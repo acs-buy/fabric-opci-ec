@@ -1,0 +1,40 @@
+/// Le referentiel des entites, restreint aux 3 colonnes qu'un rapport client emploie. L'adresse, le dirigeant et les coordonnees de contact ne sont pas reprises : elles n'ont rien a faire dans un modele diffuse. Le role de securite de niveau ligne filtre sur la colonne code.
+table ref_entite
+	lineageTag: 34b17525-b7c5-4316-8b46-09008f8b9217
+
+	/// Le nom du vehicule, lu dans le referentiel, pour le bandeau.
+	measure Vehicule = IF ( DISTINCTCOUNT ( ref_entite[code] ) = 1, MAX ( ref_entite[denomination] ), "Plusieurs entités" )
+		lineageTag: bc3e6e42-dc15-4eec-81df-886b1953fd09
+
+	column code
+		dataType: string
+		isHidden
+		isKey
+		isNullable: false
+		lineageTag: da87f35f-78e6-4b5f-80e0-c061485e1318
+		summarizeBy: none
+		sourceColumn: code
+
+	column denomination
+		dataType: string
+		isNullable: false
+		lineageTag: b984d3fa-d989-499d-bef5-b3cf055d1851
+		summarizeBy: none
+		sourceColumn: denomination
+
+	column forme_vehicule
+		dataType: string
+		lineageTag: 118482bc-1880-412e-8466-532bc4997eba
+		summarizeBy: none
+		sourceColumn: forme_vehicule
+
+	partition ref_entite = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_ref_entite = Source{[Schema="dbo",Item="ref_entite"]}[Data],
+				    retenues = Table.SelectColumns(dbo_ref_entite, {"code", "denomination", "forme_vehicule"})
+				in
+				    retenues
+

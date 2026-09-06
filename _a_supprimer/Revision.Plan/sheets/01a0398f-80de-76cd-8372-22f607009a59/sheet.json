@@ -1,0 +1,245 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/Sheets/Sheet/1.0.0/schema.json",
+  "properties": {
+    "assignmentColumnMap": {
+      "2": {
+        "approuve_par": {
+          "columnId": "maintien_mission[approuve_par]",
+          "label": "approuve_par",
+          "parentPath": [
+            "powertable-DossierOPCI-dbo-maintien_mission"
+          ],
+          "source": "visual",
+          "sourceId": "maintien_mission[approuve_par]"
+        },
+        "arrete_conclu": {
+          "columnId": "maintien_mission[arrete_conclu]",
+          "label": "arrete_conclu",
+          "parentPath": [
+            "powertable-DossierOPCI-dbo-maintien_mission"
+          ],
+          "source": "visual",
+          "sourceId": "maintien_mission[arrete_conclu]"
+        },
+        "cree_par": {
+          "columnId": "maintien_mission[cree_par]",
+          "label": "cree_par",
+          "parentPath": [
+            "powertable-DossierOPCI-dbo-maintien_mission"
+          ],
+          "source": "visual",
+          "sourceId": "maintien_mission[cree_par]"
+        },
+        "decision": {
+          "columnId": "maintien_mission[decision]",
+          "label": "decision",
+          "parentPath": [
+            "powertable-DossierOPCI-dbo-maintien_mission"
+          ],
+          "source": "visual",
+          "sourceId": "maintien_mission[decision]"
+        },
+        "entite": {
+          "columnId": "maintien_mission[entite]",
+          "label": "entite",
+          "parentPath": [
+            "powertable-DossierOPCI-dbo-maintien_mission"
+          ],
+          "source": "visual",
+          "sourceId": "maintien_mission[entite]"
+        },
+        "id": {
+          "columnId": "maintien_mission[id]",
+          "label": "id",
+          "parentPath": [
+            "powertable-DossierOPCI-dbo-maintien_mission"
+          ],
+          "source": "visual",
+          "sourceId": "maintien_mission[id]"
+        },
+        "motif": {
+          "columnId": "maintien_mission[motif]",
+          "label": "motif",
+          "parentPath": [
+            "powertable-DossierOPCI-dbo-maintien_mission"
+          ],
+          "source": "visual",
+          "sourceId": "maintien_mission[motif]"
+        },
+        "statut": {
+          "columnId": "maintien_mission[statut]",
+          "label": "statut",
+          "parentPath": [
+            "powertable-DossierOPCI-dbo-maintien_mission"
+          ],
+          "source": "visual",
+          "sourceId": "maintien_mission[statut]"
+        }
+      }
+    },
+    "canvasStyle": {
+      "background": {
+        "color": "#FFFFFF",
+        "imageUrl": "",
+        "isEnabled": true,
+        "opacity": 1,
+        "type": "color",
+        "value": "#ffffff"
+      },
+      "border": {
+        "color": "#DDDDDD",
+        "isEnabled": false,
+        "side": "all",
+        "width": 0
+      },
+      "cornerRadius": {
+        "isCustomCornerRadius": false,
+        "isEnabled": true,
+        "radiusBottomLeft": 0,
+        "radiusBottomRight": 0,
+        "radiusTopLeft": 0,
+        "radiusTopRight": 0
+      },
+      "dimension": {
+        "elementScalingUnit": "percentage",
+        "height": 900,
+        "type": "DEFAULT_16_9",
+        "width": 1600
+      },
+      "gridLineSettings": {
+        "gridColumns": null,
+        "gridLayoutType": "auto",
+        "gridRows": null,
+        "showGridLines": false,
+        "snapToGrid": false
+      },
+      "isAutoLayoutDisabled": false,
+      "isLocked": false,
+      "mobileCanvas": {
+        "editModeDimension": {
+          "height": 3200,
+          "width": 324
+        },
+        "runtimeDimension": {
+          "height": 3200,
+          "width": 324
+        }
+      },
+      "scrollToZoom": true,
+      "shadow": {
+        "angle": 135,
+        "blur": 8,
+        "color": "#0000003f",
+        "distance": 10,
+        "isEnabled": false,
+        "opacity": 100,
+        "placement": "outer",
+        "side": "bottom",
+        "width": 0
+      },
+      "showSmartGuide": true,
+      "showVisualGuide": false,
+      "verticalAlign": "top",
+      "wallpaper": {
+        "isEnabled": true,
+        "opacity": 1,
+        "value": {
+          "color": "#ffffff",
+          "imageUrl": "",
+          "type": "color"
+        }
+      }
+    },
+    "commentary": {
+      "annotation": {
+        "settings": {
+          "annotationText": {},
+          "hideAllAnnotations": false,
+          "indicator": {
+            "color": "#FFFFFF",
+            "size": 12,
+            "type": "custom"
+          },
+          "style": {
+            "borderAndCorner": {
+              "isEnabled": false
+            },
+            "cornerRadius": {
+              "isCustomCornerRadius": false,
+              "isEnabled": false,
+              "radiusBottomLeft": 0,
+              "radiusBottomRight": 0,
+              "radiusTopLeft": 0,
+              "radiusTopRight": 0
+            },
+            "padding": {
+              "bottom": 0,
+              "isCustomPadding": false,
+              "left": 0,
+              "right": 0,
+              "top": 0
+            },
+            "shadow": {
+              "isEnabled": false
+            }
+          },
+          "title": {}
+        }
+      },
+      "notes": {
+        "counter": 0,
+        "enableMarkerMode": false,
+        "markerData": [],
+        "settings": {
+          "displayStyle": "card",
+          "enable": true,
+          "floatSettings": {
+            "arrowColor": "#616161",
+            "arrowEnd": "arrow",
+            "arrowStyle": "solid",
+            "arrowWidth": 1,
+            "borderColor": "#E0E0E0",
+            "borderStyle": "solid",
+            "borderWidth": 1,
+            "displayNoteAs": "markerText",
+            "dragLineType": "line",
+            "horizontalAlign": "start",
+            "shape": "rect",
+            "verticalAlign": "start"
+          },
+          "footNotes": {
+            "footNoteColumn": 3,
+            "footNoteHeight": 15
+          },
+          "hideAllNotes": false,
+          "indicator": {
+            "color": "#117865",
+            "fontSize": 12,
+            "position": "LEFT",
+            "size": 16,
+            "type": "number"
+          },
+          "marker": {
+            "color": "#117865",
+            "pattern": "solid",
+            "size": 2,
+            "style": "pencil",
+            "textSize": 20
+          }
+        }
+      }
+    },
+    "controlPanePosition": "right",
+    "entityLevelVariables": [],
+    "excludedFilterContextAssignments": {},
+    "filterContextUserConfig": {},
+    "filterPanePosition": "RIGHT",
+    "pageLevelFilterAssignments": [],
+    "sourceVisualsMeta": {},
+    "topPositionFilterExpandConfig": {
+      "expandedHeight": 250,
+      "isFilterPaneCollapsed": true
+    },
+    "visualGroupMap": {}
+  }
+}

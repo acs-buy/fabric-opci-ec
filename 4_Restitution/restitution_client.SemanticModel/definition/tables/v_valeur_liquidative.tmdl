@@ -1,0 +1,117 @@
+/// La valeur liquidative par part a chaque arrete, son ecart avec la precedente, et l'actif net reevalue qui la fonde.
+table v_valeur_liquidative
+	lineageTag: e6a20890-1aac-4967-9520-a6aa1b88cea4
+
+	/// La valeur liquidative par part a l'arrete choisi dans le segment.
+	measure 'VL de l''arrete' =
+			VAR a = MAX ( v_arrete_client[arrete] )
+			RETURN CALCULATE ( MAX ( v_valeur_liquidative[Valeur liquidative par part] ), v_valeur_liquidative[Arrêté] = a )
+		formatString: #,0.00
+		lineageTag: 75e7dc77-2c92-4219-8bc2-50ffb5b40ed7
+
+	/// L'ecart de la valeur liquidative a l'arrete precedent.
+	measure 'Ecart de VL' =
+			VAR a = MAX ( v_arrete_client[arrete] )
+			RETURN CALCULATE ( MAX ( v_valeur_liquidative[Écart à l'arrêté précédent] ), v_valeur_liquidative[Arrêté] = a )
+		formatString: +#,0.00;-#,0.00;0.00
+		lineageTag: ab09c630-9fbc-4240-b0b5-267965ad39c7
+
+	/// L'actif net reevalue a l'arrete choisi.
+	measure 'ANR de l''arrete' =
+			VAR a = MAX ( v_arrete_client[arrete] )
+			RETURN CALCULATE ( MAX ( v_valeur_liquidative[Actif net réévalué] ), v_valeur_liquidative[Arrêté] = a )
+		formatString: #,0.00
+		lineageTag: 8afd4c9a-6873-44a6-87a0-4087c5450bd0
+
+	/// Le nombre de parts a l'arrete choisi.
+	measure 'Parts à l''arrêté' =
+			VAR a = MAX ( v_arrete_client[arrete] )
+			RETURN CALCULATE ( MAX ( v_valeur_liquidative[Parts en circulation] ), v_valeur_liquidative[Arrêté] = a )
+		formatString: #,0
+		lineageTag: 5968f93e-9d1a-478a-914b-58ee15cc75d3
+
+	/// Pour le graphique d'evolution, une valeur par arrete.
+	measure 'VL par arrêté' = MAX ( v_valeur_liquidative[Valeur liquidative par part] )
+		formatString: #,0.00
+		lineageTag: 7092ed93-beb2-48e4-87e9-367d7f7db75f
+
+	column entite
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 359132ed-2017-4729-b1ac-75fd70eb53bd
+		summarizeBy: none
+		sourceColumn: entite
+
+	column Arrêté
+		dataType: string
+		isNullable: false
+		lineageTag: ba16eb69-d2fa-4c9f-ba92-a11b81bcba0f
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column 'Actif net réévalué'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 8bc09534-ea51-4380-bede-1d7a7dbed3a6
+		summarizeBy: none
+		sourceColumn: actif_net_reevalue
+
+	column 'Parts en circulation'
+		dataType: decimal
+		formatString: #,0
+		lineageTag: 276a8b15-7963-4fe5-ae5e-45d3cf6b1460
+		summarizeBy: none
+		sourceColumn: nombre_parts
+
+	column source
+		dataType: string
+		isHidden
+		lineageTag: 0b1a42d1-b6f4-4b80-a7ee-077527142ff5
+		summarizeBy: none
+		sourceColumn: source
+
+	column version_regles
+		dataType: string
+		isHidden
+		lineageTag: c5e79c80-c611-41a8-a3e3-a4586be9f5aa
+		summarizeBy: none
+		sourceColumn: version_regles
+
+	column 'Valeur liquidative par part'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: d8f70bfb-0f25-4f2b-b001-2cac58e48bef
+		summarizeBy: none
+		sourceColumn: valeur_liquidative
+
+	column motif_refus
+		dataType: string
+		isHidden
+		lineageTag: 8333275c-a8d2-448b-99e1-a83958b2f465
+		summarizeBy: none
+		sourceColumn: motif_refus
+
+	column valeur_liquidative_precedente
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 27021672-ee7d-4c77-a532-40e5842e373a
+		summarizeBy: none
+		sourceColumn: valeur_liquidative_precedente
+
+	column 'Écart à l''arrêté précédent'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: d9a015e1-b0c2-4aaf-8a24-73bd77c8ac1e
+		summarizeBy: none
+		sourceColumn: ecart
+
+	partition v_valeur_liquidative = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v_valeur_liquidative = Source{[Schema="dbo",Item="v_valeur_liquidative"]}[Data]
+				in
+				    dbo_v_valeur_liquidative
+

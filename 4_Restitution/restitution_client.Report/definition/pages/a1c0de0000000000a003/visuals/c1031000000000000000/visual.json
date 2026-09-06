@@ -1,0 +1,223 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "c1031000000000000000",
+  "position": {
+    "x": 24,
+    "y": 240,
+    "z": 1000,
+    "height": 230,
+    "width": 1232,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_famille"
+                    }
+                  },
+                  "Property": "Famille"
+                }
+              },
+              "queryRef": "v_client_patrimoine_famille.Famille",
+              "nativeQueryRef": "Famille",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_famille"
+                    }
+                  },
+                  "Property": "Total actifs"
+                }
+              },
+              "queryRef": "v_client_patrimoine_famille.Total actifs",
+              "nativeQueryRef": "Total actifs"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_famille"
+                    }
+                  },
+                  "Property": "Total valeur comptable"
+                }
+              },
+              "queryRef": "v_client_patrimoine_famille.Total valeur comptable",
+              "nativeQueryRef": "Total valeur comptable"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_famille"
+                    }
+                  },
+                  "Property": "Total valeur actuelle"
+                }
+              },
+              "queryRef": "v_client_patrimoine_famille.Total valeur actuelle",
+              "nativeQueryRef": "Total valeur actuelle"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_famille"
+                    }
+                  },
+                  "Property": "Total différence d'estimation"
+                }
+              },
+              "queryRef": "v_client_patrimoine_famille.Total différence d'estimation",
+              "nativeQueryRef": "Total différence d'estimation"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_famille"
+                    }
+                  },
+                  "Property": "Article"
+                }
+              },
+              "queryRef": "v_client_patrimoine_famille.Article",
+              "nativeQueryRef": "Article"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "columnAdjustment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'growToFit'"
+                }
+              }
+            },
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12233C'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF1F5'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Les 3 familles de détention, valeur comptable et valeur actuelle'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12233C'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

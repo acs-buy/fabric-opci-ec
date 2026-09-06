@@ -1,0 +1,67 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/Definition/1.0.0/schema.json",
+  "appDBconnection": "1070b324-0607-4a57-bb9a-237611de6964",
+  "cube": {
+    "partitionRefIds": []
+  },
+  "sheets": [
+    {
+      "displayName": "Intelligence 1",
+      "isHidden": false,
+      "recordGuid": "01a0398f-80de-76cd-8372-22f607009a59",
+      "sheetType": "REPORTING",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a039e2-18e8-76ef-9811-ea1162732bbc",
+          "visualType": "SUPER_FILTER"
+        },
+        {
+          "isEmbedded": false,
+          "visualId": "01a039e6-a23f-737b-b8e8-cf3de69d03aa",
+          "visualType": "TABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "arrete_mission",
+      "isHidden": false,
+      "recordGuid": "01a03991-0c8b-7658-9c2c-c3de111e27c9",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "feuille_travail",
+      "isHidden": false,
+      "recordGuid": "01a03995-15b2-754c-9013-b1d8ec0f3273",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a03995-c4e6-730c-b3a5-4233300e3e97",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "maintien_mission",
+      "isHidden": false,
+      "recordGuid": "01a03994-5bbf-7149-923d-98bf42481ccb",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a03994-dae3-7456-8114-01da5381f3ca",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    }
+  ],
+  "workloadItemName": "Revision"
+}

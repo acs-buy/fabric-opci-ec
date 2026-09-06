@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SQLDatabase",
+    "displayName": "DossierOPCI",
+    "description": "Etat de mission et ecritures du dossier de revision OPCI. Tranche verticale de valorisation, plan 2026-08-19."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e75236e3-ceab-b437-4253-1d4f3ade2222"
+  }
+}

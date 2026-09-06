@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "restitution_client"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "14f6526a-fa24-4f49-a3c1-3d010747464a"
+  }
+}

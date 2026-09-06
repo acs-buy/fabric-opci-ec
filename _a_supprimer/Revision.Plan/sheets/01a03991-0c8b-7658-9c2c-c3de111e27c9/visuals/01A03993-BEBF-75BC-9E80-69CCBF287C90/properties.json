@@ -1,0 +1,1127 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/PowerTable/Properties/1.0.0/schema.json",
+  "properties": {
+    "properties": {
+      "advanceLookup": [],
+      "chartType": "COLUMN_VERTICAL",
+      "dimension": {
+        "height": 0.4,
+        "width": 0.3
+      },
+      "groupMeasureAssignments": [],
+      "groupName": "",
+      "layerProperties": {
+        "order": 0
+      },
+      "lockAspectRatio": false,
+      "mobileProperties": {},
+      "originEntityId": "2",
+      "pivotAssignments": [],
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "preVisualId": "1",
+      "shapeType": "RECTANGLE",
+      "sortingConfig": [],
+      "splitByCategory": {
+        "pivotValueAssignments": [],
+        "splitByCategoryAssignments": [],
+        "splitByCategoryItems": [],
+        "splitByDelimiter": "-"
+      },
+      "superFilterAssignments": [
+        {
+          "configuration": {
+            "alphaNumericValues": {
+              "equalValue": null,
+              "maxValue": null,
+              "minValue": null
+            },
+            "enableNumericToFacet": false,
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "id",
+            "regex": "",
+            "scale": "none",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "slider": false,
+            "sort": [
+              {
+                "columnId": "id",
+                "columnName": "id",
+                "direction": "ASC",
+                "id": "id"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "NUMERIC"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "id",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "id",
+              "columnType": "Column",
+              "dataType": "Int64",
+              "id": "id",
+              "name": "id",
+              "order": 0,
+              "sourceId": "id",
+              "sourceType": "powerTables",
+              "tableName": "arrete_mission"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "code",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "entite",
+                "columnName": "entite",
+                "direction": "ASC",
+                "id": "entite"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "entite",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "entite",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "entite",
+              "name": "entite",
+              "order": 0,
+              "sourceId": "entite",
+              "sourceType": "powerTables",
+              "tableName": "arrete_mission"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "arrete",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "arrete",
+                "columnName": "arrete",
+                "direction": "ASC",
+                "id": "arrete"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "arrete",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "arrete",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "arrete",
+              "name": "arrete",
+              "order": 0,
+              "sourceId": "arrete",
+              "sourceType": "powerTables",
+              "tableName": "arrete_mission"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "type_arrete",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "type_arrete",
+                "columnName": "type_arrete",
+                "direction": "ASC",
+                "id": "type_arrete"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "type_arrete",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "type_arrete",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "type_arrete",
+              "name": "type_arrete",
+              "order": 0,
+              "sourceId": "type_arrete",
+              "sourceType": "powerTables",
+              "tableName": "arrete_mission"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "ouvert_par",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "ouvert_par",
+                "columnName": "ouvert_par",
+                "direction": "ASC",
+                "id": "ouvert_par"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "ouvert_par",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "ouvert_par",
+              "columnType": "Column",
+              "dataType": "NVarchar",
+              "id": "ouvert_par",
+              "name": "ouvert_par",
+              "order": 0,
+              "sourceId": "ouvert_par",
+              "sourceType": "powerTables",
+              "tableName": "arrete_mission"
+            }
+          ],
+          "position": "RIGHT"
+        }
+      ],
+      "transformMeasure": "none",
+      "visualInteractions": {},
+      "visualState": {
+        "assignmentColumnMap": {
+          "1": {
+            "arrete": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "entite": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "id": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "ouvert_par": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "type_arrete": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            }
+          }
+        },
+        "columnMeta": {
+          "arrete": {
+            "width": 100
+          },
+          "entite": {
+            "width": 100
+          },
+          "id": {
+            "width": 100
+          },
+          "ouvert_le": {
+            "width": 100
+          },
+          "ouvert_par": {
+            "width": 100
+          },
+          "type_arrete": {
+            "width": 100
+          }
+        },
+        "embeddedSuperFilter": {
+          "assignmentColumnMap": {},
+          "incomingFilterAssignments": [],
+          "powerbiSemanticModelDeps": {
+            "datasetId": "",
+            "datasetName": "",
+            "workspaceName": ""
+          },
+          "superFilterAssignments": []
+        },
+        "gridStyles": {
+          "autoWrapHeaderText": false,
+          "bottomSpace": 0,
+          "categoryGridLines": true,
+          "categoryLabelColor": "#DDDDDD",
+          "cellUpdateBackgroundColor": "#E1F5FF",
+          "chartSpacing": true,
+          "columnSpacing": "off",
+          "columnSpacingValue": 5,
+          "compactSplitLine": false,
+          "compactSplitLineColor": "#E0E0E0",
+          "defaultColors": [],
+          "direction": "ltr",
+          "enableCategoryLabelColor": false,
+          "gridBackground": "#FFFFFF",
+          "headerBackground": "#F5F5F5",
+          "headerGridColor": "#E0E0E0",
+          "headerGridLines": true,
+          "headerSelectionBackgroundColor": "#E6E6E6",
+          "horizontalMinorGridColor": "#E0E0E0",
+          "horizontalMinorGridLines": "solid",
+          "iconColor": "#242424",
+          "indentSpacing": 10,
+          "isLevelIndent": false,
+          "leftSpace": 0,
+          "lineStyleColor": "#666666",
+          "lineStyleFormat": "solid",
+          "majorGridColor": "#b0b0b0",
+          "majorGridLines": "off",
+          "placeholderGridBackground": "#FFFFFF",
+          "primaryColors": [
+            "#117865"
+          ],
+          "restrictedCellBackgroundColor": "#F0F0F0",
+          "rightSpace": 0,
+          "rowDeleteBackgroundColor": "#FFEAEB",
+          "rowDraggerLeftOffset": 0,
+          "rowInsertBackgroundColor": "#EDFFEE",
+          "selectionBackgroundColor": "rgba(95, 95, 95, 0.08)",
+          "selectionBorderColor": "#117865",
+          "showExpandCollapse": true,
+          "showVAHighlight": true,
+          "titleAndChartSpace": 4,
+          "topSpace": 0,
+          "verticalMinorGridColor": "#E0E0E0",
+          "verticalMinorGridLines": "solid"
+        },
+        "locale": "en-US",
+        "manageMeasures": [
+          {
+            "id": "id",
+            "label": "id",
+            "measureType": "data",
+            "name": "id",
+            "order": 0,
+            "visible": true
+          },
+          {
+            "id": "entite",
+            "label": "entite",
+            "measureType": "data",
+            "name": "entite",
+            "order": 1,
+            "visible": true
+          },
+          {
+            "id": "arrete",
+            "label": "arrete",
+            "measureType": "data",
+            "name": "arrete",
+            "order": 2,
+            "visible": true
+          },
+          {
+            "id": "type_arrete",
+            "label": "type_arrete",
+            "measureType": "data",
+            "name": "type_arrete",
+            "order": 3,
+            "visible": true
+          },
+          {
+            "id": "ouvert_par",
+            "label": "ouvert_par",
+            "measureType": "data",
+            "name": "ouvert_par",
+            "order": 4,
+            "visible": true
+          },
+          {
+            "id": "ouvert_le",
+            "label": "ouvert_le",
+            "measureType": "data",
+            "name": "ouvert_le",
+            "order": 5,
+            "visible": true
+          }
+        ],
+        "mdmLayout": {
+          "activeLayout": "table",
+          "childHeaderTableControlConfiguration": {},
+          "configuration": null,
+          "ganttViewColVisibility": {},
+          "layoutVisibility": {},
+          "parentApprovalMeta": {},
+          "tableModeColVisibility": {}
+        },
+        "superFilter": {
+          "arrete": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "arrete",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "varchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "arrete",
+              "columnType": 1,
+              "displayName": "arrete",
+              "id": "3",
+              "sourceId": 1,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "arrete",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "arrete",
+                  "columnName": "arrete",
+                  "direction": "ASC",
+                  "id": "arrete"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "arrete_mission",
+            "topNMeasureOptions": [
+              {
+                "id": "id",
+                "label": "id"
+              }
+            ]
+          },
+          "entite": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "entite",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "varchar"
+                },
+                "optionLinking": {
+                  "lookupConfig": [
+                    {
+                      "id": "code",
+                      "label": "code",
+                      "linkingColumn": "entite",
+                      "order": 0,
+                      "schema": "dbo",
+                      "table": "ref_entite"
+                    }
+                  ]
+                },
+                "options": [],
+                "selectionMethod": "LOAD_FROM_DATABASE",
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "entite",
+              "columnType": 2,
+              "displayName": "code",
+              "id": "2",
+              "sourceId": 1,
+              "visualColumnType": 3
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "code",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "entite",
+                  "columnName": "entite",
+                  "direction": "ASC",
+                  "id": "entite"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "arrete_mission",
+            "topNMeasureOptions": [
+              {
+                "id": "id",
+                "label": "id"
+              }
+            ]
+          },
+          "id": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "id",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": true,
+                  "isNullable": false,
+                  "isPrimaryKey": true,
+                  "type": "int"
+                }
+              },
+              "columnName": "id",
+              "columnType": 6,
+              "displayName": "id",
+              "id": "1",
+              "sourceId": 1,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "alphaNumericValues": {
+                "equalValue": null,
+                "maxValue": null,
+                "minValue": null
+              },
+              "enableNumericToFacet": false,
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "id",
+              "regex": "",
+              "scale": "none",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "slider": false,
+              "sort": [
+                {
+                  "columnId": "id",
+                  "columnName": "id",
+                  "direction": "ASC",
+                  "id": "id"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "NUMERIC"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "arrete_mission",
+            "topNMeasureOptions": [
+              {
+                "id": "id",
+                "label": "id"
+              }
+            ]
+          },
+          "ouvert_par": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "ouvert_par",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "nvarchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "ouvert_par",
+              "columnType": 1,
+              "displayName": "ouvert_par",
+              "id": "5",
+              "sourceId": 1,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "ouvert_par",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "ouvert_par",
+                  "columnName": "ouvert_par",
+                  "direction": "ASC",
+                  "id": "ouvert_par"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "arrete_mission",
+            "topNMeasureOptions": [
+              {
+                "id": "id",
+                "label": "id"
+              }
+            ]
+          },
+          "type_arrete": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "type_arrete",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "varchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "type_arrete",
+              "columnType": 1,
+              "displayName": "type_arrete",
+              "id": "4",
+              "sourceId": 1,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "type_arrete",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "type_arrete",
+                  "columnName": "type_arrete",
+                  "direction": "ASC",
+                  "id": "type_arrete"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "arrete_mission",
+            "topNMeasureOptions": [
+              {
+                "id": "id",
+                "label": "id"
+              }
+            ]
+          }
+        },
+        "superFilterAssignments": [
+          {
+            "configuration": {
+              "alphaNumericValues": {
+                "equalValue": null,
+                "maxValue": null,
+                "minValue": null
+              },
+              "enableNumericToFacet": false,
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "id",
+              "regex": "",
+              "scale": "none",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "slider": false,
+              "sort": [
+                {
+                  "columnId": "id",
+                  "columnName": "id",
+                  "direction": "ASC",
+                  "id": "id"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "NUMERIC"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "id",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "id",
+                "columnType": "Column",
+                "dataType": "Int64",
+                "id": "id",
+                "name": "id",
+                "order": 0,
+                "sourceId": "id",
+                "sourceType": "powerTables",
+                "tableName": "arrete_mission"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "code",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "entite",
+                  "columnName": "entite",
+                  "direction": "ASC",
+                  "id": "entite"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "entite",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "entite",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "entite",
+                "name": "entite",
+                "order": 0,
+                "sourceId": "entite",
+                "sourceType": "powerTables",
+                "tableName": "arrete_mission"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "arrete",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "arrete",
+                  "columnName": "arrete",
+                  "direction": "ASC",
+                  "id": "arrete"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "arrete",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "arrete",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "arrete",
+                "name": "arrete",
+                "order": 0,
+                "sourceId": "arrete",
+                "sourceType": "powerTables",
+                "tableName": "arrete_mission"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "type_arrete",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "type_arrete",
+                  "columnName": "type_arrete",
+                  "direction": "ASC",
+                  "id": "type_arrete"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "type_arrete",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "type_arrete",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "type_arrete",
+                "name": "type_arrete",
+                "order": 0,
+                "sourceId": "type_arrete",
+                "sourceType": "powerTables",
+                "tableName": "arrete_mission"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "ouvert_par",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "ouvert_par",
+                  "columnName": "ouvert_par",
+                  "direction": "ASC",
+                  "id": "ouvert_par"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "ouvert_par",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "ouvert_par",
+                "columnType": "Column",
+                "dataType": "NVarchar",
+                "id": "ouvert_par",
+                "name": "ouvert_par",
+                "order": 0,
+                "sourceId": "ouvert_par",
+                "sourceType": "powerTables",
+                "tableName": "arrete_mission"
+              }
+            ],
+            "position": "RIGHT"
+          }
+        ],
+        "superFilterMetaConfig": {
+          "orderedFilterIds": [
+            "id",
+            "entite",
+            "arrete",
+            "type_arrete",
+            "ouvert_par"
+          ]
+        }
+      },
+      "visualStyles": {
+        "background": {
+          "backgroundColor": "#fff",
+          "isEnabled": true
+        },
+        "border": {
+          "color": "#ddd",
+          "isEnabled": false,
+          "side": "all",
+          "width": 0
+        },
+        "cornerRadius": {
+          "isCustomCornerRadius": false,
+          "isEnabled": true,
+          "radiusBottomLeft": 0,
+          "radiusBottomRight": 0,
+          "radiusTopLeft": 0,
+          "radiusTopRight": 0
+        },
+        "isTooltipEnabled": true,
+        "padding": {
+          "bottomPadding": 5,
+          "isCustomPaddingSize": false,
+          "isEnabled": true,
+          "leftPadding": 5,
+          "rightPadding": 5,
+          "topPadding": 5
+        },
+        "rotation": {
+          "isEnabled": false,
+          "transform": 0
+        },
+        "shadow": {
+          "angle": 0,
+          "blur": 0,
+          "color": "#000000",
+          "distance": 10,
+          "isEnabled": false,
+          "opacity": 100,
+          "placement": "outer",
+          "side": "center",
+          "width": 0
+        },
+        "showHelperTooltips": true,
+        "showSelectedSeriesInTooltip": false,
+        "tooltipPageId": "auto",
+        "tooltipStyle": {
+          "backgroundColor": "#FFFFFF",
+          "bold": false,
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "italic": false,
+          "labelColor": "#252423",
+          "underline": false,
+          "valueColor": "#252423"
+        },
+        "tooltipType": "default",
+        "varianceInTooltip": true,
+        "varianceTooltipType": "both"
+      },
+      "visualType": 30
+    },
+    "schema": "0.0.1"
+  }
+}

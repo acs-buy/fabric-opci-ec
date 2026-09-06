@@ -1,0 +1,33 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: fr-FR
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
+
+ref table ref_entite
+ref table v_valeur_liquidative
+ref table v_performance_periode
+ref table v_distribution_par_part
+ref table v_arrete_client
+ref table v_simulation_distribution
+ref table v_parts_porteur_courant
+ref table v_montant_simulable
+ref table v_client_rationalisation
+ref table v_client_rationalisation_cause
+ref table v_client_patrimoine_famille
+ref table v_client_patrimoine_actif
+ref table v_client_filiale
+ref table v_client_ratio
+ref table v_client_publication
+
+ref role 'Client OMEGA-OPCI'
+
+ref cultureInfo fr-FR
+

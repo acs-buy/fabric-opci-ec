@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "publier_rapport_client",
+    "description": "Publication du rapport client sur visa de cloture du chef de mission, conception du 06/09/2026."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9ed85154-2031-a4bf-4cf1-ac15b02ed9a9"
+  }
+}

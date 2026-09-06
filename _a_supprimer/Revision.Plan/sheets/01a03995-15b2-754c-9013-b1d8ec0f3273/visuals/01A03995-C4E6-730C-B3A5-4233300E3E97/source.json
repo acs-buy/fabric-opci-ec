@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/PowerTable/Source/1.0.0/schema.json",
+  "source": {
+    "connectionId": "482cb3e5-3b43-4cf8-aec2-6eb6e2243c9e",
+    "connectionIdVariable": null,
+    "creationMode": 2,
+    "databaseVariable": null,
+    "dbHost": "ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com",
+    "dbName": "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1",
+    "fileImportType": null,
+    "meta": {
+      "databaseId": "fd9080bb-e3ae-4aab-bf09-edbfcc8606d1",
+      "dbDisplayName": "DossierOPCI",
+      "lastRowCountUpdatedAt": 1787677166,
+      "totalRows": 5,
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906",
+      "workspaceName": "OPCI-DEV"
+    },
+    "recordGuid": "E2F6F97D-9BA0-F111-9B34-000D3AE7631B",
+    "schemaName": "dbo",
+    "sqlTargetArtifact": null,
+    "tableName": "feuille_travail",
+    "tableType": 1
+  }
+}

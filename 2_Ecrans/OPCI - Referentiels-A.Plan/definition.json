@@ -1,0 +1,296 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/Definition/1.0.0/schema.json",
+  "appDBconnection": "1070b324-0607-4a57-bb9a-237611de6964",
+  "cube": {
+    "partitionRefIds": []
+  },
+  "sheets": [
+    {
+      "displayName": "ref_arrete",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c758-7253-bd46-ea2a0d8d04dc",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c758-78bc-b7a2-c2afd39fb811",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_article",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c75d-74ff-bc10-ec1f58228ef7",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c75d-7022-93a3-07699f3b3d7c",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_cas_eligibilite",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c763-7d86-8ee2-99f8307efd20",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c763-7834-80c8-dc301d917154",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_cas_immeuble",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c767-70ed-84f6-13b7818257d5",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c767-7190-8ec5-9e1eea6b8a70",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_categorie_actif_cmf",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c76c-78ad-8039-955c3fc3b44c",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c76c-735d-8877-49c2a09cb2a3",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_compte",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c771-7038-a219-be4299b81f5a",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c771-7ed0-8bef-0ae832b9c374",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_compte_entite",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c777-7f19-a374-b3347c36682d",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c777-76df-bac4-9684cfef5fc9",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_contrepartie_estimation",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c77c-7ec1-8323-012a21db1bd5",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c77c-7bb0-825d-1ca357d1e78a",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_controle",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c781-72c8-a753-bb40f13297a1",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c781-77b4-bd0e-b4d6f22fd6ba",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_correspondance_plan",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c787-7674-b6e0-0476330dd363",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c787-7dbf-ad2b-dbf310e0ba79",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_croisee",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c78c-7f50-a1c9-bc9f51be60c2",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c78c-7836-a4e4-abb224a91866",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_cycle",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c791-7c3f-9f28-56b9a44c1063",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c791-7427-95df-9bdbd2527777",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_droit_reel",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c796-7d42-b6b7-47883b3b9c07",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c796-78a4-a27d-899c8a7caa92",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_entite",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c79b-7b97-90db-728131bb4a29",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c79b-7e35-9991-3a5721dfa6ba",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_forme_conclusion",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c7a1-7477-b0e0-e9451d0eb6c6",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c7a1-7d0d-a2da-9188b23c1594",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_ligne_annexe",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c7a6-7c52-a26c-fb9fef561ad0",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c7a6-7da3-9d2a-75fa36c0db58",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_ligne_etat",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c7ab-75ba-9b7f-f0a4b96c8bee",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c7ab-7cf7-bde6-1b09a5b3c90a",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_livrable",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c7b0-7ba5-bc06-cb6161b53013",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c7b0-7fd0-97ce-c6f70d921584",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_nature_actif",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c7b5-7cd7-b64a-0b82d17c97e0",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c7b5-704f-9ca1-580fddac9ca8",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_nature_arrete",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c7ba-7aa6-9c9a-de0f7a26841f",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c7ba-7aae-9b57-31d28de143a4",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_nature_piece",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c7bf-7380-89c1-142c444a6005",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c7bf-765b-99ed-006b0ec1ec87",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "ref_norme",
+      "isHidden": false,
+      "recordGuid": "01a075ff-c7c4-7f4e-b5b4-7b5f01a30438",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a075ff-c7c4-7348-9d44-b41a8d07f041",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    }
+  ],
+  "workloadItemName": "OPCI test"
+}

@@ -1,0 +1,30 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: fr-FR
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["v_maintien_requis","v_prerequis_arrete","v_pieces_manquantes","v_balance","v_anr_entite","v_valeur_liquidative","v_titres_valeur_actuelle","feuille_travail","lot_ecritures","ref_entite","ref_cycle","v_dim_arrete"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table v_maintien_requis
+ref table v_prerequis_arrete
+ref table v_pieces_manquantes
+ref table v_balance
+ref table v_anr_entite
+ref table v_valeur_liquidative
+ref table v_titres_valeur_actuelle
+ref table feuille_travail
+ref table lot_ecritures
+ref table ref_entite
+ref table ref_cycle
+ref table v_dim_arrete
+
+ref cultureInfo fr-FR
+

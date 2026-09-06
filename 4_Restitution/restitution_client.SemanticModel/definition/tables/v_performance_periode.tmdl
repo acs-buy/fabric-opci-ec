@@ -1,0 +1,78 @@
+/// Le rendement de la periode, distributions comprises et non reinvesties, sans annualisation. Une periode sans valeur liquidative precedente ne rend aucun rendement, et non zero.
+table v_performance_periode
+	lineageTag: 23038df1-6cad-4b62-85e6-877856c931c7
+
+	/// Le rendement de la periode, distribution comprise, a l'arrete choisi.
+	measure 'Rendement de la periode' =
+			VAR a = MAX ( v_arrete_client[arrete] )
+			RETURN CALCULATE ( MAX ( v_performance_periode[rendement_periode] ), v_performance_periode[arrete] = a )
+		formatString: +0.00 %;-0.00 %;0.00 %
+		lineageTag: 82a04796-390a-43e5-b07b-d31eaa7e92a8
+
+	/// La distribution par part versee sur la periode.
+	measure 'Distribution par part' =
+			VAR a = MAX ( v_arrete_client[arrete] )
+			RETURN CALCULATE ( MAX ( v_performance_periode[distribution_par_part] ), v_performance_periode[arrete] = a )
+		formatString: #,0.00
+		lineageTag: 7ff413e7-57c8-44a6-b468-c02cc6488c5b
+
+	/// Pour le graphique du rendement, une valeur par arrete.
+	measure 'Rendement par arrêté' = MAX ( v_performance_periode[rendement_periode] )
+		formatString: 0.00 %
+		lineageTag: 246e1185-5aa2-4967-aa46-9959964dc942
+
+	column entite
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 256c2ec7-f751-4583-8553-d4e8f362306c
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isNullable: false
+		lineageTag: f61153b2-d2a7-4a94-beab-391279a3c3c5
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column valeur_liquidative
+		dataType: decimal
+		isHidden
+		formatString: #,0.00
+		lineageTag: 19050c9c-57b4-47dd-8a92-602cc05830dd
+		summarizeBy: sum
+		sourceColumn: valeur_liquidative
+
+	column valeur_liquidative_precedente
+		dataType: decimal
+		isHidden
+		formatString: #,0.00
+		lineageTag: 61ea700d-7a0e-4335-8f2f-6a86b9f2b62c
+		summarizeBy: sum
+		sourceColumn: valeur_liquidative_precedente
+
+	column distribution_par_part
+		dataType: decimal
+		isHidden
+		formatString: #,0.0000
+		lineageTag: dd94455a-446b-4284-a243-a78289a10487
+		summarizeBy: sum
+		sourceColumn: distribution_par_part
+
+	column rendement_periode
+		dataType: decimal
+		formatString: 0.00 %
+		lineageTag: 851a88fa-8a20-4e50-9319-ed2ee03f0a40
+		summarizeBy: sum
+		sourceColumn: rendement_periode
+
+	partition v_performance_periode = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v_performance_periode = Source{[Schema="dbo",Item="v_performance_periode"]}[Data]
+				in
+				    dbo_v_performance_periode
+

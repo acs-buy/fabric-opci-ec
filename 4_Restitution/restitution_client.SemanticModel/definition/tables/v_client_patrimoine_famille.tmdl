@@ -1,0 +1,115 @@
+/// Le patrimoine par famille : nombre d'actifs, valeur comptable, valeur actuelle, difference d'estimation, article. Script 141.
+table v_client_patrimoine_famille
+	lineageTag: d935394c-37ef-4bf0-bff0-11ebb7607ff4
+
+	measure 'Total valeur actuelle' = SUM ( v_client_patrimoine_famille[Valeur actuelle] )
+		formatString: #,0.00
+		lineageTag: 0ed8a028-e837-4acd-844b-a27e9f0b62af
+
+	measure 'Total valeur comptable' = SUM ( v_client_patrimoine_famille[Valeur comptable] )
+		formatString: #,0.00
+		lineageTag: 3ff8f4da-a5d7-458e-b9f5-3970d6e44bd7
+
+	measure 'Total différence d''estimation' = SUM ( v_client_patrimoine_famille[Différence d'estimation] )
+		formatString: +#,0.00;-#,0.00;0.00
+		lineageTag: 7c7b961d-d4da-4051-8c85-c203ada85b64
+
+	measure 'Total actifs' = SUM ( v_client_patrimoine_famille[Actifs] )
+		formatString: #,0
+		lineageTag: 18426790-7a82-4e66-b098-bcde8b64486f
+
+	/// L'article du reglement qui fonde la methode de la famille, vide sur le total.
+	measure Article = IF ( HASONEVALUE ( v_client_patrimoine_famille[Article du règlement] ), MAX ( v_client_patrimoine_famille[Article du règlement] ), BLANK () )
+		lineageTag: 201b3200-74aa-4085-b3df-393c86915e9f
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		lineageTag: b42084d2-1722-456d-9d2a-04b138c6cccf
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: d974d401-3b09-4f27-8ff7-f9b44a72ced9
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		lineageTag: b17097aa-6e2c-4ae2-9666-d9140957bc32
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column code_famille
+		dataType: string
+		isHidden
+		lineageTag: fc1d1283-41af-4f7e-8357-540ffda0a7df
+		summarizeBy: none
+		sourceColumn: famille
+
+	column Famille
+		dataType: string
+		lineageTag: 7caedc7e-6dda-46b5-a05c-b98747acc0d2
+		summarizeBy: none
+		sourceColumn: famille_libelle
+		sortByColumn: ordre
+
+	column ordre
+		dataType: int64
+		isHidden
+		lineageTag: 6328643f-3847-48bc-988e-238c9796db8a
+		summarizeBy: none
+		sourceColumn: ordre
+
+	column 'Article du règlement'
+		dataType: string
+		lineageTag: 04509d00-7a27-425f-8490-785c7c86c873
+		summarizeBy: none
+		sourceColumn: article
+
+	column citation_courte
+		dataType: string
+		lineageTag: 30e3216b-897c-46d2-aad4-26aed9d3abbe
+		summarizeBy: none
+		sourceColumn: citation_courte
+
+	column Actifs
+		dataType: int64
+		formatString: #,0
+		lineageTag: 8b90357d-2354-4a00-b18c-72855ac73b7a
+		summarizeBy: none
+		sourceColumn: nombre_actifs
+
+	column 'Valeur comptable'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: ea454c4f-eb54-4a08-bf96-af262d9b19a6
+		summarizeBy: none
+		sourceColumn: valeur_comptable
+
+	column 'Valeur actuelle'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 532e5a27-2b02-4780-bbd3-b1405309abfb
+		summarizeBy: none
+		sourceColumn: valeur_actuelle
+
+	column 'Différence d''estimation'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: ee81679d-7ce9-47ab-8623-e2f6586cc351
+		summarizeBy: none
+		sourceColumn: difference_estimation
+
+	partition v_client_patrimoine_famille = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_patrimoine_famille"]}[Data]
+				in
+				    dbo_v
+

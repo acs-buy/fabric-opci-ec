@@ -1,0 +1,7 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/cube/1.0.0/schema.json",
+  "cubePartitionMeasureDataInputColumnMappings": [],
+  "cubePartitionMeasureMappings": [],
+  "cubePartitionMeasures": [],
+  "cubePartitions": []
+}

@@ -1,0 +1,142 @@
+table v_balance
+	lineageTag: 04c2527e-e104-4764-8f48-5fa6cbef9103
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a7f8df07-736c-4995-a716-c2dc09584bee
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 3f127cf2-bb92-40af-b641-ca84faee57e6
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 15303548-7686-412a-be9c-f5c98eb670dd
+		summarizeBy: none
+		sourceColumn: compte
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: 66effa5e-224f-43e5-be16-38044b651cba
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column porte_actif
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 24e94908-394f-4984-9ff7-62ff0459a844
+		summarizeBy: sum
+		sourceColumn: porte_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column b0_initiale
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 2a19af56-cbae-4097-af8f-bd1c27fbe872
+		summarizeBy: sum
+		sourceColumn: b0_initiale
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column od_revision
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: f827525b-d150-4c08-9501-c2896dcbfe5a
+		summarizeBy: sum
+		sourceColumn: od_revision
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column od_valorisation
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 45bea8aa-a3af-4ce1-b0fd-a52ddddce838
+		summarizeBy: sum
+		sourceColumn: od_valorisation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column balance_finale
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: a98abe4f-b5a2-444b-8578-add018fabca5
+		summarizeBy: sum
+		sourceColumn: balance_finale
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column xref
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: a2b300e3-388c-443c-9383-1f5f4a8cda38
+		summarizeBy: none
+		sourceColumn: xref
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 6783ec64-eeff-4deb-81a6-41b94faca983
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: f2cae1d7-7cb5-4443-96f3-994bf2b47ee5
+		summarizeBy: none
+		sourceColumn: par
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_etat
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 7ded352a-04cb-403c-952a-a2437406fb66
+		summarizeBy: none
+		sourceColumn: date_etat
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_balance = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_balance = Source{[Schema="dbo",Item="v_balance"]}[Data]
+				in
+				    dbo_v_balance
+

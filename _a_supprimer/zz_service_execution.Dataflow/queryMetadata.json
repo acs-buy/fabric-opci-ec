@@ -1,0 +1,8 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {
+    "allowFastCopy": false
+  },
+  "name": null,
+  "allowNativeQueries": false
+}
