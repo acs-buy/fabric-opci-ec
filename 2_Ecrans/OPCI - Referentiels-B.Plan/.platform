@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Plan",
+    "displayName": "OPCI - Referentiels-B",
+    "description": "Genere le 06/09/2026 par 61_DEPLOIEMENT/generer_elements_plan.py."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9bdddd12-4d35-b453-49ff-a91288469c8b"
+  }
+}

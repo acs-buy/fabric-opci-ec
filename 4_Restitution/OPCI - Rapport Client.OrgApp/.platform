@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "OrgApp",
+    "displayName": "OPCI - Rapport Client"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "54824a07-59d6-46bb-b277-342f87fabcd8"
+  }
+}

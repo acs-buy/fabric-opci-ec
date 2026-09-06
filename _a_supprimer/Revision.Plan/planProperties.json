@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/PlanProperties/1.0.0/schema.json",
+  "properties": {
+    "adhocPresets": [],
+    "dataStreamerConfig": {
+      "enabled": false
+    },
+    "drillThroughConfig": {},
+    "entityAdditionalProps": {},
+    "favoriteCharts": [],
+    "homeLayout": {
+      "roles": []
+    },
+    "pageGroupingMeta": {
+      "pageGroupMapping": {},
+      "pageGroups": []
+    },
+    "reportPageTooltipEntities": [],
+    "syncSlicerConfig": [],
+    "syncVisualsState": {},
+    "theme": {
+      "appliedThemes": {
+        "1": {
+          "type": 3
+        }
+      },
+      "type": 3
+    },
+    "timeIntervalMapping": [],
+    "workloadLevelFilterAssignments": [],
+    "workloadLevelQueryFilterAssignments": [],
+    "workloadLevelVariables": [],
+    "workloadModeConfig": {
+      "EDIT": {
+        "showBookmarksPane": false,
+        "showCommentsPane": false,
+        "showDataPane": true,
+        "showElementsPane": true,
+        "showFieldsPane": true,
+        "showFilterPane": true,
+        "showLumelAIPane": false,
+        "showPersonalizePane": false,
+        "showVariablesPane": false
+      },
+      "READ": {
+        "showBookmarksPane": false,
+        "showCommentsPane": false,
+        "showDataPane": false,
+        "showFilterPane": true,
+        "showLumelAIPane": false,
+        "showPersonalizePane": false,
+        "showVariablesPane": false
+      }
+    }
+  }
+}

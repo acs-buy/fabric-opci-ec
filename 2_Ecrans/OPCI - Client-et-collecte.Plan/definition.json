@@ -1,0 +1,218 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/Definition/1.0.0/schema.json",
+  "appDBconnection": "1070b324-0607-4a57-bb9a-237611de6964",
+  "cube": {
+    "partitionRefIds": []
+  },
+  "sheets": [
+    {
+      "displayName": "acceptation_mission",
+      "isHidden": false,
+      "recordGuid": "01a07605-a5c1-74ca-92e9-6c56814a6af8",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a5c3-7c10-a4cb-436faa10c62d",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "arrete_mission",
+      "isHidden": false,
+      "recordGuid": "01a07605-a5c9-7457-bb64-bd5b54f0ebf7",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a5c9-77ab-8b7f-6daad01861c1",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "maintien_mission",
+      "isHidden": false,
+      "recordGuid": "01a07605-a5d0-7882-b146-a84712798827",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a5d0-7062-8c2f-591be69ac0be",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "detention",
+      "isHidden": false,
+      "recordGuid": "01a07605-a5d6-752a-8f33-c637ad96c607",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a5d6-7c45-9338-699c615414aa",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "import_fec",
+      "isHidden": false,
+      "recordGuid": "01a07605-a5dc-7c41-aee6-d5c144d4cec8",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a5dc-7870-8a16-00d38f9a9e33",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "rejet_import",
+      "isHidden": false,
+      "recordGuid": "01a07605-a5e6-76f2-bede-411f1accbcaf",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a5e6-7590-9303-7fcd91eb523e",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "export_fec",
+      "isHidden": false,
+      "recordGuid": "01a07605-a5ef-7855-988a-9205b5d70797",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a5ef-739b-8a2b-e7fd0b4a4816",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "export_fec_lot",
+      "isHidden": false,
+      "recordGuid": "01a07605-a5f8-7216-86a3-ae151b2958c8",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a5f8-74e1-afbc-13e95ea185ec",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "piece",
+      "isHidden": false,
+      "recordGuid": "01a07605-a5fe-7fb1-be77-82c6c0b13a86",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a5fe-7975-96f3-21ec69aef4f8",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "piece_rattachement",
+      "isHidden": false,
+      "recordGuid": "01a07605-a603-762f-9b85-42db64b92c1b",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a603-7632-8866-65c8313acdb7",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "releve_coffre",
+      "isHidden": false,
+      "recordGuid": "01a07605-a609-7752-9943-a4803b5fd2d2",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a609-7bd9-867e-3acb4f8e0f4f",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "releve_coffre_refus",
+      "isHidden": false,
+      "recordGuid": "01a07605-a60f-76e6-aee7-70f0b9dbd8c2",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a60f-7350-961c-d579528588ea",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "porteur",
+      "isHidden": false,
+      "recordGuid": "01a07605-a614-7034-99b9-9cfbb29a4d8f",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a614-7e32-a6ab-2a560360482a",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "parts_en_circulation",
+      "isHidden": false,
+      "recordGuid": "01a07605-a619-785c-beb3-3d9b02d76d0a",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a619-73c6-b8e5-f8f49e04c8dd",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "mouvement_porteur",
+      "isHidden": false,
+      "recordGuid": "01a07605-a61e-7638-a574-387bf2a934ef",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a61e-7960-b8be-0cea93ac1048",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    },
+    {
+      "displayName": "eligibilite_participation",
+      "isHidden": false,
+      "recordGuid": "01a07605-a623-7477-af21-cc4c0ff0ff5d",
+      "sheetType": "POWERTABLE",
+      "workloadItemEntityVisuals": [
+        {
+          "isEmbedded": false,
+          "visualId": "01a07605-a623-7556-9293-70e95453a129",
+          "visualType": "POWERTABLE"
+        }
+      ]
+    }
+  ],
+  "workloadItemName": "OPCI - Client-et-collecte"
+}

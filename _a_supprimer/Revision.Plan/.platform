@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Plan",
+    "displayName": "Revision",
+    "description": "Coquille destinee a la mesure de consommation des sessions PowerTable sur capacite F2. Tache 8 du plan, arbitrage A4."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a14fd9c1-550d-b6aa-420e-1576a4cdd767"
+  }
+}

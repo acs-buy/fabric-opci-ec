@@ -1,0 +1,64 @@
+/// La publication au client : le visa de cloture qui ouvre la porte, et la date a laquelle le modele a ete rafraichi sur ce visa. Script 142.
+table v_client_publication
+	lineageTag: f463edf6-2c87-482c-8577-96e0eed74152
+
+	/// La date de publication au client, pour le bandeau ; « non publie » tant que le pipeline n'a pas marque l'arrete.
+	measure 'Publie le' = VAR d = MAX ( v_client_publication[publiee_le] ) RETURN IF ( ISBLANK ( d ), "non publié", FORMAT ( d, "dd/mm/yyyy hh:nn" ) )
+		lineageTag: 20a9cbcb-fbe8-44c0-a589-85ce6903f438
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		lineageTag: cde0b1c4-38b6-4b23-b536-d647f64d98e7
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: 135378bc-af2d-4763-8138-f4e833dabdc5
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		lineageTag: b66ff76c-7dc6-4fa0-94eb-1f85ee16db7b
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column cloture_visee_le
+		dataType: dateTime
+		formatString: dd/mm/yyyy hh:nn
+		lineageTag: 4437edf0-df57-4e82-af67-0a0a987ea542
+		summarizeBy: none
+		sourceColumn: cloture_visee_le
+
+	column cloture_visee_par
+		dataType: string
+		lineageTag: b6c05db7-124c-4c18-a253-9ccb53062c0e
+		summarizeBy: none
+		sourceColumn: cloture_visee_par
+
+	column publiee_le
+		dataType: dateTime
+		formatString: dd/mm/yyyy hh:nn
+		lineageTag: 1ab3a759-3950-4ec2-a1dd-4a9f11e602cb
+		summarizeBy: none
+		sourceColumn: publiee_le
+
+	column publiee_par
+		dataType: string
+		lineageTag: b2f5c9d9-cc5f-484b-83a7-b6c6da67d9d4
+		summarizeBy: none
+		sourceColumn: publiee_par
+
+	partition v_client_publication = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_publication"]}[Data]
+				in
+				    dbo_v
+

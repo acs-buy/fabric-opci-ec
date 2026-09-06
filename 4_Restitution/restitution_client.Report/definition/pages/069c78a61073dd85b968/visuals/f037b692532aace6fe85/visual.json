@@ -1,0 +1,108 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "f037b692532aace6fe85",
+  "position": {
+    "x": 24,
+    "y": 366,
+    "z": 2000,
+    "height": 130,
+    "width": 1232,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_simulation_distribution"
+                    }
+                  },
+                  "Property": "Obligation minimale"
+                }
+              },
+              "queryRef": "v_simulation_distribution.Obligation minimale",
+              "nativeQueryRef": "Obligation minimale"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_simulation_distribution"
+                    }
+                  },
+                  "Property": "Plafond distribuable"
+                }
+              },
+              "queryRef": "v_simulation_distribution.Plafond distribuable",
+              "nativeQueryRef": "Plafond distribuable"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_montant_simulable"
+                    }
+                  },
+                  "Property": "Montant simule"
+                }
+              },
+              "queryRef": "v_montant_simulable.Montant simule",
+              "nativeQueryRef": "Montant simule"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "value": [
+        {
+          "properties": {
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "'1'"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "'1'"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
+      ]
+    }
+  }
+}

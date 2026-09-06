@@ -1,0 +1,8 @@
+/// La source unique du modele. Toutes les partitions la referencent, si bien qu'un deploiement vers un autre etage ne remplace qu'un seul endroit. Le modele frere conduite_de_mission repete l'appel dans chaque partition, ce qui exige autant de remplacements que de tables.
+expression 'Source OPCI' =
+		let
+		    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1")
+		in
+		    Source
+	lineageTag: bc8faf6a-da41-4a6c-b68c-53b62fe75b6b
+

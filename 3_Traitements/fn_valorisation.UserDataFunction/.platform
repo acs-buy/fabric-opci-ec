@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "UserDataFunction",
+    "displayName": "fn_valorisation",
+    "description": "Enveloppe mince du paquet moteur_opci, teste unitairement dans le depot. Genere les lots derivables de differences d'estimation."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8263d3fd-618d-9b5a-4a9e-78e78b247953"
+  }
+}

@@ -1,0 +1,98 @@
+/// Les parts detenues par chaque porteur a la date de l'arrete. Elle remplace v_parts_porteur, qui porte un cumul glissant a une ligne par date de mouvement et dont la somme comptait un porteur plusieurs fois. La photographie se prend a la derniere date de valeur de chaque porteur, jamais a une date globale : un porteur sans mouvement dans la periode detient toujours ses parts.
+table v_parts_porteur_courant
+	lineageTag: 525cbe2f-2d2a-4215-9f6f-8eea56eefcd2
+
+	/// La quote-part du montant simule qui revient au porteur, au prorata de ses parts a la date de l'arrete. Le denominateur leve TOUS les filtres de la table des parts, puis reapplique le seul arrete par la dimension : une premiere version ne levait que les colonnes de porteur nommees une a une, et laissait donc passer date_valeur. Eprouve le 03/09/2026 : cette date etant celle du dernier mouvement de CHAQUE porteur, elle differe d'un porteur a l'autre, et la mettre a l'ecran reduisait le denominateur au seul porteur ayant bouge le dernier, la repartition rendant alors 100 800,00 pour un montant simule de 50 400,00. L'affichage arrondit chaque part a 2 decimales, si bien que le total des lignes peut s'ecarter du montant simule de quelques centimes, 1 centime sur le jeu de demonstration : le total du tableau s'affiche par la mesure Montant simule, jamais par la somme des lignes. La regle du residu au porteur detenant le plus de parts s'applique a la resolution d'affectation, pas ici.
+	measure 'Part du porteur' =
+			VAR parts_du_porteur = SUM ( v_parts_porteur_courant[parts_detenues] )
+			VAR parts_totales =
+			    CALCULATE (
+			        SUM ( v_parts_porteur_courant[parts_detenues] ),
+			        REMOVEFILTERS ( v_parts_porteur_courant ),
+			        VALUES ( v_arrete_client[cle_arrete] )
+			    )
+			RETURN
+			    ROUND ( DIVIDE ( parts_du_porteur, parts_totales ) * [Montant simule], 2 )
+		formatString: #,0.00
+		displayFolder: Simulation de distribution
+		lineageTag: 0f02180a-5681-42f4-a470-72b6d244908f
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 7bcb913f-3c10-4053-a958-e6772e3755fd
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: cebdb554-1d63-4e2e-a329-265c2ebd7487
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: c9dad3d1-6d5d-4686-a33d-1421de939a79
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column exercice
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: bcfa463d-7bbb-43d6-b42f-d5b9fc29fc0c
+		summarizeBy: none
+		sourceColumn: exercice
+
+	column porteur_id
+		dataType: int64
+		isHidden
+		isNullable: false
+		lineageTag: 4b717ca3-7630-4306-ae61-6dd62d5a82af
+		summarizeBy: none
+		sourceColumn: porteur_id
+
+	column code
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 1a5908fa-a8bc-4ed0-a763-916b629324ca
+		summarizeBy: none
+		sourceColumn: code
+
+	/// Le porteur, tel qu'il apparait au tableau de repartition.
+	column denomination
+		dataType: string
+		isNullable: false
+		lineageTag: a5e91af9-9e3e-4307-8e8b-83391de16689
+		summarizeBy: none
+		sourceColumn: denomination
+
+	/// La date du dernier mouvement du porteur qui ne depasse pas l'arrete. Elle peut etre anterieure a l'arrete, et elle est vide pour un porteur sans aucun mouvement.
+	column date_valeur
+		dataType: string
+		lineageTag: 389e80c6-1aef-43d7-be28-13c014bf97a8
+		summarizeBy: none
+		sourceColumn: date_valeur
+
+	column parts_detenues
+		dataType: decimal
+		formatString: #,0
+		lineageTag: cbac23de-ac14-4997-8637-51ebe73c50bc
+		summarizeBy: sum
+		sourceColumn: parts_detenues
+
+	partition v_parts_porteur_courant = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v_parts_porteur_courant = Source{[Schema="dbo",Item="v_parts_porteur_courant"]}[Data]
+				in
+				    dbo_v_parts_porteur_courant
+

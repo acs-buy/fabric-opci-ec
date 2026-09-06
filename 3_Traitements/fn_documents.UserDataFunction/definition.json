@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/userDataFunction/definition/1.1.0/schema.json",
+  "runtime": "PYTHON",
+  "connectedDataSources": [
+    {
+      "alias": "Coffre",
+      "artifactId": "4a1d428b-490a-4bdf-813e-5bc1bd5e4e2b",
+      "artifactType": "Lakehouse",
+      "workspaceId": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "alias": "DossierOPCI",
+      "artifactId": "e75236e3-ceab-b437-4253-1d4f3ade2222",
+      "artifactType": "SqlDbNative",
+      "workspaceId": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+  "functions": [
+    {
+      "name": "essai_modele",
+      "description": "",
+      "isPublicEndpointEnabled": true
+    }
+  ],
+  "libraries": {
+    "public": [
+      {
+        "name": "docxtpl",
+        "type": "PYPI",
+        "version": "0.20.2"
+      },
+      {
+        "name": "fabric-user-data-functions",
+        "type": "PYPI",
+        "version": "1.0"
+      }
+    ],
+    "private": []
+  }
+}

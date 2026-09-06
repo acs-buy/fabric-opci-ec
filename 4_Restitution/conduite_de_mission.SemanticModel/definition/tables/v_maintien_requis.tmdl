@@ -1,0 +1,78 @@
+table v_maintien_requis
+	lineageTag: eb81a248-c426-4637-9817-fca79cc52c1f
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e6a1ebfd-0fa3-41fe-a943-87c1c721e0ce
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column dernier_arrete_annuel
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: cf1b95d9-ad3c-4cf8-8161-2ce3008ed62e
+		summarizeBy: none
+		sourceColumn: dernier_arrete_annuel
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut_maintien
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: da76f9dd-0759-4fcb-95d2-c4e1c6334f37
+		summarizeBy: none
+		sourceColumn: statut_maintien
+
+		annotation SummarizationSetBy = Automatic
+
+	column decision
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 09845ada-47d7-4441-9a0e-5729d51755c3
+		summarizeBy: none
+		sourceColumn: decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column approuve_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 54563123-e05b-4e2d-9d1b-7b5c76fbdb42
+		summarizeBy: none
+		sourceColumn: approuve_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column approuve_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: db50836b-cc67-4511-a470-2eba9a441762
+		summarizeBy: none
+		sourceColumn: approuve_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column prochain_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(19)
+		lineageTag: 66214950-aca0-492c-bb2e-e750f9447309
+		summarizeBy: none
+		sourceColumn: prochain_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_maintien_requis = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_maintien_requis = Source{[Schema="dbo",Item="v_maintien_requis"]}[Data]
+				in
+				    dbo_v_maintien_requis
+

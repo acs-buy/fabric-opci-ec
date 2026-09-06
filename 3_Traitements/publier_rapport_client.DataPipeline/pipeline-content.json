@@ -1,0 +1,240 @@
+{
+  "properties": {
+    "description": "Publie le rapport client quand le chef de mission a vise la cloture de l'etape 5 : lit dbo.v_publication_client_a_faire, rafraichit le modele en import, marque la publication. Conception du 06/09/2026, script 142.",
+    "activities": [
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "FabricSqlDatabaseSource",
+            "sqlReaderQuery": "SELECT COUNT(*) AS n FROM dbo.v_publication_client_a_faire;",
+            "partitionOption": "None",
+            "queryTimeout": "00:10:00"
+          },
+          "datasetSettings": {
+            "type": "FabricSqlDatabaseTable",
+            "schema": [],
+            "connectionSettings": {
+              "name": "DossierOPCI",
+              "properties": {
+                "type": "FabricSqlDatabase",
+                "typeProperties": {
+                  "artifactId": "e75236e3-ceab-b437-4253-1d4f3ade2222",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000"
+                },
+                "externalReferences": {
+                  "connection": "1070b324-0607-4a57-bb9a-237611de6964"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": true
+        },
+        "policy": {
+          "timeout": "0.00:30:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "compter_les_arretes_a_publier",
+        "description": "Un arrete est a publier quand son dernier visa de cloture est VISE et qu'aucune publication reussie ni en cours ne porte ce visa.",
+        "dependsOn": []
+      },
+      {
+        "type": "IfCondition",
+        "typeProperties": {
+          "expression": {
+            "value": "@greater(int(activity('compter_les_arretes_a_publier').output.firstRow.n), 0)",
+            "type": "Expression"
+          },
+          "ifTrueActivities": [
+            {
+              "type": "Lookup",
+              "typeProperties": {
+                "source": {
+                  "type": "FabricSqlDatabaseSource",
+                  "sqlReaderQuery": "EXEC dbo.pr_marquer_publication_client N'pipeline publier_rapport_client', 'EN_COURS';",
+                  "partitionOption": "None",
+                  "queryTimeout": "00:10:00"
+                },
+                "datasetSettings": {
+                  "type": "FabricSqlDatabaseTable",
+                  "schema": [],
+                  "connectionSettings": {
+                    "name": "DossierOPCI",
+                    "properties": {
+                      "type": "FabricSqlDatabase",
+                      "typeProperties": {
+                        "artifactId": "e75236e3-ceab-b437-4253-1d4f3ade2222",
+                        "workspaceId": "00000000-0000-0000-0000-000000000000"
+                      },
+                      "externalReferences": {
+                        "connection": "1070b324-0607-4a57-bb9a-237611de6964"
+                      },
+                      "annotations": []
+                    }
+                  },
+                  "annotations": []
+                },
+                "firstRowOnly": true
+              },
+              "policy": {
+                "timeout": "0.00:30:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "ouvrir_la_publication",
+              "description": "Ouvre dans dbo.publication_client une publication EN_COURS pour chaque arrete a publier, AVANT la photographie : le bandeau du client porte ainsi la date de sa propre publication.",
+              "dependsOn": []
+            },
+            {
+              "type": "PBISemanticModelRefresh",
+              "typeProperties": {
+                "method": "POST",
+                "groupId": "3d36cceb-a461-4e21-a285-9e40297fe906",
+                "datasetId": "1cc3e265-228f-4cf3-9f2c-3a03f26f6f8e",
+                "type": "Full",
+                "commitMode": "transactional",
+                "maxParallelism": 2,
+                "retryCount": 1,
+                "waitOnCompletion": true,
+                "operationType": "SemanticModelRefresh"
+              },
+              "externalReferences": {
+                "connection": "176e4b08-d055-4f18-975e-85f8a8fb7128"
+              },
+              "policy": {
+                "timeout": "0.01:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "rafraichir_le_modele_client",
+              "description": "Rafraichit le modele semantique restitution_client, en import : la photographie que le client lit est celle de l'arrete vise.",
+              "dependsOn": [
+                {
+                  "activity": "ouvrir_la_publication",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Lookup",
+              "typeProperties": {
+                "source": {
+                  "type": "FabricSqlDatabaseSource",
+                  "sqlReaderQuery": "EXEC dbo.pr_marquer_publication_client N'pipeline publier_rapport_client', 'PUBLIEE';",
+                  "partitionOption": "None",
+                  "queryTimeout": "00:10:00"
+                },
+                "datasetSettings": {
+                  "type": "FabricSqlDatabaseTable",
+                  "schema": [],
+                  "connectionSettings": {
+                    "name": "DossierOPCI",
+                    "properties": {
+                      "type": "FabricSqlDatabase",
+                      "typeProperties": {
+                        "artifactId": "e75236e3-ceab-b437-4253-1d4f3ade2222",
+                        "workspaceId": "00000000-0000-0000-0000-000000000000"
+                      },
+                      "externalReferences": {
+                        "connection": "1070b324-0607-4a57-bb9a-237611de6964"
+                      },
+                      "annotations": []
+                    }
+                  },
+                  "annotations": []
+                },
+                "firstRowOnly": true
+              },
+              "policy": {
+                "timeout": "0.00:30:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "marquer_la_publication",
+              "description": "Ferme les publications en cours en PUBLIEE : le modele a ete rafraichi sur le visa de cloture.",
+              "dependsOn": [
+                {
+                  "activity": "rafraichir_le_modele_client",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Lookup",
+              "typeProperties": {
+                "source": {
+                  "type": "FabricSqlDatabaseSource",
+                  "sqlReaderQuery": "EXEC dbo.pr_marquer_publication_client N'pipeline publier_rapport_client', 'EN_ECHEC', N'Rafraichissement du modele en echec';",
+                  "partitionOption": "None",
+                  "queryTimeout": "00:10:00"
+                },
+                "datasetSettings": {
+                  "type": "FabricSqlDatabaseTable",
+                  "schema": [],
+                  "connectionSettings": {
+                    "name": "DossierOPCI",
+                    "properties": {
+                      "type": "FabricSqlDatabase",
+                      "typeProperties": {
+                        "artifactId": "e75236e3-ceab-b437-4253-1d4f3ade2222",
+                        "workspaceId": "00000000-0000-0000-0000-000000000000"
+                      },
+                      "externalReferences": {
+                        "connection": "1070b324-0607-4a57-bb9a-237611de6964"
+                      },
+                      "annotations": []
+                    }
+                  },
+                  "annotations": []
+                },
+                "firstRowOnly": true
+              },
+              "policy": {
+                "timeout": "0.00:30:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "marquer_l_echec",
+              "description": "Trace l'echec du rafraichissement : le rapport client porte alors l'etat precedent, et le controle v_controle_publication_en_echec le dit.",
+              "dependsOn": [
+                {
+                  "activity": "rafraichir_le_modele_client",
+                  "dependencyConditions": [
+                    "Failed"
+                  ]
+                }
+              ]
+            }
+          ],
+          "ifFalseActivities": []
+        },
+        "name": "si_un_arrete_est_a_publier",
+        "dependsOn": [
+          {
+            "activity": "compter_les_arretes_a_publier",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
