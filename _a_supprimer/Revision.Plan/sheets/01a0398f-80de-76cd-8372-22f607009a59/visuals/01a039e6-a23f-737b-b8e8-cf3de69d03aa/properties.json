@@ -1,0 +1,3509 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/Planning/Properties/1.0.0/schema.json",
+  "properties": {
+    "advanceLookup": [],
+    "dimension": {
+      "height": 0.4536411111111111,
+      "width": 0.7914875000000001
+    },
+    "layerProperties": {
+      "layerProperties": {
+        "groupIds": [],
+        "isHidden": false,
+        "name": "Table"
+      },
+      "order": 0
+    },
+    "pivotAssignments": [
+      {
+        "bucketId": "rows",
+        "columnName": "ecriture_date",
+        "columnType": "Column",
+        "contents": null,
+        "dataRoleType": "Grouping",
+        "dataType": "DateTime",
+        "formatString": "",
+        "groupDataType": "DateTime",
+        "hierarchyName": "ecriture_date",
+        "id": "ecriture[ecriture_date]",
+        "isFlatHierarchy": true,
+        "isHierarchyItemInMeasure": false,
+        "name": "ecriture_date",
+        "order": 0,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[ecriture_date]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "bucketId": "rows",
+        "columnName": "compte_origine",
+        "columnType": "Column",
+        "contents": null,
+        "dataRoleType": "Grouping",
+        "dataType": "String",
+        "distinctValueCount": null,
+        "formatString": null,
+        "id": "ecriture[compte_origine]",
+        "isFlatHierarchy": false,
+        "isHierarchyItemInMeasure": false,
+        "name": "compte_origine",
+        "order": 1,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[compte_origine]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "bucketId": "rows",
+        "columnName": "compte_lib",
+        "columnType": "Column",
+        "contents": null,
+        "dataRoleType": "Grouping",
+        "dataType": "String",
+        "distinctValueCount": null,
+        "formatString": null,
+        "id": "ecriture[compte_lib]",
+        "isFlatHierarchy": false,
+        "isHierarchyItemInMeasure": false,
+        "name": "compte_lib",
+        "order": 2,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[compte_lib]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "bucketId": "rows",
+        "columnName": "comp_aux_num",
+        "columnType": "Column",
+        "contents": null,
+        "dataRoleType": "Grouping",
+        "dataType": "String",
+        "distinctValueCount": null,
+        "formatString": null,
+        "id": "ecriture[comp_aux_num]",
+        "isFlatHierarchy": false,
+        "isHierarchyItemInMeasure": false,
+        "name": "comp_aux_num",
+        "order": 3,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[comp_aux_num]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "bucketId": "rows",
+        "columnName": "comp_aux_lib",
+        "columnType": "Column",
+        "contents": null,
+        "dataRoleType": "Grouping",
+        "dataType": "String",
+        "distinctValueCount": null,
+        "formatString": null,
+        "id": "ecriture[comp_aux_lib]",
+        "isFlatHierarchy": false,
+        "isHierarchyItemInMeasure": false,
+        "name": "comp_aux_lib",
+        "order": 4,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[comp_aux_lib]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "bucketId": "rows",
+        "columnName": "journal_code",
+        "columnType": "Column",
+        "contents": null,
+        "dataRoleType": "Grouping",
+        "dataType": "String",
+        "distinctValueCount": null,
+        "formatString": null,
+        "id": "ecriture[journal_code]",
+        "isFlatHierarchy": false,
+        "isHierarchyItemInMeasure": false,
+        "name": "journal_code",
+        "order": 5,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[journal_code]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "bucketId": "rows",
+        "columnName": "journal_lib",
+        "columnType": "Column",
+        "contents": null,
+        "dataRoleType": "Grouping",
+        "dataType": "String",
+        "distinctValueCount": null,
+        "formatString": null,
+        "id": "ecriture[journal_lib]",
+        "isFlatHierarchy": false,
+        "isHierarchyItemInMeasure": false,
+        "name": "journal_lib",
+        "order": 6,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[journal_lib]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "bucketId": "rows",
+        "columnName": "ecriture_num",
+        "columnType": "Column",
+        "contents": null,
+        "dataRoleType": "Grouping",
+        "dataType": "String",
+        "distinctValueCount": null,
+        "formatString": null,
+        "id": "ecriture[ecriture_num]",
+        "isFlatHierarchy": false,
+        "isHierarchyItemInMeasure": false,
+        "name": "ecriture_num",
+        "order": 7,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[ecriture_num]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "bucketId": "rows",
+        "columnName": "piece_date",
+        "columnType": "Column",
+        "contents": null,
+        "dataRoleType": "Grouping",
+        "dataType": "DateTime",
+        "formatString": "",
+        "groupDataType": "DateTime",
+        "hierarchyName": "piece_date",
+        "id": "ecriture[piece_date]",
+        "isFlatHierarchy": true,
+        "isHierarchyItemInMeasure": false,
+        "name": "piece_date",
+        "order": 8,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[piece_date]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "bucketId": "rows",
+        "columnName": "ecriture_lib",
+        "columnType": "Column",
+        "contents": null,
+        "dataRoleType": "Grouping",
+        "dataType": "String",
+        "distinctValueCount": null,
+        "formatString": null,
+        "id": "ecriture[ecriture_lib]",
+        "isFlatHierarchy": false,
+        "name": "ecriture_lib",
+        "order": 9,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[ecriture_lib]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "aggregationType": "sum",
+        "bucketId": "ameasure",
+        "columnName": "debit",
+        "columnType": "Column",
+        "contents": null,
+        "customName": "Sum of debit",
+        "dataRoleType": "Measure",
+        "dataType": "Double",
+        "distinctValueCount": null,
+        "formatString": null,
+        "id": "ecriture[debit]",
+        "isFlatHierarchy": false,
+        "measureGuid": "10642855169526972586",
+        "name": "Sum of debit",
+        "order": 0,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[debit]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      },
+      {
+        "aggregationType": "sum",
+        "bucketId": "ameasure",
+        "columnName": "credit",
+        "columnType": "Column",
+        "contents": null,
+        "customName": "Sum of credit",
+        "dataRoleType": "Measure",
+        "dataType": "Double",
+        "distinctValueCount": null,
+        "formatString": null,
+        "id": "ecriture[credit]",
+        "isFlatHierarchy": false,
+        "measureGuid": "10254360185001526142",
+        "name": "Sum of credit",
+        "order": 1,
+        "relationships": [
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "compte_num",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "compte",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ref_compte"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "lot_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "lot_ecritures"
+          },
+          {
+            "crossFilterDirection": "Single",
+            "fromColumn": "ecriture_id",
+            "fromColumnMultiplicity": "*",
+            "fromTable": "ecriture_axe",
+            "isActive": true,
+            "toColumn": "id",
+            "toColumnMultiplicity": "0..1",
+            "toTable": "ecriture"
+          }
+        ],
+        "sourceId": "ecriture[credit]",
+        "sourceType": "PowerTable",
+        "tableName": "ecriture",
+        "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+      }
+    ],
+    "position": {
+      "x": 0.169995,
+      "y": 0.004991944444444445
+    },
+    "splitByCategory": {
+      "pivotValueAssignments": [],
+      "splitByCategoryAssignments": [],
+      "splitByCategoryItems": [],
+      "splitByDelimiter": "-"
+    },
+    "superFilterAssignments": [
+      {
+        "bucketId": "rows",
+        "configuration": {
+          "dateFormat": "defaultFormat",
+          "filterMode": "basic",
+          "filterOperator": "is",
+          "fiscalStartMonth": 0,
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "name": "ecriture_date",
+          "paneWidth": 200,
+          "relativeDate": {
+            "includeToday": false,
+            "period": "",
+            "type": "",
+            "value": 0
+          },
+          "selectAll": true,
+          "selectedPreset": [],
+          "sort": [
+            {
+              "columnId": "ecriture[ecriture_date]",
+              "columnName": "ecriture_date",
+              "direction": "ASC",
+              "id": "ecriture[ecriture_date]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "DATE"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677857993_es8de9du5",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": false,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "ecriture_date",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "DateTime",
+            "distinctValueCount": 0,
+            "formatString": "",
+            "group": "ecriture[ecriture_date]",
+            "groupDataType": "DateTime",
+            "hierarchyName": "ecriture_date",
+            "id": "ecriture[ecriture_date]",
+            "isFlatHierarchy": true,
+            "isHierarchyItemInMeasure": false,
+            "name": "ecriture_date",
+            "order": 0,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[ecriture_date_Year]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "rows",
+        "configuration": {
+          "filterMode": "basic",
+          "filterOperator": "is",
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "measureSearch": true,
+          "name": "compte_origine",
+          "paneWidth": 200,
+          "selectAll": true,
+          "sheetDataItemAggregationType": "sum",
+          "singleSelect": false,
+          "sort": [
+            {
+              "columnId": "ecriture[compte_origine]",
+              "columnName": "compte_origine",
+              "direction": "ASC",
+              "id": "ecriture[compte_origine]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "FACET"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677908819_hhcvyqweb",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": false,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "compte_origine",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[compte_origine]",
+            "isFlatHierarchy": false,
+            "name": "compte_origine",
+            "order": 1,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[compte_origine]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "rows",
+        "configuration": {
+          "filterMode": "basic",
+          "filterOperator": "is",
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "measureSearch": true,
+          "name": "compte_lib",
+          "paneWidth": 200,
+          "selectAll": true,
+          "sheetDataItemAggregationType": "sum",
+          "singleSelect": false,
+          "sort": [
+            {
+              "columnId": "ecriture[compte_lib]",
+              "columnName": "compte_lib",
+              "direction": "ASC",
+              "id": "ecriture[compte_lib]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "FACET"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677912434_0u708f9tj",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": false,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "compte_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[compte_lib]",
+            "isFlatHierarchy": false,
+            "name": "compte_lib",
+            "order": 2,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[compte_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "rows",
+        "configuration": {
+          "filterMode": "basic",
+          "filterOperator": "is",
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "measureSearch": true,
+          "name": "comp_aux_num",
+          "paneWidth": 200,
+          "selectAll": true,
+          "sheetDataItemAggregationType": "sum",
+          "singleSelect": false,
+          "sort": [
+            {
+              "columnId": "ecriture[comp_aux_num]",
+              "columnName": "comp_aux_num",
+              "direction": "ASC",
+              "id": "ecriture[comp_aux_num]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "FACET"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677913500_6x1t8csp2",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": false,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "comp_aux_num",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[comp_aux_num]",
+            "isFlatHierarchy": false,
+            "name": "comp_aux_num",
+            "order": 3,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[comp_aux_num]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "rows",
+        "configuration": {
+          "filterMode": "basic",
+          "filterOperator": "is",
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "measureSearch": true,
+          "name": "comp_aux_lib",
+          "paneWidth": 200,
+          "selectAll": true,
+          "sheetDataItemAggregationType": "sum",
+          "singleSelect": false,
+          "sort": [
+            {
+              "columnId": "ecriture[comp_aux_lib]",
+              "columnName": "comp_aux_lib",
+              "direction": "ASC",
+              "id": "ecriture[comp_aux_lib]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "FACET"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677914842_py3igy5ri",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": false,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "comp_aux_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[comp_aux_lib]",
+            "isFlatHierarchy": false,
+            "name": "comp_aux_lib",
+            "order": 4,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[comp_aux_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "rows",
+        "configuration": {
+          "filterMode": "basic",
+          "filterOperator": "is",
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "measureSearch": true,
+          "name": "journal_code",
+          "paneWidth": 200,
+          "selectAll": true,
+          "sheetDataItemAggregationType": "sum",
+          "singleSelect": false,
+          "sort": [
+            {
+              "columnId": "ecriture[journal_code]",
+              "columnName": "journal_code",
+              "direction": "ASC",
+              "id": "ecriture[journal_code]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "FACET"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677917706_9i52zxhpl",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": false,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "journal_code",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[journal_code]",
+            "isFlatHierarchy": false,
+            "name": "journal_code",
+            "order": 5,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[journal_code]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "rows",
+        "configuration": {
+          "filterMode": "basic",
+          "filterOperator": "is",
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "measureSearch": true,
+          "name": "journal_lib",
+          "paneWidth": 200,
+          "selectAll": true,
+          "sheetDataItemAggregationType": "sum",
+          "singleSelect": false,
+          "sort": [
+            {
+              "columnId": "ecriture[journal_lib]",
+              "columnName": "journal_lib",
+              "direction": "ASC",
+              "id": "ecriture[journal_lib]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "FACET"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677918434_ktuiprszj",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": false,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "journal_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[journal_lib]",
+            "isFlatHierarchy": false,
+            "name": "journal_lib",
+            "order": 6,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[journal_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "rows",
+        "configuration": {
+          "filterMode": "basic",
+          "filterOperator": "is",
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "measureSearch": true,
+          "name": "ecriture_num",
+          "paneWidth": 200,
+          "selectAll": true,
+          "sheetDataItemAggregationType": "sum",
+          "singleSelect": false,
+          "sort": [
+            {
+              "columnId": "ecriture[ecriture_num]",
+              "columnName": "ecriture_num",
+              "direction": "ASC",
+              "id": "ecriture[ecriture_num]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "FACET"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677919094_k5p50fnwo",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": false,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "ecriture_num",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[ecriture_num]",
+            "isFlatHierarchy": false,
+            "name": "ecriture_num",
+            "order": 7,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[ecriture_num]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "rows",
+        "configuration": {
+          "dateFormat": "defaultFormat",
+          "filterMode": "basic",
+          "filterOperator": "is",
+          "fiscalStartMonth": 0,
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "name": "piece_date",
+          "paneWidth": 200,
+          "relativeDate": {
+            "includeToday": false,
+            "period": "",
+            "type": "",
+            "value": 0
+          },
+          "selectAll": true,
+          "selectedPreset": [],
+          "sort": [
+            {
+              "columnId": "ecriture[piece_date]",
+              "columnName": "piece_date",
+              "direction": "ASC",
+              "id": "ecriture[piece_date]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "DATE"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677927179_hp0ck12go",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": false,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "piece_date",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "DateTime",
+            "distinctValueCount": 0,
+            "formatString": "",
+            "group": "ecriture[piece_date]",
+            "groupDataType": "DateTime",
+            "hierarchyName": "piece_date",
+            "id": "ecriture[piece_date]",
+            "isFlatHierarchy": true,
+            "isHierarchyItemInMeasure": false,
+            "name": "piece_date",
+            "order": 8,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[piece_date_Year]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "rows",
+        "configuration": {
+          "filterMode": "basic",
+          "filterOperator": "is",
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "measureSearch": true,
+          "name": "ecriture_lib",
+          "paneWidth": 200,
+          "selectAll": true,
+          "sheetDataItemAggregationType": "sum",
+          "singleSelect": false,
+          "sort": [
+            {
+              "columnId": "ecriture[ecriture_lib]",
+              "columnName": "ecriture_lib",
+              "direction": "ASC",
+              "id": "ecriture[ecriture_lib]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "FACET"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677930255_72365c2g9",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": false,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "ecriture_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[ecriture_lib]",
+            "isFlatHierarchy": false,
+            "name": "ecriture_lib",
+            "order": 9,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[ecriture_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "ameasure",
+        "configuration": {
+          "alphaNumericValues": {
+            "equalValue": null,
+            "maxValue": null,
+            "minValue": null
+          },
+          "enableNumericToFacet": false,
+          "filterMode": "advanced",
+          "filterOperator": "between",
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "measureSearch": true,
+          "name": "Sum of debit",
+          "paneWidth": 200,
+          "regex": "",
+          "scale": "none",
+          "selectAll": true,
+          "sheetDataItemAggregationType": "sum",
+          "singleSelect": false,
+          "slider": false,
+          "sort": [
+            {
+              "columnId": "ecriture[debit]",
+              "columnName": "debit",
+              "direction": "ASC",
+              "id": "ecriture[debit]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "NUMERIC"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677931728_l0od4vob0",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": true,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "ecriture_date",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "DateTime",
+            "formatString": "",
+            "groupDataType": "DateTime",
+            "hierarchyName": "ecriture_date",
+            "id": "ecriture[ecriture_date]",
+            "isFlatHierarchy": true,
+            "isHierarchyItemInMeasure": false,
+            "name": "ecriture_date",
+            "order": 0,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[ecriture_date]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "compte_origine",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[compte_origine]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "compte_origine",
+            "order": 1,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[compte_origine]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "compte_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[compte_lib]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "compte_lib",
+            "order": 2,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[compte_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "comp_aux_num",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[comp_aux_num]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "comp_aux_num",
+            "order": 3,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[comp_aux_num]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "comp_aux_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[comp_aux_lib]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "comp_aux_lib",
+            "order": 4,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[comp_aux_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "journal_code",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[journal_code]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "journal_code",
+            "order": 5,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[journal_code]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "journal_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[journal_lib]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "journal_lib",
+            "order": 6,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[journal_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "ecriture_num",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[ecriture_num]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "ecriture_num",
+            "order": 7,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[ecriture_num]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "piece_date",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "DateTime",
+            "formatString": "",
+            "groupDataType": "DateTime",
+            "hierarchyName": "piece_date",
+            "id": "ecriture[piece_date]",
+            "isFlatHierarchy": true,
+            "isHierarchyItemInMeasure": false,
+            "name": "piece_date",
+            "order": 8,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[piece_date]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "ecriture_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[ecriture_lib]",
+            "isFlatHierarchy": false,
+            "name": "ecriture_lib",
+            "order": 9,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[ecriture_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "aggregationType": "sum",
+            "bucketId": "ameasure",
+            "columnName": "debit",
+            "columnType": "Column",
+            "contents": null,
+            "customName": "Sum of debit",
+            "dataRoleType": "Measure",
+            "dataType": "Double",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[debit]",
+            "isFlatHierarchy": false,
+            "name": "Sum of debit",
+            "order": 0,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[debit]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      },
+      {
+        "bucketId": "ameasure",
+        "configuration": {
+          "alphaNumericValues": {
+            "equalValue": null,
+            "maxValue": null,
+            "minValue": null
+          },
+          "enableNumericToFacet": false,
+          "filterMode": "advanced",
+          "filterOperator": "between",
+          "hide": false,
+          "isExpanded": false,
+          "locked": false,
+          "measureSearch": true,
+          "name": "Sum of credit",
+          "paneWidth": 200,
+          "regex": "",
+          "scale": "none",
+          "selectAll": true,
+          "sheetDataItemAggregationType": "sum",
+          "singleSelect": false,
+          "slider": false,
+          "sort": [
+            {
+              "columnId": "ecriture[credit]",
+              "columnName": "credit",
+              "direction": "ASC",
+              "id": "ecriture[credit]",
+              "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+            }
+          ],
+          "toolBarTrigger": false,
+          "topN": {
+            "displayOthers": true,
+            "otherLabel": "Others",
+            "rankMeasure": "",
+            "rankMeasureLabel": "",
+            "rankMode": "TOP",
+            "rankType": "value",
+            "rankValue": 5
+          },
+          "visualType": "NUMERIC"
+        },
+        "filter": [],
+        "filterLevel": "visual",
+        "id": "filter_1787677932505_c49t28l3w",
+        "isDaxMeasure": false,
+        "isDefault": true,
+        "isDefaultMeasure": true,
+        "pivotAssignments": [
+          {
+            "bucketId": "rows",
+            "columnName": "ecriture_date",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "DateTime",
+            "formatString": "",
+            "groupDataType": "DateTime",
+            "hierarchyName": "ecriture_date",
+            "id": "ecriture[ecriture_date]",
+            "isFlatHierarchy": true,
+            "isHierarchyItemInMeasure": false,
+            "name": "ecriture_date",
+            "order": 0,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[ecriture_date]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "compte_origine",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[compte_origine]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "compte_origine",
+            "order": 1,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[compte_origine]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "compte_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[compte_lib]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "compte_lib",
+            "order": 2,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[compte_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "comp_aux_num",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[comp_aux_num]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "comp_aux_num",
+            "order": 3,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[comp_aux_num]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "comp_aux_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[comp_aux_lib]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "comp_aux_lib",
+            "order": 4,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[comp_aux_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "journal_code",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[journal_code]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "journal_code",
+            "order": 5,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[journal_code]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "journal_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[journal_lib]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "journal_lib",
+            "order": 6,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[journal_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "ecriture_num",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[ecriture_num]",
+            "isFlatHierarchy": false,
+            "isHierarchyItemInMeasure": false,
+            "name": "ecriture_num",
+            "order": 7,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[ecriture_num]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "piece_date",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "DateTime",
+            "formatString": "",
+            "groupDataType": "DateTime",
+            "hierarchyName": "piece_date",
+            "id": "ecriture[piece_date]",
+            "isFlatHierarchy": true,
+            "isHierarchyItemInMeasure": false,
+            "name": "piece_date",
+            "order": 8,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[piece_date]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "bucketId": "rows",
+            "columnName": "ecriture_lib",
+            "columnType": "Column",
+            "contents": null,
+            "dataRoleType": "Grouping",
+            "dataType": "String",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[ecriture_lib]",
+            "isFlatHierarchy": false,
+            "name": "ecriture_lib",
+            "order": 9,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[ecriture_lib]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          },
+          {
+            "aggregationType": "sum",
+            "bucketId": "ameasure",
+            "columnName": "credit",
+            "columnType": "Column",
+            "contents": null,
+            "customName": "Sum of credit",
+            "dataRoleType": "Measure",
+            "dataType": "Double",
+            "distinctValueCount": null,
+            "formatString": null,
+            "id": "ecriture[credit]",
+            "isFlatHierarchy": false,
+            "name": "Sum of credit",
+            "order": 1,
+            "relationships": [
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "compte_num",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "compte",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ref_compte"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "lot_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "lot_ecritures"
+              },
+              {
+                "crossFilterDirection": "Single",
+                "fromColumn": "ecriture_id",
+                "fromColumnMultiplicity": "*",
+                "fromTable": "ecriture_axe",
+                "isActive": true,
+                "toColumn": "id",
+                "toColumnMultiplicity": "0..1",
+                "toTable": "ecriture"
+              }
+            ],
+            "sourceId": "ecriture[credit]",
+            "sourceType": "PowerTable",
+            "tableName": "ecriture",
+            "visualId": "01a03993-bebf-75bc-9e80-69ccbf287c90"
+          }
+        ],
+        "position": "RIGHT"
+      }
+    ],
+    "visualState": {
+      "auto_fit_options": {
+        "autoFit": false,
+        "bestFit": false,
+        "lockColumnWidth": true,
+        "uniformColumnWidth": null,
+        "wrapCols": false
+      },
+      "columnDimensions": [],
+      "columnMeta": {
+        "1353383270806883812": {
+          "width": 120
+        },
+        "16735836733707781875": {
+          "width": 120
+        },
+        "1691269838300259502": {
+          "width": 120
+        },
+        "8651161817539264210": {
+          "width": 120
+        }
+      },
+      "commentsNotes": {
+        "commentsMap": {},
+        "createMode": false,
+        "creationType": "NOTES",
+        "globalNoteSettings": {
+          "floatSettings": {
+            "arrowColor": "#616161",
+            "arrowEnd": "arrow",
+            "arrowStyle": "solid",
+            "arrowWidth": 1,
+            "borderColor": "#E0E0E0",
+            "borderStyle": "solid",
+            "borderWidth": 1,
+            "displayNoteAs": "markerText",
+            "dragLineType": "line",
+            "horizontalAlign": "start",
+            "shape": "rect",
+            "verticalAlign": "start"
+          },
+          "footNotes": {
+            "footNoteColumn": 3,
+            "footNoteHeight": 15
+          },
+          "hideAllNotes": false,
+          "indicator": {
+            "color": "#117865",
+            "fontSize": 12,
+            "position": "LEFT",
+            "size": 16,
+            "type": "number"
+          }
+        },
+        "modCommentaryId": "",
+        "noteCreateIndex": 1,
+        "tempIdMap": {}
+      },
+      "embeddedSuperFilter": {
+        "superFilterAssignments": [
+          {
+            "filter": [
+              {
+                "columnDataType": [
+                  "String"
+                ],
+                "columnIds": [
+                  "ref_entite[denomination]"
+                ],
+                "columnNames": [
+                  "denomination"
+                ],
+                "columnType": [
+                  "Column"
+                ],
+                "dataType": [
+                  "string"
+                ],
+                "filterType": "VALUES",
+                "sourceType": [
+                  "PowerTable"
+                ],
+                "tableNames": [
+                  "ref_entite"
+                ],
+                "valuesFilter": [
+                  {
+                    "id": [
+                      "OPCI OMEGA (cas construit)"
+                    ],
+                    "label": [
+                      "OPCI OMEGA (cas construit)"
+                    ]
+                  }
+                ],
+                "valuesFilterApplicationType": "include"
+              }
+            ]
+          }
+        ]
+      },
+      "filterContextHashMap": {
+        "dbc4ea4764": {
+          "ref_entite.denomination": [
+            "OPCI OMEGA (cas construit)"
+          ]
+        }
+      },
+      "filterContextProperties": {
+        "filterContextDimensions": [],
+        "filterContextHash": null,
+        "filterContextHashMap": {},
+        "filterContextJson": {}
+      },
+      "fiscal_config": null,
+      "globalStyles": {
+        "blankColumnLabel": "(Blank)",
+        "blankRowLabel": "(Blank)",
+        "chartScale": "universal",
+        "columnHierarchyFontStyle": "normal",
+        "columnHierarchyFontWeight": "normal",
+        "fontFamily": "\"Segoe UI\", wf_segoe-ui_normal, helvetica, arial, sans-serif",
+        "fontSize": "14",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "headerFontColor": "#333333",
+        "headerFontSize": "14px",
+        "headerFormat": false,
+        "headerHeight": 30,
+        "headerLabelOrient": "initial",
+        "hierarchyFontStyle": "normal",
+        "hierarchyfontWeight": "bold",
+        "isHeightUpdatedManually": false,
+        "kpiFontSize": 45,
+        "rowHeight": 26,
+        "showRowLabelEditor": false,
+        "subTotalFontWeight": "semiBold",
+        "textColor": "#333333",
+        "variableColor": "#0078D4",
+        "varianceBarFont": 12
+      },
+      "gridStyles": {
+        "bottomSpace": 0,
+        "categoryLabelColor": "#DDDDDD",
+        "chartSpacing": true,
+        "columnSpacing": "off",
+        "columnSpacingValue": 5,
+        "compactSplitLine": true,
+        "compactSplitLineColor": "#A6A6A6",
+        "direction": "ltr",
+        "enableCategoryLabelColor": false,
+        "gridBackground": "#FFFFFF",
+        "gridBorderLineColor": "#A6A6A6",
+        "gridBorderLinePosition": null,
+        "gridBorderLineStyle": "solid",
+        "gridBorderLineWidth": 0,
+        "headerGridLines": true,
+        "horizontalMinorGridColor": "#E6E6E6",
+        "horizontalMinorGridLines": "dotted",
+        "indentSpacing": 10,
+        "isLevelIndent": false,
+        "leftSpace": 0,
+        "lineStyleColor": "#666666",
+        "lineStyleFormat": "solid",
+        "majorGridColor": "#A6A6A6",
+        "majorGridLines": "double",
+        "rightSpace": 0,
+        "showColumnExpandCollapse": false,
+        "showExpandCollapse": true,
+        "showVAHighlight": true,
+        "titleAndChartSpace": 4,
+        "topSpace": 0,
+        "verticalMinorGridColor": "#E6E6E6",
+        "verticalMinorGridLines": "solid"
+      },
+      "layoutSizes": {
+        "bulletWidth": 300,
+        "chartWidth": 150,
+        "isMaximumChartWidthAllowed": false,
+        "isResponsive": false,
+        "labelWidth": 120,
+        "maximumChartWidth": 200,
+        "preferedWidthSelection": "measure",
+        "tableWidth": 80
+      },
+      "locale": "en-US",
+      "manage_measures": [
+        {
+          "id": "10642855169526972586",
+          "label": "Sum of debit",
+          "order": 0,
+          "visible": true,
+          "width": 0
+        },
+        {
+          "id": "10254360185001526142",
+          "label": "Sum of credit",
+          "order": 1,
+          "visible": true,
+          "width": 0
+        }
+      ],
+      "manage_rows": [
+        {
+          "id": "3372249217078544945",
+          "visible": true
+        },
+        {
+          "id": "17226026597014548598",
+          "visible": true
+        },
+        {
+          "id": "12730623536951378827",
+          "visible": true
+        },
+        {
+          "id": "17029710775177810109",
+          "visible": true
+        },
+        {
+          "id": "655962478931970704",
+          "visible": true
+        },
+        {
+          "id": "17171639847355083002",
+          "visible": true
+        },
+        {
+          "id": "9203304776806895369",
+          "visible": true
+        },
+        {
+          "id": "12976500423769612397",
+          "visible": true
+        },
+        {
+          "id": "14603629218903482366",
+          "visible": true
+        },
+        {
+          "id": "1944135867140141135",
+          "visible": true
+        }
+      ],
+      "miscellaneous": {
+        "enableFooter": true,
+        "enableReadViewBookmarking": false,
+        "featureFlags": "",
+        "footerText": "inforiver.com",
+        "footerUrl": "https://inforiver.com/",
+        "hideOnReadMode": false,
+        "isUserChangedFooter": false,
+        "pinIcon": "solid",
+        "showInfoRiverLogo": true,
+        "showTooltip": true
+      },
+      "notes": {
+        "customIcon": "CIRCLE_FILL",
+        "footNote": {
+          "footNoteColumn": 3,
+          "footNoteHeight": 15
+        },
+        "indicator": {
+          "color": "#117865",
+          "indicatorPositions": [
+            "left",
+            "center"
+          ],
+          "indicatorType": "numbered",
+          "size": 16
+        },
+        "markerSettings": {
+          "color": "red",
+          "strokeType": "solid",
+          "strokeWidth": 2,
+          "style": "freestyle"
+        },
+        "noteCreateIndex": 0,
+        "notes": [],
+        "persistProperties": {
+          "bgColor": "rgba(255,255,255,0.9)",
+          "borderColor": "rgba(3,169,244,0.7)",
+          "displayOptions": "4",
+          "iconColor": "rgb(18, 120, 100)",
+          "iconSize": "14",
+          "indicatorIcon": "CIRCLE_FILL",
+          "lineColor": "rgba(3,169,244,0.7)"
+        },
+        "reportSummaryNote": null,
+        "show": true
+      },
+      "numberFormatting": {
+        "billions": "b",
+        "billionsFullText": "in Billions",
+        "billionsMediumText": "in b",
+        "customNullText": "",
+        "customZeroText": "",
+        "customizeScalingLabel": false,
+        "decimalSeperator": ".",
+        "dlCustomScalingFactor": "none",
+        "dlFlexibleScalingFactor": "auto",
+        "dlIBCSNoOfDecimal": 0,
+        "enableDataLabelFormatting": true,
+        "enablePrefixAsUnit": true,
+        "enableSuffixAsUnit": false,
+        "enabled": true,
+        "formatType": "ibcs",
+        "ibcsformat": true,
+        "millions": "m",
+        "millionsFullText": "in Millions",
+        "millionsMediumText": "in m",
+        "negativeValueColor": "#FF000A",
+        "negativeValueFormat": "-x",
+        "neutralValueColor": "#B3B3B3",
+        "noOfDecimal": 1,
+        "noOfDecimalPercent": 2,
+        "positiveValueColor": "#82BA00",
+        "positiveValueFormat": "x",
+        "prefix": "",
+        "scalingFactor": "autoFixed",
+        "scalingTextType": "Full",
+        "semanticFormatting": false,
+        "showDataLabel": true,
+        "showNegativeSign": false,
+        "showNullAs": "blank",
+        "showPercentageSymbol": false,
+        "showScalingUnit": false,
+        "showTooltipAsUnit": false,
+        "showTooltipDecimal": false,
+        "showZeroAs": "zero",
+        "suffix": "",
+        "thousandSeperator": ",",
+        "thousands": "k",
+        "thousandsFullText": "in Thousands",
+        "thousandsMediumText": "in k",
+        "tooltipDecimal": "1",
+        "trillion": "t",
+        "trillionFullText": "in Trillions",
+        "trillionMediumText": "in t"
+      },
+      "page_config": {
+        "column_break": null,
+        "pagination_type": {
+          "ContainerHeight": 0
+        },
+        "view": "Browser"
+      },
+      "pagination": {
+        "autoRowCount": "hide",
+        "currentPageNumber": 0,
+        "enable": false,
+        "pageNo": 0,
+        "pageRowCount": 10,
+        "paginationHeight": 20,
+        "view": "browser"
+      },
+      "ranking_config": {
+        "exemptions": {},
+        "others_title": "Others",
+        "rank_rules": [],
+        "show_category_suffix": false,
+        "show_others": true
+      },
+      "rowDimensions": [
+        {
+          "externalKey": "ecriture[ecriture_date]",
+          "id": "3372249217078544945",
+          "isNative": true,
+          "label": "ecriture_date"
+        },
+        {
+          "externalKey": "ecriture[compte_origine]",
+          "id": "17226026597014548598",
+          "isNative": true,
+          "label": "compte_origine"
+        },
+        {
+          "externalKey": "ecriture[compte_lib]",
+          "id": "12730623536951378827",
+          "isNative": true,
+          "label": "compte_lib"
+        },
+        {
+          "externalKey": "ecriture[comp_aux_num]",
+          "id": "17029710775177810109",
+          "isNative": true,
+          "label": "comp_aux_num"
+        },
+        {
+          "externalKey": "ecriture[comp_aux_lib]",
+          "id": "655962478931970704",
+          "isNative": true,
+          "label": "comp_aux_lib"
+        },
+        {
+          "externalKey": "ecriture[journal_code]",
+          "id": "17171639847355083002",
+          "isNative": true,
+          "label": "journal_code"
+        },
+        {
+          "externalKey": "ecriture[journal_lib]",
+          "id": "9203304776806895369",
+          "isNative": true,
+          "label": "journal_lib"
+        },
+        {
+          "externalKey": "ecriture[ecriture_num]",
+          "id": "12976500423769612397",
+          "isNative": true,
+          "label": "ecriture_num"
+        },
+        {
+          "externalKey": "ecriture[piece_date]",
+          "id": "14603629218903482366",
+          "isNative": true,
+          "label": "piece_date"
+        },
+        {
+          "externalKey": "ecriture[ecriture_lib]",
+          "id": "1944135867140141135",
+          "isNative": true,
+          "label": "ecriture_lib"
+        }
+      ],
+      "row_expand_state_config": {
+        "expand_till_descendant": {},
+        "grid_state": {
+          "Grid": "Expanded"
+        },
+        "max_level": null,
+        "rows": {
+          "16017913890930171270": "Expanded"
+        }
+      },
+      "ruler": {
+        "activeSummaryGroup": null,
+        "disabled": {
+          "prevEnabledState": null,
+          "state": false
+        },
+        "enabled": false,
+        "rulerMeta": {
+          "loading": false,
+          "showNumbers": false,
+          "width": 20
+        }
+      },
+      "scaleDelta": {
+        "height": 0,
+        "scale": 0.95,
+        "width": 0
+      },
+      "signDisplayOptions": {
+        "hide_result_sign": false,
+        "show_category_sign": false,
+        "show_positive_sign": false
+      },
+      "themeColors": {
+        "chartTheme": "trafficlights",
+        "enableRowHover": "rowAlternate",
+        "enableVarianceColor": false,
+        "invertVarianceColor": false,
+        "lineStyleRecentColor": "",
+        "measureOnlyHighlight": false,
+        "negativeColor": "#FF000A",
+        "positiveColor": "#82BA00",
+        "previousThemeType": "trafficlights",
+        "rowEvenColor": "#FFFFFF",
+        "rowHoverColor": "#fafafa",
+        "rowHoverTextColor": "#212121",
+        "rowOddColor": "#F5F5F5",
+        "tableThemeType": false,
+        "themeType": "trafficlights",
+        "valueColor": ""
+      },
+      "toolbar": {
+        "backupState": {},
+        "currentTab": "",
+        "enableHoverToolbar": true,
+        "hideDuplicateReportWarning": false,
+        "isPinned": false,
+        "readViewPin": true,
+        "setCanvasResize": false,
+        "showFloatingToolbar": true,
+        "showForecastTab": false,
+        "showMinimalTabEditMode": true,
+        "showMinimalView": true,
+        "showOnHover": false,
+        "showTabContent": true,
+        "toolbarTheme": "light"
+      },
+      "totalDisplayConfig": {
+        "grandTotalHeight": 10,
+        "subTotalHeight": 1,
+        "totalCustomTitle": {
+          "columnGrandTotalTitle": "Grand Total",
+          "columnSubTotalTitle": "none",
+          "grandTotalTitle": "All",
+          "splitTotalRowSuffix": "Total",
+          "steppedSubTotalText": "Total ",
+          "steppedSubTotalTitle": "none",
+          "totalColumnSuffix": "Total"
+        },
+        "totalsDisplay": {
+          "advancedSteppedLayout": false,
+          "removeSingleChildren": true,
+          "showColumnGTAsTable": true,
+          "showSubTotalsAsTable": false,
+          "showTotalAsTable": true,
+          "showVarSubTotalsAsTable": false,
+          "showVarTotalAsTable": false
+        }
+      },
+      "uiSettings": {
+        "aggregateOption": {
+          "avg": false,
+          "count": false,
+          "max": false,
+          "min": false,
+          "sum": true
+        },
+        "customScroll": false,
+        "dynamicRowIcon": true,
+        "enable": true,
+        "hideExpandLevel": {},
+        "scrollThickness": false,
+        "selectionBorder": true,
+        "showChildCount": false,
+        "showInfoRiverLogo": true,
+        "showRowDescendants": false,
+        "storedColumnTooltip": true
+      },
+      "visualStyles": {
+        "background": {
+          "backgroundColor": "#FFFFFF",
+          "isEnabled": true
+        },
+        "border": {
+          "color": "#DDDDDD",
+          "isEnabled": false,
+          "side": "all",
+          "width": 1
+        },
+        "cornerRadius": {
+          "isCustomCornerRadius": false,
+          "isEnabled": true,
+          "radiusBottomLeft": 0,
+          "radiusBottomRight": 0,
+          "radiusTopLeft": 0,
+          "radiusTopRight": 0
+        },
+        "isTooltipEnabled": true,
+        "padding": {
+          "bottomPadding": 5,
+          "isCustomPaddingSize": false,
+          "isEnabled": true,
+          "leftPadding": 5,
+          "rightPadding": 5,
+          "topPadding": 5
+        },
+        "rotation": {
+          "isEnabled": false,
+          "transform": 0
+        },
+        "shadow": {
+          "angle": 135,
+          "blur": 8,
+          "color": "#0000003f",
+          "distance": 10,
+          "isEnabled": false,
+          "opacity": 100,
+          "placement": "outer",
+          "side": "bottom",
+          "width": 0
+        },
+        "showHelperTooltips": true,
+        "showSelectedSeriesInTooltip": false,
+        "tooltipPageId": "auto",
+        "tooltipStyle": {
+          "backgroundColor": "#FFFFFF",
+          "bold": false,
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "italic": false,
+          "labelColor": "#252423",
+          "underline": false,
+          "valueColor": "#252423"
+        },
+        "tooltipType": "default",
+        "varianceInTooltip": true,
+        "varianceTooltipType": "both"
+      }
+    },
+    "visualStyles": {
+      "background": {
+        "backgroundColor": "#FFFFFF",
+        "isEnabled": true
+      },
+      "border": {
+        "color": "#DDDDDD",
+        "isEnabled": false,
+        "side": "all",
+        "width": 1
+      },
+      "cornerRadius": {
+        "isCustomCornerRadius": false,
+        "isEnabled": true,
+        "radiusBottomLeft": 0,
+        "radiusBottomRight": 0,
+        "radiusTopLeft": 0,
+        "radiusTopRight": 0
+      },
+      "isTooltipEnabled": true,
+      "padding": {
+        "bottomPadding": 5,
+        "isCustomPaddingSize": false,
+        "isEnabled": true,
+        "leftPadding": 5,
+        "rightPadding": 5,
+        "topPadding": 5
+      },
+      "rotation": {
+        "isEnabled": false,
+        "transform": 0
+      },
+      "shadow": {
+        "angle": 135,
+        "blur": 8,
+        "color": "#0000003f",
+        "distance": 10,
+        "isEnabled": false,
+        "opacity": 100,
+        "placement": "outer",
+        "side": "bottom",
+        "width": 0
+      },
+      "showHelperTooltips": true,
+      "showSelectedSeriesInTooltip": false,
+      "tooltipPageId": "auto",
+      "tooltipStyle": {
+        "backgroundColor": "#FFFFFF",
+        "bold": false,
+        "fontFamily": "Segoe UI",
+        "fontSize": 12,
+        "italic": false,
+        "labelColor": "#252423",
+        "underline": false,
+        "valueColor": "#252423"
+      },
+      "tooltipType": "default",
+      "varianceInTooltip": true,
+      "varianceTooltipType": "both"
+    },
+    "visualType": 15
+  }
+}

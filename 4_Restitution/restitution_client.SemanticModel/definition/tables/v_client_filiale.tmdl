@@ -1,0 +1,124 @@
+/// Les participations, filiale par filiale : capitaux propres, differences d'estimation, actif net reevalue, quote-part, valeur actuelle et cout des titres. Script 141.
+table v_client_filiale
+	lineageTag: 99e50d31-8c10-4450-9ff4-a8bbba60ebf3
+
+	measure 'Filiales detenues' = COUNTROWS ( v_client_filiale )
+		formatString: #,0
+		lineageTag: 3a3cff81-e103-4260-8158-435cd39b5a1c
+
+	measure 'Total valeur actuelle des titres' = SUM ( v_client_filiale[Valeur actuelle des titres] )
+		formatString: #,0.00
+		lineageTag: a5c0395e-c9d7-49f5-8636-7494975fe4dc
+
+	measure 'Total coût des titres' = SUM ( v_client_filiale[Coût des titres] )
+		formatString: #,0.00
+		lineageTag: b1174826-783f-4c9f-96fb-d228f9d34f98
+
+	measure 'Total différence sur titres' = SUM ( v_client_filiale[Différence sur titres] )
+		formatString: +#,0.00;-#,0.00;0.00
+		lineageTag: 17517684-b067-4e70-9c3d-333039f26987
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		lineageTag: 1f6d898f-da14-4501-88e4-ea94e5c9c872
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: 4b6ceada-a333-4f29-94cc-fe90378452c5
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		lineageTag: e5d78364-9760-4bd4-afd3-25b7b027c54c
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column entite_fille
+		dataType: string
+		lineageTag: 97d864a9-25e1-475f-bd56-daae20103468
+		summarizeBy: none
+		sourceColumn: entite_fille
+
+	column Filiale
+		dataType: string
+		lineageTag: 70f7923b-9249-4b81-bd57-5a6047a0886c
+		summarizeBy: none
+		sourceColumn: filiale
+
+	column 'Capitaux propres'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 2b471ce9-24c5-4e58-978f-eb41941ed22e
+		summarizeBy: none
+		sourceColumn: capitaux_propres_comptables
+
+	column 'Différences d''estimation'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: fc7a5ea9-0f15-4666-9406-ea0bf9ab43f7
+		summarizeBy: none
+		sourceColumn: differences_d_estimation
+
+	column 'Actif net réévalué'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 0f278753-3a9c-40a8-ae1e-619f722a69ef
+		summarizeBy: none
+		sourceColumn: actif_net_reevalue
+
+	column Quote-part
+		dataType: decimal
+		formatString: 0.0 %
+		lineageTag: e93a9c95-cf3a-4851-9fc6-26646addf431
+		summarizeBy: none
+		sourceColumn: quote_part
+
+	column 'Valeur actuelle des titres'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 9b78960a-ab77-4af1-9de0-b75b639cc177
+		summarizeBy: none
+		sourceColumn: valeur_actuelle_titres
+
+	column 'Coût des titres'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 6992f4a8-79d9-406b-baa4-88ca04b6ce68
+		summarizeBy: none
+		sourceColumn: cout_des_titres
+
+	column 'Différence sur titres'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 324d987f-d3e1-490a-b47e-33e7ff150191
+		summarizeBy: none
+		sourceColumn: difference_estimation_titres
+
+	column valeur_comptable_compte_courant
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 39f20cbe-b1e0-4005-9853-4f10a1f12fe8
+		summarizeBy: none
+		sourceColumn: valeur_comptable_compte_courant
+
+	column moins_value_latente
+		dataType: boolean
+		lineageTag: cafc8633-e613-48f0-8a53-a308f557f5ea
+		summarizeBy: none
+		sourceColumn: moins_value_latente
+
+	partition v_client_filiale = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_filiale"]}[Data]
+				in
+				    dbo_v
+

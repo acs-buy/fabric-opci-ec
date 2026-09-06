@@ -1,0 +1,8 @@
+/// Le cloisonnement du client OMEGA-OPCI. Le filtre porte sur ref_entite, d'ou il se propage aux 6 tables qui en dependent et, par porteur, a v_parts_porteur. Un role par client. La securite de niveau ligne ne restreint que les Lecteurs : un membre ou un administrateur de l'espace de travail voit tout.
+role 'Client OMEGA-OPCI'
+	modelPermission: read
+
+	tablePermission ref_entite = [code] = "OMEGA-OPCI"
+
+	annotation PBI_Id = 12db98bfec364dc1b9161aa6b9ce6388
+

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/PowerTable/ColumnConfigs/1.0.0/schema.json",
+  "columnConfigs": [
+    {
+      "allowEdit": 0,
+      "columnGuid": "export_id",
+      "columnMeta": {
+        "allowNegative": true,
+        "dbMeta": {
+          "isCompositeUnique": false,
+          "isIdentity": false,
+          "isNullable": false,
+          "isPrimaryKey": true,
+          "isUnique": true,
+          "maxLength": 4,
+          "type": "int",
+          "uniqueConstraintName": null
+        },
+        "defaultValue": "",
+        "defaultValueType": "NONE",
+        "isPrimaryKey": true,
+        "largeNumberAbbrevation": "",
+        "max": "",
+        "min": "",
+        "negativeValueFormat": "-0",
+        "prefix": "",
+        "resetToDefaultOnRowModify": false,
+        "suffix": "",
+        "thousandSeparator": "",
+        "updateValueOnRowModify": false
+      },
+      "columnName": "export_id",
+      "columnType": 6,
+      "description": "",
+      "displayName": "export_id",
+      "hideColumn": 0,
+      "mandatory": 1,
+      "recordGuid": "01A07605-A5F8-7105-8ECA-CB485F84BE76",
+      "visualColumnType": 1
+    },
+    {
+      "allowEdit": 0,
+      "columnGuid": "lot_id",
+      "columnMeta": {
+        "allowNegative": true,
+        "dbMeta": {
+          "isCompositeUnique": false,
+          "isIdentity": false,
+          "isNullable": false,
+          "isPrimaryKey": true,
+          "isUnique": true,
+          "maxLength": 4,
+          "type": "int",
+          "uniqueConstraintName": null
+        },
+        "defaultValue": "",
+        "defaultValueType": "NONE",
+        "isPrimaryKey": true,
+        "largeNumberAbbrevation": "",
+        "max": "",
+        "min": "",
+        "negativeValueFormat": "-0",
+        "prefix": "",
+        "resetToDefaultOnRowModify": false,
+        "suffix": "",
+        "thousandSeparator": "",
+        "updateValueOnRowModify": false
+      },
+      "columnName": "lot_id",
+      "columnType": 6,
+      "description": "",
+      "displayName": "lot_id",
+      "hideColumn": 0,
+      "mandatory": 1,
+      "recordGuid": "01A07605-A5F8-7076-82B9-E29A75738318",
+      "visualColumnType": 1
+    }
+  ]
+}

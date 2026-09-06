@@ -1,0 +1,2888 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/PowerTable/Properties/1.0.0/schema.json",
+  "properties": {
+    "properties": {
+      "advanceLookup": [],
+      "chartType": "COLUMN_VERTICAL",
+      "dimension": {
+        "height": 0.4,
+        "width": 0.3
+      },
+      "groupMeasureAssignments": [],
+      "groupName": "",
+      "layerProperties": {
+        "order": 0
+      },
+      "lockAspectRatio": false,
+      "mobileProperties": {},
+      "originEntityId": "4",
+      "pivotAssignments": [],
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "preVisualId": "3",
+      "shapeType": "RECTANGLE",
+      "sortingConfig": [],
+      "splitByCategory": {
+        "pivotValueAssignments": [],
+        "splitByCategoryAssignments": [],
+        "splitByCategoryItems": [],
+        "splitByDelimiter": "-"
+      },
+      "superFilterAssignments": [
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "cote",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "cote",
+                "columnName": "cote",
+                "direction": "ASC",
+                "id": "cote"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "cote",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "cote",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "cote",
+              "name": "cote",
+              "order": 0,
+              "sourceId": "cote",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "code",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "cycle",
+                "columnName": "cycle",
+                "direction": "ASC",
+                "id": "cycle"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "cycle",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "cycle",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "cycle",
+              "name": "cycle",
+              "order": 0,
+              "sourceId": "cycle",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "arrete",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "arrete",
+                "columnName": "arrete",
+                "direction": "ASC",
+                "id": "arrete"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "arrete",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "arrete",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "arrete",
+              "name": "arrete",
+              "order": 0,
+              "sourceId": "arrete",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "code",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "entite",
+                "columnName": "entite",
+                "direction": "ASC",
+                "id": "entite"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "entite",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "entite",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "entite",
+              "name": "entite",
+              "order": 0,
+              "sourceId": "entite",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "code",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "modele_code",
+                "columnName": "modele_code",
+                "direction": "ASC",
+                "id": "modele_code"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "modele_code",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "modele_code",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "modele_code",
+              "name": "modele_code",
+              "order": 0,
+              "sourceId": "modele_code",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "origine",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "origine",
+                "columnName": "origine",
+                "direction": "ASC",
+                "id": "origine"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "origine",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "origine",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "origine",
+              "name": "origine",
+              "order": 0,
+              "sourceId": "origine",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "nom_fichier",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "nom_fichier",
+                "columnName": "nom_fichier",
+                "direction": "ASC",
+                "id": "nom_fichier"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "nom_fichier",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "nom_fichier",
+              "columnType": "Column",
+              "dataType": "NVarchar",
+              "id": "nom_fichier",
+              "name": "nom_fichier",
+              "order": 0,
+              "sourceId": "nom_fichier",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "chemin_coffre",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "chemin_coffre",
+                "columnName": "chemin_coffre",
+                "direction": "ASC",
+                "id": "chemin_coffre"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "chemin_coffre",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "chemin_coffre",
+              "columnType": "Column",
+              "dataType": "NVarchar",
+              "id": "chemin_coffre",
+              "name": "chemin_coffre",
+              "order": 0,
+              "sourceId": "chemin_coffre",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "empreinte_sha256",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "empreinte_sha256",
+                "columnName": "empreinte_sha256",
+                "direction": "ASC",
+                "id": "empreinte_sha256"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "empreinte_sha256",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "empreinte_sha256",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "empreinte_sha256",
+              "name": "empreinte_sha256",
+              "order": 0,
+              "sourceId": "empreinte_sha256",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "conclusion",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "conclusion",
+                "columnName": "conclusion",
+                "direction": "ASC",
+                "id": "conclusion"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "conclusion",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "conclusion",
+              "columnType": "Column",
+              "dataType": "NVarchar",
+              "id": "conclusion",
+              "name": "conclusion",
+              "order": 0,
+              "sourceId": "conclusion",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "preparateur",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "preparateur",
+                "columnName": "preparateur",
+                "direction": "ASC",
+                "id": "preparateur"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "preparateur",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "preparateur",
+              "columnType": "Column",
+              "dataType": "NVarchar",
+              "id": "preparateur",
+              "name": "preparateur",
+              "order": 0,
+              "sourceId": "preparateur",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "reviseur",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "reviseur",
+                "columnName": "reviseur",
+                "direction": "ASC",
+                "id": "reviseur"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "reviseur",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "reviseur",
+              "columnType": "Column",
+              "dataType": "NVarchar",
+              "id": "reviseur",
+              "name": "reviseur",
+              "order": 0,
+              "sourceId": "reviseur",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "code",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "phase",
+                "columnName": "phase",
+                "direction": "ASC",
+                "id": "phase"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "phase",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "phase",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "phase",
+              "name": "phase",
+              "order": 0,
+              "sourceId": "phase",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "forme_conclusion",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "forme_conclusion",
+                "columnName": "forme_conclusion",
+                "direction": "ASC",
+                "id": "forme_conclusion"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "forme_conclusion",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "forme_conclusion",
+              "columnType": "Column",
+              "dataType": "String",
+              "id": "forme_conclusion",
+              "name": "forme_conclusion",
+              "order": 0,
+              "sourceId": "forme_conclusion",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        },
+        {
+          "configuration": {
+            "filterMode": "basic",
+            "filterOperator": "is",
+            "hide": false,
+            "isExpanded": false,
+            "locked": false,
+            "name": "conclue_par",
+            "selectAll": true,
+            "selectAllState": "UNSELECTED",
+            "singleSelect": false,
+            "sort": [
+              {
+                "columnId": "conclue_par",
+                "columnName": "conclue_par",
+                "direction": "ASC",
+                "id": "conclue_par"
+              }
+            ],
+            "topN": {
+              "displayOthers": true,
+              "isRankEmptyItems": false,
+              "otherLabel": "Others",
+              "rankMeasure": "",
+              "rankMode": "TOP",
+              "rankType": "value",
+              "rankValue": 5
+            },
+            "visualType": "FACET"
+          },
+          "filter": [],
+          "filterLevel": "visual",
+          "id": "conclue_par",
+          "isDeleted": false,
+          "pivotAssignments": [
+            {
+              "bucketId": "",
+              "columnName": "conclue_par",
+              "columnType": "Column",
+              "dataType": "NVarchar",
+              "id": "conclue_par",
+              "name": "conclue_par",
+              "order": 0,
+              "sourceId": "conclue_par",
+              "sourceType": "powerTables",
+              "tableName": "feuille_travail"
+            }
+          ],
+          "position": "RIGHT"
+        }
+      ],
+      "transformMeasure": "none",
+      "visualInteractions": {},
+      "visualState": {
+        "assignmentColumnMap": {
+          "3": {
+            "arrete": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "chemin_coffre": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "conclue_par": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "conclusion": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "cote": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "cycle": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "empreinte_sha256": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "entite": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "forme_conclusion": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "modele_code": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "nom_fichier": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "origine": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "phase": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "preparateur": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            },
+            "reviseur": {
+              "columnId": "",
+              "label": "",
+              "parentPath": [],
+              "source": "",
+              "sourceId": ""
+            }
+          }
+        },
+        "columnMeta": {
+          "arrete": {
+            "width": 100
+          },
+          "chemin_coffre": {
+            "width": 504.48828125
+          },
+          "conclue_le": {
+            "width": 100
+          },
+          "conclue_par": {
+            "width": 100
+          },
+          "conclusion": {
+            "width": 334.337890625
+          },
+          "cote": {
+            "width": 100
+          },
+          "cycle": {
+            "width": 100
+          },
+          "empreinte_sha256": {
+            "width": 460.267578125
+          },
+          "entite": {
+            "width": 100
+          },
+          "forme_conclusion": {
+            "width": 100
+          },
+          "modele_code": {
+            "width": 100
+          },
+          "nom_fichier": {
+            "width": 277.75390625
+          },
+          "origine": {
+            "width": 100
+          },
+          "phase": {
+            "width": 100
+          },
+          "preparateur": {
+            "width": 100
+          },
+          "prepare_le": {
+            "width": 112.865234375
+          },
+          "revise_le": {
+            "width": 112.865234375
+          },
+          "reviseur": {
+            "width": 100
+          }
+        },
+        "embeddedSuperFilter": {
+          "assignmentColumnMap": {},
+          "incomingFilterAssignments": [],
+          "powerbiSemanticModelDeps": {
+            "datasetId": "",
+            "datasetName": "",
+            "workspaceName": ""
+          },
+          "superFilterAssignments": []
+        },
+        "gridStyles": {
+          "autoWrapHeaderText": false,
+          "bottomSpace": 0,
+          "categoryGridLines": true,
+          "categoryLabelColor": "#DDDDDD",
+          "cellUpdateBackgroundColor": "#E1F5FF",
+          "chartSpacing": true,
+          "columnSpacing": "off",
+          "columnSpacingValue": 5,
+          "compactSplitLine": false,
+          "compactSplitLineColor": "#E0E0E0",
+          "defaultColors": [],
+          "direction": "ltr",
+          "enableCategoryLabelColor": false,
+          "gridBackground": "#FFFFFF",
+          "headerBackground": "#F5F5F5",
+          "headerGridColor": "#E0E0E0",
+          "headerGridLines": true,
+          "headerSelectionBackgroundColor": "#E6E6E6",
+          "horizontalMinorGridColor": "#E0E0E0",
+          "horizontalMinorGridLines": "solid",
+          "iconColor": "#242424",
+          "indentSpacing": 10,
+          "isLevelIndent": false,
+          "leftSpace": 0,
+          "lineStyleColor": "#666666",
+          "lineStyleFormat": "solid",
+          "majorGridColor": "#b0b0b0",
+          "majorGridLines": "off",
+          "placeholderGridBackground": "#FFFFFF",
+          "primaryColors": [
+            "#117865"
+          ],
+          "restrictedCellBackgroundColor": "#F0F0F0",
+          "rightSpace": 0,
+          "rowDeleteBackgroundColor": "#FFEAEB",
+          "rowDraggerLeftOffset": 0,
+          "rowInsertBackgroundColor": "#EDFFEE",
+          "selectionBackgroundColor": "rgba(95, 95, 95, 0.08)",
+          "selectionBorderColor": "#117865",
+          "showExpandCollapse": true,
+          "showVAHighlight": true,
+          "titleAndChartSpace": 4,
+          "topSpace": 0,
+          "verticalMinorGridColor": "#E0E0E0",
+          "verticalMinorGridLines": "solid"
+        },
+        "locale": "en-US",
+        "manageMeasures": [
+          {
+            "id": "cote",
+            "label": "cote",
+            "measureType": "data",
+            "name": "cote",
+            "order": 0,
+            "visible": true
+          },
+          {
+            "id": "cycle",
+            "label": "cycle",
+            "measureType": "data",
+            "name": "cycle",
+            "order": 1,
+            "visible": true
+          },
+          {
+            "id": "arrete",
+            "label": "arrete",
+            "measureType": "data",
+            "name": "arrete",
+            "order": 2,
+            "visible": true
+          },
+          {
+            "id": "entite",
+            "label": "entite",
+            "measureType": "data",
+            "name": "entite",
+            "order": 3,
+            "visible": true
+          },
+          {
+            "id": "modele_code",
+            "label": "modele_code",
+            "measureType": "data",
+            "name": "modele_code",
+            "order": 4,
+            "visible": true
+          },
+          {
+            "id": "origine",
+            "label": "origine",
+            "measureType": "data",
+            "name": "origine",
+            "order": 5,
+            "visible": true
+          },
+          {
+            "id": "nom_fichier",
+            "label": "nom_fichier",
+            "measureType": "data",
+            "name": "nom_fichier",
+            "order": 6,
+            "visible": true
+          },
+          {
+            "id": "chemin_coffre",
+            "label": "chemin_coffre",
+            "measureType": "data",
+            "name": "chemin_coffre",
+            "order": 7,
+            "visible": true
+          },
+          {
+            "id": "empreinte_sha256",
+            "label": "empreinte_sha256",
+            "measureType": "data",
+            "name": "empreinte_sha256",
+            "order": 8,
+            "visible": true
+          },
+          {
+            "id": "conclusion",
+            "label": "conclusion",
+            "measureType": "data",
+            "name": "conclusion",
+            "order": 9,
+            "visible": true
+          },
+          {
+            "id": "preparateur",
+            "label": "preparateur",
+            "measureType": "data",
+            "name": "preparateur",
+            "order": 10,
+            "visible": true
+          },
+          {
+            "id": "prepare_le",
+            "label": "prepare_le",
+            "measureType": "data",
+            "name": "prepare_le",
+            "order": 11,
+            "visible": true
+          },
+          {
+            "id": "reviseur",
+            "label": "reviseur",
+            "measureType": "data",
+            "name": "reviseur",
+            "order": 12,
+            "visible": true
+          },
+          {
+            "id": "revise_le",
+            "label": "revise_le",
+            "measureType": "data",
+            "name": "revise_le",
+            "order": 13,
+            "visible": true
+          },
+          {
+            "id": "phase",
+            "label": "phase",
+            "measureType": "data",
+            "name": "phase",
+            "order": 14,
+            "visible": true
+          },
+          {
+            "id": "forme_conclusion",
+            "label": "forme_conclusion",
+            "measureType": "data",
+            "name": "forme_conclusion",
+            "order": 15,
+            "visible": true
+          },
+          {
+            "id": "conclue_par",
+            "label": "conclue_par",
+            "measureType": "data",
+            "name": "conclue_par",
+            "order": 16,
+            "visible": true
+          },
+          {
+            "id": "conclue_le",
+            "label": "conclue_le",
+            "measureType": "data",
+            "name": "conclue_le",
+            "order": 17,
+            "visible": true
+          }
+        ],
+        "mdmLayout": {
+          "activeLayout": "table",
+          "childHeaderTableControlConfiguration": {},
+          "configuration": null,
+          "ganttViewColVisibility": {},
+          "layoutVisibility": {},
+          "parentApprovalMeta": {},
+          "tableModeColVisibility": {}
+        },
+        "superFilter": {
+          "arrete": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "arrete",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "varchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "arrete",
+              "columnType": 1,
+              "displayName": "arrete",
+              "id": "19",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "arrete",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "arrete",
+                  "columnName": "arrete",
+                  "direction": "ASC",
+                  "id": "arrete"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "chemin_coffre": {
+            "appData": [
+              [
+                "/Coffre/OMEGA-OPCI/2023-12-31/feuilles/IR4-M_titres_et_compte_courant_2023-12-31.xlsx"
+              ],
+              [
+                "/Coffre/OMEGA-SCI-1/2023-12-31/feuilles/IR4-F_capitaux_propres_2023-12-31.xlsx"
+              ],
+              [
+                "/Coffre/SCI-NORD/2025-12-31/feuilles/IMM-01_constructions_2025-12-31.xlsx"
+              ],
+              [
+                "/Coffre/SCI-NORD/2025-12-31/feuilles/IMM-04_differences_estimation_2025-12-31.xlsx"
+              ],
+              [
+                "/Coffre/SCI-NORD/2025-12-31/feuilles/VAL-01_ecarts_estimation_2025-12-31.xlsx"
+              ]
+            ],
+            "columnMeta": {
+              "columnGuid": "chemin_coffre",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "nvarchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "chemin_coffre",
+              "columnType": 1,
+              "displayName": "chemin_coffre",
+              "id": "24",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "chemin_coffre",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "chemin_coffre",
+                  "columnName": "chemin_coffre",
+                  "direction": "ASC",
+                  "id": "chemin_coffre"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": false,
+            "isRefreshingOptions": false,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": [],
+            "totalRecordToFetch": 5
+          },
+          "conclue_par": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "conclue_par",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": true,
+                  "isPrimaryKey": false,
+                  "type": "nvarchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "conclue_par",
+              "columnType": 1,
+              "displayName": "conclue_par",
+              "id": "33",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "conclue_par",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "conclue_par",
+                  "columnName": "conclue_par",
+                  "direction": "ASC",
+                  "id": "conclue_par"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "conclusion": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "conclusion",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": true,
+                  "isPrimaryKey": false,
+                  "type": "nvarchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "conclusion",
+              "columnType": 1,
+              "displayName": "conclusion",
+              "id": "26",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "conclusion",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "conclusion",
+                  "columnName": "conclusion",
+                  "direction": "ASC",
+                  "id": "conclusion"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "cote": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "cote",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": true,
+                  "type": "varchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "cote",
+              "columnType": 1,
+              "displayName": "cote",
+              "id": "17",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "cote",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "cote",
+                  "columnName": "cote",
+                  "direction": "ASC",
+                  "id": "cote"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "cycle": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "cycle",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": true,
+                  "isPrimaryKey": false,
+                  "type": "varchar"
+                },
+                "optionLinking": {
+                  "lookupConfig": [
+                    {
+                      "id": "code",
+                      "label": "code",
+                      "linkingColumn": "cycle",
+                      "order": 0,
+                      "schema": "dbo",
+                      "table": "ref_cycle"
+                    }
+                  ]
+                },
+                "options": [],
+                "selectionMethod": "LOAD_FROM_DATABASE",
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "cycle",
+              "columnType": 2,
+              "displayName": "code",
+              "id": "18",
+              "sourceId": 3,
+              "visualColumnType": 3
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "code",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "cycle",
+                  "columnName": "cycle",
+                  "direction": "ASC",
+                  "id": "cycle"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "empreinte_sha256": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "empreinte_sha256",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "char"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "empreinte_sha256",
+              "columnType": 1,
+              "displayName": "empreinte_sha256",
+              "id": "25",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "empreinte_sha256",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "empreinte_sha256",
+                  "columnName": "empreinte_sha256",
+                  "direction": "ASC",
+                  "id": "empreinte_sha256"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "entite": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "entite",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "varchar"
+                },
+                "optionLinking": {
+                  "lookupConfig": [
+                    {
+                      "id": "code",
+                      "label": "code",
+                      "linkingColumn": "entite",
+                      "order": 0,
+                      "schema": "dbo",
+                      "table": "ref_entite"
+                    }
+                  ]
+                },
+                "options": [],
+                "selectionMethod": "LOAD_FROM_DATABASE",
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "entite",
+              "columnType": 2,
+              "displayName": "code",
+              "id": "20",
+              "sourceId": 3,
+              "visualColumnType": 3
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "code",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "entite",
+                  "columnName": "entite",
+                  "direction": "ASC",
+                  "id": "entite"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "forme_conclusion": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "forme_conclusion",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": true,
+                  "isPrimaryKey": false,
+                  "type": "varchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "forme_conclusion",
+              "columnType": 1,
+              "displayName": "forme_conclusion",
+              "id": "32",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "forme_conclusion",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "forme_conclusion",
+                  "columnName": "forme_conclusion",
+                  "direction": "ASC",
+                  "id": "forme_conclusion"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "modele_code": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "modele_code",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": true,
+                  "isPrimaryKey": false,
+                  "type": "varchar"
+                },
+                "optionLinking": {
+                  "lookupConfig": [
+                    {
+                      "id": "code",
+                      "label": "code",
+                      "linkingColumn": "modele_code",
+                      "order": 0,
+                      "schema": "dbo",
+                      "table": "modele_feuille"
+                    }
+                  ]
+                },
+                "options": [],
+                "selectionMethod": "LOAD_FROM_DATABASE",
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "modele_code",
+              "columnType": 2,
+              "displayName": "code",
+              "id": "21",
+              "sourceId": 3,
+              "visualColumnType": 3
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "code",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "modele_code",
+                  "columnName": "modele_code",
+                  "direction": "ASC",
+                  "id": "modele_code"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "nom_fichier": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "nom_fichier",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "nvarchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "nom_fichier",
+              "columnType": 1,
+              "displayName": "nom_fichier",
+              "id": "23",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "nom_fichier",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "nom_fichier",
+                  "columnName": "nom_fichier",
+                  "direction": "ASC",
+                  "id": "nom_fichier"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "origine": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "origine",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "varchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "origine",
+              "columnType": 1,
+              "displayName": "origine",
+              "id": "22",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "origine",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "origine",
+                  "columnName": "origine",
+                  "direction": "ASC",
+                  "id": "origine"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "phase": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "phase",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": true,
+                  "isPrimaryKey": false,
+                  "type": "varchar"
+                },
+                "optionLinking": {
+                  "lookupConfig": [
+                    {
+                      "id": "code",
+                      "label": "code",
+                      "linkingColumn": "phase",
+                      "order": 0,
+                      "schema": "dbo",
+                      "table": "ref_phase"
+                    }
+                  ]
+                },
+                "options": [],
+                "selectionMethod": "LOAD_FROM_DATABASE",
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "phase",
+              "columnType": 2,
+              "displayName": "code",
+              "id": "31",
+              "sourceId": 3,
+              "visualColumnType": 3
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "code",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "phase",
+                  "columnName": "phase",
+                  "direction": "ASC",
+                  "id": "phase"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "preparateur": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "preparateur",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": false,
+                  "isPrimaryKey": false,
+                  "type": "nvarchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "preparateur",
+              "columnType": 1,
+              "displayName": "preparateur",
+              "id": "27",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "preparateur",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "preparateur",
+                  "columnName": "preparateur",
+                  "direction": "ASC",
+                  "id": "preparateur"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          },
+          "reviseur": {
+            "appData": [],
+            "columnMeta": {
+              "columnGuid": "reviseur",
+              "columnMeta": {
+                "dbMeta": {
+                  "isIdentity": false,
+                  "isNullable": true,
+                  "isPrimaryKey": false,
+                  "type": "nvarchar"
+                },
+                "textFieldColumnType": "Any Value"
+              },
+              "columnName": "reviseur",
+              "columnType": 1,
+              "displayName": "reviseur",
+              "id": "29",
+              "sourceId": 3,
+              "visualColumnType": 1
+            },
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "reviseur",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "reviseur",
+                  "columnName": "reviseur",
+                  "direction": "ASC",
+                  "id": "reviseur"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "isLoading": true,
+            "tableName": "feuille_travail",
+            "topNMeasureOptions": []
+          }
+        },
+        "superFilterAssignments": [
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "cote",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "cote",
+                  "columnName": "cote",
+                  "direction": "ASC",
+                  "id": "cote"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "cote",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "cote",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "cote",
+                "name": "cote",
+                "order": 0,
+                "sourceId": "cote",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "code",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "cycle",
+                  "columnName": "cycle",
+                  "direction": "ASC",
+                  "id": "cycle"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "cycle",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "cycle",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "cycle",
+                "name": "cycle",
+                "order": 0,
+                "sourceId": "cycle",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "arrete",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "arrete",
+                  "columnName": "arrete",
+                  "direction": "ASC",
+                  "id": "arrete"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "arrete",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "arrete",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "arrete",
+                "name": "arrete",
+                "order": 0,
+                "sourceId": "arrete",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "code",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "entite",
+                  "columnName": "entite",
+                  "direction": "ASC",
+                  "id": "entite"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "entite",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "entite",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "entite",
+                "name": "entite",
+                "order": 0,
+                "sourceId": "entite",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "code",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "modele_code",
+                  "columnName": "modele_code",
+                  "direction": "ASC",
+                  "id": "modele_code"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "modele_code",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "modele_code",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "modele_code",
+                "name": "modele_code",
+                "order": 0,
+                "sourceId": "modele_code",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "origine",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "origine",
+                  "columnName": "origine",
+                  "direction": "ASC",
+                  "id": "origine"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "origine",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "origine",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "origine",
+                "name": "origine",
+                "order": 0,
+                "sourceId": "origine",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "nom_fichier",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "nom_fichier",
+                  "columnName": "nom_fichier",
+                  "direction": "ASC",
+                  "id": "nom_fichier"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "nom_fichier",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "nom_fichier",
+                "columnType": "Column",
+                "dataType": "NVarchar",
+                "id": "nom_fichier",
+                "name": "nom_fichier",
+                "order": 0,
+                "sourceId": "nom_fichier",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "chemin_coffre",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "chemin_coffre",
+                  "columnName": "chemin_coffre",
+                  "direction": "ASC",
+                  "id": "chemin_coffre"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "chemin_coffre",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "chemin_coffre",
+                "columnType": "Column",
+                "dataType": "NVarchar",
+                "id": "chemin_coffre",
+                "name": "chemin_coffre",
+                "order": 0,
+                "sourceId": "chemin_coffre",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "empreinte_sha256",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "empreinte_sha256",
+                  "columnName": "empreinte_sha256",
+                  "direction": "ASC",
+                  "id": "empreinte_sha256"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "empreinte_sha256",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "empreinte_sha256",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "empreinte_sha256",
+                "name": "empreinte_sha256",
+                "order": 0,
+                "sourceId": "empreinte_sha256",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "conclusion",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "conclusion",
+                  "columnName": "conclusion",
+                  "direction": "ASC",
+                  "id": "conclusion"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "conclusion",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "conclusion",
+                "columnType": "Column",
+                "dataType": "NVarchar",
+                "id": "conclusion",
+                "name": "conclusion",
+                "order": 0,
+                "sourceId": "conclusion",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "preparateur",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "preparateur",
+                  "columnName": "preparateur",
+                  "direction": "ASC",
+                  "id": "preparateur"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "preparateur",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "preparateur",
+                "columnType": "Column",
+                "dataType": "NVarchar",
+                "id": "preparateur",
+                "name": "preparateur",
+                "order": 0,
+                "sourceId": "preparateur",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "reviseur",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "reviseur",
+                  "columnName": "reviseur",
+                  "direction": "ASC",
+                  "id": "reviseur"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "reviseur",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "reviseur",
+                "columnType": "Column",
+                "dataType": "NVarchar",
+                "id": "reviseur",
+                "name": "reviseur",
+                "order": 0,
+                "sourceId": "reviseur",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "code",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "phase",
+                  "columnName": "phase",
+                  "direction": "ASC",
+                  "id": "phase"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "phase",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "phase",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "phase",
+                "name": "phase",
+                "order": 0,
+                "sourceId": "phase",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "forme_conclusion",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "forme_conclusion",
+                  "columnName": "forme_conclusion",
+                  "direction": "ASC",
+                  "id": "forme_conclusion"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "forme_conclusion",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "forme_conclusion",
+                "columnType": "Column",
+                "dataType": "String",
+                "id": "forme_conclusion",
+                "name": "forme_conclusion",
+                "order": 0,
+                "sourceId": "forme_conclusion",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          },
+          {
+            "configuration": {
+              "filterMode": "basic",
+              "filterOperator": "is",
+              "hide": false,
+              "isExpanded": false,
+              "locked": false,
+              "name": "conclue_par",
+              "selectAll": true,
+              "selectAllState": "UNSELECTED",
+              "singleSelect": false,
+              "sort": [
+                {
+                  "columnId": "conclue_par",
+                  "columnName": "conclue_par",
+                  "direction": "ASC",
+                  "id": "conclue_par"
+                }
+              ],
+              "topN": {
+                "displayOthers": true,
+                "isRankEmptyItems": false,
+                "otherLabel": "Others",
+                "rankMeasure": "",
+                "rankMode": "TOP",
+                "rankType": "value",
+                "rankValue": 5
+              },
+              "visualType": "FACET"
+            },
+            "filter": [],
+            "filterLevel": "visual",
+            "id": "conclue_par",
+            "isDeleted": false,
+            "pivotAssignments": [
+              {
+                "bucketId": "",
+                "columnName": "conclue_par",
+                "columnType": "Column",
+                "dataType": "NVarchar",
+                "id": "conclue_par",
+                "name": "conclue_par",
+                "order": 0,
+                "sourceId": "conclue_par",
+                "sourceType": "powerTables",
+                "tableName": "feuille_travail"
+              }
+            ],
+            "position": "RIGHT"
+          }
+        ],
+        "superFilterMetaConfig": {
+          "orderedFilterIds": [
+            "cote",
+            "cycle",
+            "arrete",
+            "entite",
+            "modele_code",
+            "origine",
+            "nom_fichier",
+            "chemin_coffre",
+            "empreinte_sha256",
+            "conclusion",
+            "preparateur",
+            "reviseur",
+            "phase",
+            "forme_conclusion",
+            "conclue_par"
+          ]
+        }
+      },
+      "visualStyles": {
+        "background": {
+          "backgroundColor": "#fff",
+          "isEnabled": true
+        },
+        "border": {
+          "color": "#ddd",
+          "isEnabled": false,
+          "side": "all",
+          "width": 0
+        },
+        "cornerRadius": {
+          "isCustomCornerRadius": false,
+          "isEnabled": true,
+          "radiusBottomLeft": 0,
+          "radiusBottomRight": 0,
+          "radiusTopLeft": 0,
+          "radiusTopRight": 0
+        },
+        "isTooltipEnabled": true,
+        "padding": {
+          "bottomPadding": 5,
+          "isCustomPaddingSize": false,
+          "isEnabled": true,
+          "leftPadding": 5,
+          "rightPadding": 5,
+          "topPadding": 5
+        },
+        "rotation": {
+          "isEnabled": false,
+          "transform": 0
+        },
+        "shadow": {
+          "angle": 0,
+          "blur": 0,
+          "color": "#000000",
+          "distance": 10,
+          "isEnabled": false,
+          "opacity": 100,
+          "placement": "outer",
+          "side": "center",
+          "width": 0
+        },
+        "showHelperTooltips": true,
+        "showSelectedSeriesInTooltip": false,
+        "tooltipPageId": "auto",
+        "tooltipStyle": {
+          "backgroundColor": "#FFFFFF",
+          "bold": false,
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "italic": false,
+          "labelColor": "#252423",
+          "underline": false,
+          "valueColor": "#252423"
+        },
+        "tooltipType": "default",
+        "varianceInTooltip": true,
+        "varianceTooltipType": "both"
+      },
+      "visualType": 30
+    },
+    "schema": "0.0.1"
+  }
+}

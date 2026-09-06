@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Dataflow",
+    "displayName": "zz_service_execution",
+    "description": "Element de service. Contexte d'evaluation Power Query pour executer du T-SQL contre DossierOPCI. Supprimable."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "0236ac17-24bb-9d2d-49c0-d367a5f9f5f5"
+  }
+}

@@ -1,0 +1,78 @@
+/// Les montants que le curseur de simulation propose, exprimes en euros, de l'obligation minimale au plafond des sommes distribuables, par pas de 100,00. Les 2 bornes exactes sont toujours presentes meme si elles ne tombent pas sur le pas, sans quoi le curseur ne pourrait atteindre ni l'obligation ni le plafond. La liste vient de la base et non d'une table de parametre en dur, les 2 bornes etant calculees par dossier et par exercice.
+table v_montant_simulable
+	lineageTag: 716e9a9a-ca89-44b9-a0bb-5ef4e45642c2
+
+	/// Le versement simule, en euros. Aucun montant choisi rend l'obligation minimale, qui est le plancher du droit : la simulation ne part jamais de zero, et c'est pourquoi le defaut se lit par ISFILTERED et non par le maximum de la colonne. Un montant choisi est pris par son maximum, ce qui donne la poignee droite quand le curseur porte sur une plage. Le resultat est ramene dans l'intervalle des 2 bornes, ce qui protege le cas ou le curseur porte sur un autre arrete que celui des cartes. Aucune ecriture n'en decoule, la simulation ne decide rien.
+	measure 'Montant simule' =
+			VAR borne_basse = [Obligation minimale]
+			VAR borne_haute = [Plafond distribuable]
+			VAR choisi =
+			    IF (
+			        ISFILTERED ( v_montant_simulable[montant_simulable] ),
+			        MAX ( v_montant_simulable[montant_simulable] ),
+			        borne_basse
+			    )
+			RETURN
+			    MIN ( MAX ( choisi, borne_basse ), borne_haute )
+		formatString: #,0.00
+		displayFolder: Simulation de distribution
+		lineageTag: 1d8cc2a9-57cd-4ecc-b77c-9e370c08b813
+
+	column cle_montant
+		dataType: string
+		isHidden
+		isKey
+		isNullable: false
+		lineageTag: 15b6c14e-2c93-4a1d-9f2e-115ad86044ad
+		summarizeBy: none
+		sourceColumn: cle_montant
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 87901de5-4718-4ab4-af84-5c30e2ec26ed
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 34a35f37-eac5-48b4-9b72-e00ce721f4bd
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 87d656d3-d33a-4555-a653-f3fa77a29f5b
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column exercice
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: c2212886-3395-462b-b634-d9a80946ca87
+		summarizeBy: none
+		sourceColumn: exercice
+
+	/// Le montant du versement envisage, en euros. Le seul champ que le porteur du dossier deplace.
+	column montant_simulable
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 46696ee9-f0e2-4ba1-8b07-2fc6a74eb5ba
+		summarizeBy: none
+		sourceColumn: montant_simulable
+
+	partition v_montant_simulable = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v_montant_simulable_cle = Source{[Schema="dbo",Item="v_montant_simulable_cle"]}[Data]
+				in
+				    dbo_v_montant_simulable_cle
+

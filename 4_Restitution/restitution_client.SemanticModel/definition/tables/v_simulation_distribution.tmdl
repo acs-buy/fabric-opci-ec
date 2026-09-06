@@ -1,0 +1,100 @@
+/// L'assiette de la simulation de distribution : une ligne par entite et par exercice annuel, portant l'obligation minimale et le plafond des sommes distribuables. Elle remplace la lecture directe de v_obligation_minimale et de v_plafond_distribuable, qui rendaient plusieurs lignes par entite et dont une carte sommait les periodes.
+table v_simulation_distribution
+	lineageTag: fab55c6d-4215-4aa6-9b14-70c88746375a
+
+	/// Le montant que l'entite doit au minimum distribuer sur l'exercice. Borne basse du curseur de simulation. Article L. 214-69 du code monetaire et financier pour le caractere annuel.
+	measure 'Obligation minimale' = SUM ( v_simulation_distribution[obligation_minimale] )
+		formatString: #,0.00
+		displayFolder: Simulation de distribution
+		lineageTag: 67745287-473d-432e-aefd-248851379f33
+
+	/// Le plafond des sommes distribuables de l'arrete annuel. Borne haute du curseur de simulation. I de l'article L. 214-69 du code monetaire et financier.
+	measure 'Plafond distribuable' = SUM ( v_simulation_distribution[plafond_distribuable] )
+		formatString: #,0.00
+		displayFolder: Simulation de distribution
+		lineageTag: e5e214c2-2c3e-416c-abf5-be776feb2afd
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 6882058a-74ff-4963-8487-06f1fa2a2f84
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 7dc14b7d-3184-4f5d-90bb-e30ce1ffc30e
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 50ab9b0a-e7b5-4e21-beeb-6e000b766325
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column exercice
+		dataType: string
+		isNullable: false
+		lineageTag: 5e2ba1ec-364c-4cb3-90b0-041ee9fe189d
+		summarizeBy: none
+		sourceColumn: exercice
+
+	column date_arrete
+		dataType: dateTime
+		isHidden
+		isNullable: false
+		formatString: dd/mm/yyyy
+		lineageTag: 9d23b5b2-9253-4f5a-ba05-fb64ef6c7b18
+		summarizeBy: none
+		sourceColumn: date_arrete
+
+	column obligation_minimale
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 279e17dc-fdaa-4a4a-88f9-ddbb973be9dd
+		summarizeBy: sum
+		sourceColumn: obligation_minimale
+
+	column categories_renseignees
+		dataType: int64
+		isHidden
+		lineageTag: 3d683664-276a-48e1-b55b-867c2925cf29
+		summarizeBy: none
+		sourceColumn: categories_renseignees
+
+	column plafond_distribuable
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: e53c62ce-0c3d-438d-86e2-a8f2beaf4207
+		summarizeBy: sum
+		sourceColumn: plafond_distribuable
+
+	/// Vrai pour l'exercice annuel le plus recent de l'entite. La page s'en sert comme filtre par defaut.
+	column est_dernier_exercice
+		dataType: boolean
+		lineageTag: 0e0dbedb-91cf-4494-9ea3-15d4971f27b3
+		summarizeBy: none
+		sourceColumn: est_dernier_exercice
+
+	/// Vrai quand le plafond des sommes distribuables est inferieur a l'obligation minimale. L'ecran l'affiche : c'est un fait de dossier, pas une anomalie de calcul, et la simulation n'a alors pas d'intervalle.
+	column plafond_inferieur_obligation
+		dataType: boolean
+		lineageTag: baee56c6-9435-43ea-af33-ea2cbbb78236
+		summarizeBy: none
+		sourceColumn: plafond_inferieur_obligation
+
+	partition v_simulation_distribution = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v_simulation_distribution = Source{[Schema="dbo",Item="v_simulation_distribution"]}[Data]
+				in
+				    dbo_v_simulation_distribution
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "OrgAppAudience",
+    "displayName": "OPCI App"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a85df4e5-4a15-4ecc-8a0c-1a3053315ab5"
+  }
+}

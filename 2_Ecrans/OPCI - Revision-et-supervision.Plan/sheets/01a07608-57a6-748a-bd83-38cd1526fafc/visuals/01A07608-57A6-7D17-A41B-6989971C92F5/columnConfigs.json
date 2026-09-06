@@ -1,0 +1,79 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/PowerTable/ColumnConfigs/1.0.0/schema.json",
+  "columnConfigs": [
+    {
+      "allowEdit": 0,
+      "columnGuid": "cote",
+      "columnMeta": {
+        "allowNegative": true,
+        "dbMeta": {
+          "isCompositeUnique": false,
+          "isIdentity": false,
+          "isNullable": false,
+          "isPrimaryKey": true,
+          "isUnique": true,
+          "maxLength": 30,
+          "type": "varchar",
+          "uniqueConstraintName": null
+        },
+        "defaultValue": "",
+        "defaultValueType": "NONE",
+        "isPrimaryKey": true,
+        "largeNumberAbbrevation": "",
+        "max": "",
+        "min": "",
+        "negativeValueFormat": "-0",
+        "prefix": "",
+        "resetToDefaultOnRowModify": false,
+        "suffix": "",
+        "thousandSeparator": "",
+        "updateValueOnRowModify": false
+      },
+      "columnName": "cote",
+      "columnType": 1,
+      "description": "",
+      "displayName": "cote",
+      "hideColumn": 0,
+      "mandatory": 1,
+      "recordGuid": "01A07608-57A6-75DA-AEBD-B4AE255886A7",
+      "visualColumnType": 1
+    },
+    {
+      "allowEdit": 0,
+      "columnGuid": "piece_id",
+      "columnMeta": {
+        "allowNegative": true,
+        "dbMeta": {
+          "isCompositeUnique": false,
+          "isIdentity": false,
+          "isNullable": false,
+          "isPrimaryKey": true,
+          "isUnique": true,
+          "maxLength": 4,
+          "type": "int",
+          "uniqueConstraintName": null
+        },
+        "defaultValue": "",
+        "defaultValueType": "NONE",
+        "isPrimaryKey": true,
+        "largeNumberAbbrevation": "",
+        "max": "",
+        "min": "",
+        "negativeValueFormat": "-0",
+        "prefix": "",
+        "resetToDefaultOnRowModify": false,
+        "suffix": "",
+        "thousandSeparator": "",
+        "updateValueOnRowModify": false
+      },
+      "columnName": "piece_id",
+      "columnType": 6,
+      "description": "",
+      "displayName": "piece_id",
+      "hideColumn": 0,
+      "mandatory": 1,
+      "recordGuid": "01A07608-57A6-7224-AD1E-E17CA6E72610",
+      "visualColumnType": 1
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+/// Le patrimoine actif par actif : valeur comptable, valeur actuelle, difference, source de la valeur, article. L'exemple IR4 est ecarte. Script 141.
+table v_client_patrimoine_actif
+	lineageTag: b94705ed-457f-4665-9801-ef956af38007
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		lineageTag: 7afb3212-3ec2-4db0-ad93-cdb86c4bc3bf
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: b07429c7-07da-42b6-9c95-ad1d5b582328
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		lineageTag: b3019624-784d-4454-b859-4297df13154d
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column Actif
+		dataType: string
+		lineageTag: 5e974d72-2e89-4d6b-a0c3-023085cc24b1
+		summarizeBy: none
+		sourceColumn: code_actif
+
+	column code_famille
+		dataType: string
+		isHidden
+		lineageTag: 8c1e0310-2458-45c9-b2db-390d002cdccf
+		summarizeBy: none
+		sourceColumn: famille
+
+	column Famille
+		dataType: string
+		lineageTag: 6bca899e-67c2-4fcf-b9aa-84f7a2d72c33
+		summarizeBy: none
+		sourceColumn: famille_libelle
+
+	column poste_bilan
+		dataType: string
+		lineageTag: a9681f6a-8e09-4b8d-ae07-336bf3d7da1e
+		summarizeBy: none
+		sourceColumn: poste_bilan
+
+	column 'Valeur comptable'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 626bb2e6-a409-4272-9d96-69407b624562
+		summarizeBy: none
+		sourceColumn: valeur_comptable
+
+	column 'Valeur actuelle'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: b04b83ff-2f91-4ab3-90db-6bf5a9ec40d5
+		summarizeBy: none
+		sourceColumn: valeur_actuelle
+
+	column 'Différence d''estimation'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: ad7efde2-ac02-466a-bc93-cfc4e0999da5
+		summarizeBy: none
+		sourceColumn: difference_estimation
+
+	column 'Source de la valeur'
+		dataType: string
+		lineageTag: b37af22b-b632-4f34-b693-84d2276dd0d0
+		summarizeBy: none
+		sourceColumn: source_libelle
+
+	column 'Article du règlement'
+		dataType: string
+		lineageTag: 482e1e38-cfdc-4810-8f38-3bcb3c5ef0b4
+		summarizeBy: none
+		sourceColumn: article
+
+	column entite_liee
+		dataType: string
+		lineageTag: 7c1ea5ca-1d59-46da-a897-6e81be332674
+		summarizeBy: none
+		sourceColumn: entite_liee
+
+	column quote_part
+		dataType: decimal
+		formatString: 0.0 %
+		lineageTag: 5f8a0d5e-9cc0-4d34-9015-918869dc87ec
+		summarizeBy: none
+		sourceColumn: quote_part
+
+	partition v_client_patrimoine_actif = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_patrimoine_actif"]}[Data]
+				in
+				    dbo_v
+

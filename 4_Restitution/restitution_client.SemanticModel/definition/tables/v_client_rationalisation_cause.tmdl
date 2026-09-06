@@ -1,0 +1,71 @@
+/// La rationalisation depliee, une ligne par cause dans l'ordre de la feuille VAR ANR : ouverture, causes, cloture. Script 141.
+table v_client_rationalisation_cause
+	lineageTag: bbcb61ff-0fc9-4fca-b8c2-18b5cbf9cce7
+
+	measure 'Montant de la cause' = SUM ( v_client_rationalisation_cause[Montant] )
+		formatString: #,0.00
+		lineageTag: 3ece7bee-fcb7-4cc3-9000-c447c127099e
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		lineageTag: 609a43bb-52f3-4ad7-a1f7-e52a942f79d9
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: 3f1249a6-bba7-438c-bcb1-1d695f236d50
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		lineageTag: c8297361-f028-441a-9327-2a0f28300c02
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column ordre
+		dataType: int64
+		isHidden
+		lineageTag: fb0debd4-273b-4d2f-9d1d-a2a108cf1833
+		summarizeBy: none
+		sourceColumn: ordre
+
+	column nature
+		dataType: string
+		lineageTag: 392bb21e-2d3f-4434-a8ce-5d082a949b01
+		summarizeBy: none
+		sourceColumn: nature
+
+	column Cause
+		dataType: string
+		lineageTag: 822e8231-9a15-4d49-a102-c885cb127bd6
+		summarizeBy: none
+		sourceColumn: cause
+		sortByColumn: ordre
+
+	column Montant
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: aade1277-2a6a-40f6-bdaf-8adc51c96e0f
+		summarizeBy: none
+		sourceColumn: montant
+
+	column a_afficher
+		dataType: boolean
+		lineageTag: be813544-c642-4919-8f49-b1a794052f24
+		summarizeBy: none
+		sourceColumn: a_afficher
+
+	partition v_client_rationalisation_cause = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_rationalisation_cause"]}[Data]
+				in
+				    dbo_v
+

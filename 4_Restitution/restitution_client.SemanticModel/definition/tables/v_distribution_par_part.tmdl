@@ -1,0 +1,42 @@
+/// Les distributions versees, en total et par part, a chaque date de valeur.
+table v_distribution_par_part
+	lineageTag: b3703566-3520-4c42-835b-29a4d9a6e0d4
+
+	column entite
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 7a3013b2-7331-482d-87a1-4dd41eb4f563
+		summarizeBy: none
+		sourceColumn: entite
+
+	column date_valeur
+		dataType: string
+		isNullable: false
+		lineageTag: 589fc41f-27a9-4724-bf58-b8e0d1229c59
+		summarizeBy: none
+		sourceColumn: date_valeur
+
+	column distribution_totale
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 523d3fa1-f0bb-4d89-9f13-1ecbcf567577
+		summarizeBy: sum
+		sourceColumn: distribution_totale
+
+	column distribution_par_part
+		dataType: decimal
+		formatString: #,0.0000
+		lineageTag: a383c672-8aca-4f5e-8d01-799fe36a99d5
+		summarizeBy: sum
+		sourceColumn: distribution_par_part
+
+	partition v_distribution_par_part = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v_distribution_par_part = Source{[Schema="dbo",Item="v_distribution_par_part"]}[Data]
+				in
+				    dbo_v_distribution_par_part
+

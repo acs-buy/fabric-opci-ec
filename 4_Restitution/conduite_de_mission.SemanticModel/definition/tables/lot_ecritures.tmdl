@@ -1,0 +1,172 @@
+table lot_ecritures
+	lineageTag: 2f3dbe93-3137-4ad2-990a-214192626c90
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 589e48e3-0860-41a5-8f6e-74a31f747852
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 4c87a40b-a677-4cb1-b961-3fd1042eac8e
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: c11622f4-aff8-4d40-bce3-a34eef1ab95c
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column portee
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: b7fcbf2c-b48d-4f0a-9804-926335062e8f
+		summarizeBy: none
+		sourceColumn: portee
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d39e16e9-1836-41dc-b206-6d74796cccfc
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 46e6a8d0-83e6-4a23-95b9-d63f759f136a
+		summarizeBy: none
+		sourceColumn: statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column version_regles
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 7d97c64f-3eba-4c7c-bbad-d3697340689e
+		summarizeBy: none
+		sourceColumn: version_regles
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: f85e2e6f-df0d-4717-8c10-ee3b171fc43f
+		summarizeBy: none
+		sourceColumn: motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column cree_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 84de9bf3-b0cc-4a7c-878e-d01bb358fa7c
+		summarizeBy: none
+		sourceColumn: cree_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column cree_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 99656c87-cb1c-4303-a628-9c4226452af4
+		summarizeBy: none
+		sourceColumn: cree_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 8ee26a22-8058-4576-8ced-7fd438f7f26f
+		summarizeBy: none
+		sourceColumn: statut_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 1299b901-870e-4099-b372-442a52651a47
+		summarizeBy: none
+		sourceColumn: statut_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column question_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c6e2e79a-e7e6-4d34-8155-f29ce6f20523
+		summarizeBy: sum
+		sourceColumn: question_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuille_cote
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: cf586036-d041-45c8-9d82-4f204ef259bf
+		summarizeBy: none
+		sourceColumn: feuille_cote
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 6b4cc359-6997-4944-8864-3768ca72d5b1
+		summarizeBy: sum
+		sourceColumn: piece_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column import_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3f007f34-7247-4280-9b51-60f450ebfa92
+		summarizeBy: sum
+		sourceColumn: import_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition lot_ecritures = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_lot_ecritures = Source{[Schema="dbo",Item="lot_ecritures"]}[Data]
+				in
+				    dbo_lot_ecritures
+
+	annotation PBI_ResultType = Table
+

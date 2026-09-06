@@ -1,0 +1,89 @@
+/// La dimension des arretes de mission. Elle ne porte que les arretes ouverts en conduite de mission : les arretes d'ouverture et ceux que le rejeu cree n'y figurent pas. C'est ce qui empeche une carte de sommer 2 periodes.
+table v_arrete_client
+	lineageTag: 41cbe1bf-3b11-43f6-b9c6-3201d1e09068
+
+	/// La date du visa de cloture de l'etape 5 par le chef de mission, pour le bandeau.
+	measure 'Cloture visee le' = FORMAT ( MAX ( v_arrete_client[cloture_visee_le] ), "dd/mm/yyyy" )
+		lineageTag: 7b4aba29-2cd3-4a55-a3bb-47accc62086c
+
+	/// L'arrete choisi dans le segment, pour le bandeau.
+	measure 'Arrete choisi' = IF ( DISTINCTCOUNT ( v_arrete_client[arrete] ) = 1, MAX ( v_arrete_client[arrete] ), "Plusieurs arrêtés" )
+		lineageTag: c56d3fe7-0d86-4ac4-a371-5d2e84663504
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		isKey
+		isNullable: false
+		lineageTag: af9137af-9f33-4b20-857f-9a47ff8dd92a
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: 27a12ae3-2283-46fe-9bef-7f0cf89325e9
+		summarizeBy: none
+		sourceColumn: entite
+
+	/// L'arrete de la mission, sous la forme AAAA-MM-JJ.
+	column arrete
+		dataType: string
+		isNullable: false
+		lineageTag: 9f48be6f-f76f-435d-aaa0-e0cc8cf336de
+		summarizeBy: none
+		sourceColumn: arrete
+
+	/// ANNUEL, SEMESTRIEL ou INTERMEDIAIRE.
+	column type_arrete
+		dataType: string
+		isNullable: false
+		lineageTag: b21e420a-0a07-4262-8c96-22acba674dbe
+		summarizeBy: none
+		sourceColumn: type_arrete
+
+	column exercice
+		dataType: string
+		isNullable: false
+		lineageTag: 3e29e2b7-fcda-41bd-8836-cd78707c8b03
+		summarizeBy: none
+		sourceColumn: exercice
+
+	column date_arrete
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/mm/yyyy
+		lineageTag: cf3031b6-0fdf-48e0-b5b8-3a5e2f14d0f4
+		summarizeBy: none
+		sourceColumn: date_arrete
+
+	column visa_cloture_id
+		dataType: int64
+		isHidden
+		lineageTag: 90f29400-8bea-4334-9362-a687c8aa4b3c
+		summarizeBy: none
+		sourceColumn: visa_cloture_id
+
+	column cloture_visee_par
+		dataType: string
+		lineageTag: b96a79b2-875c-424c-ad50-e6b9e6ed53e4
+		summarizeBy: none
+		sourceColumn: cloture_visee_par
+
+	column cloture_visee_le
+		dataType: dateTime
+		formatString: dd/mm/yyyy hh:nn
+		lineageTag: b0569336-3a04-42ee-912c-130d63436188
+		summarizeBy: none
+		sourceColumn: cloture_visee_le
+
+	partition v_arrete_client = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v_arrete_client = Source{[Schema="dbo",Item="v_arrete_client"]}[Data]
+				in
+				    dbo_v_arrete_client
+

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "75e8a83dfb563f8eca25",
+  "position": {
+    "x": 736,
+    "y": 512,
+    "z": 6000,
+    "height": 520,
+    "width": 520,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_distribution_par_part"
+                    }
+                  },
+                  "Property": "date_valeur"
+                }
+              },
+              "queryRef": "v_distribution_par_part.date_valeur",
+              "nativeQueryRef": "date_valeur",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "v_distribution_par_part"
+                        }
+                      },
+                      "Property": "distribution_par_part"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(v_distribution_par_part.distribution_par_part)",
+              "nativeQueryRef": "Somme de distribution_par_part"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Distributions versees, par part et par date de valeur'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

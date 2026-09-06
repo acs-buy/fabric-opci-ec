@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "conduite_de_mission"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "0081088d-3c9c-4add-be14-b6f8cf5b26f8"
+  }
+}

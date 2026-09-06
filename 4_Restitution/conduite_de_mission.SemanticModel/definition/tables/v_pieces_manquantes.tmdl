@@ -1,0 +1,82 @@
+table v_pieces_manquantes
+	lineageTag: 50e4be21-7b14-4589-8022-95269e89a075
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ae9836a8-dc6e-4cfa-9d18-e7ca90e974de
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b10a0b45-9699-4791-afc7-9bae348ab5e6
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 414ca6b2-608a-474f-add1-7de04b50cddc
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cote
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: 7b38b3e8-50ac-4c20-890e-69feebec230a
+		summarizeBy: none
+		sourceColumn: cote
+
+		annotation SummarizationSetBy = Automatic
+
+	column attendue_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 6a8c71ac-daaa-4f22-8bc2-f2d050debaae
+		summarizeBy: sum
+		sourceColumn: attendue_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_attendue
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 07dedd45-e305-47bb-bdc3-f591ef993ffa
+		summarizeBy: none
+		sourceColumn: piece_attendue
+
+		annotation SummarizationSetBy = Automatic
+
+	column periodicite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e003de57-15c8-4c2b-a194-23dd1a68a77b
+		summarizeBy: none
+		sourceColumn: periodicite
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_pieces_manquantes = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_pieces_manquantes = Source{[Schema="dbo",Item="v_pieces_manquantes"]}[Data]
+				in
+				    dbo_v_pieces_manquantes
+

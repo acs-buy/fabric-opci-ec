@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "export_fec",
+    "description": "Ecrit le fichier des ecritures comptables dans le Lakehouse Coffre. Une activite de recherche pour le Siren, une activite de copie par profil. La mise en forme que l'article A47 A-1 impose vit dans les requetes source, le connecteur ne formatant ni les dates ni les decimales."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d940d2da-cdc0-4b78-80e2-53417c03a618"
+  }
+}

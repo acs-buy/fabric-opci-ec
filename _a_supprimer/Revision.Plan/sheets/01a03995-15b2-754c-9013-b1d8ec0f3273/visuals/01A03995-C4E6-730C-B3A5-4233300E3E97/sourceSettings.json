@@ -1,0 +1,77 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/plan/definition/PowerTable/Settings/1.0.0/schema.json",
+  "sourceSettings": [
+    {
+      "name": "SCD",
+      "recordGuid": "F6F6F97D-9BA0-F111-9B34-000D3AE7631B",
+      "settings": {
+        "config": {
+          "businessKey": "",
+          "identifierKeys": {
+            "activeFlag": "",
+            "allowEditStartDate": false,
+            "effectiveDate": "",
+            "endDate": "",
+            "endDateDefaultValue": null,
+            "startDate": ""
+          },
+          "selectedColumns": []
+        },
+        "enabled": false,
+        "type": 2
+      },
+      "sourceId": "E2F6F97D-9BA0-F111-9B34-000D3AE7631B"
+    },
+    {
+      "name": "COMMENT_SETTINGS",
+      "recordGuid": "F7F6F97D-9BA0-F111-9B34-000D3AE7631B",
+      "settings": {
+        "displayComment": true,
+        "notification": true,
+        "rowLevelComments": false,
+        "toggleAddonColumns": false
+      },
+      "sourceId": "E2F6F97D-9BA0-F111-9B34-000D3AE7631B"
+    },
+    {
+      "filters": [
+        {
+          "filter": {},
+          "filterType": 1,
+          "name": "all_users",
+          "recordGuid": "FBF6F97D-9BA0-F111-9B34-000D3AE7631B"
+        }
+      ],
+      "name": "ROW_UPDATE",
+      "recordGuid": "F8F6F97D-9BA0-F111-9B34-000D3AE7631B",
+      "settings": {
+        "enabled": true
+      },
+      "sourceId": "E2F6F97D-9BA0-F111-9B34-000D3AE7631B"
+    },
+    {
+      "name": "ROW_DELETE",
+      "recordGuid": "F9F6F97D-9BA0-F111-9B34-000D3AE7631B",
+      "settings": {
+        "enabled": false
+      },
+      "sourceId": "E2F6F97D-9BA0-F111-9B34-000D3AE7631B"
+    },
+    {
+      "filters": [
+        {
+          "filter": {},
+          "filterType": 1,
+          "name": "all_users",
+          "recordGuid": "FCF6F97D-9BA0-F111-9B34-000D3AE7631B"
+        }
+      ],
+      "name": "ROW_ADD",
+      "recordGuid": "FAF6F97D-9BA0-F111-9B34-000D3AE7631B",
+      "settings": {
+        "enabled": true
+      },
+      "sourceId": "E2F6F97D-9BA0-F111-9B34-000D3AE7631B"
+    }
+  ]
+}

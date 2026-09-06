@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Lakehouse",
+    "displayName": "Coffre",
+    "description": "Coffre des pieces et des fichiers produits. Rang 3 de l'inventaire cible, raccourci OneLake vers la bibliotheque SharePoint a poser au portail."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4a1d428b-490a-4bdf-813e-5bc1bd5e4e2b"
+  }
+}

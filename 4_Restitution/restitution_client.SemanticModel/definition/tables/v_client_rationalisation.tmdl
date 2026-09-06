@@ -1,0 +1,116 @@
+/// La rationalisation de l'actif net, une ligne par arrete qui porte une balance : ouverture, variation constatee, variation expliquee et bouclage. Script 141.
+table v_client_rationalisation
+	lineageTag: 025cebdc-3108-44ff-82cf-670c5018b422
+
+	measure 'ANR precedent' = SUM ( v_client_rationalisation[actif_net_precedent] )
+		formatString: #,0.00
+		lineageTag: 9e79f1da-1af6-4419-8344-2de76cc75f8f
+
+	measure 'ANR constate' = SUM ( v_client_rationalisation[actif_net_constate] )
+		formatString: #,0.00
+		lineageTag: 79ef61ab-1d93-4886-b35d-77162e60b69c
+
+	measure 'Variation expliquee' = SUM ( v_client_rationalisation[variation_expliquee] )
+		formatString: +#,0.00;-#,0.00;0.00
+		lineageTag: 28e0c75a-e140-476f-9188-3fe53ab26631
+
+	measure 'Ecart de bouclage' = SUM ( v_client_rationalisation[bouclage] )
+		formatString: #,0.00
+		lineageTag: 1195bb22-6327-4fc3-9232-a2fc0aaf4dd5
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		lineageTag: 20bce460-69ec-4d65-88b4-6dfb6ab4abbe
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: 7399f2b0-1ec0-4e1f-8f11-95a7b2b00108
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		lineageTag: 95a2f25f-59f7-49f9-9b86-1e6b87b4c85c
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column arrete_precedent
+		dataType: string
+		lineageTag: 9274dc9c-58fd-422d-acfc-f3b67b0b2c2d
+		summarizeBy: none
+		sourceColumn: arrete_precedent
+
+	column actif_net_precedent
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 897ff68f-6dfb-48d8-8c9a-af0742a0b3f9
+		summarizeBy: sum
+		sourceColumn: actif_net_precedent
+
+	column actif_net_constate
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 734976da-8291-459c-82ce-fd07003a3bb9
+		summarizeBy: sum
+		sourceColumn: actif_net_constate
+
+	column variation_constatee
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: e2d144e9-3e22-44a4-99f9-fbfe486a7cd0
+		summarizeBy: sum
+		sourceColumn: variation_constatee
+
+	column variation_expliquee
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: f3cb979d-83e9-407a-8fbd-26a2a1cc4d27
+		summarizeBy: sum
+		sourceColumn: variation_expliquee
+
+	column bouclage
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 25626989-909d-4164-981d-77d77aa37bcf
+		summarizeBy: sum
+		sourceColumn: bouclage
+
+	column boucle
+		dataType: boolean
+		lineageTag: f7d8b45f-78c5-4267-82c5-bbf7adcbef0b
+		summarizeBy: none
+		sourceColumn: boucle
+
+	column lecture
+		dataType: string
+		lineageTag: 9d089490-4288-4b59-9164-e0f466aeb640
+		summarizeBy: none
+		sourceColumn: lecture
+
+	column source_du_seuil
+		dataType: string
+		isHidden
+		lineageTag: d6f23c86-a624-4060-987a-0f3edb73b007
+		summarizeBy: none
+		sourceColumn: source_du_seuil
+
+	column dividendes_internes_pour_memoire
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: defcb62a-b198-4eca-a339-1341ed0a68d7
+		summarizeBy: sum
+		sourceColumn: dividendes_internes_pour_memoire
+
+	partition v_client_rationalisation = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_rationalisation"]}[Data]
+				in
+				    dbo_v
+
