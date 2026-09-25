@@ -1,0 +1,268 @@
+/// L'avancement des 5 etapes du parcours par entite et arrete : fait, total, part, etape en cours. Script 63_SQL/152_avancement_etapes.sql, definitions arbitrees avec la session de la base le 09/09/2026. Ajoutee le 09/09/2026.
+table v_avancement_etapes
+	lineageTag: f8ac9cc4-fe5d-4988-86de-a3efd8c6758d
+
+	/// Unites faites de l'etape filtree.
+	measure 'Fait de l etape' = SUM(v_avancement_etapes[fait]) + 0
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 05fdfecd-8d6e-439b-ae7b-1119baa444ac
+
+	/// Unites attendues de l'etape filtree.
+	measure 'Total de l etape' = SUM(v_avancement_etapes[total]) + 0
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: fd3161ef-e45b-43d1-badb-88eddaaca4e0
+
+	/// Part faite de l'etape, vide quand l'etape n'a pas d'objet.
+	measure Avancement = DIVIDE(SUM(v_avancement_etapes[fait]), SUM(v_avancement_etapes[total]))
+		formatString: 0 %
+		displayFolder: Le dossier
+		lineageTag: 0946028b-a012-45fc-bc19-e0578e8a01f3
+
+	/// Rang de la premiere etape non achevee, vide quand tout est acheve.
+	measure 'Numero de l etape en cours' = CALCULATE(MIN(v_avancement_etapes[etape_ordre]), v_avancement_etapes[en_cours] = TRUE())
+		formatString: 0
+		displayFolder: Le dossier
+		lineageTag: 3196bb10-eee3-4e7e-9c30-3f281bb9fc96
+
+	/// Nom de la premiere etape non achevee.
+	measure 'Etape en cours' = CALCULATE(MIN(v_avancement_etapes[etape]), v_avancement_etapes[en_cours] = TRUE())
+		displayFolder: Le dossier
+		lineageTag: 5a69fd04-5d21-4325-bbfb-6eeb565194c7
+
+	/// Libelle de carte : Etape n sur 5, ou Acheve.
+	measure 'Etape en cours sur 5' = IF(ISBLANK([Numero de l etape en cours]), "Acheve", "Etape " & [Numero de l etape en cours] & " sur 5")
+		displayFolder: Le dossier
+		lineageTag: bf736477-941a-44b2-9f6a-af170676806a
+
+	/// Numero de l'etape en cours, entite et arrete affiches.
+	measure 'Etape du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Numero de l etape en cours], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: 0
+		displayFolder: Le dossier
+		lineageTag: bcd7b4d4-4fe7-4e99-81b1-7e3b79df4d63
+
+	/// Part faite de l'etape, entite et arrete affiches.
+	measure 'Avancement du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Avancement], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: 0 %
+		displayFolder: Le dossier
+		lineageTag: 1e9059bf-3f4b-421a-85a5-21c427345302
+
+	/// Unites faites, entite et arrete affiches.
+	measure 'Fait du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Fait de l etape], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 221b85cb-23b5-476f-bd17-965205a90f2a
+
+	/// Unites attendues, entite et arrete affiches.
+	measure 'Total du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Total de l etape], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 7bd803d7-71d6-470e-b38d-e6d64a7088d2
+
+	/// Part faite de l'etape 1, Collecte, quel que soit le filtre d'etape du visuel.
+	measure 'Avancement etape 1' = CALCULATE([Avancement], v_avancement_etapes[etape_ordre] = 1)
+		formatString: 0 %
+		displayFolder: La barre d'avancement
+		lineageTag: a8b51068-73f4-44dd-8002-aa9e04a8a974
+
+	/// Part faite de l'etape 2, Revision, quel que soit le filtre d'etape du visuel.
+	measure 'Avancement etape 2' = CALCULATE([Avancement], v_avancement_etapes[etape_ordre] = 2)
+		formatString: 0 %
+		displayFolder: La barre d'avancement
+		lineageTag: f54043c8-1472-4e76-b43d-78801a73d33c
+
+	/// Part faite de l'etape 3, Valorisation, quel que soit le filtre d'etape du visuel.
+	measure 'Avancement etape 3' = CALCULATE([Avancement], v_avancement_etapes[etape_ordre] = 3)
+		formatString: 0 %
+		displayFolder: La barre d'avancement
+		lineageTag: 4af55d63-e842-480f-a097-53b8de529c0b
+
+	/// Part faite de l'etape 4, Arrete, quel que soit le filtre d'etape du visuel.
+	measure 'Avancement etape 4' = CALCULATE([Avancement], v_avancement_etapes[etape_ordre] = 4)
+		formatString: 0 %
+		displayFolder: La barre d'avancement
+		lineageTag: 10411bbf-ca95-40ad-8c0a-4221ee0ffb56
+
+	/// Part faite de l'etape 5, Livrables, quel que soit le filtre d'etape du visuel.
+	measure 'Avancement etape 5' = CALCULATE([Avancement], v_avancement_etapes[etape_ordre] = 5)
+		formatString: 0 %
+		displayFolder: La barre d'avancement
+		lineageTag: 1e2cff6d-f0d0-4ea0-a597-f2fd75abb870
+
+	/// Etiquette « fait / total » de l'etape 1, Collecte. Rend du TEXTE : a eprouver avant
+	/// de s'y fier, une mesure de texte ne s'affichant pas dans une carte.
+	measure 'Fait sur total etape 1' = VAR f = CALCULATE([Fait de l etape], v_avancement_etapes[etape_ordre] = 1) VAR t = CALCULATE([Total de l etape], v_avancement_etapes[etape_ordre] = 1) RETURN FORMAT(f, "#,0") & " / " & FORMAT(t, "#,0")
+		displayFolder: La barre d'avancement
+		lineageTag: b04f7dd2-3bb4-47ed-be95-b26b2e27fe68
+
+	/// Etiquette « fait / total » de l'etape 2, Revision. Rend du TEXTE : a eprouver avant
+	/// de s'y fier, une mesure de texte ne s'affichant pas dans une carte.
+	measure 'Fait sur total etape 2' = VAR f = CALCULATE([Fait de l etape], v_avancement_etapes[etape_ordre] = 2) VAR t = CALCULATE([Total de l etape], v_avancement_etapes[etape_ordre] = 2) RETURN FORMAT(f, "#,0") & " / " & FORMAT(t, "#,0")
+		displayFolder: La barre d'avancement
+		lineageTag: 390edb32-4e72-49c8-997b-2862bf3e48be
+
+	/// Etiquette « fait / total » de l'etape 3, Valorisation. Rend du TEXTE : a eprouver avant
+	/// de s'y fier, une mesure de texte ne s'affichant pas dans une carte.
+	measure 'Fait sur total etape 3' = VAR f = CALCULATE([Fait de l etape], v_avancement_etapes[etape_ordre] = 3) VAR t = CALCULATE([Total de l etape], v_avancement_etapes[etape_ordre] = 3) RETURN FORMAT(f, "#,0") & " / " & FORMAT(t, "#,0")
+		displayFolder: La barre d'avancement
+		lineageTag: 8bd55175-809e-4f8a-a5ae-b50bd7de25d2
+
+	/// Etiquette « fait / total » de l'etape 4, Arrete. Rend du TEXTE : a eprouver avant
+	/// de s'y fier, une mesure de texte ne s'affichant pas dans une carte.
+	measure 'Fait sur total etape 4' = VAR f = CALCULATE([Fait de l etape], v_avancement_etapes[etape_ordre] = 4) VAR t = CALCULATE([Total de l etape], v_avancement_etapes[etape_ordre] = 4) RETURN FORMAT(f, "#,0") & " / " & FORMAT(t, "#,0")
+		displayFolder: La barre d'avancement
+		lineageTag: a0e20e83-79df-4a44-a1b8-a04ab86d2d85
+
+	/// Etiquette « fait / total » de l'etape 5, Livrables. Rend du TEXTE : a eprouver avant
+	/// de s'y fier, une mesure de texte ne s'affichant pas dans une carte.
+	measure 'Fait sur total etape 5' = VAR f = CALCULATE([Fait de l etape], v_avancement_etapes[etape_ordre] = 5) VAR t = CALCULATE([Total de l etape], v_avancement_etapes[etape_ordre] = 5) RETURN FORMAT(f, "#,0") & " / " & FORMAT(t, "#,0")
+		displayFolder: La barre d'avancement
+		lineageTag: 991c80e5-7b44-49f2-95c7-5de562080124
+
+	/// ESSAI DU 13/09/2026, a retirer une fois le format tranche. Meme calcul que
+	/// « Avancement etape 2 », ecrit sans passer par une autre mesure.
+	measure 'Avancement etape 2 direct' = DIVIDE(CALCULATE(SUM(v_avancement_etapes[fait]), v_avancement_etapes[etape_ordre] = 2), CALCULATE(SUM(v_avancement_etapes[total]), v_avancement_etapes[etape_ordre] = 2))
+		formatString: 0 %
+		displayFolder: La barre d'avancement
+		lineageTag: 25e53115-9104-4702-9d0c-887e9d7aebcb
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(54)
+		lineageTag: b4c21cf1-b6ce-4505-a40e-585de1b3ace3
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 735cf53b-e80e-44ff-a98a-c4f6ef48e3f8
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 37eaf726-62ab-4dee-bda1-1a1c98d4f5de
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column etape_ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: fa0fd4ef-6ae4-40a1-be13-452bfb055c27
+		summarizeBy: none
+		sourceColumn: etape_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column etape
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 9f1858a9-f5af-4180-8af4-41b81a72142b
+		summarizeBy: none
+		sourceColumn: etape
+
+		annotation SummarizationSetBy = Automatic
+
+	column unite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(23)
+		lineageTag: 0651ae00-26c3-4ba5-98aa-d0a0022f2d86
+		summarizeBy: none
+		sourceColumn: unite
+
+		annotation SummarizationSetBy = Automatic
+
+	column fait
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4c6f5481-8577-4190-8126-c66a864f989f
+		summarizeBy: sum
+		sourceColumn: fait
+
+		annotation SummarizationSetBy = Automatic
+
+	column total
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: efe39ef5-7ea8-410a-b410-715fcff77a07
+		summarizeBy: sum
+		sourceColumn: total
+
+		annotation SummarizationSetBy = Automatic
+
+	column part
+		dataType: double
+		sourceProviderType: decimal(5, 4)
+		lineageTag: 5d4cc831-5016-42e6-9503-354123ee5cfd
+		summarizeBy: sum
+		sourceColumn: part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column en_cours
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 949dcba3-8ca0-4fe5-9f9c-0abf732963c3
+		summarizeBy: none
+		sourceColumn: en_cours
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(66)
+		lineageTag: 8970886d-3d9b-4ab9-9ae2-9cefdc0d0c6c
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column etape_libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(12)
+		lineageTag: eabfae8b-3300-4713-a088-93df5afa79d9
+		summarizeBy: none
+		sourceColumn: etape_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column unite_libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(23)
+		lineageTag: 8cebdb09-a5fe-4618-9631-dfbc227d3c04
+		summarizeBy: none
+		sourceColumn: unite_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_avancement_etapes = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_avancement_etapes = Source{[Schema="dbo",Item="v_avancement_etapes"]}[Data]
+				in
+				    dbo_v_avancement_etapes
+

@@ -1,0 +1,495 @@
+/// L'etat du dossier par entite : acceptation, maintien, arretes ouverts, feuilles, expertises manquantes, questions. Tableau de bord Client et collecte. Ajoutee le 09/09/2026.
+table v_etat_dossier
+	lineageTag: 2f8c1b2f-32fb-46fc-a5e1-a643ee20269e
+
+	/// Entites du dossier.
+	measure 'Entites au dossier' = COUNTROWS(v_etat_dossier) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: c95ecdaa-6f7a-4f71-aa99-1e8df1f48779
+
+	/// Arretes ouverts, toutes entites filtrees.
+	measure 'Arretes ouverts au dossier' = SUM(v_etat_dossier[arretes_ouverts]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 7814be4c-affd-46d0-9862-84b8c228c1cc
+
+	/// Feuilles de travail des entites filtrees.
+	measure 'Feuilles du dossier' = SUM(v_etat_dossier[feuilles]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 34666d29-e4f8-4183-945a-973928090963
+
+	/// Feuilles conclues des entites filtrees.
+	measure 'Feuilles conclues du dossier' = SUM(v_etat_dossier[feuilles_conclues]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 5945c92a-af8e-446c-83b8-2c72612506ae
+
+	/// Expertises manquantes des entites filtrees.
+	measure 'Expertises manquantes' = SUM(v_etat_dossier[expertises_manquantes]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 173e5ff2-7ff3-4f9a-abf3-9d754633e3da
+
+	/// Entites dont l'acceptation est approuvee.
+	measure 'Acceptations approuvees' = CALCULATE(COUNTROWS(v_etat_dossier), v_etat_dossier[acceptation_statut] = "APPROUVE") + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: e55cb1ce-f8e0-4a42-b808-81d504e9971d
+
+	/// Toujours 1 : l'entite affichee.
+	measure 'Entites au dossier courant' = VAR e = [Entite courante] RETURN CALCULATE([Entites au dossier], ref_entite[Entité] = e)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 0d03e719-7220-4219-ae47-a02fe8dcab1d
+
+	/// Questions du questionnaire d'acceptation deja repondues. Ajoutee le 12/09/2026 pour la grille du tableau de bord Client.
+	measure 'Questions repondues' = SUM(v_etat_dossier[acceptation_questions_repondues])
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 9c4b1ee9-8c26-4953-81b7-87badfa5829f
+
+	/// Questions obligatoires attendues. Ajoutee le 12/09/2026.
+	measure 'Questions dues' = SUM(v_etat_dossier[acceptation_questions_dues])
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 0acc665a-bdaa-4852-a876-8ebe015db695
+
+	/// Carte 2. Arbitree le 15/09/2026 par la session de la base.
+	measure 'Acceptations a faire' = CALCULATE ( COUNTROWS ( v_etat_dossier ), ref_entite[est_client] = TRUE (), v_etat_dossier[acceptation_statut] <> "APPROUVE" )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 0de646aa-a06a-4e41-a8ea-d2faccc87897
+
+	/// Carte 3. Arbitree le 15/09/2026 par la session de la base.
+	measure 'Maintiens a faire' = CALCULATE ( COUNTROWS ( v_etat_dossier ), ref_entite[est_client] = TRUE (), v_etat_dossier[maintien_statut] <> "APPROUVE" )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 6369d354-9983-43c5-bd19-e05bb115a351
+
+	/// Carte 4. Arbitree le 15/09/2026 par la session de la base.
+	measure 'Arretes ouverts des clients' = CALCULATE ( SUM ( v_etat_dossier[arretes_ouverts] ), ref_entite[est_client] = TRUE () )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 6f9f13ac-78b6-446e-9f7e-8a3fdf6efa58
+
+	measure 'Questionnaire complet' = IF ( [Questions dues] > 0 && [Questions repondues] = [Questions dues], "OUI" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 427a6667-f332-4f80-a77d-8ef84c91cdf0
+
+	measure 'Etape courante' = VAR c = [Client selectionne] VAR e = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR fil = CALCULATE ( COUNTROWS ( v_perimetre_groupe ), FILTER ( ALL ( v_perimetre_groupe ), v_perimetre_groupe[Client] = c && v_perimetre_groupe[est_vehicule] = FALSE () ) ) VAR r = CALCULATE ( SUM ( v_etat_dossier[acceptation_questions_repondues] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR q = CALCULATE ( SUM ( v_etat_dossier[acceptation_questions_dues] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( TRUE (), ISBLANK ( c ), 1, ISBLANK ( fil ) || fil = 0, 2, ISBLANK ( q ) || r < q, 3, e <> "APPROUVE", 4, 5 )
+		formatString: 0
+		displayFolder: Ecran 1 Client
+		lineageTag: 811b7680-e061-4cc3-a68d-22c9d1d54de6
+
+	measure 'M Acceptation' = VAR auNiveauEntite = ISINSCOPE ( ref_entite[Dénomination] ) VAR estClient = SELECTEDVALUE ( ref_entite[est_client] ) VAR s = IF ( auNiveauEntite, IF ( estClient = TRUE (), CALCULATE ( MAX ( v_etat_dossier[acceptation_statut] ) ) ), CALCULATE ( MAX ( v_etat_dossier[acceptation_statut] ), TREATAS ( VALUES ( v_perimetre_groupe[Client] ), ref_entite[Entité] ) ) ) RETURN IF ( NOT ISBLANK ( s ), SWITCH ( s, "APPROUVE", "Approuvée", "ABSENTE", "À faire", "ABSENT", "À faire", "OUVERT", "En cours", "REFUSE", "Refusée", s ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 408ab920-cd5a-4355-b105-7eedfc4878b9
+
+	measure 'M Maintien' = VAR auNiveauEntite = ISINSCOPE ( ref_entite[Dénomination] ) VAR estClient = SELECTEDVALUE ( ref_entite[est_client] ) VAR s = IF ( auNiveauEntite, IF ( estClient = TRUE (), CALCULATE ( MAX ( v_etat_dossier[maintien_statut] ) ) ), CALCULATE ( MAX ( v_etat_dossier[maintien_statut] ), TREATAS ( VALUES ( v_perimetre_groupe[Client] ), ref_entite[Entité] ) ) ) RETURN IF ( NOT ISBLANK ( s ), SWITCH ( s, "APPROUVE", "Approuvée", "ABSENTE", "À faire", "ABSENT", "À faire", "OUVERT", "En cours", "REFUSE", "Refusée", s ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: d725bc4a-a618-4c15-a84c-7c715f640a7b
+
+	measure 'M Arretes ouverts' = CALCULATE ( SUM ( v_etat_dossier[arretes_ouverts] ) )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: e73de483-916e-4e55-b94b-d54850751815
+
+	measure 'Etat etape 1' = VAR e = [Etape courante] RETURN IF ( ISBLANK ( e ), BLANK (), IF ( e > 1, "fait", IF ( e = 1, "ici", "à venir" ) ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 098fff28-e8b3-44b3-96f6-2c7a0e9ac5a7
+
+	measure 'Etat etape 2' = VAR e = [Etape courante] RETURN IF ( ISBLANK ( e ), BLANK (), IF ( e > 2, "fait", IF ( e = 2, "ici", "à venir" ) ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: b67d80a8-1f55-40be-8581-6cb8b33a67c8
+
+	measure 'Etat etape 3' = VAR e = [Etape courante] RETURN IF ( ISBLANK ( e ), BLANK (), IF ( e > 3, "fait", IF ( e = 3, "ici", "à venir" ) ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: bdd38ccc-4b00-4d50-ab96-c2b167b4f704
+
+	measure 'Etat etape 4' = VAR e = [Etape courante] RETURN IF ( ISBLANK ( e ), BLANK (), IF ( e > 4, "fait", IF ( e = 4, "ici", "à venir" ) ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 4fe2d2d9-b49c-4c6a-858d-d2e8809b8598
+
+	measure 'Etat etape 5' = VAR e = [Etape courante] RETURN IF ( ISBLANK ( e ), BLANK (), IF ( e > 5, "fait", IF ( e = 5, "ici", "à venir" ) ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 6c7391bf-8097-4485-9ae3-536b67b18a08
+
+	measure 'Etat etape 6' = VAR e = [Etape courante] RETURN IF ( ISBLANK ( e ), BLANK (), IF ( e > 6, "fait", IF ( e = 6, "ici", "à venir" ) ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 0e6b9239-1053-4913-8cda-01902b54ee22
+
+	measure 'Acceptations à faire' = [Acceptations a faire]
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 014a896a-382d-4a27-a7b7-f9643dbbae6b
+
+	measure 'Maintiens à faire' = [Maintiens a faire]
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 93c15626-37ef-4f86-9b2b-147b014257ac
+
+	measure 'Arrêtés ouverts' = [Arretes ouverts des clients]
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: f1f39183-ab97-4209-bb96-38472880bfa1
+
+	measure Acceptation = [M Acceptation]
+		displayFolder: Ecran 1 Client
+		lineageTag: 03ba7048-0011-42c9-bafa-fcb9bb8d0cf4
+
+	measure Maintien = [M Maintien]
+		displayFolder: Ecran 1 Client
+		lineageTag: 40816faa-1047-4a9f-b9f8-7687fa861f16
+
+	measure Arrêtés = [M Arretes ouverts]
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 2ab0ff04-7a3b-457c-b813-a751e999007e
+
+	measure '1 Créer le dossier' = [Etat etape 1]
+		displayFolder: Ecran 1 Client
+		lineageTag: c4a61c0f-da84-47fc-8660-b1ab7ca13e07
+
+	measure '2 Lister les filiales' = [Etat etape 2]
+		displayFolder: Ecran 1 Client
+		lineageTag: 28856814-ee72-4a33-8ae7-2c171df80ec4
+
+	measure '3 Répondre au questionnaire' = [Etat etape 3]
+		displayFolder: Ecran 1 Client
+		lineageTag: e9b177ab-e70f-4f82-a823-f478c344d5b0
+
+	measure '4 Joindre les pièces' = [Etat etape 4]
+		displayFolder: Ecran 1 Client
+		lineageTag: 4cb48247-8636-4602-8792-4d95e5312c6b
+
+	measure '5 Soumettre au visa' = [Etat etape 5]
+		displayFolder: Ecran 1 Client
+		lineageTag: de78f3db-0e87-40aa-86fd-48447ad86e6d
+
+	measure '6 Ouvrir l''arrêté' = [Etat etape 6]
+		displayFolder: Ecran 1 Client
+		lineageTag: 09f244c3-89c9-4343-901a-81f3f82ef087
+
+	measure 'Sous-ligne acceptations' = VAR a = [Acceptations à faire] VAR c = [Clients du cabinet] RETURN IF ( ISBLANK ( a ) || a = 0, "toutes approuvées", FORMAT ( a, "#,0" ) & " sur " & FORMAT ( c, "#,0" ) & " clients" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 89b1b862-0d83-41e4-b3dc-f10ab0600843
+
+	measure 'Sous-ligne maintiens' = VAR m = [Maintiens à faire] RETURN IF ( ISBLANK ( m ) || m = 0, "tous visés", FORMAT ( m, "#,0" ) & " à viser sur l'exercice" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 4f71bdd4-0823-4597-9b6e-633b619daff3
+
+	measure 'Sous-ligne arretes' = VAR a = [Arrêtés ouverts] RETURN IF ( ISBLANK ( a ) || a = 0, "aucun arrêté ouvert", FORMAT ( a, "#,0" ) & " ouvert(s), tous clients" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 75acdbfd-ab91-4965-bd9f-2fd5ef17caa7
+
+	measure 'L Arrêtés' = VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( c = TRUE (), CALCULATE ( SUM ( v_etat_dossier[arretes_ouverts] ) ) )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 9a0bce61-c5ec-4472-8142-7ebbfd442fdc
+
+	measure 'Arrêtés ouverts du client' = VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( c = TRUE (), CALCULATE ( SUM ( v_etat_dossier[arretes_ouverts] ) ) )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 0399f0ab-494b-44c9-a1c0-3233cd3a5e7e
+
+	/// Carte pastille de statut, fond. Arbitree le 15/09/2026 par la session de la base.
+	measure 'Fond acceptation' = SWITCH ( [Acceptation], "Approuvée", "#EFF6F2", "À faire", "#F9ECEC", "En cours", "#FFF3D6", BLANK () )
+		displayFolder: Ecran 1 Client
+		lineageTag: 0213b84f-3e59-4491-9b11-f463691c95e0
+
+	/// Carte pastille de statut, encre. Arbitree le 15/09/2026 par la session de la base.
+	measure 'Texte acceptation' = SWITCH ( [Acceptation], "Approuvée", "#1F6D4A", "À faire", "#9A2A2A", "En cours", "#8A5A00", BLANK () )
+		displayFolder: Ecran 1 Client
+		lineageTag: 0e3603a8-112b-4625-959b-0ffc68d1578c
+
+	/// Carte pastille de statut, fond. Arbitree le 15/09/2026 par la session de la base.
+	measure 'Fond maintien' = SWITCH ( [Maintien], "Approuvée", "#EFF6F2", "À faire", "#F9ECEC", "En cours", "#FFF3D6", BLANK () )
+		displayFolder: Ecran 1 Client
+		lineageTag: fde41341-8209-4f08-9556-91df3ab34ec9
+
+	/// Carte pastille de statut, encre. Arbitree le 15/09/2026 par la session de la base.
+	measure 'Texte maintien' = SWITCH ( [Maintien], "Approuvée", "#1F6D4A", "À faire", "#9A2A2A", "En cours", "#8A5A00", BLANK () )
+		displayFolder: Ecran 1 Client
+		lineageTag: 6d899884-64e4-42ce-85eb-4f790dd02f04
+
+	measure 'Avancement acceptation' = [Questions repondues] & " sur " & [Questions dues] & " répondue(s) · " & [Pieces du questionnaire] & " pièce(s)"
+		displayFolder: Ecran 1 Client
+		lineageTag: 55fa5aaf-8b28-4795-ad31-8c161f3f97c5
+
+	/// Carte barre des etapes, temps 3. Arbitree le 15/09/2026 par la session de la base.
+	measure '3 Questionnaire et pièces' = [Etat etape 3]
+		displayFolder: Ecran 1 Client
+		lineageTag: 4505601f-263f-4e34-bcf4-8ee194a57b4e
+
+	/// Carte barre des etapes, temps 4. Arbitree le 15/09/2026 par la session de la base.
+	measure '4 Soumettre au visa' = [Etat etape 5]
+		displayFolder: Ecran 1 Client
+		lineageTag: 49233586-cf43-427b-9632-22167b7c86f3
+
+	/// Carte barre des etapes, temps 5. Arbitree le 15/09/2026 par la session de la base.
+	measure '5 Ouvrir l''arrêté' = [Etat etape 6]
+		displayFolder: Ecran 1 Client
+		lineageTag: 51bbbc3b-8da4-482a-9639-0fabfce78a46
+
+	/// Carte barre des etapes, temps 1. Arbitree le 15/09/2026 par la session de la base.
+	measure '1 Le dossier' = [Etat etape 1]
+		displayFolder: Ecran 1 Client
+		lineageTag: c14ece5f-1077-4082-b721-7fc900c70f1b
+
+	/// Carte temps 1. Arbitree le 15/09/2026 par la session de la base.
+	measure '1 Dossier' = [Etat etape 1]
+		displayFolder: Ecran 1 Client
+		lineageTag: 835d8c90-a4ee-4449-a2cb-8ff5f42b3388
+
+	/// Carte temps 2. Arbitree le 15/09/2026 par la session de la base.
+	measure '2 Filiales' = [Etat etape 2]
+		displayFolder: Ecran 1 Client
+		lineageTag: 608deec9-5def-4129-8adc-0e09628ea5e3
+
+	/// Carte temps 4. Arbitree le 15/09/2026 par la session de la base.
+	measure '4 Visa' = [Etat etape 5]
+		displayFolder: Ecran 1 Client
+		lineageTag: c8d62106-dcc6-437f-a152-15d1bba2e945
+
+	/// Carte temps 5. Arbitree le 15/09/2026 par la session de la base.
+	measure '5 Arrêtés' = [Etat etape 6]
+		displayFolder: Ecran 1 Client
+		lineageTag: c7688ea6-36dc-4100-97f4-a8ff3b43f3e8
+
+	measure 'Acceptation approuvee' = VAR c = [Client selectionne] RETURN IF ( CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) = "APPROUVE", "OUI" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 64f15661-e049-4799-b8e7-629ff3849105
+
+	measure 'Statut acceptation' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( s, "APPROUVE", "Approuvée", "OUVERT", "En cours", "REFUSE", "Refusée", "ABSENTE", "À faire", s )
+		displayFolder: Ecran 1 Client
+		lineageTag: 33d38b62-5023-40fa-af0e-be7c9c1cb8f2
+
+	measure 'Fond statut acceptation' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( s, "APPROUVE", "#EFF6F2", "REFUSE", "#F9ECEC", "#FAF2E2" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 5ca7916f-8f36-4eed-9ee3-f58cb7958457
+
+	measure 'Texte statut acceptation' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( s, "APPROUVE", "#1F6D4A", "REFUSE", "#9A2A2A", "#8A6710" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 4713e153-c18d-430c-9133-631679478037
+
+	measure 'Decision acceptation' = VAR c = [Client selectionne] VAR x = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_decision] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( x, "ACCEPTEE", "Acceptée", "REFUSEE", "Refusée", "EN_ATTENTE", "En attente", x )
+		displayFolder: Ecran 1 Client
+		lineageTag: 6560bb56-0142-4d0d-8237-91384fc4484d
+
+	measure 'Acceptation visee par et le' = VAR c = [Client selectionne] VAR p = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_approuvee_par] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR l = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_approuvee_le] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR sp = SEARCH ( " (", p, 1, 0 ) VAR net = IF ( sp > 0, TRIM ( LEFT ( p, sp - 1 ) ), p ) RETURN IF ( ISBLANK ( p ), "en attente de visa", net & " · " & FORMAT ( l, "dd/mm/yyyy" ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 28220bf1-03ca-4ed1-a91a-94a56c33527d
+
+	measure 'Questionnaire consultable' = VAR c = [Client selectionne] RETURN IF ( CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) = "APPROUVE", "consultable au temps 3, plus modifiable", "à compléter au temps 3" )
+		displayFolder: Ecran 1 Client
+		lineageTag: c33af0dd-5126-4c1b-a25d-e0e60ed68bae
+
+	measure 'Dernier arrete ouvert du client' = VAR c = [Client selectionne] VAR a = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[dernier_arrete_ouvert] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN IF ( ISBLANK ( a ), "aucun arrêté ouvert", a )
+		displayFolder: Ecran 1 Client
+		lineageTag: 544587b8-f7da-4ef6-bb62-ff6e3985be2f
+
+	measure 'Arretes ouverts du client (fiche)' = VAR c = [Client selectionne] RETURN CALCULATE ( SUM ( v_etat_dossier[arretes_ouverts] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 17763249-c7d2-4635-a0ac-5ff8885dd77a
+
+	measure 'Bandeau visa' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR q = [Questions du client] VAR p = [Pieces du client] RETURN SWITCH ( s, "APPROUVE", "Acceptation approuvée " & [Acceptation visee par et le] & ".", "REFUSE", "Acceptation refusée " & [Acceptation visee par et le] & " : reprendre le questionnaire, puis soumettre à nouveau.", IF ( [Questionnaire complet] = "OUI", q & " questions répondues, " & ( p + 0 ) & " pièce(s) au coffre : le dossier peut partir au visa.", q & " questions répondues : le questionnaire n'est pas complet, le visa attend." ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 75488fc5-a92d-4dbd-a8b9-b8160bb86224
+
+	measure 'Fond bandeau visa' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( s, "APPROUVE", "#EFF6F2", "REFUSE", "#F9ECEC", "#FAF2E2" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 98197252-0d8d-48cc-9413-2b3405b221d8
+
+	measure 'Position visa' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( TRUE (), s = "APPROUVE", 4, s = "REFUSE", 3, [Questionnaire complet] = "OUI", 2, 1 )
+		formatString: 0
+		displayFolder: Ecran 1 Client
+		lineageTag: 891d780c-df8b-4e8d-b115-35b7e54bf3b7
+
+	measure 'Libelle case visa 3' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( s, "APPROUVE", "Visé", "REFUSE", "Renvoyé avec un motif", "Visé" )
+		displayFolder: Ecran 1 Client
+		lineageTag: e688ab9d-e897-4284-81cf-f4ca81e11977
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 7097055d-22bf-49fd-b37e-ab75e0d1a688
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 1539e1a1-415a-4d55-a4b7-928f9ccb9aa3
+		summarizeBy: none
+		sourceColumn: entite_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column acceptation_statut
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: d6a20b8c-6b1c-4376-a36e-be550632f6e2
+		summarizeBy: none
+		sourceColumn: acceptation_statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column acceptation_decision
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 6dbd410e-bc21-4f3d-bcc9-3be9f7b39ca0
+		summarizeBy: none
+		sourceColumn: acceptation_decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column acceptation_approuvee_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: b4a17f8d-be3d-427d-b8a3-f5fa4b8aebd3
+		summarizeBy: none
+		sourceColumn: acceptation_approuvee_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column acceptation_approuvee_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 25f44477-c44d-4cac-b7d0-3fb071b4cb4e
+		summarizeBy: none
+		sourceColumn: acceptation_approuvee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column maintien_exercice
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: dafaff1a-14f2-498d-a1fe-05fb798a1318
+		summarizeBy: none
+		sourceColumn: maintien_exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column maintien_statut
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: c7cdbbda-b271-4f7e-8b01-61e263a3ecda
+		summarizeBy: none
+		sourceColumn: maintien_statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column maintien_decision
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: f57ffb12-2400-4d6a-be1a-b114ce2ca600
+		summarizeBy: none
+		sourceColumn: maintien_decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column chef_de_mission
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 26676bf5-b13d-44fc-9533-89f2ae4be541
+		summarizeBy: none
+		sourceColumn: chef_de_mission
+
+		annotation SummarizationSetBy = Automatic
+
+	column arretes_ouverts
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f39c1846-5a0f-4e6a-a809-8781b06dd2fe
+		summarizeBy: sum
+		sourceColumn: arretes_ouverts
+
+		annotation SummarizationSetBy = Automatic
+
+	column dernier_arrete_ouvert
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 6ef06c55-68cb-477e-b453-8d7c06b04a27
+		summarizeBy: none
+		sourceColumn: dernier_arrete_ouvert
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuilles
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ff7f7c75-f459-4846-ae44-5ff03b11e280
+		summarizeBy: sum
+		sourceColumn: feuilles
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuilles_conclues
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3f82510e-d551-44fa-a37e-d925caf07924
+		summarizeBy: sum
+		sourceColumn: feuilles_conclues
+
+		annotation SummarizationSetBy = Automatic
+
+	column expertises_manquantes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4be23036-51a0-4361-992e-69eaa6aa9831
+		summarizeBy: sum
+		sourceColumn: expertises_manquantes
+
+		annotation SummarizationSetBy = Automatic
+
+	column balances_filiales_manquantes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: a71ab3bf-02ca-47ca-889a-1921de0dc530
+		summarizeBy: sum
+		sourceColumn: balances_filiales_manquantes
+
+		annotation SummarizationSetBy = Automatic
+
+	column acceptation_questions_repondues
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f381ea16-aa79-4577-af53-259a7cb75064
+		summarizeBy: sum
+		sourceColumn: acceptation_questions_repondues
+
+		annotation SummarizationSetBy = Automatic
+
+	column acceptation_questions_dues
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0cb28f9d-bb3d-47d2-ad8d-ca3f14bc4971
+		summarizeBy: sum
+		sourceColumn: acceptation_questions_dues
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_etat_dossier = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_etat_dossier = Source{[Schema="dbo",Item="v_etat_dossier"]}[Data]
+				in
+				    dbo_v_etat_dossier
+

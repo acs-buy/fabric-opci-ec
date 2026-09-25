@@ -1,0 +1,112 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_simulation_distribution
+	lineageTag: 83be3990-4dbe-423a-b255-218a7b61837c
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 446e5b5c-94d0-410c-a3d8-eea1e7484b48
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e8f386f6-3bee-4c82-803e-78d1c477989b
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ab159a46-fb75-4026-a10c-430490d0e574
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 51a840df-68dd-419c-8259-82c37eed7cb8
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_arrete
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 759d5bec-72d8-4771-a2af-0d77dfdb7256
+		summarizeBy: none
+		sourceColumn: date_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column obligation_minimale
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 9a55aa88-8f10-4ba6-b416-32e3acd5a8db
+		summarizeBy: sum
+		sourceColumn: obligation_minimale
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column categories_renseignees
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 120188ba-6877-4d70-bf1c-77c2e67a2290
+		summarizeBy: sum
+		sourceColumn: categories_renseignees
+
+		annotation SummarizationSetBy = Automatic
+
+	column plafond_distribuable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7bb4e30d-8226-4bcf-8be8-5ed36562b0b5
+		summarizeBy: sum
+		sourceColumn: plafond_distribuable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column est_dernier_exercice
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: df3ab7b3-d9ad-4c00-8f5c-a3f4a29c663c
+		summarizeBy: none
+		sourceColumn: est_dernier_exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column plafond_inferieur_obligation
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 1994a5c5-ea81-4a09-9248-ebe8cd414674
+		summarizeBy: none
+		sourceColumn: plafond_inferieur_obligation
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_simulation_distribution = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_simulation_distribution = Source{[Schema="dbo",Item="v_simulation_distribution"]}[Data]
+				in
+				    dbo_v_simulation_distribution
+

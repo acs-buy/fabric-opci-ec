@@ -1,0 +1,233 @@
+table feuille_travail
+	lineageTag: 95c3267f-d659-4ac9-a1f2-b125d9340401
+
+	/// Nombre de feuilles de travail du périmètre filtré.
+	measure 'Feuilles de travail' = COUNTROWS(feuille_travail)
+		formatString: #,0
+		displayFolder: Révision
+		lineageTag: 7b429334-d858-4233-bbd6-701827c3079c
+
+	/// Feuilles dont la conclusion est posée.
+	measure 'Feuilles conclues' = CALCULATE(COUNTROWS(feuille_travail), NOT ISBLANK(feuille_travail[conclue_le])) + 0
+		formatString: #,0
+		displayFolder: Révision
+		lineageTag: e9deee0f-558c-4df0-9b04-e910613f18f5
+
+	/// Feuilles ouvertes sans conclusion.
+	measure 'Feuilles a conclure' = [Feuilles de travail] - [Feuilles conclues]
+		formatString: #,0
+		displayFolder: Révision
+		lineageTag: 570a0b38-96a3-43ec-9ed1-02a3ded1fd7d
+
+	/// Part des feuilles conclues.
+	measure 'Part conclue' = DIVIDE([Feuilles conclues], [Feuilles de travail])
+		formatString: 0.0 %
+		displayFolder: Révision
+		lineageTag: 3e5dc169-4c5f-420d-92f8-4c5841378415
+
+	/// Feuilles portant une revue.
+	measure 'Feuilles revisees' = CALCULATE(COUNTROWS(feuille_travail), NOT ISBLANK(feuille_travail[revise_le])) + 0
+		formatString: #,0
+		displayFolder: Révision
+		lineageTag: 9f448571-a4b7-4de8-9b6e-54aa7188dba8
+
+	/// Jours moyens entre la préparation et la conclusion.
+	measure 'Delai de conclusion' = AVERAGEX(FILTER(feuille_travail, NOT ISBLANK(feuille_travail[conclue_le])), DATEDIFF(feuille_travail[prepare_le], feuille_travail[conclue_le], DAY))
+		formatString: 0.0
+		displayFolder: Révision
+		lineageTag: b06afe56-b390-4355-a0a6-c3deeeaa7b6b
+
+	column cote
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: 2ae8bfba-ed7c-4452-8ad7-bd43ee0e5a09
+		summarizeBy: none
+		sourceColumn: cote
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: f8bff6e0-a34e-479b-91dd-f021a9e1cc0a
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f8546336-01c0-4cc7-a9dd-89125bf81ef3
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 681f608c-f71c-4505-b6da-e0d1cccc7f74
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column modele_code
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 87359c91-0f38-42ae-b086-6f0e427e0ed3
+		summarizeBy: none
+		sourceColumn: modele_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column origine
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 12e922a5-59d6-4478-80f2-349e886dce0b
+		summarizeBy: none
+		sourceColumn: origine
+
+		annotation SummarizationSetBy = Automatic
+
+	column nom_fichier
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: e0514221-fa0b-4c20-b535-113fe7f69c69
+		summarizeBy: none
+		sourceColumn: nom_fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column chemin_coffre
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 3351db43-6398-4506-b8d5-b8e17e7c7b37
+		summarizeBy: none
+		sourceColumn: chemin_coffre
+
+		annotation SummarizationSetBy = Automatic
+
+	column empreinte_sha256
+		dataType: string
+		isNullable: false
+		sourceProviderType: char
+		lineageTag: e2635a47-9ce7-4c70-8bf1-c925fd1c9197
+		summarizeBy: none
+		sourceColumn: empreinte_sha256
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 6aa8b80c-516b-4128-8cc4-8038856fb66b
+		summarizeBy: none
+		sourceColumn: conclusion
+
+		annotation SummarizationSetBy = Automatic
+
+	column preparateur
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 45a1185d-50c3-4c7f-af1e-35004e415d6d
+		summarizeBy: none
+		sourceColumn: preparateur
+
+		annotation SummarizationSetBy = Automatic
+
+	column prepare_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 474c4c84-11dc-4e02-af2c-cad3fa06098f
+		summarizeBy: none
+		sourceColumn: prepare_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column reviseur
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 4f40d99c-9574-4815-9ab1-6ecf66e639c9
+		summarizeBy: none
+		sourceColumn: reviseur
+
+		annotation SummarizationSetBy = Automatic
+
+	column revise_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 37e3f399-5c3f-4d45-a48c-536edba9da19
+		summarizeBy: none
+		sourceColumn: revise_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column phase
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: c5bdaf9b-ab87-498e-bbf9-59e95a42c74d
+		summarizeBy: none
+		sourceColumn: phase
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_conclusion
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: fc2c6c15-5183-4c82-bcfe-1730c3b4e8d0
+		summarizeBy: none
+		sourceColumn: forme_conclusion
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclue_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: ece300de-92d9-4163-9fad-914504daf61e
+		summarizeBy: none
+		sourceColumn: conclue_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclue_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 28ea0449-f7f4-40d5-8cbc-b681078b2cac
+		summarizeBy: none
+		sourceColumn: conclue_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: cfd8f337-f063-491c-94da-393d173366af
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition feuille_travail = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_feuille_travail = Source{[Schema="dbo",Item="feuille_travail"]}[Data]
+				in
+				    dbo_feuille_travail
+
+	annotation PBI_ResultType = Table
+

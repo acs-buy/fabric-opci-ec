@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
+  "items": [
+    {
+      "name": "bkEtat1"
+    },
+    {
+      "name": "bkEtat1b"
+    },
+    {
+      "name": "bkEtat1c"
+    },
+    {
+      "name": "bkEtat2"
+    },
+    {
+      "name": "bkEtat2b"
+    },
+    {
+      "name": "bkEtat2c"
+    },
+    {
+      "name": "bkEtat2d"
+    },
+    {
+      "name": "bkEtat3"
+    },
+    {
+      "name": "bkEtat3b"
+    },
+    {
+      "name": "bkEtat4"
+    },
+    {
+      "name": "bkEtat5"
+    },
+    {
+      "name": "bkRev1"
+    },
+    {
+      "name": "bkRev2"
+    },
+    {
+      "name": "bkRev3"
+    },
+    {
+      "name": "bkRev4"
+    },
+    {
+      "name": "bkRev5"
+    },
+    {
+      "name": "bkRev6"
+    }
+  ]
+}

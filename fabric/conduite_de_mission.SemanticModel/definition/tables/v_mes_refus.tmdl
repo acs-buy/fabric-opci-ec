@@ -1,0 +1,131 @@
+/// Les refus opposes par la base, avec la procedure, le motif et le geste qui leve le refus. Tableau de bord Revision et supervision. Ajoutee le 09/09/2026.
+table v_mes_refus
+	lineageTag: 9923922b-f11a-4965-9b0f-50a46d367a14
+
+	/// Refus opposes par la base.
+	measure 'Refus de la base' = COUNTROWS(v_mes_refus) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: d7f08893-9654-4d40-b61b-413f350cb724
+
+	/// Carte 2.3, Refus ouverts. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R23 Refus ouverts' = COUNTROWS ( v_mes_refus )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 8245d1cc-9264-4231-952f-fff8fe8e164f
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: eaaa6ab3-468e-4c8a-b3f9-afa665d8b126
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column procedure_nom
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(60)
+		lineageTag: 97c93674-42fd-42be-882f-8bae61c6e867
+		summarizeBy: none
+		sourceColumn: procedure_nom
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 6cde8058-1f2a-4731-bab5-d3c5612d62dd
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: ee91a133-86b5-499b-904a-6de0664edbbb
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cote
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: 3fe2dc72-17e8-4cbe-89bf-5fe6224ae6bd
+		summarizeBy: none
+		sourceColumn: cote
+
+		annotation SummarizationSetBy = Automatic
+
+	column question_reference
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 43f62f51-0e5f-40ac-aabb-6043c1a23b03
+		summarizeBy: none
+		sourceColumn: question_reference
+
+		annotation SummarizationSetBy = Automatic
+
+	column question
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 9aa0b9d0-143d-4f50-b2da-126858d78cc7
+		summarizeBy: none
+		sourceColumn: question
+
+		annotation SummarizationSetBy = Automatic
+
+	column message
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 909322d5-2ee9-484e-b00e-32eb1bc8e67d
+		summarizeBy: none
+		sourceColumn: message
+
+		annotation SummarizationSetBy = Automatic
+
+	column geste
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 7ce6b044-ebb4-4502-b2ed-0ef9351b9e1e
+		summarizeBy: none
+		sourceColumn: geste
+
+		annotation SummarizationSetBy = Automatic
+
+	column refuse_pour
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 513ae524-bfa6-413a-991e-719198ca94c5
+		summarizeBy: none
+		sourceColumn: refuse_pour
+
+		annotation SummarizationSetBy = Automatic
+
+	column refuse_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 9649ad89-7ae2-4cac-b68d-011ce15b13dd
+		summarizeBy: none
+		sourceColumn: refuse_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_mes_refus = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_mes_refus = Source{[Schema="dbo",Item="v_mes_refus"]}[Data]
+				in
+				    dbo_v_mes_refus
+

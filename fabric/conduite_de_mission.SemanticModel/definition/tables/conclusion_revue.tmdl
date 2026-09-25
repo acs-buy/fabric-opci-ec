@@ -1,0 +1,75 @@
+/// Conclusion generale de la revue, sous les cycles
+table conclusion_revue
+	lineageTag: dcf585c8-b4fd-4998-88d0-eae2b9b36140
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 97f1f9f5-a729-41ab-a925-7d0ae253abcb
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 9dc08da5-b29c-4862-ba2a-bc5ed2cdc820
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ceaee393-bf3a-49e5-baf7-59c1a5cd2dcb
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(4000)
+		lineageTag: 71de9347-8091-423f-b93b-4484b565ac33
+		summarizeBy: none
+		sourceColumn: conclusion
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclu_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 44eb87dc-7cdd-43c0-9feb-6e3b311e01cc
+		summarizeBy: none
+		sourceColumn: conclu_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclu_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 294ebc3d-7809-4e59-92e8-7125fea0d4c6
+		summarizeBy: none
+		sourceColumn: conclu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition conclusion_revue = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_conclusion_revue = Source{[Schema="dbo",Item="conclusion_revue"]}[Data]
+				in
+				    dbo_conclusion_revue
+

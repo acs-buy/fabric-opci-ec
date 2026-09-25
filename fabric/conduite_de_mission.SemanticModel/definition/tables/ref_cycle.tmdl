@@ -1,0 +1,70 @@
+table ref_cycle
+	lineageTag: bd25e0c8-963f-499e-8c9d-0d6912dcee61
+
+	measure 'Cycle selectionne' = IF ( HASONEVALUE ( ref_cycle[code] ), SELECTEDVALUE ( ref_cycle[code] ) )
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: e44b2b09-2f49-4fd1-97dc-4cb7a3569f5e
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 6062d3ec-91c1-4610-9acb-dc0134ca2988
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column applicabilite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a8d205b1-14d2-4577-b59a-9f67d1ce7415
+		summarizeBy: none
+		sourceColumn: applicabilite
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ca89e70b-9176-4302-b775-b1d60e4f8f75
+		summarizeBy: sum
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cycle = SWITCH ( ref_cycle[code], "CAPITAL", "Capital", "AFFECT", "Résultat", "IMMO", "Immeubles", "PART", "Participations", "VALO", "Valorisation", "FIN", "Placements", "TRESO", "Trésorerie", "TIERS", "Tiers", "FRAIS", "Frais de gestion", "CESSIONS", "Cessions", "HB", "Hors bilan", ref_cycle[libelle] )
+		dataType: string
+		lineageTag: 3499c1c2-9972-471a-bc7d-64b6602badd1
+		summarizeBy: none
+		sortByColumn: 'Ordre revision'
+
+	column 'Ordre revision' = SWITCH ( ref_cycle[code], "TRESO", 1, "TIERS", 2, "FRAIS", 3, "IMMO", 4, "PART", 5, "VALO", 6, "CAPITAL", 7, "AFFECT", 8, "CESSIONS", 9, "FIN", 10, "HB", 11, 99 )
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3e706ac7-c8b2-47a9-9a0e-09fb62ba7020
+		summarizeBy: none
+
+	partition ref_cycle = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_cycle = Source{[Schema="dbo",Item="ref_cycle"]}[Data]
+				in
+				    dbo_ref_cycle
+
+	annotation PBI_ResultType = Table
+

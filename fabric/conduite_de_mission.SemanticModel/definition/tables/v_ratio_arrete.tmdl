@@ -1,0 +1,254 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_ratio_arrete
+	lineageTag: a37eb736-4bb8-4b2a-9c0f-b765076b3909
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: fe764bad-de2a-46ae-b87d-f104fa4823f5
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 8cee9ab1-07ca-4a1c-b4b1-a96b36065b2c
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column sens
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 1692af5a-d600-4287-b71a-2bbbf4a99f62
+		summarizeBy: none
+		sourceColumn: sens
+
+		annotation SummarizationSetBy = Automatic
+
+	column seuil
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(9, 4)
+		lineageTag: d8d4a729-60ad-4bfd-b14a-430aa2f7366f
+		summarizeBy: sum
+		sourceColumn: seuil
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(60)
+		lineageTag: b375e52a-6205-4554-b053-1c73d602ec1e
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e578640e-af26-4e84-910c-3476f23dd427
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: c0dfc982-da49-470c-ba7c-636147ff55d0
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column numerateur
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7a243d7e-d43d-4a1d-ada0-f38bff8d418b
+		summarizeBy: sum
+		sourceColumn: numerateur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column denominateur
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 8f5101da-3220-472c-9eb3-09bbb1a98970
+		summarizeBy: sum
+		sourceColumn: denominateur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ratio
+		dataType: double
+		sourceProviderType: decimal(9, 6)
+		lineageTag: 00ed8ee2-7ecb-4f6a-b34a-a2644372ca1f
+		summarizeBy: sum
+		sourceColumn: ratio
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column emprunts_propres
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 18744a60-7ab8-4e40-9b53-09a0efa13d5c
+		summarizeBy: sum
+		sourceColumn: emprunts_propres
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column emprunts_filiales_quote_part
+		dataType: double
+		sourceProviderType: decimal(38, 8)
+		lineageTag: a6619516-a127-404e-9671-3cf72e6bcdd7
+		summarizeBy: sum
+		sourceColumn: emprunts_filiales_quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column immeubles_directs
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: b01c8ef1-5d04-4b67-a0ed-dd1b36c8ff81
+		summarizeBy: sum
+		sourceColumn: immeubles_directs
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column immeubles_quote_part
+		dataType: double
+		sourceProviderType: decimal(38, 8)
+		lineageTag: b1bf56d3-47bd-4252-9a25-05d6117aa46a
+		summarizeBy: sum
+		sourceColumn: immeubles_quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column actif_total
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 6cd2856a-3cf8-408f-97e0-d82ab40ec2e5
+		summarizeBy: sum
+		sourceColumn: actif_total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column immobilier_1_a_5
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 3e5bc8fe-4c39-4473-bbbe-d86d8b1e6e5e
+		summarizeBy: sum
+		sourceColumn: immobilier_1_a_5
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column non_cote_1_3_5
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 19d38ff1-31ec-439d-88e2-25d568b4a7bd
+		summarizeBy: sum
+		sourceColumn: non_cote_1_3_5
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column liquidites_8_9
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 2d17e808-c674-403a-b911-b221f3e10c02
+		summarizeBy: sum
+		sourceColumn: liquidites_8_9
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column citation
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 53ece9ce-6fe5-49f8-958e-3793d2c000a5
+		summarizeBy: none
+		sourceColumn: citation
+
+		annotation SummarizationSetBy = Automatic
+
+	column lu_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 7c7b41f9-34df-4761-b71a-e66c2eae8d6b
+		summarizeBy: none
+		sourceColumn: lu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column note
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: da87bb6c-0a95-4d2d-957e-0c7d1884c43b
+		summarizeBy: none
+		sourceColumn: note
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_du_seuil
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 8e29432c-9b15-470f-937f-eeed8f2afc13
+		summarizeBy: none
+		sourceColumn: source_du_seuil
+
+		annotation SummarizationSetBy = Automatic
+
+	column calcul_a_valider
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: da745a2b-e1e5-4df0-902f-9cab5f1a7f5d
+		summarizeBy: none
+		sourceColumn: calcul_a_valider
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ratio_arrete = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ratio_arrete = Source{[Schema="dbo",Item="v_ratio_arrete"]}[Data]
+				in
+				    dbo_v_ratio_arrete
+

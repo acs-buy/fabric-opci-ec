@@ -1,0 +1,35 @@
+table v_dim_arrete
+	lineageTag: 43960e07-b823-4350-9583-716165e9b1f5
+
+	/// Arrete affiche : la selection, sinon le dernier arrete portant une valeur liquidative pour l'entite courante.
+	measure 'Arrete courant' = IF(HASONEVALUE(v_dim_arrete[arrete]), SELECTEDVALUE(v_dim_arrete[arrete]), VAR e = [Entite courante] RETURN CALCULATE(MAX(v_valeur_liquidative[arrete]), FILTER(ALL(v_valeur_liquidative), v_valeur_liquidative[entite] = e)))
+		displayFolder: Le dossier
+		lineageTag: e3ea3d2b-781d-41be-97a2-90c22bd74b6f
+
+	measure 'Exercice courant' = VAR a = MAXX ( FILTER ( ALL ( v_dim_arrete ), NOT ISBLANK ( v_dim_arrete[arrete] ) ), v_dim_arrete[arrete] ) RETURN IF ( ISBLANK ( a ), FORMAT ( TODAY (), "yyyy" ), LEFT ( a, 4 ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 50066cd8-3178-4672-8040-516c5ce96015
+
+	measure 'Arrete selectionne' = IF ( HASONEVALUE ( v_dim_arrete[arrete] ), SELECTEDVALUE ( v_dim_arrete[arrete] ) )
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 7ef3ab62-0c65-4c81-872a-6ce4e523dfe7
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_dim_arrete = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_dim_arrete = Source{[Schema="dbo",Item="v_dim_arrete"]}[Data]
+				in
+				    dbo_v_dim_arrete
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,84 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table journal_perimetre
+	lineageTag: f3e2e41a-cb30-48cd-9a65-92377dd1a5a1
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 7c403e02-b475-423e-af37-6fb5cf19f00f
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_mere
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 9113a7fc-177e-4846-abb1-01513b8cdc24
+		summarizeBy: none
+		sourceColumn: entite_mere
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_fille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 6a42a5e9-8853-42f4-ab4b-c68df14c0cb8
+		summarizeBy: none
+		sourceColumn: entite_fille
+
+		annotation SummarizationSetBy = Automatic
+
+	column action
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: fd968f8e-f7f8-417e-b1a0-67a69fec556a
+		summarizeBy: none
+		sourceColumn: action
+
+		annotation SummarizationSetBy = Automatic
+
+	column detail
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: f51f75eb-9d71-4a33-830b-b42f30de921c
+		summarizeBy: none
+		sourceColumn: detail
+
+		annotation SummarizationSetBy = Automatic
+
+	column fait_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: dd8097a8-4461-4f43-a1b6-5e3643bdf4aa
+		summarizeBy: none
+		sourceColumn: fait_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column fait_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 11d61669-d5ad-42af-9c12-59e92cd930ce
+		summarizeBy: none
+		sourceColumn: fait_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition journal_perimetre = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_journal_perimetre = Source{[Schema="dbo",Item="journal_perimetre"]}[Data]
+				in
+				    dbo_journal_perimetre
+

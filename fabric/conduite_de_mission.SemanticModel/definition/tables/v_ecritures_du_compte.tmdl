@@ -1,0 +1,257 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_ecritures_du_compte
+	lineageTag: 87c2f3bf-615b-44d6-acfa-2e97e991fb9a
+
+	/// Carte 3.5, sous-titre de la carte Comptes de la balance. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R35 Ecritures du compte' = COUNTROWS ( v_ecritures_du_compte )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 821bd395-d1f7-4612-a551-3b6cf883e24e
+
+	column ecriture_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 9d9a899c-3ab6-4e6b-9a66-9f46f8150430
+		summarizeBy: sum
+		sourceColumn: ecriture_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 57cbd2bf-c24c-4808-93ec-2625b48bd9ad
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d717874b-028b-4dc2-b4bd-ae6619e7ae16
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ea0f0276-f37d-4fe1-a8bf-9bfa7bb3c592
+		summarizeBy: none
+		sourceColumn: compte
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte_libelle
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: 14a5acd7-986d-4455-8f69-1c77965fa892
+		summarizeBy: none
+		sourceColumn: compte_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column classe
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: 3c2b6134-9aaa-4868-b5fa-466b8970dcb7
+		summarizeBy: none
+		sourceColumn: classe
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_ecriture
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: d31a7c8a-f416-40a8-a55c-2a8e6ab8a559
+		summarizeBy: none
+		sourceColumn: date_ecriture
+
+		annotation SummarizationSetBy = Automatic
+
+	column journal_code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: ee7b7cbe-a2e9-47ba-94b6-e86625857353
+		summarizeBy: none
+		sourceColumn: journal_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_ref
+		dataType: string
+		sourceProviderType: varchar(50)
+		lineageTag: bdb64f76-1d93-44a8-83ba-421cc7e01dd8
+		summarizeBy: none
+		sourceColumn: piece_ref
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: c97c4183-faeb-4049-baee-2779256a9a39
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column debit
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: e214c852-9acb-4fef-86be-5f1920887811
+		summarizeBy: sum
+		sourceColumn: debit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column credit
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 9e2218d1-4b88-4fe9-9a9a-094200243d08
+		summarizeBy: sum
+		sourceColumn: credit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column solde
+		dataType: double
+		sourceProviderType: decimal(20, 2)
+		lineageTag: dede4743-5f94-48ac-90c2-30a03e24808f
+		summarizeBy: sum
+		sourceColumn: solde
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lot_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 08dc23e9-fce9-4f97-ad3a-e886ccdee17b
+		summarizeBy: sum
+		sourceColumn: lot_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column lot_famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 34206d19-b4a6-437f-bd42-567b36262ae4
+		summarizeBy: none
+		sourceColumn: lot_famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column lot_statut
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 6996f339-e2b7-480b-8f43-27cf91df86e0
+		summarizeBy: none
+		sourceColumn: lot_statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column lot_portee
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: f547f7dc-781d-410a-a06c-cbbb4645b6e0
+		summarizeBy: none
+		sourceColumn: lot_portee
+
+		annotation SummarizationSetBy = Automatic
+
+	column lot_perime
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 1f55967e-6869-4060-b070-ac383db7d086
+		summarizeBy: none
+		sourceColumn: lot_perime
+
+		annotation SummarizationSetBy = Automatic
+
+	column origine
+		dataType: string
+		sourceProviderType: nvarchar(29)
+		lineageTag: fabaa841-91c2-458d-ac1e-5d453e382801
+		summarizeBy: none
+		sourceColumn: origine
+
+		annotation SummarizationSetBy = Automatic
+
+	column question_reference
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: a13747d3-c294-40cb-b6a4-7355e675a25b
+		summarizeBy: none
+		sourceColumn: question_reference
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuille_cote
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: a2e5880b-fb14-480a-92ff-be4c1786c836
+		summarizeBy: none
+		sourceColumn: feuille_cote
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: a8a3f43d-5dee-4cbb-a54f-b14542d7df17
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte_auxiliaire
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 100cc39e-884e-4667-877a-b53bd041a849
+		summarizeBy: none
+		sourceColumn: compte_auxiliaire
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte_origine
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 068793b4-823c-4850-ae71-412eb089f4f4
+		summarizeBy: none
+		sourceColumn: compte_origine
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecritures_du_compte = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecritures_du_compte = Source{[Schema="dbo",Item="v_ecritures_du_compte"]}[Data]
+				in
+				    dbo_v_ecritures_du_compte
+

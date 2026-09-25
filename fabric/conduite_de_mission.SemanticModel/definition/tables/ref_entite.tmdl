@@ -1,0 +1,464 @@
+table ref_entite
+	lineageTag: 5fc83b43-7fa8-4444-945c-dfde8acdd1b3
+
+	/// Entités du périmètre filtré.
+	measure 'Entites du perimetre' = DISTINCTCOUNT(ref_entite[Entité])
+		formatString: #,0
+		displayFolder: Client
+		lineageTag: cd0c04eb-aecc-44e2-9c45-3a61169fdcf1
+
+	/// Code de l'entite affichee : la selection, sinon le premier vehicule.
+	measure 'Entite courante' = IF(HASONEVALUE(ref_entite[Entité]), SELECTEDVALUE(ref_entite[Entité]), CALCULATE(MIN(ref_entite[Entité]), FILTER(ALL(ref_entite), NOT ISBLANK(ref_entite[forme_vehicule]))))
+		displayFolder: Le dossier
+		lineageTag: 6e97c78b-8d3e-4616-9fca-c5c27c815e24
+
+	/// Denomination de l'entite affichee.
+	measure 'Denomination courante' = VAR e = [Entite courante] RETURN CALCULATE(MIN(ref_entite[Dénomination]), FILTER(ALL(ref_entite), ref_entite[Entité] = e))
+		displayFolder: Le dossier
+		lineageTag: 1e0cb6c9-bb29-4d8f-9be8-c708ecefa71e
+
+	/// Carte 1. Arbitree le 15/09/2026 par la session de la base.
+	measure 'Clients du cabinet' = CALCULATE ( COUNTROWS ( ref_entite ), ref_entite[est_client] = TRUE () )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: dc627918-582a-4cbf-9d06-ef66154ec660
+
+	measure 'Client selectionne' = VAR choisi = IF ( HASONEVALUE ( ref_entite[Entité] ) && SELECTEDVALUE ( ref_entite[est_client] ) = TRUE (), SELECTEDVALUE ( ref_entite[Entité] ) ) VAR dernier = MAXX ( TOPN ( 1, FILTER ( ALL ( ref_entite ), ref_entite[est_client] = TRUE () ), ref_entite[cree_le], DESC, ref_entite[Entité], ASC ), ref_entite[Entité] ) RETURN IF ( NOT ISBLANK ( choisi ), choisi, dernier )
+		displayFolder: Ecran 1 Client
+		lineageTag: 6b4e330e-c713-4887-9165-58ff6d88d837
+
+	measure 'Cote acceptation' = IF ( NOT ISBLANK ( [Client selectionne] ), "ACC-" & [Client selectionne] )
+		displayFolder: Ecran 1 Client
+		lineageTag: 40471883-932f-4c40-9fa7-0d77122fbe08
+
+	measure 'Titre état 1' = "Nouveau client"
+		displayFolder: Ecran 1 Client
+		lineageTag: 22f0e1a5-5f7c-4a7a-a9b2-738f6b77d491
+
+	measure 'Titre état 2' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", périmètre du groupe" )
+		displayFolder: Ecran 1 Client
+		lineageTag: be72f205-e3bb-46e6-8d8f-fb86140536bd
+
+	measure 'Titre état 3' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", questionnaire d'acceptation" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 9f6662f2-efa5-4e47-b35e-d0051dbf3b1b
+
+	measure 'Titre état 4' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", pièces du dossier permanent" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 59c05e11-6e38-4a79-b1d6-ac2a899cdbd5
+
+	measure 'Titre état 5' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", soumission au visa" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 3d91303b-5d5d-49cb-86ef-083658d4d4be
+
+	measure 'Titre état 6' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", ouverture de l'arrêté" )
+		displayFolder: Ecran 1 Client
+		lineageTag: fb00cd50-1b5f-4713-acb8-04070925f9e2
+
+	measure 'Titre état 7' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", client accepté" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 6f8bcc49-518b-4415-bdac-8a870af0ad6f
+
+	measure 'Étape 1' = "Nouveau client"
+		displayFolder: Ecran 1 Client
+		lineageTag: 6cc0538b-a0f7-48bf-9bc2-888876108b8c
+
+	measure 'Étape 2' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", périmètre du groupe" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 116fe571-11eb-4dbd-bed9-8202a5fcc397
+
+	measure 'Étape 3' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", questionnaire d'acceptation" )
+		displayFolder: Ecran 1 Client
+		lineageTag: b293e347-676d-43ab-a7b4-341028075ad0
+
+	measure 'Étape 4' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", pièces du dossier permanent" )
+		displayFolder: Ecran 1 Client
+		lineageTag: b067474b-b259-423a-825c-880ae7b69809
+
+	measure 'Étape 5' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", soumission au visa" )
+		displayFolder: Ecran 1 Client
+		lineageTag: d2db8f08-8e63-415e-aef6-bd5a14569921
+
+	measure 'Étape 6' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", ouverture de l'arrêté" )
+		displayFolder: Ecran 1 Client
+		lineageTag: b677ab07-a3df-487f-ba52-899ceec3164f
+
+	measure 'Étape 7' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", client accepté" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 94b2b21c-1b36-4cba-9367-1c76f22ad01b
+
+	measure 'Sous-ligne clients' = VAR n = CALCULATE ( COUNTROWS ( ref_entite ) ) RETURN IF ( ISBLANK ( n ), "aucune entité", FORMAT ( n, "#,0" ) & " entités au périmètre" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 12700850-775e-4be4-9c4e-6ca63281fcbd
+
+	measure 'En-tête étape 1' = [Client selectionne] & " · " & [Denomination du client]
+		displayFolder: Ecran 1 Client
+		lineageTag: 1690de3f-2d2c-42cc-a7b7-c9d0abb77ef5
+
+	measure 'En-tête étape 2' = [Client selectionne] & ", périmètre du groupe"
+		displayFolder: Ecran 1 Client
+		lineageTag: f10afc7c-7205-4980-87d5-3f4fbb268307
+
+	measure 'En-tête étape 3' = [Client selectionne]
+		displayFolder: Ecran 1 Client
+		lineageTag: 2f6094a5-0793-4e90-b3ec-9dadc8d6ee85
+
+	measure 'En-tête étape 4' = [Client selectionne] & " · soumettre au visa, et suivre le statut"
+		displayFolder: Ecran 1 Client
+		lineageTag: 26ca34d8-fd9f-44df-92d7-bb6d63a9392e
+
+	measure 'En-tête étape 5' = [Client selectionne] & " · ouvrir le premier arrêté, et fixer la périodicité"
+		displayFolder: Ecran 1 Client
+		lineageTag: 113526c2-f60b-4a90-b1a0-729872ff7f05
+
+	measure 'En-tête étape 6' = "Étape 6 · " & ( VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", ouverture de l'arrêté" ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 19cf1b42-52dc-4fe9-9c29-cbf910e00020
+
+	measure 'En-tête étape 7' = "Étape 7 · " & ( VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Choisissez un client", c & ", client accepté" ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 53c0313d-6017-4028-b4f4-c7a15a6807c8
+
+	measure 'L Dénomination' = SELECTEDVALUE ( ref_entite[Dénomination] )
+		displayFolder: Ecran 1 Client
+		lineageTag: 76be0f9f-a956-452a-a502-636622d41ff1
+
+	measure 'Est un client' = IF ( SELECTEDVALUE ( ref_entite[est_client] ) = TRUE (), "oui", "non" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 5c58674f-8cd6-47a8-80d2-ed760b1f7f6d
+
+	/// Carte fond de la ligne d'un client dans la liste. Arbitree le 15/09/2026 par la session de la base.
+	measure 'Fond ligne entite' = IF ( [Est un client] = "oui", "#F4F8FC", "#FFFFFF" )
+		displayFolder: Ecran 1 Client
+		lineageTag: c618702f-1ac4-47c4-b914-1ca87abc01a0
+
+	measure 'Denomination du client' = VAR c = [Client selectionne] RETURN CALCULATE ( SELECTEDVALUE ( ref_entite[Dénomination] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 8f05e820-2bf7-4792-b312-b9de37358192
+
+	measure 'Cote questionnaire' = [Cote acceptation]
+		displayFolder: Ecran 1 Client
+		lineageTag: 124b045a-50cc-4c07-b2dd-c18535fa3324
+
+	/// Carte titre du formulaire de creation. Arbitree le 15/09/2026 par la session de la base.
+	measure 'En-tête étape 1b' = "Nouveau dossier client"
+		displayFolder: Ecran 1 Client
+		lineageTag: 36578599-c8e3-4bba-87dd-a831dbc67027
+
+	/// Carte titre du formulaire de modification. Arbitree le 15/09/2026 par la session de la base.
+	measure 'En-tête étape 1c' = "Modifier " & [Client selectionne] & " · un champ laissé vide reste inchangé"
+		displayFolder: Ecran 1 Client
+		lineageTag: bcc9fa98-0112-491d-86de-8662019d25d0
+
+	/// Carte Identite, FORME. Arbitree le 15/09/2026 par la session de la base.
+	measure 'Forme du client' = VAR c = [Client selectionne] RETURN CALCULATE ( SELECTEDVALUE ( ref_entite[forme_vehicule] ) & " · " & SELECTEDVALUE ( ref_entite[forme_sociale] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: f8c91bd0-2968-457d-805b-88743ac9c4e7
+
+	measure 'SIREN du client' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( ref_entite[siren] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN IF ( ISBLANK ( s ), "sans SIREN", "SIREN " & LEFT ( s, 3 ) & " " & MID ( s, 4, 3 ) & " " & RIGHT ( s, 3 ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 8101ef6b-43ce-4802-b622-8db261b1b355
+
+	measure 'Cloture et VL' = VAR c = [Client selectionne] VAR cl = CALCULATE ( SELECTEDVALUE ( ref_entite[cloture] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) VAR vl = CALCULATE ( SELECTEDVALUE ( ref_entite[periodicite_vl] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN SUBSTITUTE ( cl, "-", "/" ) & " · " & IF ( ISBLANK ( vl ), "VL à fixer", LOWER ( vl ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: d227bdcf-d1b3-49dd-8ea5-d0ca23487249
+
+	measure 'Adresse du client' = VAR c = [Client selectionne] VAR x = CALCULATE ( SELECTEDVALUE ( ref_entite[adresse_1] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) VAR p = SEARCH ( " (", x, 1, 0 ) VAR net = IF ( p > 0, TRIM ( LEFT ( x, p - 1 ) ), x ) RETURN IF ( LEN ( net ) > 32, LEFT ( net, 31 ) & "…", net )
+		displayFolder: Ecran 1 Client
+		lineageTag: d23c5e88-0737-44e6-9f4e-ea0fa78a77c9
+
+	measure 'Dirigeant du client' = VAR c = [Client selectionne] VAR x = CALCULATE ( SELECTEDVALUE ( ref_entite[dirigeant_nom] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) VAR p = SEARCH ( " (", x, 1, 0 ) VAR net = IF ( p > 0, TRIM ( LEFT ( x, p - 1 ) ), x ) RETURN IF ( LEN ( net ) > 32, LEFT ( net, 31 ) & "…", net )
+		displayFolder: Ecran 1 Client
+		lineageTag: c0ff727a-f9fb-4417-ba03-edb3a76f8c01
+
+	measure 'Contact du client' = VAR c = [Client selectionne] VAR x = CALCULATE ( SELECTEDVALUE ( ref_entite[contact_nom] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) VAR p = SEARCH ( " (", x, 1, 0 ) VAR net = IF ( p > 0, TRIM ( LEFT ( x, p - 1 ) ), x ) RETURN IF ( LEN ( net ) > 32, LEFT ( net, 31 ) & "…", net )
+		displayFolder: Ecran 1 Client
+		lineageTag: 16d119f0-f909-4061-990d-15612873259f
+
+	measure 'Actuel Denomination' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[Dénomination] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: bebd2b21-74e5-443c-bdd7-43eeed8f5a39
+
+	measure 'Actuel SIREN' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[siren] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: b0f3d062-8268-40bd-8103-997196d690f3
+
+	measure 'Actuel Forme du vehicule' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: b73a4a9e-d594-42de-8055-5997319741ab
+
+	measure 'Actuel Forme sociale' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[forme_sociale] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 876cc523-e798-4d4d-b07b-a5d29586e06d
+
+	measure 'Actuel Adresse' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[adresse_1] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 8a228a0a-c41d-44da-b7bc-d60048aeeb14
+
+	measure 'Actuel Complement d adresse' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[adresse_2] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 0d0bdbe9-a080-480d-b040-5ddf8fc72151
+
+	measure 'Actuel Code postal' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[code_postal] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 4f7a73a6-373f-43a6-8c71-7c98a4856a40
+
+	measure 'Actuel Ville' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[ville] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 4990bb08-7326-48b8-8ac8-df9c91261a86
+
+	measure 'Actuel Pays' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[pays] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 795ba195-d031-4187-ba61-d42dc71d1197
+
+	measure 'Actuel Nom du dirigeant' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[dirigeant_nom] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: ab73545e-f55e-4d25-9e7e-ec522790723f
+
+	measure 'Actuel Qualite du dirigeant' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[dirigeant_qualite] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 17eb55e2-5f68-4553-b7f0-1af75a9b16d8
+
+	measure 'Actuel Contact nom' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[contact_nom] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 23e21cf3-3ca3-4e2e-b943-71ebaf693ff6
+
+	measure 'Actuel Contact courriel' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[contact_courriel] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 1d3e2d3a-5bd3-4da2-95b4-fead725b3bdd
+
+	measure 'Actuel Contact telephone' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[contact_telephone] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: c15ec44c-f2fe-4b15-b0eb-7a8f98824061
+
+	measure 'Actuel Cloture' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[cloture] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: e42e73df-9761-4e79-bc60-870fbbebbda5
+
+	measure 'En-tête étape 2b' = "Ajouter une filiale à " & [Client selectionne]
+		displayFolder: Ecran 1 Client
+		lineageTag: 1212ef51-4187-41c8-9623-c2d2f4b240ca
+
+	measure 'En-tête étape 2c' = "Modifier " & [Titre filiale]
+		displayFolder: Ecran 1 Client
+		lineageTag: 09171af6-5ea7-4089-91c9-6d4f0fe5646f
+
+	measure 'En-tête étape 2d' = "Supprimer une filiale du périmètre de " & [Client selectionne]
+		displayFolder: Ecran 1 Client
+		lineageTag: 0d40fbf8-970f-48b1-bf90-48b374206349
+
+	measure 'Dirigeant du client (sous-ligne)' = VAR c = [Client selectionne] VAR q = CALCULATE ( SELECTEDVALUE ( ref_entite[dirigeant_qualite] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN IF ( ISBLANK ( q ), BLANK (), UPPER ( LEFT ( q, 1 ) ) & MID ( q, 2, 60 ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 8d4db713-79a4-4469-b97b-c57c0d934d31
+
+	measure 'Adresse du client (sous-ligne)' = VAR c = [Client selectionne] VAR cp = CALCULATE ( SELECTEDVALUE ( ref_entite[code_postal] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) VAR v = CALCULATE ( SELECTEDVALUE ( ref_entite[ville] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) VAR p = CALCULATE ( SELECTEDVALUE ( ref_entite[pays] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN cp & " " & v & IF ( ISBLANK ( p ) || p = "FR", "", " · " & p )
+		displayFolder: Ecran 1 Client
+		lineageTag: a80cdda0-0333-45ac-85e3-5445c8f2e630
+
+	measure 'Contact du client (sous-ligne)' = VAR c = [Client selectionne] VAR m = CALCULATE ( SELECTEDVALUE ( ref_entite[contact_courriel] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) VAR t = CALCULATE ( SELECTEDVALUE ( ref_entite[contact_telephone] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN IF ( ISBLANK ( m ), t, m )
+		displayFolder: Ecran 1 Client
+		lineageTag: c20e72c7-83ef-418e-b217-a1a8bb53066a
+
+	measure Cabinet = "ACS"
+		displayFolder: Ecran 1 Client
+		lineageTag: 79b54354-a2d6-4292-9407-f2f35bb1f930
+
+	measure 'En-tête étape 3b' = VAR r = [Reference acceptation selectionnee] RETURN IF ( ISBLANK ( r ), "Pièce justificative", "Pièce pour la question " & r )
+
+	measure 'Entite selectionnee' = IF ( HASONEVALUE ( ref_entite[Entité] ), SELECTEDVALUE ( ref_entite[Entité] ) )
+
+	measure 'Ref cycle' = IF ( NOT ISBLANK ( [Cycle selectionne] ), [Entite selectionnee] & "|" & [Arrete selectionne] & "|" & [Cycle selectionne] )
+
+	measure 'Ref revue' = IF ( NOT ISBLANK ( [Arrete selectionne] ), [Entite selectionnee] & "|" & [Arrete selectionne] )
+
+	column Entité
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 1d84f86f-65ed-4890-bee1-92508cd32366
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dénomination
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 9f4ed7a1-4110-45b7-805d-990931fa3c3f
+		summarizeBy: none
+		sourceColumn: denomination
+
+		annotation SummarizationSetBy = Automatic
+
+	column siren
+		dataType: string
+		sourceProviderType: char
+		lineageTag: 28ed0c8b-4941-423f-99c8-eaa85231780f
+		summarizeBy: none
+		sourceColumn: siren
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_vehicule
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: fe63f9ff-eaf9-4ed9-8494-f6cb9100dc0f
+		summarizeBy: none
+		sourceColumn: forme_vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_sociale
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 263f5fc6-57f6-43f6-8be8-04c4669a737e
+		summarizeBy: none
+		sourceColumn: forme_sociale
+
+		annotation SummarizationSetBy = Automatic
+
+	column adresse_1
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 4f9e63f3-9450-4e50-b35f-ddebaccbeaba
+		summarizeBy: none
+		sourceColumn: adresse_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column adresse_2
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: ba0928fe-5484-419c-bf3b-a3c83d1c5d99
+		summarizeBy: none
+		sourceColumn: adresse_2
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_postal
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 9db8a29f-a14e-40cc-9722-d0066f5bdae1
+		summarizeBy: none
+		sourceColumn: code_postal
+
+		annotation SummarizationSetBy = Automatic
+
+	column ville
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(100)
+		lineageTag: 97fcf6a5-28aa-4716-8cd4-8df7759bd7a7
+		summarizeBy: none
+		sourceColumn: ville
+
+		annotation SummarizationSetBy = Automatic
+
+	column pays
+		dataType: string
+		isNullable: false
+		sourceProviderType: char
+		lineageTag: 62f18b6e-e0b6-4f9f-a603-4618b7a26e87
+		summarizeBy: none
+		sourceColumn: pays
+
+		annotation SummarizationSetBy = Automatic
+
+	column dirigeant_nom
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 3a4a0ef8-3a79-4723-a655-7d3cff4507f1
+		summarizeBy: none
+		sourceColumn: dirigeant_nom
+
+		annotation SummarizationSetBy = Automatic
+
+	column dirigeant_qualite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(60)
+		lineageTag: 8b6569c4-e4c2-4a45-842a-0ac6a43c31ca
+		summarizeBy: none
+		sourceColumn: dirigeant_qualite
+
+		annotation SummarizationSetBy = Automatic
+
+	column contact_nom
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: ffb6cb20-adb1-4147-b6d4-5595a62964b8
+		summarizeBy: none
+		sourceColumn: contact_nom
+
+		annotation SummarizationSetBy = Automatic
+
+	column contact_courriel
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: d9d38069-2c37-4e1c-899c-8f3b95b1f2a5
+		summarizeBy: none
+		sourceColumn: contact_courriel
+
+		annotation SummarizationSetBy = Automatic
+
+	column contact_telephone
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: a0614801-644b-41fb-8980-2516653444db
+		summarizeBy: none
+		sourceColumn: contact_telephone
+
+		annotation SummarizationSetBy = Automatic
+
+	column cloture
+		dataType: string
+		isNullable: false
+		sourceProviderType: char
+		lineageTag: e0b35f17-512b-457a-a2d5-b9687a1299f8
+		summarizeBy: none
+		sourceColumn: cloture
+
+		annotation SummarizationSetBy = Automatic
+
+	column est_client
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 850853a2-2a82-4e87-9cfb-0973b3b70e73
+		summarizeBy: none
+		sourceColumn: est_client
+
+		annotation SummarizationSetBy = Automatic
+
+	column periodicite_vl
+		dataType: string
+		sourceProviderType: varchar
+		lineageTag: be65513f-61a1-47bb-97a8-e9ef239dd437
+		summarizeBy: none
+		sourceColumn: periodicite_vl
+
+		annotation SummarizationSetBy = Automatic
+
+	column cree_le
+		dataType: dateTime
+		sourceProviderType: datetime2
+		lineageTag: 4e3d788c-1d3b-4da6-a3ab-e976b6535934
+		summarizeBy: none
+		sourceColumn: cree_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_entite = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_entite = Source{[Schema="dbo",Item="ref_entite"]}[Data]
+				in
+				    dbo_ref_entite
+
+	annotation PBI_ResultType = Table
+

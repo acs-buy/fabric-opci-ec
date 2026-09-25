@@ -1,0 +1,113 @@
+/// Qui tient quel role sur quelle entite, et de quand a quand : ASSOCIE, CHEF_MISSION ou PREPARATEUR, 16 entites chacun. La colonne connexion porte le compte nomme du reviseur, renseigne sur 32 lignes sur 48. Table de reference de la securite au niveau des lignes de la V2 du front office ; AUCUNE REGLE N'EST POSEE ICI, la regle DAX est ecrite par la session de la base. Ajoutee le 15/09/2026.
+table role_mission
+	lineageTag: 5cd6859a-939f-4a60-96be-80eee32293bc
+
+	measure 'Role du connecte' = VAR u = USERPRINCIPALNAME () VAR c = [Client selectionne] RETURN IF ( u <> "", SWITCH ( TRUE (), CALCULATE ( COUNTROWS ( role_mission ), FILTER ( ALL ( role_mission ), role_mission[connexion] = u && role_mission[entite] = c && role_mission[role] = "ASSOCIE" && role_mission[du] <= TODAY () && ( ISBLANK ( role_mission[au] ) || role_mission[au] >= TODAY () ) ) ) > 0, "ASSOCIE", CALCULATE ( COUNTROWS ( role_mission ), FILTER ( ALL ( role_mission ), role_mission[connexion] = u && role_mission[entite] = c && role_mission[role] = "CHEF_MISSION" && role_mission[du] <= TODAY () && ( ISBLANK ( role_mission[au] ) || role_mission[au] >= TODAY () ) ) ) > 0, "CHEF_MISSION", CALCULATE ( COUNTROWS ( role_mission ), FILTER ( ALL ( role_mission ), role_mission[connexion] = u && role_mission[entite] = c && role_mission[role] IN { "PREPARATEUR", "REVISEUR" } && role_mission[du] <= TODAY () && ( ISBLANK ( role_mission[au] ) || role_mission[au] >= TODAY () ) ) ) > 0, "REVISEUR" ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: b033a5cc-ea07-435c-8be8-b8a124d97c52
+
+	measure 'Superviseur connecte' = VAR r = [Role du connecte] RETURN IF ( r IN { "ASSOCIE", "CHEF_MISSION" }, USERPRINCIPALNAME () )
+		displayFolder: Ecran 1 Client
+		lineageTag: 20b1a6f0-b32d-4db3-9161-e98b7a787785
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 90914529-5a90-49fa-a28d-f0ec5a2d27a3
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d833a217-6537-4958-b7a1-5a6f9b0bfc41
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column role
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 77d97115-ea09-47be-a122-717d52018a26
+		summarizeBy: none
+		sourceColumn: role
+
+		annotation SummarizationSetBy = Automatic
+
+	column personne
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 7f13a576-9e84-4aa9-8728-e6d62080e37e
+		summarizeBy: none
+		sourceColumn: personne
+
+		annotation SummarizationSetBy = Automatic
+
+	column du
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: ac519513-56f6-47fe-8789-ae0784d2375c
+		summarizeBy: none
+		sourceColumn: du
+
+		annotation SummarizationSetBy = Automatic
+
+	column au
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 440fca35-42b2-4fcc-9c8c-bc6d0fee86fa
+		summarizeBy: none
+		sourceColumn: au
+
+		annotation SummarizationSetBy = Automatic
+
+	column pose_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 9d7f9c83-42b4-4829-832d-f8de978d7a2e
+		summarizeBy: none
+		sourceColumn: pose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column pose_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 4175b927-232b-4536-b63f-a7d1f1700187
+		summarizeBy: none
+		sourceColumn: pose_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column connexion
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: e1a27327-40ae-4d46-94bb-7125fec4561c
+		summarizeBy: none
+		sourceColumn: connexion
+
+		annotation SummarizationSetBy = Automatic
+
+	partition role_mission = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_role_mission = Source{[Schema="dbo",Item="role_mission"]}[Data]
+				in
+				    dbo_role_mission
+

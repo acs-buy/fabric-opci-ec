@@ -1,0 +1,94 @@
+/// L'obligation minimale de distribution, categorie par categorie : base, taux, montant, article L. 214-69 du CMF. Script 141.
+table v_client_obligation_distribution
+	lineageTag: 53f3922d-cd2c-4fdb-9a13-f7b49cfca476
+
+	/// La somme des fractions : l'obligation minimale de l'exercice.
+	measure 'Total obligation' = SUM ( v_client_obligation_distribution[Obligation] )
+		formatString: #,0.00
+		lineageTag: 711d9d86-6e3e-4e70-a7d4-765c493c9205
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		lineageTag: a8827c82-dd3f-4e32-bcc7-808463eb982f
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: fc0ca2f9-ca03-49d2-afd2-c2835e9cb5fe
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		lineageTag: 90481b21-e747-40d2-8a94-0e7ffb745cfa
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column ordre
+		dataType: int64
+		isHidden
+		lineageTag: d6fd20b6-06ef-407b-b821-0ce3c388454b
+		summarizeBy: none
+		sourceColumn: ordre
+
+	column Catégorie
+		dataType: string
+		lineageTag: 702922da-5acf-403d-b85e-c3abab867e94
+		summarizeBy: none
+		sourceColumn: categorie
+		sortByColumn: ordre
+
+	column 'Article du CMF'
+		dataType: string
+		lineageTag: 8f0ebfe2-f31e-424b-9b8c-d9119400ddf3
+		summarizeBy: none
+		sourceColumn: article
+
+	column 'Base de calcul'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: df9693a1-5f1e-4723-8af2-29081a4b7314
+		summarizeBy: none
+		sourceColumn: base_calcul
+
+	column Taux
+		dataType: decimal
+		formatString: 0 %
+		lineageTag: ede87cfb-e840-427d-83c1-412e05a4cf9d
+		summarizeBy: none
+		sourceColumn: taux
+
+	column Obligation
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 99ee7442-5c48-4cd6-ab80-a5766afafbab
+		summarizeBy: none
+		sourceColumn: obligation
+
+	column 'Report indirect N-1'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 9cf02a83-d7f4-4c92-8270-fc4d2dddd976
+		summarizeBy: none
+		sourceColumn: report_indirect_n_moins_1
+
+	column etat
+		dataType: string
+		isHidden
+		lineageTag: 230c9763-a378-4c05-9a38-a5493027ae1a
+		summarizeBy: none
+		sourceColumn: etat
+
+	partition v_client_obligation_distribution = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_obligation_distribution"]}[Data]
+				in
+				    dbo_v
+

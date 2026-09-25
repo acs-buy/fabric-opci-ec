@@ -1,0 +1,243 @@
+/// Les differences d'estimation par famille d'actif, entite et arrete : valeur comptable, valeur actuelle, difference, article du reglement ANC 2021-09. Source du pont comptable vers actuel du tableau de bord du dossier. Ajoutee le 09/09/2026.
+table v_differences_synthese
+	lineageTag: 68a75602-4701-4f3f-a37a-abb234c4f948
+
+	/// Valeur comptable des actifs des familles filtrees.
+	measure 'Valeur comptable des actifs' = SUM(v_differences_synthese[valeur_comptable])
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 56098b47-20fb-4129-85b9-9919479ef78a
+
+	/// Valeur actuelle des actifs, articles 211-6, 212-4 et 213-4.
+	measure 'Valeur actuelle des actifs' = SUM(v_differences_synthese[valeur_actuelle])
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 37648b93-ce93-4cfc-ba47-c88af26629a1
+
+	/// Ecart entre valeur actuelle et valeur comptable, par famille.
+	measure 'Difference d estimation des actifs' = SUM(v_differences_synthese[difference_estimation])
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 5bf0655b-2859-4886-b15a-d5ea8805ba89
+
+	/// Nombre d'actifs portes par les familles filtrees.
+	measure 'Actifs evalues' = SUM(v_differences_synthese[nombre_actifs]) + 0
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 710134d2-11dd-4db5-8ff4-af52becb3c9c
+
+	/// Ecart entre la difference d'estimation lue sur les actifs (vue de synthese) et celle comptabilisee dans les ecritures (v_anr_entite). Un ecart non nul est une anomalie du dossier, controle 153 du 09/09/2026.
+	measure 'Ecart actifs moins ecritures' = [Difference d estimation des actifs] - [Differences d estimation]
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: d5d38e8a-d26a-4c86-ab13-1ff9a09144ed
+
+	/// Differences d'estimation lues sur les actifs, entite et arrete affiches.
+	measure 'Differences des actifs du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Difference d estimation des actifs], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 68170126-ee9e-4f6b-a7f9-871a314680aa
+
+	/// Valeur comptable des actifs, entite et arrete affiches.
+	measure 'Valeur comptable du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Valeur comptable des actifs], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: a10f370f-968a-4a32-8618-8d3f0afdb2b0
+
+	/// Valeur actuelle des actifs, entite et arrete affiches.
+	measure 'Valeur actuelle du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Valeur actuelle des actifs], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: e94f5830-437b-4eb6-b681-99e1410bb3ef
+
+	/// Ecart actifs moins ecritures, entite et arrete affiches ; controle 153.
+	measure 'Ecart du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Ecart actifs moins ecritures], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 0f1a5651-79a7-412e-89d0-947a416467ab
+
+	/// Carte 3.2, Valeur comptable. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R32 Valeur comptable' = SUM ( v_differences_synthese[valeur_comptable] )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 63eff262-b1cc-4bdf-9364-926ae0c2ff10
+
+	/// Carte 3.2, Valeur actuelle. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R32 Valeur actuelle' = SUM ( v_differences_synthese[valeur_actuelle] )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: e1b329de-affc-4c4c-8cb9-d80d136f75b2
+
+	/// Carte 3.2, Difference d estimation. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R32 Difference d estimation' = SUM ( v_differences_synthese[difference_estimation] )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: aa0bd572-a4f9-427c-bf98-4c8644913ae2
+
+	/// Carte 3.2, sous-titre de la carte Valeur comptable. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R32 Actifs valorises' = SUM ( v_differences_synthese[nombre_actifs] )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 1993aeb7-e4ab-4619-9dc0-cf9f18a15201
+
+	/// Carte 3.2, Familles servies. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R32 Familles servies' = CALCULATE ( DISTINCTCOUNT ( v_differences_synthese[famille] ), v_differences_synthese[nombre_actifs] > 0 )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 505a1e6f-b6ab-472e-ab8e-6cf6ec949fad
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 3e3bdb3f-2ed2-47b7-a477-8ba9e2af142e
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: bab0f88d-1ca0-4c72-af4e-12c04fce047f
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 9d8d361b-e2f3-4316-a85f-a059c0dbaa35
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: 4d57fbcc-b5df-4ed9-b333-6a11592c9722
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		sourceProviderType: varchar(40)
+		lineageTag: 3ddd0dad-d924-4707-b823-ad54c09a09de
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column norme
+		dataType: string
+		sourceProviderType: varchar(14)
+		lineageTag: 4f2e3bf1-22f7-4e82-a485-ff3ab9eeb6bb
+		summarizeBy: none
+		sourceColumn: norme
+
+		annotation SummarizationSetBy = Automatic
+
+	column citation_courte
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 0b255344-68e7-4e93-ba1d-1492d01404a9
+		summarizeBy: none
+		sourceColumn: citation_courte
+
+		annotation SummarizationSetBy = Automatic
+
+	column nombre_actifs
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8cf670db-cc8e-4f2f-b716-170b5d53c4da
+		summarizeBy: sum
+		sourceColumn: nombre_actifs
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_comptable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: d16636d7-3e72-49c8-8400-b68d2475bb44
+		summarizeBy: sum
+		sourceColumn: valeur_comptable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_actuelle
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 8641d099-5cca-442f-801e-dac1d2207f50
+		summarizeBy: sum
+		sourceColumn: valeur_actuelle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column difference_estimation
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: a82ae128-9c10-4086-bbb6-5a76afffa190
+		summarizeBy: sum
+		sourceColumn: difference_estimation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: c8f346c2-1b91-4209-a6dc-71beccc714bf
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille_libelle
+		dataType: string
+		sourceProviderType: nvarchar(41)
+		lineageTag: 6f707a02-7e2b-4725-9865-25a76ce78515
+		summarizeBy: none
+		sourceColumn: famille_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille_libelle_court
+		dataType: string
+		sourceProviderType: nvarchar(16)
+		lineageTag: 0d3ccdea-4cba-4143-a24c-6952c788eebc
+		summarizeBy: none
+		sourceColumn: famille_libelle_court
+		sortByColumn: famille_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille_ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 9c6cbf57-1198-4068-99ab-39f363cab068
+		summarizeBy: sum
+		sourceColumn: famille_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_differences_synthese = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_differences_synthese = Source{[Schema="dbo",Item="v_differences_synthese"]}[Data]
+				in
+				    dbo_v_differences_synthese
+

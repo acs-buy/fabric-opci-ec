@@ -1,0 +1,173 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table maintien_mission
+	lineageTag: 8bab0fb3-ea66-4424-808a-01b13ecf63e9
+
+	measure 'Maintien vise du dernier annuel' = VAR d = CALCULATE ( MAX ( arrete_mission[arrete] ), arrete_mission[type_arrete] = "ANNUEL" ) RETURN IF ( CALCULATE ( COUNTROWS ( maintien_mission ), maintien_mission[Exercice] = d, maintien_mission[Statut] = "APPROUVE" ) > 0, "OUI" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 3f0f809b-d256-48c0-b65f-94f9cb87e90b
+
+	measure 'Cote maintien courant' = VAR c = [Client selectionne] RETURN CALCULATE ( MAXX ( TOPN ( 1, FILTER ( ALL ( maintien_mission ), FILTER ( ALL ( maintien_mission ), maintien_mission[entite] = c ) ), maintien_mission[arrete_conclu], DESC ), maintien_mission[cote_questionnaire] ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 6f889352-e600-49fc-9603-8c259dfea3f4
+
+	measure 'Est client courant (maintiens)' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( maintien_mission ) ) RETURN IF ( SELECTEDVALUE ( maintien_mission[entite] ) = c, 1 )
+		formatString: 0
+		displayFolder: Ecran 1 Client
+		lineageTag: 3e5a94dd-ac0e-4922-93bd-0646ac2b7479
+
+	measure 'Libelle puce maintien' = VAR c = [Client selectionne] VAR a = CALCULATE ( MAX ( maintien_mission[Exercice] ), FILTER ( ALL ( maintien_mission ), maintien_mission[entite] = c ) ) RETURN IF ( ISBLANK ( a ), "Maintien (aucun ouvert)", "Maintien " & FORMAT ( a, "yyyy" ) )
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 82e1500b-fc4b-46dc-84f1-87d64d8b33c2
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f98365a0-3191-4655-bd4a-1bdeb322f5ff
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column Exercice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 62959c63-fc69-40dd-99e9-2198e47fb202
+		summarizeBy: none
+		sourceColumn: arrete_conclu
+
+		annotation SummarizationSetBy = Automatic
+
+	column Statut
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 9cab9698-5ee8-4a45-a8d5-161d8ccb9291
+		summarizeBy: none
+		sourceColumn: statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column Décision
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 247639c1-9f74-442d-a884-91eaeccf53d8
+		summarizeBy: none
+		sourceColumn: decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: df76e903-1939-4f59-9e07-c0e798c54fb2
+		summarizeBy: none
+		sourceColumn: motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Visé par'
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: e85884c6-a96a-420f-a9d3-3cedebf837ac
+		summarizeBy: none
+		sourceColumn: approuve_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column Le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: 0461afb7-02e0-49b3-bd7f-f8f4faa787b4
+		summarizeBy: none
+		sourceColumn: approuve_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column cree_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 54d3b4c4-5fd4-48c2-9a94-0d0c6aba4915
+		summarizeBy: none
+		sourceColumn: cree_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column cree_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 24fa2dfd-edf9-432c-b7fd-84061ab62471
+		summarizeBy: none
+		sourceColumn: cree_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column cote_questionnaire
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: 4ce143f3-e8e5-47da-a30c-dcf2046ea05d
+		summarizeBy: none
+		sourceColumn: cote_questionnaire
+
+		annotation SummarizationSetBy = Automatic
+
+	column reprise_motif
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 7a2c253c-eb4b-4451-86e4-9b0bf689126e
+		summarizeBy: none
+		sourceColumn: reprise_motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 151adb3a-8e3d-45e4-a732-8f9721721966
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: f98306c9-34e0-4243-b69f-da1533511d8d
+		summarizeBy: none
+		sourceColumn: message_ecran_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran_pour
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 66e35394-0758-44bb-bec3-d1c8be17a455
+		summarizeBy: none
+		sourceColumn: message_ecran_pour
+
+		annotation SummarizationSetBy = Automatic
+
+	partition maintien_mission = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_maintien_mission = Source{[Schema="dbo",Item="maintien_mission"]}[Data]
+				in
+				    dbo_maintien_mission
+

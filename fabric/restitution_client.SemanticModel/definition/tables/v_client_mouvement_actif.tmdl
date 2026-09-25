@@ -1,0 +1,78 @@
+/// Les mouvements du portefeuille dans la periode : acquisitions, cessions, travaux. Rubrique 5 du DIP. Script 141.
+table v_client_mouvement_actif
+	lineageTag: f0410297-d2e8-476d-b9f7-f5913d19c5b3
+
+	/// Le nombre de mouvements de la periode ; 0 se lit « aucun mouvement ».
+	measure 'Mouvements de la periode' = COUNTROWS ( v_client_mouvement_actif ) + 0
+		lineageTag: b2c58217-c8c1-4c41-9edc-a15f683bd7b0
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		lineageTag: 211032e7-fb9b-4e44-ab56-12ae63cffad5
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: 797119b5-9584-4b8f-ba0a-fd5fac02a908
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		lineageTag: a2eb7f92-8e38-4fbf-afdb-a020ce6c47b4
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column Actif
+		dataType: string
+		lineageTag: 4bcc95e1-74dc-4628-8c7d-21b814b0bbe3
+		summarizeBy: none
+		sourceColumn: code_actif
+
+	column Nature
+		dataType: string
+		lineageTag: d3e66a3d-5673-415b-a055-b46d94d5918d
+		summarizeBy: none
+		sourceColumn: nature
+
+	column 'Date du mouvement'
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: 16b7ef64-1d4a-4d81-af03-732e28e336b9
+		summarizeBy: none
+		sourceColumn: date_mouvement
+
+	column Montant
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 2327cbf5-8323-453e-a7f4-ac1a97b49712
+		summarizeBy: none
+		sourceColumn: montant
+
+	column 'Prix de cession'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 69a83474-8c62-400a-9203-3a22b1bbc4e3
+		summarizeBy: none
+		sourceColumn: prix_cession
+
+	column Frais
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: e3659417-3d9c-4a41-aa4d-96f0f2d2402e
+		summarizeBy: none
+		sourceColumn: frais
+
+	partition v_client_mouvement_actif = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_mouvement_actif"]}[Data]
+				in
+				    dbo_v
+

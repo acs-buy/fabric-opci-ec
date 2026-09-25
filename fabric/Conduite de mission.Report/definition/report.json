@@ -1,0 +1,61 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "resourcePackages": [
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "fond_ecran_client.png",
+          "path": "fond_ecran_client.png",
+          "type": "Image"
+        },
+        {
+          "name": "ConduiteMission.json",
+          "path": "ConduiteMission.json",
+          "type": "CustomTheme"
+        },
+        {
+          "name": "fond_ecran_revision.png",
+          "path": "fond_ecran_revision.png",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "themeCollection": {
+    "baseTheme": {
+      "name": "Fluent2-CY26SU08",
+      "type": "SharedResources",
+      "reportVersionAtImport": {
+        "visual": "2.12.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      }
+    },
+    "customTheme": {
+      "name": "ConduiteMission.json",
+      "type": "RegisteredResources",
+      "reportVersionAtImport": {
+        "visual": "2.12.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      }
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

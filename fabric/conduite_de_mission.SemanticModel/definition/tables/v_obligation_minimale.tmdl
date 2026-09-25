@@ -1,0 +1,72 @@
+/// L'obligation minimale de distribution par exercice, article L. 214-69 du CMF. Tableau de bord Arrete et livrables. Ajoutee le 09/09/2026.
+table v_obligation_minimale
+	lineageTag: 748e898e-ff3d-4a61-af4a-b8905621d6b6
+
+	/// Obligation minimale de distribution, L. 214-69.
+	measure 'Obligation minimale' = SUM(v_obligation_minimale[obligation_minimale])
+		formatString: #,0.00
+		displayFolder: Parcours
+		lineageTag: 32fb1190-64da-4f35-bdc2-837bd355a708
+
+	/// Obligation minimale, entite et arrete affiches.
+	measure 'Obligation minimale du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Obligation minimale], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0.00
+		displayFolder: Le dossier
+		lineageTag: 21b9ff4f-415f-42eb-82b5-e482983907b0
+
+	/// Carte 4.2, Obligation minimale. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R42 Obligation minimale' = VAR lignes = COUNTROWS ( v_obligation_minimale ) RETURN IF ( lignes = 1, SUM ( v_obligation_minimale[obligation_minimale] ) )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 0bc33dd6-2607-4be7-9b1b-8180658bc48a
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b991c07d-42fa-460a-b471-e70d7f3e3aab
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: da47f04d-3c4c-410a-b536-1a6cd9fccb5a
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column obligation_minimale
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 83d8c54d-f527-43a1-95d6-871391cda686
+		summarizeBy: sum
+		sourceColumn: obligation_minimale
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column categories_renseignees
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f0926443-2cdf-4ade-9cbd-173f1dcd33ab
+		summarizeBy: sum
+		sourceColumn: categories_renseignees
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_obligation_minimale = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_obligation_minimale = Source{[Schema="dbo",Item="v_obligation_minimale"]}[Data]
+				in
+				    dbo_v_obligation_minimale
+

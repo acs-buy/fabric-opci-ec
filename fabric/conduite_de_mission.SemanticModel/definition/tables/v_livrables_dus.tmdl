@@ -1,0 +1,215 @@
+/// Les livrables dus par entite et arrete, avec leur production et leur peremption. Source de la carte Livrables produits du tableau de bord du dossier. Ajoutee le 09/09/2026.
+table v_livrables_dus
+	lineageTag: 5479c11d-be89-474d-8fc4-570267a1fe76
+
+	/// Livrables dus sur le perimetre filtre.
+	measure 'Livrables dus' = COUNTROWS(v_livrables_dus) + 0
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 19e24046-621c-4e0d-96a4-b95ffb4ecf89
+
+	/// Livrables portant une date de production.
+	measure 'Livrables produits' = CALCULATE(COUNTROWS(v_livrables_dus), NOT ISBLANK(v_livrables_dus[produit_le])) + 0
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 690a1f9f-7a89-40e4-96df-f708b474df6f
+
+	/// Livrables dus non encore produits.
+	measure 'Livrables restants' = [Livrables dus] - [Livrables produits]
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 053ed5fd-3cdd-401d-b8bc-d454ffaa6b5e
+
+	/// Part des livrables produits parmi les dus.
+	measure 'Part des livrables produits' = DIVIDE([Livrables produits], [Livrables dus])
+		formatString: 0 %
+		displayFolder: Le dossier
+		lineageTag: 5139af4d-ad0d-4e24-b6d7-44ce42a218a3
+
+	/// Libelle de carte : produits sur dus.
+	measure 'Livrables produits sur dus' = [Livrables produits] & " sur " & [Livrables dus]
+		displayFolder: Le dossier
+		lineageTag: 6e6433cc-3073-4c9e-8666-257faddbacb0
+
+	/// Livrables dus, entite et arrete affiches.
+	measure 'Livrables dus du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Livrables dus], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: d12234b4-38d7-4d27-ac84-34630a418392
+
+	/// Livrables produits, entite et arrete affiches.
+	measure 'Livrables produits du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Livrables produits], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 73ac2c5f-358c-47fc-92d1-238eb50f1e65
+
+	/// Alias.
+	measure 'Livrables dus du dossier courant' = [Livrables dus du dossier]
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: cd69714a-0d4d-4b85-9919-c1437b7f43e3
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 1cf32074-3a13-4e64-86bc-1296169fa4af
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: bb4faafc-c31d-440d-9957-4a194c63fe46
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: 442fed64-5670-4cc3-b69b-a2d64821de43
+		summarizeBy: none
+		sourceColumn: type_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: cb1bfae6-6155-4b4c-9dcc-7fe8fc74c36b
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column livrable
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 59ca64d6-3343-4cb8-b93f-23983abbf594
+		summarizeBy: none
+		sourceColumn: livrable
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: d373a39e-1fe9-4649-b8bc-babb73c8d722
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 556f2319-3540-4eb7-95a9-554234dc8854
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: afeaed21-61f0-473a-bdea-6359bebd516e
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column etape_5_cloturee
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: b84c534c-2434-4c45-a39f-9581bc7053d5
+		summarizeBy: none
+		sourceColumn: etape_5_cloturee
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_version
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ba5810c2-f712-4762-9cef-b1248365f870
+		summarizeBy: none
+		sourceColumn: derniere_version
+
+		annotation SummarizationSetBy = Automatic
+
+	column produit_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: df8e0a00-6676-448c-8c18-98bc76d803b5
+		summarizeBy: none
+		sourceColumn: produit_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column produit_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: dd42893b-c3e9-4a00-8806-deee4ca209ee
+		summarizeBy: none
+		sourceColumn: produit_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 442e98b7-fa34-44d7-91d1-81c6d8197b7f
+		summarizeBy: none
+		sourceColumn: perime_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime_motif
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 3b7da49f-baee-4d10-8e18-a8eba3784ca8
+		summarizeBy: none
+		sourceColumn: perime_motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(4000)
+		lineageTag: f11d7cbe-2dfd-4b6f-8f57-55c620c87df5
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 33356be9-a02f-4033-b9e3-28fbdd3dea32
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_livrables_dus = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_livrables_dus = Source{[Schema="dbo",Item="v_livrables_dus"]}[Data]
+				in
+				    dbo_v_livrables_dus
+

@@ -1,0 +1,71 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_plafond_distribuable
+	lineageTag: 0a7ff6be-2c48-4001-83b0-fb627c4a363d
+
+	/// Carte 4.2, Plafond distribuable. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R42 Plafond distribuable' = VAR lignes = COUNTROWS ( v_plafond_distribuable ) RETURN IF ( lignes = 1, SUM ( v_plafond_distribuable[plafond_distribuable] ) )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 76f02e0c-5915-44f4-9082-7dae0b9f9382
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: a62b3117-b637-4183-80fc-f3796c1fc2f9
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 8d1b29e6-2321-4be3-9c92-556ecdc46380
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column resultat_distribuable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7c397394-eb4a-41e3-8183-61ebe54e184f
+		summarizeBy: sum
+		sourceColumn: resultat_distribuable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column plus_values_distribuables
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: a2c13df5-61b3-4204-a7ce-ac1dafa36448
+		summarizeBy: sum
+		sourceColumn: plus_values_distribuables
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column plafond_distribuable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 6055e0a1-86f2-49e6-8c63-6b155dcb0d10
+		summarizeBy: sum
+		sourceColumn: plafond_distribuable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition v_plafond_distribuable = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_plafond_distribuable = Source{[Schema="dbo",Item="v_plafond_distribuable"]}[Data]
+				in
+				    dbo_v_plafond_distribuable
+

@@ -1,0 +1,138 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_ecran_maintiens
+	lineageTag: 743e0174-66be-432a-ad0f-94b9366b862d
+
+	measure 'Fond statut maintien' = VAR s = SELECTEDVALUE ( v_ecran_maintiens[statut_code] ) RETURN SWITCH ( s, "APPROUVE", "#EFF6F2", "REFUSE", "#F9ECEC", "A_FAIRE", "#FAF2E2", "#FAF2E2" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 1463f65a-02ab-4091-b678-29a06b3c7a94
+
+	measure 'Maintiens du client' = VAR c = [Client selectionne] RETURN CALCULATE ( COUNTROWS ( v_ecran_maintiens ), FILTER ( ALL ( v_ecran_maintiens ), v_ecran_maintiens[entite] = c && v_ecran_maintiens[a_faire] = FALSE () ) ) + 0
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: cc8e4613-6ede-47af-842a-b0891e4718a6
+
+	measure 'Texte statut maintien' = VAR s = SELECTEDVALUE ( v_ecran_maintiens[statut_code] ) RETURN SWITCH ( s, "APPROUVE", "#1F6D4A", "REFUSE", "#9A2A2A", "#8A6710" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 4d366a57-ea4d-46ef-a494-2141eebbb179
+
+	measure 'Est maintien du client courant' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_maintiens ) ) RETURN IF ( SELECTEDVALUE ( v_ecran_maintiens[entite] ) = c, 1 )
+		formatString: 0
+		displayFolder: Ecran 1 Client
+		lineageTag: f80b979b-6931-4da9-9ed3-7facb6625ab3
+
+	measure 'Maintien selectionne' = SELECTEDVALUE ( v_ecran_maintiens[exercice] )
+		displayFolder: Ecran 1 Client
+		lineageTag: 72522f45-4966-41d0-bc8a-bc23c9d5d7c9
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e65ae8d0-2659-40c1-a216-397aa2ad9570
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column Exercice
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: f30c5626-fecd-4d76-b973-daf2c95637fb
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column Statut
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(14)
+		lineageTag: 04bad2a1-3ab4-45f1-906e-5eb833190c76
+		summarizeBy: none
+		sourceColumn: statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut_code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 66000b53-99c5-45f3-9467-9c56a9629cfa
+		summarizeBy: none
+		sourceColumn: statut_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Décision
+		dataType: string
+		sourceProviderType: nvarchar(27)
+		lineageTag: 74412a59-1864-4bfd-b1c5-e676a675bc4a
+		summarizeBy: none
+		sourceColumn: decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Visé par'
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: d17d45d7-c209-47fa-96c7-93162b3a0cb6
+		summarizeBy: none
+		sourceColumn: vise_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column Le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: cd9310ed-6284-49ad-9475-ccef51c5ac14
+		summarizeBy: none
+		sourceColumn: vise_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column cote_questionnaire
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: 8f762498-df06-46d8-8368-e5108456d00e
+		summarizeBy: none
+		sourceColumn: cote_questionnaire
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: ff0cf37c-53f2-4242-a0b4-166656f8d521
+		summarizeBy: none
+		sourceColumn: motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column a_faire
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: a41c27c8-82d1-46d3-b5f2-6562ecd0b20d
+		summarizeBy: none
+		sourceColumn: a_faire
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: varchar(44)
+		lineageTag: 2a8c9a30-ce20-42ea-846f-0864f5261692
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_maintiens = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_maintiens = Source{[Schema="dbo",Item="v_ecran_maintiens"]}[Data]
+				in
+				    dbo_v_ecran_maintiens
+

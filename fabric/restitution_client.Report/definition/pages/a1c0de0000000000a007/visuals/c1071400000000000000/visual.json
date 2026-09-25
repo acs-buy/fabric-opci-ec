@@ -1,0 +1,276 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "c1071400000000000000",
+  "position": {
+    "x": 24,
+    "y": 632,
+    "z": 1400,
+    "height": 330,
+    "width": 1232,
+    "tabOrder": 1400
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_actif"
+                    }
+                  },
+                  "Property": "Actif"
+                }
+              },
+              "queryRef": "v_client_patrimoine_actif.Actif",
+              "nativeQueryRef": "Actif"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_actif"
+                    }
+                  },
+                  "Property": "Famille"
+                }
+              },
+              "queryRef": "v_client_patrimoine_actif.Famille",
+              "nativeQueryRef": "Famille"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_actif"
+                    }
+                  },
+                  "Property": "Adresse"
+                }
+              },
+              "queryRef": "v_client_patrimoine_actif.Adresse",
+              "nativeQueryRef": "Adresse"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_actif"
+                    }
+                  },
+                  "Property": "Valeur comptable"
+                }
+              },
+              "queryRef": "v_client_patrimoine_actif.Valeur comptable",
+              "nativeQueryRef": "Valeur comptable"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_actif"
+                    }
+                  },
+                  "Property": "Valeur actuelle"
+                }
+              },
+              "queryRef": "v_client_patrimoine_actif.Valeur actuelle",
+              "nativeQueryRef": "Valeur actuelle"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_actif"
+                    }
+                  },
+                  "Property": "Source de la valeur"
+                }
+              },
+              "queryRef": "v_client_patrimoine_actif.Source de la valeur",
+              "nativeQueryRef": "Source de la valeur"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_patrimoine_actif"
+                    }
+                  },
+                  "Property": "Article du règlement"
+                }
+              },
+              "queryRef": "v_client_patrimoine_actif.Article du règlement",
+              "nativeQueryRef": "Article du règlement"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_client_patrimoine_actif"
+                  }
+                },
+                "Property": "Actif"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": false
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "columnAdjustment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'growToFit'"
+                }
+              }
+            },
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12233C'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF1F5'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'4. Le portefeuille : l''inventaire du patrimoine, articles 336-1 à 336-3'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12233C'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

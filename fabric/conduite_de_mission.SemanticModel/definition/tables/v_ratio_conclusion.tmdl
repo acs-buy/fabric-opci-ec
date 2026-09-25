@@ -1,0 +1,266 @@
+/// Les 4 ratios du CMF par arrete : ratio, seuil, sens, conformite, calcul a valider. Tableau de bord Arrete et livrables. Ajoutee le 09/09/2026.
+table v_ratio_conclusion
+	lineageTag: edddf27f-cd73-4e2a-ae0d-c66a008c4db8
+
+	/// Ratios calcules.
+	measure 'Ratios calcules' = COUNTROWS(v_ratio_conclusion) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: fa861edb-a24f-40e5-a927-63a2aa2984ec
+
+	/// Comparaison arithmetique du ratio a son seuil selon le sens ; indicative : la conformite
+	/// n'est pas conclue, la vue la laisse a NULL tant que le calcul est a valider.
+	measure 'Ratios en ecart au seuil' = SUMX(v_ratio_conclusion, IF((v_ratio_conclusion[sens] = "MINIMUM" && v_ratio_conclusion[ratio] < v_ratio_conclusion[seuil]) || (v_ratio_conclusion[sens] = "MAXIMUM" && v_ratio_conclusion[ratio] > v_ratio_conclusion[seuil]), 1, 0)) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 307d6d73-1c0a-4d19-9210-77e2f9f68161
+
+	/// Ratios dont le calcul porte la mention a valider.
+	measure 'Ratios a valider' = CALCULATE(COUNTROWS(v_ratio_conclusion), v_ratio_conclusion[calcul_a_valider] = TRUE()) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 84edc213-3d24-45a7-9a65-cbe2ed48d81c
+
+	/// Valeur du ratio de la ligne.
+	measure 'Valeur du ratio' = MAX(v_ratio_conclusion[ratio])
+		formatString: 0.00 %
+		displayFolder: Parcours
+		lineageTag: 025047b5-68e2-4824-9103-2e972a148885
+
+	/// Seuil du ratio de la ligne.
+	measure 'Seuil du ratio' = MAX(v_ratio_conclusion[seuil])
+		formatString: 0 %
+		displayFolder: Parcours
+		lineageTag: 74949d5e-ec28-4b62-a538-e29b76c3f83a
+
+	/// Ratios en ecart au seuil, entite et arrete affiches.
+	measure 'Ratios en ecart au seuil du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Ratios en ecart au seuil], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: c985f4c6-e551-4f58-a385-6736b904ca12
+
+	/// Ratios a valider, entite et arrete affiches.
+	measure 'Ratios a valider du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Ratios a valider], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 98714207-c103-4bab-a2f2-c9e5e725384d
+
+	/// Ratio de la ligne, entite et arrete affiches.
+	measure 'Valeur du ratio du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Valeur du ratio], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: 0.00 %
+		displayFolder: Le dossier
+		lineageTag: 79b47ca5-3974-486c-9e9c-17b1e45faf10
+
+	/// Seuil de la ligne, entite et arrete affiches.
+	measure 'Seuil du ratio du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Seuil du ratio], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: 0 %
+		displayFolder: Le dossier
+		lineageTag: dea557d6-78e2-4c41-bcd1-89ec63ba0b7d
+
+	/// Ratios calcules, entite et arrete affiches.
+	measure 'Ratios calcules du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Ratios calcules], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: e4549577-b3f4-45e2-b39e-97dd97c2003d
+
+	/// Carte 4.1, denominateur de la carte Calculs a valider. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R41 Ratios applicables' = COUNTROWS ( v_ratio_conclusion )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 79e174cf-848f-4d42-99ce-c2e562861622
+
+	/// Carte 4.1, Calculs a valider. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R41 Calculs a valider' = CALCULATE ( COUNTROWS ( v_ratio_conclusion ), v_ratio_conclusion[calcul_a_valider] = TRUE () )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 0d7f8b96-0e4f-49b0-8890-f527ab3df980
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 6824ba37-c304-4341-a54f-f7b2d4aeb962
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d8e871e0-2638-444e-a915-42829a8e154c
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b91f6659-7a62-462e-ae52-8c3b4d66c35d
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: e0d0c9cd-1498-48fd-b382-e18ca779e907
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(60)
+		lineageTag: 0caa3b71-0c8b-470a-998c-8172e9578ecc
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column sens
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 1f84b8bf-0bd6-49be-ab08-29e9bae402d8
+		summarizeBy: none
+		sourceColumn: sens
+
+		annotation SummarizationSetBy = Automatic
+
+	column seuil
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(9, 4)
+		lineageTag: fff4f182-e280-4033-b3b8-68e17993c8e0
+		summarizeBy: sum
+		sourceColumn: seuil
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source_du_seuil
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 6c50f100-784d-49fa-bc74-bd22b650a3af
+		summarizeBy: none
+		sourceColumn: source_du_seuil
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuille_regularisation
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: a987d593-989e-40d4-8169-0e161971b6ba
+		summarizeBy: none
+		sourceColumn: feuille_regularisation
+
+		annotation SummarizationSetBy = Automatic
+
+	column numerateur
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 3f0ff92d-6565-4cc0-a3a2-ea09960a65cf
+		summarizeBy: sum
+		sourceColumn: numerateur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column denominateur
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 2ef7d92d-7f60-45d2-bf77-518ac8925aeb
+		summarizeBy: sum
+		sourceColumn: denominateur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ratio
+		dataType: double
+		sourceProviderType: decimal(9, 6)
+		lineageTag: a1ac9ee9-949f-48f0-a30a-fdf239e2f674
+		summarizeBy: sum
+		sourceColumn: ratio
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column conforme
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: fd460027-0088-4ba0-b56d-63b87fbd1207
+		summarizeBy: none
+		sourceColumn: conforme
+
+		annotation SummarizationSetBy = Automatic
+
+	column calcul_a_valider
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: b2119ef2-8f5b-426b-a40d-a55ea94d8865
+		summarizeBy: none
+		sourceColumn: calcul_a_valider
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion
+		dataType: string
+		sourceProviderType: nvarchar(4000)
+		lineageTag: 8b2985b7-ec32-4849-80b3-7d37f9f29408
+		summarizeBy: none
+		sourceColumn: conclusion
+
+		annotation SummarizationSetBy = Automatic
+
+	column citation
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(2000)
+		lineageTag: f9f5fce9-a205-4a3f-885e-e55a01344445
+		summarizeBy: none
+		sourceColumn: citation
+
+		annotation SummarizationSetBy = Automatic
+
+	column lu_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: cb7d4462-470d-4d44-b31e-bc11729f956a
+		summarizeBy: none
+		sourceColumn: lu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column note
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 9a5824c0-8a0c-4ef1-b065-41baac853f7c
+		summarizeBy: none
+		sourceColumn: note
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ratio_conclusion = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ratio_conclusion = Source{[Schema="dbo",Item="v_ratio_conclusion"]}[Data]
+				in
+				    dbo_v_ratio_conclusion
+

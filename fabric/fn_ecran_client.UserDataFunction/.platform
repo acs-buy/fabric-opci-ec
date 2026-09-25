@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "UserDataFunction",
+    "displayName": "fn_ecran_client",
+    "description": "Les 13 fonctions de l'ecran 1, une par bouton. Ecrites par la session de la base, posees par l'API."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "59070427-af84-9e45-42d2-7930d0b84751"
+  }
+}

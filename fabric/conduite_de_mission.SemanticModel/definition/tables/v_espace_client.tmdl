@@ -1,0 +1,144 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_espace_client
+	lineageTag: 4b0212b5-6ec8-46d2-b6f6-cce8c3e1414a
+
+	measure 'Site SharePoint du client' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( v_espace_client[site_url] ), FILTER ( ALL ( v_espace_client ), v_espace_client[entite] = c ) ) RETURN IF ( ISBLANK ( v ), "aucun (Modifier)", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 0b1fb881-485b-4e58-8bda-936f8313cee2
+
+	measure 'Actuel Site SharePoint' = VAR c = [Client selectionne] VAR v = CALCULATE ( SELECTEDVALUE ( v_espace_client[site_url] ), FILTER ( ALL ( v_espace_client ), v_espace_client[entite] = c ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "aucun", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: 7cfa0adb-f05a-4b34-835b-fb41f225639c
+
+	column cle
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(31)
+		lineageTag: 3f20effc-99a1-41c9-9240-a4d21624b9a7
+		summarizeBy: none
+		sourceColumn: cle
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 0e5e1c77-c321-4e3f-85db-a8e9303f70ec
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column denomination
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: bad935ee-8663-4e77-8fb4-9ef7281fdab8
+		summarizeBy: none
+		sourceColumn: denomination
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_vehicule
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: cae381b5-799b-46a1-8afe-a335edb9154d
+		summarizeBy: none
+		sourceColumn: forme_vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column demande_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4bbeecc2-1693-42bd-85a9-034bb8013810
+		summarizeBy: sum
+		sourceColumn: demande_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut
+		dataType: string
+		sourceProviderType: varchar(12)
+		lineageTag: df22873f-c080-4b91-b165-71a21fe6c960
+		summarizeBy: none
+		sourceColumn: statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column demande_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 1169fc16-7ca8-4e8b-a0f0-ba9644b26a04
+		summarizeBy: none
+		sourceColumn: demande_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column demande_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 2edc5e0a-c00a-4714-9783-e7f0bd36ccd1
+		summarizeBy: none
+		sourceColumn: demande_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column repondu_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 2e76a5d3-ce60-401f-b1d5-09e04e4d150c
+		summarizeBy: none
+		sourceColumn: repondu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column groupe_id
+		dataType: string
+		sourceProviderType: varchar(40)
+		lineageTag: d0e51ee8-12c6-4de6-b8a8-7e95e3ad26ac
+		summarizeBy: none
+		sourceColumn: groupe_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column site_url
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: a233017c-0817-4d26-8574-0a67ea5cb549
+		summarizeBy: none
+		sourceColumn: site_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column equipe_indice
+		dataType: string
+		sourceProviderType: nvarchar(35)
+		lineageTag: 8f9f1852-0506-4e6c-867d-3146d16ff77c
+		summarizeBy: none
+		sourceColumn: equipe_indice
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 5848b2c9-9c8f-409b-86a9-0fbf285909f5
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_espace_client = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_espace_client = Source{[Schema="dbo",Item="v_espace_client"]}[Data]
+				in
+				    dbo_v_espace_client
+

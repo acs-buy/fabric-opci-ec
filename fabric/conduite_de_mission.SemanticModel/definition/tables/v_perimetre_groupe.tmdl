@@ -1,0 +1,169 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_perimetre_groupe
+	lineageTag: 3e548577-1760-4327-97b6-07c0ad9e8eb7
+
+	measure 'M Vehicule' = CALCULATE ( MAX ( v_perimetre_groupe[Client] ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 9cb50080-a211-42fe-b021-8195b91d7687
+
+	measure 'M Quote part' = VAR auNiveauEntite = ISINSCOPE ( ref_entite[Dénomination] ) VAR estClient = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( auNiveauEntite && estClient <> TRUE (), CALCULATE ( MAX ( v_perimetre_groupe[quote_part] ) ) )
+		formatString: 0.00%
+		displayFolder: Ecran 1 Client
+		lineageTag: 185251ab-62eb-4202-bb1e-ff876cb3855b
+
+	measure Quote-part = [M Quote part]
+		formatString: 0.00%
+		displayFolder: Ecran 1 Client
+		lineageTag: 39af31c1-6062-4d37-af1e-5a6c09008b70
+
+	measure 'L Entité' = VAR c = SELECTEDVALUE ( ref_entite[est_client] ) VAR e = SELECTEDVALUE ( ref_entite[Entité] ) RETURN IF ( c = TRUE (), e, "└ " & e )
+		displayFolder: Ecran 1 Client
+		lineageTag: 274234e7-09ef-420b-8fc5-c4ed7c22682f
+
+	measure 'L Quote-part' = VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( c <> TRUE (), CALCULATE ( MAX ( v_perimetre_groupe[quote_part] ) ) )
+		formatString: 0.00%
+		displayFolder: Ecran 1 Client
+		lineageTag: dbe72ec2-be68-42d1-8cb4-d39913981321
+
+	measure 'L Ordre' = VAR v = CALCULATE ( MAX ( v_perimetre_groupe[vehicule] ) ) VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN v & IF ( c = TRUE (), "0", "1" ) & SELECTEDVALUE ( ref_entite[Entité] )
+		displayFolder: Ecran 1 Client
+		lineageTag: 72f07849-c739-48c6-a58b-6f0fd204c84d
+
+	measure 'Quote-part détenue' = VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( c <> TRUE (), CALCULATE ( MAX ( v_perimetre_groupe[quote_part] ) ) )
+		formatString: 0.00%
+		displayFolder: Ecran 1 Client
+		lineageTag: 040ee993-896c-4d61-a813-972a98ec9bfe
+
+	measure 'Filiales du client' = VAR c = [Client selectionne] RETURN CALCULATE ( COUNTROWS ( v_perimetre_groupe ), FILTER ( ALL ( v_perimetre_groupe ), v_perimetre_groupe[Client] = c && v_perimetre_groupe[est_vehicule] = FALSE () ) )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 5a1cb32e-8327-4ae5-a3b2-73e33718147d
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 572e33f1-028f-42c3-8158-292f53a31234
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column Client
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 5ef33054-8e7a-49a1-9745-5dfb8a9b18e3
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicule_denomination
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: cf317a8d-6243-4571-b9c1-eae7cdbe52ec
+		summarizeBy: none
+		sourceColumn: vehicule_denomination
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e2c99f02-f9ec-4f57-b771-9481337286f0
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_denomination
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: e3eebe5e-71ad-4932-8755-e9f707e4c1e7
+		summarizeBy: none
+		sourceColumn: entite_denomination
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_sociale
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 6b133bbc-cad1-4eed-96ec-e4f018dca62b
+		summarizeBy: none
+		sourceColumn: forme_sociale
+
+		annotation SummarizationSetBy = Automatic
+
+	column est_vehicule
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 0c251d23-bbd9-4fe3-a349-3d4bcaf6d968
+		summarizeBy: none
+		sourceColumn: est_vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column quote_part
+		dataType: double
+		formatString: 0.00 %
+		sourceProviderType: decimal(9, 6)
+		lineageTag: 9aa654e3-5b77-4e61-97d7-fa2e9b73f15a
+		summarizeBy: sum
+		sourceColumn: quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column rang
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: ac3ddf9b-bac1-4129-a90d-931ee2a74203
+		summarizeBy: sum
+		sourceColumn: rang
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(4000)
+		lineageTag: ee63dc8c-3afe-4fe9-8ddf-633628425be9
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column Entité
+		dataType: string
+		sourceProviderType: nvarchar
+		lineageTag: 5912e1e0-6bcf-4c3b-b302-7b43ad362534
+		summarizeBy: none
+		sourceColumn: entite_affichee
+		sortByColumn: ordre_affichage
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre_affichage
+		dataType: string
+		sourceProviderType: varchar
+		lineageTag: 62b775e7-a54d-42b0-92ba-c979922d1555
+		summarizeBy: none
+		sourceColumn: ordre_affichage
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_perimetre_groupe = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_perimetre_groupe = Source{[Schema="dbo",Item="v_perimetre_groupe"]}[Data]
+				in
+				    dbo_v_perimetre_groupe
+

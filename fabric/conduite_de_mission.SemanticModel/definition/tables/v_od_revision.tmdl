@@ -1,0 +1,173 @@
+/// Ecritures de revision, liees a une question ou libres
+table v_od_revision
+	lineageTag: 0fef6d20-6cfc-46ce-a1aa-59344647129d
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 1d71b949-1e84-4f2b-bea5-1ed095999aa3
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: bd0a6a90-63e0-4899-b26d-2def3ab2c077
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 669688a0-b2cf-41f9-abdb-28026fff3cdc
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cote
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: 4a18f001-f513-413d-9c2f-a259d3ed53ca
+		summarizeBy: none
+		sourceColumn: cote
+
+		annotation SummarizationSetBy = Automatic
+
+	column reference
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 9ab32e5c-2386-4499-9306-3e6e3c1724a5
+		summarizeBy: none
+		sourceColumn: reference
+
+		annotation SummarizationSetBy = Automatic
+
+	column État
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 0e5316a0-e842-42ac-aa2c-9e0e01e85e30
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column lot_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 6f329ae5-4df3-46e5-8006-a0cdbdf56d11
+		summarizeBy: sum
+		sourceColumn: lot_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column Journal
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 3074eeb8-e80a-4ee4-8365-99486954568e
+		summarizeBy: none
+		sourceColumn: journal_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Compte
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: efae81a3-ee20-4f75-b10d-90e686ed2f16
+		summarizeBy: none
+		sourceColumn: compte_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column Libellé
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: ef40d2a4-23db-4e1c-b11d-0979202aea81
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column Débit
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 74bde97a-8dad-4d52-9db0-758b57f78f1d
+		summarizeBy: sum
+		sourceColumn: debit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Crédit
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 55cfa3ee-05ed-4c66-a1bb-773ce032b60f
+		summarizeBy: sum
+		sourceColumn: credit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column piece_ref
+		dataType: string
+		sourceProviderType: varchar(50)
+		lineageTag: a95bd767-ac00-49aa-8554-f63b9955ac33
+		summarizeBy: none
+		sourceColumn: piece_ref
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: bba0b97d-2ca2-4d6c-803f-0a9ac2219b3b
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 5a376754-09ef-4498-bf58-8f338b06a0ef
+		summarizeBy: none
+		sourceColumn: par
+
+		annotation SummarizationSetBy = Automatic
+
+	column le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 05255f83-b291-4e97-ae25-17253302fc65
+		summarizeBy: none
+		sourceColumn: le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_od_revision = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_od_revision = Source{[Schema="dbo",Item="v_od_revision"]}[Data]
+				in
+				    dbo_v_od_revision
+

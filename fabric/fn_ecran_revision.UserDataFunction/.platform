@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "UserDataFunction",
+    "displayName": "fn_ecran_revision",
+    "description": "Les 13 fonctions de l'ecran 1, une par bouton. Ecrites par la session de la base, posees par l'API."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "1ed3d848-fbde-8a0c-49d4-3dd3379b2bbf"
+  }
+}

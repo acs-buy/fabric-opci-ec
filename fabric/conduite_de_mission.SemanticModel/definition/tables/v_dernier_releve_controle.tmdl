@@ -1,0 +1,151 @@
+/// Le dernier releve de chaque controle de la base : lignes controlees, anomalies, date et auteur. Sans cle d'entite ni d'arrete, les controles portent sur la base entiere. Source des cartes Controles du tableau de bord du dossier. Ajoutee le 09/09/2026.
+table v_dernier_releve_controle
+	lineageTag: b60287ac-c590-48bc-b80e-de40da99f785
+
+	/// Controles de la base portant un dernier releve.
+	measure 'Controles releves' = COUNTROWS(v_dernier_releve_controle) + 0
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: aa3ea2a1-5f0d-401a-a124-cc37f302f8b2
+
+	/// Controles dont le dernier releve porte au moins une anomalie.
+	measure 'Controles en anomalie' = CALCULATE(COUNTROWS(v_dernier_releve_controle), v_dernier_releve_controle[anomalies] > 0) + 0
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 1dc9eda2-5298-4827-9e6f-e03b44e26129
+
+	/// Controles sans anomalie au dernier releve.
+	measure 'Controles conformes' = [Controles releves] - [Controles en anomalie]
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 3bd9493c-e119-49dc-a286-1c42439d5940
+
+	/// Part des controles conformes.
+	measure 'Part des controles conformes' = DIVIDE([Controles conformes], [Controles releves])
+		formatString: 0 %
+		displayFolder: Le dossier
+		lineageTag: 9e578d02-ea2f-4bec-814c-4448f4a30134
+
+	/// Libelle de carte : anomalies sur releves.
+	measure 'Controles en anomalie sur releves' = [Controles en anomalie] & " sur " & [Controles releves]
+		displayFolder: Le dossier
+		lineageTag: ab1127fd-49ec-4f32-9ffe-f92be08f50eb
+
+	column vue
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(120)
+		lineageTag: 652a86ed-b3a0-4472-8950-4a30e4149368
+		summarizeBy: none
+		sourceColumn: vue
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 00cbddb6-4739-4ef4-8ff5-d97c97b9cfb9
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: c4004af9-54c9-44e6-a549-cb275024484e
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column genre
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 5f4d8d19-1a7b-44f7-9ba6-d0c56bef6d2b
+		summarizeBy: none
+		sourceColumn: genre
+
+		annotation SummarizationSetBy = Automatic
+
+	column fondement
+		dataType: string
+		sourceProviderType: nvarchar(1000)
+		lineageTag: af65c597-bffc-4422-86ca-eb557ac9dd2d
+		summarizeBy: none
+		sourceColumn: fondement
+
+		annotation SummarizationSetBy = Automatic
+
+	column lignes
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: aa359962-d765-47e1-976b-e38e558fca97
+		summarizeBy: sum
+		sourceColumn: lignes
+
+		annotation SummarizationSetBy = Automatic
+
+	column anomalies
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: a0a0fc36-f51c-4c76-b77e-41d0db1f1046
+		summarizeBy: sum
+		sourceColumn: anomalies
+
+		annotation SummarizationSetBy = Automatic
+
+	column releve_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 8a4b69b4-3a45-454d-9a1e-db34b050d51c
+		summarizeBy: none
+		sourceColumn: releve_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column releve_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 9c9a03b6-01a8-49ef-8ff0-9d3846d2e314
+		summarizeBy: none
+		sourceColumn: releve_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column message
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 13d35e83-0653-4b2a-972e-4290bcacde6b
+		summarizeBy: none
+		sourceColumn: message
+
+		annotation SummarizationSetBy = Automatic
+
+	column lecture
+		dataType: string
+		sourceProviderType: nvarchar(414)
+		lineageTag: 29438e7b-ae01-49c4-a70e-d458aeab183d
+		summarizeBy: none
+		sourceColumn: lecture
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_dernier_releve_controle = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_dernier_releve_controle = Source{[Schema="dbo",Item="v_dernier_releve_controle"]}[Data]
+				in
+				    dbo_v_dernier_releve_controle
+

@@ -1,0 +1,94 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table arrete_mission
+	lineageTag: 067f58b5-430e-42f1-af87-1e92a1046f9b
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 5388b3e4-f039-46b8-ae82-bdc7432de689
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e577e17d-222f-44a0-bea1-b21eeeb77d3c
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d717fd21-9bda-46f5-854f-940f761e3a7e
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: b87a61bf-9820-4ef0-bc81-9187227a535f
+		summarizeBy: none
+		sourceColumn: type_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column ouvert_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: f551f1b3-0d0d-44d9-aaba-1b7ed4850960
+		summarizeBy: none
+		sourceColumn: ouvert_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column ouvert_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 20d347ac-a7b3-4222-87a1-7df134ab5080
+		summarizeBy: none
+		sourceColumn: ouvert_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 86201b71-9e45-4636-9a88-6d61a0d65950
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_arrete
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 3c1c7e47-dc06-441c-abdf-28e9f5f7ce9f
+		summarizeBy: none
+		sourceColumn: date_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	partition arrete_mission = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_arrete_mission = Source{[Schema="dbo",Item="arrete_mission"]}[Data]
+				in
+				    dbo_arrete_mission
+

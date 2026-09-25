@@ -1,0 +1,277 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_obligation_par_categorie
+	lineageTag: 7c311389-3181-41bf-98bd-8333524c078e
+
+	column cle
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(72)
+		lineageTag: 5bb2a250-f673-457f-bf9b-6e5c241364af
+		summarizeBy: none
+		sourceColumn: cle
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 85eaf895-e435-4f4b-92f0-18ebcf48f1a0
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 98325160-8389-4acf-b7aa-87806d046813
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 91d1deb3-40c1-45a0-b070-c07969ce8196
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column categorie
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: 17fbea1c-f767-4e75-93dd-c740a9f62162
+		summarizeBy: none
+		sourceColumn: categorie
+
+		annotation SummarizationSetBy = Automatic
+
+	column categorie_ref
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: b613e2e6-12f6-40c7-a3bb-3007a1758ffd
+		summarizeBy: none
+		sourceColumn: categorie_ref
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: 778e19b4-3804-4e4d-a506-d8254812fe2e
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(60)
+		lineageTag: 29c21052-9cb0-4ba6-8066-4e233812afe7
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 594c058d-2f58-4faf-8618-bb803588e3b0
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column base_calcul
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: c9bf09b4-bc65-40b9-a955-cfb53d341d28
+		summarizeBy: sum
+		sourceColumn: base_calcul
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column taux
+		dataType: double
+		sourceProviderType: decimal(9, 6)
+		lineageTag: 59e54bff-c638-433b-9f73-623eecbd5d69
+		summarizeBy: sum
+		sourceColumn: taux
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column montant_propose
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 2d31a156-487b-49e8-8e81-966ce543c224
+		summarizeBy: sum
+		sourceColumn: montant_propose
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: f7040e04-0a64-4cbb-9ece-ec3e7eaf6e7c
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column obligation_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 5dd6908b-7859-4d08-92cd-b680010862a4
+		summarizeBy: sum
+		sourceColumn: obligation_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column base_visee
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: b7b3ab9a-4f86-44fd-85e3-f514b849f1ef
+		summarizeBy: sum
+		sourceColumn: base_visee
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column montant_vise
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 267432cf-04f5-4b2f-a9f5-cce0544ad220
+		summarizeBy: sum
+		sourceColumn: montant_vise
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column vise_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 9984c324-61fa-4efd-963c-5b007f31922f
+		summarizeBy: none
+		sourceColumn: vise_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column vise_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 0c01cabd-9a15-47ae-aa61-e7f2bd8413e3
+		summarizeBy: none
+		sourceColumn: vise_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_obligation
+		dataType: string
+		sourceProviderType: varchar(12)
+		lineageTag: 4ba88a35-4003-48f7-9d9f-1c786c08f7c2
+		summarizeBy: none
+		sourceColumn: etat_obligation
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(7)
+		lineageTag: 891bc80f-68d4-415d-8a47-7482b6d943b8
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column montant_decide
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: ee5dd488-c806-4dd5-8d8c-e6163b564c2a
+		summarizeBy: sum
+		sourceColumn: montant_decide
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column date_assemblee
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: f0d23abb-5988-42bf-9970-ead068cb232f
+		summarizeBy: none
+		sourceColumn: date_assemblee
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 2236b507-093f-4315-a4d3-af82d9cdb451
+		summarizeBy: none
+		sourceColumn: decide_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_distribuable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: ef1bc242-f1c8-43f2-99f2-ceef4a6e6466
+		summarizeBy: sum
+		sourceColumn: total_distribuable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column acomptes_verses
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7a11180d-cd74-483b-996a-08c6520fd17c
+		summarizeBy: sum
+		sourceColumn: acomptes_verses
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 7c55e417-5c06-4faa-803d-b305754a417e
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_obligation_par_categorie = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_obligation_par_categorie = Source{[Schema="dbo",Item="v_obligation_par_categorie"]}[Data]
+				in
+				    dbo_v_obligation_par_categorie
+

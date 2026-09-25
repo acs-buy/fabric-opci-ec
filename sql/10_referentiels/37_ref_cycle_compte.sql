@@ -1,0 +1,68 @@
+-- ref_cycle_compte : 57 ligne(s) de referentiel.
+-- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
+-- Produit depuis la base de reference, ne pas modifier a la main.
+
+IF NOT EXISTS (SELECT 1 FROM dbo.[ref_cycle_compte])
+BEGIN
+    INSERT INTO dbo.[ref_cycle_compte] ([cycle], [racine], [source]) VALUES
+        (N'AFFECT',N'11',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'AFFECT',N'12',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'AFFECT',N'19',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'AFFECT',N'77',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'CAPITAL',N'10',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'CAPITAL',N'45',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'CESSIONS',N'39',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'CESSIONS',N'66',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'CESSIONS',N'76',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FIN',N'30',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FIN',N'31',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FIN',N'32',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FIN',N'33',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FIN',N'34',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FIN',N'35',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FIN',N'36',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FIN',N'60',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FIN',N'70',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FRAIS',N'61',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'FRAIS',N'71',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'HB',N'90',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'HB',N'91',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'HB',N'92',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'HB',N'94',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'HB',N'95',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'HB',N'96',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'IMMO',N'21',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'IMMO',N'22',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'IMMO',N'23',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'IMMO',N'24',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'IMMO',N'291',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'IMMO',N'62',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'IMMO',N'72',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'PART',N'25',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'PART',N'26',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'PART',N'295',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'PART',N'63',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'PART',N'68',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'PART',N'73',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'PART',N'78',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'40',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'41',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'42',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'43',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'44',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'46',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'47',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'48',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'49',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'68',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TIERS',N'78',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TRESO',N'51',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'TRESO',N'58',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'VALO',N'105',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'VALO',N'27',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'VALO',N'37',N'ref_compte art. 411-3, affectation du 16/09/2026'),
+        (N'VALO',N'57',N'ref_compte art. 411-3, affectation du 16/09/2026');
+    PRINT 'ref_cycle_compte : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+END
+ELSE PRINT 'ref_cycle_compte : deja chargee, rien a faire.';
+GO

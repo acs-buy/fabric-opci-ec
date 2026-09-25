@@ -1,0 +1,150 @@
+/// Les objets en attente de visa par entite, arrete, cycle et nature. Tableau de bord Revision et supervision. Ajoutee le 09/09/2026.
+table v_a_viser
+	lineageTag: cae23490-4144-47eb-8f38-b8237e2914c0
+
+	/// Objets en attente de visa, toutes natures.
+	measure 'Objets a viser' = COUNTROWS(v_a_viser) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 5a800d55-aef8-49b3-8e74-f597dc0cc0d5
+
+	/// Carte 2.3, En attente de visa. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R23 En attente de visa' = COUNTROWS ( v_a_viser )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 8ea2c93a-7ba1-4d9d-8d1a-e8988d7a907a
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 996793a6-64b2-4473-b169-41f4203ff9ca
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ee431eae-0d9d-46a1-91c1-3adeb161bf3a
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 313797e2-698e-46c6-89d4-24359303888d
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(11)
+		lineageTag: a48ca11d-5439-40ea-9b60-16826ddd7d59
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column objet_ref
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: c259c8f4-4168-4093-b200-a0c7ad6c793a
+		summarizeBy: none
+		sourceColumn: objet_ref
+
+		annotation SummarizationSetBy = Automatic
+
+	column objet_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 14e81d7d-c134-4f82-a816-9750bb1e05ad
+		summarizeBy: sum
+		sourceColumn: objet_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: 1727ec03-ac16-46c7-9d88-0656869f8998
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column propose_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 9612e849-7e2e-4261-99a2-06892dedc21b
+		summarizeBy: none
+		sourceColumn: propose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column propose_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 30a6f520-0dfd-4047-863f-63c4026a4c4a
+		summarizeBy: none
+		sourceColumn: propose_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column lignes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b84a17a4-bfb1-4823-9b21-8ece472e550e
+		summarizeBy: sum
+		sourceColumn: lignes
+
+		annotation SummarizationSetBy = Automatic
+
+	column montant
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 8e0d2ae9-1611-4b58-ae14-f63483a71d1b
+		summarizeBy: sum
+		sourceColumn: montant
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column etat
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 55b3d213-6c3c-425d-9625-f2c4ab59dd2e
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 39cb9456-8e35-450e-9382-f17f3591ef84
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_a_viser = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_a_viser = Source{[Schema="dbo",Item="v_a_viser"]}[Data]
+				in
+				    dbo_v_a_viser
+

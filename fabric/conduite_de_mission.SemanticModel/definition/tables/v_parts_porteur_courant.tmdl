@@ -1,0 +1,103 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_parts_porteur_courant
+	lineageTag: 16035a1e-f1c1-4618-af6e-037a97646605
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 6db03bab-c3f4-4932-aec6-a55e8d2fa70a
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a3c4fed9-7f27-4a44-9b9d-83fdee3ea019
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 646f8a07-4d63-4642-8354-e9cb68a167e5
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 1f50dde5-8d15-4252-9988-81bd11d2d065
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column porteur_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 950dcacf-0f32-43c8-9802-88c369538735
+		summarizeBy: sum
+		sourceColumn: porteur_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 898d69fb-c7ef-49be-ae0e-28dc4bd1629f
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column denomination
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 6b0fe326-1f2a-480f-a072-d06d9f699bca
+		summarizeBy: none
+		sourceColumn: denomination
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_valeur
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: e4871c6e-cb5a-4a03-b53b-0a790343d868
+		summarizeBy: none
+		sourceColumn: date_valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	column parts_detenues
+		dataType: double
+		sourceProviderType: decimal(19, 4)
+		lineageTag: c9aaf0a3-4626-4a2b-b811-ca75993b9afd
+		summarizeBy: sum
+		sourceColumn: parts_detenues
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition v_parts_porteur_courant = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_parts_porteur_courant = Source{[Schema="dbo",Item="v_parts_porteur_courant"]}[Data]
+				in
+				    dbo_v_parts_porteur_courant
+

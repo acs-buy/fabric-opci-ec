@@ -1,0 +1,621 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "e1cBouton0",
+  "position": {
+    "x": 728,
+    "y": 822,
+    "z": 49900,
+    "height": 36,
+    "width": 197,
+    "tabOrder": 49900
+  },
+  "visual": {
+    "visualType": "actionButton",
+    "objects": {
+      "text": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Enregistrer les modifications'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "horizontalAlignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
+                }
+              }
+            },
+            "verticalAlignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'middle'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        },
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Enregistrer les modifications'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5B6B7D'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "horizontalAlignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
+                }
+              }
+            },
+            "verticalAlignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'middle'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "disabled"
+          }
+        },
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "hover"
+          }
+        },
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "selected"
+          }
+        }
+      ],
+      "fill": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fillColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#0F5C8C'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "100D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        },
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fillColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E4E9EF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "100D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "disabled"
+          }
+        },
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fillColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#2B4666'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "35D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "hover"
+          }
+        },
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fillColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#0F5C8C'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "100D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "selected"
+          }
+        }
+      ],
+      "outline": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "lineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D5DCE4'"
+                    }
+                  }
+                }
+              }
+            },
+            "weight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualLink": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'DataFunction'"
+                }
+              }
+            },
+            "dataFunction": {
+              "kind": "ItemLocation",
+              "byReference": {
+                "itemId": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'d0b84751-7930-42d2-9e45-af8459070427'"
+                    }
+                  }
+                },
+                "workspaceId": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'3d36cceb-a461-4e21-a285-9e40297fe906'"
+                    }
+                  }
+                }
+              },
+              "metadata": {
+                "dataFunction": {
+                  "name": "modifier_client",
+                  "autoRefresh": true,
+                  "parameters": [
+                    {
+                      "name": "code",
+                      "dataType": "string",
+                      "isOptional": false,
+                      "defaultValue": null,
+                      "type": "ValueParameter",
+                      "value": {
+                        "expr": {
+                          "Measure": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Entity": "ref_entite"
+                              }
+                            },
+                            "Property": "Client selectionne"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "denomination",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie0",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "siren",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie1",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "formeVehicule",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie2",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "formeSociale",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie3",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "adresse1",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie4",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "adresse2",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie5",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "codePostal",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie6",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "ville",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie7",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "pays",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie8",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "dirigeantNom",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie9",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "dirigeantQualite",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie10",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "contactNom",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie11",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "contactCourriel",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie12",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "contactTelephone",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie13",
+                      "autoClear": false
+                    },
+                    {
+                      "name": "siteUrl",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e1cSaisie15",
+                      "autoClear": false
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "isHidden": true
+}

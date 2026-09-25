@@ -1,0 +1,106 @@
+/// Le pilotage du groupe, arrete par arrete, pour l'historique ; relie a l'entite seule. Script 141.
+table v_client_pilotage_groupe
+	lineageTag: 93eb8d22-c176-49f6-813a-b8454755b683
+
+	measure 'Tresorerie par arrete' = SUM ( v_client_pilotage_groupe[tresorerie] )
+		formatString: #,0.00
+		lineageTag: 75dad7fd-f656-40f7-978c-c984b343ee4e
+
+	measure 'Loyers par arrete' = SUM ( v_client_pilotage_groupe[loyers] )
+		formatString: #,0.00
+		lineageTag: 4813cacd-bce5-42b1-aaa4-8091da4a599f
+
+	measure 'Resultat locatif par arrete' = SUM ( v_client_pilotage_groupe[resultat_locatif] )
+		formatString: #,0.00
+		lineageTag: 89db1a82-01aa-450d-855c-b503ded652a2
+
+	measure 'Rendement locatif par arrete' = MAX ( v_client_pilotage_groupe[rendement_locatif] )
+		formatString: 0.00 %
+		lineageTag: 2b4270d2-982e-4d8b-b173-9f2d512324dc
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: 9aec20bb-d73b-47ff-a266-aadaed1fd93d
+		summarizeBy: none
+		sourceColumn: entite
+
+	column Arrêté
+		dataType: string
+		lineageTag: aaa3e3a0-31d2-4a6e-9ec4-7063dbe088cc
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column tresorerie
+		dataType: decimal
+		isHidden
+		formatString: #,0.00
+		lineageTag: 40543043-50e5-49d0-a3fb-617aa1c5dfff
+		summarizeBy: none
+		sourceColumn: tresorerie
+
+	column emprunt_bancaire
+		dataType: decimal
+		isHidden
+		formatString: #,0.00
+		lineageTag: 11862622-e4bd-44cd-9a67-d00583ed13be
+		summarizeBy: none
+		sourceColumn: emprunt_bancaire
+
+	column loyers
+		dataType: decimal
+		isHidden
+		formatString: #,0.00
+		lineageTag: 766dd2c3-b950-4ee8-88ae-5a49a8885a95
+		summarizeBy: none
+		sourceColumn: loyers
+
+	column charges_entretien
+		dataType: decimal
+		isHidden
+		formatString: #,0.00
+		lineageTag: e7cc2f23-4f2d-4a5e-8e24-2110a43fdd21
+		summarizeBy: none
+		sourceColumn: charges_entretien
+
+	column interets
+		dataType: decimal
+		isHidden
+		formatString: #,0.00
+		lineageTag: 92d6e53d-0df5-4e80-826b-ea7e4d091e2d
+		summarizeBy: none
+		sourceColumn: interets
+
+	column resultat_locatif
+		dataType: decimal
+		isHidden
+		formatString: #,0.00
+		lineageTag: b86b8238-d866-45fb-9975-93d24fe6299d
+		summarizeBy: none
+		sourceColumn: resultat_locatif
+
+	column valeur_actuelle_immeubles
+		dataType: decimal
+		isHidden
+		formatString: #,0.00
+		lineageTag: 570662b5-6bf6-4794-8315-2981e81f1932
+		summarizeBy: none
+		sourceColumn: valeur_actuelle_immeubles
+
+	column rendement_locatif
+		dataType: decimal
+		isHidden
+		formatString: 0.00 %
+		lineageTag: 17f6dbef-8c2c-4eef-8ecd-ac4e9f1e4025
+		summarizeBy: none
+		sourceColumn: rendement_locatif
+
+	partition v_client_pilotage_groupe = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_pilotage_groupe"]}[Data]
+				in
+				    dbo_v
+

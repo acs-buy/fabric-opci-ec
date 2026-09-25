@@ -1,0 +1,192 @@
+table v_valeur_liquidative
+	lineageTag: 120f4577-f9dd-491d-8e8e-7872ddf7302d
+
+	/// Valeur liquidative de l'arrêté.
+	measure 'Valeur liquidative' = SUM(v_valeur_liquidative[valeur_liquidative])
+		formatString: #,0.00
+		displayFolder: Valeur liquidative
+		lineageTag: 256a6270-35dd-46ef-af6a-e2fdc4073870
+
+	/// Valeur liquidative de l'arrêté précédent.
+	measure 'Valeur liquidative precedente' = SUM(v_valeur_liquidative[valeur_liquidative_precedente])
+		formatString: #,0.00
+		displayFolder: Valeur liquidative
+		lineageTag: b2e43028-6876-40d5-bf7e-8f350de81768
+
+	/// Écart entre les 2 valeurs liquidatives.
+	measure 'Ecart de valeur liquidative' = SUM(v_valeur_liquidative[ecart])
+		formatString: #,0.00
+		displayFolder: Valeur liquidative
+		lineageTag: 5c6d7444-80bf-4642-b41d-910ba89804ef
+
+	/// Variation relative de la valeur liquidative.
+	measure 'Variation de valeur liquidative' = DIVIDE([Ecart de valeur liquidative], [Valeur liquidative precedente])
+		formatString: 0.00 %
+		displayFolder: Valeur liquidative
+		lineageTag: c4b30a4b-3f7b-4676-bcb2-8d48ce28579e
+
+	/// Nombre de parts émises.
+	measure 'Nombre de parts' = SUM(v_valeur_liquidative[nombre_parts])
+		formatString: #,0.00
+		displayFolder: Valeur liquidative
+		lineageTag: acdfc48c-112c-48fd-96e5-bc6424c5304c
+
+	/// Lignes dont la publication est refusée.
+	measure 'Publications refusees' = CALCULATE(COUNTROWS(v_valeur_liquidative), NOT ISBLANK(v_valeur_liquidative[motif_refus])) + 0
+		formatString: #,0
+		displayFolder: Valeur liquidative
+		lineageTag: fcdd64f7-e7c9-43a3-901c-316795a33fbf
+
+	/// Valeur liquidative de l'entite et de l'arrete affiches.
+	measure 'VL du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Valeur liquidative], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0.00
+		displayFolder: Le dossier
+		lineageTag: 6c797658-8b53-4025-b36f-73ebe95eb220
+
+	/// Variation de la valeur liquidative de l'entite et de l'arrete affiches.
+	measure 'Variation de VL du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Variation de valeur liquidative], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: 0.00 %
+		displayFolder: Le dossier
+		lineageTag: 54e63bf6-b781-4031-9c26-8e2f220d65d5
+
+	/// Valeur liquidative de l'entite affichee, par arrete.
+	measure 'VL de l entite' = VAR e = [Entite courante] RETURN IF(HASONEVALUE(v_valeur_liquidative[arrete]), CALCULATE([Valeur liquidative], ref_entite[Entité] = e))
+		formatString: #,0.00
+		displayFolder: Le dossier
+		lineageTag: f2c0e85d-3cef-482f-803a-da3120353050
+
+	/// Variation de la valeur liquidative de l'entite affichee, par arrete.
+	measure 'Variation de VL de l entite' = VAR e = [Entite courante] RETURN IF(HASONEVALUE(v_valeur_liquidative[arrete]), CALCULATE([Variation de valeur liquidative], ref_entite[Entité] = e))
+		formatString: 0.00 %
+		displayFolder: Le dossier
+		lineageTag: 002d39fb-90ff-401a-aeb3-227e8de99310
+
+	/// Carte 4.1, Valeur liquidative. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R41 Valeur liquidative' = VAR lignes = COUNTROWS ( v_valeur_liquidative ) RETURN IF ( lignes = 1, SUM ( v_valeur_liquidative[valeur_liquidative] ) )
+		formatString: #,0.00
+		displayFolder: Rapports V2
+		lineageTag: e4373db5-9c30-4440-ae2f-1369ccfe441a
+
+	/// Carte 4.1, VL precedente. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R41 VL precedente' = VAR lignes = COUNTROWS ( v_valeur_liquidative ) RETURN IF ( lignes = 1, SUM ( v_valeur_liquidative[valeur_liquidative_precedente] ) )
+		formatString: #,0.00
+		displayFolder: Rapports V2
+		lineageTag: d5d27ff1-b5d5-48e5-b428-12f2078031da
+
+	/// Carte 4.1, Ecart. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R41 Ecart de VL' = VAR lignes = COUNTROWS ( v_valeur_liquidative ) RETURN IF ( lignes = 1, SUM ( v_valeur_liquidative[ecart] ) )
+		formatString: +#,0.00;-#,0.00;0
+		displayFolder: Rapports V2
+		lineageTag: 6f6d3f11-9c98-4804-85b1-09e8fe41ebb7
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 608fa1c5-e069-4d5e-8fd8-d5e4f43a03eb
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 5da71ce6-0b2b-4918-9344-0104446819fa
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column actif_net_reevalue
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: baf03a6c-487f-4c0d-8952-558f23c83cc6
+		summarizeBy: sum
+		sourceColumn: actif_net_reevalue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column nombre_parts
+		dataType: double
+		sourceProviderType: decimal(19, 4)
+		lineageTag: 17933c87-677f-4941-8a65-5898e3ea7f11
+		summarizeBy: sum
+		sourceColumn: nombre_parts
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: fded947e-2226-4e73-a51b-0dea40a2ed71
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column version_regles
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 76254988-ee3b-44ff-854a-288a8066c826
+		summarizeBy: none
+		sourceColumn: version_regles
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_liquidative
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 6be41a3a-b645-410c-a2b9-dc512e9ccc1f
+		summarizeBy: sum
+		sourceColumn: valeur_liquidative
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column motif_refus
+		dataType: string
+		sourceProviderType: nvarchar(56)
+		lineageTag: 621e4de6-a35c-4544-95f2-6dbca43ffa84
+		summarizeBy: none
+		sourceColumn: motif_refus
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_liquidative_precedente
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 182e6636-6e0d-4a98-b286-a73cdd672dc5
+		summarizeBy: sum
+		sourceColumn: valeur_liquidative_precedente
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ecart
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 9d3d87a7-d659-4cb8-8442-b9fdb9849720
+		summarizeBy: sum
+		sourceColumn: ecart
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition v_valeur_liquidative = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_valeur_liquidative = Source{[Schema="dbo",Item="v_valeur_liquidative"]}[Data]
+				in
+				    dbo_v_valeur_liquidative
+

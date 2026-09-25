@@ -1,0 +1,189 @@
+/// Le pilotage, societe par societe du groupe : tresorerie, emprunts, avances, loyers, charges, interets, resultat et rendement locatifs. Script 141.
+table v_client_pilotage_societe
+	lineageTag: 615ff5cb-ddbe-4375-b456-1796dbbe2184
+
+	/// La tresorerie des societes du groupe, comptes 511.
+	measure 'Tresorerie du groupe' = SUM ( v_client_pilotage_societe[Trésorerie] )
+		formatString: #,0.00
+		lineageTag: 9ceda9b0-96ee-4a83-ba11-7d986f879bb8
+
+	measure 'Emprunts bancaires du groupe' = SUM ( v_client_pilotage_societe[Emprunt bancaire] )
+		formatString: #,0.00
+		lineageTag: 868240d3-5d0d-4527-a2bb-23423d4ff0c3
+
+	measure 'Loyers de la periode' = SUM ( v_client_pilotage_societe[Loyers] )
+		formatString: #,0.00
+		lineageTag: 1cabb3e0-1d03-40a1-acc3-789342a35a04
+
+	measure 'Charges d entretien' = SUM ( v_client_pilotage_societe[Charges d'entretien] )
+		formatString: #,0.00
+		lineageTag: 8cb9452d-cf9a-4379-b086-3ac33f39a532
+
+	/// Loyers moins charges d'entretien moins interets d'emprunt.
+	measure 'Resultat locatif net' = SUM ( v_client_pilotage_societe[Résultat locatif] )
+		formatString: #,0.00
+		lineageTag: 0774cc1d-8194-41b2-818e-74addbf3d056
+
+	/// Loyers de la periode rapportes a la valeur actuelle des immeubles a l'arrete.
+	measure 'Rendement locatif' = DIVIDE ( SUM ( v_client_pilotage_societe[Loyers] ), SUM ( v_client_pilotage_societe[Valeur actuelle des immeubles] ) )
+		formatString: 0.00 %
+		lineageTag: f75cd2a2-cc53-47eb-ad88-15c9ad4a2d16
+
+	measure 'Avances en compte courant' = SUM ( v_client_pilotage_societe[Avances versées] )
+		formatString: #,0.00
+		lineageTag: 71d6d8ea-9d60-4b29-96df-de5f29f298c8
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		lineageTag: 52a67ae8-0af4-407f-8908-ba28d9049e99
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: 9cf33b09-9a28-4a01-9b70-740a6dce992a
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		lineageTag: 9ffeb017-5689-4c80-a587-3e2f4ce552e0
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column code_societe
+		dataType: string
+		isHidden
+		lineageTag: 75f0252d-664a-41e2-b3fe-a87a16f437c7
+		summarizeBy: none
+		sourceColumn: societe
+
+	column Société
+		dataType: string
+		lineageTag: c9953721-4042-43c9-aba1-587ae386aab0
+		summarizeBy: none
+		sourceColumn: denomination
+
+	column Rôle
+		dataType: string
+		lineageTag: b7b3222a-ac07-4f4c-8260-32bb8975d2ee
+		summarizeBy: none
+		sourceColumn: role
+
+	column Quote-part
+		dataType: decimal
+		formatString: 0.0 %
+		lineageTag: fd4883b0-885f-4ee7-9300-bce2ad480c92
+		summarizeBy: none
+		sourceColumn: quote_part
+
+	column Trésorerie
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: f93f30ee-0590-494e-b40a-965da00fd8f1
+		summarizeBy: none
+		sourceColumn: tresorerie
+
+	column 'Emprunt bancaire'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: dfc500cb-9d80-4d48-b443-be9c8671614f
+		summarizeBy: none
+		sourceColumn: emprunt_bancaire
+
+	column 'Dette intragroupe'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 1aea8cab-09b1-4215-bbb9-69024b0ceb93
+		summarizeBy: none
+		sourceColumn: dette_intragroupe
+
+	column 'Avances versées'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: ae285cb3-4385-405e-9be9-538439d5794a
+		summarizeBy: none
+		sourceColumn: avances_versees
+
+	column Loyers
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 36de5757-53eb-4e4b-9d1e-a0dace567cc0
+		summarizeBy: none
+		sourceColumn: loyers
+
+	column 'Charges d''entretien'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 5e6cfded-e80b-4ffb-bde3-45d8e9302702
+		summarizeBy: none
+		sourceColumn: charges_entretien
+
+	column Intérêts
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: e1e681c8-5a76-4137-9365-ecfe04b29cc2
+		summarizeBy: none
+		sourceColumn: interets
+
+	column 'Frais de fonctionnement'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 05897dd5-2875-4404-b2fe-585369dbcddd
+		summarizeBy: none
+		sourceColumn: frais_fonctionnement
+
+	column 'Intérêts reçus'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: a4551e88-997a-4e89-bc99-e20f5ec900ee
+		summarizeBy: none
+		sourceColumn: interets_recus
+
+	column 'Dividendes reçus'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 1c11a6df-34ec-429c-ae5d-914ad17fe9d9
+		summarizeBy: none
+		sourceColumn: dividendes_recus
+
+	column 'Résultat locatif'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 073f008d-a5b4-4381-beed-988fb1cf27ef
+		summarizeBy: none
+		sourceColumn: resultat_locatif
+
+	column 'Valeur actuelle des immeubles'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 1ee57d78-fe7f-4718-aab0-5baaf89faa6c
+		summarizeBy: none
+		sourceColumn: valeur_actuelle_immeubles
+
+	column Immeubles
+		dataType: int64
+		formatString: 0
+		lineageTag: 4f8d31a1-5607-4bbd-b185-acdd9b99c1c5
+		summarizeBy: none
+		sourceColumn: immeubles
+
+	column Rendement
+		dataType: decimal
+		formatString: 0.00 %
+		lineageTag: 3cff2008-72fc-4987-b158-657c01a3350d
+		summarizeBy: none
+		sourceColumn: rendement_locatif
+
+	partition v_client_pilotage_societe = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_pilotage_societe"]}[Data]
+				in
+				    dbo_v
+

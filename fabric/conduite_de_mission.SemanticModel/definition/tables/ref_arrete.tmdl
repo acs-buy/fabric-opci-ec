@@ -1,0 +1,174 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table ref_arrete
+	lineageTag: 8ceccea3-e3c4-4c88-8571-79449f35e86a
+
+	measure 'Message arrete' = CALCULATE ( MAX ( ref_arrete[message_ecran] ), ref_arrete[est_arrete_client] = TRUE () )
+		displayFolder: Ecran 1 Client
+		lineageTag: 7f12305e-596a-4210-a6f4-bb1f2cab054f
+
+	measure 'Arrete ouvert' = VAR e = SELECTEDVALUE ( ref_arrete[entite] ) VAR a = SELECTEDVALUE ( ref_arrete[arrete] ) VAR o = CALCULATE ( MAX ( arrete_mission[ouvert_le] ), FILTER ( ALL ( arrete_mission ), arrete_mission[entite] = e && arrete_mission[arrete] = a ) ) RETURN IF ( ISBLANK ( o ), "à ouvrir", "ouvert le " & FORMAT ( o, "dd/mm/yyyy" ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: b619a3c5-911e-41b3-a2dd-f780f988ba86
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 16b9777d-06b6-4490-8bd0-d3c527e24264
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column Arrêté
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b482ee8d-f07c-45c2-a20a-b37796d55baa
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_arrete
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: 7dfcead7-3747-4fe5-b1d4-db123e6b4007
+		summarizeBy: none
+		sourceColumn: date_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column Exercice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b103e76d-ff59-4fbe-9a67-c3b21e268582
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_cloture
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: 14ec6886-58a4-4b44-9cfc-5af66920d7c3
+		summarizeBy: none
+		sourceColumn: date_cloture
+
+		annotation SummarizationSetBy = Automatic
+
+	column Type
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: d9fbabd3-c38e-46d9-931a-db0171158bf6
+		summarizeBy: none
+		sourceColumn: type_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature_technique
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 5171c40d-efe9-42da-b292-8e844e447087
+		summarizeBy: none
+		sourceColumn: nature_technique
+
+		annotation SummarizationSetBy = Automatic
+
+	column trimestre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: 051d374c-44ae-417b-9246-64c5003af330
+		summarizeBy: sum
+		sourceColumn: trimestre
+
+		annotation SummarizationSetBy = Automatic
+
+	column rang_exercice
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: b146e3ee-f80b-4c52-82f7-f507a64de693
+		summarizeBy: sum
+		sourceColumn: rang_exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column est_arrete_client
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 49927244-3094-424e-acca-f3c41117c85e
+		summarizeBy: none
+		sourceColumn: est_arrete_client
+
+		annotation SummarizationSetBy = Automatic
+
+	column porte_balance
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 25290780-6cb6-4bb2-b26d-f4ade53378bd
+		summarizeBy: none
+		sourceColumn: porte_balance
+
+		annotation SummarizationSetBy = Automatic
+
+	column cree_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 1751028c-06a2-4502-b638-a060fadfbd76
+		summarizeBy: none
+		sourceColumn: cree_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 41307bdf-6edf-44a5-9f62-029eb3d06fd5
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 1ca67eeb-bf6c-4a92-baa6-7daa7ff6fa12
+		summarizeBy: none
+		sourceColumn: message_ecran_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran_pour
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: b5daccc0-f8ba-4cbf-9e5b-adb35c358644
+		summarizeBy: none
+		sourceColumn: message_ecran_pour
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_arrete = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_arrete = Source{[Schema="dbo",Item="ref_arrete"]}[Data]
+				in
+				    dbo_ref_arrete
+

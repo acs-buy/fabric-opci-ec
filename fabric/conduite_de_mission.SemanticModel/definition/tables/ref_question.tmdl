@@ -1,0 +1,189 @@
+/// Referentiel des questions, les 4 questionnaires confondus
+table ref_question
+	lineageTag: a9607524-d0ae-4ba7-8d0a-b7c3fd81e5f5
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ffe4b193-7b0a-4a91-a951-1b85afb9f40f
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column reference
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 749e4365-d8c2-4096-813f-aae9d444e4a2
+		summarizeBy: none
+		sourceColumn: reference
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: e832b83a-816c-4fe8-94d3-c1e5b5a31c6e
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column phase
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 75efd127-7d22-4823-8030-2fc19d11b1b3
+		summarizeBy: none
+		sourceColumn: phase
+
+		annotation SummarizationSetBy = Automatic
+
+	column enonce
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: a23a5ee1-5aff-4950-a227-318622014dca
+		summarizeBy: none
+		sourceColumn: enonce
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_reponse
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 00a825d4-17dd-45da-9927-e2566dedbe7c
+		summarizeBy: none
+		sourceColumn: type_reponse
+
+		annotation SummarizationSetBy = Automatic
+
+	column obligatoire
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f08fd2f9-3a80-43cd-8cab-47d0fe8217e8
+		summarizeBy: sum
+		sourceColumn: obligatoire
+
+		annotation SummarizationSetBy = Automatic
+
+	column applicabilite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e2449376-08b7-4d72-9ba9-2aa1163aa3e2
+		summarizeBy: none
+		sourceColumn: applicabilite
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ba047fd0-2a78-4c72-82f3-c947044e420b
+		summarizeBy: none
+		sourceColumn: statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4f33c34b-29cb-4aba-85e8-562deb26e9fc
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: fafc4193-7703-4a76-be93-04ad1aaaae2a
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: aedd5143-ca4a-465e-ad8e-1dfdac106fac
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column section
+		dataType: string
+		sourceProviderType: nvarchar(120)
+		lineageTag: 93d4a155-4eb9-4276-93c2-b513c4ed6fbf
+		summarizeBy: none
+		sourceColumn: section
+
+		annotation SummarizationSetBy = Automatic
+
+	column options
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 0d4c09a7-5734-4904-986a-7e3701d789d8
+		summarizeBy: none
+		sourceColumn: options
+
+		annotation SummarizationSetBy = Automatic
+
+	column doc_attendu
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 780b0e9b-ae48-44ea-b85f-d582e212e9e3
+		summarizeBy: none
+		sourceColumn: doc_attendu
+
+		annotation SummarizationSetBy = Automatic
+
+	column reference_texte
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 59f747a8-9066-4e9a-9fab-e1bdaa1ef3c1
+		summarizeBy: none
+		sourceColumn: reference_texte
+
+		annotation SummarizationSetBy = Automatic
+
+	column en_vigueur_depuis
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 180bf8d9-e1ec-40a3-a347-e6dbc9855d8d
+		summarizeBy: none
+		sourceColumn: en_vigueur_depuis
+
+		annotation SummarizationSetBy = Automatic
+
+	column niveau_programme
+		dataType: int64
+		formatString: 0
+		sourceProviderType: tinyint
+		lineageTag: 61c0864a-9600-4974-8344-3b097a53c518
+		summarizeBy: sum
+		sourceColumn: niveau_programme
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_question = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_question = Source{[Schema="dbo",Item="ref_question"]}[Data]
+				in
+				    dbo_ref_question
+

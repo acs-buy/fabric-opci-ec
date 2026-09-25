@@ -1,0 +1,111 @@
+/// Les sommes distribuables par arrete. Tableau de bord Arrete et livrables. Ajoutee le 09/09/2026.
+table v_sommes_distribuables
+	lineageTag: 6b655178-853a-4fd3-9d20-29c8b1accc0c
+
+	/// Sommes distribuables de l'arrete.
+	measure 'Total distribuable' = SUM(v_sommes_distribuables[total_distribuable])
+		formatString: #,0.00
+		displayFolder: Parcours
+		lineageTag: 4b95d3e2-f79c-4739-9a96-e3e784c2710b
+
+	/// Total distribuable, entite et arrete affiches.
+	measure 'Total distribuable du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Total distribuable], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0.00
+		displayFolder: Le dossier
+		lineageTag: 03f8d214-8511-4b48-a2df-7366e28eb6d2
+
+	/// Carte 4.2, Total distribuable. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R42 Total distribuable' = VAR lignes = COUNTROWS ( v_sommes_distribuables ) RETURN IF ( lignes = 1, SUM ( v_sommes_distribuables[total_distribuable] ) )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: bb939af9-ba5d-41ef-a3b3-9011524ac5e3
+
+	/// Carte 4.2, Acomptes verses. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R42 Acomptes verses' = VAR lignes = COUNTROWS ( v_sommes_distribuables ) RETURN IF ( lignes = 1, SUM ( v_sommes_distribuables[acomptes_verses] ) )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 41a09873-8b3a-4548-bdd7-5cf9342a8f12
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f80cafd2-c522-4cbb-adde-69afa8fdaa80
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d792319a-de84-463c-a004-af441a2d7e84
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column resultat_distribuable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7331720f-d055-4d1c-85e7-2fb550555775
+		summarizeBy: sum
+		sourceColumn: resultat_distribuable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column plus_values_distribuables
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 39110044-c231-44f8-9682-5ec8f65349b2
+		summarizeBy: sum
+		sourceColumn: plus_values_distribuables
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_distribuable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 9f12b5d7-7b30-4316-bab7-7061c8646eb6
+		summarizeBy: sum
+		sourceColumn: total_distribuable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column acomptes_verses
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: c6d9cd90-cf4a-4682-bdfe-f4a3da858ae0
+		summarizeBy: sum
+		sourceColumn: acomptes_verses
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(50)
+		lineageTag: 720f9cc3-0c49-4702-b43b-033d3e8d071a
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_sommes_distribuables = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_sommes_distribuables = Source{[Schema="dbo",Item="v_sommes_distribuables"]}[Data]
+				in
+				    dbo_v_sommes_distribuables
+

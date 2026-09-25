@@ -1,0 +1,65 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_anr_filiale
+	lineageTag: 80798cd5-33a3-4ca7-939c-9976cc92d528
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 280bfdad-6f91-4c64-ac31-d86d72faadb5
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 0a483633-fefc-46b8-803a-d8e004d50385
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column capitaux_propres_comptables
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 02b5d396-08e8-4cd0-8cf8-37e4010f797d
+		summarizeBy: sum
+		sourceColumn: capitaux_propres_comptables
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column differences_d_estimation
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: d091522a-fe8f-4f9f-9fd5-cee4e9dfa918
+		summarizeBy: sum
+		sourceColumn: differences_d_estimation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column actif_net_reevalue
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: fec3e0d3-eedb-4872-bf93-4d416e3938bb
+		summarizeBy: sum
+		sourceColumn: actif_net_reevalue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition v_anr_filiale = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_anr_filiale = Source{[Schema="dbo",Item="v_anr_filiale"]}[Data]
+				in
+				    dbo_v_anr_filiale
+

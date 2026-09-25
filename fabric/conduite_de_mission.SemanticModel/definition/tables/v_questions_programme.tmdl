@@ -1,0 +1,310 @@
+/// Questions du programme d'un arrete, avec leur reponse
+table v_questions_programme
+	lineageTag: 8327678a-dacf-4283-afd2-06ce01c84b87
+
+	measure 'Cote du cycle' = CALCULATE ( MAX ( v_questions_programme[cote] ) )
+
+	measure 'Reference selectionnee' = IF ( HASONEVALUE ( v_questions_programme[Réf.] ), SELECTEDVALUE ( v_questions_programme[Réf.] ) )
+
+	measure 'Enonce selectionne' = IF ( HASONEVALUE ( v_questions_programme[Réf.] ), SELECTEDVALUE ( v_questions_programme[Question] ) )
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 417d019b-a4f5-40c8-8e30-6454f7e90e70
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 41bdfa54-cc69-4930-bca9-f4c5084c0369
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: eaf15d98-4643-4f5d-a4b3-339d987c9696
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column programme_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 7a4fda18-737e-4a89-9eba-a4723f6bc8b2
+		summarizeBy: sum
+		sourceColumn: programme_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_programme
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 212bdd59-5648-4463-8dac-226c2ff23a05
+		summarizeBy: none
+		sourceColumn: type_programme
+
+		annotation SummarizationSetBy = Automatic
+
+	column cote
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: f5990b00-b709-4716-8e25-6b41787d3fa7
+		summarizeBy: none
+		sourceColumn: cote
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuille_question_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1ebb79f0-5dea-4097-a64c-6643564830c6
+		summarizeBy: sum
+		sourceColumn: feuille_question_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column question_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f461402a-e53e-41f4-9e65-2ed177623998
+		summarizeBy: sum
+		sourceColumn: question_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Réf.'
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f50b4582-ea00-479f-bb62-b7d08ddb2060
+		summarizeBy: none
+		sourceColumn: reference
+
+		annotation SummarizationSetBy = Automatic
+
+	column Question
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: d56ebc78-6f38-44d3-83da-17e4db147fbc
+		summarizeBy: none
+		sourceColumn: enonce
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_reponse
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: bb089e94-2a75-495e-92bb-7c6261b1a155
+		summarizeBy: none
+		sourceColumn: type_reponse
+
+		annotation SummarizationSetBy = Automatic
+
+	column obligatoire
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 9fbc377a-ccd3-4f1c-94d2-bcefa13fc11f
+		summarizeBy: none
+		sourceColumn: obligatoire
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0412fea0-3c5b-4dbc-b031-3c62bdb7d45e
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column section
+		dataType: string
+		sourceProviderType: nvarchar(120)
+		lineageTag: 86d5b39e-a3de-4baf-a8b9-935d80edf67d
+		summarizeBy: none
+		sourceColumn: section
+
+		annotation SummarizationSetBy = Automatic
+
+	column reponse
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: f5ccc2af-b1ea-4c2c-983e-40994186cb87
+		summarizeBy: none
+		sourceColumn: reponse
+
+		annotation SummarizationSetBy = Automatic
+
+	column reponse_valeur
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 330217c0-2d55-4f0d-96dd-ce09fdba2482
+		summarizeBy: none
+		sourceColumn: reponse_valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	column Réponse
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 9656b95e-59ae-4c0e-803f-4935036a7b85
+		summarizeBy: none
+		sourceColumn: reponse_lue
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_non_applicable
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 65674209-bcfc-4105-b788-62be2da1e48b
+		summarizeBy: none
+		sourceColumn: motif_non_applicable
+
+		annotation SummarizationSetBy = Automatic
+
+	column commentaire
+		dataType: string
+		sourceProviderType: nvarchar(1000)
+		lineageTag: 1b38e46b-63bf-436a-81c7-1c09362ee2f6
+		summarizeBy: none
+		sourceColumn: commentaire
+
+		annotation SummarizationSetBy = Automatic
+
+	column repondu_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 416a706f-6412-4fcf-9ae9-3a04d1f972a8
+		summarizeBy: none
+		sourceColumn: repondu_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column repondu_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 42163eca-7a31-4ec4-a39c-0de33fafa1ac
+		summarizeBy: none
+		sourceColumn: repondu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_ligne
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: 56686e23-8158-479f-a1e4-2644770fad66
+		summarizeBy: none
+		sourceColumn: etat_ligne
+
+		annotation SummarizationSetBy = Automatic
+
+	column Feuille
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: b9583a86-3312-4ca0-bb8e-62c400ebc891
+		summarizeBy: none
+		sourceColumn: feuille_cote
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuille_modele
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 7c8e45d5-6287-4916-9252-f779a56a97f9
+		summarizeBy: none
+		sourceColumn: feuille_modele
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuille_forme
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 66e296df-440f-4a54-98cc-3c66dc049a49
+		summarizeBy: none
+		sourceColumn: feuille_forme
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuille_conclue_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 6da359fe-19dd-423d-836b-5bfa66f2a849
+		summarizeBy: none
+		sourceColumn: feuille_conclue_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column OD
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 15c4d0ed-3259-4923-874b-4d031309764a
+		summarizeBy: sum
+		sourceColumn: od_brouillon
+
+		annotation SummarizationSetBy = Automatic
+
+	column od_lots
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e34e9bda-d860-43b6-ad0b-18544107e8cd
+		summarizeBy: sum
+		sourceColumn: od_lots
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pièces
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f2d8082d-9680-4ff5-b5b6-1ff383363559
+		summarizeBy: sum
+		sourceColumn: pieces
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_cycle
+		dataType: string
+		sourceProviderType: varchar(52)
+		lineageTag: 668cffcb-c9c2-420a-bb2e-384ad70933c0
+		summarizeBy: none
+		sourceColumn: cle_cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_questions_programme = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_questions_programme = Source{[Schema="dbo",Item="v_questions_programme"]}[Data]
+				in
+				    dbo_v_questions_programme
+

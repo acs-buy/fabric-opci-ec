@@ -1,0 +1,143 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_rationalisation_filiale
+	lineageTag: ccbdc7dd-f36e-4fbf-8cde-93d324ba935b
+
+	column filiale
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 2189ac10-895d-4a88-905a-f292094cee5a
+		summarizeBy: none
+		sourceColumn: filiale
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_mere
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 4f17e3ed-80f9-470f-a2e6-42f85354e838
+		summarizeBy: none
+		sourceColumn: entite_mere
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 55a3afd4-cf5d-476e-8d41-4ebae791068b
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column quote_part
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(9, 6)
+		lineageTag: d9abcc89-67fc-4cce-8525-60c45e32ea86
+		summarizeBy: sum
+		sourceColumn: quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column capitaux_propres
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 0f797d4f-f815-4409-a021-ec3f448c523d
+		summarizeBy: sum
+		sourceColumn: capitaux_propres
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column differences_estimation
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 1aa4a7aa-cdc7-4a3b-a52c-509fced8a010
+		summarizeBy: sum
+		sourceColumn: differences_estimation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column actif_net_filiale
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: fe3c16b3-de52-4da6-ad60-f3e36018a32f
+		summarizeBy: sum
+		sourceColumn: actif_net_filiale
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column interets_reintegres
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 736bb598-2db3-4cee-b2f1-9e030ed9a9f3
+		summarizeBy: sum
+		sourceColumn: interets_reintegres
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_titres_a_la_quote_part
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: d4fdc2c9-52e1-4498-9ea4-7971a2aad9b5
+		summarizeBy: sum
+		sourceColumn: valeur_titres_a_la_quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column variation_rationalisee_a
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 3893db43-e426-4821-b31c-e98ef8488882
+		summarizeBy: sum
+		sourceColumn: variation_rationalisee_a
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column variation_calculee_b
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 1521992b-696f-464d-b241-735557d5809c
+		summarizeBy: sum
+		sourceColumn: variation_calculee_b
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ecart_a_moins_b
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 93343f03-b11d-4d5c-9a98-9b71e1212ee0
+		summarizeBy: sum
+		sourceColumn: ecart_a_moins_b
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition v_rationalisation_filiale = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_rationalisation_filiale = Source{[Schema="dbo",Item="v_rationalisation_filiale"]}[Data]
+				in
+				    dbo_v_rationalisation_filiale
+

@@ -1,0 +1,178 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_differences_instruments
+	lineageTag: 9654c853-8633-4a99-873f-97519f363688
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 268435d5-217a-4f85-85f1-0be698086e90
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d0084d34-d6b1-4590-af78-d13d8f208ec8
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 3c6583f6-7fdd-4dfe-9fd3-6aa35d3eb03c
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a1299e9e-be99-4ec7-890b-7ff7d362de7b
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(40)
+		lineageTag: 9ece15e1-dbd3-4bd7-97f5-5fde5bc609bc
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column poste_bilan
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 00f5b864-c2d3-40cc-a26b-141a41ced681
+		summarizeBy: none
+		sourceColumn: poste_bilan
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: a5a37b1f-4826-4634-a9a4-030411b3a19c
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_comptable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 0e855318-0a13-477b-bf38-8e5540c491bb
+		summarizeBy: sum
+		sourceColumn: valeur_comptable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_actuelle
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: b8a6a89a-a721-4e28-a268-7d31fb9ca212
+		summarizeBy: sum
+		sourceColumn: valeur_actuelle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column difference_estimation
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7be21041-d2cd-4dcf-a148-0144eafd5e33
+		summarizeBy: sum
+		sourceColumn: difference_estimation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 0903b390-f9d1-4f21-9a8c-9d2fc6886742
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		sourceProviderType: varchar(40)
+		lineageTag: 988a04b7-610f-4a89-aad9-b27632afcbe2
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column norme
+		dataType: string
+		sourceProviderType: varchar(14)
+		lineageTag: 199f4ee5-8380-4542-81a1-99c826a3929b
+		summarizeBy: none
+		sourceColumn: norme
+
+		annotation SummarizationSetBy = Automatic
+
+	column reference
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: d92a2f0f-98d3-4de5-aed0-a0b4dd50470a
+		summarizeBy: none
+		sourceColumn: reference
+
+		annotation SummarizationSetBy = Automatic
+
+	column citation_courte
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 48b130b6-122d-48f1-b6e0-ded8ab2d0f51
+		summarizeBy: none
+		sourceColumn: citation_courte
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_liee
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: aafc4d79-f8f9-410f-abfa-35280dd24e7f
+		summarizeBy: none
+		sourceColumn: entite_liee
+
+		annotation SummarizationSetBy = Automatic
+
+	column quote_part
+		dataType: double
+		sourceProviderType: decimal(12, 6)
+		lineageTag: d30145aa-3ebb-4e0e-9748-779b0b01635d
+		summarizeBy: sum
+		sourceColumn: quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition v_differences_instruments = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_differences_instruments = Source{[Schema="dbo",Item="v_differences_instruments"]}[Data]
+				in
+				    dbo_v_differences_instruments
+

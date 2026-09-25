@@ -1,0 +1,105 @@
+/// Conclusion saisie sur un cycle de revision, avec qui l'a posee
+table conclusion_cycle
+	lineageTag: 268c1838-4d4f-469e-92c1-015bc248ec43
+
+	measure 'Cycle conclu' = IF ( CALCULATE ( COUNTROWS ( conclusion_cycle ) ) > 0, "OUI" )
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 9f03d374-a956-4401-89c4-c3f127d139c2
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d8398ca0-e9f9-4441-be0f-ef12c953dd9e
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f5aceb64-7080-4df9-a078-dea6677e50e2
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: f94c63a5-f0e9-4085-bdd1-a22a085e3abb
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column synthese_feuilles
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 5d5da5bc-e603-44ad-90d4-f9d3fac8b5f1
+		summarizeBy: none
+		sourceColumn: synthese_feuilles
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(2000)
+		lineageTag: d01fee05-2b94-4d64-86c6-7cf93b666c45
+		summarizeBy: none
+		sourceColumn: conclusion
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 119782ae-4f2a-459a-bbd1-71c518357b36
+		summarizeBy: none
+		sourceColumn: forme
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclu_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: ba000dd9-96fd-4d4b-9ed6-8f8aecbe2aec
+		summarizeBy: none
+		sourceColumn: conclu_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclu_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: c20e2330-89a2-4361-a535-76fd1e3a7a6f
+		summarizeBy: none
+		sourceColumn: conclu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition conclusion_cycle = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_conclusion_cycle = Source{[Schema="dbo",Item="conclusion_cycle"]}[Data]
+				in
+				    dbo_conclusion_cycle
+

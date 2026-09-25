@@ -1,0 +1,191 @@
+/// Les 5 indicateurs de l'ecran 2, un seul enregistrement
+table v_revision_indicateurs
+	lineageTag: f5ddd48b-fd53-468f-a232-f8738f5b89c2
+
+	measure 'Programme choisi' = CALCULATE ( MAX ( v_revision_indicateurs[type_programme] ) )
+
+	measure 'Questions du programme' = SUM ( v_revision_indicateurs[questions] )
+
+	measure 'OD de revision' = SUM ( v_revision_indicateurs[od_brouillon] ) + CALCULATE ( COUNTROWS ( v_od_revision ), v_od_revision[État] <> "BROUILLON" )
+
+	measure 'Cycles a valider' = SUM ( v_revision_indicateurs[cycles] ) - SUM ( v_revision_indicateurs[cycles_vises] )
+
+	measure 'Dossier ouvert' = IF ( NOT ISBLANK ( [Arrete selectionne] ) && CALCULATE ( MAXX ( v_revision_indicateurs, IF ( v_revision_indicateurs[verrouille], 1, 0 ) ) ) = 0, "OUI" )
+
+	measure 'Signataire du verrou' = VAR s = CALCULATE ( MAX ( v_revision_indicateurs[verrouille_par] ) ) RETURN IF ( s = USERPRINCIPALNAME (), s )
+
+	measure 'Questions revision repondues' = SUM ( v_revision_indicateurs[questions_repondues] )
+
+	measure 'Etape revision' = VAR i = v_revision_indicateurs RETURN SWITCH ( TRUE (), ISBLANK ( [Programme choisi] ), 2, [Questions revision repondues] < [Questions du programme], 3, [Cycles a valider] > 0, 5, CALCULATE ( MAXX ( v_revision_indicateurs, IF ( v_revision_indicateurs[revue_visee], 1, 0 ) ) ) = 1, 6, 5 )
+
+	measure 'Reponse OUI' = "OUI"
+
+	measure 'Reponse NON' = "NON"
+
+	measure 'Reponse NA' = "NA"
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 326fad99-2ca7-4959-8c86-a4bf6fea038d
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 261c99ff-c4c2-42dd-8edd-41cbcad67ba8
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_programme
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 69d3ebaf-473b-448a-bf54-0ae698b7ff16
+		summarizeBy: none
+		sourceColumn: type_programme
+
+		annotation SummarizationSetBy = Automatic
+
+	column questions
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e849013c-74b3-4c5a-bb3e-d0323e7832fe
+		summarizeBy: sum
+		sourceColumn: questions
+
+		annotation SummarizationSetBy = Automatic
+
+	column questions_repondues
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: dd653c68-d63b-481b-9ad3-46aabc2193da
+		summarizeBy: sum
+		sourceColumn: questions_repondues
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuilles
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d35c4f7f-f58c-485d-80cc-dd7456578e43
+		summarizeBy: sum
+		sourceColumn: feuilles
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuilles_conclues
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1a2313d4-c35e-4275-8fdc-c98ef7a8f2a3
+		summarizeBy: sum
+		sourceColumn: feuilles_conclues
+
+		annotation SummarizationSetBy = Automatic
+
+	column od_brouillon
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0299c63c-128e-476e-abf4-a04539ec8697
+		summarizeBy: sum
+		sourceColumn: od_brouillon
+
+		annotation SummarizationSetBy = Automatic
+
+	column comptes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1cbc6a63-c891-46c5-8a99-0247e06b845c
+		summarizeBy: sum
+		sourceColumn: comptes
+
+		annotation SummarizationSetBy = Automatic
+
+	column comptes_couverts
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 23581321-4d28-4920-88ac-8651b5456efc
+		summarizeBy: sum
+		sourceColumn: comptes_couverts
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycles
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b2ff4340-bbd5-4628-9f00-2a444cb4054c
+		summarizeBy: sum
+		sourceColumn: cycles
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycles_conclus
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 727ccb47-d922-47e1-9b8d-f8847feda6f3
+		summarizeBy: sum
+		sourceColumn: cycles_conclus
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycles_vises
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f652ac33-1ddc-4603-b1d2-97d29b08d62b
+		summarizeBy: sum
+		sourceColumn: cycles_vises
+
+		annotation SummarizationSetBy = Automatic
+
+	column revue_visee
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: f1dbe9c5-a83f-4efd-96c7-f72c629bb4a9
+		summarizeBy: none
+		sourceColumn: revue_visee
+
+		annotation SummarizationSetBy = Automatic
+
+	column verrouille
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 7481aef5-615f-4a63-8425-67ecf58e6e8e
+		summarizeBy: none
+		sourceColumn: verrouille
+
+		annotation SummarizationSetBy = Automatic
+
+	column verrouille_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 6ec9c970-44d4-40b7-bad1-861e7db9c002
+		summarizeBy: none
+		sourceColumn: verrouille_par
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_revision_indicateurs = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_revision_indicateurs = Source{[Schema="dbo",Item="v_revision_indicateurs"]}[Data]
+				in
+				    dbo_v_revision_indicateurs
+

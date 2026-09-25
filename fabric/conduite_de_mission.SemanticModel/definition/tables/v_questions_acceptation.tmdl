@@ -1,0 +1,284 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_questions_acceptation
+	lineageTag: b1dcde84-77bf-42f2-bd3d-54b0c5bd49ed
+
+	measure 'Reference acceptation selectionnee' = SELECTEDVALUE ( v_questions_acceptation[Réf.] )
+		displayFolder: Ecran 1 Client
+		lineageTag: 8dc4ed26-4597-4464-b268-bd31847596f4
+
+	measure 'Pieces du questionnaire' = SUM ( v_questions_acceptation[Pièces] )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 312a512f-4762-401e-8f14-75f044546037
+
+	measure 'Est questionnaire courant' = VAR c = CALCULATE ( [Cote questionnaire], REMOVEFILTERS ( v_questions_acceptation ) ) RETURN IF ( SELECTEDVALUE ( v_questions_acceptation[cote] ) = c, 1 )
+		formatString: 0
+		displayFolder: Ecran 1 Client
+		lineageTag: 4d8fae93-ac2b-44df-a94f-11d69bf5d959
+
+	measure 'Questions dues du questionnaire' = VAR c = [Cote questionnaire] RETURN CALCULATE ( COUNTROWS ( v_questions_acceptation ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = c ) )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: b482eeb2-8d02-4a6f-84bf-77426cdded8c
+
+	measure 'Questions repondues du questionnaire' = VAR c = [Cote questionnaire] RETURN CALCULATE ( COUNTROWS ( v_questions_acceptation ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = c && v_questions_acceptation[etat_ligne] = "REPONDUE" ) )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: c47ba6df-7bb9-46b5-90c9-d05d953f773e
+
+	measure 'Sous-titre questionnaire' = VAR r = [Questions repondues du questionnaire] VAR q = [Questions dues du questionnaire] VAR p = [Pieces du client] RETURN IF ( ISBLANK ( q ), "aucun questionnaire ouvert", ( r + 0 ) & " sur " & q & IF ( r > 1, " répondues", " répondue" ) & " · " & ( p + 0 ) & IF ( p > 1, " pièces", " pièce" ) & " · une ligne par question, on y répond directement" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 74b03cd8-0867-429b-95f7-b9f55b9c7fd9
+
+	measure 'Compteur grille questionnaire' = VAR r = [Questions repondues du questionnaire] VAR q = [Questions dues du questionnaire] VAR aff = MIN ( 10, q ) RETURN IF ( ISBLANK ( q ), BLANK (), ( r + 0 ) & " sur " & q & IF ( r > 1, " répondues", " répondue" ) & " · " & aff & " affichées" & IF ( q > 10, ", la grille défile", "" ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: b66b97c7-88d5-4a44-8177-db780064d9af
+
+	measure 'Question selectionnee' = VAR c = [Cote questionnaire] VAR r = [Reference acceptation selectionnee] VAR e = CALCULATE ( SELECTEDVALUE ( v_questions_acceptation[Question] ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = c && v_questions_acceptation[Réf.] = r ) ) RETURN IF ( ISBLANK ( r ), "Cliquez une question dans la grille pour y répondre", r & " · " & IF ( LEN ( e ) > 90, LEFT ( e, 90 ) & "…", e ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 533d97cc-7b3c-4603-98b1-aebd54cc5bfb
+
+	measure 'Questions du client' = VAR a = [Cote acceptation] VAR r = CALCULATE ( COUNTROWS ( v_questions_acceptation ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = a && v_questions_acceptation[etat_ligne] = "REPONDUE" ) ) VAR q = CALCULATE ( COUNTROWS ( v_questions_acceptation ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = a ) ) RETURN IF ( ISBLANK ( q ), "aucune question ouverte", ( r + 0 ) & " sur " & q )
+		displayFolder: Ecran 1 Client
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 50c20fba-8c22-43fc-89fc-e705873299ef
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column cote
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: a55f5d19-5fe5-45d5-881c-9ee4cb5ddd05
+		summarizeBy: none
+		sourceColumn: cote
+
+		annotation SummarizationSetBy = Automatic
+
+	column phase
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 001a3fc4-d31b-4a66-94da-8cfe1656e01f
+		summarizeBy: none
+		sourceColumn: phase
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b47eca3a-b6bf-47c6-b703-6df9a7632c24
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuille_question_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0da0d6f2-17b5-4d46-b93d-78ad75159398
+		summarizeBy: sum
+		sourceColumn: feuille_question_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column question_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ef0eed07-a9af-4167-9d8e-f286928cbbbc
+		summarizeBy: sum
+		sourceColumn: question_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Réf.'
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 6b0080d5-4cd4-4f60-b1b3-f3e7fc151de9
+		summarizeBy: none
+		sourceColumn: reference
+
+		annotation SummarizationSetBy = Automatic
+
+	column Question
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 2fcf9e24-dd11-487a-9fe2-800decbd8f54
+		summarizeBy: none
+		sourceColumn: enonce
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_reponse
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 64f585ce-6507-4545-bdcd-fe139bf0a718
+		summarizeBy: none
+		sourceColumn: type_reponse
+
+		annotation SummarizationSetBy = Automatic
+
+	column obligatoire
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: a4bc950e-db76-4854-8536-c4c722e1496b
+		summarizeBy: none
+		sourceColumn: obligatoire
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 75ebcfb6-f6c5-4646-872b-aa6dfbf3fa61
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column Section
+		dataType: string
+		sourceProviderType: nvarchar(120)
+		lineageTag: c597e026-e549-446a-b8a8-5cf57addff56
+		summarizeBy: none
+		sourceColumn: section
+
+		annotation SummarizationSetBy = Automatic
+
+	column options
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: a55c11d5-6956-4160-9c45-51850078b24b
+		summarizeBy: none
+		sourceColumn: options
+
+		annotation SummarizationSetBy = Automatic
+
+	column doc_attendu
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 105af77b-71e9-4379-ad5d-4288ccc55193
+		summarizeBy: none
+		sourceColumn: doc_attendu
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Réponse brute'
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: c1477b40-01a3-43b7-8200-b27878786738
+		summarizeBy: none
+		sourceColumn: reponse
+
+		annotation SummarizationSetBy = Automatic
+
+	column reponse_valeur
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: c918851e-562d-4771-8993-41239f3f1ddb
+		summarizeBy: none
+		sourceColumn: reponse_valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	column Réponse
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 1dad9b4d-a020-40a6-b846-819a983a1470
+		summarizeBy: none
+		sourceColumn: reponse_lue
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_non_applicable
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 768bb326-3133-4581-ae9a-1f2bde1fa4b9
+		summarizeBy: none
+		sourceColumn: motif_non_applicable
+
+		annotation SummarizationSetBy = Automatic
+
+	column Commentaire
+		dataType: string
+		sourceProviderType: nvarchar(1000)
+		lineageTag: 87fcc9b2-50bf-46a4-b6f1-6f5d4714684e
+		summarizeBy: none
+		sourceColumn: commentaire
+
+		annotation SummarizationSetBy = Automatic
+
+	column repondu_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: ed6840d9-2974-4c92-b521-b1bfe11c5efa
+		summarizeBy: none
+		sourceColumn: repondu_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column repondu_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 59cbda0c-5de0-410c-9375-c7865c357a2b
+		summarizeBy: none
+		sourceColumn: repondu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_ligne
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: d8181d63-ceac-4d20-ae83-ccdadf44ac0f
+		summarizeBy: none
+		sourceColumn: etat_ligne
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pièces
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8f32d76a-cbe5-4108-835c-56d3008bed2b
+		summarizeBy: sum
+		sourceColumn: pieces
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ligne
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(51)
+		lineageTag: 1665c91d-2307-40ab-8d68-9075cc6de8f6
+		summarizeBy: none
+		sourceColumn: cle_ligne
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_questions_acceptation = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_questions_acceptation = Source{[Schema="dbo",Item="v_questions_acceptation"]}[Data]
+				in
+				    dbo_v_questions_acceptation
+

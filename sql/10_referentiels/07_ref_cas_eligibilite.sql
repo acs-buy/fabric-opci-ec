@@ -1,0 +1,16 @@
+-- ref_cas_eligibilite : 5 ligne(s) de referentiel.
+-- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
+-- Produit depuis la base de reference, ne pas modifier a la main.
+
+IF NOT EXISTS (SELECT 1 FROM dbo.[ref_cas_eligibilite])
+BEGIN
+    INSERT INTO dbo.[ref_cas_eligibilite] ([cas], [libelle], [citation], [maitrise], [note], [ordre], [modifie_par], [modifie_le]) VALUES
+        (N'a',N'Majorité des droits de vote',N'L''organisme de placement collectif immobilier detient directement ou indirectement la majorite des droits de vote dans ces societes.',N'1',NULL,N'1',NULL,NULL),
+        (N'b',N'Désignation de la majorité des organes pendant deux exercices',N'L''organisme ou sa societe de gestion designe, pendant deux exercices successifs, la majorite des membres des organes d''administration, de direction ou de surveillance. L''organisme est PRESUME avoir effectue cette designation lorsqu''il a dispose au cours de cette periode, directement ou indirectement, d''une fraction superieure a 40 % des droits de vote, et qu''aucun autre associe ou actionnaire ne detenait, directement ou indirectement, une fraction superieure a la sienne.',N'1',N'La presomption a 2 conditions cumulatives : plus de 40 % des droits de vote, ET aucun autre associe au-dessus. Les 40 % seuls ne suffisent pas.',N'2',NULL,NULL),
+        (N'c',N'Influence dominante par contrat ou clauses statutaires',N'L''organisme ou sa societe de gestion dispose du droit d''exercer une influence dominante sur ces societes en vertu d''un contrat ou de clauses statutaires, lorsque le droit applicable le permet.',N'1',NULL,N'3',NULL,NULL),
+        (N'd',N'Exercice conjoint avec d''autres organismes du même groupe de gestion',N'L''organisme ou sa societe de gestion exerce l''un des droits ou pouvoirs mentionnes aux a a c conjointement avec d''autres organismes mentionnes au 5° du I de l''article L. 214-36 qui sont geres soit par la societe de gestion de l''organisme, soit, au sens de l''article L. 233-3 du code de commerce, par une societe qui est controlee par elle, par une societe qui la controle ou par une societe controlee par une societe qui la controle.',N'1',NULL,N'4',NULL,NULL),
+        (N'e',N'Engagement écrit de transmettre les informations',N'Ces societes s''engagent, par un accord ecrit avec l''organisme ou sa societe de gestion, a transmettre a la societe de gestion les informations qui lui sont necessaires, en vue notamment de l''evaluation des actifs et passifs de ces societes, au calcul des limites et quotas d''investissement en actifs immobiliers, de la limite d''endettement mentionnee a l''article L. 214-39 et a la determination et la mise a disposition des sommes distribuables definies aux articles L. 214-69 et L. 214-81.',N'0',N'CE CAS N''EMPORTE AUCUNE MAITRISE : une societe qui s''engage seulement a transmettre ses informations est eligible sans que l''OPCI la controle. C''est la lecture qui range les participations dans le second bloc du tableau de l''article 336-2, et elle est DEDUITE : l''article R. 214-83 n''emploie nulle part le mot controle.',N'5',NULL,NULL);
+    PRINT 'ref_cas_eligibilite : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+END
+ELSE PRINT 'ref_cas_eligibilite : deja chargee, rien a faire.';
+GO

@@ -1,0 +1,193 @@
+/// La supervision par entite, arrete et cycle : a viser, vises, renvoyes, decisions, etat du cycle. Tableau de bord Revision et supervision. Ajoutee le 09/09/2026.
+table v_supervision_cycle
+	lineageTag: 7a26f8ae-9370-4891-9ccc-3e3eba9f44a1
+
+	/// Lignes entite, arrete, cycle.
+	measure 'Lignes de supervision' = COUNTROWS(v_supervision_cycle) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: c5f9925b-81ec-46ce-b21e-7f09bc1f6507
+
+	/// Objets en attente de visa.
+	measure 'En attente de visa' = SUM(v_supervision_cycle[a_viser]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 81beb009-5fcd-497b-8201-78acb1829285
+
+	/// Objets vises.
+	measure 'Objets vises' = SUM(v_supervision_cycle[vises]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 25c518e5-35a5-4fb2-84ba-2d93adc2b6bb
+
+	/// Objets renvoyes.
+	measure 'Objets renvoyes' = SUM(v_supervision_cycle[renvoyes]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: e1ac899f-e8a3-4960-bf32-54eb907b3aac
+
+	/// Decisions prises.
+	measure 'Decisions prises' = SUM(v_supervision_cycle[decisions]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: e591d83e-c9d0-4e8f-be6f-3375db84ba0e
+
+	/// Lignes de cycle, a ventiler par etat_cycle.
+	measure 'Cycles par etat' = COUNTROWS(v_supervision_cycle) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: d1de1131-a875-489d-a74b-e1c0748d6f4e
+
+	/// En attente de visa, entite et arrete affiches.
+	measure 'En attente du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([En attente de visa], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: bc917a3a-5845-4298-9a09-de018e3deb6e
+
+	/// Objets vises, entite et arrete affiches.
+	measure 'Vises du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Objets vises], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: dfc3d0de-65b5-4c37-86fd-dc63fb6f99d2
+
+	/// Objets renvoyes, entite et arrete affiches.
+	measure 'Renvoyes du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Objets renvoyes], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 67c1410e-7128-43ba-95d8-a9bf228e2f3d
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: fb15dda7-0d68-49b9-8a03-f1189f01d640
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 84f15fc5-1265-41ad-b94e-9b7d11584eea
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: be03db3e-ad4c-4e9d-aadb-2f1a23751b71
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_libelle
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: a83e03d5-906e-4bca-b9d6-35514092abcf
+		summarizeBy: none
+		sourceColumn: cycle_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: bd034717-4ee9-49c5-81d8-491de18a1c5b
+		summarizeBy: sum
+		sourceColumn: cycle_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_affiche
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: f057045b-4b03-4334-8235-f32b39958034
+		summarizeBy: none
+		sourceColumn: cycle_affiche
+
+		annotation SummarizationSetBy = Automatic
+
+	column a_viser
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: eb41b99a-f67c-43f6-834e-396038bca631
+		summarizeBy: sum
+		sourceColumn: a_viser
+
+		annotation SummarizationSetBy = Automatic
+
+	column vises
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 2146fe63-d1cd-4789-aafe-849bd9520449
+		summarizeBy: sum
+		sourceColumn: vises
+
+		annotation SummarizationSetBy = Automatic
+
+	column renvoyes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: a2c6a666-e7b0-49f0-bffc-4b7bd660f2e3
+		summarizeBy: sum
+		sourceColumn: renvoyes
+
+		annotation SummarizationSetBy = Automatic
+
+	column decisions
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1c999acd-8c18-4777-8a9d-f205f4ee5859
+		summarizeBy: sum
+		sourceColumn: decisions
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_decision
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 50a98f72-7b0a-4be0-810f-38c795aafc60
+		summarizeBy: none
+		sourceColumn: derniere_decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column dernier_decideur
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: af2d1772-f972-4d87-9059-9e6b328f9abc
+		summarizeBy: none
+		sourceColumn: dernier_decideur
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_cycle
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(16)
+		lineageTag: ec594b55-538a-4ad4-bafd-377a0c21d79e
+		summarizeBy: none
+		sourceColumn: etat_cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_supervision_cycle = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_supervision_cycle = Source{[Schema="dbo",Item="v_supervision_cycle"]}[Data]
+				in
+				    dbo_v_supervision_cycle
+

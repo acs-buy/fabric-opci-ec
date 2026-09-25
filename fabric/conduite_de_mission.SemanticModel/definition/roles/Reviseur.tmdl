@@ -1,0 +1,7 @@
+role Reviseur
+	modelPermission: read
+
+	tablePermission ref_entite = ref_entite[Entité] IN SELECTCOLUMNS(FILTER(role_mission, USERPRINCIPALNAME() <> "" && role_mission[connexion] <> "" && role_mission[connexion] = USERPRINCIPALNAME() && role_mission[du] <= TODAY() && (ISBLANK(role_mission[au]) || role_mission[au] >= TODAY())), role_mission[entite])
+
+	tablePermission role_mission = USERPRINCIPALNAME() <> "" && role_mission[connexion] <> "" && role_mission[connexion] = USERPRINCIPALNAME()
+

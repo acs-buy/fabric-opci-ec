@@ -1,0 +1,214 @@
+/// Les actifs qui exigent une valeur externe, avec le depot du rapport et la saisie de la valeur retenue. Tableau de bord Valorisation. Ajoutee le 09/09/2026.
+table v_actifs_expertise_requise
+	lineageTag: 601e2bcb-1117-42d1-95f2-359325817621
+
+	/// Actifs exigeant une valeur externe.
+	measure 'Actifs a valeur externe' = COUNTROWS(v_actifs_expertise_requise) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 7e3756b3-e4a5-410b-9bc9-a52a78db61c2
+
+	/// Rapports d'expertise deposes.
+	measure 'Rapports deposes' = CALCULATE(COUNTROWS(v_actifs_expertise_requise), v_actifs_expertise_requise[rapport_depose] = TRUE()) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 3a86a890-9999-4e2f-9a14-f8a447e97bf5
+
+	/// Valeurs retenues saisies.
+	measure 'Valeurs retenues saisies' = CALCULATE(COUNTROWS(v_actifs_expertise_requise), v_actifs_expertise_requise[valeur_retenue_saisie] = TRUE()) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 358053b4-a268-4d43-84ca-18f31f380baf
+
+	/// Actifs a valeur externe, entite et arrete affiches.
+	measure 'Actifs a valeur externe du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Actifs a valeur externe], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: dec7ff87-ad4b-4196-acda-8674f4747051
+
+	/// Rapports deposes, entite et arrete affiches.
+	measure 'Rapports deposes du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Rapports deposes], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: c36fc047-1211-4ec3-9763-5181ad5d1200
+
+	column code_actif
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 510111ed-2437-420c-a6e6-383e6246bd54
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: caeb55ce-c360-44e9-b1e7-d81514d010a2
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(40)
+		lineageTag: 0501a926-e25c-4052-a682-f71e08ccedbf
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature_libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: a0570794-74cb-4d18-8af3-8e2a449f6ec9
+		summarizeBy: none
+		sourceColumn: nature_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column methode
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: 161a2004-6954-44d4-ba9c-c324fc10eaf9
+		summarizeBy: none
+		sourceColumn: methode
+
+		annotation SummarizationSetBy = Automatic
+
+	column norme
+		dataType: string
+		sourceProviderType: varchar(14)
+		lineageTag: 51601c8e-345f-4601-b08b-bdb7776fb480
+		summarizeBy: none
+		sourceColumn: norme
+
+		annotation SummarizationSetBy = Automatic
+
+	column reference
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 3dc31ac3-bd83-4961-b708-e82b3dc84459
+		summarizeBy: none
+		sourceColumn: reference
+
+		annotation SummarizationSetBy = Automatic
+
+	column citation_courte
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 59de16e2-2692-442b-8f84-6df95be7aff9
+		summarizeBy: none
+		sourceColumn: citation_courte
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 01b66a1e-ce3e-4782-aa85-ab3d428da4b9
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_arrete
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: fb051924-8d33-4b91-b66e-582eaa643ee8
+		summarizeBy: none
+		sourceColumn: date_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature_technique
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: b70b3330-288f-497d-b40c-070c0502e58d
+		summarizeBy: none
+		sourceColumn: nature_technique
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_externe_attendue
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: c60504a9-3803-48ce-b2f2-0f21108c5db6
+		summarizeBy: none
+		sourceColumn: valeur_externe_attendue
+
+		annotation SummarizationSetBy = Automatic
+
+	column fondement_evaluateur
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 984bc5f9-ba3f-45f3-8a27-7cacb3dcb5f6
+		summarizeBy: none
+		sourceColumn: fondement_evaluateur
+
+		annotation SummarizationSetBy = Automatic
+
+	column rapport_depose
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: d4efce03-de46-4b1a-aeca-302999873b89
+		summarizeBy: none
+		sourceColumn: rapport_depose
+
+		annotation SummarizationSetBy = Automatic
+
+	column rapport_au_coffre
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 31085dc6-ae00-4c18-9c51-9e83fb26d545
+		summarizeBy: none
+		sourceColumn: rapport_au_coffre
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_rapport
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: d1c1645d-1c2b-41e8-a0e1-936001d28a13
+		summarizeBy: none
+		sourceColumn: date_rapport
+
+		annotation SummarizationSetBy = Automatic
+
+	column expert
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: eceee35e-f89a-40e4-b12e-a334fd818407
+		summarizeBy: none
+		sourceColumn: expert
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_retenue_saisie
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: cdbb6efb-4ec0-4eaa-be0c-eab69d9d8455
+		summarizeBy: none
+		sourceColumn: valeur_retenue_saisie
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_actifs_expertise_requise = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_actifs_expertise_requise = Source{[Schema="dbo",Item="v_actifs_expertise_requise"]}[Data]
+				in
+				    dbo_v_actifs_expertise_requise
+

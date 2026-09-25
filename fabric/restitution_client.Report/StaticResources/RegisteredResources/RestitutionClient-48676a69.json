@@ -1,0 +1,142 @@
+{
+  "name": "RestitutionClient-48676a69.json",
+  "dataColors": [
+    "#0F5C8C",
+    "#C8961E",
+    "#12233C",
+    "#1F6D4A",
+    "#9A2A2A",
+    "#5B6B7D",
+    "#2B4666",
+    "#8A5A00",
+    "#7A9CC6",
+    "#B9C6D6"
+  ],
+  "good": "#1F6D4A",
+  "neutral": "#C8961E",
+  "bad": "#9A2A2A",
+  "maximum": "#0F5C8C",
+  "center": "#C8961E",
+  "minimum": "#DEEFFF",
+  "null": "#5B6B7D",
+  "foreground": "#12233C",
+  "background": "#FFFFFF",
+  "tableAccent": "#0F5C8C",
+  "firstLevelElements": "#12233C",
+  "secondLevelElements": "#5B6B7D",
+  "thirdLevelElements": "#D5DCE4",
+  "fourthLevelElements": "#8A96A3",
+  "secondaryBackground": "#F4F6F9",
+  "textClasses": {
+    "callout": {
+      "fontSize": 22,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#12233C"
+    },
+    "title": {
+      "fontSize": 12,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#12233C"
+    },
+    "header": {
+      "fontSize": 12,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#12233C"
+    },
+    "label": {
+      "fontSize": 10,
+      "fontFace": "Segoe UI",
+      "color": "#12233C"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "title": [
+          {
+            "show": true,
+            "fontFamily": "Segoe UI Semibold",
+            "fontSize": 12,
+            "fontColor": {
+              "solid": {
+                "color": "#12233C"
+              }
+            }
+          }
+        ],
+        "background": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#D5DCE4"
+              }
+            },
+            "radius": 3,
+            "width": 1
+          }
+        ],
+        "padding": [
+          {
+            "top": 8,
+            "bottom": 8,
+            "left": 8,
+            "right": 8
+          }
+        ],
+        "visualHeader": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "tableEx": {
+      "*": {
+        "columnHeaders": [
+          {
+            "autoSizeColumnWidth": true,
+            "columnAdjustment": "growToFit"
+          }
+        ]
+      }
+    },
+    "pivotTable": {
+      "*": {
+        "columnHeaders": [
+          {
+            "autoSizeColumnWidth": true,
+            "columnAdjustment": "growToFit"
+          }
+        ]
+      }
+    },
+    "cardVisual": {
+      "*": {
+        "value": [
+          {
+            "bold": true,
+            "$id": "default"
+          }
+        ],
+        "label": [
+          {
+            "show": true,
+            "$id": "default"
+          }
+        ]
+      }
+    }
+  }
+}

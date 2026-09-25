@@ -1,0 +1,121 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table piece_rattachement
+	lineageTag: 1ceb98c8-ee37-4d48-a5d8-00d495d22907
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: fedca8cf-b514-464c-8140-1c409bad88c5
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8629c120-72bf-479b-bfa1-b3d70ebfd82c
+		summarizeBy: sum
+		sourceColumn: piece_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: a76cb108-6547-4c7d-94db-536de9d6285d
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 440c1f00-eea0-435b-934b-cdb7a5d51321
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column question_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0d115983-1776-45f8-8e2e-4dabfb528a18
+		summarizeBy: sum
+		sourceColumn: question_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 38c01fee-0232-4e9c-b81c-b18040b6e17b
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column rattache_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 4d64e038-9dc4-45fc-89b4-7776450acf27
+		summarizeBy: none
+		sourceColumn: rattache_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column rattache_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: f847d282-7c02-4c61-878d-b1ceca86ea03
+		summarizeBy: none
+		sourceColumn: rattache_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_attendue_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0ec314d2-8445-4d27-826f-303cbeb15a28
+		summarizeBy: sum
+		sourceColumn: piece_attendue_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_couverte
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 21562519-407d-47c9-b763-9e0448edc9e4
+		summarizeBy: none
+		sourceColumn: entite_couverte
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete_couvert
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: d1f6b34d-5000-43fd-842e-a6ba746b0598
+		summarizeBy: none
+		sourceColumn: arrete_couvert
+
+		annotation SummarizationSetBy = Automatic
+
+	partition piece_rattachement = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_piece_rattachement = Source{[Schema="dbo",Item="piece_rattachement"]}[Data]
+				in
+				    dbo_piece_rattachement
+

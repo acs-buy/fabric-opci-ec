@@ -1,0 +1,234 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table ecriture
+	lineageTag: 0084d3a7-1b66-47ee-af72-37ecce8e4ec6
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 07784c21-1872-487c-9bf1-08e549b0ba2c
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column lot_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 30b60133-1bf7-4dee-8555-d48cbc324b37
+		summarizeBy: sum
+		sourceColumn: lot_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column journal_code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 8eb2de1d-9da7-42f0-9f76-f4f6c4aa505d
+		summarizeBy: none
+		sourceColumn: journal_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column journal_lib
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(100)
+		lineageTag: 69da3277-78db-4bd3-960d-7b8bca43c3d6
+		summarizeBy: none
+		sourceColumn: journal_lib
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecriture_num
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: ab106705-51fb-4ddb-a711-14fdb3b913f5
+		summarizeBy: none
+		sourceColumn: ecriture_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecriture_date
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 80959f9c-f9de-437b-9f5e-9fd248e801d1
+		summarizeBy: none
+		sourceColumn: ecriture_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte_num
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 85519bec-214c-4ebb-8037-db441edee05a
+		summarizeBy: none
+		sourceColumn: compte_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte_lib
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 21af7304-46d1-4c55-b7d6-d7807c34b477
+		summarizeBy: none
+		sourceColumn: compte_lib
+
+		annotation SummarizationSetBy = Automatic
+
+	column comp_aux_num
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 16710589-7b6f-407e-af41-6178cae38a47
+		summarizeBy: none
+		sourceColumn: comp_aux_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column comp_aux_lib
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 8e6c1ce9-f8f6-4cb3-9d66-f76917227497
+		summarizeBy: none
+		sourceColumn: comp_aux_lib
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_ref
+		dataType: string
+		sourceProviderType: varchar(50)
+		lineageTag: d040c6c7-76ec-4b82-87eb-2d52530042d3
+		summarizeBy: none
+		sourceColumn: piece_ref
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 2f888f4d-b293-4fac-bb93-2264aa18d236
+		summarizeBy: none
+		sourceColumn: piece_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecriture_lib
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 12e26ebb-d7ee-4877-a822-2997cf269be8
+		summarizeBy: none
+		sourceColumn: ecriture_lib
+
+		annotation SummarizationSetBy = Automatic
+
+	column debit
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 2f3f29ec-31e0-4cd6-8b34-7fae1cf1afd9
+		summarizeBy: sum
+		sourceColumn: debit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column credit
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 45a3920f-46b2-4c69-a130-40e3edb55f86
+		summarizeBy: sum
+		sourceColumn: credit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ecriture_let
+		dataType: string
+		sourceProviderType: varchar(40)
+		lineageTag: 3d086101-d158-4841-83f0-cd802e3fff61
+		summarizeBy: none
+		sourceColumn: ecriture_let
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_let
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: a8b56ffc-890c-4480-9b06-80f6116706ad
+		summarizeBy: none
+		sourceColumn: date_let
+
+		annotation SummarizationSetBy = Automatic
+
+	column valid_date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: aa40968d-a4df-48c7-b6d7-0d1f195a15db
+		summarizeBy: none
+		sourceColumn: valid_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column montant_devise
+		dataType: double
+		sourceProviderType: decimal(19, 3)
+		lineageTag: 31c66521-36e7-49f2-abf6-0516567853a5
+		summarizeBy: sum
+		sourceColumn: montant_devise
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column id_devise
+		dataType: string
+		sourceProviderType: varchar(3)
+		lineageTag: 467ed5bf-9664-449e-963a-4ed9c1c9f2de
+		summarizeBy: none
+		sourceColumn: id_devise
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte_origine
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 4af803ef-5579-4cd5-bd2c-88ab4bd42f4d
+		summarizeBy: none
+		sourceColumn: compte_origine
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: eca7e0a0-ff82-423c-a383-9a1c39ad82af
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ecriture = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ecriture = Source{[Schema="dbo",Item="ecriture"]}[Data]
+				in
+				    dbo_ecriture
+

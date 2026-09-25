@@ -1,0 +1,166 @@
+/// Le journal des visas : decisions (VISE, RENVOYE) et refus (REFUSE), horodates et attribues. Tableau de bord Revision et supervision. Ajoutee le 09/09/2026.
+table v_journal_visa
+	lineageTag: 009366fc-3fec-4585-89bd-2016dd429ba9
+
+	/// Lignes du journal des visas.
+	measure 'Lignes du journal' = COUNTROWS(v_journal_visa) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 324c5a91-0e02-4daa-b3f4-cba63b03723f
+
+	/// Refus traces au journal.
+	measure 'Refus traces' = CALCULATE(COUNTROWS(v_journal_visa), v_journal_visa[genre] = "REFUS") + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: e3d64afb-acd7-46ac-b1d3-3588e89fea5e
+
+	/// Refus traces, entite et arrete affiches.
+	measure 'Refus du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Refus traces], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: d7dce49a-0f1a-444d-b3ae-1e5585d4d777
+
+	/// Carte 2.3, Visas poses. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R23 Visas poses' = COUNTROWS ( v_journal_visa )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: f787881d-4699-4c9f-a0ee-2dcaa70be556
+
+	/// Carte 2.3, Dernier geste. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R23 Dernier visa' = MAX ( v_journal_visa[horodatage] )
+		formatString: dd/MM/yyyy HH:mm
+		displayFolder: Rapports V2
+		lineageTag: 3ccd57ce-05d8-4a95-beb3-7f6aac699554
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 99b62b0a-66be-4a66-9c35-626326a2e228
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: d54be0c9-aa35-4607-8a9c-e7000b2775b9
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: b93dd601-b65f-44fd-ad07-10f956a374c0
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_libelle
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: fe29cc4e-251b-4051-97c6-bccd9617257a
+		summarizeBy: none
+		sourceColumn: cycle_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0a3151f8-86ad-4dc4-bcc3-ae42550a0f5a
+		summarizeBy: sum
+		sourceColumn: cycle_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column horodatage
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 89d100c1-1ff1-4641-a82d-463da712f1b9
+		summarizeBy: none
+		sourceColumn: horodatage
+
+		annotation SummarizationSetBy = Automatic
+
+	column genre
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(8)
+		lineageTag: 711d935f-494b-4c17-8b33-78746a4dd6cb
+		summarizeBy: none
+		sourceColumn: genre
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: 3a538311-7d8c-4eb7-a49f-5a0cb3af41fa
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column objet_ref
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: 34a01f44-9122-4d34-a443-4f73f985e1fe
+		summarizeBy: none
+		sourceColumn: objet_ref
+
+		annotation SummarizationSetBy = Automatic
+
+	column issue
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(8)
+		lineageTag: 61af3698-4dd9-4554-a24b-d3ba5c4afa73
+		summarizeBy: none
+		sourceColumn: issue
+
+		annotation SummarizationSetBy = Automatic
+
+	column auteur
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: e6e61dda-a160-49c7-8510-50020e7347d5
+		summarizeBy: none
+		sourceColumn: auteur
+
+		annotation SummarizationSetBy = Automatic
+
+	column propose_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: b027e4d3-77db-4e83-ae7c-09339d446d2f
+		summarizeBy: none
+		sourceColumn: propose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column message
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 9d50c07b-38fb-46d6-b8b6-71d709a4fa9c
+		summarizeBy: none
+		sourceColumn: message
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_journal_visa = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_journal_visa = Source{[Schema="dbo",Item="v_journal_visa"]}[Data]
+				in
+				    dbo_v_journal_visa
+

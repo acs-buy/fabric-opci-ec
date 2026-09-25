@@ -1,9 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/orgappaudience/definition/orgAppAudienceDefinition/1.0.0/schema.json",
-  "settings": {
-    "hasAccessToHiddenContent": false,
-    "tabOrder": 0
-  },
-  "parentAppId": "54824a07-59d6-46bb-b277-342f87fabcd8",
-  "elementReferences": []
-}

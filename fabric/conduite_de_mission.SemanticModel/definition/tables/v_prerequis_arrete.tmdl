@@ -1,0 +1,57 @@
+table v_prerequis_arrete
+	lineageTag: 20df4666-b80e-4366-8dc6-a4f24c4ef617
+
+	/// Prérequis d'arrêté non satisfaits.
+	measure 'Prerequis non tenus' = COUNTROWS(v_prerequis_arrete) + 0
+		formatString: #,0
+		displayFolder: Collecte
+		lineageTag: bb8f2709-78ca-4c0d-8d2e-40a0d34a1f04
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: ca6a7bcd-5ddf-42af-a98c-b28db1c85c79
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 4e8b9a5c-99d7-4856-831e-a016d0bc9658
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column manquant
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(25)
+		lineageTag: fa055c31-3df7-4bea-b32c-f6978fef9962
+		summarizeBy: none
+		sourceColumn: manquant
+
+		annotation SummarizationSetBy = Automatic
+
+	column objet
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 685e18a2-0363-4935-8b54-c00389e62bfd
+		summarizeBy: none
+		sourceColumn: objet
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_prerequis_arrete = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_prerequis_arrete = Source{[Schema="dbo",Item="v_prerequis_arrete"]}[Data]
+				in
+				    dbo_v_prerequis_arrete
+

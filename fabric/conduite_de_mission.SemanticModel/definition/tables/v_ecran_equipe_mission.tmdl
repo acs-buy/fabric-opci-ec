@@ -1,0 +1,160 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_ecran_equipe_mission
+	lineageTag: bf82b2e4-a9c3-443d-b9fa-0fbb25f797e5
+
+	measure 'Est equipe du client courant' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_equipe_mission ) ) RETURN IF ( SELECTEDVALUE ( v_ecran_equipe_mission[entite] ) = c, 1 )
+		formatString: 0
+
+	measure 'Role selectionne' = SELECTEDVALUE ( v_ecran_equipe_mission[role_code] )
+
+	measure 'Titre equipe' = VAR c = [Client selectionne] VAR n = CALCULATE ( COUNTROWS ( v_ecran_equipe_mission ), FILTER ( ALL ( v_ecran_equipe_mission ), v_ecran_equipe_mission[entite] = c && v_ecran_equipe_mission[a_designer] = FALSE () ) ) VAR t = CALCULATE ( COUNTROWS ( v_ecran_equipe_mission ), FILTER ( ALL ( v_ecran_equipe_mission ), v_ecran_equipe_mission[entite] = c && TRUE () ) ) RETURN ( n + 0 ) & " rôle(s) sur " & ( t + 0 ) & " tenu(s)"
+
+	measure 'Alerte equipe' = VAR c = [Client selectionne] VAR cumul = CALCULATE ( COUNTROWS ( v_ecran_equipe_mission ), FILTER ( ALL ( v_ecran_equipe_mission ), v_ecran_equipe_mission[entite] = c && v_ecran_equipe_mission[cumul_a_signaler] = TRUE () ) ) VAR manquants = CALCULATE ( COUNTROWS ( v_ecran_equipe_mission ), FILTER ( ALL ( v_ecran_equipe_mission ), v_ecran_equipe_mission[entite] = c && v_ecran_equipe_mission[a_designer] = TRUE () ) ) VAR sans = CALCULATE ( COUNTROWS ( v_ecran_equipe_mission ), FILTER ( ALL ( v_ecran_equipe_mission ), v_ecran_equipe_mission[entite] = c && v_ecran_equipe_mission[sans_connexion] = TRUE () ) ) RETURN IF ( cumul > 0, "L'associé signataire et le chef de mission sont la même personne : la séparation des fonctions n'est pas tenue sur ce dossier.", IF ( manquants > 0, ( manquants + 0 ) & " rôle(s) à désigner : le visa attend un associé signataire.", IF ( sans > 0, ( sans + 0 ) & " personne(s) sans connexion : elles ne seront pas reconnues à l'écran.", BLANK () ) ) )
+
+	measure 'Fond alerte equipe' = IF ( ISBLANK ( [Alerte equipe] ), "#FFFFFF", "#FAF2E2" )
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 8dd4a44e-0b5d-422d-803c-2e2f6f15bef5
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column role_code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f955c137-36bf-4015-88f7-b1f3b9be8efe
+		summarizeBy: none
+		sourceColumn: role_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Personne
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 2d99f46f-d6f4-4bdd-9f04-119e46c23a4c
+		summarizeBy: none
+		sourceColumn: Personne
+
+		annotation SummarizationSetBy = Automatic
+
+	column connexion
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 8c570226-6437-4ada-b13f-0b014c80d84a
+		summarizeBy: none
+		sourceColumn: connexion
+
+		annotation SummarizationSetBy = Automatic
+
+	column Depuis
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: 1ef77bc9-f388-4fe2-b0cd-503331767acf
+		summarizeBy: none
+		sourceColumn: Depuis
+
+		annotation SummarizationSetBy = Automatic
+
+	column a_designer
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 5f861e52-9924-4a3a-9708-faccaeac883e
+		summarizeBy: none
+		sourceColumn: a_designer
+
+		annotation SummarizationSetBy = Automatic
+
+	column designe_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 7c4bb914-e35e-4d95-be2c-5376d3703b91
+		summarizeBy: none
+		sourceColumn: designe_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column designe_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 1c675eb6-077c-4289-a87f-25878962963f
+		summarizeBy: none
+		sourceColumn: designe_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column cumul_a_signaler
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 7ca1d03c-6f19-410e-986c-6fbbc82fa444
+		summarizeBy: none
+		sourceColumn: cumul_a_signaler
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: e6027293-c352-4aab-9647-7ea8adb8da5e
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 1783eeb3-c812-4753-9101-06914f825363
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rôle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(20)
+		lineageTag: 9f2ffd2e-19cd-4786-81eb-0a221a82043d
+		summarizeBy: none
+		sourceColumn: Rôle
+
+		annotation SummarizationSetBy = Automatic
+
+	column État
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(14)
+		lineageTag: ba13f075-4b6e-4bc3-97e7-6b321fde2875
+		summarizeBy: none
+		sourceColumn: État
+
+		annotation SummarizationSetBy = Automatic
+
+	column sans_connexion
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: f8a13223-926d-4369-976e-d3bd41d72445
+		summarizeBy: none
+		sourceColumn: sans_connexion
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_equipe_mission = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_equipe_mission = Source{[Schema="dbo",Item="v_ecran_equipe_mission"]}[Data]
+				in
+				    dbo_v_ecran_equipe_mission
+

@@ -1,0 +1,107 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_ecran_message
+	lineageTag: e53efe02-ccd7-4042-a2e0-8a37d1d476d3
+
+	measure 'Message ecran' = VAR u = USERPRINCIPALNAME () VAR c = [Client selectionne] VAR m = CALCULATE ( SELECTEDVALUE ( v_ecran_message[message] ), FILTER ( ALL ( v_ecran_message ), v_ecran_message[pour] = u && ( v_ecran_message[entite] = c || v_ecran_message[entite] = "-" ) && v_ecran_message[il_y_a_minutes] <= 30 ) ) VAR g = CALCULATE ( SELECTEDVALUE ( v_ecran_message[geste] ), FILTER ( ALL ( v_ecran_message ), v_ecran_message[pour] = u && ( v_ecran_message[entite] = c || v_ecran_message[entite] = "-" ) && v_ecran_message[il_y_a_minutes] <= 30 ) ) RETURN IF ( ISBLANK ( m ), BLANK (), m & IF ( ISBLANK ( g ), "", "  ·  " & g ) )
+
+	measure 'Fond message ecran' = VAR u = USERPRINCIPALNAME () VAR c = [Client selectionne] VAR gr = CALCULATE ( SELECTEDVALUE ( v_ecran_message[genre] ), FILTER ( ALL ( v_ecran_message ), v_ecran_message[pour] = u && ( v_ecran_message[entite] = c || v_ecran_message[entite] = "-" ) && v_ecran_message[il_y_a_minutes] <= 30 ) ) RETURN SWITCH ( gr, "REFUS", "#F9ECEC", "SUCCES", "#EFF6F2", "#FFFFFF" )
+
+	column pour
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 3af875db-8e68-4bb7-a84f-ca74c16e0088
+		summarizeBy: none
+		sourceColumn: pour
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: c65af165-cc4f-4e09-8327-c3af106896b8
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column procedure_nom
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(60)
+		lineageTag: 28de325c-001f-4e9d-ada7-868bd07b33e8
+		summarizeBy: none
+		sourceColumn: procedure_nom
+
+		annotation SummarizationSetBy = Automatic
+
+	column message
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 5f3c8075-718b-4f5a-bc59-7434e3e5aa7f
+		summarizeBy: none
+		sourceColumn: message
+
+		annotation SummarizationSetBy = Automatic
+
+	column geste
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 1912c8f9-fb48-4cab-af68-955ab43f3ac1
+		summarizeBy: none
+		sourceColumn: geste
+
+		annotation SummarizationSetBy = Automatic
+
+	column il_y_a_minutes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e182755a-db47-41b5-aac6-1272cdc158b0
+		summarizeBy: sum
+		sourceColumn: il_y_a_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(221)
+		lineageTag: 1bffd680-b75f-4995-8a95-04dd0663a384
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column genre
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 4e8caaf3-70b6-4cef-a33a-21a1571420a9
+		summarizeBy: none
+		sourceColumn: genre
+
+		annotation SummarizationSetBy = Automatic
+
+	column pose_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 0b0ef14d-7170-4cc4-b049-09defe9c1d1a
+		summarizeBy: none
+		sourceColumn: pose_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_message = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_message = Source{[Schema="dbo",Item="v_ecran_message"]}[Data]
+				in
+				    dbo_v_ecran_message
+

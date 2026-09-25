@@ -1,0 +1,143 @@
+/// L'inventaire des 36 referentiels : lignes, lignes modifiees, etat du releve, qui le tient. Tableau de bord Referentiels. Ajoutee le 09/09/2026.
+table v_inventaire_referentiel
+	lineageTag: 4d647144-98e3-4c97-8186-ad10ac266734
+
+	/// Tables de reference inventoriees.
+	measure 'Referentiels inventories' = COUNTROWS(v_inventaire_referentiel) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: e4ca8ed4-6fc9-456b-97f4-8b9b4fbe5237
+
+	/// Lignes de reference, toutes tables.
+	measure 'Lignes de reference' = SUM(v_inventaire_referentiel[lignes]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: b6c8d2c7-811b-4560-9bb5-536de4169267
+
+	/// Lignes reprises localement.
+	measure 'Lignes modifiees' = SUM(v_inventaire_referentiel[lignes_modifiees]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 78498428-5984-4654-aaaa-b3fcbd7fd1f7
+
+	/// Tables vides a ce jour.
+	measure 'Referentiels non releves' = CALCULATE(COUNTROWS(v_inventaire_referentiel), v_inventaire_referentiel[etat] = "non relevé") + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 27d3a140-3c39-449b-81bd-a0a5cf39dac1
+
+	/// Referentiels tenus par l'associe.
+	measure 'Tenus par l associe' = CALCULATE(COUNTROWS(v_inventaire_referentiel), v_inventaire_referentiel[qui_tient] = "ASSOCIE") + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: eefae0af-7641-45f3-ab5f-2ce4ddf21b7a
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1c35729e-017f-4036-9562-5b5fbc5d2684
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(160)
+		lineageTag: 5e4da9a8-1597-4cf5-aa88-d7979ff9fc81
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecran_lu
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 20ae5868-cc28-4602-b088-6e591611c904
+		summarizeBy: none
+		sourceColumn: ecran_lu
+
+		annotation SummarizationSetBy = Automatic
+
+	column qui_tient
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ae848b0a-732d-43fe-a8c4-8ef36809b7cb
+		summarizeBy: none
+		sourceColumn: qui_tient
+
+		annotation SummarizationSetBy = Automatic
+
+	column lignes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b45d755d-6837-4742-a67a-56e76ec9fb6b
+		summarizeBy: sum
+		sourceColumn: lignes
+
+		annotation SummarizationSetBy = Automatic
+
+	column lignes_modifiees
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 5e0307ec-8480-4ea6-8279-341af0cfc6c3
+		summarizeBy: sum
+		sourceColumn: lignes_modifiees
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_modification
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 8353672e-9c6a-4c21-894c-ac4fc085e279
+		summarizeBy: none
+		sourceColumn: derniere_modification
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(51)
+		lineageTag: 938834db-ae55-4427-a0bf-18ee07a0e851
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column releve_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 3ea10bd4-8859-46af-9f47-7bed041b9e19
+		summarizeBy: none
+		sourceColumn: releve_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column table_nom
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(120)
+		lineageTag: ccfea42f-e312-4f0b-a9f1-7ecd3e6cc7f2
+		summarizeBy: none
+		sourceColumn: table_nom
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_inventaire_referentiel = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_inventaire_referentiel = Source{[Schema="dbo",Item="v_inventaire_referentiel"]}[Data]
+				in
+				    dbo_v_inventaire_referentiel
+

@@ -1,0 +1,408 @@
+relationship 5dbf660e-aa58-427a-87c8-42e7317bb6c1
+	fromColumn: feuille_travail.cycle
+	toColumn: ref_cycle.code
+
+	annotation PBI_IsFromSource = FS
+
+relationship e72935e7-1d4e-4c82-ade1-14e23c078b07
+	fromColumn: feuille_travail.entite
+	toColumn: ref_entite.Entité
+
+	annotation PBI_IsFromSource = FS
+
+relationship c946718c-f85b-46ea-adf3-1f1cc630a840
+	fromColumn: lot_ecritures.entite
+	toColumn: ref_entite.Entité
+
+	annotation PBI_IsFromSource = FS
+
+relationship 4b2ce340-55ae-1d97-39a4-05a72b2e2e08
+	fromColumn: v_balance.entite
+	toColumn: ref_entite.Entité
+
+relationship f6652c5b-2b5e-6879-77da-38f3b021ed95
+	fromColumn: v_pieces_manquantes.entite
+	toColumn: ref_entite.Entité
+
+relationship 285f5536-5112-34d8-350d-422aa8129e02
+	fromColumn: v_prerequis_arrete.entite
+	toColumn: ref_entite.Entité
+
+relationship 647ad0b2-26b3-a2ec-6097-5bb7ab497c6f
+	fromColumn: v_valeur_liquidative.entite
+	toColumn: ref_entite.Entité
+
+relationship 94de290b-4e84-6666-290e-66a71bb7ef8d
+	fromColumn: v_maintien_requis.entite
+	toColumn: ref_entite.Entité
+
+relationship efe03f3b-d62e-70f2-d374-daf2d3089b89
+	fromColumn: v_anr_entite.entite
+	toColumn: ref_entite.Entité
+
+relationship f5ad2760-612c-69b6-ca64-145aa049a2d4
+	fromColumn: v_titres_valeur_actuelle.entite_mere
+	toColumn: ref_entite.Entité
+
+relationship a6958b2c-ae39-9dd1-9134-648c6cfbae6d
+	fromColumn: v_pieces_manquantes.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship ba4bff51-8aa4-611e-c643-fa20cf5ba30d
+	fromColumn: v_valeur_liquidative.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 1c165f91-e7fe-a02a-e1df-1c71c92eca41
+	fromColumn: v_balance.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship d6487c84-2dd5-d265-9875-da4f35384019
+	fromColumn: v_titres_valeur_actuelle.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship d08121fb-f51f-d30e-0c70-9a898cf2ccca
+	fromColumn: v_anr_entite.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship a9fd20cd-f477-90fc-f9d4-8edd3d522842
+	fromColumn: v_prerequis_arrete.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 4b45311d-3a46-5a86-2aa8-c91d2b40bac9
+	fromColumn: v_pieces_manquantes.cycle
+	toColumn: ref_cycle.code
+
+relationship e9658d5b-d38e-4a9f-a834-660d005b4f6a
+	fromColumn: feuille_travail.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 63d0acc8-5881-455e-a0ca-2ad21eb209a6
+	fromColumn: lot_ecritures.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 6ff4c40c-6c02-4d20-91f7-ea687b36f758
+	fromColumn: v_livrables_dus.entite
+	toColumn: ref_entite.Entité
+
+relationship 25c93487-267e-4aa8-98f5-89d779b7c7e2
+	fromColumn: v_livrables_dus.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 30b07fc3-8703-4a3b-81ee-737f45cb0fdf
+	fromColumn: v_differences_synthese.entite
+	toColumn: ref_entite.Entité
+
+relationship 8369293a-7b77-4ed0-99dd-fba15a19e698
+	fromColumn: v_differences_synthese.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship a3219e08-0027-4796-8fdb-6d2971a69a38
+	fromColumn: v_avancement_etapes.entite
+	toColumn: ref_entite.Entité
+
+relationship db2ce094-1d45-418e-b023-41c3cdf26274
+	fromColumn: v_avancement_etapes.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 5094c32c-9ca8-43c4-bae8-3e442db4fef2
+	fromColumn: v_etat_dossier.entite
+	toColumn: ref_entite.Entité
+
+relationship 311aab1a-7b21-4a29-b4ca-fd0f620354ab
+	fromColumn: v_documents_attendus.entite
+	toColumn: ref_entite.Entité
+
+relationship ea5c268e-b584-4cca-8bd2-dbe9c2a800d4
+	fromColumn: v_documents_attendus.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship abfa6d63-5b11-4404-9474-7ae1572646a4
+	fromColumn: v_perimetre_arrete.entite
+	toColumn: ref_entite.Entité
+
+relationship f7e56a55-1f75-409d-aa32-1e314c623d61
+	fromColumn: v_perimetre_arrete.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship fc860f07-f749-4e6a-bff6-dcef4f003570
+	fromColumn: v_supervision_cycle.entite
+	toColumn: ref_entite.Entité
+
+relationship c60f0c11-56c8-46ac-a6b1-fcd2d156326c
+	fromColumn: v_supervision_cycle.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 4ece3fc8-de0b-4252-ac9c-3bc51358f4ad
+	fromColumn: v_supervision_cycle.cycle
+	toColumn: ref_cycle.code
+
+relationship 0a7afc61-ab05-4c44-b762-9ef4ee494d77
+	fromColumn: v_journal_visa.entite
+	toColumn: ref_entite.Entité
+
+relationship bfd51996-6539-430d-a8bc-d09b513920d2
+	fromColumn: v_journal_visa.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 2dda701f-5413-4aaf-b771-1eab3a69a5c4
+	fromColumn: v_a_viser.entite
+	toColumn: ref_entite.Entité
+
+relationship 0cd78523-9e10-44ba-8729-de27677e0db7
+	fromColumn: v_a_viser.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 63a37da9-84a8-44da-802c-9931f537eeb6
+	fromColumn: v_mes_refus.entite
+	toColumn: ref_entite.Entité
+
+relationship 21345712-8b6e-4f94-a031-2e6315ff0af3
+	fromColumn: v_rationalisation_opci.entite
+	toColumn: ref_entite.Entité
+
+relationship 7547af07-60f7-4444-b39f-62647daea411
+	fromColumn: v_rationalisation_opci.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship bee60f17-e6d0-46dd-981f-14a7ed2c8630
+	fromColumn: v_actifs_expertise_requise.entite
+	toColumn: ref_entite.Entité
+
+relationship 7e47622f-28d1-480b-8e23-ec76f55dcc00
+	fromColumn: v_actifs_expertise_requise.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship e936ab5e-c1a4-4217-aeb6-9ade319882cf
+	fromColumn: v_ratio_conclusion.entite
+	toColumn: ref_entite.Entité
+
+relationship 726db11b-b60c-4e1f-b06a-e73c7b57606a
+	fromColumn: v_ratio_conclusion.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 31fe84ec-2342-4220-a7c6-9e6a7329dc8b
+	fromColumn: v_sommes_distribuables.entite
+	toColumn: ref_entite.Entité
+
+relationship 262cd1e0-1989-48a6-af6c-6e28d6180a0f
+	fromColumn: v_sommes_distribuables.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship d4c0b86e-aac9-4f67-8b06-b8d85153ff56
+	fromColumn: v_obligation_minimale.entite
+	toColumn: ref_entite.Entité
+
+relationship 29dab95c-1c45-43bd-b81b-b5d8590945b3
+	fromColumn: v_obligation_minimale.exercice
+	toColumn: v_dim_arrete.arrete
+
+relationship 154d0755-0fbd-44ef-8c71-5b54bae43ca3
+	fromColumn: v_a_generer_synthese.entite
+	toColumn: ref_entite.Entité
+
+relationship 4252f195-4d97-4c89-87e5-bb273c0d8ef7
+	fromColumn: v_anr_filiale.entite
+	toColumn: ref_entite.Entité
+
+relationship fcae7fda-56fd-4e48-bf08-9c40e62f40d8
+	fromColumn: v_anr_filiale_detail.entite
+	toColumn: ref_entite.Entité
+
+relationship 89920e43-746d-491e-9f25-eb826aaea50f
+	fromColumn: v_cadrage_pret_intragroupe.opci
+	toColumn: ref_entite.Entité
+
+relationship 2c21e91f-1137-4fe6-9414-6828d18690ab
+	fromColumn: v_differences_comptes_courants.entite
+	toColumn: ref_entite.Entité
+
+relationship c149c04b-cc90-4bbb-acba-7fe4df82cf39
+	fromColumn: v_differences_immeubles.entite
+	toColumn: ref_entite.Entité
+
+relationship 63367992-e3b8-4651-a9f5-ff7e207a7272
+	fromColumn: v_differences_instruments.entite
+	toColumn: ref_entite.Entité
+
+relationship 5d4c6180-43c5-422c-8d7a-351a144e3a87
+	fromColumn: v_differences_titres.entite
+	toColumn: ref_entite.Entité
+
+relationship 8623486d-d7c5-45b1-ad7a-77824cd46a11
+	fromColumn: v_ecritures_du_compte.entite
+	toColumn: ref_entite.Entité
+
+relationship 45625ff9-6e05-466b-a04e-db2594aecf66
+	fromColumn: v_flux_intragroupe.entite_debitrice
+	toColumn: ref_entite.Entité
+
+relationship 59caa484-83fd-4742-b9e6-624be80d3bc4
+	fromColumn: v_obligation_par_categorie.entite
+	toColumn: ref_entite.Entité
+
+relationship 8f2591ad-223e-432d-bfa8-cb6fe1654c05
+	fromColumn: v_parts_porteur_courant.entite
+	toColumn: ref_entite.Entité
+
+relationship 534c5073-1ce7-48e7-8801-e799c58004b7
+	fromColumn: v_plafond_distribuable.entite
+	toColumn: ref_entite.Entité
+
+relationship 10cf3a04-47e0-4078-ada7-8e8b64450e6b
+	fromColumn: v_ratio_arrete.entite
+	toColumn: ref_entite.Entité
+
+relationship c47f3a35-26da-4bfb-adbd-e073dba6afed
+	fromColumn: v_rationalisation_filiale.entite_mere
+	toColumn: ref_entite.Entité
+
+relationship 2ccca3b0-4ee0-43de-bf81-e05ef0c8b166
+	fromColumn: v_simulation_distribution.entite
+	toColumn: ref_entite.Entité
+
+relationship 33467273-24e4-40cf-81ce-9b19d7ed95fa
+	fromColumn: ecriture.lot_id
+	toColumn: lot_ecritures.id
+
+relationship f028ae57-d298-40b0-8da1-b07f80ad5e19
+	fromColumn: v_differences_detail.entite
+	toColumn: ref_entite.Entité
+
+relationship 38549bae-5e40-48a7-931b-8524d02ea99d
+	crossFilteringBehavior: bothDirections
+	fromColumn: v_perimetre_groupe.entite
+	toColumn: ref_entite.Entité
+
+relationship 68e6272d-0a52-4b52-825b-2cec277157a6
+	fromColumn: v_a_generer_synthese.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship acc8b54c-6641-4a88-9198-5c0c85dab515
+	fromColumn: v_anr_filiale.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 6c0b98b7-e66c-4deb-b70c-a9d431eedabb
+	fromColumn: v_anr_filiale_detail.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship e2183fea-5bbb-43fa-9b0c-1288e8345de4
+	fromColumn: v_cadrage_pret_intragroupe.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 6fda2ab9-bf6b-4107-8a44-356e180bc53a
+	fromColumn: v_differences_comptes_courants.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 85b8bd9e-395d-4923-b899-25378b09361b
+	fromColumn: v_differences_detail.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 7e25f583-0e81-4b96-9143-acf0355833a5
+	fromColumn: v_differences_immeubles.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 9ed61165-3fe6-4d5b-b4ad-6fd94e96d961
+	fromColumn: v_differences_titres.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 4015b460-82dc-4536-a2f8-9783cbee6115
+	fromColumn: v_ecritures_du_compte.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship fbabd3df-89bd-41ac-9117-b49a8596c801
+	fromColumn: v_flux_intragroupe.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship fde8b00f-035c-4521-87ca-8bc3c146fdb9
+	fromColumn: v_obligation_par_categorie.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 2b1f7c67-2b45-40ae-9a5f-675c901995bd
+	fromColumn: v_parts_porteur_courant.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 06c54cf2-40aa-40e0-ab12-23b843774d96
+	fromColumn: v_plafond_distribuable.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 3370c194-c995-4172-81b7-b8eb6aecb020
+	fromColumn: v_ratio_arrete.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship b8e2ca60-a687-4cf4-811c-a6196eb04bf3
+	fromColumn: v_rationalisation_filiale.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship dde34a85-58a2-4d05-bf6d-2d6984a8c220
+	fromColumn: v_simulation_distribution.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 540b4c39-af39-429d-b36c-d11fed4f9086
+	fromColumn: acceptation_mission.entite
+	toColumn: ref_entite.Entité
+
+relationship 959f6969-19f8-44bc-aab4-6f11d31daf0b
+	fromColumn: maintien_mission.entite
+	toColumn: ref_entite.Entité
+
+relationship 64fe419f-fdc0-4ce5-98b7-c32f992f22cc
+	fromColumn: maintien_mission.Exercice
+	toColumn: v_dim_arrete.arrete
+
+relationship 47cb5731-1daf-41bd-bd6b-c05875413dc8
+	fromColumn: arrete_mission.entite
+	toColumn: ref_entite.Entité
+
+relationship 76fdc20d-c7d0-4040-94bb-372f1c14b62b
+	fromColumn: arrete_mission.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship d868d8e8-41f7-486f-bfff-0e7666c7da14
+	fromColumn: ref_arrete.entite
+	toColumn: ref_entite.Entité
+
+relationship 0efe27f4-00e5-457d-b9ca-46d33fb4f815
+	fromColumn: ref_arrete.Arrêté
+	toColumn: v_dim_arrete.arrete
+
+relationship b6aa8cd5-e8b2-4ed2-b41a-bd07aff91205
+	fromColumn: piece_rattachement.entite
+	toColumn: ref_entite.Entité
+
+relationship aa19c2e0-93a1-4b7a-ac90-18ccdd44f13f
+	fromColumn: piece.nature
+	toColumn: ref_nature_piece.code
+
+relationship 586a541c-0c13-42a8-9158-a97f33f616df
+	fromColumn: piece_rattachement.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 96a60bff-2a41-4ab1-898d-a3668a711d63
+	crossFilteringBehavior: bothDirections
+	fromColumn: piece_rattachement.piece_id
+	toColumn: piece.id
+
+relationship 448c1c8f-cb4f-443c-8051-f1b8a821d91a
+	fromColumn: v_questions_acceptation.entite
+	toColumn: ref_entite.Entité
+
+relationship f8f3df96-42b3-47ca-953f-7e32f9f2eb06
+	fromColumn: v_ecran_pieces_du_dossier.entite
+	toColumn: ref_entite.Entité
+
+relationship ddd1f1c8-00dc-4b09-8eaa-4fb0baa099e5
+	fromColumn: v_espace_client.entite
+	toColumn: ref_entite.Entité
+
+relationship 0f6fe95c-a8ae-487a-85ba-fb24c7a1b3ff
+	fromColumn: v_filiale_dependances.entite_mere
+	toColumn: ref_entite.Entité
+
+relationship f1b429e0-7ad7-47af-8f84-309b2d6352cd
+	fromColumn: journal_perimetre.entite_mere
+	toColumn: ref_entite.Entité
+
+relationship 7e9ad8c2-b807-4474-bd50-98ae005997dd
+	fromColumn: v_ecran_maintiens.entite
+	toColumn: ref_entite.Entité
+

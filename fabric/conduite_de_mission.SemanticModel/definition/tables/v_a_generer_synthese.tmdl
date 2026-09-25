@@ -1,0 +1,145 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_a_generer_synthese
+	lineageTag: ce572ed6-6694-400b-aa6d-0e8c22dec1ea
+
+	/// Carte 3.4, Actifs de l entite. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R34 Actifs de l entite' = VAR arretes = COUNTROWS ( VALUES ( v_dim_arrete[arrete] ) ) RETURN IF ( arretes = 1, SUM ( v_a_generer_synthese[actifs] ) )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 4e04851a-d228-446d-9371-61dbb173385e
+
+	/// Carte 3.4, Calculables. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R34 Calculables' = SUM ( v_a_generer_synthese[calculables] )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: e76f12a2-a674-4a69-9601-e086c7eeb2ee
+
+	/// Carte 3.4, Bloques. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R34 Bloques' = SUM ( v_a_generer_synthese[bloques] )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 7e9db7a9-c310-4d01-8fc2-28ba4cb8d4f2
+
+	/// Carte 3.4, Variation calculable. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R34 Variation calculable' = SUM ( v_a_generer_synthese[variation_calculable] )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: cb7ce846-caaf-4ab7-8276-7e243b500811
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 17a66f4c-7183-4f06-9c78-c9cb4d3d879d
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 537f8323-a947-445a-820c-0a1516b516e4
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: e562cd24-f919-435b-a72d-fd01f638e5a3
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column actifs
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 52bf66dd-e7fe-45ca-bda9-409a1de7bd60
+		summarizeBy: sum
+		sourceColumn: actifs
+
+		annotation SummarizationSetBy = Automatic
+
+	column calculables
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: fdacac15-e4b1-47fd-aaa9-bc1c00db4968
+		summarizeBy: sum
+		sourceColumn: calculables
+
+		annotation SummarizationSetBy = Automatic
+
+	column bloques
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 2ad5e585-f97e-4759-ba13-8d152a8b8ba1
+		summarizeBy: sum
+		sourceColumn: bloques
+
+		annotation SummarizationSetBy = Automatic
+
+	column variation_calculable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: a5e393a2-41af-4a0a-8c08-8f512fd4729e
+		summarizeBy: sum
+		sourceColumn: variation_calculable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column demande_en_attente
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 208e6b0d-6f58-418c-8bb0-36a53ba1ca79
+		summarizeBy: sum
+		sourceColumn: demande_en_attente
+
+		annotation SummarizationSetBy = Automatic
+
+	column lots_proposes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: acac8418-f794-4df1-b7db-6eac1c612465
+		summarizeBy: sum
+		sourceColumn: lots_proposes
+
+		annotation SummarizationSetBy = Automatic
+
+	column lots_perimes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f67172bc-30fc-4c6f-a788-33a0750b0413
+		summarizeBy: sum
+		sourceColumn: lots_perimes
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: eb5783ae-fc52-41aa-9b94-970ae986ad7e
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_a_generer_synthese = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_a_generer_synthese = Source{[Schema="dbo",Item="v_a_generer_synthese"]}[Data]
+				in
+				    dbo_v_a_generer_synthese
+

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/userDataFunction/definition/1.1.0/schema.json",
+  "runtime": "PYTHON",
+  "connectedDataSources": [
+    {
+      "alias": "Coffre",
+      "artifactId": "4a1d428b-490a-4bdf-813e-5bc1bd5e4e2b",
+      "artifactType": "Lakehouse",
+      "workspaceId": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "alias": "DossierOPCI",
+      "artifactId": "e75236e3-ceab-b437-4253-1d4f3ade2222",
+      "artifactType": "SqlDbNative",
+      "workspaceId": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+  "functions": [
+    {
+      "name": "ajuster_programme",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "choisir_programme",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "conclure_cycle",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "conclure_feuille",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "conclure_revue",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "deverrouiller_dossier",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "exporter_dossier",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "exporter_feuille",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "exporter_od",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "exporter_questions",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "importer_classeur",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "ouvrir_feuille",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "repondre_question",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "saisir_od",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "valider_od_libres",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "valider_od_question",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "verifier_couverture",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "viser",
+      "description": "Ecran Revision, maquette 73",
+      "isPublicEndpointEnabled": false
+    }
+  ],
+  "libraries": {
+    "public": [
+      {
+        "name": "fabric-user-data-functions",
+        "type": "PYPI",
+        "version": "1.0"
+      },
+      {
+        "name": "openpyxl",
+        "type": "PYPI",
+        "version": "3.1.5"
+      }
+    ],
+    "private": []
+  }
+}

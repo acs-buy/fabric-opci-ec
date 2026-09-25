@@ -1,0 +1,103 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table ref_nature_piece
+	lineageTag: 3d34529c-71b0-4dad-ac4d-3aa9862a0114
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(40)
+		lineageTag: 28cd1813-d1dd-459b-bb63-5c88da527bf4
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: a74196d4-fafb-4ad1-9598-5c695f6a5312
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 945d37b4-1ccc-48fa-bda3-6982f6f43b01
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column conservation
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: bffd8e9b-1062-43aa-9b4f-169a765fdc66
+		summarizeBy: none
+		sourceColumn: conservation
+
+		annotation SummarizationSetBy = Automatic
+
+	column reference_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: abce83c4-d938-440d-8719-72bd80db1b95
+		summarizeBy: sum
+		sourceColumn: reference_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d59a3c10-3a84-4d2a-806b-55fd96c11652
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column source
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: 199cb5ff-1168-454d-8cee-271b1a661585
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 71c3c81f-9aff-43bc-b787-5e2e69892d63
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: c62a58e0-25ba-40ec-b32c-d142ab7844ec
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_nature_piece = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_nature_piece = Source{[Schema="dbo",Item="ref_nature_piece"]}[Data]
+				in
+				    dbo_ref_nature_piece
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Conduite de mission"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "471bb12b-1b61-aae9-42c1-ec42ba40a95a"
+  }
+}

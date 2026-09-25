@@ -1,0 +1,191 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_filiale_dependances
+	lineageTag: 381fff26-ddb0-4c5f-b0f7-48dd47d57bd3
+
+	measure 'Filiale selectionnee' = SELECTEDVALUE ( v_filiale_dependances[Filiale] )
+		displayFolder: Ecran 1 Client
+		lineageTag: 278a475a-76dd-4668-a51a-53dc73c5a52b
+
+	measure 'Est filiale du client courant' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_filiale_dependances ) ) RETURN IF ( SELECTEDVALUE ( v_filiale_dependances[entite_mere] ) = c, 1 )
+		formatString: 0
+		displayFolder: Ecran 1 Client
+		lineageTag: 0fe1b3ac-323c-459d-9e93-10113aa4cd49
+
+	measure 'Titre filiale' = VAR f = [Filiale selectionnee] VAR dn = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[Dénomination] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN IF ( ISBLANK ( f ), "Choisissez une filiale dans la liste", f & " · " & dn )
+		displayFolder: Ecran 1 Client
+		lineageTag: 23c0ce73-1d70-45d9-a928-05677fb8f9c5
+
+	measure 'Actuel filiale denomination' = VAR f = [Filiale selectionnee] VAR v = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[Dénomination] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: c88c5c0b-f3b2-4fbc-9e55-19a22b0a3c4c
+
+	measure 'Actuel filiale forme' = VAR f = [Filiale selectionnee] VAR v = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[Forme] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", v )
+		displayFolder: Ecran 1 Client
+		lineageTag: c21f5109-599f-4563-a25c-999d0f35288f
+
+	measure 'Actuel filiale quote-part' = VAR f = [Filiale selectionnee] VAR v = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[Quote-part] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN "actuel : " & IF ( ISBLANK ( v ), "vide", FORMAT ( v, "0.00 %" ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 15c39c32-1687-4115-8d41-0143c1174f9f
+
+	measure 'Filiale supprimable' = VAR f = [Filiale selectionnee] VAR s = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[supprimable] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN IF ( s = TRUE (), "OUI" )
+		displayFolder: Ecran 1 Client
+		lineageTag: 755c9981-652c-4036-9a42-adcd15e84a33
+
+	measure 'Confirmation suppression filiale' = VAR f = [Filiale selectionnee] VAR dn = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[Dénomination] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR a = CALCULATE ( SUM ( v_filiale_dependances[arretes] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR p = CALCULATE ( SUM ( v_filiale_dependances[pieces] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR e = CALCULATE ( SUM ( v_filiale_dependances[ecritures] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR s = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[supprimable] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN IF ( ISBLANK ( f ), BLANK (), "Supprimer " & f & " · " & dn & " ? " & IF ( s = TRUE (), "Cette filiale ne porte aucune donnée : elle sort du périmètre, l'entité est effacée, le geste est tracé.", "Cette filiale porte " & ( a + 0 ) & " arrêté(s), " & ( p + 0 ) & " pièce(s) et " & ( e + 0 ) & " écriture(s) : elle ne se supprime pas, sa sortie du groupe se constate par la détention à l'arrêté suivant." ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 1f2523e8-fbd5-447d-b9b8-876df1795a30
+
+	measure 'Filiales du client (liste)' = VAR c = [Client selectionne] RETURN CALCULATE ( COUNTROWS ( v_filiale_dependances ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[entite_mere] = c ) )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: aebcc168-58d7-479b-a98e-5e97d1baa4e7
+
+	column entite_mere
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 405b6c36-868c-4f08-97f2-ab4a65af19af
+		summarizeBy: none
+		sourceColumn: entite_mere
+
+		annotation SummarizationSetBy = Automatic
+
+	column Filiale
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 68cd1118-2df2-4440-9865-e655f2d290e5
+		summarizeBy: none
+		sourceColumn: entite_fille
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dénomination
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 2852486a-baba-42ff-b468-cfe5dbd638e2
+		summarizeBy: none
+		sourceColumn: denomination
+
+		annotation SummarizationSetBy = Automatic
+
+	column Forme
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: f6a27a71-e53d-44df-ae42-505bea1bca01
+		summarizeBy: none
+		sourceColumn: forme_sociale
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quote-part
+		dataType: double
+		formatString: 0.00 %
+		sourceProviderType: decimal(9, 6)
+		lineageTag: 37702ab2-c37d-4fb5-b22f-6aa74febc8e2
+		summarizeBy: sum
+		sourceColumn: droits_de_vote
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column arretes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d61514a7-0396-4339-906c-edea42307a6e
+		summarizeBy: sum
+		sourceColumn: arretes
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuilles
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f459985f-a0fb-40f6-8f8b-0bd68c2e7e4d
+		summarizeBy: sum
+		sourceColumn: feuilles
+
+		annotation SummarizationSetBy = Automatic
+
+	column pieces
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d3ec13df-4554-425e-86c3-24390f1b055c
+		summarizeBy: sum
+		sourceColumn: pieces
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecritures
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: dacae30f-2827-4811-8fd5-68d05d854df9
+		summarizeBy: sum
+		sourceColumn: ecritures
+
+		annotation SummarizationSetBy = Automatic
+
+	column comptes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 87c5cee3-d758-473c-bd5c-e67f68f9d6d9
+		summarizeBy: sum
+		sourceColumn: comptes
+
+		annotation SummarizationSetBy = Automatic
+
+	column detentions
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b102f244-c71e-4bd2-808d-17a76389c935
+		summarizeBy: sum
+		sourceColumn: detentions
+
+		annotation SummarizationSetBy = Automatic
+
+	column roles
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b03865b5-045d-4fc9-97be-cd2e7ee8a084
+		summarizeBy: sum
+		sourceColumn: roles
+
+		annotation SummarizationSetBy = Automatic
+
+	column supprimable
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 0c6b3b5d-2c2f-435b-b94a-fc77cda362a1
+		summarizeBy: none
+		sourceColumn: supprimable
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 93345ed8-920e-4ee9-a7d4-f06012e30dc8
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_filiale_dependances = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_filiale_dependances = Source{[Schema="dbo",Item="v_filiale_dependances"]}[Data]
+				in
+				    dbo_v_filiale_dependances
+

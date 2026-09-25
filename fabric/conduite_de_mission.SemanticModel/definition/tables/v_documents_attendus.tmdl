@@ -1,0 +1,228 @@
+/// Les pieces attendues par entite et arrete, avec leur etat (MANQUANTE, FOURNIE, FACULTATIVE). Tableau de bord Client et collecte. Ajoutee le 09/09/2026.
+table v_documents_attendus
+	lineageTag: 4b83c3aa-b157-4423-8c1b-329243da959f
+
+	measure 'Pieces attendues' = CALCULATE ( COUNTROWS ( v_documents_attendus ), FILTER ( v_documents_attendus, v_documents_attendus[etat] <> "FACULTATIVE" ), FILTER ( ALL ( ref_entite ), ref_entite[est_client] = TRUE () ) ) + 0
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 7dcc4ec5-3683-4c74-ae29-165ad791e015
+
+	/// Pieces attendues non recues.
+	measure 'Pieces attendues manquantes' = CALCULATE(COUNTROWS(v_documents_attendus), v_documents_attendus[etat] = "MANQUANTE") + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 6af2efe7-3561-4d67-876c-ed07ed8fb0cc
+
+	/// Pieces attendues recues.
+	measure 'Pieces attendues fournies' = CALCULATE(COUNTROWS(v_documents_attendus), v_documents_attendus[etat] = "FOURNIE") + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: a202f915-6a97-47bf-bcd7-bdf8ca2f1d3d
+
+	/// Pieces attendues manquantes, entite et arrete affiches.
+	measure 'Pieces manquantes du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Pieces attendues manquantes], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: b370adc5-e72b-4c98-89ee-09957356f6aa
+
+	/// Pieces attendues fournies, entite et arrete affiches.
+	measure 'Pieces fournies du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Pieces attendues fournies], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: c4fad6a3-c226-4dac-89cb-7c494028799c
+
+	measure 'Pieces attendues 2' = CALCULATE ( COUNTROWS ( v_documents_attendus ), v_documents_attendus[etat] <> "FACULTATIVE", ref_entite[est_client] = TRUE () )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 00e9b4f2-c90a-4063-93ea-9f15c375f000
+
+	measure 'Pieces sous ligne' = VAR n = [Pieces manquantes] RETURN IF ( ISBLANK ( n ) || n = 0, "toutes fournies", "manquantes : " & FORMAT ( n, "#,0" ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: d2c544f1-a447-4bac-85b2-f28869e7b914
+
+	measure 'Pièces attendues' = [Pieces attendues 2]
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 4d791ac9-5e07-4742-ace5-24376a5d9ae3
+
+	measure 'Sous-ligne pieces' = VAR n = [Pieces manquantes] RETURN IF ( ISBLANK ( n ) || n = 0, "toutes fournies", "manquantes : " & FORMAT ( n, "#,0" ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 11fa4abb-223a-4d1f-ad1a-157b3351bb05
+
+	measure 'Pieces attendues du client' = VAR c = [Client selectionne] RETURN CALCULATE ( COUNTROWS ( v_documents_attendus ), FILTER ( ALL ( v_documents_attendus ), v_documents_attendus[entite] = c && v_documents_attendus[etat] <> "FACULTATIVE" ) ) + 0
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 57c6f028-36f5-4af7-9c6d-78c2de7a8c71
+
+	measure 'Pieces manquantes du client' = VAR c = [Client selectionne] RETURN CALCULATE ( COUNTROWS ( v_documents_attendus ), FILTER ( ALL ( v_documents_attendus ), v_documents_attendus[entite] = c && v_documents_attendus[etat] = "MANQUANTE" ) ) + 0
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: 9e12bafa-eb56-40dd-891c-159f065a9157
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 0ba3470a-aa85-43c0-92c6-c6d5c5adcc2a
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 107cc089-fea4-4a6f-8439-e4a15bf43690
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_arrete
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 392ca943-2990-445d-97ac-52795f7f5027
+		summarizeBy: none
+		sourceColumn: date_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 832a86d5-cef1-4aba-99ac-d247d02d3350
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_attendue_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 14dc2f53-d005-4383-ac4f-ae92440f3545
+		summarizeBy: sum
+		sourceColumn: piece_attendue_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 2b291ffe-6544-48cc-b07f-0780570c0b84
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column phase
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: d4b0cf60-7684-48ed-b87f-0c6bf496573b
+		summarizeBy: none
+		sourceColumn: phase
+
+		annotation SummarizationSetBy = Automatic
+
+	column rattachement_libelle
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 97522f86-f5ee-4dc8-9c69-777feffaf19f
+		summarizeBy: none
+		sourceColumn: rattachement_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre_affichage
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3901bf18-0f6e-42b4-acdc-379f54ade608
+		summarizeBy: sum
+		sourceColumn: ordre_affichage
+
+		annotation SummarizationSetBy = Automatic
+
+	column exigence
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 840f246e-fe3f-4fce-9817-62fe39e5ba52
+		summarizeBy: none
+		sourceColumn: exigence
+
+		annotation SummarizationSetBy = Automatic
+
+	column obligatoire
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: d5fb51f8-dd38-406f-8be7-e80dda10b1b5
+		summarizeBy: none
+		sourceColumn: obligatoire
+
+		annotation SummarizationSetBy = Automatic
+
+	column periodicite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 3b48f24d-5b0e-43bd-8e0e-f292a60861fa
+		summarizeBy: none
+		sourceColumn: periodicite
+
+		annotation SummarizationSetBy = Automatic
+
+	column racine_declenchante
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 599f64fc-4d8e-4982-91ca-5c062bc44057
+		summarizeBy: none
+		sourceColumn: racine_declenchante
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 31042106-8d15-42d1-8ec0-5b5b65d2a4ec
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column pieces_fournies
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 62febde3-761c-4f9d-81a4-114bb349ed85
+		summarizeBy: sum
+		sourceColumn: pieces_fournies
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(11)
+		lineageTag: 9fe36600-5604-462b-ba46-a280c247a341
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_documents_attendus = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_documents_attendus = Source{[Schema="dbo",Item="v_documents_attendus"]}[Data]
+				in
+				    dbo_v_documents_attendus
+

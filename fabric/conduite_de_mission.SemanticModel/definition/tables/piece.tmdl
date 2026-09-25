@@ -1,0 +1,105 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table piece
+	lineageTag: 8029c7b2-1e41-4e25-a80b-ad5bdcc1b54d
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b5a2b807-a416-409c-a1bc-92d9c139a846
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column nom_fichier
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 91179d41-6460-4a32-8535-ce6a72efac2c
+		summarizeBy: none
+		sourceColumn: nom_fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column chemin_coffre
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: aaa8af0b-bcda-49c2-92cb-22e3d908ab03
+		summarizeBy: none
+		sourceColumn: chemin_coffre
+
+		annotation SummarizationSetBy = Automatic
+
+	column empreinte_sha256
+		dataType: string
+		isNullable: false
+		sourceProviderType: char(64)
+		lineageTag: 1bed4d62-b22d-4244-8916-b2d07f412dc1
+		summarizeBy: none
+		sourceColumn: empreinte_sha256
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(40)
+		lineageTag: 612fa97e-a848-4bd1-bd67-15dd20d82d17
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column periode_debut
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 1c9f4dfe-5856-4583-986a-a02c3d3b20de
+		summarizeBy: none
+		sourceColumn: periode_debut
+
+		annotation SummarizationSetBy = Automatic
+
+	column periode_fin
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: cb2ed0e6-9d84-4eaa-9791-f688ad16ea76
+		summarizeBy: none
+		sourceColumn: periode_fin
+
+		annotation SummarizationSetBy = Automatic
+
+	column depose_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: d9d195d7-ed8d-432d-b36e-b52ea51039b2
+		summarizeBy: none
+		sourceColumn: depose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column depose_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: d33523a6-99a2-4509-b612-9c9d78f64f02
+		summarizeBy: none
+		sourceColumn: depose_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition piece = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_piece = Source{[Schema="dbo",Item="piece"]}[Data]
+				in
+				    dbo_piece
+

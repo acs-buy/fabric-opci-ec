@@ -1,0 +1,101 @@
+/// Ce que le programme couvre de la balance, compte par compte
+table v_couverture_balance
+	lineageTag: b35cf463-7706-4aea-819a-20a294ef48a7
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d2dedbbb-798b-44ab-b2f9-9d5a9f39b218
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 5d0e8429-3132-41e2-bf66-bca9a0287f85
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 13e2380f-1b61-416f-856e-2c192862833b
+		summarizeBy: none
+		sourceColumn: compte
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: 46af376b-8f4e-4646-ac6b-077f1492f052
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column balance_finale
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: ae707d95-7e4b-4142-919c-04f6643ab974
+		summarizeBy: sum
+		sourceColumn: balance_finale
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cycles
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 1a021e01-ecc5-4195-b745-f65c9c35e077
+		summarizeBy: none
+		sourceColumn: cycles
+
+		annotation SummarizationSetBy = Automatic
+
+	column questions_directes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 511c2c56-0e3f-4dea-ab55-9bde16b3107f
+		summarizeBy: sum
+		sourceColumn: questions_directes
+
+		annotation SummarizationSetBy = Automatic
+
+	column questions_du_cycle
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ebdcf32a-eb47-4f58-b59d-7541c117a909
+		summarizeBy: sum
+		sourceColumn: questions_du_cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: varchar(14)
+		lineageTag: bdbbc184-a3f2-4142-8931-ee1b3ab47a57
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_couverture_balance = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_couverture_balance = Source{[Schema="dbo",Item="v_couverture_balance"]}[Data]
+				in
+				    dbo_v_couverture_balance
+

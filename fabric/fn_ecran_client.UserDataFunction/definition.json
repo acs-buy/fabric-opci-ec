@@ -1,0 +1,135 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/userDataFunction/definition/1.1.0/schema.json",
+  "runtime": "PYTHON",
+  "connectedDataSources": [
+    {
+      "alias": "Coffre",
+      "artifactId": "4a1d428b-490a-4bdf-813e-5bc1bd5e4e2b",
+      "artifactType": "Lakehouse",
+      "workspaceId": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "alias": "DossierOPCI",
+      "artifactId": "e75236e3-ceab-b437-4253-1d4f3ade2222",
+      "artifactType": "SqlDbNative",
+      "workspaceId": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+  "functions": [
+    {
+      "name": "ajouter_filiale",
+      "description": "Etape 2, Ajouter cette filiale : pr_ajouter_filiale",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "approuver_acceptation",
+      "description": "Etape 5, Accepter ou Refuser : pr_ecran_approuver_acceptation",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "approuver_maintien",
+      "description": "Client accepte, Viser le maintien : pr_ecran_approuver_maintien",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "creer_client",
+      "description": "Etape 1, Creer le dossier : pr_creer_client",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "designer_role",
+      "description": "Fiche du dossier, section Equipe : pr_designer_role_mission (ferme le mandat en cours du meme role)",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "exporter_questionnaire",
+      "description": "Exporter le questionnaire : classeur des questions et reponses, ecrit au coffre",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "importer_classeur",
+      "description": "Reimporter : le classeur depose au coffre, Client, Filiales ou Questionnaire",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "importer_reponses",
+      "description": "Etape 3, Reimporter : pr_importer_reponses",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "inscrire_piece",
+      "description": "Etape 4, Deposer une piece : pr_deposer_piece",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "modifier_client",
+      "description": "Temps 1, fiche du dossier, Enregistrer les modifications : pr_modifier_client (code fixe, vide = inchange)",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "modifier_filiale",
+      "description": "Temps 2, Enregistrer la filiale : pr_modifier_filiale (code fixe, vide = inchange)",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "ouvrir_arrete",
+      "description": "Etape 6, Ouvrir l\u0027arrete : pr_ecran_ouvrir_arrete",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "ouvrir_maintien",
+      "description": "Client accepte, Ouvrir le maintien : pr_ouvrir_questionnaire_maintien",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "ouvrir_questionnaire_acceptation",
+      "description": "Etape 3, Ouvrir la saisie en ligne : pr_ouvrir_questionnaire_acceptation",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "reclamer_document",
+      "description": "Reclamer : pr_ecran_demander_document",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "repondre_question",
+      "description": "Une reponse : pr_repondre_question",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "reprendre_acceptation",
+      "description": "Reprendre : pr_ecran_reprendre_acceptation",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "retirer_piece",
+      "description": "Temps 3, Retirer la piece : pr_retirer_piece, trace journal_piece, refuse si la piece fonde une donnee",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "rouvrir_arrete",
+      "description": "Rouvrir : pr_ecran_rouvrir_arrete",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "supprimer_filiale",
+      "description": "Temps 2, Supprimer (pop-up de confirmation) : pr_supprimer_filiale, refuse si la filiale porte des donnees",
+      "isPublicEndpointEnabled": false
+    }
+  ],
+  "libraries": {
+    "public": [
+      {
+        "name": "fabric-user-data-functions",
+        "type": "PYPI",
+        "version": "1.0"
+      },
+      {
+        "name": "openpyxl",
+        "type": "PYPI",
+        "version": "3.1.5"
+      }
+    ],
+    "private": []
+  }
+}

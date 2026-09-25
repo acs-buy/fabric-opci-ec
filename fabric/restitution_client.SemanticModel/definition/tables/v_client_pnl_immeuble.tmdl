@@ -1,0 +1,141 @@
+/// Le compte de resultat locatif, immeuble par immeuble : loyers, entretien, interets, resultat, rendement. Script 141, analytique du 145.
+table v_client_pnl_immeuble
+	lineageTag: 399993da-1e6b-4090-82fe-2d1755b6c195
+
+	measure 'Immeubles du groupe' = COUNTROWS ( v_client_pnl_immeuble )
+		lineageTag: 285f66ae-66f2-4c7f-8bed-67771cdedd03
+
+	measure 'Loyer moyen par m2' = DIVIDE ( SUM ( v_client_pnl_immeuble[Loyers] ), SUM ( v_client_pnl_immeuble[Surface m2] ) )
+		formatString: #,0.00
+		lineageTag: 2dfcbd93-5dff-4ebf-9282-8c7665fbcd7f
+
+	column cle_arrete
+		dataType: string
+		isHidden
+		lineageTag: fb8fad18-624a-4271-a62d-4680b2570d14
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+	column entite
+		dataType: string
+		isHidden
+		lineageTag: 19ccd4c4-7002-4d19-9138-1348158d3e92
+		summarizeBy: none
+		sourceColumn: entite
+
+	column arrete
+		dataType: string
+		isHidden
+		lineageTag: e5e161ee-c625-4f30-88ed-88c5bd6a4d05
+		summarizeBy: none
+		sourceColumn: arrete
+
+	column code_societe
+		dataType: string
+		isHidden
+		lineageTag: 8c137286-479a-4fe4-8da7-b3fdbd4fdce7
+		summarizeBy: none
+		sourceColumn: societe
+
+	column Société
+		dataType: string
+		lineageTag: 5f1ce027-9d5d-4a54-b8eb-56d6394229a2
+		summarizeBy: none
+		sourceColumn: societe_libelle
+
+	column Quote-part
+		dataType: decimal
+		formatString: 0.0 %
+		lineageTag: 1e2c3c27-f94f-4627-9f49-16cd2ba2edbc
+		summarizeBy: none
+		sourceColumn: quote_part
+
+	column Immeuble
+		dataType: string
+		lineageTag: b51188f2-dddd-4fa6-a3e4-9ff6d5ea07d5
+		summarizeBy: none
+		sourceColumn: code_actif
+
+	column Adresse
+		dataType: string
+		lineageTag: f3a6cf07-1a31-49e5-93d9-54952b078879
+		summarizeBy: none
+		sourceColumn: adresse
+
+	column Commune
+		dataType: string
+		lineageTag: 0434f536-31fa-4fba-a8df-a1f3963c3fce
+		summarizeBy: none
+		sourceColumn: commune
+
+	column Secteur
+		dataType: string
+		lineageTag: 73dc5868-5937-4db1-882a-9f91ea263ec8
+		summarizeBy: none
+		sourceColumn: secteur
+
+	column 'Surface m2'
+		dataType: decimal
+		formatString: #,0
+		lineageTag: 7c71460a-5ba7-4f42-a133-9f2f7ab83dc8
+		summarizeBy: none
+		sourceColumn: surface_m2
+
+	column Loyers
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 99e399a9-5cc9-447f-907b-2f494c374749
+		summarizeBy: none
+		sourceColumn: loyers
+
+	column 'Charges d''entretien'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 3bc54987-0b3c-472e-ad6d-d788a93d296e
+		summarizeBy: none
+		sourceColumn: charges_entretien
+
+	column Intérêts
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 7d9431cb-f9b6-4e16-8454-6dbe53dfc345
+		summarizeBy: none
+		sourceColumn: interets
+
+	column 'Résultat locatif'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: c1af7dbc-7bc9-44ed-bbff-6716b0f886d0
+		summarizeBy: none
+		sourceColumn: resultat_locatif
+
+	column 'Valeur actuelle'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: c4f72cd5-1be7-411b-a988-6e2f83ecaf36
+		summarizeBy: none
+		sourceColumn: valeur_actuelle
+
+	column Rendement
+		dataType: decimal
+		formatString: 0.00 %
+		lineageTag: aed1a512-f74c-4082-a0bf-fa6fc370529c
+		summarizeBy: none
+		sourceColumn: rendement_locatif
+
+	column 'Loyer par m2'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 6a40954f-33e3-40a7-9c82-1cc5112db93b
+		summarizeBy: none
+		sourceColumn: loyer_par_m2
+
+	partition v_client_pnl_immeuble = m
+		mode: import
+		source =
+				let
+				    Source = #"Source OPCI",
+				    dbo_v = Source{[Schema="dbo",Item="v_client_pnl_immeuble"]}[Data]
+				in
+				    dbo_v
+

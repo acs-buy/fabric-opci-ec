@@ -1,0 +1,15 @@
+-- ref_ratio : 4 ligne(s) de referentiel.
+-- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
+-- Produit depuis la base de reference, ne pas modifier a la main.
+
+IF NOT EXISTS (SELECT 1 FROM dbo.[ref_ratio])
+BEGIN
+    INSERT INTO dbo.[ref_ratio] ([code], [libelle], [sens], [seuil], [forme_vehicule], [article], [citation], [source_du_seuil], [lu_le], [calculable], [note], [calcul_a_valider], [ordre], [modifie_par], [modifie_le]) VALUES
+        (N'ACTIFS_IMMO_60',N'Actifs immobiliers, au moins 60 % de l''actif',N'MINIMUM',N'0.6000',NULL,N'CMF, art. L. 214-37, 1°',N'A hauteur de 60 % au moins d''actifs immobiliers. Dans le cas de la societe de placement a preponderance immobiliere a capital variable, ces actifs immobiliers sont ceux mentionnes aux 1° a 5° du I de l''article L. 214-36.',N'TEXTE',N'2026-09-04',N'1',N'Numerateur : les actifs des 1° a 5° du I de l''article L. 214-36, soit immeubles, parts de societes de personnes, actions negociees et parts d''OPCI. Denominateur : l''actif total.',N'1',N'1',NULL,NULL),
+        (N'ENDETTEMENT_40',N'Emprunts, au plus 40 % de la valeur des actifs immobiliers',N'MAXIMUM',N'0.4000',NULL,N'CMF, art. L. 214-39',N'Un organisme de placement collectif immobilier peut contracter des emprunts dans la limite de 40 % de la valeur des actifs immobiliers mentionnes aux 1° a 3° et au 5° du I de l''article L. 214-36. Pour l''appreciation de cette limite, il est tenu compte de l''ensemble des emprunts et dettes souscrits par l''organisme, par les societes mentionnees aux 2° et 3° du I et par les organismes mentionnes au 5° du meme I, a concurrence du pourcentage de participation detenue directement ou indirectement.',N'TEXTE',N'2026-09-04',N'1',N'Le second alinea impose de compter les emprunts des filiales A LA QUOTE-PART. Le denominateur exclut le 4°, les actions negociees, comme le ratio de 51 %.',N'1',N'4',NULL,NULL),
+        (N'LIQUIDITES_5',N'Dépôts, instruments liquides et liquidités, au moins 5 %',N'MINIMUM',N'0.0500',NULL,N'CMF, art. L. 214-37, 2°',N'A hauteur de 5 % au moins d''actifs mentionnes au 8° et au 9° du I de l''article L. 214-36. Ces actifs doivent etre libres de toutes suretes ou droits au profit de tiers.',N'TEXTE',N'2026-09-04',N'1',N'La condition de liberte des suretes n''est PAS verifiable en base : aucune table ne porte les suretes consenties. Le ratio calcule le montant, non sa disponibilite.',N'1',N'3',NULL,NULL),
+        (N'NON_COTE_51',N'Actifs non cotés, au moins 51 % de l''actif, SPPICAV',N'MINIMUM',N'0.5100',N'SPPICAV',N'CMF, art. L. 214-37, 1°',N'Les actifs mentionnes aux 1° a 3° et au 5° du I de l''article precite devant representer au minimum 51 % de l''actif.',N'TEXTE',N'2026-09-04',N'1',N'Le 4°, les actions negociees sur un marche, est EXCLU du numerateur : c''est la seule difference avec le ratio de 60 %. Ne s''applique qu''a la SPPICAV, le texte le disant expressement.',N'1',N'2',NULL,NULL);
+    PRINT 'ref_ratio : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+END
+ELSE PRINT 'ref_ratio : deja chargee, rien a faire.';
+GO

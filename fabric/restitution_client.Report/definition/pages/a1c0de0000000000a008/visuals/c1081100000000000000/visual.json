@@ -1,0 +1,390 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "c1081100000000000000",
+  "position": {
+    "x": 24,
+    "y": 386,
+    "z": 1100,
+    "height": 400,
+    "width": 1232,
+    "tabOrder": 1100
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Société"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Société",
+              "nativeQueryRef": "Société"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Rôle"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Rôle",
+              "nativeQueryRef": "Rôle"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Quote-part"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Quote-part",
+              "nativeQueryRef": "Quote-part"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Trésorerie"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Trésorerie",
+              "nativeQueryRef": "Trésorerie"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Emprunt bancaire"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Emprunt bancaire",
+              "nativeQueryRef": "Emprunt bancaire"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Dette intragroupe"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Dette intragroupe",
+              "nativeQueryRef": "Dette intragroupe"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Loyers"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Loyers",
+              "nativeQueryRef": "Loyers"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Charges d'entretien"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Charges d'entretien",
+              "nativeQueryRef": "Charges d'entretien"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Intérêts"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Intérêts",
+              "nativeQueryRef": "Intérêts"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Résultat locatif"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Résultat locatif",
+              "nativeQueryRef": "Résultat locatif"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_client_pilotage_societe"
+                    }
+                  },
+                  "Property": "Rendement"
+                }
+              },
+              "queryRef": "v_client_pilotage_societe.Rendement",
+              "nativeQueryRef": "Rendement"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_client_pilotage_societe"
+                  }
+                },
+                "Property": "Rôle"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "columnAdjustment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'growToFit'"
+                }
+              }
+            },
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12233C'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF1F5'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnFormatting": [
+        {
+          "properties": {
+            "dataBars": {
+              "positiveColor": {
+                "solid": {
+                  "color": {
+                    "expr": {
+                      "Literal": {
+                        "Value": "'#1F6D4A'"
+                      }
+                    }
+                  }
+                }
+              },
+              "negativeColor": {
+                "solid": {
+                  "color": {
+                    "expr": {
+                      "Literal": {
+                        "Value": "'#9A2A2A'"
+                      }
+                    }
+                  }
+                }
+              },
+              "axisColor": {
+                "solid": {
+                  "color": {
+                    "expr": {
+                      "Literal": {
+                        "Value": "'#5B6B7D'"
+                      }
+                    }
+                  }
+                }
+              },
+              "reverseDirection": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              },
+              "hideText": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_client_pilotage_societe.Résultat locatif"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'La situation financière et locative, société par société'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12233C'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

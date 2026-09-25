@@ -1,0 +1,6 @@
+# Ecrit par scripts/00_mes_identifiants.py, propre a chaque lecteur.
+mes_commandes.txt
+
+# Fichiers locaux de Python
+__pycache__/
+*.pyc

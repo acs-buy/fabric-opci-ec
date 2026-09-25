@@ -1,0 +1,331 @@
+/// La rationalisation de l'actif net : ouverture, souscriptions, rachats, dividendes, resultats, valorisations, cloture calculee et rationalisee. Tableau de bord Valorisation. Ajoutee le 09/09/2026.
+table v_rationalisation_opci
+	lineageTag: f2d8c4d9-3476-48b7-bf9d-bbd8096e6036
+
+	/// Actif net a l'ouverture de l'exercice.
+	measure 'ANR d ouverture' = SUM(v_rationalisation_opci[actif_net_precedent])
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 763873b9-bcaf-494e-b84d-4d45dac5b79a
+
+	/// Dividendes verses dans l'exercice.
+	measure 'Dividendes verses' = SUM(v_rationalisation_opci[dividendes_verses])
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 6790b82f-580c-4777-8688-565df26585ab
+
+	/// Resultat corporate de l'exercice.
+	measure 'Resultat corporate' = SUM(v_rationalisation_opci[resultat_corporate])
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 7d4754ff-c64f-47e4-854c-c78f0f010452
+
+	/// Resultat immobilier de l'exercice.
+	measure 'Resultat immobilier' = SUM(v_rationalisation_opci[resultat_immobilier])
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 78e3ab3c-f73e-494a-b27d-9599a463dfdc
+
+	/// Gain de valorisation de l'exercice.
+	measure 'Gain de valorisation' = SUM(v_rationalisation_opci[gain_valorisations])
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: ab4a9797-0cc7-472a-b6fa-b3d224afd2d8
+
+	/// Actif net calcule a la cloture.
+	measure 'ANR calcule' = SUM(v_rationalisation_opci[actif_net_calcule])
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: b2fe23ff-15b7-43f8-8bcc-55d54621e8c1
+
+	/// Calcule moins rationalise, attendu 0.
+	measure 'Ecart de rationalisation' = SUM(v_rationalisation_opci[actif_net_calcule]) - SUM(v_rationalisation_opci[actif_net_rationalise])
+		formatString: #,0.00
+		displayFolder: Parcours
+		lineageTag: 317f0224-546d-4452-965c-5047be8a3c03
+
+	/// Ecart de rationalisation, entite et arrete affiches.
+	measure 'Ecart de rationalisation du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Ecart de rationalisation], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0.00
+		displayFolder: Le dossier
+		lineageTag: 9511cd3e-4e29-4da8-bbb6-e2396e9ee2b7
+
+	/// ANR d ouverture, entite et arrete affiches. Ajoutee le 12/09/2026 pour le panneau du deplacement de l'actif net.
+	measure 'ANR d ouverture du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([ANR d ouverture], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 418affb7-3691-449d-9730-7f5792be30d8
+
+	/// Dividendes verses, entite et arrete affiches. Ajoutee le 12/09/2026 pour le panneau du deplacement de l'actif net.
+	measure 'Dividendes verses du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Dividendes verses], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 08ab73c6-107a-47bc-88db-e656b35e104e
+
+	/// Resultat corporate, entite et arrete affiches. Ajoutee le 12/09/2026 pour le panneau du deplacement de l'actif net.
+	measure 'Resultat corporate du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Resultat corporate], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 892f5287-b67b-413b-a0b9-6c0746ae8dd3
+
+	/// Resultat immobilier, entite et arrete affiches. Ajoutee le 12/09/2026 pour le panneau du deplacement de l'actif net.
+	measure 'Resultat immobilier du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Resultat immobilier], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 60d2a8b2-3943-44d8-8fc5-deb56796397a
+
+	/// Gain de valorisation, entite et arrete affiches. Ajoutee le 12/09/2026 pour le panneau du deplacement de l'actif net.
+	measure 'Gain de valorisation du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Gain de valorisation], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 41bb0371-ec34-4f6e-9e6e-9cddee5f7d88
+
+	/// ANR calcule, entite et arrete affiches. Ajoutee le 12/09/2026 pour le panneau du deplacement de l'actif net.
+	measure 'ANR calcule du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([ANR calcule], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
+		formatString: #,0
+		displayFolder: Le dossier
+		lineageTag: 3d1f96ff-537b-4659-b377-0d6e8403429f
+
+	/// Carte 3.5, Actif net rationalise. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R35 Actif net rationalise' = VAR lignes = COUNTROWS ( v_rationalisation_opci ) RETURN IF ( lignes = 1, SUM ( v_rationalisation_opci[actif_net_rationalise] ) )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 3d4d03c8-3c6a-4d44-81ac-b8e99695659f
+
+	/// Carte 3.5, Actif net calcule. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R35 Actif net calcule' = VAR lignes = COUNTROWS ( v_rationalisation_opci ) RETURN IF ( lignes = 1, SUM ( v_rationalisation_opci[actif_net_calcule] ) )
+		formatString: #,0
+		displayFolder: Rapports V2
+		lineageTag: 50c7f810-c199-4014-8ad4-6f74a9e6c144
+
+	/// Carte 3.5, Ecart. Le nom porte « de rationalisation » parce qu'un ecart de VL existe aussi en 4.1 : deux grandeurs differentes ne partagent jamais un nom.. Arbitree le 15/09/2026 par la session de la base.
+	measure 'R35 Ecart de rationalisation' = VAR arretes = COUNTROWS ( VALUES ( v_dim_arrete[arrete] ) ) RETURN IF ( arretes = 1, [R35 Actif net rationalise] - [R35 Actif net calcule] )
+		formatString: #,0.00
+		displayFolder: Rapports V2
+		lineageTag: 24bfa5c4-dd87-43f5-aba7-c73187a7ffb7
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 95ef34c5-d5e2-4c19-b8f1-9f44c5caad67
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 613efe94-4c39-42c9-9087-22da958d7ae0
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete_precedent
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 36b21ca7-5d69-4319-8489-cf5c568c1468
+		summarizeBy: none
+		sourceColumn: arrete_precedent
+
+		annotation SummarizationSetBy = Automatic
+
+	column actif_net_precedent
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 5d46e340-c380-4508-8d5e-8b05c57aeba5
+		summarizeBy: sum
+		sourceColumn: actif_net_precedent
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column souscriptions
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 09e3e39e-574e-40eb-b3c1-7bf2c6797c25
+		summarizeBy: sum
+		sourceColumn: souscriptions
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column rachats
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 7675b0ab-f0ad-4ddf-b709-6854f5228fe8
+		summarizeBy: sum
+		sourceColumn: rachats
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column dividendes_verses
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: d70352c8-6650-438e-b05d-37e3b7c7121b
+		summarizeBy: sum
+		sourceColumn: dividendes_verses
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column resultat_corporate
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 4526a64c-219e-4585-a2db-75c315d25d53
+		summarizeBy: sum
+		sourceColumn: resultat_corporate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column resultat_immobilier
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 39bbb641-4892-41bf-a489-aaffef6b72b1
+		summarizeBy: sum
+		sourceColumn: resultat_immobilier
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column resultat_financier
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: c1dcb1eb-6a8c-4226-974a-189875f596a9
+		summarizeBy: sum
+		sourceColumn: resultat_financier
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column plus_values_cession
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: d78473cf-3302-4428-9627-66d55f65d3bf
+		summarizeBy: sum
+		sourceColumn: plus_values_cession
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gain_valorisations
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 0363d3de-1dbb-4d1c-9782-d3c62ad04d8c
+		summarizeBy: sum
+		sourceColumn: gain_valorisations
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column interets_internes_elimines
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 1f6a0b45-a9ef-4cfb-b790-49cedba9178d
+		summarizeBy: sum
+		sourceColumn: interets_internes_elimines
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column interets_internes_produit_mere
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 8fb7637f-fc87-41c3-98d3-816c3882e081
+		summarizeBy: sum
+		sourceColumn: interets_internes_produit_mere
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column interets_internes_charge_filiales
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 5e868fc5-bcd3-479b-9c2f-c8bebff75648
+		summarizeBy: sum
+		sourceColumn: interets_internes_charge_filiales
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column interets_internes_flux_pour_memoire
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: bf689af1-c78d-4ad3-9b7a-0c5e3405ea67
+		summarizeBy: sum
+		sourceColumn: interets_internes_flux_pour_memoire
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column dividendes_internes_pour_memoire
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 20fcd24f-dd94-4180-bde3-7e8124761582
+		summarizeBy: sum
+		sourceColumn: dividendes_internes_pour_memoire
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ventes_internes_pour_memoire
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 854b9cff-be16-464d-b4ee-89b82d5e4566
+		summarizeBy: sum
+		sourceColumn: ventes_internes_pour_memoire
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column actif_net_rationalise
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: b0afecd8-8a00-4965-adda-7aa8fad6c966
+		summarizeBy: sum
+		sourceColumn: actif_net_rationalise
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column actif_net_calcule
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: e815a664-41c8-445d-8abe-c1930f235280
+		summarizeBy: sum
+		sourceColumn: actif_net_calcule
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition v_rationalisation_opci = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_rationalisation_opci = Source{[Schema="dbo",Item="v_rationalisation_opci"]}[Data]
+				in
+				    dbo_v_rationalisation_opci
+

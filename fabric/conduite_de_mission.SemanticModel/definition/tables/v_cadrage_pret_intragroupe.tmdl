@@ -1,0 +1,85 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_cadrage_pret_intragroupe
+	lineageTag: 7bb21803-f341-4cf6-ba74-31dfadb85922
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 6e642219-6256-45f9-8f8d-e1bb0918757e
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column filiale
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: c9324c35-9ed0-49b7-b336-c551bb3e32c7
+		summarizeBy: none
+		sourceColumn: filiale
+
+		annotation SummarizationSetBy = Automatic
+
+	column opci
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 6b3040bc-5c12-4b94-a20b-da00733c8070
+		summarizeBy: none
+		sourceColumn: opci
+
+		annotation SummarizationSetBy = Automatic
+
+	column encours_vu_de_la_filiale
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 3139082c-1e95-4048-b524-1e5351380632
+		summarizeBy: sum
+		sourceColumn: encours_vu_de_la_filiale
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column creance_vue_de_l_opci
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: b2fd99d9-8346-4b18-9fdc-12da17622487
+		summarizeBy: sum
+		sourceColumn: creance_vue_de_l_opci
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column interets_de_la_periode
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 5d481e32-b468-4cd9-b69a-bb5868c4ef4d
+		summarizeBy: sum
+		sourceColumn: interets_de_la_periode
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column reciproque_par_construction
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 1501349b-9cfe-4a8f-8d01-cf0da677503d
+		summarizeBy: none
+		sourceColumn: reciproque_par_construction
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_cadrage_pret_intragroupe = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_cadrage_pret_intragroupe = Source{[Schema="dbo",Item="v_cadrage_pret_intragroupe"]}[Data]
+				in
+				    dbo_v_cadrage_pret_intragroupe
+

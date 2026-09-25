@@ -1,0 +1,92 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: fr-FR
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["v_maintien_requis", "v_prerequis_arrete", "v_pieces_manquantes", "v_balance", "v_anr_entite", "v_valeur_liquidative", "v_titres_valeur_actuelle", "feuille_travail", "lot_ecritures", "ref_entite", "ref_cycle", "v_dim_arrete", "v_livrables_dus", "v_differences_synthese", "v_dernier_releve_controle", "v_avancement_etapes", "v_etat_dossier", "v_documents_attendus", "v_perimetre_arrete", "v_supervision_cycle", "v_journal_visa", "v_a_viser", "v_mes_refus", "v_rationalisation_opci", "v_actifs_expertise_requise", "v_ratio_conclusion", "v_sommes_distribuables", "v_obligation_minimale", "v_inventaire_referentiel", "role_mission", "v_a_generer_synthese", "v_anr_filiale", "v_anr_filiale_detail", "v_cadrage_pret_intragroupe", "v_differences_comptes_courants", "v_differences_immeubles", "v_differences_instruments", "v_differences_titres", "v_ecritures_du_compte", "v_flux_intragroupe", "v_obligation_par_categorie", "v_parts_porteur_courant", "v_plafond_distribuable", "v_ratio_arrete", "v_rationalisation_filiale", "v_simulation_distribution", "ecriture", "v_differences_detail", "v_perimetre_groupe", "acceptation_mission", "maintien_mission", "arrete_mission", "ref_arrete", "piece", "piece_rattachement", "ref_nature_piece", "v_questions_acceptation", "v_ecran_pieces_du_dossier", "v_espace_client", "v_filiale_dependances", "journal_perimetre", "v_ecran_maintiens", "v_ecran_message", "v_ecran_equipe_mission"]
+
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
+
+ref table v_maintien_requis
+ref table v_prerequis_arrete
+ref table v_pieces_manquantes
+ref table v_balance
+ref table v_anr_entite
+ref table v_valeur_liquidative
+ref table v_titres_valeur_actuelle
+ref table feuille_travail
+ref table lot_ecritures
+ref table ref_entite
+ref table ref_cycle
+ref table v_dim_arrete
+ref table v_livrables_dus
+ref table v_differences_synthese
+ref table v_dernier_releve_controle
+ref table v_avancement_etapes
+ref table v_etat_dossier
+ref table v_documents_attendus
+ref table v_perimetre_arrete
+ref table v_supervision_cycle
+ref table v_journal_visa
+ref table v_a_viser
+ref table v_mes_refus
+ref table v_rationalisation_opci
+ref table v_actifs_expertise_requise
+ref table v_ratio_conclusion
+ref table v_sommes_distribuables
+ref table v_obligation_minimale
+ref table v_inventaire_referentiel
+ref table role_mission
+ref table v_a_generer_synthese
+ref table v_anr_filiale
+ref table v_anr_filiale_detail
+ref table v_cadrage_pret_intragroupe
+ref table v_differences_comptes_courants
+ref table v_differences_immeubles
+ref table v_differences_instruments
+ref table v_differences_titres
+ref table v_ecritures_du_compte
+ref table v_flux_intragroupe
+ref table v_obligation_par_categorie
+ref table v_parts_porteur_courant
+ref table v_plafond_distribuable
+ref table v_ratio_arrete
+ref table v_rationalisation_filiale
+ref table v_simulation_distribution
+ref table ecriture
+ref table v_differences_detail
+ref table v_perimetre_groupe
+ref table acceptation_mission
+ref table maintien_mission
+ref table arrete_mission
+ref table ref_arrete
+ref table piece
+ref table piece_rattachement
+ref table ref_nature_piece
+ref table v_questions_acceptation
+ref table v_ecran_pieces_du_dossier
+ref table v_espace_client
+ref table v_filiale_dependances
+ref table journal_perimetre
+ref table v_ecran_maintiens
+ref table v_ecran_message
+ref table v_ecran_equipe_mission
+ref table conclusion_cycle
+ref table conclusion_revue
+ref table programme_travail
+ref table ref_question
+ref table v_couverture_balance
+ref table v_od_revision
+ref table v_questions_programme
+ref table v_revision_indicateurs
+
+ref role Reviseur
+
+ref cultureInfo fr-FR
+

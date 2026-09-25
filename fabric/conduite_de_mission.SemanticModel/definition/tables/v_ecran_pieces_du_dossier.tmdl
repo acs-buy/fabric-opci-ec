@@ -1,0 +1,217 @@
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+table v_ecran_pieces_du_dossier
+	lineageTag: 50416a1d-0ad7-451a-96b1-67a9cf69c79a
+
+	measure 'Pieces du dossier' = COUNTROWS ( v_ecran_pieces_du_dossier )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: d69b10fe-445c-4bcb-83db-319559ff01fb
+
+	measure 'Est client courant (pieces)' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_pieces_du_dossier ) ) RETURN IF ( SELECTEDVALUE ( v_ecran_pieces_du_dossier[entite] ) = c, 1 )
+		formatString: 0
+		displayFolder: Ecran 1 Client
+		lineageTag: 67b8bab6-1020-4415-87dc-abcb82778c51
+
+	measure 'Pieces du client' = VAR c = [Client selectionne] RETURN CALCULATE ( COUNTROWS ( v_ecran_pieces_du_dossier ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[entite] = c ) )
+		formatString: #,0
+		displayFolder: Ecran 1 Client
+		lineageTag: cd8db6d0-0d93-4e47-896f-4374a007600a
+
+	measure 'Piece selectionnee' = SELECTEDVALUE ( v_ecran_pieces_du_dossier[piece_id] )
+		formatString: 0
+
+	measure 'Piece selectionnee libelle' = VAR p = [Piece selectionnee] VAR n = CALCULATE ( SELECTEDVALUE ( v_ecran_pieces_du_dossier[Fichier] ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[piece_id] = p ) ) RETURN IF ( ISBLANK ( p ), "Cliquez une pièce dans la liste", n )
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 81140a9c-f9c1-4bef-b529-64398f1d9aeb
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 94ff1550-eb55-4835-b90b-c603cf4abae7
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column Question
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 74acc49a-c75a-4774-bd9a-2525ead6adba
+		summarizeBy: none
+		sourceColumn: question
+
+		annotation SummarizationSetBy = Automatic
+
+	column question_enonce
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: c4bd9dac-b16c-4f16-847c-493a71b5f157
+		summarizeBy: none
+		sourceColumn: question_enonce
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3a2c4f37-ac33-4fb4-8334-4312d57471b2
+		summarizeBy: sum
+		sourceColumn: piece_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fichier
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 88505d75-bc99-4b79-8370-e7058fa4ba1a
+		summarizeBy: none
+		sourceColumn: nom_fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column chemin_coffre
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: b15a4949-6a63-455f-b02a-5720601d96ea
+		summarizeBy: none
+		sourceColumn: chemin_coffre
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nature
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 606cb764-8c90-46aa-b8e8-3c54093e872d
+		summarizeBy: none
+		sourceColumn: nature_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: e0dd7642-eb30-45db-b921-6fb0a28bd62b
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column conservation
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: cfe459a6-d563-4f75-8a80-39b518970ad2
+		summarizeBy: none
+		sourceColumn: conservation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Déposée par'
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 58ba9af3-6163-4030-a09a-e9144d7c92cb
+		summarizeBy: none
+		sourceColumn: depose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Déposée le'
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: 0878a4b9-42df-486c-81ef-265d0d818199
+		summarizeBy: none
+		sourceColumn: depose_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column rattache_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: eac3d3d4-c2d2-4084-94c0-df641835265f
+		summarizeBy: none
+		sourceColumn: rattache_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column rattache_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 5faab6ae-6f21-4af7-8f9f-5d2aba5c881a
+		summarizeBy: none
+		sourceColumn: rattache_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: c95e421b-43ab-4eb6-9a3e-655c89482989
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_attendue_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 50683107-83c4-436a-a66a-4bb927dab4d4
+		summarizeBy: sum
+		sourceColumn: piece_attendue_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column portee
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(8)
+		lineageTag: 7cd1b214-ab72-4fd3-99fd-04d995918659
+		summarizeBy: none
+		sourceColumn: portee
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: varchar(31)
+		lineageTag: 8eff97d2-7e6d-4941-b9cb-63c99c6d7787
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Code nature'
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(40)
+		lineageTag: 0e301ce1-fa2c-4c98-a3ff-154ee7d1a30c
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_pieces_du_dossier = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_pieces_du_dossier = Source{[Schema="dbo",Item="v_ecran_pieces_du_dossier"]}[Data]
+				in
+				    dbo_v_ecran_pieces_du_dossier
+

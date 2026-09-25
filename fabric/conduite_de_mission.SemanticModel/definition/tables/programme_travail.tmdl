@@ -1,0 +1,75 @@
+/// Programme de travail retenu pour un arrete : les questions activees
+table programme_travail
+	lineageTag: c4d18c7d-6fe9-4df6-ab89-1bfb4707265f
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: cf3955fc-27cb-45a4-9212-f4582444c5a6
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 2f4a2970-cf44-420f-85e9-5613005ebf92
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d17abcea-8c84-45b2-9d4c-20a82716405e
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_programme
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: af4836fe-3874-4711-9f7f-047b8dc5e2cc
+		summarizeBy: none
+		sourceColumn: type_programme
+
+		annotation SummarizationSetBy = Automatic
+
+	column choisi_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 55690e03-55d5-4228-a486-b849fa429c09
+		summarizeBy: none
+		sourceColumn: choisi_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column choisi_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 2380f641-9900-4a83-b486-1c0497ff5acd
+		summarizeBy: none
+		sourceColumn: choisi_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition programme_travail = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_programme_travail = Source{[Schema="dbo",Item="programme_travail"]}[Data]
+				in
+				    dbo_programme_travail
+

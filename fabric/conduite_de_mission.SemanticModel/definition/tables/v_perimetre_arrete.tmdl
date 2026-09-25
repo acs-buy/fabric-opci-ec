@@ -1,0 +1,222 @@
+/// L'entree des entites dans le perimetre d'un arrete : imports, lots, ecritures, etat d'entree (CHARGE, HORS_BALANCE). Tableau de bord Client et collecte. Ajoutee le 09/09/2026.
+table v_perimetre_arrete
+	lineageTag: 7ccd1dad-27a5-44f9-9bf3-84583d38e8b6
+
+	/// Entites entrees dans le perimetre d'un arrete.
+	measure 'Entrees du perimetre' = COUNTROWS(v_perimetre_arrete) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: febad7bd-daae-45e5-866e-242b3f91128c
+
+	/// Entrees dont la balance est chargee.
+	measure 'Entrees chargees' = CALCULATE(COUNTROWS(v_perimetre_arrete), v_perimetre_arrete[etat_entree] = "CHARGE") + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 570cd37f-d879-4c47-bba4-fb5c703c9815
+
+	/// Lots d'ecritures recus.
+	measure 'Lots recus' = SUM(v_perimetre_arrete[lots]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: e245e779-e33d-4f33-ab79-887bc2cb84e6
+
+	/// Ecritures recues.
+	measure 'Ecritures recues' = SUM(v_perimetre_arrete[ecritures]) + 0
+		formatString: #,0
+		displayFolder: Parcours
+		lineageTag: 7a127676-bf77-489e-b8d5-cc98d4fa8538
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b0af5f8a-408e-4ed1-89b3-e4b5d4c451aa
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: cac8f10e-55ca-4e3f-b2b3-40f1cdae1696
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_arrete
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 877a475c-2e51-42a5-93fd-32e9d9f82e61
+		summarizeBy: none
+		sourceColumn: date_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a955c771-04aa-4ddc-a914-e2e8e788be9e
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: a369efd0-9700-460c-9978-9c034db9c2dd
+		summarizeBy: none
+		sourceColumn: type_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature_technique
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 46feef0c-2a30-4d27-b796-8584164a453a
+		summarizeBy: none
+		sourceColumn: nature_technique
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_libelle
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: fab792a8-d389-4e29-b13b-6e6b368a3a34
+		summarizeBy: none
+		sourceColumn: entite_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_vehicule
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 7bb423a8-4b3b-49f3-a6c6-55a4984834b4
+		summarizeBy: none
+		sourceColumn: forme_vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_sociale
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: cecb6412-59fa-4a94-806d-77848a113823
+		summarizeBy: none
+		sourceColumn: forme_sociale
+
+		annotation SummarizationSetBy = Automatic
+
+	column entree_attendue
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(7)
+		lineageTag: fee04953-cd7a-46aa-b0a4-35942a34e9af
+		summarizeBy: none
+		sourceColumn: entree_attendue
+
+		annotation SummarizationSetBy = Automatic
+
+	column est_filiale
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: ccb8006e-aa31-4738-b50a-8c601cdb61f5
+		summarizeBy: none
+		sourceColumn: est_filiale
+
+		annotation SummarizationSetBy = Automatic
+
+	column imports
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 5ed4774a-db90-4c73-bdd2-7d799db72e84
+		summarizeBy: sum
+		sourceColumn: imports
+
+		annotation SummarizationSetBy = Automatic
+
+	column imports_charges
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3358f241-745a-46ce-be9d-3428bd15cff9
+		summarizeBy: sum
+		sourceColumn: imports_charges
+
+		annotation SummarizationSetBy = Automatic
+
+	column imports_rejetes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: af2857fe-ffc8-494a-9c0b-cb0972dafbe4
+		summarizeBy: sum
+		sourceColumn: imports_rejetes
+
+		annotation SummarizationSetBy = Automatic
+
+	column lots
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: fcf46877-14ce-49b3-a3b9-eff0652506b5
+		summarizeBy: sum
+		sourceColumn: lots
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecritures
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 6e384719-9fd5-4f74-aabf-7645fa27d055
+		summarizeBy: sum
+		sourceColumn: ecritures
+
+		annotation SummarizationSetBy = Automatic
+
+	column porte_balance
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 1065201a-0c9e-4c50-ab09-a7b2d1da6dfe
+		summarizeBy: none
+		sourceColumn: porte_balance
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_entree
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 2d27cdf1-591f-4a07-ae94-b3f990ae9c74
+		summarizeBy: none
+		sourceColumn: etat_entree
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: b872a752-036f-421b-ba1d-647bba492b30
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_perimetre_arrete = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_perimetre_arrete = Source{[Schema="dbo",Item="v_perimetre_arrete"]}[Data]
+				in
+				    dbo_v_perimetre_arrete
+
