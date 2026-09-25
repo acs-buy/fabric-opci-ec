@@ -16,6 +16,12 @@ solution calcule son empreinte et l'inscrit en base avec sa nature, sa date et s
 **Ce chemin ne demande aucune autorisation particulière** au-delà de votre accès à l'espace de
 travail. Il fonctionne dès l'étape 6 de l'installation.
 
+Voici le coffre tel qu'il se présente. Le dossier `exports` reçoit les classeurs que la solution
+écrit. Les dossiers marqués d'une flèche sur leur icône sont des raccourcis : ils pointent vers une
+bibliothèque SharePoint, sans recopie.
+
+![Le contenu du coffre, avec le dossier des exports et les raccourcis](../../captures/coffre-fichiers.png)
+
 ### Le chemin facultatif : votre bibliothèque SharePoint
 
 Si votre cabinet range déjà les pièces de ses clients dans SharePoint, vous n'avez pas à les

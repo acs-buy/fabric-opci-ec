@@ -33,6 +33,11 @@ mais pas leur autorisation de parler à la base. Tant que vous ne l'avez pas pos
 
 ## La procédure, pour fn_ecran_client
 
+Les deux boutons dont vous avez besoin sont dans le bandeau du haut : **Manage connections** et
+**Publish**.
+
+![Le bandeau d'un ensemble de fonctions, avec Manage connections et Publish](../../captures/fonctions-bandeau.png)
+
 1. Dans votre espace de travail, ouvrez **fn_ecran_client**.
 2. Dans le bandeau du haut, cliquez sur **Gérer les connexions**.
 3. Cliquez sur **Ajouter une connexion de données**.
@@ -75,6 +80,11 @@ C'est la vérification la plus directe de tout le mode opératoire.
 
 1. Ouvrez **fn_ecran_client**.
 2. Dans la liste des fonctions, trouvez **qui_suis_je**.
+
+Les fonctions se lisent dans le volet de gauche, une par bouton de l'écran.
+
+![La liste des fonctions de l'écran client](../../captures/fonctions-liste.png)
+
 3. Lancez-la.
 4. **Elle doit rendre une réponse contenant votre identité.**
 
