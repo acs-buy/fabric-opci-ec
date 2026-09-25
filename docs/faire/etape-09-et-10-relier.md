@@ -109,4 +109,4 @@ des fichiers intact, afin que vous puissiez relire exactement ce qui a changé.
 
 Relancer un script déjà passé ne fait rien et l'annonce.
 
-Suite : [7. Publier l'application](07-publier-l-application.md)
+Suite : [7. Publier l'application](etape-11-publier-les-applications.md)

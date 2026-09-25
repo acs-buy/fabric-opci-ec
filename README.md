@@ -1,287 +1,330 @@
-# Conduite de mission OPCI : reproduire la solution dans votre espace de travail
+# Une solution OPCI conçue à partir des besoins de ceux qui s'en servent
 
-Ce dépôt contient une solution complète de conduite de mission pour les organismes de placement
-collectif immobilier, construite sur Microsoft Fabric et Power BI. Il est écrit pour que vous
-puissiez la reproduire entièrement chez vous, à partir de rien.
+Ce dépôt contient une solution complète pour les organismes de placement collectif immobilier,
+construite sur Microsoft Fabric et Power BI. Il est écrit pour que vous puissiez la reproduire
+entièrement chez vous, à partir de rien, **sans compétence technique préalable**.
 
-**Ce mode opératoire s'adresse à un expert-comptable, pas à un informaticien.** Chaque action a faire y est
-écrit en toutes lettres. Vous n'avez besoin d'aucune connaissance en programmation pour les étapes
-1 à 6, 11 et 12.
+**Elle n'est pas partie d'un outil, elle est partie de deux personnes.** Le réviseur qui conduit la
+mission, et le client qui détient le véhicule. Ce sont leurs besoins qui ont dicté ce que la
+solution fait, et c'est pour cela qu'elle leur sert.
 
-**Quatre étapes relèvent du métier d'analyste de données : les étapes 7 à 10.** Elles consistent à
-charger des données et à rebrancher la solution sur votre propre espace de travail. Ce dépôt les
-outille par des scripts qui font le travail à votre place, et elles restent faisables seul. Si vous
-préférez vous faire accompagner, un analyste certifié Power BI et Fabric les traite en environ deux
-heures. Vous n'avez pas besoin de l'engager pour la journée entière : les autres étapes ne le
-justifient pas.
+| L'utilisateur | Son besoin | Ce que la solution lui donne |
+|---|---|---|
+| **Le réviseur** | Savoir où en est sa mission, et où il doit agir | Un écran de conduite qui dit ce qui reste à faire, dossier par dossier |
+| **Le client** | Piloter son véhicule sans attendre un rapport | Huit pages de restitution, sur une donnée que le cabinet a visée |
 
 ---
 
-## Ce que la solution fait
+## Comment lire ce dépôt
 
-Elle porte le dossier d'un client OPCI de bout en bout, dans un seul écran de travail :
+Chaque étape de l'installation vous propose **deux portes**. Vous n'êtes pas obligé de passer par
+les deux, mais elles existent toutes les deux pour chaque étape.
 
-- créer le dossier d'un client, qui ouvre aussitôt son questionnaire d'acceptation de mission ;
-- lister les filiales du véhicule, en ajouter, en modifier, en supprimer ;
-- répondre aux questions d'acceptation, déposer les pièces justificatives, les tracer ;
-- soumettre le dossier au visa, et le faire approuver par une autre personne que son auteur ;
-- ouvrir les arrêtés de l'exercice et désigner l'équipe de la mission.
+| La porte | Ce qu'elle vous donne | Quand la prendre |
+|---|---|---|
+| **Comprendre** | Pourquoi cette étape existe, ce qui se passe derrière, ce qui pourrait mal tourner | Avant de commencer, ou quand une étape vous surprend |
+| **Faire** | La procédure, clic par clic, avec le nom exact de chaque bouton | Au moment de l'exécuter, l'écran sous les yeux |
 
-Chaque bouton écrit réellement en base de données. Ce n'est pas une maquette.
+**Si vous voulez d'abord comprendre l'ensemble**, lisez les sept pages de la partie Comprendre, dans
+l'ordre. Comptez une heure de lecture.
 
-Un second écran, destiné au client, restitue ce qui le concerne.
-
----
-
-## Avant de commencer : ce dont vous avez besoin
-
-### La capacité
-
-La solution demande une **capacité Fabric F4** au minimum.
-
-**Vous pouvez tout reproduire gratuitement.** L'essai gratuit de Microsoft Fabric dure **60 jours**
-et ouvre une capacité **F4 ou F64** selon votre éligibilité, avec 1 To de stockage. Il comprend
-aussi une licence Power BI individuelle équivalente à Premium par utilisateur si vous n'en avez
-pas. C'est exactement ce qu'il faut.
-
-Cette exigence de F4 a été établie par la mesure : en F2, la création d'une surface de saisie
-échoue. Cette mesure portait sur un composant que la présente solution ne contient plus. Il est donc
-possible que F2 suffise, mais cela n'a pas été éprouvé sur ce périmètre. Nous annonçons F4.
-
-### Les licences des personnes
-
-| Qui | Ce qu'il lui faut |
-|---|---|
-| Vous, qui installez | Power BI Pro ou Premium par utilisateur. L'essai Fabric en fournit l'équivalent. |
-| Vos collaborateurs, sur une capacité F4 à F32 | Power BI Pro ou Premium par utilisateur, chacun |
-| Vos collaborateurs, sur une capacité F64 ou plus | Une licence gratuite suffit, avec le rôle de lecteur |
-
-**Le point de coût, dit franchement :** passé l'essai, une capacité F4 ne rend pas l'écran gratuit
-pour votre équipe. Tant que la capacité reste sous F64, chaque personne qui ouvre l'écran a besoin
-d'une licence Pro. Pour le prix courant d'une capacité, consultez le calculateur de tarifs
-Microsoft Azure : les tarifs varient par région et changent, et un chiffre inscrit ici serait faux
-avant que vous le lisiez.
-
-### Les autorisations à ouvrir
-
-Votre administrateur Microsoft Fabric doit activer **quatre réglages** dans le portail
-d'administration, section Paramètres du locataire :
-
-1. **Les utilisateurs peuvent créer des éléments Fabric**
-2. **Les utilisateurs peuvent synchroniser les éléments d'un espace de travail avec leurs dépôts Git**
-3. **Créer des espaces de travail**
-4. **Les utilisateurs peuvent synchroniser les éléments d'un espace de travail avec des dépôts GitHub**
-
-Le quatrième est distinct du deuxième, et c'est celui qu'on oublie. Sans lui, GitHub n'apparaîtra
-pas dans la liste des fournisseurs et vous chercherez longtemps pourquoi.
-
-Vous devez par ailleurs être **administrateur de l'espace de travail** que vous allez créer.
-
-### Sur votre poste
-
-- Un navigateur.
-- **Python 3**, pour les trois scripts de ce dépôt. Rien d'autre à installer : ils n'utilisent
-  aucune bibliothèque extérieure.
-- Un compte **GitHub**, gratuit.
+**Si vous voulez installer tout de suite**, allez directement au tableau des douze étapes.
 
 ---
 
-## La reproduction, étape par étape
+## Partie 1. Comprendre
 
-Suivez les étapes dans l'ordre. Chacune se termine par une vérification : ne passez à la suivante
-que lorsqu'elle est passée.
+| # | La page | Ce qu'elle explique |
+|---|---|---|
+| 1 | [Pourquoi cette solution existe](docs/comprendre/01-pourquoi-cette-solution.md) | Les besoins du réviseur et du client, et comment ils ont dicté la conception |
+| 2 | [Ce que voit le réviseur](docs/comprendre/02-ce-que-voit-le-reviseur.md) | L'écran de conduite, ce qu'il montre, et les quatre natures d'action |
+| 3 | [Ce que voit le client](docs/comprendre/03-ce-que-voit-le-client.md) | Les huit pages de restitution, page par page |
+| 4 | [Comment c'est construit](docs/comprendre/04-comment-c-est-construit.md) | La chaîne d'un clic, et où se trouve chaque chose |
+| 5 | [Les licences, expliquées](docs/comprendre/05-les-licences.md) | Ce que coûte la solution, et la ligne qu'on oublie |
+| 6 | [Les trois couches d'une reproduction](docs/comprendre/06-les-trois-couches.md) | Pourquoi l'installation ne se fait pas d'un seul coup |
+| 7 | [L'environnement intégré](docs/comprendre/07-l-environnement-integre.md) | L'authentification, le cloisonnement des données, où elles sont stockées |
+
+---
+
+## Partie 2. Faire : les douze étapes
+
+**Suivez-les dans l'ordre.** Chacune se termine par une vérification. Ne passez à la suivante que
+lorsqu'elle est passée : une étape ratée ne se voit souvent que trois étapes plus loin.
+
+Les durées sont des **estimations, non mesurées**. Elles seront remplacées par des durées relevées
+après la première reproduction à blanc.
+
+| # | L'étape | Durée estimée | Qui | La procédure |
+|---|---|---|---|---|
+| 1 | Ouvrir une capacité Fabric | 10 min | Vous | [Faire](docs/faire/etape-01-ouvrir-la-capacite.md) |
+| 2 | Faire activer les cinq réglages | 15 min | Votre administrateur | [Faire](docs/faire/etape-02-activer-les-reglages.md) |
+| 3 | Créer l'espace de travail | 5 min | Vous | [Faire](docs/faire/etape-03-creer-l-espace.md) |
+| 4 | Copier ce dépôt sur votre compte | 10 min | Vous | [Faire](docs/faire/etape-04-copier-le-depot.md) |
+| 5 | Connecter l'espace au dépôt | 20 min | Vous, administrateur de l'espace | [Faire](docs/faire/etape-05-connecter-le-depot.md) |
+| 6 | Ramener les éléments | 15 min | Vous | [Faire](docs/faire/etape-06-ramener-les-elements.md) |
+| 7 | Charger les données | 30 min | Analyste recommandé | [Faire](docs/faire/etape-07-charger-les-donnees.md) |
+| 8 | Connecter les fonctions à la base | 20 min | Analyste recommandé | [Faire](docs/faire/etape-08-connecter-les-fonctions.md) |
+| 9 | Relier les modèles à votre base | 15 min | Analyste recommandé | [Faire](docs/faire/etape-09-et-10-relier.md) |
+| 10 | Relier les boutons à vos fonctions | 15 min | Analyste recommandé | [Faire](docs/faire/etape-09-et-10-relier.md) |
+| 11 | Publier les deux écrans | 30 min | Vous | [Faire](docs/faire/etape-11-publier-les-applications.md) |
+| 12 | Passer la recette | 60 min | Vous, plus un collègue | [Faire](docs/faire/etape-12-passer-la-recette.md) |
+
+**Deux pages s'ajoutent, à lire quand le sujet se présente :**
+
+- [Les pièces justificatives et les classeurs Excel](docs/faire/pieces-et-classeurs.md), pour
+  SharePoint, OneDrive, et les exports vers Excel.
+- [Le dépannage](docs/faire/depannage.md), qui donne la cause réelle de chaque symptôme.
+
+---
+
+## Le détail de chaque étape
+
+Ce qui suit reprend chaque étape en résumé. **Le résumé ne suffit pas à l'exécuter** : suivez le
+lien vers la procédure, qui donne le nom exact de chaque bouton.
 
 ### Étape 1. Ouvrir une capacité Fabric
 
-Connectez-vous à `app.fabric.microsoft.com`. Cliquez sur votre photo en haut à droite, puis sur
-**Démarrer l'essai**. Acceptez les conditions, choisissez votre région, validez.
+**Ce que vous faites :** vous ouvrez l'essai gratuit de 60 jours, ou vous vous faites affecter une
+capacité existante.
 
-*Vérification :* votre gestionnaire de compte affiche désormais un état d'essai.
+**Pourquoi :** la solution demande une capacité F4 au minimum. Cette exigence a été établie par la
+mesure, et non par prudence : en F2, la création d'une surface de saisie échoue.
 
-Si le bouton n'apparaît pas, votre administrateur a désactivé les essais. Demandez-lui soit de les
-autoriser, soit de vous affecter une capacité existante.
+**Le bon côté :** l'essai gratuit ouvre exactement la capacité qu'il faut, pendant 60 jours, avec
+1 To de stockage et une licence Power BI individuelle. Vous pouvez tout reproduire sans rien
+dépenser.
 
-### Étape 2. Faire activer les quatre réglages
+*Vérification :* votre gestionnaire de compte affiche un état d'essai.
 
-Transmettez à votre administrateur la liste des quatre réglages ci-dessus.
+[Comprendre les licences](docs/comprendre/05-les-licences.md) ·
+[Faire l'étape 1](docs/faire/etape-01-ouvrir-la-capacite.md)
 
-*Vérification :* les quatre sont sur « Activé » dans le portail d'administration.
+### Étape 2. Faire activer les cinq réglages
+
+**Ce que vous faites :** vous transmettez à votre administrateur Microsoft Fabric une liste de cinq
+réglages à activer dans le portail d'administration.
+
+**Pourquoi :** sans le quatrième, GitHub n'apparaîtra pas dans la liste des fournisseurs Git. Sans
+le cinquième, vous ne pourrez pas télécharger un classeur exporté, et rien ne vous dira pourquoi.
+
+*Vérification :* les cinq sont sur « Activé ».
+
+[Faire l'étape 2](docs/faire/etape-02-activer-les-reglages.md)
 
 ### Étape 3. Créer l'espace de travail
 
-Dans le menu de gauche, **Espaces de travail**, puis **Nouvel espace de travail**. Donnez-lui un
-nom. Dépliez **Avancé** et affectez-le à votre capacité d'essai.
+**Ce que vous faites :** vous créez un espace de travail et vous l'affectez à votre capacité.
 
-*Vérification :* les paramètres de l'espace de travail indiquent la capacité, et non « Pro ».
+**Pourquoi :** l'espace de travail est le contenant de toute la solution. S'il reste en licence
+« Pro » au lieu de votre capacité, les éléments Fabric ne fonctionneront pas, et les messages
+d'erreur ne désigneront pas la capacité.
 
-**Ne renommez aucun élément par la suite.** Le rapport retrouve son modèle de données par son nom.
-Un renommage casse cette liaison de façon peu lisible.
+**La règle à retenir :** ne renommez aucun élément après l'installation. Le rapport retrouve son
+modèle de données par son nom.
+
+*Vérification :* les paramètres de l'espace indiquent le nom de votre capacité.
+
+[Faire l'étape 3](docs/faire/etape-03-creer-l-espace.md)
 
 ### Étape 4. Copier ce dépôt sur votre compte GitHub
 
-En haut de cette page, cliquez sur **Fork**. Cela crée votre propre copie, que vous pourrez
-modifier sans affecter l'original.
+**Ce que vous faites :** vous créez votre propre copie du dépôt, puis vous la téléchargez sur votre
+poste.
+
+**Pourquoi :** l'installation vous fera modifier deux fichiers de configuration, et vous ne pouvez
+écrire que dans un dépôt qui vous appartient.
 
 *Vérification :* le dépôt apparaît sous votre nom d'utilisateur GitHub.
 
-Téléchargez ensuite cette copie sur votre poste, par **Code**, puis **Download ZIP**, ou par
-`git clone` si vous connaissez.
+[Faire l'étape 4](docs/faire/etape-04-copier-le-depot.md)
 
 ### Étape 5. Connecter l'espace de travail à votre dépôt
 
-Dans votre espace de travail, **Paramètres de l'espace de travail**, puis **Intégration Git**.
+**Ce que vous faites :** vous créez un jeton d'accès GitHub, puis vous connectez l'espace de travail
+au dépôt, en pointant le répertoire `fabric`.
 
-- Fournisseur : **GitHub**
-- Renseignez votre nom d'utilisateur, votre dépôt, la branche
-- **Répertoire : `fabric`** — ce point est important. Ce dépôt contient aussi des scripts et de la
-  documentation, qui n'ont rien à faire dans votre espace de travail. Seul le dossier `fabric`
-  contient les éléments Fabric.
+**Pourquoi :** c'est ce lien qui apportera les éléments de la solution dans votre espace.
 
-GitHub demandera un jeton d'accès personnel. Créez-le depuis votre compte GitHub, dans
-**Settings**, **Developer settings**, **Personal access tokens**, avec le droit sur les dépôts.
+**Le point qui se rate :** le répertoire. Ce dépôt contient aussi des scripts, de la documentation
+et des fichiers SQL, qui n'ont rien à faire dans votre espace de travail. Seul le dossier `fabric`
+porte les éléments Fabric. Laissé vide, le répertoire fait échouer la synchronisation.
 
 *Vérification :* l'écran d'intégration Git affiche l'état de la connexion.
 
-### Étape 6. Ramener les éléments dans votre espace de travail
+[Faire l'étape 5](docs/faire/etape-05-connecter-le-depot.md)
 
-Toujours dans l'écran d'intégration Git, cliquez sur **Mettre à jour tout**.
+### Étape 6. Ramener les éléments dans votre espace
 
-*Vérification :* huit éléments apparaissent dans votre espace de travail. Le lakehouse, la base, les
-deux ensembles de fonctions, les deux modèles sémantiques et les deux rapports.
+**Ce que vous faites :** vous cliquez sur « Mettre à jour tout ». Huit éléments apparaissent.
 
-L'application organisationnelle ne vient pas par Git : vous la créerez à l'étape 11. Sa
-représentation dans Git est en préversion, et nous préférons une action que vous maîtrisez à une
-préversion qui peut changer.
+**Pourquoi rien ne marche encore, et pourquoi c'est normal :** la synchronisation Git recrée la
+*forme* des éléments, jamais leur contenu ni leurs branchements. L'éditeur l'écrit ainsi : « Git
+Integration re-creates item definitions only and does not restore item data ». Les étapes 7 à 10
+posent le contenu et les branchements.
 
-**À ce stade, rien ne marche encore, et c'est normal.** La synchronisation Git recrée la *forme* des
-éléments, jamais leur contenu ni leurs branchements. L'éditeur l'écrit ainsi : « Git Integration
-re-creates item definitions only and does not restore item data ». Les étapes 7 à 10 posent le
-contenu et les branchements.
+C'est le moment où l'on croit que l'installation a échoué. Elle n'a pas échoué : elle n'est pas
+finie.
+
+*Vérification :* huit éléments sont là. Le lakehouse, la base, les deux ensembles de fonctions, les
+deux modèles et les deux rapports.
+
+[Comprendre les trois couches](docs/comprendre/06-les-trois-couches.md) ·
+[Faire l'étape 6](docs/faire/etape-06-ramener-les-elements.md)
 
 ### Étape 7. Charger les données
 
-Votre base a ses tables, ses vues et ses procédures, mais aucune donnée. Les scripts du dossier
-`sql/` la remplissent, dans cet ordre :
+**Ce que vous faites :** vous jouez les fichiers SQL du dépôt, dans l'ordre de leur numéro.
 
-1. `sql/10_referentiels/` : le socle, soit 3 452 lignes. Questions d'acceptation, plan de comptes,
-   articles du règlement, natures de pièces, rôles. C'est ce que vous gardez.
-2. `sql/80_demonstration/` : 7 293 lignes. Deux véhicules fictifs, leurs filiales, leurs arrêtés et
-   leurs écritures. C'est ce que vous pourrez effacer.
+**Pourquoi :** votre base a ses tables, ses vues et ses procédures, mais aucune donnée.
 
-Vous pouvez les jouer depuis l'éditeur de requêtes de la base, dans Fabric : ouvrez la base,
-onglet **Nouvelle requête**, collez le contenu d'un fichier, exécutez. Faites-les dans l'ordre des
-numéros.
+| Le dossier | Ce qu'il porte | Ce que vous en faites |
+|---|---|---|
+| `sql/10_referentiels/` | 3 452 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
+| `sql/80_demonstration/` | 7 293 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures | Vous pourrez l'effacer |
 
-Le jeu de démonstration s'efface par `sql/89_effacer_la_demonstration.sql` quand vous passerez à vos
-vrais dossiers. Lisez son en-tête avant : il vaut mieux le jouer avant vos premières saisies
-qu'après, et il explique pourquoi.
+**Le jeu de démonstration sert d'abord à voir l'écran du client rempli.** Sans lui, les huit pages
+de restitution sont vides et ne vous apprennent rien.
+
+**Les scripts sont rejouables :** une table ne se remplit que si elle est vide. Vous ne risquez pas
+de créer des doublons en vous y reprenant à deux fois.
 
 *Vérification :* `python scripts/30_recette.py --donnees` compte les lignes et vous dit ce qui manque.
 
-### Étape 8. Ouvrir la connexion des fonctions à la base
+[Faire l'étape 7](docs/faire/etape-07-charger-les-donnees.md)
 
-Les fonctions doivent avoir le droit de parler à la base, et ce droit ne se transporte pas par Git.
+### Étape 8. Connecter les fonctions à la base
 
-Ouvrez `fn_ecran_client`. Dans le bandeau, **Gérer les connexions**, puis **Ajouter une connexion
-de données**. Choisissez votre base `DossierOPCI`. Faites de même pour `fn_ecran_revision`.
+**Ce que vous faites :** vous ajoutez une connexion de données à chaque ensemble de fonctions, puis
+vous les publiez.
 
-Publiez ensuite chaque ensemble de fonctions, par **Publier**.
+**Pourquoi :** les fonctions doivent avoir le droit de parler à la base, et ce droit ne se
+transporte pas par Git.
 
-**Deux points qui surprennent, et qui sont normaux :**
-- La publication impose **deux minutes d'attente** entre deux publications successives. Si un
-  message vous le signale, attendez et recommencez.
-- **Seule la personne propriétaire d'un ensemble de fonctions peut le publier.** Si vous installez
-  pour un cabinet, faites-le depuis le compte qui restera responsable de la solution.
+**Deux surprises qui n'en sont pas :** la publication impose deux minutes d'attente entre deux
+publications successives, et seule la personne propriétaire d'un ensemble de fonctions peut le
+publier.
 
-*Vérification :* dans l'écran des fonctions, lancez `qui_suis_je` : elle doit rendre une réponse.
+*Vérification :* dans l'écran des fonctions, `qui_suis_je` rend une réponse.
 
-### Étape 9. Relier le modèle à votre base
+[Faire l'étape 8](docs/faire/etape-08-connecter-les-fonctions.md)
 
-Les tables du modèle interrogent encore la base d'origine. Il faut les faire pointer vers la vôtre.
+### Étapes 9 et 10. Relier la solution à votre espace
 
-Ouvrez un terminal dans le dossier du dépôt, et lancez :
+**C'est le point le plus important de toute l'installation.** Deux liaisons ne se refont pas toutes
+seules, et leur absence ne produit aucun message d'erreur clair.
 
-```
-python scripts/00_mes_identifiants.py
-```
+| Ce qui ne se recolle pas | Combien | Ce qui se passe sans réparation |
+|---|---|---|
+| Les tables du modèle vers la base | 72 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
+| Les boutons vers les fonctions | 24 | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
-Le script vous demande de coller cinq valeurs et vous rend les deux commandes à lancer. Lancez la
-première, celle du modèle :
+**L'ordre compte :** le modèle d'abord, les boutons ensuite. Actualiser le modèle avant de l'avoir
+relié produit une erreur qui fait croire à une panne générale.
 
-```
-python scripts/25_relier_le_modele.py --serveur <le vôtre> --base <la vôtre>
-```
+Un script relève vos identifiants et prépare les deux commandes. Vous n'avez rien à taper à la main.
 
-Le script réécrit les 72 tables et vous dit combien il en a traité. Envoyez ensuite la modification
-à votre dépôt GitHub, puis, dans Fabric, **Mettre à jour tout** de nouveau.
+*Vérification :* 72 sources reliées et 24 boutons reliés, zéro restant.
 
-*Vérification :* ouvrez le modèle dans votre espace de travail et actualisez-le. Aucune erreur.
+[Comprendre les trois couches](docs/comprendre/06-les-trois-couches.md) ·
+[Faire les étapes 9 et 10](docs/faire/etape-09-et-10-relier.md)
 
-### Étape 10. Relier les boutons à vos fonctions
+### Étape 11. Publier les deux écrans, à deux publics distincts
 
-Même principe, et c'est le point le plus important de toute l'installation.
+**Ce que vous faites :** deux choses. Vous créez un rôle de sécurité par client dans le modèle de
+restitution, puis vous publiez une application organisationnelle avec deux audiences, une pour votre
+équipe et une pour vos clients.
 
-Les 24 boutons qui écrivent en base portent, en clair, l'identifiant de l'espace de travail et
-de l'ensemble de fonctions qu'ils appellent. Le rapport appelle deux ensembles de fonctions, un par
-écran, et il faut donner les deux identifiants. L'éditeur l'écrit ainsi : « Data function buttons don't
-automatically rebind across workspaces ». Sans cette étape, vos boutons appellent l'espace de
-travail d'origine : soit ils ne font rien, soit ils écrivent au mauvais endroit.
+**Pourquoi :** c'est cette séparation qui permet de donner l'écran de restitution au client sans lui
+ouvrir le dossier de travail du cabinet, ni les dossiers de ses confrères.
 
-Lancez la seconde commande rendue à l'étape 9 :
+**Le point qu'on découvre trop tard :** le dépôt livre un seul rôle de sécurité, celui du véhicule
+de démonstration. **Vous devrez en créer un par client réel.** Sans ce rôle, un client ouvrant
+l'écran verrait les données de tous les autres.
 
-```
-python scripts/20_relier_les_boutons.py --espace <le vôtre> --fn-ecran-client <le vôtre> --fn-ecran-revision <le vôtre>
-```
+**Et une règle qui ne souffre pas d'exception :** n'ajoutez jamais un client comme membre de votre
+espace de travail. Le cloisonnement par rôle ne restreint que les lecteurs.
 
-Le script traite les 24 boutons et vous dit combien il en a relié. Envoyez la modification à GitHub,
-puis **Mettre à jour tout** dans Fabric.
+*Vérification :* un collègue voit l'écran de conduite. Un compte de l'audience client voit la
+restitution, ne voit pas la conduite de mission, et ne voit que son propre véhicule.
 
-*Vérification :* `python scripts/20_relier_les_boutons.py --verifier` affiche 24 boutons reliés et
-zéro restant.
-
-### Étape 11. Publier l'application
-
-Dans votre espace de travail, ouvrez l'application organisationnelle et publiez-la. Donnez l'accès
-aux personnes concernées.
-
-*Vérification :* un collègue ouvre l'application et voit l'écran.
+[Comprendre le cloisonnement](docs/comprendre/07-l-environnement-integre.md) ·
+[Faire l'étape 11](docs/faire/etape-11-publier-les-applications.md)
 
 ### Étape 12. Passer la recette
 
+**Ce que vous faites :** vous exécutez douze actions, du clic jusqu'à la base, et vous vérifiez que
+chacune donne le résultat attendu.
+
+**Pourquoi :** c'est la seule façon de savoir que votre installation fonctionne réellement, et pas
+seulement qu'elle s'affiche.
+
+**Une action demande deux comptes :** l'approbation d'un visa est refusée à la personne qui a soumis
+le dossier. C'est voulu, et c'est la séparation des fonctions.
+
+*Vérification :* les douze actions aboutissent.
+
+[Faire l'étape 12](docs/faire/etape-12-passer-la-recette.md)
+
+---
+
+## Ce que la solution fait, en deux écrans
+
+### L'écran du réviseur
+
+Il porte le dossier d'un client OPCI de bout en bout : créer le dossier, lister les filiales,
+répondre au questionnaire d'acceptation, déposer les pièces, soumettre au visa, ouvrir les arrêtés,
+désigner l'équipe.
+
+Chaque bouton écrit réellement en base de données. Ce n'est pas une maquette.
+
+[Le détail de ce que voit le réviseur](docs/comprendre/02-ce-que-voit-le-reviseur.md)
+
+### L'écran du client
+
+Huit pages, toutes filtrées sur l'arrêté que le client choisit : la valeur de la part, la
+rationalisation de la valeur liquidative, le patrimoine, les participations, le pilotage, les
+ratios, le document d'information périodique, la distribution.
+
+**Rien n'y arrive sans être passé par le visa du cabinet.**
+
+[Le détail de ce que voit le client](docs/comprendre/03-ce-que-voit-le-client.md)
+
+### Comment les deux tiennent ensemble
+
 ```
-python scripts/30_recette.py
+le réviseur saisit et vise  ->  la base  ->  l'écran du client
 ```
 
-La recette passe douze actions, du clic jusqu'à la base, et vous dit lesquelles aboutissent. Vous
-pouvez aussi les faire à la main : le détail est dans `docs/08-recette.md`, avec pour chacun le
-résultat attendu et la capture d'écran correspondante.
+Une seule base, une seule saisie. Le cabinet garde la main sur ce qui est publié, et sur quand. Les
+deux écrans lisent la même donnée, ce qui interdit qu'ils se contredisent.
 
-**Une action demande deux comptes** : l'approbation d'un visa est refusée à la personne qui a
-soumis le dossier. C'est voulu, et c'est la séparation des fonctions. Prévoyez un second compte pour
-l'éprouver.
+---
+
+## Ce qu'il vous faut, en résumé
+
+**La capacité :** Microsoft Fabric F4 au minimum. L'essai gratuit de 60 jours convient.
+
+**Les licences :** sous une capacité F64, toute personne qui ouvre un écran a besoin d'une licence
+Power BI Pro ou Premium par utilisateur. **Cela vaut aussi pour vos clients.** C'est la ligne qu'on
+oublie, et elle change le calcul.
+
+**Sur votre poste :** un navigateur, Python 3, et un compte GitHub gratuit. Les quatre scripts de ce
+dépôt n'utilisent aucune bibliothèque extérieure.
+
+[Le détail des licences, avec les chiffres](docs/comprendre/05-les-licences.md)
 
 ---
 
 ## Si quelque chose ne marche pas
 
-`docs/09-depannage.md` reprend les erreurs rencontrées pendant la mise au point, avec leur cause
-réelle. Deux exemples du genre de piège qui fait perdre une demi-journée :
+[La page de dépannage](docs/faire/depannage.md) donne la cause réelle de chaque symptôme. Dans
+presque tous les cas, le symptôme ne désigne pas la cause.
+
+Deux exemples du genre de piège qui fait perdre une demi-journée :
 
 - un bouton qui ne fait rien n'est presque jamais un bouton cassé : c'est l'étape 10 non faite, ou
   la connexion de l'étape 8 non posée ;
 - un écran vide n'est pas une panne d'affichage : c'est l'étape 7 non faite.
-
----
-
-## Comprendre et modifier la solution
-
-`docs/10-comprendre.md` explique comment la solution est construite : ce que fait la base, comment
-un bouton appelle une fonction, comment une fonction appelle une procédure, et où se trouve le
-libellé que voit l'utilisateur. Lisez-le avant de modifier quoi que ce soit.
-
-Une règle vaut d'être retenue dès maintenant : **les libellés affichés dans les tableaux viennent
-des vues SQL, pas du modèle.** Renommer une colonne dans le modèle casse les mesures qui la lisent.
-Si vous voulez changer un intitulé, changez-le dans la vue.
 
 ---
 
@@ -293,4 +336,5 @@ en mission, y compris commercialement, en conservant la mention de licence.
 ## Origine
 
 Cette solution accompagne un mémoire d'expertise comptable. Elle est publiée pour que des confrères
-puissent la reprendre, l'éprouver et l'adapter à leurs propres dossiers.
+puissent la reprendre, l'éprouver et l'adapter à leurs propres dossiers, et pour qu'ils en fassent
+bénéficier leurs clients.

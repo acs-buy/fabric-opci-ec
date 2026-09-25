@@ -39,7 +39,7 @@ désignation se fait sur l'écran lui-même, section **Équipe de la mission**.
 | Aucun visuel ne s'affiche | Le modèle n'est pas relié, étape 6, premier script |
 | « Écriture refusée : rôle » | Votre compte ne porte aucun rôle sur ce dossier. C'est le comportement attendu |
 
-La page [9. Dépannage](09-depannage.md) reprend chacune de ces causes en détail.
+La page [9. Dépannage](depannage.md) reprend chacune de ces causes en détail.
 
 ## Garder une trace
 

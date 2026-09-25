@@ -42,4 +42,4 @@ pouvoir sélectionner un dossier. S'il ne voit rien, vérifiez son autorisation 
 C'est aussi le bon moment pour préparer la recette : une des douze actions demande deux comptes
 distincts, l'approbation d'un visa étant refusée à la personne qui l'a soumis.
 
-Suite : [8. La recette](08-recette.md)
+Suite : [8. La recette](etape-12-passer-la-recette.md)

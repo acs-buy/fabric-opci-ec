@@ -51,4 +51,4 @@ Vous devez y trouver des tables, des vues, des procédures stockées et des déc
 requête ne rend rien, la synchronisation n'a pas abouti : reprenez l'étape 3 et vérifiez le
 répertoire `fabric`.
 
-Suite : [5. Charger les données](05-charger-les-donnees.md)
+Suite : [5. Charger les données](etape-07-charger-les-donnees.md)

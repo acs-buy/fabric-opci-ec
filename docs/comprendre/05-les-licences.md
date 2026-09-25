@@ -72,4 +72,4 @@ git config --global core.longpaths true
 Le temps d'installation sera porté ici après la première reproduction à blanc. Nous préférons ne
 pas avancer de chiffre tant qu'il n'est pas mesuré.
 
-Suite : [2. Créer l'espace de travail](02-espace-de-travail.md)
+Suite : [2. Créer l'espace de travail](../faire/etape-03-creer-l-espace.md)

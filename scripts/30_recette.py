@@ -99,13 +99,13 @@ def main():
         print(u"   %2d. %s" % (i, g))
     print(u"")
     print(u"L'action 11 demande deux comptes : l'approbation est refusee a qui a soumis.")
-    print(u"Le detail de chaque action est dans docs/08-recette.md.")
+    print(u"Le detail de chaque action est dans docs/faire/etape-12-passer-la-recette.md.")
 
     print(u"")
     if bon:
         print(u"Les liaisons sont faites. Passez aux donnees, puis aux douze actions.")
         return 0
-    print(u"ATTENTION : au moins une liaison n'est pas faite. Reprenez docs/06-relier.md.")
+    print(u"ATTENTION : au moins une liaison n'est pas faite. Reprenez docs/faire/etape-09-et-10-relier.md.")
     return 1
 
 

@@ -72,4 +72,4 @@ Jouez `sql/89_effacer_la_demonstration.sql`. Lisez son en-tête avant : il dit e
 supprime, ce qu'il vide entièrement, et pourquoi il vaut mieux le jouer **avant** de saisir vos
 premiers dossiers plutôt qu'après.
 
-Suite : [6. Relier la solution à votre espace](06-relier.md)
+Suite : [6. Relier la solution à votre espace](etape-09-et-10-relier.md)
