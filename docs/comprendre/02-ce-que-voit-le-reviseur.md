@@ -26,6 +26,8 @@ Toujours la même, quel que soit le dossier ouvert.
 | **La barre des étapes** | Les cinq temps du dossier, de la création à l'arrêté |
 | **La zone de travail** | Le détail de l'étape ouverte |
 
+![L'en-tête, les cinq indicateurs et la barre des étapes](../../captures/conduite-indicateurs.png)
+
 ### Les cinq indicateurs de la bande
 
 Ils ne sont pas décoratifs : chacun est un compteur de ce qui reste ouvert.
@@ -37,6 +39,11 @@ Ils ne sont pas décoratifs : chacun est un compteur de ce qui reste ouvert.
 | Maintiens à faire | Les maintiens de mission attendus à la fin d'un arrêté |
 | Arrêtés ouverts | Les arrêtés en cours, tous dossiers confondus |
 | Cycles à valider | Les cycles de révision qui attendent une conclusion |
+
+Sous les indicateurs, la liste des clients porte chaque véhicule et ses filiales, avec l'état de
+l'acceptation et du maintien pour chacun.
+
+![La liste des clients et de leur périmètre](../../captures/conduite-liste-clients.png)
 
 ---
 

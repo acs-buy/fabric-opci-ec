@@ -51,6 +51,10 @@ Ce que la page porte :
 entièrement expliquée. S'il ne l'est pas, le client sait qu'il reste quelque chose à comprendre, et
 il peut le demander.
 
+![La page de rationalisation de la valeur liquidative](../../captures/client-rationalisation-vl.png)
+
+*Les montants visibles sont ceux du jeu de démonstration, sur un véhicule fictif.*
+
 ---
 
 ## Page 3. Le patrimoine

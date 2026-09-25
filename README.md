@@ -279,6 +279,11 @@ Chaque bouton écrit réellement en base de données. Ce n'est pas une maquette.
 
 [Le détail de ce que voit le réviseur](docs/comprendre/02-ce-que-voit-le-reviseur.md)
 
+![L'en-tête, les cinq indicateurs et la barre des étapes de l'écran de conduite](captures/conduite-indicateurs.png)
+
+*Les cinq indicateurs donnent l'état du cabinet en un coup d'œil. La barre au-dessous porte les cinq
+temps du dossier, de la création à l'arrêté.*
+
 ### L'écran du client
 
 Huit pages, toutes filtrées sur l'arrêté que le client choisit : la valeur de la part, la
@@ -288,6 +293,11 @@ ratios, le document d'information périodique, la distribution.
 **Rien n'y arrive sans être passé par le visa du cabinet.**
 
 [Le détail de ce que voit le client](docs/comprendre/03-ce-que-voit-le-client.md)
+
+![La page de rationalisation de la valeur liquidative, sur l'écran du client](captures/client-rationalisation-vl.png)
+
+*La page qui explique la variation de la valeur liquidative, cause par cause. L'écart de bouclage à
+zéro signifie que la variation est entièrement expliquée.*
 
 ### Comment les deux tiennent ensemble
 
