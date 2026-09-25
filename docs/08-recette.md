@@ -1,11 +1,11 @@
-# 8. La recette : douze gestes qui prouvent que la solution marche
+# 8. La recette : douze actions qui prouvent que la solution marche
 
-Ces douze gestes parcourent la chaîne complète, du clic jusqu'à l'écriture en base. S'ils passent
-tous, votre installation est bonne.
+Ces douze actions parcourent la chaîne complète, du clic jusqu'à l'écriture en base. Si elles passent
+toutes, votre installation est bonne.
 
-Faites-les dans l'ordre : chacun prépare le suivant.
+Faites-les dans l'ordre : chacune prépare la suivante.
 
-| # | Le geste | Où | Ce que vous devez obtenir |
+| # | L'action à faire | Où | Ce que vous devez obtenir |
 |---|---|---|---|
 | 1 | Créer un dossier client | Section Dossier, sous-état Nouveau dossier | Le dossier apparaît, et son questionnaire d'acceptation s'ouvre seul |
 | 2 | Modifier les informations du client | Sous-état Modifier | La valeur change, un champ laissé vide reste inchangé |
@@ -20,7 +20,7 @@ Faites-les dans l'ordre : chacun prépare le suivant.
 | 11 | Approuver le visa | Section Visa, **avec un second compte** | Refusé au compte qui a soumis, accepté à l'autre |
 | 12 | Ouvrir un arrêté | Section Arrêtés | L'arrêté planifié devient ouvert |
 
-## Le geste 11 mérite une explication
+## L'action 11 mérite une explication
 
 L'approbation est refusée à la personne qui a soumis le dossier. Ce n'est pas un défaut : c'est la
 séparation des fonctions, et elle est portée par la base, non par l'écran. Un utilisateur qui
@@ -43,5 +43,5 @@ La page [9. Dépannage](09-depannage.md) reprend chacune de ces causes en détai
 
 ## Garder une trace
 
-Notez la date de votre recette et le résultat des douze gestes. Si vous adaptez la solution plus
+Notez la date de votre recette et le résultat des douze actions. Si vous adaptez la solution plus
 tard, cette liste vous dira ce qui marchait avant votre modification.

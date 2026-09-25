@@ -52,7 +52,7 @@ dans la liste des fournisseurs, et vous chercherez longtemps pourquoi.
 - **Propriétaire des ensembles de fonctions** : seule la personne qui possède un ensemble de
   fonctions peut le publier. Installez depuis le compte qui restera responsable de la solution.
 - **Un second compte** : l'approbation d'un visa est refusée à la personne qui a soumis le dossier.
-  C'est la séparation des fonctions. Prévoyez un collègue pour éprouver ce geste.
+  C'est la séparation des fonctions. Prévoyez un collègue pour éprouver cette action.
 
 ## Sur votre poste
 

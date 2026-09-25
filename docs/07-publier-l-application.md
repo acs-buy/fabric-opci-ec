@@ -39,7 +39,7 @@ message qui le dit.
 Demandez à un collègue d'ouvrir l'application. Il doit voir l'écran de conduite de mission et
 pouvoir sélectionner un dossier. S'il ne voit rien, vérifiez son autorisation et sa licence.
 
-C'est aussi le bon moment pour préparer la recette : un des douze gestes demande deux comptes
+C'est aussi le bon moment pour préparer la recette : une des douze actions demande deux comptes
 distincts, l'approbation d'un visa étant refusée à la personne qui l'a soumis.
 
 Suite : [8. La recette](08-recette.md)

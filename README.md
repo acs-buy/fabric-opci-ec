@@ -4,7 +4,7 @@ Ce dépôt contient une solution complète de conduite de mission pour les organ
 collectif immobilier, construite sur Microsoft Fabric et Power BI. Il est écrit pour que vous
 puissiez la reproduire entièrement chez vous, à partir de rien.
 
-**Ce mode opératoire s'adresse à un expert-comptable, pas à un informaticien.** Chaque geste y est
+**Ce mode opératoire s'adresse à un expert-comptable, pas à un informaticien.** Chaque action a faire y est
 écrit en toutes lettres. Vous n'avez besoin d'aucune connaissance en programmation pour les étapes
 1 à 6, 11 et 12.
 
@@ -150,7 +150,7 @@ Toujours dans l'écran d'intégration Git, cliquez sur **Mettre à jour tout**.
 deux ensembles de fonctions, les deux modèles sémantiques et les deux rapports.
 
 L'application organisationnelle ne vient pas par Git : vous la créerez à l'étape 11. Sa
-représentation dans Git est en préversion, et nous préférons un geste que vous maîtrisez à une
+représentation dans Git est en préversion, et nous préférons une action que vous maîtrisez à une
 préversion qui peut changer.
 
 **À ce stade, rien ne marche encore, et c'est normal.** La synchronisation Git recrée la *forme* des
@@ -252,11 +252,11 @@ aux personnes concernées.
 python scripts/30_recette.py
 ```
 
-La recette passe douze gestes, du clic jusqu'à la base, et vous dit lesquels aboutissent. Vous
+La recette passe douze actions, du clic jusqu'à la base, et vous dit lesquelles aboutissent. Vous
 pouvez aussi les faire à la main : le détail est dans `docs/08-recette.md`, avec pour chacun le
 résultat attendu et la capture d'écran correspondante.
 
-**Un geste demande deux comptes** : l'approbation d'un visa est refusée à la personne qui a
+**Une action demande deux comptes** : l'approbation d'un visa est refusée à la personne qui a
 soumis le dossier. C'est voulu, et c'est la séparation des fonctions. Prévoyez un second compte pour
 l'éprouver.
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-u"""30. Verifier l'installation, et preparer la recette des douze gestes.
+u"""30. Verifier l'installation, et preparer la recette des douze actions.
 
 CE QU'IL VERIFIE TOUT SEUL
     Les deux liaisons de l'etape 6, en relisant les fichiers du depot. C'est la panne la plus
@@ -9,7 +9,7 @@ CE QU'IL VERIFIE TOUT SEUL
 CE QU'IL NE PEUT PAS VERIFIER SEUL, ET POURQUOI
     Le contenu de votre base et le comportement de vos boutons. Le premier demanderait vos
     identifiants de connexion, le second un pilotage du navigateur. Ce script vous donne donc la
-    requete a jouer et la liste des gestes a faire, plutot que de vous promettre une verification
+    requete a jouer et la liste des actions a faire, plutot que de vous promettre une verification
     qu'il ne ferait pas.
 
 USAGE
@@ -31,7 +31,7 @@ UNION ALL SELECT 'roles',                  COUNT(*),   4 FROM dbo.ref_role
 UNION ALL SELECT 'natures de pieces',      COUNT(*),  10 FROM dbo.ref_nature_piece
 UNION ALL SELECT 'entites de demonstration', COUNT(*), 16 FROM dbo.ref_entite;"""
 
-GESTES = [
+ACTIONS = [
     u"Creer un dossier client, et voir son questionnaire s'ouvrir seul",
     u"Modifier les informations du client, un champ vide restant inchange",
     u"Enregistrer le site du client, et le voir cliquable dans la fiche",
@@ -93,17 +93,17 @@ def main():
 
     print(u"")
     print(u"=" * 78)
-    print(u"3. LES DOUZE GESTES, a faire a l'ecran")
+    print(u"3. LES DOUZE ACTIONS, a faire a l'ecran")
     print(u"=" * 78)
-    for i, g in enumerate(GESTES, start=1):
+    for i, g in enumerate(ACTIONS, start=1):
         print(u"   %2d. %s" % (i, g))
     print(u"")
-    print(u"Le geste 11 demande deux comptes : l'approbation est refusee a qui a soumis.")
-    print(u"Le detail de chaque geste est dans docs/08-recette.md.")
+    print(u"L'action 11 demande deux comptes : l'approbation est refusee a qui a soumis.")
+    print(u"Le detail de chaque action est dans docs/08-recette.md.")
 
     print(u"")
     if bon:
-        print(u"Les liaisons sont faites. Passez aux donnees, puis aux douze gestes.")
+        print(u"Les liaisons sont faites. Passez aux donnees, puis aux douze actions.")
         return 0
     print(u"ATTENTION : au moins une liaison n'est pas faite. Reprenez docs/06-relier.md.")
     return 1

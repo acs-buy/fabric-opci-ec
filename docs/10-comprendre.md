@@ -81,4 +81,4 @@ segments reviennent à « tout » en changeant d'état, et l'écran perd la sél
 Commencez par le questionnaire d'acceptation, qui est la partie la plus propre à chaque cabinet. Il
 vit dans les tables de référentiel des questions, et se modifie sans toucher au reste.
 
-Gardez la recette des douze gestes comme garde-fou : jouez-la après chaque modification.
+Gardez la recette des douze actions comme garde-fou : jouez-la après chaque modification.
