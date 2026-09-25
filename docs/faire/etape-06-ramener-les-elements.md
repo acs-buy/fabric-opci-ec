@@ -5,6 +5,11 @@
 Dans le panneau de contrôle de source de votre espace de travail, cliquez sur **Mettre à jour
 tout**. Fabric crée les éléments de la solution dans votre espace.
 
+![Le panneau de contrôle de source](../../captures/controle-de-source.png)
+
+*Le panneau s'ouvre par le bouton **Source control** du bandeau. Il affiche la branche connectée et
+les éléments à ramener.*
+
 ## Ce que vous devez voir
 
 | Élément | Type | Ce qu'il porte |

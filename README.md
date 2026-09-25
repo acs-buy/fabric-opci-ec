@@ -284,6 +284,13 @@ Chaque bouton écrit réellement en base de données. Ce n'est pas une maquette.
 *Les cinq indicateurs donnent l'état du cabinet en un coup d'œil. La barre au-dessous porte les cinq
 temps du dossier, de la création à l'arrêté.*
 
+Sous la barre des étapes, la fiche du dossier rassemble tout ce qui le concerne.
+
+![La fiche du dossier](captures/maquettes/fiche-du-dossier.png)
+
+*Maquette de conception. L'écran de conduite est en cours de pose, et l'écran publié peut différer
+dans le détail.*
+
 ### L'écran du client
 
 Huit pages, toutes filtrées sur l'arrêté que le client choisit : la valeur de la part, la

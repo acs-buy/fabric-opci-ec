@@ -22,6 +22,36 @@ Faites-les dans l'ordre : chacune prépare la suivante.
 
 ## L'action 11 mérite une explication
 
+## Où se font ces actions
+
+> Les images qui suivent sont des **maquettes de conception**, et non des captures d'écran :
+> l'écran de conduite est en cours de pose. Elles montrent la structure retenue, qui ne bougera
+> plus. L'écran publié peut différer dans le détail.
+
+**Actions 1 à 3, le dossier.**
+
+![Le formulaire de création d'un dossier](../../captures/maquettes/nouveau-dossier.png)
+
+**Actions 4 à 6, les filiales.** L'action 6 doit rendre un refus motivé si la filiale porte des
+données de mission.
+
+![Le refus motivé d'une suppression de filiale](../../captures/maquettes/filiales-suppression-refusee.png)
+
+**Actions 7 à 9, le questionnaire et les pièces.**
+
+![La grille des questions et les pièces](../../captures/maquettes/questionnaire-et-pieces.png)
+
+**Actions 10 et 11, le visa.**
+
+![La soumission au visa et son approbation](../../captures/maquettes/visa.png)
+
+**Action 12, les arrêtés.**
+
+![Les arrêtés de l'exercice](../../captures/maquettes/arretes.png)
+
+---
+
+
 L'approbation est refusée à la personne qui a soumis le dossier. Ce n'est pas un défaut : c'est la
 séparation des fonctions, et elle est portée par la base, non par l'écran. Un utilisateur qui
 contournerait l'écran se verrait opposer le même refus.

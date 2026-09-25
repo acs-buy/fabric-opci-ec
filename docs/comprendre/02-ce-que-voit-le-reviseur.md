@@ -3,6 +3,13 @@
 L'écran de conduite de mission. Cette page décrit ce qu'il montre et comment il est organisé. Elle
 ne contient aucune manipulation.
 
+> **Les images de cette page sont des maquettes de conception, et non des captures d'écran.**
+> L'écran de conduite est en cours de pose : une capture prise aujourd'hui montrerait un écran
+> incomplet, et elle serait fausse demain. Les maquettes montrent la structure retenue, qui ne
+> bougera plus. L'écran publié peut différer dans le détail.
+>
+> Les deux images prises sur l'installation réelle sont signalées comme telles.
+
 ---
 
 ## La question à laquelle l'écran répond
@@ -28,6 +35,8 @@ Toujours la même, quel que soit le dossier ouvert.
 
 ![L'en-tête, les cinq indicateurs et la barre des étapes](../../captures/conduite-indicateurs.png)
 
+*Capture de l'installation réelle.*
+
 ### Les cinq indicateurs de la bande
 
 Ils ne sont pas décoratifs : chacun est un compteur de ce qui reste ouvert.
@@ -44,6 +53,8 @@ Sous les indicateurs, la liste des clients porte chaque véhicule et ses filiale
 l'acceptation et du maintien pour chacun.
 
 ![La liste des clients et de leur périmètre](../../captures/conduite-liste-clients.png)
+
+*Capture de l'installation réelle.*
 
 ---
 
@@ -63,12 +74,29 @@ Deux sous-états : **Nouveau dossier**, pour créer, et **Modifier**, pour corri
 d'acceptation. Le réviseur n'a pas à y penser, et un dossier ne peut pas exister sans son
 questionnaire.
 
+![La fiche du dossier](../../captures/maquettes/fiche-du-dossier.png)
+
+*Maquette de conception. La fiche porte l'identité, l'équipe de la mission avec son alerte de cumul
+de rôles, l'acceptation, les maintiens par exercice et les arrêtés.*
+
+![Le formulaire de création d'un dossier](../../captures/maquettes/nouveau-dossier.png)
+
+*Maquette de conception. Le sous-état de création.*
+
 ### 2. Les filiales
 
 Le périmètre du véhicule. Ajouter une filiale, la modifier, la supprimer.
 
 **La suppression est refusée si la filiale porte des données de mission.** Le refus est motivé, et
 il vient de la base. Chaque changement de périmètre est tracé dans un journal.
+
+![Le périmètre du véhicule](../../captures/maquettes/filiales-liste.png)
+
+*Maquette de conception.*
+
+![Le refus motivé d'une suppression](../../captures/maquettes/filiales-suppression-refusee.png)
+
+*Maquette de conception. Le refus nomme ce qui s'oppose à la suppression.*
 
 ### 3. Le questionnaire et les pièces
 
@@ -81,11 +109,19 @@ qu'on valide à la fin est un formulaire qu'on perd.
 En dessous, les pièces justificatives déposées, avec leur nature, leur date de dépôt et leur
 déposant. Un retrait exige un motif et se refuse si la pièce fonde une donnée.
 
+![La grille des questions et les pièces](../../captures/maquettes/questionnaire-et-pieces.png)
+
+*Maquette de conception.*
+
 ### 4. Le visa
 
 La soumission du dossier à l'approbation, puis l'approbation elle-même.
 
 **L'approbation est refusée à la personne qui a soumis.** Voir plus bas, la partie sur la qualité.
+
+![La soumission au visa et son approbation](../../captures/maquettes/visa.png)
+
+*Maquette de conception.*
 
 ### 5. Les arrêtés
 
@@ -93,6 +129,10 @@ Les arrêtés planifiés de l'exercice, et leur ouverture.
 
 **Planifier n'est pas ouvrir.** Un arrêté planifié est une échéance ; un arrêté ouvert est un
 travail en cours. La distinction évite qu'on travaille sur un arrêté qui n'a pas été décidé.
+
+![Les arrêtés de l'exercice](../../captures/maquettes/arretes.png)
+
+*Maquette de conception.*
 
 ---
 
