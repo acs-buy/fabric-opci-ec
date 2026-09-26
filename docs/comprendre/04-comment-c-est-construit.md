@@ -3,6 +3,96 @@
 Lisez cette page avant de changer quoi que ce soit. Elle explique comment un clic devient une
 écriture en base, et où se trouve chaque chose.
 
+---
+
+## La carte de la solution
+
+Ce schéma montre les six éléments de la solution et ce qui circule entre eux. GitHub le dessine
+directement dans la page.
+
+```mermaid
+flowchart TD
+
+subgraph groupe_usage["Ce que les personnes voient"]
+  n_rapport["Écran de conduite<br/>et écran client"]
+end
+
+subgraph groupe_actions["Ce qui écrit en base"]
+  n_fn_client["Actions du dossier<br/>fn_ecran_client"]
+  n_fn_revision["Actions de révision<br/>fn_ecran_revision"]
+end
+
+subgraph groupe_donnees["La plateforme de données"]
+  n_sql[("Base DossierOPCI")]
+  n_modele["Modèle sémantique"]
+end
+
+subgraph groupe_fichiers["Les fichiers"]
+  n_coffre[("Coffre des pièces")]
+end
+
+n_reviseur(("Réviseur"))
+n_client(("Client"))
+n_excel["Classeurs Excel"]
+n_sharepoint["Fichiers SharePoint"]
+
+n_reviseur -->|"conduit la mission"| n_rapport
+n_client -->|"lit sa restitution"| n_rapport
+n_rapport -->|"appelle les actions du dossier"| n_fn_client
+n_rapport -->|"appelle les actions de révision"| n_fn_revision
+n_fn_client -->|"exécute les procédures"| n_sql
+n_fn_revision -->|"exécute les procédures"| n_sql
+n_sql -->|"alimente les tables"| n_modele
+n_modele -->|"alimente les visuels"| n_rapport
+n_fn_client -->|"inscrit les pièces"| n_coffre
+n_fn_revision -->|"écrit les exports"| n_coffre
+n_excel -.->|"import d'un classeur"| n_fn_client
+n_excel -.->|"import et export"| n_fn_revision
+n_sharepoint -.->|"apporte les pièces, en lecture seule"| n_coffre
+
+classDef bleu fill:#dbeafe,stroke:#2563eb,stroke-width:1.5px,color:#172554
+classDef ambre fill:#fef3c7,stroke:#d97706,stroke-width:1.5px,color:#78350f
+classDef vert fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px,color:#14532d
+classDef rose fill:#ffe4e6,stroke:#e11d48,stroke-width:1.5px,color:#881337
+classDef indigo fill:#e0e7ff,stroke:#4f46e5,stroke-width:1.5px,color:#312e81
+class n_rapport,n_reviseur,n_client bleu
+class n_fn_client,n_fn_revision ambre
+class n_sql,n_modele vert
+class n_coffre rose
+class n_excel,n_sharepoint indigo
+```
+
+### Comment lire ce schéma
+
+**Les flèches pleines sont le chemin normal.** Une personne agit sur l'écran, l'écran appelle une
+fonction, la fonction exécute une procédure, la procédure écrit dans la base. Le modèle relit la
+base et alimente les visuels.
+
+**Les flèches en pointillés sont les échanges de fichiers.** Ils entrent, ils ne commandent rien.
+Un classeur importé passe par les mêmes procédures que la saisie à l'écran, et SharePoint apporte
+des pièces sans jamais rien recevoir en retour.
+
+**Ce que le schéma montre et qu'il faut retenir :** aucune flèche ne va de l'écran vers la base
+directement. Tout passe par une fonction, puis par une procédure. C'est ce qui garantit qu'un
+contrôle ne se contourne pas.
+
+### Chaque élément, dans le dépôt
+
+| L'élément du schéma | Où il vit dans ce dépôt |
+|---|---|
+| Écran de conduite | [fabric/Conduite de mission.Report](../../fabric/Conduite%20de%20mission.Report) |
+| Écran client | [fabric/restitution_client.Report](../../fabric/restitution_client.Report) |
+| Actions du dossier | [fn_ecran_client.UserDataFunction/function_app.py](../../fabric/fn_ecran_client.UserDataFunction/function_app.py) |
+| Actions de révision | [fn_ecran_revision.UserDataFunction/function_app.py](../../fabric/fn_ecran_revision.UserDataFunction/function_app.py) |
+| Base DossierOPCI | [fabric/DossierOPCI.SQLDatabase](../../fabric/DossierOPCI.SQLDatabase) |
+| Modèle sémantique | [fabric/conduite_de_mission.SemanticModel](../../fabric/conduite_de_mission.SemanticModel) |
+| Coffre des pièces | [fabric/Coffre.Lakehouse](../../fabric/Coffre.Lakehouse) |
+
+*Les liens ci-dessus mènent aux fichiers réels. Le diagramme lui-même porte aussi des liens, mais
+leur prise en charge par GitHub n'est pas documentée : fiez-vous au tableau.*
+
+---
+
 ## La chaîne d'un clic
 
 ```

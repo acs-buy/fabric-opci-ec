@@ -308,6 +308,11 @@ zéro signifie que la variation est entièrement expliquée.*
 
 ### Comment les deux tiennent ensemble
 
+**Une carte de la solution**, avec ses six éléments et ce qui circule entre eux, est dessinée dans
+[Comment c'est construit](docs/comprendre/04-comment-c-est-construit.md). Chaque élément y renvoie
+au fichier correspondant dans ce dépôt.
+
+
 ```
 le réviseur saisit et vise  ->  la base  ->  l'écran du client
 ```
