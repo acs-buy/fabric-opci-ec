@@ -21,6 +21,11 @@ le premier clic.
 
 Dans votre espace de travail, ouvrez la base `DossierOPCI`, puis **Nouvelle requête**.
 
+Le bouton s'appelle **New Query** dans le bandeau de la base. L'explorateur de gauche montre la base
+et les requêtes enregistrées.
+
+![L'éditeur de la base, avec le bouton New Query](../../captures/base-nouvelle-requete.png)
+
 Jouez les fichiers **dans l'ordre de leur numéro**, d'abord tout le dossier `10_referentiels`, puis
 tout le dossier `80_demonstration`. L'ordre n'est pas décoratif : les clés étrangères imposent
 qu'une table soit remplie après celles dont elle dépend.
