@@ -3,7 +3,7 @@
   "version": "4.0",
   "datasetReference": {
     "byPath": {
-      "path": "../4_Restitution/conduite_de_mission.SemanticModel"
+      "path": "../conduite_de_mission.SemanticModel"
     }
   }
 }
