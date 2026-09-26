@@ -350,6 +350,25 @@ Deux exemples du genre de piège qui fait perdre une demi-journée :
 
 ---
 
+## Contribuer, signaler, poser une question
+
+| Ce que vous voulez faire | Où aller |
+|---|---|
+| Signaler une étape qui ne marche pas chez vous | Une issue, modèle **Un problème pendant l'installation** |
+| Signaler une affirmation devenue fausse | Une issue, modèle **Une affirmation devenue fausse**, avec sa source |
+| Poser une question sur la solution | Une issue, modèle **Une question sur la solution** |
+| Proposer une modification | [Le guide de contribution](CONTRIBUTING.md) |
+| Signaler une fuite de données ou une faille | [La politique de sécurité](SECURITY.md), jamais une issue publique |
+
+**La contribution la plus utile est le récit d'une installation qui a buté.** Un mode opératoire
+n'est éprouvé que par ceux qui le suivent.
+
+Les échanges suivent le [code de conduite](CODE_OF_CONDUCT.md), et une règle y prime sur les
+autres : **aucune donnée de client réel dans ce dépôt**, sous aucune forme, capture d'écran
+comprise.
+
+---
+
 ## Licence
 
 MIT. Voir le fichier [LICENSE](LICENSE). Vous pouvez reprendre, adapter et utiliser cette solution
