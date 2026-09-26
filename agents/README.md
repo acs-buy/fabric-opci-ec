@@ -57,7 +57,7 @@ ailleurs que dans le dossier du dépôt.
    reconnaissent pas un fichier : c'est une protection, pas une panne. Un agent serviable lèvera ce
    refus pour vous faire plaisir, et vous perdrez la dernière chose qui vous protégeait.
 2. **Exigez la sortie brute, jamais un résumé.** « Tout s'est bien passé » ne se vérifie pas.
-   `73 source(s) reliées, 0 restant` se vérifie.
+   `<n> source(s) reliées, 0 restant` se vérifie.
 3. **Une étape à la fois, et vous lisez entre chaque.** Un agent qui enchaîne les douze étapes sans
    contrôle vous livre une installation dont personne n'a vu le détail.
 

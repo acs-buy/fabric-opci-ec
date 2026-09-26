@@ -112,7 +112,7 @@ c'est voulu : le dépôt a été modifié à la main quelque part.
    reconnaissent pas un fichier. Un agent serviable lèvera ce refus pour vous faire plaisir, et
    vous perdrez la seule protection qui vous restait.
 2. **Exigez la sortie brute, jamais un résumé.** « Tout s'est bien passé » ne se vérifie pas.
-   `73 source(s) reliées, 0 restant` se vérifie.
+   `<n> source(s) reliées, 0 restant` se vérifie.
 3. **Ne lui donnez jamais votre jeton GitHub.** L'étape 5 se fait à la main, et elle prend
    3 secondes de machine.
 

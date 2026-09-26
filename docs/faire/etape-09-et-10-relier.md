@@ -20,7 +20,7 @@ item data. » Les liaisons, elles, pointent encore vers l'espace de travail d'or
 
 ### Le modèle interroge encore la base d'origine
 
-Les 73 sources des deux modèles sémantiques lisent la base directement, et chacune porte en clair le nom du
+Les sources des deux modèles sémantiques lisent la base directement, et chacune porte en clair le nom du
 serveur SQL et le nom de la base. L'éditeur donne cette liaison pour non reconstruite lors d'un
 déploiement entre espaces de travail : « Semantic models vers SQL database : No. The connection
 string in TMDL expressions contains workspace-specific values. »
@@ -63,7 +63,7 @@ Le script vous demande de coller cinq choses et vérifie leur forme au passage. 
    porte deux identifiants : celui de l'espace d'abord, celui de l'élément ensuite. Le script
    retient le second, qui est le bon.
 3. **L'adresse de votre élément `fn_ecran_revision`.** Le rapport appelle deux ensembles de
-   fonctions, un par écran. Sans celui-ci, 7 boutons de l'écran de révision resteraient sans effet.
+   fonctions, un par écran. Sans celui-ci, les boutons de l'écran de révision resteraient sans effet.
 4. **Le serveur SQL de votre base.** Ouvrez la base `DossierOPCI`, bandeau **Paramètres**, puis
    **Chaînes de connexion**.
 5. **Le nom complet de votre base.** Sur la même page. Il porte un identifiant après `DossierOPCI`,
@@ -160,12 +160,12 @@ Les boutons, qui appellent encore les fonctions d'origine :
    restant a relier           : 36
    identifiants inconnus      : 0
 
-fn_ecran_client, 13 fonction(s) appelee(s) :
+fn_ecran_client, <n> fonction(s) appelee(s) :
    ajouter_filiale
    approuver_acceptation
    creer_client
    ...
-fn_ecran_revision, 5 fonction(s) appelee(s) :
+fn_ecran_revision, <n> fonction(s) appelee(s) :
    conclure_feuille
    ouvrir_feuille
    ...
@@ -175,6 +175,9 @@ fn_ecran_revision, 5 fonction(s) appelee(s) :
 elle ne vaut pas zéro, le rapport a été modifié à la main, et les scripts refuseront d'écrire.
 
 ### Ce que vous devez voir, une fois relié
+
+Les mêmes réserves qu'au paragraphe précédent : ce sont les nombres d'un jour donné.
+**Ce qui compte est le total inchangé, et les deux lignes de restant tombées à zéro.**
 
 ```
 73 source(s) de donnees dans les 2 modeles.
