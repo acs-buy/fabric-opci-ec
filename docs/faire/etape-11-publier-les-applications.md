@@ -48,7 +48,7 @@ pouvoir sélectionner un dossier. S'il ne voit rien, vérifiez son autorisation 
 
 ## Avant l'application : créer un rôle de sécurité par client
 
-**Cette action n'est pas facultative.** Le dépôt livre un seul rôle, celui du véhicule de
+**Cette action n'est pas facultative.** Le dépôt livré a un seul rôle, celui du véhicule de
 démonstration. Sans un rôle par client réel, un client ouvrant sa restitution verrait les données de
 tous les autres.
 
