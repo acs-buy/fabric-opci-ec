@@ -7,6 +7,10 @@ qu'il peut raisonnablement lui confier.
 Elle a été écrite après une reproduction complète menée le 26/09/2026, où un agent a joué les
 étapes qu'il sait jouer. Ce qui suit est ce qui a été observé, pas ce qui est promis.
 
+**Les demandes prêtes à coller sont dans [`agents/`](../../agents/README.md)**, avec un exemple
+d'autorisations et [l'avertissement](../../agents/AVERTISSEMENT.md) qui porte le partage des
+responsabilités. Cette page-ci explique pourquoi le partage est celui-là.
+
 ---
 
 ## Ce qu'il faut savoir avant de lire la suite

@@ -82,7 +82,9 @@ du modèle du client, à l'étape 9, prend 20 secondes de plus.
   SharePoint, OneDrive, et les exports vers Excel.
 - [Le dépannage](docs/faire/depannage.md), qui donne la cause réelle de chaque symptôme.
 - [Reproduire avec un agent d'intelligence artificielle](docs/faire/avec-un-agent.md), qui dit les
-  3 étapes sur 12 qu'un agent sait jouer, et les 4 contrôles qui ne se délèguent pas.
+  3 étapes sur 12 qu'un agent sait jouer, et les 4 contrôles qui ne se délèguent pas. Les demandes
+  prêtes à coller sont dans [`agents/`](agents/README.md). **Rien de tout cela n'est obligatoire :**
+  les douze étapes se font à la main, sans agent et sans rien y perdre.
 
 ---
 

@@ -1,0 +1,50 @@
+{
+  "_lisez_d_abord": [
+    "EXEMPLE, A ADAPTER. Ce fichier montre la forme d'un jeu d'autorisations restreint, au",
+    "format de Claude Code, qui le lit dans .claude/settings.json a la racine du projet.",
+    "Un autre agent emploiera un autre format : la forme change, le principe ne change pas.",
+    "",
+    "LE PRINCIPE : n'autoriser que les 3 commandes dont l'agent a besoin, et rien d'autre.",
+    "Un agent qui peut tout faire fera un jour quelque chose que vous n'aviez pas demande.",
+    "",
+    "CE QUI N'EST PAS AUTORISE ICI, ET QUI NE DOIT PAS L'ETRE :",
+    "  - git push, qui publierait vos identifiants d'installation sur votre depot ;",
+    "  - la suppression de fichiers ;",
+    "  - toute commande hors du dossier du depot.",
+    "",
+    "CE FICHIER NE VOUS DISPENSE DE RIEN. Lisez agents/AVERTISSEMENT.md."
+  ],
+
+  "permissions": {
+    "allow": [
+      "Bash(python scripts/00_mes_identifiants.py)",
+      "Bash(python scripts/20_relier_les_boutons.py:*)",
+      "Bash(python scripts/25_relier_le_modele.py:*)",
+      "Bash(python scripts/30_recette.py:*)",
+      "Bash(git clone:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(sqlcmd:*)"
+    ],
+
+    "deny": [
+      "Bash(git push:*)",
+      "Bash(git reset:*)",
+      "Bash(git checkout:*)",
+      "Bash(rm:*)",
+      "Bash(del:*)",
+      "Read(./**/.env)",
+      "Read(./**/*token*)",
+      "Read(./**/*secret*)"
+    ]
+  },
+
+  "_ce_que_vous_ajoutez_vous_meme": [
+    "Rien dans ce fichier ne porte de mot de passe ni de jeton, et rien ne doit en porter.",
+    "La connexion a la base se fait avec votre compte Microsoft Entra, par -G sur sqlcmd :",
+    "l'agent n'a donc aucun secret a connaitre.",
+    "",
+    "Le jeton GitHub de l'etape 5 ne se donne jamais a un agent. Cette etape se fait a la",
+    "main, et elle prend 3 secondes de machine."
+  ]
+}
