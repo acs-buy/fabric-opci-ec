@@ -23,7 +23,7 @@ cause d'échecs qui n'annoncent pas leur cause :
 
 ## La liste à transmettre
 
-Copiez ce qui suit et envoyez-le à votre administrateur.
+Copiez le texte ci-dessous et envoyez-le à votre administrateur.
 
 > Bonjour,
 >

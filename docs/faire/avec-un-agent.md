@@ -4,8 +4,8 @@ Cette page est facultative. **Les douze étapes se font entièrement à la main,
 rien y perdre.** Elle s'adresse à celui qui dispose déjà d'un agent de codage et se demande ce
 qu'il peut raisonnablement lui confier.
 
-Elle a été écrite après une reproduction complète menée le 26/09/2026, où un agent a joué les
-étapes qu'il sait jouer. Ce qui suit est ce qui a été observé, pas ce qui est promis.
+Elle s'appuie sur une reproduction complète menée le 26/09/2026, où un agent a joué les étapes
+qu'il sait jouer. Les chiffres donnés sont ceux qui ont été relevés.
 
 **Les demandes prêtes à coller sont dans [`agents/`](../../agents/README.md)**, avec un exemple
 d'autorisations et [l'avertissement](../../agents/AVERTISSEMENT.md) qui porte le partage des
@@ -25,14 +25,14 @@ Trois conséquences pratiques :
 | Il vous rend une sortie | Lire cette sortie et juger si elle est bonne |
 | Il ne voit jamais l'écran | Ouvrir les deux écrans et vérifier qu'ils portent ce qu'ils doivent porter |
 
-**Aucune vérification de cette installation ne se délègue.** L'agent accélère la saisie, il ne
-remplace pas la revue.
+Aucune vérification de cette installation ne se délègue. L'agent accélère la saisie ; la revue
+reste entière.
 
 ---
 
 ## Ce qu'un agent sait faire, et ce qu'il ne sait pas faire
 
-Le partage n'est pas une opinion : il tient à ce que la plateforme expose.
+Ce partage tient à ce que la plateforme expose, et non à une préférence.
 
 | # | L'étape | Un agent peut-il la faire ? | Pourquoi |
 |---|---|---|---|
@@ -48,8 +48,7 @@ Le partage n'est pas une opinion : il tient à ce que la plateforme expose.
 | 11 | Publier les deux écrans | **Non** | L'application et ses audiences se composent au portail |
 | 12 | Passer la recette | **Non** | Douze actions à l'écran, et l'action 11 exige deux personnes |
 
-**Trois étapes sur douze, et ce sont les plus répétitives.** Si vous attendiez davantage, la suite
-explique pourquoi c'est déjà beaucoup.
+Trois étapes sur douze, et ce sont les plus répétitives.
 
 ---
 
@@ -109,8 +108,8 @@ c'est voulu : le dépôt a été modifié à la main quelque part.
 ## Les trois consignes qui évitent les ennuis
 
 1. **Interdisez-lui de corriger un script.** Ces scripts refusent d'écrire quand ils ne
-   reconnaissent pas un fichier. Un agent serviable lèvera ce refus pour vous faire plaisir, et
-   vous perdrez la seule protection qui vous restait.
+   reconnaissent pas un fichier. Un agent cherchant à vous satisfaire lèvera ce refus, et la
+   protection tombe.
 2. **Exigez la sortie brute, jamais un résumé.** « Tout s'est bien passé » ne se vérifie pas.
    `<n> source(s) reliées, 0 restant` se vérifie.
 3. **Ne lui donnez jamais votre jeton GitHub.** L'étape 5 se fait à la main, et elle prend

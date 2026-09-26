@@ -89,7 +89,7 @@ périmée.
 raccourci. Choisissez **OneDrive** au lieu de **SharePoint Folder** à l'étape 3 ci-dessus.
 
 L'URL à fournir se trouve dans les paramètres de OneDrive : ouvrez **Paramètres OneDrive**, puis
-**Plus de paramètres**, et copiez l'adresse web OneDrive. Retirez ce qui suit `_onmicrosoft_com`.
+**Plus de paramètres**, et copiez l'adresse web OneDrive. Retirez la partie qui suit `_onmicrosoft_com`.
 
 **Les mêmes quatre limites s'appliquent**, et la lecture seule aussi. OneDrive personnel, celui d'un
 compte Microsoft grand public, n'est pas accepté : il faut OneDrive Entreprise.
@@ -156,7 +156,7 @@ Il commande aussi l'application OneLake file explorer.
 
 ---
 
-## Ce qu'il faut retenir
+## En résumé
 
 1. Les pièces vont dans le coffre. SharePoint est facultatif.
 2. Un raccourci SharePoint ou OneDrive **ne sait que lire**. Tout ce que la solution écrit va dans

@@ -7,15 +7,15 @@ d'autorisations à lui accorder.
 et le résultat est le même. Un agent est un facilitateur sur les étapes répétitives, jamais un
 passage obligé.
 
-**Lisez [l'avertissement](AVERTISSEMENT.md) avant tout.** Il porte le partage des responsabilités,
-et il n'est pas une formalité.
+Lisez [l'avertissement](AVERTISSEMENT.md) avant d'employer ces demandes : il porte le partage des
+responsabilités.
 
 ---
 
 ## Ce qu'un agent fait, et ce qu'il ne fait pas
 
-**Trois étapes sur douze.** Ce partage n'est pas une précaution de rédaction : il tient à ce que la
-plateforme expose, et il a été établi lors d'une reproduction complète le 26/09/2026.
+Trois étapes sur douze. Ce partage tient à ce que la plateforme expose, et il a été établi lors
+d'une reproduction complète, le 26/09/2026.
 
 | # | L'étape | Confiable à un agent | Pourquoi |
 |---|---|---|---|
@@ -53,13 +53,13 @@ ailleurs que dans le dossier du dépôt.
 
 ## Les trois consignes qui évitent les ennuis
 
-1. **Interdisez-lui de corriger un script.** Les scripts de ce dépôt refusent d'écrire quand ils ne
-   reconnaissent pas un fichier : c'est une protection, pas une panne. Un agent serviable lèvera ce
-   refus pour vous faire plaisir, et vous perdrez la dernière chose qui vous protégeait.
+1. **Interdisez-lui de corriger un script.** Les scripts du dépôt refusent d'écrire quand ils ne
+   reconnaissent pas un fichier : c'est une protection. Un agent cherchant à vous satisfaire lèvera
+   ce refus, et la protection tombe.
 2. **Exigez la sortie brute, jamais un résumé.** « Tout s'est bien passé » ne se vérifie pas.
    `<n> source(s) reliées, 0 restant` se vérifie.
 3. **Une étape à la fois, et vous lisez entre chaque.** Un agent qui enchaîne les douze étapes sans
-   contrôle vous livre une installation dont personne n'a vu le détail.
+   contrôle livre une installation que personne n'a regardée.
 
 ---
 

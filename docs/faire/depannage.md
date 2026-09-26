@@ -44,7 +44,7 @@ Si elle rend 0, le socle n'est pas chargé.
 
 ## « Écriture refusée : cette opération demande le rôle associé »
 
-Ce n'est pas une panne. La base vérifie le rôle de la personne avant toute écriture sensible.
+La base vérifie le rôle de la personne avant toute écriture sensible.
 Faites-vous désigner sur l'écran de conduite de mission, section **Équipe de la mission**.
 
 Le même refus se produit quand vous jouez le script d'effacement de la démonstration depuis un

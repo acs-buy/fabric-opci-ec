@@ -62,7 +62,7 @@ vous ne vous y inscrivez pas :
 2. Remplacez les **deux adresses** en tête du fichier : la vôtre, puis celle d'un collègue.
 3. Jouez le fichier.
 
-**Il faut bien deux comptes, et ce n'est pas un confort.** La base refuse l'approbation d'un visa à
+**Deux comptes sont nécessaires.** La base refuse l'approbation d'un visa à
 celui qui l'a soumis. Avec un seul compte, vous ne pouvez mener aucun dossier jusqu'à son visa.
 
 **L'ordre des rôles est imposé par la base**, et l'inverser produit un refus :
@@ -88,7 +88,7 @@ Les fonctions doivent avoir le droit d'interroger la base, et ce droit ne voyage
 **Deux surprises qui n'en sont pas :**
 
 - La publication impose **deux minutes d'attente** entre deux publications successives. Si un
-  message vous le signale, attendez et recommencez. Ce n'est pas une panne.
+  message vous le signale, attendez et recommencez.
 - **Seule la personne propriétaire d'un ensemble de fonctions peut le publier.** Si vous installez
   pour un cabinet, faites-le depuis le compte qui restera responsable de la solution.
 

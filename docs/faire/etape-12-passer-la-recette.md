@@ -117,7 +117,7 @@ démonstration qui porte des écritures.
 
 ---
 
-## L'action 11 a été éprouvée, et voici ce que la base répond
+## L'action 11, et ce que la base répond
 
 Rejouée le 26/09/2026 sur une installation neuve. Les deux messages sont recopiés tels quels.
 

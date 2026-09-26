@@ -1,7 +1,6 @@
 # Avertissement, à lire avant d'employer un agent
 
-Cette page dit ce que fournir des demandes toutes faites ne veut pas dire. Elle est courte, et
-chacun de ses points a une conséquence pratique.
+Cette page dit ce que fournir des demandes toutes faites ne veut pas dire.
 
 ---
 
@@ -24,11 +23,10 @@ votre secret professionnel.** Ces trois choses ne se délèguent à aucun outil.
 **Toute production d'un agent se revérifie, au plan métier et au plan technique, avant d'être
 retenue.** Cela vaut pour une ligne chargée en base comme pour une liaison réécrite dans un fichier.
 
-Ce dépôt est construit autour de ce principe, et c'est pour cela que chaque étape du mode opératoire
-se termine par une vérification écrite noir sur blanc. Ces vérifications sont faites pour être
-faites par vous, pas par l'agent qui vient de travailler.
+Chaque étape du mode opératoire se termine par une vérification écrite. Ces vérifications vous
+reviennent, et non à l'agent qui vient de travailler.
 
-**Un agent qui se relit lui-même ne constitue pas une revue.**
+Un agent qui se relit lui-même ne constitue pas une revue.
 
 ---
 
@@ -45,9 +43,9 @@ quatre choses suivantes :
 4. **Ce n'est pas un engagement de notre part sur ce que l'agent fera de vos données.** Ce point
    relève du contrat qui vous lie à l'éditeur de l'agent, et de lui seul.
 
-**La solution est fournie telle quelle, sans garantie d'aucune sorte**, ce que rappelle la licence
-du dépôt. L'emploi d'un agent ne modifie pas ce point : il ne fait qu'ajouter un intermédiaire
-entre vous et le résultat.
+La solution est fournie telle quelle, sans garantie d'aucune sorte, ce que rappelle la licence du
+dépôt. L'emploi d'un agent ajoute un intermédiaire entre vous et le résultat, sans rien changer à
+ce point.
 
 ---
 

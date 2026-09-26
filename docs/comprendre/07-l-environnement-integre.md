@@ -1,16 +1,16 @@
 # 7. Ce que vous garantit le fait de tout garder dans Fabric
 
-La solution ne sort jamais de Microsoft Fabric. Ce n'est pas un effet de bord : c'est un choix, et
-il se paie de quatre garanties que vous n'auriez pas en assemblant des outils séparés.
+La solution ne sort jamais de Microsoft Fabric. Ce choix apporte quatre garanties que vous n'auriez
+pas en assemblant des outils séparés, et il a des contreparties.
 
-Cette page dit ce que ce choix vous donne, et ce qu'il ne vous donne pas.
+Cette page dit les unes et les autres.
 
 ---
 
 ## 1. L'authentification, vous n'en écrivez pas une ligne
 
-**Il n'y a pas de mot de passe dans cette solution.** Aucune table d'utilisateurs, aucun formulaire
-de connexion, aucun jeton à faire tourner.
+La solution ne porte aucun mot de passe : ni table d'utilisateurs, ni formulaire de connexion, ni
+jeton à renouveler.
 
 Chaque personne se connecte avec son compte professionnel Microsoft. La plateforme le reconnaît, et
 la solution récupère son identité telle quelle.
@@ -67,8 +67,7 @@ Donnez-lui accès par l'application, avec le rôle de lecteur, et par son audien
 
 ## 3. Où vos données sont stockées, et ce que vous pouvez en décider
 
-C'est le point sur lequel on lit le plus d'approximations. Voici ce que la documentation de
-l'éditeur dit exactement.
+Ce point est souvent mal rapporté. La documentation de l'éditeur dit ceci.
 
 ### La région de domiciliation n'est pas choisie librement
 
@@ -115,8 +114,7 @@ les deux.
 
 ## 4. Un environnement intégré : vous ne sortez jamais de la plateforme
 
-C'est la garantie la plus concrète au quotidien, et la plus difficile à percevoir avant de l'avoir
-vécue.
+C'est la garantie qui pèse le plus au quotidien.
 
 ### Tout se fait au même endroit
 
@@ -129,8 +127,8 @@ vécue.
 | Exporter vers Excel | Un classeur écrit dans le coffre, dans le même espace |
 | Partager | Une application, dans le même espace |
 
-**Il n'y a pas de recopie entre outils.** Pas de fichier qui transite par un poste, pas d'export
-intermédiaire, pas de version qui diverge parce qu'elle a été téléchargée mardi.
+Aucune recopie entre outils : pas de fichier qui transite par un poste, pas d'export intermédiaire,
+pas de version qui diverge parce qu'elle a été téléchargée la semaine passée.
 
 ### Les outils que votre cabinet connaît déjà restent utilisables
 
@@ -145,18 +143,18 @@ apparaître dans le coffre sans les recopier.
 
 ### La partie collaborative, qui est le point d'arrivée
 
-C'est là que l'intégration produit sa valeur. **Le même espace de travail qui porte votre outil de
-production porte l'écran que vous donnez à votre client.** Vous ne construisez pas deux choses, vous
-n'en maintenez pas deux, et vous ne risquez pas qu'elles divergent.
+Le même espace de travail porte votre outil de production et l'écran que vous donnez à votre
+client. Vous n'en construisez donc qu'un, vous n'en maintenez qu'un, et ils ne peuvent pas
+diverger.
 
 Le client ouvre une application, avec son compte, et voit ce que son audience lui permet de voir.
 Vous décidez ce qui est publié, et quand.
 
 ---
 
-## Ce que ce choix ne vous donne pas
+## Les contreparties
 
-Soyons complets, parce qu'un mode opératoire honnête dit aussi les contreparties.
+Les contreparties de ce choix :
 
 | La contrepartie | Ce qu'elle implique |
 |---|---|

@@ -39,7 +39,7 @@ specific Workspace, Function set, and Data function. »
 **Sans réparation :** vos boutons appellent l'espace de travail d'origine. Ou bien ils ne font
 rien, ou bien ils écrivent au mauvais endroit. Les deux sont mauvais.
 
-## Ce qui se recolle tout seul
+## Ce qui se refait seul
 
 La liaison du rapport vers son modèle sémantique se refait seule, parce que le rapport désigne son
 modèle par un chemin relatif et non par un identifiant. **À une condition : ne renommez aucun
@@ -132,11 +132,11 @@ l'état de la dernière actualisation, non l'état de la base à la seconde prè
 
 ### Vérifier
 
-### Ce que vous devez voir, avant de relier
+### Avant de relier
 
 Ces sorties sont celles d'une installation réelle, recopiées telles quelles. **Les nombres qu'elles
 portent sont ceux du jour où elles ont été relevées** : votre version peut en compter davantage, et
-ce n'est pas une anomalie. Ce qui compte est la ligne « restant a relier », avant puis après. Elles vous disent où
+c'est le cours normal des choses. Ce qui compte est la ligne « restant a relier », avant puis après. Elles vous disent où
 vous en êtes avant d'avoir rien fait.
 
 Le modèle, qui interroge encore la base d'origine :
@@ -174,7 +174,7 @@ fn_ecran_revision, <n> fonction(s) appelee(s) :
 **Ce qu'il faut lire dans ces sorties :** la ligne « identifiants inconnus » doit valoir zéro. Si
 elle ne vaut pas zéro, le rapport a été modifié à la main, et les scripts refuseront d'écrire.
 
-### Ce que vous devez voir, une fois relié
+### Une fois relié
 
 Les mêmes réserves qu'au paragraphe précédent : ce sont les nombres d'un jour donné.
 **Ce qui compte est le total inchangé, et les deux lignes de restant tombées à zéro.**

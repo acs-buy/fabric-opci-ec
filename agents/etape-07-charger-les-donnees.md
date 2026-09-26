@@ -29,7 +29,7 @@ inversion d'ordre fait échouer une dizaine de fichiers d'un coup.
 > Serveur : `<votre serveur>`
 > Base : `<le nom complet de votre base>`
 >
-> Règles, sans exception :
+> Trois règles :
 > - ne saute aucun fichier, et ne change pas l'ordre ;
 > - ne modifie aucun fichier SQL, même si tu penses qu'il contient une erreur ;
 > - si un fichier échoue, arrête-toi immédiatement, et donne-moi son nom et le message exact ;

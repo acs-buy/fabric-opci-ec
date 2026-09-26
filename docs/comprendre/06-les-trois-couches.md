@@ -1,16 +1,16 @@
 # 6. Les trois couches d'une reproduction
 
-Cette page explique pourquoi l'installation ne se fait pas d'un seul coup, et pourquoi il est normal
-que rien ne fonctionne après l'étape 6.
+Cette page explique pourquoi l'installation ne se fait pas d'un seul coup, et pourquoi rien ne
+fonctionne après l'étape 6.
 
-Lisez-la avant l'étape 6. Elle vous évitera de croire que l'installation a échoué.
+À lire avant d'aborder l'étape 6.
 
 ---
 
 ## Une solution Fabric ne se reproduit pas en une seule opération
 
-Elle se reproduit en trois couches. **Confondre ces couches est la première cause d'échec d'une
-reprise**, et la raison pour laquelle beaucoup de gens abandonnent après la synchronisation.
+Elle se reproduit en trois couches. Les confondre mène à croire que l'installation a échoué juste
+après la synchronisation, alors qu'elle n'est pas terminée.
 
 | La couche | Ce qu'elle contient | Comment elle arrive | Étapes |
 |---|---|---|---|
@@ -22,7 +22,7 @@ reprise**, et la raison pour laquelle beaucoup de gens abandonnent après la syn
 
 ## Couche A. Les définitions arrivent par Git
 
-C'est la partie facile, et c'est celle qui donne l'illusion que tout est fait.
+C'est la partie la plus simple, et celle qui donne l'impression que tout est fait.
 
 La synchronisation recrée les huit éléments de la solution dans votre espace de travail : le coffre,
 la base avec ses tables, ses vues et ses procédures, les deux ensembles de fonctions, les deux
@@ -32,7 +32,7 @@ modèles de données et les deux rapports.
 un à la base. Ils ne sont pas dans le dépôt, vous n'avez rien à en faire, et leur présence est
 normale.
 
-**Tout y est, et rien ne marche.** C'est normal, et les deux couches suivantes expliquent pourquoi.
+Tout y est, et rien ne fonctionne. Les deux couches suivantes expliquent pourquoi.
 
 ---
 
@@ -45,21 +45,21 @@ L'éditeur l'écrit sans ambiguïté :
 **La synchronisation recrée la forme, jamais le contenu.** Votre base a ses tables, ses vues et ses
 procédures, et pas une seule ligne dedans.
 
-C'est pour cela que le dépôt porte 80 fichiers SQL, dont 77 de données. Ils ne sont pas un complément : ils sont la
-seule façon de faire arriver les données.
+Le dépôt porte pour cette raison 80 fichiers SQL, dont 77 de données. C'est la seule façon de
+faire arriver le contenu dans votre base.
 
 | Ce que le dépôt charge | Lignes | Ce que vous en faites |
 |---|---|---|
 | Le socle de référentiel | 3 452 | Vous le gardez. Questions d'acceptation, plan de comptes, articles du règlement |
 | Le jeu de démonstration | 7 152 | Vous pourrez l'effacer quand vous passerez à vos dossiers |
 
-**Sans la couche B, vos écrans sont vides.** Ce n'est pas une panne d'affichage.
+Sans la couche B, vos écrans sont vides, et l'affichage n'y est pour rien.
 
 ---
 
 ## Couche C. Les liaisons ne se recollent pas toutes seules
 
-C'est la couche que personne n'anticipe, et celle qui décide si la solution fonctionne.
+C'est la couche qui décide si la solution fonctionne, et celle qu'on oublie.
 
 ### Le problème, en une phrase
 
@@ -73,7 +73,7 @@ l'espace de travail où la solution a été construite. Pas le vôtre.
 | Les sources des deux modèles vers la base | 73 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
 | Les boutons vers les ensembles de fonctions | 36 | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
-**Ces deux points sont documentés par l'éditeur**, et ce ne sont pas des défauts de notre solution.
+Ces deux points sont documentés par l'éditeur de la plateforme.
 
 Pour le modèle, le tableau de la liaison des dépendances entre espaces de travail porte, à la ligne
 « Semantic models vers SQL database » : **« No. The connection string in TMDL expressions contains
@@ -84,14 +84,13 @@ button stores an explicit reference to a specific Workspace, Function set, and D
 
 ### Pourquoi c'est difficile à diagnostiquer
 
-**Un bouton mal relié ne dit rien.** Il ne fait rien. Aucun message, aucune erreur rouge. C'est le
-symptôme le plus déroutant de toute l'installation, et c'est pour cela que le dépôt fournit un
-script qui le vérifie en une commande.
+Un bouton mal relié ne dit rien et ne fait rien : aucun message, aucune erreur. Le dépôt fournit
+donc un script qui le vérifie en une commande.
 
 ### Ce que le dépôt fait pour vous
 
-Deux scripts réparent ces liaisons. Ils remplacent le texte des identifiants dans les fichiers, sans
-reformater le reste, afin que vous puissiez relire exactement ce qui a changé.
+Deux scripts réparent ces liaisons. Ils remplacent le texte des identifiants dans les fichiers,
+sans reformater le reste, pour que vous puissiez relire ce qui a changé.
 
 Ils refusent d'écrire si un fichier porte des identifiants qu'ils ne reconnaissent pas : c'est le
 signe d'une modification à la main, et une écriture aveugle le casserait.
@@ -109,13 +108,13 @@ Trois choses ne voyagent pas dans les fichiers et se posent au portail.
 | L'actualisation du modèle du client | Il garde une copie des données, contrairement à l'autre | Étapes 9 et 10 |
 
 **Aucune des trois ne produit de message d'erreur.** Elles produisent un écran vide, ce qui est le
-symptôme le plus trompeur de toute l'installation.
+symptôme le plus opaque de l'installation.
 
 ---
 
-## Ce qui se recolle tout seul, et à quelle condition
+## Ce qui se refait seul, et à quelle condition
 
-Une bonne nouvelle, avec sa condition.
+Une liaison se refait seule, sous une condition.
 
 **Le rapport retrouve son modèle de données tout seul**, parce qu'il le désigne par un chemin
 relatif et non par un identifiant. L'éditeur donne cette liaison pour « partielle » : elle se

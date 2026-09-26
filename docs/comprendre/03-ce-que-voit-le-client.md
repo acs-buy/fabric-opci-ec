@@ -7,13 +7,12 @@ les décrit une par une.
 
 ## Le principe qui vaut pour les huit pages
 
-**Le client choisit un arrêté, et tout l'écran s'aligne dessus.** Il ne lit pas le dernier arrêté
-publié, il lit celui qui l'intéresse. Chaque page porte en tête la date de clôture visée et la date
-de publication, pour qu'il sache toujours ce qu'il regarde.
+Le client choisit un arrêté, et tout l'écran s'aligne dessus : il lit celui qui l'intéresse, et
+non le dernier publié. Chaque page porte en tête la date de clôture visée et la date de publication.
 
-**Rien n'apparaît sans être passé par le visa du cabinet.** Un arrêté non visé n'est pas publié.
-C'est plus lent qu'un branchement direct sur la base, et c'est voulu : le client sait que ce qu'il
-lit a été revu.
+Rien n'apparaît sans être passé par le visa du cabinet, et un arrêté non visé n'est pas publié. Le
+délai est plus long qu'avec un branchement direct sur la base ; en échange, le client sait que ce
+qu'il lit a été revu.
 
 Le client ouvre l'application et navigue entre les huit pages depuis le volet de gauche.
 
@@ -166,7 +165,7 @@ l'expert-comptable apporte le plus, et celui qu'il a le moins le temps d'occuper
 
 ---
 
-## Ce que le client ne voit pas, et c'est voulu
+## Ce que le client ne voit pas
 
 | Ce qu'il ne voit pas | Pourquoi |
 |---|---|

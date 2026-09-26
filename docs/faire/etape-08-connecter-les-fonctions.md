@@ -85,7 +85,7 @@ Reprenez exactement les mêmes points 1 à 7, sur **fn_ecran_revision**.
 **La plateforme impose deux minutes d'attente entre deux publications successives.** Si vous
 publiez le second ensemble de fonctions trop vite après le premier, un message vous le signale.
 
-Ce n'est pas une panne. Attendez, et recommencez.
+Attendez, puis recommencez.
 
 ### Seul le propriétaire peut publier
 

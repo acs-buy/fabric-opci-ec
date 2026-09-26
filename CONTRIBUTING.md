@@ -85,7 +85,7 @@ vérifié. Une correction éprouvée vaut mieux qu'une correction raisonnée.
 
 | La proposition | Le motif |
 |---|---|
-| Une donnée de client réel, même partielle | Règle de confidentialité, sans exception |
+| Une donnée de client réel, même partielle | Règle de confidentialité |
 | Une affirmation de plateforme sans source | Règle de vérification sur pièce |
 | Une réécriture d'ensemble non demandée | Impossible à relire, donc impossible à valider |
 | Un changement de licence | Le choix est arrêté |

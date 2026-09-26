@@ -1,6 +1,6 @@
 # Étapes 9 et 10, avec un agent : relier la solution à votre espace
 
-**C'est l'étape la plus importante de l'installation, et la plus difficile à diagnostiquer.** Un
+**C'est l'étape qui décide si la solution fonctionne, et celle dont les pannes sont les plus opaques.** Un
 bouton mal relié ne dit rien : il ne fait rien. Un modèle mal relié interroge une base qui n'est pas
 la vôtre.
 
@@ -46,7 +46,7 @@ Il écrit les deux commandes complètes, avec vos valeurs, dans `mes_commandes.t
 >
 > Relance ensuite les deux commandes `--verifier`, et montre-moi les quatre sorties.
 >
-> Règles, sans exception :
+> Trois règles :
 > - ne modifie aucun autre fichier que ceux que les scripts modifient eux-mêmes ;
 > - si un script refuse d'écrire, ne cherche pas à lever ce refus : rapporte-le-moi tel quel ;
 > - ne corrige aucun script.
@@ -71,7 +71,7 @@ identifiants inconnus     : 0
 ici.** Il augmente à chaque écran ajouté à la solution. Ce qui compte est qu'il soit identique
 avant et après, et que le restant tombe à zéro.
 
-**Si « identifiants inconnus » n'est pas zéro, les scripts refusent d'écrire, et c'est voulu.**
+Si « identifiants inconnus » n'est pas zéro, les scripts refusent d'écrire.
 Cela veut dire qu'un fichier du dépôt a été modifié à la main quelque part. Reprenez une copie
 propre du dépôt plutôt que de forcer.
 
@@ -90,7 +90,7 @@ Le détail est aux [étapes 9 et 10 du mode opératoire](../docs/faire/etape-09-
 
 ---
 
-## Ce qui se recolle tout seul, à une condition
+## La liaison qui se refait seule
 
 Le rapport retrouve son modèle de données seul, parce qu'il le désigne par un chemin relatif.
 **La condition : ne renommez aucun élément.** Un renommage casse cette liaison, et le message
