@@ -1,6 +1,6 @@
 # Étape 3. Créer l'espace de travail
 
-Toute la solution tient dans un seul espace de travail Fabric. Vous n'en créerez pas d'autre.
+Un espace de travail Fabric est le contenant de toute la solution. Vous en créez un seul.
 
 ## Le créer
 
@@ -12,34 +12,33 @@ Toute la solution tient dans un seul espace de travail Fabric. Vous n'en créere
 
 ## Vérifier
 
-Une fois l'espace créé, regardez son bandeau. Vous y retrouverez **Create app**, dont vous vous
-servirez à l'étape 11, **Manage access** pour ajouter vos collaborateurs, et **Workspace settings**,
-qui revient aux étapes 3 et 5.
+Une fois l'espace créé, son bandeau porte les actions dont vous aurez besoin plus loin :
+**Create app** à l'étape 11, **Manage access** pour ajouter vos collaborateurs, et **Workspace
+settings** aux étapes 3 et 5.
 
 ![Le bandeau de l'espace de travail](../../captures/espace-bandeau.png)
 
 
-Ouvrez ensuite **Paramètres de l'espace de travail**, onglet **Licence**, et lisez ce qui s'y
-affiche. Si vous y voyez « Pro », les éléments Fabric autres que Power BI ne fonctionneront pas, et
-aucun message d'erreur ne vous dira que la capacité est en cause : vous chercherez ailleurs. Ce que
-vous devez lire, c'est le nom de votre capacité.
+Ouvrez **Paramètres de l'espace de travail**, onglet **Licence**. Vous devez y lire le nom de votre
+capacité, et non « Pro ». Si vous lisez « Pro », les éléments Fabric autres que Power BI ne
+fonctionneront pas, et les messages d'erreur ne vous diront pas que la capacité est en cause.
 
 ## Une règle à retenir dès maintenant
 
-Une fois un élément de la solution installé, ne le renommez plus. Le rapport retrouve son modèle de
-données par son nom, un renommage casse cette liaison, et l'erreur qui apparaît alors ne parle pas
-du renommage.
+**Ne renommez aucun élément de la solution après l'avoir installé.** Le rapport retrouve son modèle
+de données par son nom. Un renommage casse cette liaison, et l'erreur qui en résulte ne désigne pas
+le renommage.
 
-L'espace de travail, lui, vous pouvez le nommer comme vous voulez et le renommer plus tard.
+Vous pouvez en revanche nommer l'espace de travail comme vous voulez, et le renommer plus tard.
 
 ## Qui doit faire quoi
 
-Vous êtes administrateur de l'espace que vous venez de créer, sans rien avoir à demander. C'est ce
-rôle qui permet de connecter le dépôt Git à l'étape suivante.
+Vous êtes automatiquement administrateur de l'espace que vous créez. C'est ce rôle qui permet de
+connecter le dépôt Git à l'étape suivante.
 
-Si plusieurs personnes doivent travailler dans la solution, ajoutez-les maintenant par **Gérer
-l'accès**. Le rôle de contributeur suffit pour utiliser les écrans. Comme signalé à l'étape
-précédente, sous une capacité F64, chacune de ces personnes a besoin d'une licence Power BI Pro.
+Si vous prévoyez que plusieurs personnes travaillent dans la solution, ajoutez-les maintenant par
+**Gérer l'accès**. Le rôle de contributeur suffit pour utiliser les écrans. Rappel de la page
+précédente : sous une capacité F64, chacune de ces personnes a besoin d'une licence Power BI Pro.
 
 ---
 

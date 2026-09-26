@@ -1,7 +1,7 @@
 # Étape 8. Connecter les fonctions à la base
 
 **Durée :** 2 minutes si les connexions sont déjà là, ce qui a été le cas sur une installation
-réelle. 20 minutes s'il faut les créer, dont 4 minutes d'attente imposée. **Qui :** analyste
+réelle. 20 minutes s'il faut les poser, dont 4 minutes d'attente imposée. **Qui :** analyste
 recommandé, faisable seul.
 
 ---
@@ -12,12 +12,12 @@ Donner à chacun des deux ensembles de fonctions le droit d'interroger votre bas
 
 ## Pourquoi
 
-Quand vous cliquez sur un bouton de l'écran, c'est une de ces fonctions qui part. Elle transmet vos
-paramètres à une procédure de la base, puis vous renvoie le résultat.
+Les fonctions sont ce que les boutons de l'écran appellent. Elles reçoivent les paramètres,
+appellent une procédure de la base, et rapportent le résultat.
 
-La synchronisation Git a bien recréé le code des fonctions, mais elle n'a pas pu recréer leur
-autorisation d'interroger la base : ce droit d'accès ne fait pas partie de ce que Git transporte.
-Tant que vous ne l'avez pas donné, chaque bouton échoue.
+**Ce droit d'accès ne voyage pas par Git.** La synchronisation a bien recréé le code des fonctions,
+mais pas leur autorisation de parler à la base. Tant que vous ne l'avez pas posée, chaque bouton
+échouera.
 
 [Comprendre les trois couches](../comprendre/06-les-trois-couches.md)
 
@@ -25,21 +25,21 @@ Tant que vous ne l'avez pas donné, chaque bouton échoue.
 
 ## Avant de commencer
 
-- L'étape 7 doit être faite. Une fonction qui interroge une base vide ne prouve rien.
-- Vous devez être propriétaire des ensembles de fonctions. Si c'est un collègue qui a fait la
-  synchronisation, c'est lui qui l'est, et c'est donc lui qui doit faire cette étape. Sinon,
-  refaites la synchronisation depuis votre compte.
+- L'étape 7 doit être faite. Une fonction qui joint une base vide ne prouve rien.
+- **Vous devez être propriétaire des ensembles de fonctions.** Si quelqu'un d'autre a fait la
+  synchronisation, c'est lui qui doit faire cette étape, ou vous devez la refaire depuis votre
+  compte.
 
 ---
 
 ## Commencez par regarder : la connexion est peut-être déjà là
 
-Sur une installation réelle du 26/09/2026, les deux connexions existaient déjà après la seule
-synchronisation Git, et elles désignaient bien les éléments du nouvel espace de travail.
+**Sur une installation réelle du 26/09/2026, les deux connexions étaient déjà posées après la seule
+synchronisation Git, et elles désignaient bien les éléments du nouvel espace de travail.**
 
-Cela tient à la manière dont la fonction nomme sa connexion : par un **alias**, `DossierOPCI` pour
-la base et `Coffre` pour le lakehouse, et non par un identifiant. La plateforme résout cet alias
-dans l'espace de travail où la fonction se trouve.
+La raison : la fonction désigne sa connexion par un **alias**, `DossierOPCI` pour la base et
+`Coffre` pour le lakehouse, et non par un identifiant. La plateforme résout cet alias dans l'espace
+où la fonction se trouve.
 
 1. Ouvrez **fn_ecran_client**, puis **Manage connections** dans le bandeau.
 2. Lisez le tableau. Vous devez y voir deux lignes :
@@ -49,9 +49,9 @@ dans l'espace de travail où la fonction se trouve.
 | Coffre | Coffre | Lakehouse | *le nom de votre espace de travail* |
 | DossierOPCI | DossierOPCI | SqlDbNative | *le nom de votre espace de travail* |
 
-3. Si la colonne Location porte le nom de votre espace, cette étape est faite. Vérifiez
+3. **Si la colonne Location porte le nom de votre espace, cette étape est faite.** Vérifiez
    fn_ecran_revision de la même façon, et passez à l'étape 9.
-4. Si le tableau est vide, ou si Location porte un autre espace, suivez la procédure ci-dessous.
+4. **Si le tableau est vide, ou si Location porte un autre espace**, suivez la procédure ci-dessous.
 
 ---
 
@@ -74,8 +74,7 @@ Les deux boutons dont vous avez besoin sont dans le bandeau du haut : **Manage c
 
 Reprenez exactement les mêmes points 1 à 7, sur **fn_ecran_revision**.
 
-Laissez deux minutes entre les deux publications : la plateforme refuse la seconde si elle arrive
-trop vite.
+**Attendez deux minutes entre les deux publications.** Voir ci-dessous.
 
 ---
 
@@ -83,16 +82,17 @@ trop vite.
 
 ### Le refroidissement de deux minutes
 
-La plateforme impose deux minutes d'attente entre deux publications successives. Si vous publiez le
-second ensemble de fonctions trop vite après le premier, un message vous le signale. Rien n'est
-cassé : attendez, puis recommencez.
+**La plateforme impose deux minutes d'attente entre deux publications successives.** Si vous
+publiez le second ensemble de fonctions trop vite après le premier, un message vous le signale.
+
+Ce n'est pas une panne. Attendez, et recommencez.
 
 ### Seul le propriétaire peut publier
 
-Être administrateur de l'espace de travail ne suffit pas. La publication d'un ensemble de fonctions
-est réservée à son propriétaire.
+**Une personne qui n'est pas propriétaire d'un ensemble de fonctions ne peut pas le publier**, même
+si elle est administratrice de l'espace de travail.
 
-Pour un cabinet, cela veut dire qu'il faut installer depuis le compte qui restera responsable de la
+**Ce que cela implique pour un cabinet :** installez depuis le compte qui restera responsable de la
 solution. Si la personne qui a installé quitte le cabinet, la republication des fonctions demandera
 un transfert de propriété.
 
@@ -100,18 +100,20 @@ un transfert de propriété.
 
 ## Vérifier que c'est fait
 
+C'est la vérification la plus directe de tout le mode opératoire.
+
 1. Ouvrez **fn_ecran_client**.
 2. Dans la liste des fonctions, trouvez **qui_suis_je**.
 
-Les fonctions sont listées dans le volet de gauche, une par bouton de l'écran.
+Les fonctions se lisent dans le volet de gauche, une par bouton de l'écran.
 
 ![La liste des fonctions de l'écran client](../../captures/fonctions-liste.png)
 
 3. Lancez-la.
-4. Elle doit répondre en vous donnant votre identité.
+4. **Elle doit rendre une réponse contenant votre identité.**
 
-Si elle répond par une erreur de connexion, c'est que la connexion de données manque, ou que la
-publication n'a pas abouti.
+Si elle rend une erreur de connexion, la connexion de données n'est pas posée, ou la publication n'a
+pas abouti.
 
 Faites la même chose sur **fn_ecran_revision** si elle porte une fonction équivalente.
 
@@ -126,9 +128,9 @@ Faites la même chose sur **fn_ecran_revision** si elle porte une fonction équi
 | « Vous n'êtes pas autorisé à publier » | Vous n'êtes pas propriétaire de cet ensemble de fonctions |
 | La fonction répond, mais une erreur SQL apparaît | L'étape 7 n'est pas faite, ou pas entièrement |
 
-Si la fonction répond et qu'un bouton de l'écran ne fait toujours rien, ne revenez pas sur cette
-étape : il s'agit de l'étape 10, qui n'est pas encore faite. Les deux symptômes se ressemblent
-beaucoup, et c'est là qu'on se trompe.
+**Un point à ne pas confondre.** Si la fonction répond mais qu'un bouton de l'écran ne fait toujours
+rien, ce n'est pas cette étape : c'est l'étape 10, qui n'est pas encore faite. Les deux symptômes se
+ressemblent, et les causes sont différentes.
 
 ---
 
@@ -136,9 +138,9 @@ beaucoup, et c'est là qu'on se trompe.
 
 | Couche | État |
 |---|---|
-| Les définitions | Créées à l'étape 6 |
-| Les données | Chargées à l'étape 7 |
-| La connexion des fonctions | **Faite maintenant** |
+| Les définitions | Posées à l'étape 6 |
+| Les données | Posées à l'étape 7 |
+| La connexion des fonctions | **Posée maintenant** |
 | Le modèle vers la base | Étape 9 |
 | Les boutons vers les fonctions | Étape 10 |
 

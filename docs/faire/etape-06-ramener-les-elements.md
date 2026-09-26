@@ -3,7 +3,7 @@
 ## Ramener les éléments
 
 Dans le panneau de contrôle de source de votre espace de travail, cliquez sur **Mettre à jour
-tout**. Fabric crée alors les éléments de la solution dans votre espace.
+tout**. Fabric crée les éléments de la solution dans votre espace.
 
 ![Le panneau de contrôle de source](../../captures/controle-de-source.png)
 
@@ -12,37 +12,37 @@ les éléments à ramener.*
 
 ## Ce que vous devez voir
 
-| Élément | Type | Ce qu'il contient |
+| Élément | Type | Ce qu'il porte |
 |---|---|---|
 | Coffre | Lakehouse | Les pièces justificatives et les gabarits |
-| DossierOPCI | Base de données SQL | Les tables, les vues, les procédures et les contrôles |
-| fn_ecran_client | Fonctions | Ce qu'appellent les boutons de l'écran de conduite |
-| fn_ecran_revision | Fonctions | Ce qu'appellent les boutons de l'écran de révision |
+| DossierOPCI | Base de données SQL | Les tables, vues, procédures et contrôles |
+| fn_ecran_client | Fonctions | Ce que les boutons de l'écran de conduite appellent |
+| fn_ecran_revision | Fonctions | Ce que les boutons de l'écran de révision appellent |
 | conduite_de_mission | Modèle sémantique | Les 72 tables et les mesures de l'écran de travail |
 | Conduite de mission | Rapport | L'écran de travail du cabinet |
 | restitution_client | Modèle et rapport | L'écran remis au client |
 
 ## À ce stade, rien ne fonctionne, et c'est normal
 
-Vous allez ouvrir le rapport, cliquer partout, et rien ne bougera. L'installation n'est pas ratée,
-il lui manque simplement les étapes suivantes.
+C'est le moment où l'on croit que l'installation a échoué. Elle n'a pas échoué : elle n'est pas
+finie. Voici précisément où en sont les choses.
 
-La base `DossierOPCI` est bien là, avec ses tables, ses vues et ses procédures, mais elle ne
-contient aucune donnée. L'éditeur le dit lui-même : « Git Integration re-creates item definitions
-only and does not restore item data. » Les données arrivent à l'étape 5.
+**La base existe mais elle est vide.** Ses tables, ses vues et ses procédures sont là, mais aucune
+donnée. L'éditeur l'écrit : « Git Integration re-creates item definitions only and does not restore
+item data. » Les données arrivent à l'étape 5.
 
-Le modèle sémantique, lui, interroge toujours la base d'origine. Si vous l'ouvrez maintenant, il
-refusera de s'actualiser. L'étape 6 le rebranche sur la vôtre.
+**Le modèle interroge encore la base d'origine.** Si vous l'ouvrez maintenant, il ne s'actualisera
+pas. C'est attendu, et c'est réparé à l'étape 6.
 
-Les boutons du rapport sont dans le même cas : ils appellent encore les fonctions d'origine, et un
-clic ne produira rien. Là aussi, c'est l'étape 6 qui les rebranche.
+**Les boutons appellent encore les fonctions d'origine.** Si vous ouvrez le rapport et cliquez, il
+ne se passera rien. C'est attendu, et c'est réparé à l'étape 6 également.
 
-Reste l'autorisation qui manque aux fonctions pour interroger la base. Elle ne se crée pas toute
-seule : vous la ferez à la main à l'étape 5.
+**Les fonctions n'ont pas encore le droit de parler à la base.** Leur connexion se pose à la main,
+à l'étape 5.
 
 ## Ce que vous pouvez vérifier utilement dès maintenant
 
-Ouvrez la base `DossierOPCI`, ouvrez une nouvelle requête et lancez ceci :
+Ouvrez la base `DossierOPCI` et lancez cette requête dans une nouvelle requête :
 
 ```sql
 SELECT type_desc, COUNT(*) AS nb
@@ -52,8 +52,8 @@ SELECT type_desc, COUNT(*) AS nb
  ORDER BY type_desc;
 ```
 
-Vous devez y trouver des tables, des vues, des procédures stockées et des déclencheurs. Si elle ne
-renvoie aucune ligne, la synchronisation n'a pas abouti : reprenez l'étape 3 et vérifiez le
+Vous devez y trouver des tables, des vues, des procédures stockées et des déclencheurs. Si la
+requête ne rend rien, la synchronisation n'a pas abouti : reprenez l'étape 3 et vérifiez le
 répertoire `fabric`.
 
 ---

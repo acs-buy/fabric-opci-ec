@@ -1,15 +1,17 @@
 # Étape 11. Publier les deux écrans, à deux publics distincts
 
-Vos collaborateurs entrent dans la solution par une application organisationnelle. Ils y ouvrent
+Une application organisationnelle est la porte d'entrée de vos collaborateurs. Ils y ouvrent
 l'écran de travail sans voir l'espace de travail ni ses éléments techniques.
 
 ## Pourquoi passer par une application
 
-Vos collaborateurs ne voient que ce qui les concerne : ni la base, ni les fonctions, ni le modèle ne
-leur sont accessibles. Vous décidez ensuite qui voit quoi, audience par audience, et c'est ce qui
-vous permet de séparer l'écran du cabinet de l'écran remis au client. Enfin, l'adresse que vous avez
-diffusée ne change pas quand vous republiez le rapport : le lien envoyé à un client il y a six mois
-fonctionne toujours.
+Trois raisons, dans l'ordre d'importance.
+
+1. **Vos collaborateurs ne voient que ce qui les concerne.** Ils n'ont accès ni à la base, ni aux
+   fonctions, ni au modèle.
+2. **Vous contrôlez qui voit quoi**, par audience, ce qui permet de séparer l'écran du cabinet et
+   l'écran remis au client.
+3. **L'adresse ne change pas** quand vous republiez le rapport.
 
 ## Créer l'application
 
@@ -32,23 +34,23 @@ Elle ne dispense pas des licences. Sur une capacité inférieure à F64, chaque 
 l'application a besoin d'une licence Power BI Pro, qu'elle passe par l'application ou par l'espace
 de travail.
 
-Les autorisations sur la base restent nécessaires, elles aussi. Les boutons qui écrivent passent par
-les fonctions, et les fonctions vérifient le rôle de la personne dans la table des rôles de mission.
-Quelqu'un qui n'a aucun rôle sur un dossier verra l'écran et se verra refuser l'écriture, avec un
-message qui le lui dit.
+Elle ne remplace pas non plus les autorisations sur la base. Les boutons qui écrivent passent par
+les fonctions, et les fonctions vérifient le rôle de la personne dans la table des rôles de
+mission. Une personne sans rôle sur un dossier verra l'écran et se verra refuser l'écriture, avec un
+message qui le dit.
 
 ## Vérifier
 
 Demandez à un collègue d'ouvrir l'application. Il doit voir l'écran de conduite de mission et
-pouvoir sélectionner un dossier. S'il ne voit rien, regardez son autorisation, puis sa licence.
+pouvoir sélectionner un dossier. S'il ne voit rien, vérifiez son autorisation et sa licence.
 
 ### Ce que vous devez obtenir
 
 ## Avant l'application : créer un rôle de sécurité par client
 
-Ne sautez pas cette étape. Le dépôt livré arrive avec un seul rôle, celui du véhicule de
-démonstration : tant que vous n'avez pas créé un rôle par client réel, un client qui ouvre sa
-restitution voit les données de tous les autres.
+**Cette action n'est pas facultative.** Le dépôt livré a un seul rôle, celui du véhicule de
+démonstration. Sans un rôle par client réel, un client ouvrant sa restitution verrait les données de
+tous les autres.
 
 ### Le chemin exact
 
@@ -58,44 +60,48 @@ restitution voit les données de tous les autres.
 4. La page de sécurité au niveau des lignes s'ouvre, avec la liste des rôles.
 5. Pour chaque rôle, cliquez sur **Assign** et ajoutez les comptes ou les groupes concernés.
 
-Si l'option **Security** n'apparaît pas, c'est que vous n'avez pas le rôle de contributeur sur
-l'espace de travail. C'est le minimum exigé pour y accéder.
+**Il faut le rôle de contributeur sur l'espace de travail, au minimum**, pour voir l'option
+**Security**.
 
 ### Créer un rôle qui n'existe pas encore
 
 La page **Security** assigne des membres à des rôles existants ; elle n'en crée pas. L'éditeur le
 dit : on ne peut gérer la sécurité que sur un modèle dont les rôles sont déjà définis.
 
-Pour créer le rôle d'un nouveau client, vous avez deux voies. La plus simple consiste à modifier le
-modèle directement dans le service : vous l'ouvrez, vous allez dans l'onglet de modélisation, vous
-définissez le rôle et son filtre. L'autre passe par Power BI Desktop : vous téléchargez le modèle,
-vous y définissez le rôle, vous republiez. C'est plus lourd.
+Pour créer le rôle d'un nouveau client, deux voies.
 
-Le filtre à écrire reprend celui du rôle livré : il restreint la table des entités au code du
+| La voie | Ce qu'elle demande |
+|---|---|
+| **Modifier le modèle dans le service** | Ouvrir le modèle, onglet de modélisation, définir le rôle et son filtre |
+| Power BI Desktop | Télécharger, définir le rôle, republier. Plus lourd |
+
+Le filtre à poser reprend celui du rôle livré : il restreint la table des entités au code du
 véhicule du client.
 
-### Là où le cloisonnement peut céder
+### La limite qui décide de tout
 
-La sécurité au niveau des lignes ne s'applique qu'aux lecteurs. L'éditeur l'écrit : elle ne
-s'applique ni aux administrateurs, ni aux membres, ni aux contributeurs de l'espace de travail. Un
-client que vous ajouteriez comme membre de votre espace verrait donc tout, rôle ou pas. Ne le faites
-jamais. Donnez-lui accès par l'application, avec le rôle de lecteur, et par son audience : c'est la
-seule configuration dans laquelle il ne voit que ses propres données.
+**La sécurité au niveau des lignes ne s'applique qu'aux lecteurs.** L'éditeur l'écrit : elle ne
+s'applique ni aux administrateurs, ni aux membres, ni aux contributeurs de l'espace de travail.
+
+**N'ajoutez donc jamais un client comme membre de votre espace de travail.** Donnez-lui accès par
+l'application, avec le rôle de lecteur, et par son audience. C'est la seule configuration où le
+cloisonnement tient.
 
 ### Vérifier
 
-Sur la page **Security**, chaque rôle a un menu **More options** qui contient **Test as role**. Il
+La page **Security** porte, pour chaque rôle, un menu **More options** avec **Test as role**. Il
 ouvre le rapport tel que ce rôle le voit.
 
-Ce test ne fonctionne pas sur un modèle en connexion directe avec authentification unique. Dans ce
-cas, connectez-vous réellement avec un compte de test placé dans le rôle de lecteur.
+**Une réserve :** cette vérification ne fonctionne pas sur un modèle en connexion directe avec
+authentification unique. Dans ce cas, connectez-vous réellement avec un compte de test placé dans
+le rôle de lecteur.
 
 ---
 
 
 ![L'application et ses deux audiences](../../captures/application-audiences.png)
 
-*Capture de l'installation réelle. Le volet de gauche affiche les deux audiences : la conduite de
+*Capture de l'installation réelle. Le volet de gauche porte les deux audiences : la conduite de
 mission pour votre équipe, la restitution client pour vos clients.*
 
 ![Le volet des deux audiences](../../captures/application-volet.png)
@@ -103,8 +109,8 @@ mission pour votre équipe, la restitution client pour vos clients.*
 *Une personne de l'audience client ne voit que la seconde, et les huit pages qu'elle contient.*
 
 
-Profitez-en pour préparer la recette : une des douze actions demande deux comptes distincts, parce
-qu'un visa ne peut pas être approuvé par la personne qui l'a soumis.
+C'est aussi le bon moment pour préparer la recette : une des douze actions demande deux comptes
+distincts, l'approbation d'un visa étant refusée à la personne qui l'a soumis.
 
 ---
 

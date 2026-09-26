@@ -1,15 +1,16 @@
 # 6. Les trois couches d'une reproduction
 
-Après l'étape 6, tous les éléments de la solution seront dans votre espace de travail et pas un seul
-écran ne s'affichera. L'installation n'a pas échoué. Il reste deux couches à installer.
+Cette page explique pourquoi l'installation ne se fait pas d'un seul coup, et pourquoi il est normal
+que rien ne fonctionne après l'étape 6.
+
+Lisez-la avant l'étape 6. Elle vous évitera de croire que l'installation a échoué.
 
 ---
 
 ## Une solution Fabric ne se reproduit pas en une seule opération
 
-Elle se reproduit en trois couches. Les confondre est la première cause d'échec d'une reprise : on
-s'arrête juste après la synchronisation, en croyant que le dépôt est cassé, alors que les deux
-autres couches n'ont simplement pas encore été installées.
+Elle se reproduit en trois couches. **Confondre ces couches est la première cause d'échec d'une
+reprise**, et la raison pour laquelle beaucoup de gens abandonnent après la synchronisation.
 
 | La couche | Ce qu'elle contient | Comment elle arrive | Étapes |
 |---|---|---|---|
@@ -21,17 +22,17 @@ autres couches n'ont simplement pas encore été installées.
 
 ## Couche A. Les définitions arrivent par Git
 
-C'est la partie facile. C'est aussi celle qui donne l'impression que tout est fait.
+C'est la partie facile, et c'est celle qui donne l'illusion que tout est fait.
 
 La synchronisation recrée les huit éléments de la solution dans votre espace de travail : le coffre,
 la base avec ses tables, ses vues et ses procédures, les deux ensembles de fonctions, les deux
 modèles de données et les deux rapports.
 
-Vous en compterez dix. La plateforme ajoute d'elle-même un point de terminaison SQL au coffre et un
-à la base. Ils ne sont pas dans le dépôt, vous n'avez rien à en faire, et leur présence est normale.
+**Vous en compterez dix.** La plateforme ajoute d'elle-même un point de terminaison SQL au coffre et
+un à la base. Ils ne sont pas dans le dépôt, vous n'avez rien à en faire, et leur présence est
+normale.
 
-À ce stade, tous les éléments existent et aucun ne rend encore service. Il manque les données et les
-liaisons.
+**Tout y est, et rien ne marche.** C'est normal, et les deux couches suivantes expliquent pourquoi.
 
 ---
 
@@ -41,28 +42,28 @@ L'éditeur l'écrit sans ambiguïté :
 
 > « Git Integration re-creates item definitions only and does not restore item data. »
 
-Votre base arrive donc avec ses tables, ses vues et ses procédures, et pas une seule ligne dedans.
+**La synchronisation recrée la forme, jamais le contenu.** Votre base a ses tables, ses vues et ses
+procédures, et pas une seule ligne dedans.
 
-C'est pour cela que le dépôt contient 80 fichiers SQL, dont 77 de données. C'est par eux, et par eux
-seuls, que les données entrent dans votre base.
+C'est pour cela que le dépôt porte 80 fichiers SQL, dont 77 de données. Ils ne sont pas un complément : ils sont la
+seule façon de faire arriver les données.
 
 | Ce que le dépôt charge | Lignes | Ce que vous en faites |
 |---|---|---|
 | Le socle de référentiel | 3 452 | Vous le gardez. Questions d'acceptation, plan de comptes, articles du règlement |
 | Le jeu de démonstration | 7 152 | Vous pourrez l'effacer quand vous passerez à vos dossiers |
 
-Tant que ces fichiers ne sont pas joués, vos écrans restent vides, et rien à l'écran ne vous indique
-que la cause est l'absence de données.
+**Sans la couche B, vos écrans sont vides.** Ce n'est pas une panne d'affichage.
 
 ---
 
 ## Couche C. Les liaisons ne se recollent pas toutes seules
 
-Personne ne l'anticipe, et c'est elle qui décide si la solution fonctionne chez vous.
+C'est la couche que personne n'anticipe, et celle qui décide si la solution fonctionne.
 
-### D'où vient le problème
+### Le problème, en une phrase
 
-Certains éléments en désignent d'autres par leur identifiant, et cet identifiant est celui de
+Certains éléments en désignent d'autres **par leur identifiant**, et cet identifiant est celui de
 l'espace de travail où la solution a été construite. Pas le vôtre.
 
 ### Les deux liaisons à refaire
@@ -72,54 +73,56 @@ l'espace de travail où la solution a été construite. Pas le vôtre.
 | Les sources des deux modèles vers la base | 73 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
 | Les boutons vers les ensembles de fonctions | 36 | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
-L'éditeur documente ces deux points. Ils tiennent au fonctionnement de la plateforme, et non à la
-façon dont la solution a été construite.
+**Ces deux points sont documentés par l'éditeur**, et ce ne sont pas des défauts de notre solution.
 
-Pour le modèle, le tableau de la liaison des dépendances entre espaces de travail indique, à la
-ligne « Semantic models vers SQL database » : **« No. The connection string in TMDL expressions
-contains workspace-specific values. »**
+Pour le modèle, le tableau de la liaison des dépendances entre espaces de travail porte, à la ligne
+« Semantic models vers SQL database » : **« No. The connection string in TMDL expressions contains
+workspace-specific values. »**
 
 Pour les boutons : **« Data function buttons don't automatically rebind across workspaces. The
 button stores an explicit reference to a specific Workspace, Function set, and Data function. »**
 
 ### Pourquoi c'est difficile à diagnostiquer
 
-Un bouton mal relié ne proteste pas. Vous cliquez, il ne se passe rien, aucun message, aucune erreur
-rouge. C'est le symptôme le plus déroutant de toute l'installation, et c'est pour cela que le dépôt
-fournit un script qui le vérifie en une commande.
+**Un bouton mal relié ne dit rien.** Il ne fait rien. Aucun message, aucune erreur rouge. C'est le
+symptôme le plus déroutant de toute l'installation, et c'est pour cela que le dépôt fournit un
+script qui le vérifie en une commande.
 
 ### Ce que le dépôt fait pour vous
 
-Deux scripts réparent ces liaisons. Ils remplacent le texte des identifiants dans les fichiers sans
+Deux scripts réparent ces liaisons. Ils remplacent le texte des identifiants dans les fichiers, sans
 reformater le reste, afin que vous puissiez relire exactement ce qui a changé.
 
-Ils refusent d'écrire si un fichier contient des identifiants qu'ils ne reconnaissent pas : c'est le
-signe d'une modification à la main, et une écriture aveugle la casserait.
+Ils refusent d'écrire si un fichier porte des identifiants qu'ils ne reconnaissent pas : c'est le
+signe d'une modification à la main, et une écriture aveugle le casserait.
 
-L'ordre compte : le modèle d'abord, les boutons ensuite.
+**L'ordre compte :** le modèle d'abord, les boutons ensuite.
 
-### Ce qui se règle à la main, au portail
+### Les liaisons qui se posent à la main
 
-Trois choses ne voyagent pas dans les fichiers.
+Trois choses ne voyagent pas dans les fichiers et se posent au portail.
 
-La connexion des fonctions à la base se fait au portail, en deux actions par ensemble de fonctions,
-à l'étape 8. Les informations d'identification des modèles se saisissent une fois par modèle, en
-OAuth2, aux étapes 9 et 10. Enfin, le modèle du client demande une actualisation, parce qu'il garde
-une copie des données contrairement à l'autre ; c'est également aux étapes 9 et 10.
+| Ce qui se pose à la main | Où | Quand |
+|---|---|---|
+| La connexion des fonctions à la base | Deux actions par ensemble de fonctions | Étape 8 |
+| Les informations d'identification des modèles | Une fois par modèle, en OAuth2 | Étapes 9 et 10 |
+| L'actualisation du modèle du client | Il garde une copie des données, contrairement à l'autre | Étapes 9 et 10 |
 
-Aucune des trois ne produit de message d'erreur quand elle manque. Vous obtenez un écran vide, et
-c'est le symptôme le plus trompeur de toute l'installation.
+**Aucune des trois ne produit de message d'erreur.** Elles produisent un écran vide, ce qui est le
+symptôme le plus trompeur de toute l'installation.
 
 ---
 
 ## Ce qui se recolle tout seul, et à quelle condition
 
-Le rapport retrouve son modèle de données tout seul, parce qu'il le désigne par un chemin relatif et
-non par un identifiant. L'éditeur donne cette liaison pour « partielle » : elle se résout si le
-modèle est déployé au même emplacement relatif.
+Une bonne nouvelle, avec sa condition.
 
-À une condition : ne renommez aucun élément. Un renommage casse cette liaison, et le message
-d'erreur que vous obtiendrez ne parlera pas de renommage.
+**Le rapport retrouve son modèle de données tout seul**, parce qu'il le désigne par un chemin
+relatif et non par un identifiant. L'éditeur donne cette liaison pour « partielle » : elle se
+résout si le modèle est déployé au même emplacement relatif.
+
+**La condition :** ne renommez aucun élément. Un renommage casse cette liaison, et le message
+d'erreur ne désigne pas le renommage.
 
 ---
 
@@ -131,7 +134,7 @@ d'erreur que vous obtiendrez ne parlera pas de renommage.
 | 7 | La base est remplie | Les écrans, les boutons |
 | 8 | Les fonctions joignent la base | Les écrans, les boutons |
 | 9 | Les écrans s'affichent | Les boutons |
-| 10 | Tout | |
+| 10 | **Tout** | |
 
 ---
 

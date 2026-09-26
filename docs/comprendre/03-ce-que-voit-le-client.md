@@ -1,18 +1,19 @@
 # 3. Ce que voit le client
 
-L'écran de restitution compte huit pages, toutes filtrées sur l'arrêté que le client choisit.
+L'écran de restitution. Huit pages, toutes filtrées sur l'arrêté que le client choisit. Cette page
+les décrit une par une.
 
 ---
 
 ## Le principe qui vaut pour les huit pages
 
-Le client choisit un arrêté, et tout l'écran s'aligne dessus. Il consulte donc celui qui l'intéresse,
-qui n'est pas forcément le dernier publié. Chaque page porte en tête la date de clôture visée et la
-date de publication, pour qu'il sache toujours ce qu'il regarde.
+**Le client choisit un arrêté, et tout l'écran s'aligne dessus.** Il ne lit pas le dernier arrêté
+publié, il lit celui qui l'intéresse. Chaque page porte en tête la date de clôture visée et la date
+de publication, pour qu'il sache toujours ce qu'il regarde.
 
-Un arrêté non visé par le cabinet n'est pas publié. Un branchement direct sur la base irait plus
-vite, mais le client lirait alors des chiffres que personne n'a revus ; ici, ce qu'il a sous les yeux
-est passé par le visa.
+**Rien n'apparaît sans être passé par le visa du cabinet.** Un arrêté non visé n'est pas publié.
+C'est plus lent qu'un branchement direct sur la base, et c'est voulu : le client sait que ce qu'il
+lit a été revu.
 
 Le client ouvre l'application et navigue entre les huit pages depuis le volet de gauche.
 
@@ -26,7 +27,7 @@ Le client ouvre l'application et navigue entre les huit pages depuis le volet de
 
 **La question :** combien vaut ma part à cet arrêté, et qu'est-ce que cela me rapporte ?
 
-Vous y lisez :
+Ce que la page porte :
 
 - la valeur liquidative de l'arrêté, et l'actif net réévalué dont elle découle ;
 - le nombre de parts en circulation à l'arrêté ;
@@ -34,7 +35,7 @@ Vous y lisez :
 - l'écart de valeur liquidative par rapport à l'arrêté précédent ;
 - la série des valeurs liquidatives, arrêté par arrêté.
 
-C'est la page d'entrée, et celle où le client revient.
+C'est la page d'entrée : le client y arrive, et il y revient.
 
 ---
 
@@ -42,17 +43,19 @@ C'est la page d'entrée, et celle où le client revient.
 
 **La question :** pourquoi la valeur a-t-elle bougé depuis l'arrêté précédent ?
 
-Un tableau de bord montre que la valeur a bougé. Ici, le client voit de combien et pourquoi, cause
-par cause.
+C'est la page qui distingue une restitution professionnelle d'un tableau de bord. Elle ne constate
+pas la variation, elle l'explique.
 
-La page donne :
+Ce que la page porte :
 
 - l'actif net constaté et l'actif net précédent ;
-- la liste des causes de variation, avec le montant de chacune ;
-- la variation expliquée, et l'écart de bouclage, c'est-à-dire ce que les causes n'expliquent pas.
+- **la liste des causes de variation, avec le montant de chacune** ;
+- la variation expliquée, et **l'écart de bouclage**, c'est-à-dire ce que les causes n'expliquent
+  pas.
 
-Regardez l'écart de bouclage. Nul, la variation est entièrement expliquée. Non nul, il reste une
-part que les causes ne couvrent pas, et le client peut demander laquelle.
+**L'écart de bouclage est le chiffre le plus utile de la page.** S'il est nul, la variation est
+entièrement expliquée. S'il ne l'est pas, le client sait qu'il reste quelque chose à comprendre, et
+il peut le demander.
 
 ![La page de rationalisation de la valeur liquidative](../../captures/client-rationalisation-vl.png)
 
@@ -64,15 +67,15 @@ part que les causes ne couvrent pas, et le client peut demander laquelle.
 
 **La question :** que possède mon véhicule, et à quelle valeur ?
 
-On y trouve :
+Ce que la page porte :
 
 - la liste des actifs, avec leur famille et leur commune ;
-- pour chacun, la valeur actuelle et la source de cette valeur ;
+- pour chacun, la valeur actuelle et **la source de cette valeur** ;
 - la différence d'estimation, actif par actif et en total ;
 - l'article du règlement qui fonde le traitement retenu.
 
-Un client qui lit une valeur demande sur quoi elle repose. Le renvoi à l'article du règlement est là
-pour ça : la question ne vient pas, ou elle se règle en une phrase.
+**La mention de l'article est un choix de conception.** Un client qui lit une valeur veut savoir ce
+qui la fonde. Le renvoi au texte évite la question, ou permet d'y répondre en une phrase.
 
 ---
 
@@ -80,7 +83,7 @@ pour ça : la question ne vient pas, ou elle se règle en une phrase.
 
 **La question :** que valent mes filiales, et pourquoi ?
 
-La page donne :
+Ce que la page porte :
 
 - la liste des filiales détenues, avec la quote-part détenue ;
 - les capitaux propres de chaque filiale, et son actif net réévalué ;
@@ -93,7 +96,7 @@ La page donne :
 
 **La question :** comment mon véhicule se comporte-t-il en exploitation ?
 
-Vous y lisez :
+Ce que la page porte :
 
 - les loyers de la période, immeuble par immeuble et par commune ;
 - les charges d'entretien ;
@@ -108,18 +111,18 @@ C'est la page qui intéresse le directeur financier plus que le porteur.
 
 **La question :** mon véhicule respecte-t-il ses obligations réglementaires ?
 
-Pour chaque ratio, la page affiche :
+Ce que la page porte, pour chaque ratio :
 
 - l'article du code monétaire et financier qui le fonde ;
 - le numérateur et le dénominateur ;
-- ce que le calcul retient, c'est-à-dire la règle appliquée ;
+- **ce que le calcul retient**, c'est-à-dire la règle appliquée ;
 - la conclusion : respecté, ou non.
 
 Plus deux compteurs : les ratios calculés, et ceux qui restent à valider.
 
-Un ratio réglementaire se calcule sur un périmètre, et le périmètre se discute. La colonne
-« ce que le calcul retient » affiche la règle appliquée, pour que le client puisse la confirmer ou
-la contester au lieu de recevoir un chiffre sans savoir d'où il sort.
+**La colonne « ce que le calcul retient » est là pour une raison précise.** Un ratio réglementaire
+se calcule sur un périmètre, et le périmètre se discute. Afficher la règle retenue permet au client
+de la contester, ou de la confirmer, au lieu de subir un chiffre.
 
 ---
 
@@ -127,7 +130,7 @@ la contester au lieu de recevoir un chiffre sans savoir d'où il sort.
 
 **La question :** de quoi mon document périodique est-il fait ?
 
-La page rassemble les éléments que le document doit comporter : l'actif net réévalué, la distribution
+La page rassemble les éléments que le document doit porter : l'actif net réévalué, la distribution
 par part, les actifs avec leur catégorie et leur adresse, la base de calcul, les mouvements avec
 leur date et leur montant, et l'article du règlement pour chaque rubrique.
 
@@ -137,7 +140,7 @@ leur date et leur montant, et l'article du règlement pour chaque rubrique.
 
 **La question :** combien puis-je distribuer, et combien dois-je distribuer ?
 
-Vous y lisez :
+Ce que la page porte :
 
 - l'obligation minimale de distribution, et l'article du code monétaire et financier qui la fonde ;
 - le plafond distribuable ;
@@ -145,8 +148,8 @@ Vous y lisez :
 - le report indirect de l'exercice précédent ;
 - la part revenant au porteur.
 
-C'est la page qui déclenche le plus de conversations, et elles portent sur une décision de gestion
-plutôt que sur l'état d'avancement des comptes.
+**C'est la page qui déclenche le plus de conversations**, et ce sont les bonnes : elles portent sur
+une décision de gestion, pas sur l'état d'avancement des comptes.
 
 ---
 
@@ -155,24 +158,25 @@ plutôt que sur l'état d'avancement des comptes.
 Avant, le client appelait pour demander où en étaient les comptes. Il recevait un tableau refait
 pour l'occasion, quelques jours plus tard.
 
-Maintenant, il ouvre son écran et lit. Quand il appelle, c'est pour demander ce que les chiffres
-impliquent.
+Maintenant, il ouvre son écran et lit. Quand il appelle, c'est pour demander **ce que les chiffres
+impliquent**.
 
-La conversation se déplace ainsi de la production vers le conseil, c'est-à-dire vers le terrain où
-l'expert-comptable apporte le plus et où il a le moins de temps.
+**La conversation se déplace de la production vers le conseil.** C'est le terrain où
+l'expert-comptable apporte le plus, et celui qu'il a le moins le temps d'occuper.
 
 ---
 
 ## Ce que le client ne voit pas, et c'est voulu
 
-Le client n'a pas accès à l'écran de conduite de mission, qui est le dossier de travail du cabinet.
-Il ne voit pas davantage les dossiers des autres clients, un rôle de sécurité par client filtrant les
-données, [voir l'environnement intégré](07-l-environnement-integre.md). Et il ne voit aucun arrêté
-tant que celui-ci n'a pas été visé, puisque la publication vient après le visa.
+| Ce qu'il ne voit pas | Pourquoi |
+|---|---|
+| L'écran de conduite de mission | C'est le dossier de travail du cabinet |
+| Les autres clients | Un rôle de sécurité par client filtre les données, [voir l'environnement intégré](07-l-environnement-integre.md) |
+| Un arrêté non visé | La publication suit le visa, jamais l'inverse |
 
-Attention sur un point : si vous inscrivez un client comme membre de votre espace de travail, le
-cloisonnement par rôle ne le retiendra pas, car il ne restreint que les lecteurs. Donnez-lui accès
-par l'application, avec son audience.
+**Une précaution qui compte :** un client ne doit jamais être membre de votre espace de travail. Le
+cloisonnement par rôle ne restreint que les lecteurs. Donnez-lui accès par l'application, avec son
+audience.
 
 ---
 
