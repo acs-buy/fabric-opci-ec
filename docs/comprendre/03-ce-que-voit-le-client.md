@@ -15,6 +15,12 @@ de publication, pour qu'il sache toujours ce qu'il regarde.
 C'est plus lent qu'un branchement direct sur la base, et c'est voulu : le client sait que ce qu'il
 lit a été revu.
 
+Le client ouvre l'application et navigue entre les huit pages depuis le volet de gauche.
+
+![Les huit pages de la restitution client](../../captures/application-volet.png)
+
+*Capture de l'installation réelle.*
+
 ---
 
 ## Page 1. La valeur de la part

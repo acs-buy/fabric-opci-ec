@@ -294,6 +294,13 @@ Sous la barre des étapes, la fiche du dossier rassemble tout ce qui le concerne
 *Maquette de conception. L'écran de conduite est en cours de pose, et l'écran publié peut différer
 dans le détail.*
 
+### Ce que vous obtenez au bout des douze étapes
+
+![L'application et ses deux audiences](captures/application-audiences.png)
+
+*Capture de l'installation réelle. Une seule application, deux audiences : votre équipe ouvre la
+conduite de mission, vos clients ouvrent la restitution, et ne voient rien d'autre.*
+
 ### L'écran du client
 
 Huit pages, toutes filtrées sur l'arrêté que le client choisit : la valeur de la part, la

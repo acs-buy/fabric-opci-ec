@@ -44,6 +44,18 @@ message qui le dit.
 Demandez à un collègue d'ouvrir l'application. Il doit voir l'écran de conduite de mission et
 pouvoir sélectionner un dossier. S'il ne voit rien, vérifiez son autorisation et sa licence.
 
+### Ce que vous devez obtenir
+
+![L'application et ses deux audiences](../../captures/application-audiences.png)
+
+*Capture de l'installation réelle. Le volet de gauche porte les deux audiences : la conduite de
+mission pour votre équipe, la restitution client pour vos clients.*
+
+![Le volet des deux audiences](../../captures/application-volet.png)
+
+*Une personne de l'audience client ne voit que la seconde, et les huit pages qu'elle contient.*
+
+
 C'est aussi le bon moment pour préparer la recette : une des douze actions demande deux comptes
 distincts, l'approbation d'un visa étant refusée à la personne qui l'a soumis.
 
