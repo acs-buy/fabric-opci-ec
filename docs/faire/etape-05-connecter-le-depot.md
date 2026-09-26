@@ -59,7 +59,7 @@ contrôle de source apparaît dans le bandeau de l'espace de travail.
 
 C'est le quatrième réglage de locataire qui manque, celui qui autorise la synchronisation avec des
 dépôts **GitHub** en particulier. Il est distinct de celui qui autorise Git en général. Reportez-vous
-à la page [1. Ce qu'il vous faut](../comprendre/05-les-licences.md).
+à la page [5. Les licences, expliquées](../comprendre/05-les-licences.md).
 
 ## Une remarque sur le partage
 
@@ -67,4 +67,8 @@ La connexion Git est propre à chaque personne. Si un collègue travaille dans l
 travail et veut aussi synchroniser, il configure sa propre connexion avec son propre jeton. Ne
 partagez pas le vôtre.
 
-Suite : [4. Après la synchronisation](etape-06-ramener-les-elements.md)
+---
+
+Suite : [Étape 6. Ramener les éléments dans votre espace](etape-06-ramener-les-elements.md)
+
+[Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

@@ -181,3 +181,5 @@ audience.
 ---
 
 Suite : [4. Comment c'est construit](04-comment-c-est-construit.md)
+
+[Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)

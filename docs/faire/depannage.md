@@ -87,3 +87,7 @@ casserait sans le dire.
 
 Notez le message exact et l'étape où il apparaît. Le message d'erreur des fonctions porte le nom de
 la procédure en cause, ce qui désigne directement l'endroit à regarder dans la base.
+
+---
+
+[Revenir au sommaire](../../README.md) · [Les douze étapes](../../README.md#partie-2-faire--les-douze-étapes)

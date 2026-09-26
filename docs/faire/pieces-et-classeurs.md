@@ -151,7 +151,7 @@ Votre administrateur doit l'activer :
 > **Les utilisateurs peuvent accéder aux données stockées dans OneLake avec des applications
 > externes à Fabric**
 
-C'est le cinquième réglage, en plus des quatre de la page [1. Ce qu'il vous faut](../comprendre/05-les-licences.md).
+C'est le cinquième réglage, en plus des quatre de la page [5. Les licences, expliquées](../comprendre/05-les-licences.md).
 Il commande aussi l'application OneLake file explorer.
 
 ---
@@ -164,3 +164,7 @@ Il commande aussi l'application OneLake file explorer.
 3. Commencez par l'authentification par compte organisationnel, la plus simple.
 4. OneDrive Entreprise remplace SharePoint sans changer le reste.
 5. Le cinquième réglage de locataire conditionne le téléchargement des classeurs.
+
+---
+
+[Revenir au sommaire](../../README.md) · [Les douze étapes](../../README.md#partie-2-faire--les-douze-étapes)

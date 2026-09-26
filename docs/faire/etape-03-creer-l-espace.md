@@ -40,4 +40,8 @@ Si vous prévoyez que plusieurs personnes travaillent dans la solution, ajoutez-
 **Gérer l'accès**. Le rôle de contributeur suffit pour utiliser les écrans. Rappel de la page
 précédente : sous une capacité F64, chacune de ces personnes a besoin d'une licence Power BI Pro.
 
-Suite : [3. Connecter le dépôt](etape-05-connecter-le-depot.md)
+---
+
+Suite : [Étape 4. Copier ce dépôt sur votre compte GitHub](etape-04-copier-le-depot.md)
+
+[Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

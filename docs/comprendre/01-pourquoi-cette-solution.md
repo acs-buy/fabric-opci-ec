@@ -137,3 +137,5 @@ Soyons complets : ce choix a un prix, et il vaut mieux le connaître avant.
 ---
 
 Suite : [2. Ce que voit le réviseur](02-ce-que-voit-le-reviseur.md)
+
+[Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)

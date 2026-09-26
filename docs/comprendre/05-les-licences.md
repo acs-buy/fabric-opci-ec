@@ -72,4 +72,8 @@ git config --global core.longpaths true
 Le temps d'installation sera porté ici après la première reproduction à blanc. Nous préférons ne
 pas avancer de chiffre tant qu'il n'est pas mesuré.
 
-Suite : [2. Créer l'espace de travail](../faire/etape-03-creer-l-espace.md)
+---
+
+Suite : [6. Les trois couches d'une reproduction](06-les-trois-couches.md)
+
+[Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)

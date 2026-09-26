@@ -115,3 +115,5 @@ licence Power BI Pro. Sous ce seuil, chacun doit être licencié, vos clients co
 ---
 
 Suite : [Étape 2. Faire activer les cinq réglages](etape-02-activer-les-reglages.md)
+
+[Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

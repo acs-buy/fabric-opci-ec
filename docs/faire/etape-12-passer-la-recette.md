@@ -75,3 +75,9 @@ La page [9. Dépannage](depannage.md) reprend chacune de ces causes en détail.
 
 Notez la date de votre recette et le résultat des douze actions. Si vous adaptez la solution plus
 tard, cette liste vous dira ce qui marchait avant votre modification.
+
+---
+
+**C'est la dernière étape.** Si les douze actions aboutissent, votre installation est bonne.
+
+[Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

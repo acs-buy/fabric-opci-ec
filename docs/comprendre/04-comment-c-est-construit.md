@@ -172,3 +172,9 @@ Commencez par le questionnaire d'acceptation, qui est la partie la plus propre �
 vit dans les tables de référentiel des questions, et se modifie sans toucher au reste.
 
 Gardez la recette des douze actions comme garde-fou : jouez-la après chaque modification.
+
+---
+
+Suite : [5. Les licences, expliquées](05-les-licences.md)
+
+[Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)

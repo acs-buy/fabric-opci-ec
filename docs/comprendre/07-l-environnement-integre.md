@@ -167,4 +167,6 @@ Soyons complets, parce qu'un mode opératoire honnête dit aussi les contreparti
 
 ---
 
-Suite : [Les trois couches d'une reproduction](06-les-trois-couches.md)
+**C'est la dernière page de cette partie.** Vous pouvez passer à [l'installation, étape 1](../faire/etape-01-ouvrir-la-capacite.md).
+
+[Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)

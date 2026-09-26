@@ -123,3 +123,5 @@ ressemblent, et les causes sont différentes.
 ---
 
 Suite : [Étapes 9 et 10. Relier la solution à votre espace](etape-09-et-10-relier.md)
+
+[Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

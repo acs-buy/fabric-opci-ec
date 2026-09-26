@@ -127,3 +127,5 @@ d'erreur ne désigne pas le renommage.
 ---
 
 Suite : [7. L'environnement intégré](07-l-environnement-integre.md)
+
+[Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)

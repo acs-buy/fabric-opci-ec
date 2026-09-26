@@ -170,4 +170,8 @@ des fichiers intact, afin que vous puissiez relire exactement ce qui a changé.
 
 Relancer un script déjà passé ne fait rien et l'annonce.
 
-Suite : [7. Publier l'application](etape-11-publier-les-applications.md)
+---
+
+Suite : [Étape 11. Publier les deux écrans](etape-11-publier-les-applications.md)
+
+[Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

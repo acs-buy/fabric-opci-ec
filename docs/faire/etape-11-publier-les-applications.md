@@ -59,4 +59,8 @@ mission pour votre équipe, la restitution client pour vos clients.*
 C'est aussi le bon moment pour préparer la recette : une des douze actions demande deux comptes
 distincts, l'approbation d'un visa étant refusée à la personne qui l'a soumis.
 
-Suite : [8. La recette](etape-12-passer-la-recette.md)
+---
+
+Suite : [Étape 12. Passer la recette](etape-12-passer-la-recette.md)
+
+[Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

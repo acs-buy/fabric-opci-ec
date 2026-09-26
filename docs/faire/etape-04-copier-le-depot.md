@@ -126,3 +126,5 @@ synchronisation.
 ---
 
 Suite : [Étape 5. Connecter l'espace de travail à votre dépôt](etape-05-connecter-le-depot.md)
+
+[Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

@@ -110,3 +110,5 @@ l'interface de programmation, mais elle sort du cadre de ce mode opératoire.
 ---
 
 Suite : [Étape 3. Créer l'espace de travail](etape-03-creer-l-espace.md)
+
+[Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)
