@@ -79,6 +79,44 @@ tard, cette liste vous dira ce qui marchait avant votre modification.
 
 ---
 
+## Les messages que vous devez lire, action par action
+
+Les douze actions ont été jouées le 26/09/2026 sur une installation neuve. Les phrases ci-dessous
+sont celles que la solution rend, recopiées telles quelles. **Si vous lisez autre chose, l'action
+n'a pas produit ce qu'elle devait produire.**
+
+| # | L'action | Ce que vous devez lire |
+|---|---|---|
+| 1 | Créer un dossier client | `Client <code> créé, vous en êtes le chef de mission. Questionnaire d'acceptation ouvert : 110 questions.` |
+| 2 | Modifier le client | `Informations de <code> mises à jour. Le code du client ne change pas.` |
+| 3 | Enregistrer le site | `Site SharePoint de <code> enregistré.` |
+| 4 | Ajouter une filiale | `Filiale <code> ajoutée au périmètre de <client>. Sa balance sera réclamée à la révision.` |
+| 5 | Modifier une filiale | `Filiale <code> mise à jour : droits de vote → 60,00 %.` |
+| 6 | Supprimer une filiale | `Filiale <code> (<dénomination>) retirée du périmètre de <client>.` |
+| 8 | Déposer une pièce | `Pièce « <nom> » déposée au coffre de <code>.` |
+| 9 | Retirer une pièce | `Pièce « <nom> » retirée du dossier de <code>. Le fichier reste au coffre ; le retrait est tracé.` |
+| 12 | Ouvrir un arrêté | L'arrêté passe de planifié à ouvert, et un second essai est refusé |
+
+### Trois refus que vous devez provoquer, et qui prouvent les contrôles
+
+| Ce que vous tentez | Le refus attendu |
+|---|---|
+| Retirer une pièce sans motif | `Le motif du retrait est obligatoire : il reste dans la trace du dossier.` |
+| Saisir des droits de vote à 75 | `Les droits de vote se donnent entre 0 et 1, par exemple 0,80 pour 80 %.` |
+| Enregistrer un site qui n'est pas un site SharePoint | `Le lien attendu est celui du site SharePoint de l'équipe Teams, de la forme https://<cabinet>.sharepoint.com/sites/<nom>.` |
+
+**Un refus n'est pas une panne.** Chacun de ces trois messages vient de la base, et il tiendrait
+même si l'écran était contourné.
+
+### Ce qui n'a pas été éprouvé, et qu'il faut savoir
+
+**Le refus de suppression d'une filiale qui porte des données.** Lors de l'essai, la filiale créée
+pour l'occasion ne portait ni écriture ni pièce : elle a donc été supprimée sans refus, ce qui est
+le comportement attendu dans ce cas. Pour éprouver le refus, supprimez une filiale du jeu de
+démonstration qui porte des écritures.
+
+---
+
 ## L'action 11 a été éprouvée, et voici ce que la base répond
 
 Rejouée le 26/09/2026 sur une installation neuve. Les deux messages sont recopiés tels quels.
