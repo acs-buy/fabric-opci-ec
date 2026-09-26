@@ -1,4 +1,4 @@
-# 2. Créer l'espace de travail
+# Étape 3. Créer l'espace de travail
 
 Un espace de travail Fabric est le contenant de toute la solution. Vous en créez un seul.
 

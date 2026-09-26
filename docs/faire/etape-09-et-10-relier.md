@@ -1,4 +1,4 @@
-# 6. Relier la solution à votre espace de travail
+# Étapes 9 et 10. Relier la solution à votre espace de travail
 
 C'est l'étape la plus importante de l'installation. Sans elle, les éléments sont chez vous mais
 rien ne fonctionne, et la cause est invisible à l'écran.
@@ -172,6 +172,6 @@ Relancer un script déjà passé ne fait rien et l'annonce.
 
 ---
 
-Suite : [Étape 11. Publier les deux écrans](etape-11-publier-les-applications.md)
+Suite : [Étape 11. Publier les deux écrans, à deux publics distincts](etape-11-publier-les-applications.md)
 
 [Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

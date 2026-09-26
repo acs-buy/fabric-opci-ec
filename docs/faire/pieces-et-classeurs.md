@@ -1,4 +1,4 @@
-# 11. Les pièces justificatives et les classeurs Excel
+# Les pièces justificatives et les classeurs Excel
 
 Deux sujets que le reste du mode opératoire ne couvre pas, et qui posent chacun une question
 d'autorisation.

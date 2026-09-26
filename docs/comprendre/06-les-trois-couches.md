@@ -126,6 +126,6 @@ d'erreur ne désigne pas le renommage.
 
 ---
 
-Suite : [7. L'environnement intégré](07-l-environnement-integre.md)
+Suite : [7. Ce que vous garantit le fait de tout garder dans Fabric](07-l-environnement-integre.md)
 
 [Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)

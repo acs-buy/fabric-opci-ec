@@ -1,4 +1,4 @@
-# 5. Charger les données, et ouvrir la connexion des fonctions
+# Étape 7. Charger les données
 
 Deux choses à faire ici. Remplir la base, puis autoriser les fonctions à lui parler.
 

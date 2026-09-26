@@ -1,4 +1,4 @@
-# 7. Publier l'application
+# Étape 11. Publier les deux écrans, à deux publics distincts
 
 Une application organisationnelle est la porte d'entrée de vos collaborateurs. Ils y ouvrent
 l'écran de travail sans voir l'espace de travail ni ses éléments techniques.
@@ -61,6 +61,6 @@ distincts, l'approbation d'un visa étant refusée à la personne qui l'a soumis
 
 ---
 
-Suite : [Étape 12. Passer la recette](etape-12-passer-la-recette.md)
+Suite : [Étape 12. La recette : douze actions qui prouvent que la solution marche](etape-12-passer-la-recette.md)
 
 [Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

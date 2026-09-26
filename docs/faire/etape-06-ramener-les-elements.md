@@ -1,4 +1,4 @@
-# 4. Après la synchronisation : ce qui est là, et ce qui ne marche pas encore
+# Étape 6. Ramener les éléments, et comprendre pourquoi rien ne marche encore
 
 ## Ramener les éléments
 

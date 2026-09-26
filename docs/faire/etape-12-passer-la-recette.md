@@ -1,4 +1,4 @@
-# 8. La recette : douze actions qui prouvent que la solution marche
+# Étape 12. La recette : douze actions qui prouvent que la solution marche
 
 Ces douze actions parcourent la chaîne complète, du clic jusqu'à l'écriture en base. Si elles passent
 toutes, votre installation est bonne.

@@ -1,4 +1,4 @@
-# 9. Dépannage
+# Dépannage
 
 Les pannes rencontrées pendant la construction de la solution, avec leur cause réelle. Dans presque
 tous les cas, le symptôme ne désigne pas la cause.

@@ -1,4 +1,4 @@
-# 10. Comprendre la solution avant de la modifier
+# 4. Comment c'est construit
 
 Lisez cette page avant de changer quoi que ce soit. Elle explique comment un clic devient une
 écriture en base, et où se trouve chaque chose.
@@ -175,6 +175,6 @@ Gardez la recette des douze actions comme garde-fou : jouez-la après chaque mod
 
 ---
 
-Suite : [5. Les licences, expliquées](05-les-licences.md)
+Suite : [5. Les licences, et ce qu'il vous faut avant de commencer](05-les-licences.md)
 
 [Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)

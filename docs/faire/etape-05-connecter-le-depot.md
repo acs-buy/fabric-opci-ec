@@ -1,4 +1,4 @@
-# 3. Connecter votre espace de travail au dépôt
+# Étape 5. Connecter votre espace de travail au dépôt
 
 Cette étape établit le lien qui apportera les éléments de la solution dans votre espace de travail.
 
@@ -69,6 +69,6 @@ partagez pas le vôtre.
 
 ---
 
-Suite : [Étape 6. Ramener les éléments dans votre espace](etape-06-ramener-les-elements.md)
+Suite : [Étape 6. Ramener les éléments, et comprendre pourquoi rien ne marche encore](etape-06-ramener-les-elements.md)
 
 [Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

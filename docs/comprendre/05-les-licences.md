@@ -1,4 +1,4 @@
-# 1. Ce qu'il vous faut avant de commencer
+# 5. Les licences, et ce qu'il vous faut avant de commencer
 
 Lisez cette page avant tout achat. Elle dit ce que coûte la solution, et ce qui ne coûte rien.
 
