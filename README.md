@@ -1,37 +1,28 @@
 # La mission de présentation d'un OPCI, conçue à partir des besoins du client
 
-**Une solution complète pour l'expert-comptable qui conduit la mission de présentation d'un
-organisme de placement collectif immobilier.** Elle donne à son client un écran qu'il pilote
-lui-même, et à son cabinet un dossier tenu de bout en bout, sur une seule base de données.
+Vous conduisez la mission de présentation d'un organisme de placement collectif immobilier. Cette
+solution vous donne un dossier tenu de bout en bout, et elle donne à votre client un écran qu'il
+ouvre lui-même, sur la même base de données.
 
-Construite sur Microsoft Fabric et Power BI. Ce dépôt vous permet de la reproduire entièrement chez
-vous, à partir de rien, **sans compétence technique préalable**.
+Elle est construite sur Microsoft Fabric et Power BI. Ce dépôt vous permet de la reproduire
+entièrement chez vous, à partir de rien, sans compétence technique préalable.
 
-**Elle n'est pas partie d'un outil, elle est partie de deux personnes.** Le réviseur qui conduit la
-mission, et le client qui détient le véhicule. Ce sont leurs besoins qui ont dicté ce que la
-solution fait, et c'est pour cela qu'elle leur sert.
-
-| L'utilisateur | Son besoin | Ce que la solution lui donne |
-|---|---|---|
-| **Le réviseur** | Savoir où en est sa mission, et où il doit agir | Un écran de conduite qui dit ce qui reste à faire, dossier par dossier |
-| **Le client** | Piloter son véhicule sans attendre un rapport | Huit pages de restitution, sur une donnée que le cabinet a visée |
+Deux personnes ont dicté ce qu'elle fait. Le réviseur d'abord : il veut savoir où en est sa mission
+et où il doit agir, alors son écran de conduite lui dit ce qui reste à faire, dossier par dossier.
+Le client ensuite : il veut piloter son véhicule sans attendre un rapport, alors il dispose de huit
+pages de restitution, construites sur une donnée que le cabinet a visée.
 
 ---
 
 ## Comment lire ce dépôt
 
-Chaque étape de l'installation vous propose **deux portes**. Vous n'êtes pas obligé de passer par
-les deux, mais elles existent toutes les deux pour chaque étape.
+Chaque étape existe en deux versions, et vous prenez celle qui vous sert. La version Comprendre dit
+pourquoi l'étape existe, ce qui se passe derrière, et ce qui peut mal tourner : lisez-la avant de
+commencer, ou le jour où une étape vous surprend. La version Faire donne la procédure clic par clic,
+avec le nom exact de chaque bouton, et se lit l'écran sous les yeux.
 
-| La porte | Ce qu'elle vous donne | Quand la prendre |
-|---|---|---|
-| **Comprendre** | Pourquoi cette étape existe, ce qui se passe derrière, ce qui pourrait mal tourner | Avant de commencer, ou quand une étape vous surprend |
-| **Faire** | La procédure, clic par clic, avec le nom exact de chaque bouton | Au moment de l'exécuter, l'écran sous les yeux |
-
-**Si vous voulez d'abord comprendre l'ensemble**, lisez les sept pages de la partie Comprendre, dans
-l'ordre. Comptez une heure de lecture.
-
-**Si vous voulez installer tout de suite**, allez directement au tableau des douze étapes.
+Les sept pages de la partie Comprendre se lisent dans l'ordre en une heure environ. Si vous préférez
+installer tout de suite, le tableau des douze étapes est plus bas.
 
 ---
 
@@ -43,7 +34,7 @@ l'ordre. Comptez une heure de lecture.
 | 2 | [Ce que voit le réviseur](docs/comprendre/02-ce-que-voit-le-reviseur.md) | L'écran de conduite, ce qu'il montre, et les quatre natures d'action |
 | 3 | [Ce que voit le client](docs/comprendre/03-ce-que-voit-le-client.md) | Les huit pages de restitution, page par page |
 | 4 | [Comment c'est construit](docs/comprendre/04-comment-c-est-construit.md) | La chaîne d'un clic, et où se trouve chaque chose |
-| 5 | [Les licences, expliquées](docs/comprendre/05-les-licences.md) | Ce que coûte la solution, et la ligne qu'on oublie |
+| 5 | [Les licences, expliquées](docs/comprendre/05-les-licences.md) | Ce que coûte la solution, et la ligne de licence qu'on oublie |
 | 6 | [Les trois couches d'une reproduction](docs/comprendre/06-les-trois-couches.md) | Pourquoi l'installation ne se fait pas d'un seul coup |
 | 7 | [L'environnement intégré](docs/comprendre/07-l-environnement-integre.md) | L'authentification, le cloisonnement des données, où elles sont stockées |
 
@@ -51,11 +42,12 @@ l'ordre. Comptez une heure de lecture.
 
 ## Partie 2. Faire : les douze étapes
 
-**Suivez-les dans l'ordre.** Chacune se termine par une vérification. Ne passez à la suivante que
-lorsqu'elle est passée : une étape ratée ne se voit souvent que trois étapes plus loin.
+Suivez-les dans l'ordre. Chacune se termine par une vérification, et vous ne passez à la suivante
+qu'une fois cette vérification passée : une étape ratée ne se voit souvent que trois étapes plus
+loin.
 
-**Les durées de la colonne « machine » ont été relevées lors d'une reproduction à blanc, le
-26/09/2026.** Ce sont des temps d'attente, pendant lesquels vous ne faites rien. La colonne
+Les durées de la colonne « machine » ont été relevées lors d'une reproduction à blanc, le
+26/09/2026. Ce sont des temps d'attente, pendant lesquels vous ne faites rien. La colonne
 « en tout » y ajoute le temps de lecture et de saisie, qui reste une estimation.
 
 | # | L'étape | Machine | En tout | Qui | La procédure |
@@ -73,40 +65,37 @@ lorsqu'elle est passée : une étape ratée ne se voit souvent que trois étapes
 | 11 | Publier les deux écrans | | 30 min | Vous | [Faire](docs/faire/etape-11-publier-les-applications.md) |
 | 12 | Passer la recette | | 60 min | Vous, plus un collègue | [Faire](docs/faire/etape-12-passer-la-recette.md) |
 
-**L'étape 6 est la plus longue à attendre : 7 minutes pour ramener les dix éléments.** L'actualisation
-du modèle du client, à l'étape 9, prend 20 secondes de plus.
+La plus longue attente est celle de l'étape 6 : 7 minutes pour ramener les dix éléments.
+L'actualisation du modèle du client, à l'étape 9, prend 20 secondes de plus.
 
-**Deux pages s'ajoutent, à lire quand le sujet se présente :**
+Deux pages s'ajoutent, à lire quand le sujet se présente :
 
 - [Les pièces justificatives et les classeurs Excel](docs/faire/pieces-et-classeurs.md), pour
   SharePoint, OneDrive, et les exports vers Excel.
 - [Le dépannage](docs/faire/depannage.md), qui donne la cause réelle de chaque symptôme.
 
-**Vous travaillez avec un agent d'intelligence artificielle ?** Le dossier
-[`agents/`](agents/) propose des invites prêtes à coller et un jeu d'autorisations. C'est un
-facilitateur, jamais une obligation : les douze étapes ci-dessus se font à la main, sans agent
-et sans perte. Un agent n'exécute d'ailleurs que 3 de ces 12 étapes : les autres se font au
-portail, à la souris. Lisez d'abord [l'avertissement](agents/AVERTISSEMENT.md) : il porte le partage des
-responsabilités, et rappelle que la revue humaine reste due quoi qu'il arrive.
+Si vous travaillez avec un agent d'intelligence artificielle, le dossier [`agents/`](agents/)
+propose des invites prêtes à coller et un jeu d'autorisations. Rien ne vous y oblige : les douze
+étapes ci-dessus se font à la main, sans agent, et vous n'y perdez rien. Un agent n'exécute
+d'ailleurs que 3 de ces 12 étapes, le reste se fait au portail, à la souris. Commencez par
+[l'avertissement](agents/AVERTISSEMENT.md) : il dit qui répond de quoi, et rappelle que la revue
+humaine vous incombe quoi qu'il arrive.
 
 ---
 
 ## Le détail de chaque étape
 
-Ce qui suit reprend chaque étape en résumé. **Le résumé ne suffit pas à l'exécuter** : suivez le
-lien vers la procédure, qui donne le nom exact de chaque bouton.
+Ces résumés ne suffisent pas à exécuter une étape : le nom exact de chaque bouton se trouve dans la
+procédure, en lien à la fin de chaque paragraphe.
 
 ### Étape 1. Ouvrir une capacité Fabric
 
-**Ce que vous faites :** vous ouvrez l'essai gratuit de 60 jours, ou vous vous faites affecter une
-capacité existante.
+Vous ouvrez l'essai gratuit de 60 jours, ou vous vous faites affecter une capacité existante. Il
+vous faut du F4 au minimum. Ce seuil vient d'une mesure et non d'une marge de sécurité : en F2, la
+création d'une interface de saisie échoue.
 
-**Pourquoi :** la solution demande une capacité F4 au minimum. Cette exigence a été établie par la
-mesure, et non par prudence : en F2, la création d'une surface de saisie échoue.
-
-**Le bon côté :** l'essai gratuit ouvre exactement la capacité qu'il faut, pendant 60 jours, avec
-1 To de stockage et une licence Power BI individuelle. Vous pouvez tout reproduire sans rien
-dépenser.
+L'essai gratuit ouvre exactement la capacité qu'il faut, pendant 60 jours, avec 1 To de stockage et
+une licence Power BI individuelle. Vous pouvez donc tout reproduire sans rien dépenser.
 
 *Vérification :* votre gestionnaire de compte affiche un état d'essai.
 
@@ -115,11 +104,10 @@ dépenser.
 
 ### Étape 2. Faire activer les cinq réglages
 
-**Ce que vous faites :** vous transmettez à votre administrateur Microsoft Fabric une liste de cinq
-réglages à activer dans le portail d'administration.
-
-**Pourquoi :** sans le quatrième, GitHub n'apparaîtra pas dans la liste des fournisseurs Git. Sans
-le cinquième, vous ne pourrez pas télécharger un classeur exporté, et rien ne vous dira pourquoi.
+Vous transmettez à votre administrateur Microsoft Fabric une liste de cinq réglages à activer dans
+le portail d'administration. Sans le quatrième, GitHub n'apparaîtra pas dans la liste des
+fournisseurs Git. Sans le cinquième, vous ne pourrez pas télécharger un classeur exporté, et
+personne ne vous dira pourquoi.
 
 *Vérification :* les cinq sont sur « Activé ».
 
@@ -127,14 +115,12 @@ le cinquième, vous ne pourrez pas télécharger un classeur exporté, et rien n
 
 ### Étape 3. Créer l'espace de travail
 
-**Ce que vous faites :** vous créez un espace de travail et vous l'affectez à votre capacité.
+Vous créez un espace de travail et vous l'affectez à votre capacité. Toute la solution vivra dedans.
+S'il reste en licence « Pro » au lieu de votre capacité, les éléments Fabric ne fonctionneront pas,
+et les messages d'erreur ne désigneront pas la capacité.
 
-**Pourquoi :** l'espace de travail est le contenant de toute la solution. S'il reste en licence
-« Pro » au lieu de votre capacité, les éléments Fabric ne fonctionneront pas, et les messages
-d'erreur ne désigneront pas la capacité.
-
-**La règle à retenir :** ne renommez aucun élément après l'installation. Le rapport retrouve son
-modèle de données par son nom.
+Une fois l'installation finie, ne renommez plus aucun élément : le rapport retrouve son modèle de
+données par son nom.
 
 *Vérification :* les paramètres de l'espace indiquent le nom de votre capacité.
 
@@ -142,11 +128,9 @@ modèle de données par son nom.
 
 ### Étape 4. Copier ce dépôt sur votre compte GitHub
 
-**Ce que vous faites :** vous créez votre propre copie du dépôt, puis vous la téléchargez sur votre
-poste.
-
-**Pourquoi :** l'installation vous fera modifier deux fichiers de configuration, et vous ne pouvez
-écrire que dans un dépôt qui vous appartient.
+Vous créez votre propre copie du dépôt, puis vous la téléchargez sur votre poste. L'installation
+vous fera modifier deux fichiers de configuration, et vous ne pouvez écrire que dans un dépôt qui
+vous appartient.
 
 *Vérification :* le dépôt apparaît sous votre nom d'utilisateur GitHub.
 
@@ -154,14 +138,13 @@ poste.
 
 ### Étape 5. Connecter l'espace de travail à votre dépôt
 
-**Ce que vous faites :** vous créez un jeton d'accès GitHub, puis vous connectez l'espace de travail
-au dépôt, en pointant le répertoire `fabric`.
+Vous créez un jeton d'accès GitHub, puis vous connectez l'espace de travail au dépôt, en pointant le
+répertoire `fabric`. C'est ce lien qui apportera les éléments de la solution dans votre espace.
 
-**Pourquoi :** c'est ce lien qui apportera les éléments de la solution dans votre espace.
-
-**Le point qui se rate :** le répertoire. Ce dépôt contient aussi des scripts, de la documentation
-et des fichiers SQL, qui n'ont rien à faire dans votre espace de travail. Seul le dossier `fabric`
-porte les éléments Fabric. Laissé vide, le répertoire fait échouer la synchronisation.
+C'est là qu'on se trompe, sur le répertoire. Le dépôt contient aussi des scripts, de la
+documentation et des fichiers SQL, qui n'ont rien à faire dans votre espace de travail ; seul le
+dossier `fabric` contient les éléments Fabric. Si vous laissez le répertoire vide, la
+synchronisation échoue.
 
 *Vérification :* l'écran d'intégration Git affiche l'état de la connexion.
 
@@ -169,19 +152,17 @@ porte les éléments Fabric. Laissé vide, le répertoire fait échouer la synch
 
 ### Étape 6. Ramener les éléments dans votre espace
 
-**Ce que vous faites :** vous cliquez sur « Mettre à jour tout ». Huit éléments apparaissent.
+Vous cliquez sur « Mettre à jour tout ». Huit éléments apparaissent.
 
-**Pourquoi rien ne marche encore, et pourquoi c'est normal :** la synchronisation Git recrée la
-*forme* des éléments, jamais leur contenu ni leurs branchements. L'éditeur l'écrit ainsi : « Git
-Integration re-creates item definitions only and does not restore item data ». Les étapes 7 à 10
-posent le contenu et les branchements.
+Rien ne fonctionne encore, et c'est normal. La synchronisation Git recrée la *forme* des éléments,
+jamais leur contenu ni leurs branchements. L'éditeur l'écrit ainsi : « Git Integration re-creates
+item definitions only and does not restore item data ». Le contenu et les branchements viennent aux
+étapes 7 à 10. Beaucoup croient à cet endroit que l'installation a échoué, alors qu'il leur reste
+ces quatre étapes.
 
-C'est le moment où l'on croit que l'installation a échoué. Elle n'a pas échoué : elle n'est pas
-finie.
-
-*Vérification :* **dix éléments sont là.** Les huit que le dépôt porte, le coffre, la base, les deux
-ensembles de fonctions, les deux modèles de données et les deux rapports, plus **deux points de
-terminaison SQL que la plateforme crée d'elle-même**, un pour le coffre et un pour la base. Vous ne
+*Vérification :* dix éléments sont là. Les huit que le dépôt apporte, soit le coffre, la base, les
+deux ensembles de fonctions, les deux modèles de données et les deux rapports, plus deux points de
+terminaison SQL que la plateforme crée d'elle-même, un pour le coffre et un pour la base. Vous ne
 les avez pas demandés et vous n'avez rien à en faire.
 
 [Comprendre les trois couches](docs/comprendre/06-les-trois-couches.md) ·
@@ -189,21 +170,20 @@ les avez pas demandés et vous n'avez rien à en faire.
 
 ### Étape 7. Charger les données
 
-**Ce que vous faites :** vous jouez les fichiers SQL du dépôt, dans l'ordre de leur numéro.
+Vous jouez les fichiers SQL du dépôt, dans l'ordre de leur numéro. Votre base a ses tables, ses vues
+et ses procédures, mais pas une ligne de données.
 
-**Pourquoi :** votre base a ses tables, ses vues et ses procédures, mais aucune donnée.
-
-| Le dossier | Ce qu'il porte | Ce que vous en faites |
+| Le dossier | Ce qu'il contient | Ce que vous en faites |
 |---|---|---|
 | `sql/10_referentiels/` | 3 452 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
 | `sql/80_demonstration/` | 7 152 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures | Vous pourrez l'effacer |
-| `sql/90_vous_inscrire_aux_missions.sql` | Il vous inscrit, vous et un collègue, sur les missions de démonstration | **Obligatoire.** Sans lui, l'écran du réviseur est vide |
+| `sql/90_vous_inscrire_aux_missions.sql` | Il vous inscrit, vous et un collègue, sur les missions de démonstration | Obligatoire. Sans lui, l'écran du réviseur est vide |
 
-**Le jeu de démonstration sert d'abord à voir l'écran du client rempli.** Sans lui, les huit pages
-de restitution sont vides et ne vous apprennent rien.
+Le jeu de démonstration sert d'abord à voir l'écran du client rempli. Sans lui, les huit pages de
+restitution sont vides et ne vous apprennent rien.
 
-**Les scripts sont rejouables :** une table ne se remplit que si elle est vide. Vous ne risquez pas
-de créer des doublons en vous y reprenant à deux fois.
+Vous pouvez rejouer ces scripts sans crainte : une table ne se remplit que si elle est vide, donc
+vous ne créerez pas de doublons en vous y reprenant à deux fois.
 
 *Vérification :* `python scripts/30_recette.py --donnees` compte les lignes et vous dit ce qui manque.
 
@@ -211,64 +191,58 @@ de créer des doublons en vous y reprenant à deux fois.
 
 ### Étape 8. Connecter les fonctions à la base
 
-**Ce que vous faites :** vous ajoutez une connexion de données à chaque ensemble de fonctions, puis
-vous les publiez.
+Vous ajoutez une connexion de données à chaque ensemble de fonctions, puis vous les publiez. Les
+fonctions doivent avoir le droit de parler à la base, et ce droit ne se transporte pas par Git.
 
-**Pourquoi :** les fonctions doivent avoir le droit de parler à la base, et ce droit ne se
-transporte pas par Git.
-
-**Deux surprises qui n'en sont pas :** la publication impose deux minutes d'attente entre deux
+Deux choses surprennent au passage : la publication impose deux minutes d'attente entre deux
 publications successives, et seule la personne propriétaire d'un ensemble de fonctions peut le
 publier.
 
-*Vérification :* dans l'écran des fonctions, `qui_suis_je` rend une réponse.
+*Vérification :* dans l'écran des fonctions, `qui_suis_je` répond.
 
 [Faire l'étape 8](docs/faire/etape-08-connecter-les-fonctions.md)
 
 ### Étapes 9 et 10. Relier la solution à votre espace
 
-**C'est le point le plus important de toute l'installation.** Deux liaisons ne se refont pas toutes
-seules, et leur absence ne produit aucun message d'erreur clair.
+Deux liaisons ne se refont pas toutes seules, et leur absence ne produit aucun message d'erreur
+clair. C'est ce qui fait perdre le plus de temps quand on l'oublie.
 
 | Ce qui ne se recolle pas | Combien | Ce qui se passe sans réparation |
 |---|---|---|
 | Les sources des deux modèles vers la base | 73 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
 | Les boutons vers les fonctions | 36 | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
-**L'ordre compte :** le modèle d'abord, les boutons ensuite. Actualiser le modèle avant de l'avoir
-relié produit une erreur qui fait croire à une panne générale.
+L'ordre compte : le modèle d'abord, les boutons ensuite. Actualiser le modèle avant de l'avoir relié
+produit une erreur qui fait croire à une panne générale.
 
 Un script relève vos identifiants et prépare les deux commandes. Vous n'avez rien à taper à la main.
 
-**Puis deux actions au portail, que les scripts ne peuvent pas faire à votre place.** Elles ne
-produisent aucun message d'erreur : sans elles, vos écrans restent vides.
+Restent deux actions au portail, que les scripts ne feront pas à votre place. Elles ne produisent
+aucun message d'erreur, et sans elles vos écrans restent vides.
 
 | L'action | Sur quoi | Sans elle |
 |---|---|---|
-| Poser les informations d'identification, en OAuth2 | Les deux modèles | La base refuse de répondre |
+| Saisir les informations d'identification, en OAuth2 | Les deux modèles | La base refuse de répondre |
 | Actualiser le modèle | `restitution_client` seulement, qui garde une copie des données | L'écran du client reste vide |
 
-*Vérification :* 73 sources reliées et 36 boutons reliés, zéro restant, puis l'écran du client
-porte des valeurs.
+*Vérification :* zéro source restant à relier, zéro bouton restant, zéro identifiant inconnu, puis
+l'écran du client affiche des valeurs. Les scripts annoncent eux-mêmes combien d'éléments ils ont
+traités.
 
 [Comprendre les trois couches](docs/comprendre/06-les-trois-couches.md) ·
 [Faire les étapes 9 et 10](docs/faire/etape-09-et-10-relier.md)
 
 ### Étape 11. Publier les deux écrans, à deux publics distincts
 
-**Ce que vous faites :** deux choses. Vous créez un rôle de sécurité par client dans le modèle de
-restitution, puis vous publiez une application organisationnelle avec deux audiences, une pour votre
-équipe et une pour vos clients.
+Vous faites deux choses. Vous créez un rôle de sécurité par client dans le modèle de restitution,
+puis vous publiez une application organisationnelle avec deux audiences, une pour votre équipe et
+une pour vos clients. C'est cette séparation qui vous permet de donner l'écran de restitution à un
+client sans lui ouvrir le dossier de travail du cabinet, ni les dossiers de ses confrères.
 
-**Pourquoi :** c'est cette séparation qui permet de donner l'écran de restitution au client sans lui
-ouvrir le dossier de travail du cabinet, ni les dossiers de ses confrères.
-
-**Le point qu'on découvre trop tard :** le dépôt livre un seul rôle de sécurité, celui du véhicule
-de démonstration. **Vous devrez en créer un par client réel.** Sans ce rôle, un client ouvrant
-l'écran verrait les données de tous les autres.
-
-**Et une règle qui ne souffre pas d'exception :** n'ajoutez jamais un client comme membre de votre
-espace de travail. Le cloisonnement par rôle ne restreint que les lecteurs.
+Le dépôt ne livre qu'un seul rôle de sécurité, celui du véhicule de démonstration. Vous devrez en
+créer un par client réel : sans ce rôle, un client qui ouvre l'écran verrait les données de tous les
+autres. Et n'ajoutez jamais un client comme membre de votre espace de travail, car le cloisonnement
+par rôle ne restreint que les lecteurs.
 
 *Vérification :* un collègue voit l'écran de conduite. Un compte de l'audience client voit la
 restitution, ne voit pas la conduite de mission, et ne voit que son propre véhicule.
@@ -278,14 +252,12 @@ restitution, ne voit pas la conduite de mission, et ne voit que son propre véhi
 
 ### Étape 12. Passer la recette
 
-**Ce que vous faites :** vous exécutez douze actions, du clic jusqu'à la base, et vous vérifiez que
-chacune donne le résultat attendu.
-
-**Pourquoi :** c'est la seule façon de savoir que votre installation fonctionne réellement, et pas
+Vous exécutez douze actions, du clic jusqu'à la base, et vous vérifiez que chacune donne le résultat
+attendu. C'est la seule façon de savoir que votre installation fonctionne réellement, et pas
 seulement qu'elle s'affiche.
 
-**Une action demande deux comptes :** l'approbation d'un visa est refusée à la personne qui a soumis
-le dossier. C'est voulu, et c'est la séparation des fonctions.
+Une de ces actions demande deux comptes : l'approbation d'un visa est refusée à la personne qui a
+soumis le dossier, au titre de la séparation des fonctions.
 
 *Vérification :* les douze actions aboutissent.
 
@@ -297,25 +269,25 @@ le dossier. C'est voulu, et c'est la séparation des fonctions.
 
 ### L'écran du réviseur
 
-Il porte le dossier d'un client OPCI de bout en bout : créer le dossier, lister les filiales,
+Il suit le dossier d'un client OPCI de bout en bout : créer le dossier, lister les filiales,
 répondre au questionnaire d'acceptation, déposer les pièces, soumettre au visa, ouvrir les arrêtés,
 désigner l'équipe.
 
-Chaque bouton écrit réellement en base de données. Ce n'est pas une maquette.
+Chaque bouton écrit réellement en base de données, rien n'y est simulé.
 
 [Le détail de ce que voit le réviseur](docs/comprendre/02-ce-que-voit-le-reviseur.md)
 
 ![L'en-tête, les cinq indicateurs et la barre des étapes de l'écran de conduite](captures/conduite-indicateurs.png)
 
-*Les cinq indicateurs donnent l'état du cabinet en un coup d'œil. La barre au-dessous porte les cinq
+*Les cinq indicateurs donnent l'état du cabinet en un coup d'œil. La barre au-dessous suit les cinq
 temps du dossier, de la création à l'arrêté.*
 
 Sous la barre des étapes, la fiche du dossier rassemble tout ce qui le concerne.
 
 ![La fiche du dossier](captures/maquettes/fiche-du-dossier.png)
 
-*Maquette de conception. L'écran de conduite est en cours de pose, et l'écran publié peut différer
-dans le détail.*
+*Maquette de conception. L'écran de conduite est en cours de construction, et l'écran publié peut
+différer dans le détail.*
 
 ### Ce que vous obtenez au bout des douze étapes
 
@@ -330,7 +302,7 @@ Huit pages, toutes filtrées sur l'arrêté que le client choisit : la valeur de
 rationalisation de la valeur liquidative, le patrimoine, les participations, le pilotage, les
 ratios, le document d'information périodique, la distribution.
 
-**Rien n'y arrive sans être passé par le visa du cabinet.**
+Aucune de ces pages n'affiche une donnée qui n'a pas reçu le visa du cabinet.
 
 [Le détail de ce que voit le client](docs/comprendre/03-ce-que-voit-le-client.md)
 
@@ -341,29 +313,28 @@ zéro signifie que la variation est entièrement expliquée.*
 
 ### Comment les deux tiennent ensemble
 
-**Une carte de la solution**, avec ses six éléments et ce qui circule entre eux, est dessinée dans
+La carte de la solution, avec ses six éléments et ce qui circule entre eux, est dessinée dans
 [Comment c'est construit](docs/comprendre/04-comment-c-est-construit.md). Chaque élément y renvoie
 au fichier correspondant dans ce dépôt.
-
 
 ```
 le réviseur saisit et vise  ->  la base  ->  l'écran du client
 ```
 
-Une seule base, une seule saisie. Le cabinet garde la main sur ce qui est publié, et sur quand. Les
-deux écrans lisent la même donnée, ce qui interdit qu'ils se contredisent.
+Vous saisissez une fois, dans une seule base. Les deux écrans lisent cette même donnée et ne peuvent
+donc pas se contredire, et vous gardez la main sur ce qui est publié, et sur quand.
 
 ---
 
 ## Ce qu'il vous faut, en résumé
 
-**La capacité :** Microsoft Fabric F4 au minimum. L'essai gratuit de 60 jours convient.
+Une capacité Microsoft Fabric F4 au minimum. L'essai gratuit de 60 jours convient.
 
-**Les licences :** sous une capacité F64, toute personne qui ouvre un écran a besoin d'une licence
-Power BI Pro ou Premium par utilisateur. **Cela vaut aussi pour vos clients.** C'est la ligne qu'on
-oublie, et elle change le calcul.
+Sous une capacité F64, toute personne qui ouvre un écran a besoin d'une licence Power BI Pro ou
+Premium par utilisateur, vos clients compris. C'est la ligne qu'on oublie au moment de chiffrer, et
+elle change le calcul.
 
-**Sur votre poste :** un navigateur, Python 3, et un compte GitHub gratuit. Les quatre scripts de ce
+Sur votre poste, un navigateur, Python 3, et un compte GitHub gratuit. Les quatre scripts de ce
 dépôt n'utilisent aucune bibliothèque extérieure.
 
 [Le détail des licences, avec les chiffres](docs/comprendre/05-les-licences.md)
@@ -377,9 +348,9 @@ presque tous les cas, le symptôme ne désigne pas la cause.
 
 Deux exemples du genre de piège qui fait perdre une demi-journée :
 
-- un bouton qui ne fait rien n'est presque jamais un bouton cassé : c'est l'étape 10 non faite, ou
-  la connexion de l'étape 8 non posée ;
-- un écran vide n'est pas une panne d'affichage : c'est l'étape 7 non faite.
+- un bouton qui ne fait rien est rarement un bouton cassé : c'est l'étape 10 non faite, ou la
+  connexion de l'étape 8 qui manque ;
+- un écran vide n'est pas une panne d'affichage, c'est l'étape 7 non faite.
 
 ---
 
@@ -393,12 +364,11 @@ Deux exemples du genre de piège qui fait perdre une demi-journée :
 | Proposer une modification | [Le guide de contribution](CONTRIBUTING.md) |
 | Signaler une fuite de données ou une faille | [La politique de sécurité](SECURITY.md), jamais une issue publique |
 
-**La contribution la plus utile est le récit d'une installation qui a buté.** Un mode opératoire
-n'est éprouvé que par ceux qui le suivent.
+Ce qui nous sert le plus, c'est le récit d'une installation qui a buté, parce qu'un mode opératoire
+ne vaut que par ceux qui l'ont suivi.
 
-Les échanges suivent le [code de conduite](CODE_OF_CONDUCT.md), et une règle y prime sur les
-autres : **aucune donnée de client réel dans ce dépôt**, sous aucune forme, capture d'écran
-comprise.
+Les échanges suivent le [code de conduite](CODE_OF_CONDUCT.md). Une règle y prime sur les autres :
+aucune donnée de client réel n'entre dans ce dépôt, sous aucune forme, capture d'écran comprise.
 
 ---
 
@@ -410,5 +380,4 @@ en mission, y compris commercialement, en conservant la mention de licence.
 ## Origine
 
 Cette solution accompagne un mémoire d'expertise comptable. Elle est publiée pour que des confrères
-puissent la reprendre, l'éprouver et l'adapter à leurs propres dossiers, et pour qu'ils en fassent
-bénéficier leurs clients.
+puissent l'éprouver sur leurs propres dossiers et l'adapter, au bénéfice de leurs clients.

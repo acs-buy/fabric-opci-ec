@@ -37,8 +37,8 @@
   "_motif_ligne_par_ligne": {
     "Read(./**)": "Lire le depot clone : README, docs/faire, scripts, fichiers SQL. Limite au dossier courant.",
     "python scripts/00_mes_identifiants.py": "Etape 9. Questionnaire interactif, ne se connecte a rien, ecrit mes_commandes.txt.",
-    "python scripts/20_relier_les_boutons.py": "Etape 10. Reecrit 24 boutons dans les fichiers locaux du rapport.",
-    "python scripts/25_relier_le_modele.py": "Etape 9. Reecrit 72 sources dans les fichiers .tmdl locaux.",
+    "python scripts/20_relier_les_boutons.py": "Etape 10. Reecrit les boutons de fonction dans les fichiers locaux du rapport.",
+    "python scripts/25_relier_le_modele.py": "Etape 9. Reecrit les sources DirectQuery dans les fichiers .tmdl locaux.",
     "python scripts/30_recette.py": "Verification des liaisons et liste des 12 actions de recette.",
     "git clone": "Etape 4, une seule fois.",
     "git status, git diff, git log": "Vous montrer ce que les scripts ont change, AVANT que vous ne poussiez."
@@ -46,7 +46,7 @@
 
   "_motif_des_refus": {
     "Read(./mes_commandes.txt)": "Ce fichier porte vos identifiants d'espace, de fonctions et de base. Il est ignore par .gitignore. Si vous preferez que l'agent le lise pour vous dicter les commandes, retirez cette ligne en connaissance de cause.",
-    "git push, git commit": "Vous relisez le diff et vous poussez vous-meme. Une reecriture de 72 fichiers se regarde avant d'etre publiee.",
+    "git push, git commit": "Vous relisez le diff et vous poussez vous-meme. Une reecriture de dizaines de fichiers se regarde avant d'etre publiee.",
     "az, sqlcmd, curl": "Aucune etape du depot public n'en a besoin. Leur presence signalerait que l'agent sort du perimetre.",
     "rm": "Rien n'est a supprimer pendant la reproduction.",
     "WebFetch": "Toute la documentation necessaire est dans le depot, sous docs/."

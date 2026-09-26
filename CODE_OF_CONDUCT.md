@@ -1,22 +1,22 @@
 # Code de conduite
 
-Ce dépôt s'adresse à des professionnels du chiffre. Les règles qui suivent sont celles qu'on attend
-d'un échange entre confrères, écrites pour qu'elles ne soient pas seulement supposées.
+Ce dépôt s'adresse à des professionnels du chiffre. On y attend ce qu'on attend d'un échange entre
+confrères, et c'est écrit ici plutôt que supposé.
 
-Elles s'inspirent du *Contributor Covenant*, dont elles ne sont pas une traduction officielle.
+Le texte s'inspire du *Contributor Covenant*, sans en être une traduction officielle.
 
 ---
 
 ## Ce que nous attendons
 
-- **Traiter chacun avec les égards dus à un confrère**, quel que soit son niveau technique. Ce dépôt
-  s'adresse à des experts-comptables, pas à des informaticiens : une question qui paraît naïve sur
-  la plateforme est une question légitime.
-- **Critiquer le travail, jamais la personne.** Une procédure peut être mauvaise, une affirmation
-  peut être fausse. Celui qui l'a écrite ne l'est pas.
-- **Étayer ce qu'on avance.** Un désaccord se règle par la documentation de l'éditeur ou par le
-  texte normatif, pas par l'ancienneté ni par le ton.
-- **Reconnaître une erreur quand elle est établie**, et corriger.
+- Vous traitez chacun avec les égards dus à un confrère, quel que soit son niveau technique. Le
+  dépôt s'adresse à des experts-comptables. Une question sur la plateforme qui vous paraît naïve
+  est une question légitime, et elle mérite une réponse.
+- La critique porte sur le travail et non sur celui qui l'a produit. Une procédure peut être
+  mauvaise, une affirmation peut être fausse : dites-le.
+- Vous étayez ce que vous avancez. Un désaccord se tranche sur la documentation de l'éditeur ou sur
+  le texte normatif. L'ancienneté ne tranche rien, le ton employé encore moins.
+- Quand une erreur est établie, vous la reconnaissez et vous corrigez.
 
 ## Ce qui n'a pas sa place ici
 
@@ -24,19 +24,19 @@ Elles s'inspirent du *Contributor Covenant*, dont elles ne sont pas une traducti
 - Les remarques discriminatoires, notamment sur l'origine, le sexe, l'âge, la religion, le handicap
   ou l'orientation.
 - La publication d'informations privées concernant quelqu'un, sans son accord.
-- **La publication de données de clients réels**, qui engage en outre le secret professionnel.
+- La publication de données de clients réels, qui engage en outre le secret professionnel.
 
 ---
 
 ## Le secret professionnel, qui vaut ici comme ailleurs
 
-Les contributeurs de ce dépôt sont, pour la plupart, tenus au secret professionnel.
+Vous êtes, pour la plupart, tenus au secret professionnel, et ce dépôt n'y change rien.
 
-**Aucune donnée d'un client réel ne doit apparaître dans ce dépôt**, sous aucune forme : ni dans un
-message, ni dans un fichier, ni dans une capture d'écran. Une capture du portail porte le nom de
-votre cabinet et votre identité de connexion : vérifiez-la avant de l'envoyer.
+Aucune donnée d'un client réel ne doit y apparaître, sous aucune forme : ni dans un message, ni
+dans un fichier, ni dans une capture d'écran. C'est la capture qui piège. Un écran du portail porte
+le nom de votre cabinet et votre identité de connexion, alors regardez-la avant de l'envoyer.
 
-Un manquement sur ce point n'est pas traité comme une maladresse. Le contenu est retiré sans délai.
+Un manquement sur ce point ne passe pas pour une maladresse. Le contenu est retiré sans délai.
 
 ---
 
@@ -45,8 +45,8 @@ Un manquement sur ce point n'est pas traité comme une maladresse. Le contenu es
 Les mainteneurs du dépôt peuvent retirer, modifier ou refuser tout contenu qui enfreint ce code, et
 suspendre temporairement ou définitivement l'accès de son auteur.
 
-Pour signaler un comportement, ouvrez une issue si le sujet peut être public, ou utilisez la voie
-privée décrite dans la [politique de sécurité](SECURITY.md) s'il ne le peut pas.
+Si vous avez un comportement à signaler et que le sujet peut être traité en public, ouvrez une
+issue. Sinon, passez par la voie privée décrite dans la [politique de sécurité](SECURITY.md).
 
-Tout signalement est examiné. La réponse est proportionnée, et la confidentialité de celui qui
-signale est respectée.
+Tout signalement est examiné. La réponse tient compte de la gravité de ce qui s'est passé, et
+l'identité de celui qui signale reste confidentielle.

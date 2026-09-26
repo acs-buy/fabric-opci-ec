@@ -2,9 +2,9 @@
 
 Collez le texte du bloc ci-dessous dans votre agent. Rien avant, rien après.
 
-**Ce que l'agent exécutera lui-même** : l'étape 4 seulement, et les vérifications qui ne
-demandent aucune connexion. Les étapes 1, 2, 3, 5, 6, 7 et 8 sont des gestes au portail Fabric
-qu'il vous guidera à faire, sans les faire.
+L'agent exécute lui-même l'étape 4, et les vérifications qui ne demandent aucune connexion.
+Les étapes 1, 2, 3, 5, 6, 7 et 8 se font au portail Fabric, à la souris, et c'est vous qui
+cliquez. L'agent vous donne le chemin des menus et la vérification à passer.
 
 ---
 
@@ -51,7 +51,8 @@ ma confirmation entre chaque.
      valoir « fabric », et un répertoire laissé vide fait échouer la synchronisation. Pour le
      jeton GitHub, donne-moi le chemin des menus et rappelle-moi que ce jeton est un mot de
      passe, à coller dans Fabric et nulle part ailleurs.
-  6. Cliquer « Mettre à jour tout ». Dis-moi les 8 éléments que je dois voir apparaître, et
+  6. Cliquer « Mettre à jour tout ». Dis-moi les éléments que je dois voir apparaître, en
+     les comptant dans le dossier fabric/ du dépôt cloné plutôt qu'en citant un nombre, et
      préviens-moi qu'ils arrivent VIDES : la synchronisation Git ramène les définitions, pas
      les données.
   Si les tables de la base ne reviennent pas, ne cherche pas une erreur de ma part : c'est un
@@ -81,8 +82,8 @@ suite.
 
 ## Ce que vous vérifiez vous-même, avant de passer à l'invite 2
 
-1. Les 8 éléments sont visibles dans l'espace de travail.
-2. La requête de comptage rend les valeurs attendues.
-3. `qui_suis_je` répond sur les 2 ensembles de fonctions.
+1. Vous retrouvez dans l'espace de travail tous les éléments du dossier `fabric/`.
+2. La requête de comptage donne bien les valeurs attendues.
+3. `qui_suis_je` répond sur les deux ensembles de fonctions.
 
-Si l'un des 3 manque, l'invite 2 échouera sans le dire clairement.
+Si l'un de ces trois points manque, l'invite 2 échouera sans vous dire clairement pourquoi.

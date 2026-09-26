@@ -1,14 +1,9 @@
 # 4. Comment c'est construit
 
-Lisez cette page avant de changer quoi que ce soit. Elle explique comment un clic devient une
-écriture en base, et où se trouve chaque chose.
-
----
-
 ## La carte de la solution
 
-Ce schéma montre les six éléments de la solution et ce qui circule entre eux. GitHub le dessine
-directement dans la page.
+Six éléments composent la solution, et les flèches disent ce qui circule entre eux. GitHub dessine
+le schéma directement dans la page.
 
 ```mermaid
 flowchart TD
@@ -62,21 +57,20 @@ class n_coffre rose
 class n_excel,n_sharepoint indigo
 ```
 
-### Comment lire ce schéma
+### Les flèches pleines et les pointillés
 
-**Les flèches pleines sont le chemin normal.** Une personne agit sur l'écran, l'écran appelle une
-fonction, la fonction exécute une procédure, la procédure écrit dans la base. Le modèle relit la
-base et alimente les visuels.
+Le chemin ordinaire suit les flèches pleines. Vous agissez sur l'écran, l'écran appelle une
+fonction, la fonction exécute une procédure, la procédure écrit dans la base. Le modèle relit
+ensuite la base et alimente les visuels.
 
-**Les flèches en pointillés sont les échanges de fichiers.** Ils entrent, ils ne commandent rien.
-Un classeur importé passe par les mêmes procédures que la saisie à l'écran, et SharePoint apporte
-des pièces sans jamais rien recevoir en retour.
+Les pointillés sont les échanges de fichiers. Un classeur importé passe par les mêmes procédures que
+la saisie à l'écran, donc par les mêmes contrôles. SharePoint apporte des pièces en lecture seule et
+ne reçoit jamais rien en retour.
 
-**Ce que le schéma montre et qu'il faut retenir :** aucune flèche ne va de l'écran vers la base
-directement. Tout passe par une fonction, puis par une procédure. C'est ce qui garantit qu'un
-contrôle ne se contourne pas.
+Aucune flèche ne relie l'écran à la base directement. Tout passe par une fonction, puis par une
+procédure, et c'est ce qui garantit qu'un contrôle ne se contourne pas.
 
-### Chaque élément, dans le dépôt
+### Où vit chaque élément
 
 | L'élément du schéma | Où il vit dans ce dépôt |
 |---|---|
@@ -88,8 +82,8 @@ contrôle ne se contourne pas.
 | Modèle sémantique | [fabric/conduite_de_mission.SemanticModel](../../fabric/conduite_de_mission.SemanticModel) |
 | Coffre des pièces | [fabric/Coffre.Lakehouse](../../fabric/Coffre.Lakehouse) |
 
-*Les liens ci-dessus mènent aux fichiers réels. Le diagramme lui-même porte aussi des liens, mais
-leur prise en charge par GitHub n'est pas documentée : fiez-vous au tableau.*
+*Les liens du tableau mènent aux fichiers réels. Le diagramme porte lui aussi des liens, mais GitHub
+ne documente pas leur prise en charge : servez-vous du tableau.*
 
 ---
 
@@ -99,46 +93,45 @@ leur prise en charge par GitHub n'est pas documentée : fiez-vous au tableau.*
 bouton du rapport  ->  fonction Python  ->  procédure stockée  ->  table  ->  vue  ->  écran
 ```
 
-Cinq maillons, et chacun a un rôle distinct.
+Cinq maillons, et chacun son rôle.
 
-1. **Le bouton** ne sait qu'une chose : quelle fonction appeler et avec quels paramètres. Il ne
-   contient aucune règle de gestion.
-2. **La fonction Python** transporte. Elle reçoit les paramètres, appelle la procédure, et rapporte
-   le résultat à l'écran. Elle ne décide rien.
-3. **La procédure stockée** porte la règle. C'est elle qui vérifie les droits, contrôle la
-   cohérence, refuse ou écrit.
-4. **La table** conserve.
-5. **La vue** présente. C'est elle que le modèle sémantique lit.
+1. Le bouton sait seulement quelle fonction appeler, et avec quels paramètres. Aucune règle de
+   gestion n'y figure.
+2. La fonction Python transporte. Elle reçoit les paramètres, appelle la procédure et renvoie le
+   résultat à l'écran. Elle ne décide rien.
+3. La procédure stockée contient la règle. C'est elle qui vérifie les droits, contrôle la cohérence,
+   puis refuse ou écrit.
+4. La table conserve les données.
+5. La vue les présente, et c'est elle que le modèle sémantique lit.
 
-**La conséquence pratique :** pour changer une règle de gestion, modifiez la procédure, jamais la
-fonction ni le bouton. Pour changer ce qui s'affiche, modifiez la vue.
+Donc, pour changer une règle de gestion, vous modifiez la procédure, sans toucher ni à la fonction
+ni au bouton. Pour changer ce qui s'affiche, vous modifiez la vue.
 
 ## La règle la plus importante : les libellés viennent des vues
 
-Les en-têtes de colonnes que l'utilisateur lit sont **les noms des colonnes dans les vues SQL**, pas
-des libellés posés dans le modèle.
+Les en-têtes de colonnes que vous lisez à l'écran sont les noms des colonnes dans les vues SQL. On a
+le réflexe de les chercher dans le modèle sémantique : ils n'y sont pas.
 
 ```sql
 CASE ra.code WHEN 'ASSOCIE' THEN N'Associé signataire' ... END AS [Rôle]
 ```
 
-**Pourquoi.** Renommer une colonne dans le modèle casse les mesures qui la lisent, et le message
-d'erreur désigne la mesure, pas le renommage. En posant le libellé dans la vue, le modèle n'a aucun
-renommage à porter.
+Renommer une colonne dans le modèle casse les mesures qui la lisent, et le message d'erreur vous
+désigne la mesure, jamais le renommage. Vous cherchez donc du mauvais côté. Avec le libellé écrit
+dans la vue, le modèle n'a plus aucun renommage à gérer.
 
-**La règle qui en découle :** une mesure ne lit jamais une colonne d'affichage. Elle ne lit que des
-colonnes techniques, en minuscules et sans accent. Si vous ajoutez une colonne destinée à une
-mesure, nommez-la ainsi.
+Une mesure ne lit donc jamais une colonne d'affichage. Elle ne lit que des colonnes techniques, en
+minuscules et sans accent. Si vous ajoutez une colonne destinée à une mesure, nommez-la ainsi.
 
 ## Le contrôle des droits est dans la base, pas dans l'écran
 
-La séparation des fonctions est portée par des déclencheurs et des procédures. Une personne qui
-contournerait l'écran se verrait opposer le même refus. L'écran masque les boutons inopérants par
-confort, il ne protège rien.
+La séparation des fonctions est écrite dans les déclencheurs et les procédures. Une personne qui
+contournerait l'écran se verrait opposer le même refus. L'écran masque les boutons inopérants pour
+vous éviter un clic inutile, et ce masquage ne protège rien.
 
 Trois conséquences :
 
-- Griser un bouton n'est pas une protection, seulement une courtoisie.
+- Un bouton grisé vous épargne un clic, il n'interdit rien.
 - Un refus remonte toujours un message explicite, qui nomme la procédure en cause.
 - Ajouter un écran ne crée jamais un trou de sécurité, tant que l'écriture passe par les procédures.
 
@@ -154,24 +147,24 @@ Trois conséquences :
 
 ## Deux pièges de Power BI qu'il vaut mieux connaître
 
-**Une mesure ne peut pas servir de filtre booléen dans un CALCULATE.** Le message d'erreur parle
-d'un emplacement réservé et n'aide pas. Le motif qui marche est de mettre la valeur dans une
-variable, puis de filtrer une colonne :
+Le premier : une mesure ne peut pas servir de filtre booléen dans un CALCULATE. Le message d'erreur
+parle d'un emplacement réservé, ce qui ne vous avance à rien. Le motif qui marche consiste à mettre
+la valeur dans une variable, puis à filtrer une colonne :
 
 ```
 VAR c = [Client selectionne]
 RETURN CALCULATE ( ..., FILTER ( ALL ( t ), t[col] = c ) )
 ```
 
-**Un signet d'état doit supprimer les données.** Sans l'option qui supprime les données, les
-segments reviennent à « tout » en changeant d'état, et l'écran perd la sélection de l'utilisateur.
+Le second : un signet d'état doit supprimer les données. Sans cette option, les segments reviennent
+à « tout » quand vous changez d'état, et l'écran perd votre sélection.
 
 ## Si vous adaptez la solution à votre cabinet
 
 Commencez par le questionnaire d'acceptation, qui est la partie la plus propre à chaque cabinet. Il
-vit dans les tables de référentiel des questions, et se modifie sans toucher au reste.
+vit dans les tables de référentiel des questions, et vous le modifiez sans toucher au reste.
 
-Gardez la recette des douze actions comme garde-fou : jouez-la après chaque modification.
+Gardez la recette des douze actions comme garde-fou, et rejouez-la après chaque modification.
 
 ---
 

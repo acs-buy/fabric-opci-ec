@@ -1,7 +1,7 @@
 # Reproduire avec l'aide d'un agent
 
-**Lisez d'abord [AVERTISSEMENT.md](AVERTISSEMENT.md).** Il porte le partage des
-responsabilités et les règles professionnelles que ce dossier ne lève pas.
+[AVERTISSEMENT.md](AVERTISSEMENT.md) dit qui répond de quoi. Les règles professionnelles
+s'appliquent ici comme sur n'importe quel dossier, et rien de ce répertoire ne vous en dispense.
 
 ---
 
@@ -11,30 +11,30 @@ La reproduction compte 12 étapes. Un agent n'en exécute pas 12.
 
 | Étapes | Nature | Ce que l'agent apporte |
 |---|---|---|
-| 1, 2, 3, 5, 6, 8, 11 | Gestes au portail Fabric | Rien à votre place. Il vous lit la marche à suivre, vous dit quoi vérifier, et note ce qui bloque |
-| 4 | Cloner le dépôt, vérifier Python | **Il l'exécute** |
-| 7 | Charger les données SQL | Il prépare et ordonne les scripts. **C'est vous qui les jouez au portail** |
-| 9, 10 | Réécrire 73 sources et 36 boutons | **Il l'exécute**, et vérifie le résultat |
-| 12 | Recette de 12 actions à l'écran | Il tient la liste et relève ce qui échoue. **Les clics sont les vôtres** |
+| 1, 2, 3, 5, 6, 8, 11 | À faire au portail, à la souris | Il ne fait rien à votre place. Il vous lit la marche à suivre et vous dit ce qu'il faut contrôler, en notant ce qui coince |
+| 4 | Cloner le dépôt, vérifier Python | Il l'exécute |
+| 7 | Charger les données SQL | Il prépare les scripts et les met dans l'ordre. Vous les jouez au portail vous-même |
+| 9, 10 | Réécrire les sources du modèle et les boutons du rapport | Il l'exécute, puis il contrôle le résultat |
+| 12 | Recette de 12 actions à l'écran | Il tient la liste et note ce qui échoue. Les clics sont les vôtres |
 
-**Compte honnête : 3 étapes exécutées sur 12.** Le reste est un accompagnement. Les 5 valeurs
-d'identification se relèvent au portail, à l'œil, et personne ne peut le faire pour vous.
+Au total, l'agent exécute 3 étapes sur 12. Sur les autres, il vous accompagne. Les cinq valeurs
+d'identification se lisent à l'écran du portail, et personne ne peut les lire à votre place.
 
-**Aucun des 4 scripts du dépôt ne se connecte à quoi que ce soit.** Ils réécrivent des fichiers
-locaux et affichent du texte. Un agent qui les lance n'accède donc ni à votre locataire, ni à
-votre base, ni à vos données.
+Les quatre scripts du dépôt ne se connectent à rien. Ils réécrivent des fichiers sur votre poste
+et affichent du texte. Un agent qui les lance n'entre donc ni dans votre locataire, ni dans votre
+base, ni dans vos données.
 
 ---
 
 ## Les 3 invites
 
-Elles se collent dans l'agent l'une après l'autre, jamais toutes ensemble. Chacune finit par un
-point d'arrêt où vous vérifiez avant de passer à la suivante.
+Collez-les dans l'agent l'une après l'autre, jamais toutes ensemble. Chacune s'arrête sur un
+point de contrôle : vous vérifiez, puis vous passez à la suivante.
 
 | Fichier | Couvre | Vous devrez fournir |
 |---|---|---|
 | [`01-preparation.md`](01-preparation.md) | Étapes 1 à 8 | L'adresse de votre dépôt forké |
-| [`02-liaisons.md`](02-liaisons.md) | Étapes 9 et 10 | Les 5 valeurs relevées au portail |
+| [`02-liaisons.md`](02-liaisons.md) | Étapes 9 et 10 | Les cinq valeurs lues au portail |
 | [`03-recette.md`](03-recette.md) | Étape 12 | Un second compte, pour l'action 11 |
 
 ---
@@ -42,12 +42,16 @@ point d'arrêt où vous vérifiez avant de passer à la suivante.
 ## Autorisations
 
 [`permissions-exemple.json`](permissions-exemple.json) donne un jeu minimal pour un agent de
-codage, avec le motif de chaque ligne. **C'est un point de départ à réduire.** Deux règles :
+codage, avec le motif de chaque ligne. Prenez-le comme un point de départ et retirez-en tout ce
+dont vous n'avez pas l'usage. Deux limites ne se discutent pas.
 
-1. **Aucune autorisation d'écriture hors du dépôt cloné.** Un agent n'a rien à faire ailleurs
-   sur votre poste.
-2. **Aucun accès à vos identifiants Fabric ou GitHub.** Le jeton GitHub de l'étape 5 se colle
-   dans l'écran de Fabric, par vous, jamais dans une conversation avec un agent.
+L'agent n'écrit nulle part ailleurs que dans le dépôt cloné. Il n'a aucune raison d'aller toucher
+au reste de votre poste, et une autorisation large est une autorisation que plus personne ne
+surveille.
+
+L'agent n'accède ni à vos identifiants Fabric, ni à ceux de GitHub. Le jeton GitHub de l'étape 5,
+vous le collez vous-même dans l'écran de Fabric. Une fois collé dans une conversation avec un
+agent, un jeton a quitté votre contrôle.
 
 ---
 
@@ -55,18 +59,18 @@ codage, avec le motif de chaque ligne. **C'est un point de départ à réduire.*
 
 | Prérequis | Détail |
 |---|---|
-| Capacité Fabric | **F4 minimum**, ou l'essai gratuit de 60 jours qui ouvre exactement F4 |
-| 5 réglages de locataire | À faire activer par votre administrateur, étape 2 |
-| Licences | Sous F64, une licence Pro par personne qui ouvre un écran, **vos clients compris** |
+| Capacité Fabric | F4 au minimum. L'essai gratuit de 60 jours ouvre exactement F4 |
+| Réglages de locataire | Cinq réglages, à faire activer par votre administrateur, à l'étape 2 |
+| Licences | Sous F64, une licence Pro par personne qui ouvre un écran, vos clients compris |
 | Sur le poste | Un navigateur, Python 3, git, un compte GitHub gratuit |
-| Comptes | Un administrateur d'espace de travail, et **un second compte** pour l'action 11 |
+| Comptes | Un administrateur d'espace de travail, et un second compte pour l'action 11 |
 
 ---
 
 ## Réserve sur l'état du dépôt
 
-`_outils/NOTE_FORMAT_BASE.md` signale que la base SQL est publiée sous forme de `dacpac`
-binaire, alors que la synchronisation Git attend une arborescence de fichiers `.sql`. **L'étape
-6 peut donc échouer sur la base**, et le mode opératoire n'a pas encore été rejoué de bout en
-bout sur un environnement neuf. Un agent ne corrigera pas cela : si l'étape 6 ne ramène pas les
-tables, c'est un défaut connu du dépôt, pas une erreur de votre part.
+`_outils/NOTE_FORMAT_BASE.md` signale que la base SQL est publiée sous forme de `dacpac` binaire,
+alors que la synchronisation Git attend une arborescence de fichiers `.sql`. L'étape 6 peut donc
+échouer sur la base. Le mode opératoire n'a pas encore été rejoué de bout en bout sur un
+environnement neuf. Un agent ne corrigera pas cela : si l'étape 6 ne ramène pas les tables, c'est
+un défaut connu du dépôt, et non une erreur de votre part.

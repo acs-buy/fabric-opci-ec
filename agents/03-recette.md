@@ -1,16 +1,17 @@
 # Invite 3 : publier et passer la recette (étapes 11 et 12)
 
-**L'agent ne clique rien ici.** Les 12 actions de recette vont du clic jusqu'à la base : elles
-s'éprouvent à l'écran, par une personne. L'agent tient la liste, relève ce qui échoue, et
-prépare la requête qui prouve l'effet en base.
+Ici, l'agent ne clique rien. Les 12 actions de recette vont du clic jusqu'à la base, et elles
+s'éprouvent à l'écran, par une personne. L'agent, lui, tient la liste, note ce qui échoue et
+prépare la requête qui prouvera en base que l'action a produit son effet.
 
-**L'action 11 exige un second compte.** L'approbation d'un visa est refusée à qui l'a soumis,
-par séparation des fonctions. Ce n'est pas un défaut : c'est le contrôle qui fonctionne.
+À l'action 11, il vous faudra un second compte : l'approbation d'un visa est refusée à celui qui
+l'a soumis, par séparation des fonctions. Le refus que vous verrez s'afficher est donc le signe
+que le contrôle joue son rôle.
 
 ---
 
 ```text
-Nous terminons la reproduction. Les liaisons sont vérifiées : 73 sources et 36 boutons.
+Nous terminons la reproduction. Les liaisons sont vérifiées : 0 restant, 0 inconnu.
 
 RÈGLES
 1. Tu ne cliques rien à ma place et tu ne pilotes aucun navigateur.
@@ -54,10 +55,10 @@ quelqu'un qui n'était pas là.
 
 ## Ce qui reste à votre charge, et que rien n'automatise
 
-| Acte | Pourquoi |
-|---|---|
-| Déclarer la recette conforme | C'est un constat. Il se vérifie, il ne se reçoit pas d'un agent |
-| Rattacher un compte du client à un poste du modèle | Décision comptable qui engage votre responsabilité |
-| Arrêter une forme de conclusion, viser un cycle | Acte professionnel, hors de portée de tout outillage |
+Déclarer la recette conforme reste votre affaire : c'est un constat, et un constat se vérifie,
+il ne se reçoit pas d'un agent. Rattacher un compte du client à un poste du modèle est une
+décision comptable qui engage votre responsabilité. Arrêter une forme de conclusion, viser un
+cycle, ce sont des actes professionnels qu'aucun outillage ne prend en charge.
 
-Le compte rendu produit par l'agent est une aide à la relecture, pas une attestation.
+Le compte rendu que l'agent produit vous aide à relire ; il ne remplace pas le constat que vous
+êtes seul à pouvoir faire.

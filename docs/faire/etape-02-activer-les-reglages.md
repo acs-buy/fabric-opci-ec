@@ -7,17 +7,16 @@
 
 ## Ce que vous allez faire
 
-Transmettre à votre administrateur une liste de cinq réglages, et vérifier qu'ils sont activés.
+Vous envoyez à votre administrateur la liste de cinq réglages qui suit, puis vous vérifiez qu'ils
+sont activés avant d'aller plus loin.
 
 ## Pourquoi
 
-Ces réglages ouvrent des fonctions que votre locataire ferme par défaut. Deux d'entre eux sont la
-cause d'échecs qui n'annoncent pas leur cause :
-
-- **sans le quatrième**, GitHub n'apparaît pas dans la liste des fournisseurs Git, et vous
-  chercherez longtemps pourquoi ;
-- **sans le cinquième**, vous verrez un classeur exporté dans le coffre sans pouvoir le télécharger,
-  sans message clair.
+Votre locataire ferme ces fonctions par défaut. Deux d'entre elles, quand elles restent fermées,
+vous coûteront une demi-journée sans vous dire pourquoi. Sans le quatrième réglage, GitHub
+n'apparaît pas dans la liste des fournisseurs Git, et vous chercherez longtemps du côté de votre
+dépôt alors que rien ne vient de là. Sans le cinquième, vous verrez votre classeur exporté dans le
+coffre, vous cliquerez pour le télécharger, et vous ne l'obtiendrez pas, sans message clair.
 
 ---
 
@@ -53,7 +52,7 @@ Copiez ce qui suit et envoyez-le à votre administrateur.
 |---|---|---|---|
 | 1 | Créer des éléments Fabric | Créer la base, le coffre, les fonctions | Rien ne s'installe |
 | 2 | Synchroniser avec Git | Connecter un dépôt à l'espace de travail | Pas d'intégration Git du tout |
-| 3 | Créer des espaces de travail | L'étape 3 | Il faut qu'un administrateur le crée pour vous |
+| 3 | Créer des espaces de travail | Créer vous-même l'espace de l'étape 3 | Il faut qu'un administrateur le crée pour vous |
 | 4 | Synchroniser avec GitHub | Voir GitHub dans la liste des fournisseurs | GitHub n'apparaît pas |
 | 5 | Accès externe à OneLake | Télécharger un fichier du coffre, et l'Explorateur OneLake | Vous voyez les fichiers sans pouvoir les récupérer |
 
@@ -73,12 +72,12 @@ Le cinquième se trouve dans la section **Paramètres OneLake** de la même page
 
 ## Un mot sur les groupes de sécurité
 
-Chaque réglage peut être limité à un groupe plutôt qu'ouvert à toute l'organisation. C'est ce que
-font la plupart des administrateurs, et c'est légitime.
+Chaque réglage peut être limité à un groupe de sécurité plutôt qu'ouvert à toute l'organisation.
+C'est ce que font la plupart des administrateurs, et cela se comprend.
 
-**Si votre administrateur choisit cette voie, demandez à figurer dans le groupe**, et vérifiez-le
+Si le vôtre choisit cette voie, demandez-lui de vous inscrire dans le groupe, et allez le vérifier
 avant de passer à l'étape suivante. Un réglage activé pour un groupe dont vous ne faites pas partie
-produit exactement les mêmes symptômes qu'un réglage désactivé.
+produit exactement les mêmes symptômes qu'un réglage désactivé, et c'est là qu'on se trompe.
 
 ---
 
@@ -86,23 +85,21 @@ produit exactement les mêmes symptômes qu'un réglage désactivé.
 
 Les cinq doivent afficher **Activé** dans le portail d'administration.
 
-**Un délai existe.** Un réglage vient d'être activé ne prend pas toujours effet immédiatement. Si
-vous ne voyez pas le résultat attendu à l'étape 5, attendez quelques minutes et rafraîchissez la
-page avant de conclure à un problème.
+Un réglage qui vient d'être activé ne prend pas toujours effet tout de suite. Si vous ne voyez pas
+le résultat attendu à l'étape 5, attendez quelques minutes et rafraîchissez la page avant de
+conclure à un problème.
 
 ---
 
 ## Si votre administrateur refuse
 
 Le plus souvent, c'est le deuxième ou le quatrième qui bloque, par crainte que du code du cabinet
-parte vers un dépôt externe.
+parte vers un dépôt externe. Vous pouvez lui donner deux arguments factuels.
 
-Deux arguments factuels à lui donner :
-
-1. **La synchronisation ne transporte jamais de données**, seulement des définitions d'éléments.
+1. La synchronisation ne transporte jamais de données, seulement des définitions d'éléments.
    L'éditeur l'écrit : « Git Integration re-creates item definitions only and does not restore item
    data. »
-2. **Le dépôt peut être privé.** Rien n'oblige à publier votre copie.
+2. Le dépôt peut être privé. Rien ne vous oblige à publier votre copie.
 
 Si le refus persiste, l'installation n'est pas possible par Git. Une voie de remplacement existe par
 l'interface de programmation, mais elle sort du cadre de ce mode opératoire.
