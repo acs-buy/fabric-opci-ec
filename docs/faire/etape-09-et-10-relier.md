@@ -91,6 +91,67 @@ tout** une seconde fois.
 
 ### Vérifier
 
+### Ce que vous devez voir, avant de relier
+
+Ces sorties sont celles d'une installation réelle, recopiées telles quelles. Elles vous disent où
+vous en êtes avant d'avoir rien fait.
+
+Le modèle, qui interroge encore la base d'origine :
+
+```
+72 source(s) de donnees dans le modele.
+   deja reliees a votre base : 0
+   restant a relier          : 72
+   sources inconnues         : 0
+
+Source portee par ces tables :
+   serveur : <le serveur d'origine>.database.fabric.microsoft.com
+   base    : DossierOPCI-<l'identifiant d'origine>
+```
+
+Les boutons, qui appellent encore les fonctions d'origine :
+
+```
+24 bouton(s) de fonction dans le rapport.
+   deja relies a votre espace : 0
+   restant a relier           : 24
+   identifiants inconnus      : 0
+
+fn_ecran_client, 13 fonction(s) appelee(s) :
+   ajouter_filiale
+   approuver_acceptation
+   creer_client
+   ...
+fn_ecran_revision, 5 fonction(s) appelee(s) :
+   conclure_feuille
+   ouvrir_feuille
+   ...
+```
+
+**Ce qu'il faut lire dans ces sorties :** la ligne « identifiants inconnus » doit valoir zéro. Si
+elle ne vaut pas zéro, le rapport a été modifié à la main, et les scripts refuseront d'écrire.
+
+### Ce que vous devez voir, une fois relié
+
+```
+72 source(s) de donnees dans le modele.
+   deja reliees a votre base : 72
+   restant a relier          : 0
+   sources inconnues         : 0
+```
+
+```
+24 bouton(s) de fonction dans le rapport.
+   deja relies a votre espace : 24
+   restant a relier           : 0
+   identifiants inconnus      : 0
+```
+
+**Tant que « restant à relier » n'est pas à zéro, l'installation n'est pas finie**, même si les
+écrans s'affichent.
+
+### Vérifier
+
 ```
 python scripts/25_relier_le_modele.py --verifier
 python scripts/20_relier_les_boutons.py --verifier
