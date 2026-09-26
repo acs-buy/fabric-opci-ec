@@ -1,0 +1,16 @@
+# Les fins de ligne sont normalisees a l'enregistrement, et rendues au format du poste.
+# Sans cette regle, un dépôt cloné sous Windows puis modifié sous un autre système produit des
+# differences sur des fichiers que personne n'a touches.
+* text=auto eol=lf
+
+# Les fichiers de la plateforme gardent leurs fins de ligne telles quelles : ce sont les
+# definitions d'elements Fabric, relues par le portail, et rien ne doit les reecrire.
+fabric/** -text
+
+# Les images sont binaires.
+*.png binary
+*.jpg binary
+*.pdf binary
+
+# Les fichiers SQL portent des accents et sont lus par l'editeur de requetes du portail.
+*.sql text eol=lf
