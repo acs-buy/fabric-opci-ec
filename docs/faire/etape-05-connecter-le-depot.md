@@ -30,6 +30,15 @@ Fabric, et ne l'écrivez dans aucun fichier.
 
 1. Dans votre espace de travail, ouvrez **Paramètres de l'espace de travail**.
 2. Choisissez **Intégration Git**.
+
+Le réglage se trouve dans le panneau des paramètres, à la ligne **Git integration**.
+
+![Le panneau des paramètres, où trouver l'intégration Git](../../captures/espace-parametres-menu.png)
+
+![L'écran d'intégration Git, avec le fournisseur, le dépôt et le répertoire](../../captures/espace-parametres-git.png)
+
+*Le champ **Git folder**, sous l'adresse du dépôt, est celui qui se rate. Il vaut `fabric`.*
+
 3. Fournisseur : **GitHub**.
 4. Renseignez votre nom d'utilisateur GitHub, le nom du dépôt, et la branche.
 5. **Répertoire : `fabric`**

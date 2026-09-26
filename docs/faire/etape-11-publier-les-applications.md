@@ -15,6 +15,11 @@ Trois raisons, dans l'ordre d'importance.
 
 ## Créer l'application
 
+Le bouton **Create app** se trouve dans le bandeau de l'espace de travail.
+
+![Le bandeau de l'espace, avec Create app](../../captures/espace-bandeau.png)
+
+
 1. Dans votre espace de travail, cliquez sur **Créer une application**.
 2. Donnez-lui un nom, par exemple le nom de votre cabinet suivi de « conduite de mission ».
 3. Ajoutez le rapport **Conduite de mission** au contenu.

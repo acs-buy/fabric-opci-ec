@@ -1,8 +1,11 @@
-# Une solution OPCI conçue à partir des besoins de ceux qui s'en servent
+# La mission de présentation d'un OPCI, conçue à partir des besoins du client
 
-Ce dépôt contient une solution complète pour les organismes de placement collectif immobilier,
-construite sur Microsoft Fabric et Power BI. Il est écrit pour que vous puissiez la reproduire
-entièrement chez vous, à partir de rien, **sans compétence technique préalable**.
+**Une solution complète pour l'expert-comptable qui conduit la mission de présentation d'un
+organisme de placement collectif immobilier.** Elle donne à son client un écran qu'il pilote
+lui-même, et à son cabinet un dossier tenu de bout en bout, sur une seule base de données.
+
+Construite sur Microsoft Fabric et Power BI. Ce dépôt vous permet de la reproduire entièrement chez
+vous, à partir de rien, **sans compétence technique préalable**.
 
 **Elle n'est pas partie d'un outil, elle est partie de deux personnes.** Le réviseur qui conduit la
 mission, et le client qui détient le véhicule. Ce sont leurs besoins qui ont dicté ce que la

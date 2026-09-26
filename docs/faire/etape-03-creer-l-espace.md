@@ -12,6 +12,13 @@ Un espace de travail Fabric est le contenant de toute la solution. Vous en crée
 
 ## Vérifier
 
+Une fois l'espace créé, son bandeau porte les actions dont vous aurez besoin plus loin :
+**Create app** à l'étape 11, **Manage access** pour ajouter vos collaborateurs, et **Workspace
+settings** aux étapes 3 et 5.
+
+![Le bandeau de l'espace de travail](../../captures/espace-bandeau.png)
+
+
 Ouvrez **Paramètres de l'espace de travail**, onglet **Licence**. Vous devez y lire le nom de votre
 capacité, et non « Pro ». Si vous lisez « Pro », les éléments Fabric autres que Power BI ne
 fonctionneront pas, et les messages d'erreur ne vous diront pas que la capacité est en cause.
