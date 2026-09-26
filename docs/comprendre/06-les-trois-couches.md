@@ -28,6 +28,10 @@ La synchronisation recrée les huit éléments de la solution dans votre espace 
 la base avec ses tables, ses vues et ses procédures, les deux ensembles de fonctions, les deux
 modèles de données et les deux rapports.
 
+**Vous en compterez dix.** La plateforme ajoute d'elle-même un point de terminaison SQL au coffre et
+un à la base. Ils ne sont pas dans le dépôt, vous n'avez rien à en faire, et leur présence est
+normale.
+
 **Tout y est, et rien ne marche.** C'est normal, et les deux couches suivantes expliquent pourquoi.
 
 ---
@@ -41,13 +45,13 @@ L'éditeur l'écrit sans ambiguïté :
 **La synchronisation recrée la forme, jamais le contenu.** Votre base a ses tables, ses vues et ses
 procédures, et pas une seule ligne dedans.
 
-C'est pour cela que le dépôt porte 79 fichiers SQL. Ils ne sont pas un complément : ils sont la
+C'est pour cela que le dépôt porte 80 fichiers SQL, dont 77 de données. Ils ne sont pas un complément : ils sont la
 seule façon de faire arriver les données.
 
 | Ce que le dépôt charge | Lignes | Ce que vous en faites |
 |---|---|---|
 | Le socle de référentiel | 3 452 | Vous le gardez. Questions d'acceptation, plan de comptes, articles du règlement |
-| Le jeu de démonstration | 7 293 | Vous pourrez l'effacer quand vous passerez à vos dossiers |
+| Le jeu de démonstration | 7 152 | Vous pourrez l'effacer quand vous passerez à vos dossiers |
 
 **Sans la couche B, vos écrans sont vides.** Ce n'est pas une panne d'affichage.
 
@@ -66,8 +70,8 @@ l'espace de travail où la solution a été construite. Pas le vôtre.
 
 | Ce qui ne se recolle pas | Combien | Sans réparation |
 |---|---|---|
-| Les tables du modèle vers la base | 72 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
-| Les boutons vers les ensembles de fonctions | 24 | Les boutons ne font rien, ou écrivent au mauvais endroit |
+| Les sources des deux modèles vers la base | 73 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
+| Les boutons vers les ensembles de fonctions | 36 | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
 **Ces deux points sont documentés par l'éditeur**, et ce ne sont pas des défauts de notre solution.
 
@@ -94,10 +98,18 @@ signe d'une modification à la main, et une écriture aveugle le casserait.
 
 **L'ordre compte :** le modèle d'abord, les boutons ensuite.
 
-### La troisième liaison, qui se pose à la main
+### Les liaisons qui se posent à la main
 
-La connexion des fonctions à la base ne voyage pas non plus. Elle se pose au portail, en deux
-actions par ensemble de fonctions. C'est l'étape 8.
+Trois choses ne voyagent pas dans les fichiers et se posent au portail.
+
+| Ce qui se pose à la main | Où | Quand |
+|---|---|---|
+| La connexion des fonctions à la base | Deux actions par ensemble de fonctions | Étape 8 |
+| Les informations d'identification des modèles | Une fois par modèle, en OAuth2 | Étapes 9 et 10 |
+| L'actualisation du modèle du client | Il garde une copie des données, contrairement à l'autre | Étapes 9 et 10 |
+
+**Aucune des trois ne produit de message d'erreur.** Elles produisent un écran vide, ce qui est le
+symptôme le plus trompeur de toute l'installation.
 
 ---
 

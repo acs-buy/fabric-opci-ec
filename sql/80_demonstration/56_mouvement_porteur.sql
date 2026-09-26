@@ -4,6 +4,7 @@
 
 IF NOT EXISTS (SELECT 1 FROM dbo.[mouvement_porteur])
 BEGIN
+    SET IDENTITY_INSERT dbo.[mouvement_porteur] ON;
     INSERT INTO dbo.[mouvement_porteur] ([id], [porteur_id], [date_valeur], [nature], [nombre_parts], [montant], [saisi_par], [saisi_le]) VALUES
         (N'8',N'4',N'2025-12-31',N'SOUSCRIPTION',N'6000.0000',N'600000.00',N'installation',N'2026-09-06 01:04:49.340'),
         (N'9',N'5',N'2025-12-31',N'SOUSCRIPTION',N'4000.0000',N'400000.00',N'installation',N'2026-09-06 01:04:49.340'),
@@ -25,6 +26,7 @@ BEGIN
         (N'25',N'3',N'2023-12-31',N'DISTRIBUTION',N'0.0000',N'933328.92',N'installation',N'2026-09-06 11:34:39.053'),
         (N'26',N'6',N'2022-12-31',N'DISTRIBUTION',N'0.0000',N'467022.04',N'installation',N'2026-09-06 11:34:39.053'),
         (N'27',N'6',N'2023-12-31',N'DISTRIBUTION',N'0.0000',N'483453.94',N'installation',N'2026-09-06 11:34:39.053');
+    SET IDENTITY_INSERT dbo.[mouvement_porteur] OFF;
     PRINT 'mouvement_porteur : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'mouvement_porteur : deja chargee, rien a faire.';

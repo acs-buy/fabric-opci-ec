@@ -47,7 +47,14 @@ import sys
 SERVEUR_ORIGINE = "ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com"
 BASE_ORIGINE = "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"
 
-MODELE = os.path.join("fabric", "conduite_de_mission.SemanticModel")
+# LES DEUX MODELES SE RELIENT, PAS SEULEMENT CELUI DU REVISEUR.
+# Ne relier que la conduite de mission laissait le modele du client sur la base d'origine, et
+# l'ecran de restitution restait vide sans qu'aucun message ne le dise. Trouve par une
+# installation reelle le 26/09/2026, en lisant la source que le portail affiche.
+MODELES = [
+    os.path.join("fabric", "conduite_de_mission.SemanticModel"),
+    os.path.join("fabric", "restitution_client.SemanticModel"),
+]
 
 GUID = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
 SERVEUR = re.compile(r"^[0-9a-z\-]+\.database\.fabric\.microsoft\.com$", re.I)
@@ -59,8 +66,24 @@ def racine_du_depot():
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def fichiers_de_tables(racine):
-    base = os.path.join(racine, MODELE, "definition", "tables")
+def fichiers_a_examiner(racine):
+    u"""Les fichiers ou une source de donnees peut se trouver, dans les 2 modeles.
+
+    LA SOURCE N'EST PAS TOUJOURS DANS UNE TABLE. Le modele du client la declare une seule fois,
+    dans definition/expressions.tmdl, et ses tables s'y referent. Ne lire que le dossier tables/
+    n'y trouvait aucune source, et le script croyait n'avoir rien a relier.
+    """
+    trouves = []
+    for modele in MODELES:
+        trouves += fichiers_de_tables(racine, modele)
+        expressions = os.path.join(racine, modele, "definition", "expressions.tmdl")
+        if os.path.isfile(expressions):
+            trouves.append(expressions)
+    return trouves
+
+
+def fichiers_de_tables(racine, modele):
+    base = os.path.join(racine, modele, "definition", "tables")
     if not os.path.isdir(base):
         raise SystemExit(
             u"Le modele est introuvable : %s\n"
@@ -89,7 +112,7 @@ def etat(couple, serveur_cible, base_cible):
 
 def verifier(racine, serveur_cible=None, base_cible=None):
     compte = {"a_relier": [], "deja_relie": [], "inconnu": []}
-    for chemin in fichiers_de_tables(racine):
+    for chemin in fichiers_a_examiner(racine):
         for couple in sources_du_fichier(chemin):
             compte[etat(couple, serveur_cible, base_cible)].append((chemin, couple))
     return compte
@@ -110,7 +133,7 @@ def relier(racine, serveur_cible, base_cible):
         return 2
 
     if not compte["a_relier"]:
-        print(u"Rien a faire : les %d tables sont deja reliees a votre base."
+        print(u"Rien a faire : les %d sources sont deja reliees a votre base."
               % len(compte["deja_relie"]))
         return 0
 
@@ -134,7 +157,7 @@ def relier(racine, serveur_cible, base_cible):
         print(u"ATTENTION : %d source(s) n'ont pas ete reliees. Relancez avec --verifier."
               % (len(apres["a_relier"]) + len(apres["inconnu"])))
         return 1
-    print(u"\nProchaine etape : republiez le modele, puis ouvrez-le dans votre espace de travail")
+    print(u"\nProchaine etape : republiez les 2 modeles, ouvrez-les dans votre espace de travail")
     print(u"et verifiez qu'il s'actualise sans erreur. Ensuite seulement, reliez les boutons")
     print(u"(scripts/20_relier_les_boutons.py).")
     return 0
@@ -142,7 +165,7 @@ def relier(racine, serveur_cible, base_cible):
 
 def afficher(compte):
     total = sum(len(v) for v in compte.values())
-    print(u"%d source(s) de donnees dans le modele." % total)
+    print(u"%d source(s) de donnees dans les 2 modeles." % total)
     print(u"   deja reliees a votre base : %d" % len(compte["deja_relie"]))
     print(u"   restant a relier          : %d" % len(compte["a_relier"]))
     print(u"   sources inconnues         : %d" % len(compte["inconnu"]))

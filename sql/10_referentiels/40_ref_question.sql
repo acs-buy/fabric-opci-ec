@@ -4,6 +4,7 @@
 
 IF NOT EXISTS (SELECT 1 FROM dbo.[ref_question])
 BEGIN
+    SET IDENTITY_INSERT dbo.[ref_question] ON;
     INSERT INTO dbo.[ref_question] ([id], [reference], [cycle], [phase], [enonce], [type_reponse], [obligatoire], [applicabilite], [statut], [ordre], [modifie_par], [modifie_le], [section], [options], [doc_attendu], [reference_texte], [en_vigueur_depuis], [niveau_programme]) VALUES
         (N'1',N'IMMO-01',N'IMMO',NULL,N'La date d’entrée à l’actif de chaque immeuble acquis depuis le dernier arrêté est-elle celle de l’acte notarié constatant le transfert définitif de propriété ?',N'OUI_NON',N'1',N'LES_DEUX',N'A_AUDITER',N'1',NULL,NULL,NULL,NULL,NULL,NULL,N'2023-12-31',NULL),
         (N'2',N'IMMO-02',N'IMMO',NULL,N'L’acte notarié constatant le transfert de propriété figure-t-il au dossier pour chaque immeuble, terrain ou droit réel inscrit à l’actif ?',N'OUI_NON',N'1',N'LES_DEUX',N'A_AUDITER',N'2',NULL,NULL,NULL,NULL,NULL,NULL,N'2023-12-31',NULL),
@@ -625,6 +626,7 @@ BEGIN
         (N'618',N'MTN-MR02',NULL,N'MAINTIEN',N'La structure dispose-t-elle toujours de la disponibilité nécessaire pour réaliser la mission dans les délais ?',N'OUI_NON_NA',N'1',N'ARRETE_CLOTURE',N'A_AUDITER',N'123',NULL,NULL,N'Compétence et ressources (réévaluation)',N'Oui / Non / NA',NULL,N'NPMQ A18-2',N'2023-12-31',NULL),
         (N'619',N'MTN-MR03',NULL,N'MAINTIEN',N'Les moyens technologiques et méthodologiques sont-ils toujours adaptés ?',N'OUI_NON_NA',N'1',N'ARRETE_CLOTURE',N'A_AUDITER',N'124',NULL,NULL,N'Compétence et ressources (réévaluation)',N'Oui / Non / NA',NULL,N'NPMQ Par. 24-25',N'2023-12-31',NULL),
         (N'620',N'MTN-MR04',NULL,N'MAINTIEN',N'Les évolutions réglementaires (ANC, AMF, BOFiP) ont-elles été intégrées dans les compétences de l''équipe ?',N'OUI_NON_NA',N'1',N'ARRETE_CLOTURE',N'A_AUDITER',N'125',NULL,NULL,N'Compétence et ressources (réévaluation)',N'Oui / Non / NA',NULL,N'NPMQ Par. 22',N'2023-12-31',NULL);
+    SET IDENTITY_INSERT dbo.[ref_question] OFF;
     PRINT 'ref_question : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_question : deja chargee, rien a faire.';

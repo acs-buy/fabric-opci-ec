@@ -4,6 +4,7 @@
 
 IF NOT EXISTS (SELECT 1 FROM dbo.[piece_rattachement])
 BEGIN
+    SET IDENTITY_INSERT dbo.[piece_rattachement] ON;
     INSERT INTO dbo.[piece_rattachement] ([id], [piece_id], [entite], [code_actif], [question_id], [arrete], [rattache_par], [rattache_le], [piece_attendue_id], [entite_couverte], [arrete_couvert]) VALUES
         (N'1',N'1',N'OMEGA-OPCI',N'IMM-201',NULL,N'2024-12-31',N'installation',N'2026-09-06 01:06:48.7486003',N'1',N'OMEGA-OPCI',N'2024-12-31'),
         (N'2',N'2',N'OMEGA-OPCI',N'IMM-201',NULL,N'2025-12-31',N'installation',N'2026-09-06 01:06:48.7486003',N'1',N'OMEGA-OPCI',N'2025-12-31'),
@@ -72,6 +73,7 @@ BEGIN
         (N'65',N'66',N'OMEGA-OPCI',NULL,NULL,N'2025-12-31',N'installation',N'2026-09-06 01:06:51.5163700',N'67',N'OMEGA-OPCI',N'2025-12-31'),
         (N'66',N'67',N'OMEGA-OPCI',NULL,NULL,N'2025-12-31',N'installation',N'2026-09-06 01:06:51.5163700',N'76',N'OMEGA-OPCI',N'2025-12-31'),
         (N'67',N'68',N'OMEGA-OPCI',NULL,NULL,N'2025-12-31',N'installation',N'2026-09-06 01:06:51.5163700',N'77',N'OMEGA-OPCI',N'2025-12-31');
+    SET IDENTITY_INSERT dbo.[piece_rattachement] OFF;
     PRINT 'piece_rattachement : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'piece_rattachement : deja chargee, rien a faire.';

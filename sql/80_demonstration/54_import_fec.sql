@@ -4,6 +4,7 @@
 
 IF NOT EXISTS (SELECT 1 FROM dbo.[import_fec])
 BEGIN
+    SET IDENTITY_INSERT dbo.[import_fec] ON;
     INSERT INTO dbo.[import_fec] ([id], [entite], [arrete], [nom_fichier], [empreinte], [exercice_debut], [exercice_fin], [lignes_lues], [lignes_rejetees], [statut], [importe_par], [importe_le], [format]) VALUES
         (N'3',N'OPCI-1',N'2025-12-31',N'demo_opci1_2025.txt',NULL,N'2025-01-01',N'2025-12-31',N'0',N'0',N'CHARGE',N'installation',N'2026-09-06 01:04:53.371',N'BALANCE'),
         (N'4',N'OMEGA-SCI-1',N'2024-12-31',N'balance_omega-sci-1_20241231.txt',N'4DBBAC5255CCFE97A8B5850F5B6BC826B36836FCD6F6FDE1620C3CCCBEE837FF',N'2024-01-01',N'2024-12-31',N'0',N'0',N'CHARGE',N'installation',N'2026-09-06 01:05:39.016',N'BALANCE'),
@@ -58,6 +59,7 @@ BEGIN
         (N'54',N'OMEGA-SCI-9',N'2023-12-31',N'balance_omega-sci-9_20231231.txt',N'B98CCB7736160392529668A70565E15F5B2D38B07E9CBDD44EED0D1BE2BA752B',N'2023-01-01',N'2023-12-31',N'0',N'0',N'CHARGE',N'installation',N'2026-09-06 11:33:42.808',N'BALANCE'),
         (N'55',N'OMEGA-OPCI',N'2022-12-31',N'balance_omega-opci_20221231.txt',N'533440856BDC938DA24C40D50DCC6555909094B9B1C51BEF68DB2587125117D3',N'2022-01-01',N'2022-12-31',N'0',N'0',N'CHARGE',N'installation',N'2026-09-06 11:33:42.808',N'BALANCE'),
         (N'56',N'OMEGA-OPCI',N'2023-12-31',N'balance_omega-opci_20231231.txt',N'9C00DC88733DF583817376A02B67FDFCA321A3F2B7398694932F2678BDB5EF3C',N'2023-01-01',N'2023-12-31',N'0',N'0',N'CHARGE',N'installation',N'2026-09-06 11:33:42.808',N'BALANCE');
+    SET IDENTITY_INSERT dbo.[import_fec] OFF;
     PRINT 'import_fec : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'import_fec : deja chargee, rien a faire.';

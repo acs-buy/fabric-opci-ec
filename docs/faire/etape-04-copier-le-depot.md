@@ -116,7 +116,7 @@ chemin plus court, par exemple `C:\opci`.
 | Le dossier | Ce qu'il porte | Va-t-il dans votre espace de travail ? |
 |---|---|---|
 | `fabric/` | Les huit éléments Fabric | **Oui**, c'est le répertoire à indiquer à l'étape 5 |
-| `sql/` | Les 79 fichiers de données | Non, vous les jouerez à l'étape 7 |
+| `sql/` | Les 80 fichiers SQL, dont 77 de données | Non, vous les jouerez à l'étape 7 |
 | `scripts/` | Les quatre scripts | Non, ils s'exécutent sur votre poste |
 | `docs/` | Ce mode opératoire | Non |
 

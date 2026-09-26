@@ -1,4 +1,4 @@
--- eligibilite_participation : 15 ligne(s) de referentiel.
+-- eligibilite_participation : 14 ligne(s) de referentiel.
 -- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
 -- Produit depuis la base de reference, ne pas modifier a la main.
 
@@ -18,8 +18,7 @@ BEGIN
         (N'OMEGA-OPCI',N'OMEGA-SCI-8',N'1',N'1',N'a',N'1.000000',N'0',NULL,N'installation',N'2026-09-06 01:11:31.683',N'La condition 2 est CONCLUE par la vue v_condition_2_immeubles, à partir du cas de l''article R. 214-81 et du droit réel de l''article R. 214-82 portés par chaque immeuble : satisfaite : les 1 immeubles relèvent des articles R. 214-81 et R. 214-82'),
         (N'OMEGA-OPCI',N'OMEGA-SCI-9',N'1',N'1',N'a',N'1.000000',N'0',NULL,N'installation',N'2026-09-06 01:11:31.683',N'La condition 2 est CONCLUE par la vue v_condition_2_immeubles, à partir du cas de l''article R. 214-81 et du droit réel de l''article R. 214-82 portés par chaque immeuble : satisfaite : les 1 immeubles relèvent des articles R. 214-81 et R. 214-82'),
         (N'OPCI-1',N'SCI-NORD',N'1',N'1',N'a',N'1.000000',N'0',NULL,N'installation',N'2026-09-06 01:11:31.683',N'La condition 2 est CONCLUE par la vue v_condition_2_immeubles, à partir du cas de l''article R. 214-81 et du droit réel de l''article R. 214-82 portés par chaque immeuble : satisfaite sans objet : la société ne détient aucun immeuble, la condition ne peut pas être enfreinte'),
-        (N'OPCI-1',N'SIGMA-SCI-2',N'1',N'1',N'a',N'0.800000',N'0',NULL,N'installation',N'2026-09-06 01:11:31.683',N'La condition 2 est CONCLUE par la vue v_condition_2_immeubles, à partir du cas de l''article R. 214-81 et du droit réel de l''article R. 214-82 portés par chaque immeuble : satisfaite sans objet : la société ne détient aucun immeuble, la condition ne peut pas être enfreinte'),
-        (N'OPCI-ESSAI',N'SCI-ESSAI-P',NULL,NULL,NULL,N'0.600000',NULL,NULL,N'installation',N'2026-09-21 11:48:54.354',NULL);
+        (N'OPCI-1',N'SIGMA-SCI-2',N'1',N'1',N'a',N'0.800000',N'0',NULL,N'installation',N'2026-09-06 01:11:31.683',N'La condition 2 est CONCLUE par la vue v_condition_2_immeubles, à partir du cas de l''article R. 214-81 et du droit réel de l''article R. 214-82 portés par chaque immeuble : satisfaite sans objet : la société ne détient aucun immeuble, la condition ne peut pas être enfreinte');
     PRINT 'eligibilite_participation : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'eligibilite_participation : deja chargee, rien a faire.';

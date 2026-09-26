@@ -4,6 +4,7 @@
 
 IF NOT EXISTS (SELECT 1 FROM dbo.[expertise])
 BEGIN
+    SET IDENTITY_INSERT dbo.[expertise] ON;
     INSERT INTO dbo.[expertise] ([id], [code_actif], [date_valeur], [valeur_actuelle], [expert], [methode], [piece_id], [enregistre_par], [enregistre_le], [version]) VALUES
         (N'1',N'IMM-201',N'2024-12-31',N'12600000.00',N'Expert B',N'Comparaison directe',N'1',N'installation',N'2026-09-06 00:52:50.801',N'1'),
         (N'2',N'IMM-201',N'2025-12-31',N'13230000.00',N'Expert B',N'Comparaison directe',N'2',N'installation',N'2026-09-06 00:52:50.801',N'1'),
@@ -69,6 +70,7 @@ BEGIN
         (N'64',N'IMM-201',N'2026-06-30',N'13230000.00',N'Expert B',N'Comparaison directe',NULL,N'installation',N'2026-09-09 12:06:27.493',N'1'),
         (N'65',N'IMM-202',N'2026-06-30',N'9310000.00',N'Expert B',N'Comparaison directe',NULL,N'installation',N'2026-09-09 12:06:27.493',N'1'),
         (N'66',N'IMM-203',N'2026-06-30',N'16537500.00',N'Expert B',N'Comparaison directe',NULL,N'installation',N'2026-09-09 12:06:27.493',N'1');
+    SET IDENTITY_INSERT dbo.[expertise] OFF;
     PRINT 'expertise : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'expertise : deja chargee, rien a faire.';

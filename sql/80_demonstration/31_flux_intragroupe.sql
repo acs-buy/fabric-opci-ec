@@ -4,6 +4,7 @@
 
 IF NOT EXISTS (SELECT 1 FROM dbo.[flux_intragroupe])
 BEGIN
+    SET IDENTITY_INSERT dbo.[flux_intragroupe] ON;
     INSERT INTO dbo.[flux_intragroupe] ([id], [arrete], [nature], [entite_debitrice], [entite_creditrice], [compte_debiteur], [compte_crediteur], [code_actif], [montant], [source]) VALUES
         (N'74',N'2025-12-31',N'VENTE_IMMEUBLE',N'OMEGA-SCI-10',N'OMEGA-SCI-11',N'213',N'761',N'IMM-111',N'4656000.00',N'SIMULE : vente d''immeuble entre 2 filiales, au prix de la valeur actuelle retenue a l''arrete. La plus ou moins-value de cession est nette des frais encourus a l''acquisition comme a la cession, article 211-14 du reglement ANC 2021-09, et les frais d''acquisition portes en capital sont annules en contrepartie du resultat de cession, article 211-15.'),
         (N'76',N'2025-12-31',N'DIVIDENDE',N'OMEGA-SCI-12',N'OMEGA-OPCI',N'1291',N'73',NULL,N'194736.70',N'SIMULE : dividende distribue par la filiale SIIC a sa mere, 85 % du resultat de l''exercice. Le taux de 85 % est celui de l''article L. 214-69 du CMF applicable a la SPPICAV : son emploi ici pour la filiale est un CHOIX DE JEU. Les comptes 129 sont exclus du resultat lu, faute de quoi le semis se recalculerait sur sa propre distribution.'),
@@ -31,6 +32,7 @@ BEGIN
         (N'122',N'2025-12-31',N'INTERET',N'OMEGA-SCI-7',N'OMEGA-OPCI',N'623',N'724',N'IMM-107',N'202800.00',N'DERIVE : interets de la periode sur le pret EI-07, taux 6,00 %. Classement IMMOBILIER par Article 322-5 : les charges d''emprunt liees a des actifs immobiliers entrent dans les char'),
         (N'123',N'2025-12-31',N'INTERET',N'OMEGA-SCI-8',N'OMEGA-OPCI',N'623',N'724',N'IMM-108',N'405600.00',N'DERIVE : interets de la periode sur le pret EI-08, taux 6,00 %. Classement IMMOBILIER par Article 322-5 : les charges d''emprunt liees a des actifs immobiliers entrent dans les char'),
         (N'124',N'2025-12-31',N'INTERET',N'OMEGA-SCI-9',N'OMEGA-OPCI',N'623',N'724',N'IMM-109',N'308100.00',N'DERIVE : interets de la periode sur le pret EI-09, taux 6,00 %. Classement IMMOBILIER par Article 322-5 : les charges d''emprunt liees a des actifs immobiliers entrent dans les char');
+    SET IDENTITY_INSERT dbo.[flux_intragroupe] OFF;
     PRINT 'flux_intragroupe : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'flux_intragroupe : deja chargee, rien a faire.';

@@ -1,0 +1,56 @@
+{
+  "_lisez_d_abord": "Jeu d'autorisations MINIMAL, a REDUIRE et non a elargir. Le format ci-dessous est celui de Claude Code ; un autre agent de codage emploiera d'autres noms, mais le principe vaut : n'autoriser que les commandes que les etapes 4, 9 et 10 exigent. Chaque ligne porte son motif. Retirez celles dont vous n'avez pas besoin.",
+
+  "_ce_que_ce_jeu_n_autorise_pas": [
+    "Aucune connexion a Fabric, a Azure ou a GitHub : les 4 scripts du depot ne se connectent a rien.",
+    "Aucun acces a un jeton, un mot de passe ou une chaine de connexion.",
+    "Aucune ecriture hors du depot clone.",
+    "Aucune suppression de fichier.",
+    "Aucun pilotage de navigateur : les 9 etapes de portail se font a la main."
+  ],
+
+  "permissions": {
+    "allow": [
+      "Read(./**)",
+      "Bash(python scripts/00_mes_identifiants.py)",
+      "Bash(python scripts/20_relier_les_boutons.py:*)",
+      "Bash(python scripts/25_relier_le_modele.py:*)",
+      "Bash(python scripts/30_recette.py:*)",
+      "Bash(git clone:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "deny": [
+      "Read(./**/.env)",
+      "Read(./mes_commandes.txt)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(az:*)",
+      "Bash(sqlcmd:*)",
+      "Bash(curl:*)",
+      "Bash(rm:*)",
+      "WebFetch"
+    ]
+  },
+
+  "_motif_ligne_par_ligne": {
+    "Read(./**)": "Lire le depot clone : README, docs/faire, scripts, fichiers SQL. Limite au dossier courant.",
+    "python scripts/00_mes_identifiants.py": "Etape 9. Questionnaire interactif, ne se connecte a rien, ecrit mes_commandes.txt.",
+    "python scripts/20_relier_les_boutons.py": "Etape 10. Reecrit 24 boutons dans les fichiers locaux du rapport.",
+    "python scripts/25_relier_le_modele.py": "Etape 9. Reecrit 72 sources dans les fichiers .tmdl locaux.",
+    "python scripts/30_recette.py": "Verification des liaisons et liste des 12 actions de recette.",
+    "git clone": "Etape 4, une seule fois.",
+    "git status, git diff, git log": "Vous montrer ce que les scripts ont change, AVANT que vous ne poussiez."
+  },
+
+  "_motif_des_refus": {
+    "Read(./mes_commandes.txt)": "Ce fichier porte vos identifiants d'espace, de fonctions et de base. Il est ignore par .gitignore. Si vous preferez que l'agent le lise pour vous dicter les commandes, retirez cette ligne en connaissance de cause.",
+    "git push, git commit": "Vous relisez le diff et vous poussez vous-meme. Une reecriture de 72 fichiers se regarde avant d'etre publiee.",
+    "az, sqlcmd, curl": "Aucune etape du depot public n'en a besoin. Leur presence signalerait que l'agent sort du perimetre.",
+    "rm": "Rien n'est a supprimer pendant la reproduction.",
+    "WebFetch": "Toute la documentation necessaire est dans le depot, sous docs/."
+  },
+
+  "_apres_la_reproduction": "Retirez ce fichier de vos reglages, ou videz la liste allow. Une autorisation qui survit a son besoin est une autorisation de trop."
+}

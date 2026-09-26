@@ -4,6 +4,7 @@
 
 IF NOT EXISTS (SELECT 1 FROM dbo.[modele_ecriture])
 BEGIN
+    SET IDENTITY_INSERT dbo.[modele_ecriture] ON;
     INSERT INTO dbo.[modele_ecriture] ([id], [question_id], [ordre], [compte_num], [sens], [libelle], [source], [modifie_par], [modifie_le]) VALUES
         (N'1',N'5',N'1',N'1041',N'DEBIT',N'Frais d''acquisition releves sur l''immeuble entre, exclus du cout d''acquisition',N'Reglement ANC 2021-09, art. 211-3, et art. 411-3 pour le compte 1041.',NULL,NULL),
         (N'2',N'5',N'2',N'405',N'CREDIT',N'Contrepartie de la dette au titre des frais d''acquisition',N'Reglement ANC 2021-09, art. 411-3 : compte 405.',NULL,NULL),
@@ -45,6 +46,7 @@ BEGIN
         (N'38',N'223',N'2',N'266',N'CREDIT',N'Sortie de l''avance abandonnee',N'Reglement ANC 2021-09, art. 411-3, compte 266.',NULL,NULL),
         (N'39',N'252',N'1',N'1291',N'DEBIT',N'Acompte verse au titre de l''exercice sur le resultat net, porte en capitaux propres',N'Reglement ANC 2021-09, art. 321-5 : les acomptes verses au titre de l''exercice sont comptabilises dans un compte de capitaux propres. Compte 1291 du plan de l''article 411-3, acomptes sur resultat net de l''exercice.',NULL,NULL),
         (N'40',N'252',N'2',N'511',N'CREDIT',N'Reglement de l''acompte par le compte a vue',N'Reglement ANC 2021-09, art. 411-3 : compte 511 Comptes a vue.',NULL,NULL);
+    SET IDENTITY_INSERT dbo.[modele_ecriture] OFF;
     PRINT 'modele_ecriture : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'modele_ecriture : deja chargee, rien a faire.';

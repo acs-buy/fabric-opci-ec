@@ -6,8 +6,8 @@ Deux choses à faire ici. Remplir la base, puis autoriser les fonctions à lui p
 
 | Dossier | Contenu | Ce que c'est |
 |---|---|---|
-| `sql/10_referentiels/` | 3 452 lignes | Le socle : questions d'acceptation, plan de comptes, natures de pièces, rôles, articles du règlement |
-| `sql/80_demonstration/` | 7 293 lignes | Deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures |
+| `sql/10_referentiels/` | 41 fichiers, 3 452 lignes | Le socle : questions d'acceptation, plan de comptes, natures de pièces, rôles, articles du règlement |
+| `sql/80_demonstration/` | 36 fichiers, 7 152 lignes | Deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures |
 | `sql/89_effacer_la_demonstration.sql` | | Le script qui retire la démonstration quand vous passerez à vos dossiers |
 
 **Le socle est ce que vous gardez.** Il ne contient aucune donnée de client : ce sont des

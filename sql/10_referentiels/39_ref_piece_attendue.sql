@@ -4,6 +4,7 @@
 
 IF NOT EXISTS (SELECT 1 FROM dbo.[ref_piece_attendue])
 BEGIN
+    SET IDENTITY_INSERT dbo.[ref_piece_attendue] ON;
     INSERT INTO dbo.[ref_piece_attendue] ([id], [cycle], [phase], [libelle], [obligatoire], [periodicite], [racine_declenchante], [ordre], [modifie_par], [modifie_le], [en_vigueur_depuis]) VALUES
         (N'1',N'IMMO',NULL,N'Rapport d''expertise signé',N'1',N'ARRETE',NULL,N'1',NULL,NULL,N'2023-12-31'),
         (N'2',N'IMMO',NULL,N'Bail et avenants',N'1',N'EVENEMENT',N'721',N'2',NULL,NULL,N'2023-12-31'),
@@ -82,6 +83,7 @@ BEGIN
         (N'75',NULL,N'PERMANENT',N'Procès-verbal d''assemblée générale de l''organisme',N'1',N'EVENEMENT',N'102',N'8',NULL,NULL,N'2023-12-31'),
         (N'76',NULL,N'PLANIF',N'Fichier des écritures comptables de la période',N'1',N'ARRETE',NULL,N'1',NULL,NULL,N'2023-12-31'),
         (N'77',NULL,N'PLANIF',N'Balance générale à la date d''arrêté',N'1',N'ARRETE',NULL,N'2',NULL,NULL,N'2023-12-31');
+    SET IDENTITY_INSERT dbo.[ref_piece_attendue] OFF;
     PRINT 'ref_piece_attendue : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_piece_attendue : deja chargee, rien a faire.';

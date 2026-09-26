@@ -1,7 +1,8 @@
 # Étape 8. Connecter les fonctions à la base
 
-**Durée estimée :** 20 minutes, dont 4 minutes d'attente imposée. **Qui :** analyste recommandé,
-faisable seul.
+**Durée :** 2 minutes si les connexions sont déjà là, ce qui a été le cas sur une installation
+réelle. 20 minutes s'il faut les poser, dont 4 minutes d'attente imposée. **Qui :** analyste
+recommandé, faisable seul.
 
 ---
 
@@ -31,7 +32,30 @@ mais pas leur autorisation de parler à la base. Tant que vous ne l'avez pas pos
 
 ---
 
-## La procédure, pour fn_ecran_client
+## Commencez par regarder : la connexion est peut-être déjà là
+
+**Sur une installation réelle du 26/09/2026, les deux connexions étaient déjà posées après la seule
+synchronisation Git, et elles désignaient bien les éléments du nouvel espace de travail.**
+
+La raison : la fonction désigne sa connexion par un **alias**, `DossierOPCI` pour la base et
+`Coffre` pour le lakehouse, et non par un identifiant. La plateforme résout cet alias dans l'espace
+où la fonction se trouve.
+
+1. Ouvrez **fn_ecran_client**, puis **Manage connections** dans le bandeau.
+2. Lisez le tableau. Vous devez y voir deux lignes :
+
+| Alias | Source | Type | Location |
+|---|---|---|---|
+| Coffre | Coffre | Lakehouse | *le nom de votre espace de travail* |
+| DossierOPCI | DossierOPCI | SqlDbNative | *le nom de votre espace de travail* |
+
+3. **Si la colonne Location porte le nom de votre espace, cette étape est faite.** Vérifiez
+   fn_ecran_revision de la même façon, et passez à l'étape 9.
+4. **Si le tableau est vide, ou si Location porte un autre espace**, suivez la procédure ci-dessous.
+
+---
+
+## La procédure, si la connexion manque : pour fn_ecran_client
 
 Les deux boutons dont vous avez besoin sont dans le bandeau du haut : **Manage connections** et
 **Publish**.

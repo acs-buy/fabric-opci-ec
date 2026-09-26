@@ -20,7 +20,7 @@ item data. » Les liaisons, elles, pointent encore vers l'espace de travail d'or
 
 ### Le modèle interroge encore la base d'origine
 
-Les 72 tables du modèle sémantique lisent la base directement, et chacune porte en clair le nom du
+Les 73 sources des deux modèles sémantiques lisent la base directement, et chacune porte en clair le nom du
 serveur SQL et le nom de la base. L'éditeur donne cette liaison pour non reconstruite lors d'un
 déploiement entre espaces de travail : « Semantic models vers SQL database : No. The connection
 string in TMDL expressions contains workspace-specific values. »
@@ -30,7 +30,7 @@ pas accès. Aucun écran ne s'affiche.
 
 ### Les boutons appellent encore les fonctions d'origine
 
-Les 24 boutons qui écrivent en base portent, en clair, l'identifiant de l'espace de travail et
+Les 36 boutons qui écrivent en base portent, en clair, l'identifiant de l'espace de travail et
 celui de l'ensemble de fonctions qu'ils appellent. L'éditeur l'écrit ainsi : « Data function
 buttons don't automatically rebind across workspaces. The button stores an explicit reference to a
 specific Workspace, Function set, and Data function. »
@@ -89,6 +89,46 @@ Chaque script dit combien d'éléments il a traités, puis relit son travail pou
 Envoyez ensuite les modifications à votre dépôt GitHub, et dans Fabric, faites **Mettre à jour
 tout** une seconde fois.
 
+### Deux actions restent, et sans elles vos écrans restent vides
+
+Les scripts écrivent dans les fichiers. Deux choses ne s'y trouvent pas et se font au portail, une
+fois pour toutes. **Ces deux actions ont été trouvées par une installation réelle le 26/09/2026 :
+elles ne produisent aucun message d'erreur, seulement un écran vide.**
+
+#### Premièrement, dire à chaque modèle comment se connecter à votre base
+
+Un modèle relié à votre base sait où elle est, mais pas encore sous quelle identité l'interroger.
+
+1. Dans votre espace de travail, ouvrez les **Paramètres** du modèle `conduite_de_mission`.
+2. Dépliez **Data source credentials**. Vous y lisez alors, en clair :
+   *« Failed to test the connection to your data source. Please retry your credentials. »*
+3. Cliquez **Edit credentials**.
+4. Dans **Authentication method**, choisissez **OAuth2**, puis **Sign in**. Votre compte
+   professionnel s'affiche : choisissez-le.
+5. **Recommencez à l'identique pour le modèle `restitution_client`.**
+
+Le message d'avertissement sur le chiffrement qui peut apparaître à cette étape n'empêche pas la
+connexion de s'établir.
+
+*Vérification :* le message d'échec disparaît de la section **Data source credentials**.
+
+#### Deuxièmement, actualiser le modèle du client
+
+Les deux modèles ne lisent pas la base de la même façon, et cela change ce que vous avez à faire.
+
+| Le modèle | Comment il lit la base | Ce que vous devez faire |
+|---|---|---|
+| `conduite_de_mission` | Directement, à chaque affichage | Rien. L'écran du réviseur est alimenté dès la connexion posée |
+| `restitution_client` | Il en garde une copie | **L'actualiser**, sinon l'écran du client reste vide |
+
+Dans votre espace de travail, sur la ligne du modèle `restitution_client`, choisissez **Actualiser
+maintenant**. L'actualisation a pris **20 secondes** sur une installation réelle.
+
+**C'est aussi ce que vous referez après chaque publication au client.** L'écran du client montre
+l'état de la dernière actualisation, non l'état de la base à la seconde près.
+
+*Vérification :* ouvrez l'écran du client. Les pages portent des valeurs, et non des cases vides.
+
 ### Vérifier
 
 ### Ce que vous devez voir, avant de relier
@@ -99,9 +139,9 @@ vous en êtes avant d'avoir rien fait.
 Le modèle, qui interroge encore la base d'origine :
 
 ```
-72 source(s) de donnees dans le modele.
+73 source(s) de donnees dans les 2 modeles.
    deja reliees a votre base : 0
-   restant a relier          : 72
+   restant a relier          : 73
    sources inconnues         : 0
 
 Source portee par ces tables :
@@ -112,9 +152,9 @@ Source portee par ces tables :
 Les boutons, qui appellent encore les fonctions d'origine :
 
 ```
-24 bouton(s) de fonction dans le rapport.
+36 bouton(s) de fonction dans le rapport.
    deja relies a votre espace : 0
-   restant a relier           : 24
+   restant a relier           : 36
    identifiants inconnus      : 0
 
 fn_ecran_client, 13 fonction(s) appelee(s) :
@@ -134,15 +174,15 @@ elle ne vaut pas zéro, le rapport a été modifié à la main, et les scripts r
 ### Ce que vous devez voir, une fois relié
 
 ```
-72 source(s) de donnees dans le modele.
-   deja reliees a votre base : 72
+73 source(s) de donnees dans les 2 modeles.
+   deja reliees a votre base : 73
    restant a relier          : 0
    sources inconnues         : 0
 ```
 
 ```
-24 bouton(s) de fonction dans le rapport.
-   deja relies a votre espace : 24
+36 bouton(s) de fonction dans le rapport.
+   deja relies a votre espace : 36
    restant a relier           : 0
    identifiants inconnus      : 0
 ```
@@ -157,7 +197,7 @@ python scripts/25_relier_le_modele.py --verifier
 python scripts/20_relier_les_boutons.py --verifier
 ```
 
-Vous devez lire 72 sources reliées et 24 boutons reliés, et zéro restant.
+Vous devez lire 73 sources reliées et 36 boutons reliés, et zéro restant.
 
 ## Ce que les scripts refusent de faire
 

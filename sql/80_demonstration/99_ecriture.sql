@@ -4,6 +4,7 @@
 
 IF NOT EXISTS (SELECT 1 FROM dbo.[ecriture])
 BEGIN
+    SET IDENTITY_INSERT dbo.[ecriture] ON;
     INSERT INTO dbo.[ecriture] ([id], [lot_id], [journal_code], [journal_lib], [ecriture_num], [ecriture_date], [compte_num], [compte_lib], [comp_aux_num], [comp_aux_lib], [piece_ref], [piece_date], [ecriture_lib], [debit], [credit], [ecriture_let], [date_let], [valid_date], [montant_devise], [id_devise], [compte_origine], [famille]) VALUES
         (N'2',N'2',N'ODV',N'OD de valorisation',N'T1',N'2025-12-31',N'37',N'Difference d''estimation',NULL,NULL,NULL,NULL,N'Ecart d''estimation, verification',N'1640200.00',N'0.00',NULL,NULL,NULL,NULL,NULL,NULL,N'DERIVABLE'),
         (N'3',N'2',N'ODV',N'OD de valorisation',N'T1',N'2025-12-31',N'1053',N'Variation des differences',NULL,NULL,NULL,NULL,N'Contrepartie prescrite du 37',N'0.00',N'1640200.00',NULL,NULL,NULL,NULL,NULL,NULL,N'DERIVABLE'),
@@ -1005,6 +1006,7 @@ BEGIN
         (N'3490',N'121',N'ODV',N'OD de valorisation',N'VAL',N'2023-12-31',N'105',N'Variation des differences d''estimation',NULL,NULL,NULL,NULL,N'Contrepartie prescrite du compte 275',N'0.00',N'2366520.00',NULL,NULL,NULL,NULL,NULL,NULL,N'DERIVABLE'),
         (N'3491',N'122',N'ODR',N'OD de revision',N'122',N'2026-06-30',N'1041',N'Frais d’acquisition à la clôture de l’exercice',NULL,NULL,NULL,NULL,N'Frais d''acquisition releves sur l''immeuble entre, art. 211-3 (illustration a montant rond)',N'120000.00',N'0.00',NULL,NULL,NULL,NULL,NULL,NULL,N'DECIDEE'),
         (N'3492',N'122',N'ODR',N'OD de revision',N'122',N'2026-06-30',N'405',N'Fournisseurs d''exploitation',NULL,NULL,NULL,NULL,N'Frais d''acquisition releves sur l''immeuble entre, art. 211-3 (illustration a montant rond)',N'0.00',N'120000.00',NULL,NULL,NULL,NULL,NULL,NULL,N'DECIDEE');
+    SET IDENTITY_INSERT dbo.[ecriture] OFF;
     PRINT 'ecriture : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ecriture : deja chargee, rien a faire.';

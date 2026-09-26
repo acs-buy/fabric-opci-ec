@@ -54,29 +54,40 @@ l'ordre. Comptez une heure de lecture.
 **Suivez-les dans l'ordre.** Chacune se termine par une vérification. Ne passez à la suivante que
 lorsqu'elle est passée : une étape ratée ne se voit souvent que trois étapes plus loin.
 
-Les durées sont des **estimations, non mesurées**. Elles seront remplacées par des durées relevées
-après la première reproduction à blanc.
+**Les durées de la colonne « machine » ont été relevées lors d'une reproduction à blanc, le
+26/09/2026.** Ce sont des temps d'attente, pendant lesquels vous ne faites rien. La colonne
+« en tout » y ajoute le temps de lecture et de saisie, qui reste une estimation.
 
-| # | L'étape | Durée estimée | Qui | La procédure |
-|---|---|---|---|---|
-| 1 | Ouvrir une capacité Fabric | 10 min | Vous | [Faire](docs/faire/etape-01-ouvrir-la-capacite.md) |
-| 2 | Faire activer les cinq réglages | 15 min | Votre administrateur | [Faire](docs/faire/etape-02-activer-les-reglages.md) |
-| 3 | Créer l'espace de travail | 5 min | Vous | [Faire](docs/faire/etape-03-creer-l-espace.md) |
-| 4 | Copier ce dépôt sur votre compte | 10 min | Vous | [Faire](docs/faire/etape-04-copier-le-depot.md) |
-| 5 | Connecter l'espace au dépôt | 20 min | Vous, administrateur de l'espace | [Faire](docs/faire/etape-05-connecter-le-depot.md) |
-| 6 | Ramener les éléments | 15 min | Vous | [Faire](docs/faire/etape-06-ramener-les-elements.md) |
-| 7 | Charger les données | 30 min | Analyste recommandé | [Faire](docs/faire/etape-07-charger-les-donnees.md) |
-| 8 | Connecter les fonctions à la base | 20 min | Analyste recommandé | [Faire](docs/faire/etape-08-connecter-les-fonctions.md) |
-| 9 | Relier les modèles à votre base | 15 min | Analyste recommandé | [Faire](docs/faire/etape-09-et-10-relier.md) |
-| 10 | Relier les boutons à vos fonctions | 15 min | Analyste recommandé | [Faire](docs/faire/etape-09-et-10-relier.md) |
-| 11 | Publier les deux écrans | 30 min | Vous | [Faire](docs/faire/etape-11-publier-les-applications.md) |
-| 12 | Passer la recette | 60 min | Vous, plus un collègue | [Faire](docs/faire/etape-12-passer-la-recette.md) |
+| # | L'étape | Machine | En tout | Qui | La procédure |
+|---|---|---|---|---|---|
+| 1 | Ouvrir une capacité Fabric | | 10 min | Vous | [Faire](docs/faire/etape-01-ouvrir-la-capacite.md) |
+| 2 | Faire activer les cinq réglages | | 15 min | Votre administrateur | [Faire](docs/faire/etape-02-activer-les-reglages.md) |
+| 3 | Créer l'espace de travail | **6 s** | 5 min | Vous | [Faire](docs/faire/etape-03-creer-l-espace.md) |
+| 4 | Copier ce dépôt sur votre compte | | 10 min | Vous | [Faire](docs/faire/etape-04-copier-le-depot.md) |
+| 5 | Connecter l'espace au dépôt | **3 s** | 20 min | Vous, administrateur de l'espace | [Faire](docs/faire/etape-05-connecter-le-depot.md) |
+| 6 | Ramener les éléments | **7 min** | 15 min | Vous | [Faire](docs/faire/etape-06-ramener-les-elements.md) |
+| 7 | Charger les données | **98 s** | 30 min | Analyste recommandé | [Faire](docs/faire/etape-07-charger-les-donnees.md) |
+| 8 | Connecter les fonctions à la base | | 2 à 20 min | Analyste recommandé | [Faire](docs/faire/etape-08-connecter-les-fonctions.md) |
+| 9 | Relier les modèles à votre base | **61 s** | 15 min | Analyste recommandé | [Faire](docs/faire/etape-09-et-10-relier.md) |
+| 10 | Relier les boutons à vos fonctions | | 15 min | Analyste recommandé | [Faire](docs/faire/etape-09-et-10-relier.md) |
+| 11 | Publier les deux écrans | | 30 min | Vous | [Faire](docs/faire/etape-11-publier-les-applications.md) |
+| 12 | Passer la recette | | 60 min | Vous, plus un collègue | [Faire](docs/faire/etape-12-passer-la-recette.md) |
+
+**L'étape 6 est la plus longue à attendre : 7 minutes pour ramener les dix éléments.** L'actualisation
+du modèle du client, à l'étape 9, prend 20 secondes de plus.
 
 **Deux pages s'ajoutent, à lire quand le sujet se présente :**
 
 - [Les pièces justificatives et les classeurs Excel](docs/faire/pieces-et-classeurs.md), pour
   SharePoint, OneDrive, et les exports vers Excel.
 - [Le dépannage](docs/faire/depannage.md), qui donne la cause réelle de chaque symptôme.
+
+**Vous travaillez avec un agent d'intelligence artificielle ?** Le dossier
+[`agents/`](agents/) propose des invites prêtes à coller et un jeu d'autorisations. C'est un
+facilitateur, jamais une obligation : les douze étapes ci-dessus se font à la main, sans agent
+et sans perte. Un agent n'exécute d'ailleurs que 3 de ces 12 étapes, le reste étant des gestes
+au portail. Lisez d'abord [l'avertissement](agents/AVERTISSEMENT.md) : il porte le partage des
+responsabilités, et rappelle que la revue humaine reste due quoi qu'il arrive.
 
 ---
 
@@ -168,8 +179,10 @@ posent le contenu et les branchements.
 C'est le moment où l'on croit que l'installation a échoué. Elle n'a pas échoué : elle n'est pas
 finie.
 
-*Vérification :* huit éléments sont là. Le lakehouse, la base, les deux ensembles de fonctions, les
-deux modèles et les deux rapports.
+*Vérification :* **dix éléments sont là.** Les huit que le dépôt porte, le coffre, la base, les deux
+ensembles de fonctions, les deux modèles de données et les deux rapports, plus **deux points de
+terminaison SQL que la plateforme crée d'elle-même**, un pour le coffre et un pour la base. Vous ne
+les avez pas demandés et vous n'avez rien à en faire.
 
 [Comprendre les trois couches](docs/comprendre/06-les-trois-couches.md) ·
 [Faire l'étape 6](docs/faire/etape-06-ramener-les-elements.md)
@@ -183,7 +196,7 @@ deux modèles et les deux rapports.
 | Le dossier | Ce qu'il porte | Ce que vous en faites |
 |---|---|---|
 | `sql/10_referentiels/` | 3 452 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
-| `sql/80_demonstration/` | 7 293 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures | Vous pourrez l'effacer |
+| `sql/80_demonstration/` | 7 152 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures | Vous pourrez l'effacer |
 
 **Le jeu de démonstration sert d'abord à voir l'écran du client rempli.** Sans lui, les huit pages
 de restitution sont vides et ne vous apprennent rien.
@@ -218,15 +231,24 @@ seules, et leur absence ne produit aucun message d'erreur clair.
 
 | Ce qui ne se recolle pas | Combien | Ce qui se passe sans réparation |
 |---|---|---|
-| Les tables du modèle vers la base | 72 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
-| Les boutons vers les fonctions | 24 | Les boutons ne font rien, ou écrivent au mauvais endroit |
+| Les sources des deux modèles vers la base | 73 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
+| Les boutons vers les fonctions | 36 | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
 **L'ordre compte :** le modèle d'abord, les boutons ensuite. Actualiser le modèle avant de l'avoir
 relié produit une erreur qui fait croire à une panne générale.
 
 Un script relève vos identifiants et prépare les deux commandes. Vous n'avez rien à taper à la main.
 
-*Vérification :* 72 sources reliées et 24 boutons reliés, zéro restant.
+**Puis deux actions au portail, que les scripts ne peuvent pas faire à votre place.** Elles ne
+produisent aucun message d'erreur : sans elles, vos écrans restent vides.
+
+| L'action | Sur quoi | Sans elle |
+|---|---|---|
+| Poser les informations d'identification, en OAuth2 | Les deux modèles | La base refuse de répondre |
+| Actualiser le modèle | `restitution_client` seulement, qui garde une copie des données | L'écran du client reste vide |
+
+*Vérification :* 73 sources reliées et 36 boutons reliés, zéro restant, puis l'écran du client
+porte des valeurs.
 
 [Comprendre les trois couches](docs/comprendre/06-les-trois-couches.md) ·
 [Faire les étapes 9 et 10](docs/faire/etape-09-et-10-relier.md)
