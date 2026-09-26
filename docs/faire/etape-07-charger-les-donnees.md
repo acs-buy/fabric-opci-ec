@@ -40,6 +40,41 @@ ref_question : 620 ligne(s) chargee(s).
 fichier, il vous répond « déjà chargée, rien à faire » et ne touche à rien. Vous ne risquez donc pas
 de créer des doublons en vous y reprenant à deux fois.
 
+## Vous inscrire aux missions, sans quoi votre écran sera vide
+
+**Cette action est obligatoire, et son oubli ne produit aucun message.** Il a été trouvé par une
+installation réelle le 26/09/2026.
+
+### Ce qui se passe si vous l'oubliez
+
+Le dépôt n'emporte aucune identité. Les colonnes qui disaient qui tient quel rôle portent une valeur
+neutre, `installation`, pour qu'aucune adresse de personne ne parte dans un dépôt public. Tant que
+vous ne vous y inscrivez pas :
+
+| Ce que vous constatez | La cause, dans la base |
+|---|---|
+| L'écran du réviseur est **entièrement vide** | La sécurité au niveau des lignes ne montre à chacun que les entités où il détient un mandat vivant. Aucun mandat ne porte votre adresse |
+| Aucun bouton de visa n'aboutit | La base refuse un visa à qui ne détient pas un rôle habilité |
+
+### Ce que vous faites
+
+1. Ouvrez `sql/90_vous_inscrire_aux_missions.sql`.
+2. Remplacez les **deux adresses** en tête du fichier : la vôtre, puis celle d'un collègue.
+3. Jouez le fichier.
+
+**Il faut bien deux comptes, et ce n'est pas un confort.** La base refuse l'approbation d'un visa à
+celui qui l'a soumis. Avec un seul compte, vous ne pouvez mener aucun dossier jusqu'à son visa.
+
+**L'ordre des rôles est imposé par la base**, et l'inverser produit un refus :
+
+| Le compte | Le rôle | Pourquoi celui-là |
+|---|---|---|
+| Vous | `ASSOCIE` | Créer un dossier client écrit dans le référentiel des entités, qui se tient au rôle associé |
+| Votre collègue | `CHEF_MISSION` | Ce rôle vise lui aussi, il peut donc approuver ce que vous soumettez |
+
+*Vérification :* le script affiche vos deux adresses avec 16 entités en face de chacune, puis
+`mandats encore au nom neutre : 0`.
+
 ## Ouvrir la connexion des fonctions à la base
 
 Les fonctions doivent avoir le droit d'interroger la base, et ce droit ne voyage pas par Git.

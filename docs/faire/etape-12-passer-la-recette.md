@@ -81,3 +81,32 @@ tard, cette liste vous dira ce qui marchait avant votre modification.
 **C'est la dernière étape.** Si les douze actions aboutissent, votre installation est bonne.
 
 [Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)
+
+---
+
+## L'action 11 a été éprouvée, et voici ce que la base répond
+
+Rejouée le 26/09/2026 sur une installation neuve. Les deux messages sont recopiés tels quels.
+
+**Quand celui qui a préparé l'acceptation tente de l'approuver :**
+
+```
+Approbation refusée : l'acceptation a été proposée par la même personne. La décision
+d'accepter une mission se prend par un autre que celui qui l'a préparée. Faire approuver
+par l'associé signataire.
+```
+
+**Quand le questionnaire n'est pas complet, l'approbation est refusée avant même le visa :**
+
+```
+Approbation refusée : 92 question(s) obligatoire(s) du questionnaire d'acceptation sont
+sans réponse. La première est ACCEPT-01, « L'entité pour laquelle la mission est envisagée
+est-elle un organisme de placement collectif immobilier régi par le code ». Répondre à
+toutes les questions obligatoires, puis approuver.
+```
+
+**Une fois les deux conditions remplies**, le second compte approuve, et la ligne d'acceptation
+porte alors `APPROUVE`, avec les deux adresses distinctes en `cree_par` et `approuve_par`.
+
+**Ces refus viennent de la base, non de l'écran.** Un utilisateur qui appellerait directement une
+fonction, sans passer par le bouton, recevrait le même refus.

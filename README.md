@@ -85,8 +85,8 @@ du modèle du client, à l'étape 9, prend 20 secondes de plus.
 **Vous travaillez avec un agent d'intelligence artificielle ?** Le dossier
 [`agents/`](agents/) propose des invites prêtes à coller et un jeu d'autorisations. C'est un
 facilitateur, jamais une obligation : les douze étapes ci-dessus se font à la main, sans agent
-et sans perte. Un agent n'exécute d'ailleurs que 3 de ces 12 étapes, le reste étant des gestes
-au portail. Lisez d'abord [l'avertissement](agents/AVERTISSEMENT.md) : il porte le partage des
+et sans perte. Un agent n'exécute d'ailleurs que 3 de ces 12 étapes : les autres se font au
+portail, à la souris. Lisez d'abord [l'avertissement](agents/AVERTISSEMENT.md) : il porte le partage des
 responsabilités, et rappelle que la revue humaine reste due quoi qu'il arrive.
 
 ---
@@ -197,6 +197,7 @@ les avez pas demandés et vous n'avez rien à en faire.
 |---|---|---|
 | `sql/10_referentiels/` | 3 452 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
 | `sql/80_demonstration/` | 7 152 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures | Vous pourrez l'effacer |
+| `sql/90_vous_inscrire_aux_missions.sql` | Il vous inscrit, vous et un collègue, sur les missions de démonstration | **Obligatoire.** Sans lui, l'écran du réviseur est vide |
 
 **Le jeu de démonstration sert d'abord à voir l'écran du client rempli.** Sans lui, les huit pages
 de restitution sont vides et ne vous apprennent rien.
