@@ -120,6 +120,6 @@ Le détail, avec les chiffres, est dans [les licences](05-les-licences.md).
 
 ---
 
-Suite : [Étape 1. Ouvrir une capacité Fabric](../faire/etape-01-ouvrir-la-capacite.md)
+Suite : [9. Trois espaces de travail, et un pipeline entre eux](09-trois-espaces.md)
 
 [Revenir au sommaire](../../README.md) · [Les licences](05-les-licences.md)

@@ -20,7 +20,7 @@ Deux personnes s'en servent, et leurs besoins ont dicté ce qu'elle fait.
 
 Le dépôt est écrit en deux parties, et chaque étape figure dans les deux.
 
-La partie **Comprendre** dit pourquoi une étape existe et ce qui peut mal tourner. Huit pages,
+La partie **Comprendre** dit pourquoi une étape existe et ce qui peut mal tourner. Neuf pages,
 environ une heure de lecture.
 
 La partie **Faire** donne la procédure, avec le nom exact de chaque bouton. À lire l'écran sous
@@ -42,6 +42,7 @@ Pour installer sans préambule, allez au tableau des douze étapes.
 | 6 | [Les trois couches d'une reproduction](docs/comprendre/06-les-trois-couches.md) | Pourquoi l'installation ne se fait pas d'un seul coup |
 | 7 | [L'environnement intégré](docs/comprendre/07-l-environnement-integre.md) | L'authentification, le cloisonnement des données, où elles sont stockées |
 | 8 | [Les autorisations](docs/comprendre/08-les-autorisations.md) | Toutes les autorisations, qui les pose, à quelle étape, et les deux qui se demandent d'avance |
+| 9 | [Trois espaces de travail](docs/comprendre/09-trois-espaces.md) | Pourquoi un cabinet en tient trois, ce qu'un pipeline copie, et les cinq actions qu'il ne copie pas |
 
 ---
 
@@ -72,11 +73,15 @@ reste une estimation.
 L'étape 6 demande 7 minutes d'attente pour ramener les dix éléments.
 L'actualisation du modèle du client, à l'étape 9, prend 20 secondes.
 
-Quatre pages s'ajoutent, à lire quand le sujet se présente :
+Six pages s'ajoutent, à lire quand le sujet se présente :
 
 - [Les pièces justificatives et les classeurs Excel](docs/faire/pieces-et-classeurs.md), pour
   SharePoint, OneDrive, et les exports vers Excel.
 - [Le dépannage](docs/faire/depannage.md), qui donne la cause réelle de chaque symptôme.
+- [Déployer en trois espaces](docs/faire/deployer-en-trois-espaces.md), pour un cabinet qui
+  installe dans DEV, fait tester dans TEST, et n'ouvre PROD qu'une fois les tests signés.
+- [Le cahier de tests](docs/faire/cahier-de-tests.md), 26 tests à faire passer dans TEST avant
+  d'ouvrir la production.
 - [Créer l'espace SharePoint d'un client depuis la solution](docs/faire/etape-13-provisionner-les-espaces-clients.md),
   étape facultative qui vient après les douze autres. Le code de l'Azure Function est dans
   [`azure/`](azure/README.md), avec les sept autorisations Microsoft Graph et leur raison d'être.
