@@ -71,11 +71,14 @@ reste une estimation.
 L'étape 6 demande 7 minutes d'attente pour ramener les dix éléments.
 L'actualisation du modèle du client, à l'étape 9, prend 20 secondes.
 
-Trois pages s'ajoutent, à lire quand le sujet se présente :
+Quatre pages s'ajoutent, à lire quand le sujet se présente :
 
 - [Les pièces justificatives et les classeurs Excel](docs/faire/pieces-et-classeurs.md), pour
   SharePoint, OneDrive, et les exports vers Excel.
 - [Le dépannage](docs/faire/depannage.md), qui donne la cause réelle de chaque symptôme.
+- [Créer l'espace SharePoint d'un client depuis la solution](docs/faire/etape-13-provisionner-les-espaces-clients.md),
+  étape facultative qui vient après les douze autres. Le code de l'Azure Function est dans
+  [`azure/`](azure/README.md), avec les sept autorisations Microsoft Graph et leur raison d'être.
 - [Reproduire avec un agent d'intelligence artificielle](docs/faire/avec-un-agent.md) : les
   3 étapes sur 12 qu'un agent sait jouer, et les 4 contrôles qui restent à vous. Les demandes
   prêtes à coller sont dans [`agents/`](agents/README.md). Rien de tout cela n'est obligatoire ;

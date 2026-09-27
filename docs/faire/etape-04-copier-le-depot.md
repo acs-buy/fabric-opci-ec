@@ -119,6 +119,7 @@ chemin plus court, par exemple `C:\opci`.
 | `sql/` | Les 80 fichiers SQL, dont 77 de données | Non, vous les jouerez à l'étape 7 |
 | `scripts/` | Les quatre scripts | Non, ils s'exécutent sur votre poste |
 | `docs/` | Ce mode opératoire | Non |
+| `azure/` | Le code de la fonction qui crée l'espace d'un client, facultative | Non, elle se déploie sur Azure |
 
 **Retenez `fabric`.** C'est la valeur à saisir à l'étape suivante, et l'oublier fait échouer la
 synchronisation.

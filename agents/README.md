@@ -30,6 +30,7 @@ d'une reproduction complète, le 26/09/2026.
 | **9 et 10** | **Relier les modèles et les boutons** | **Oui** | [La demande](etape-09-et-10-relier.md) |
 | 11 | Publier les deux écrans | Non | L'application et ses audiences se composent au portail |
 | 12 | Passer la recette | Non | Douze actions à l'écran, et l'action 11 exige deux personnes |
+| 13 | Créer l'espace SharePoint d'un client | **Non** | Elle demande un rôle d'administrateur Microsoft Entra, qui ne se délègue pas |
 
 **Ce que cela vous fait gagner**, mesuré le 26/09/2026 : environ 55 minutes de saisie et de
 relecture sur les étapes 7, 9 et 10. Le temps d'attente de la machine, lui, ne change pas.
