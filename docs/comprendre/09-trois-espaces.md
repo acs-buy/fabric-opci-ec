@@ -22,6 +22,11 @@ d'un acte professionnel.
 **Cela ne coûte rien de plus.** Un espace de travail ne se facture pas : c'est la capacité qui se
 facture, et les trois espaces tiennent sur la même.
 
+**Mesuré le 27/09/2026 :** trois espaces portant la solution coexistaient sur une seule capacité,
+avec 65 éléments en tout. C'était une capacité d'essai F64. **Sur une F4, le minimum de la
+solution, cette cohabitation n'a pas été mesurée** : si vous installez sur F4, surveillez votre
+consommation après le second espace.
+
 ---
 
 ## Ce que le pipeline vous évite, et ce qu'il ne vous évite pas

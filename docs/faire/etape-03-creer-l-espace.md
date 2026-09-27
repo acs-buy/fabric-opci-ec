@@ -8,7 +8,8 @@ Un espace de travail Fabric est le contenant de toute la solution.
 
 **Pour l'exploiter en mission, créez-en trois** : un pour installer et corriger, un pour faire
 tester vos collaborateurs, un pour vos dossiers réels. Un espace de travail ne coûte rien de plus :
-c'est la capacité qui se facture, et les trois tiennent sur la même.
+c'est la capacité qui se facture, et les trois tiennent sur la même. Cette cohabitation a été
+mesurée sur une capacité d'essai F64, et non sur une F4.
 
 | L'espace | Ce qu'on y fait |
 |---|---|
