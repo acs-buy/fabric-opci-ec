@@ -30,10 +30,14 @@ d'une reproduction complète, le 26/09/2026.
 | **9 et 10** | **Relier les modèles et les boutons** | **Oui** | [La demande](etape-09-et-10-relier.md) |
 | 11 | Publier les deux écrans | Non | L'application et ses audiences se composent au portail |
 | 12 | Passer la recette | Non | Douze actions à l'écran, et l'action 11 exige deux personnes |
-| 13 | Créer l'espace SharePoint d'un client | **Non** | Elle demande un rôle d'administrateur Microsoft Entra, qui ne se délègue pas |
+| 13 | Créer l'espace SharePoint d'un client, facultative | **En partie** | [La demande](etape-13-provisionner.md). Deux points sur neuf restent à vous : les autorisations et la clé |
 
 **Ce que cela vous fait gagner**, mesuré le 26/09/2026 : environ 55 minutes de saisie et de
 relecture sur les étapes 7, 9 et 10. Le temps d'attente de la machine, lui, ne change pas.
+
+L'étape 13 s'ajoute à cette liste depuis le 27/09/2026, pour la partie qui se délègue : créer les
+ressources Azure et déployer le code. Affecter les autorisations et manipuler la clé de la fonction
+restent à vous.
 
 Le reste du parcours ne bouge pas. Un agent ne raccourcit ni l'ouverture de la capacité, ni les
 réglages du locataire, ni la recette.

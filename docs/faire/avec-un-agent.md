@@ -47,8 +47,11 @@ Ce partage tient à ce que la plateforme expose, et non à une préférence.
 | 9 et 10 | Relier les modèles et les boutons | **Oui** | Deux scripts fournis, qu'il lance et dont il vous lit la sortie |
 | 11 | Publier les deux écrans | **Non** | L'application et ses audiences se composent au portail |
 | 12 | Passer la recette | **Non** | Douze actions à l'écran, et l'action 11 exige deux personnes |
+| 13 | Créer l'espace SharePoint d'un client, facultative | **En partie** | Créer les ressources Azure et déployer, oui ; les autorisations et la clé, non |
 
-Trois étapes sur douze, et ce sont les plus répétitives.
+Trois étapes sur douze se délèguent entièrement, et ce sont les plus répétitives. L'étape 13,
+facultative, se délègue pour moitié : les demandes sont dans
+[`agents/etape-13-provisionner.md`](../../agents/etape-13-provisionner.md).
 
 ---
 
