@@ -15,7 +15,7 @@ Cette page-ci donne les commandes.
 
 | Le fichier | Ce que c'est |
 |---|---|
-| `function_app.py` | Le code de la fonction, Python, une seule route `provisionner_espace` |
+| `function_app.py` | Le code de la fonction, Python, deux routes : `provisionner_espace` et `deposer_classeur` |
 | `host.json` | La configuration de l'hôte Azure Functions |
 | `requirements.txt` | Les trois bibliothèques employées |
 | `roles_graph.sh` | L'affectation des sept rôles Graph à l'identité managée |
@@ -121,6 +121,51 @@ GRANT REFERENCES ON DATABASE SCOPED CREDENTIAL::[https://<votre-function-app>.az
 
 `sp_invoke_external_rest_endpoint` est activé par défaut dans SQL database in Fabric : vous n'avez
 rien à activer, seulement à donner ces deux droits.
+
+---
+
+## La seconde route : déposer le dossier de travail dans le site du cabinet
+
+La même fonction porte une seconde route, `deposer_classeur`. À l'export du dossier de travail,
+elle dépose le classeur dans le site SharePoint **du cabinet**, jamais dans l'espace du client, et
+rend un lien qui s'ouvre au clic.
+
+**Pourquoi SharePoint et non le coffre.** Une adresse OneLake directe ne s'ouvre pas dans un
+navigateur : elle rend « Unauthorized, Bearer token is not present ». Un fichier SharePoint s'ouvre.
+
+**Aucune autorisation nouvelle** : `Sites.ReadWrite.All`, déjà affectée, couvre le dépôt. Graph
+accepte le dépôt simple jusqu'à 250 Mo.
+
+**Une credential de plus**, parce que la base apparie la credential à l'adresse appelée par son
+nom :
+
+```sql
+CREATE DATABASE SCOPED CREDENTIAL [https://<votre-function-app>.azurewebsites.net/api/deposer_classeur]
+    WITH IDENTITY = 'HTTPEndpointHeaders', SECRET = '{"x-functions-key":"<la clé de deposer_classeur>"}';
+```
+
+**Trois paramètres**, lus par `dbo.pr_deposer_classeur` :
+
+```sql
+EXEC dbo.pr_poser_parametre @code = 'DEPOT_CLASSEUR_URL',
+     @valeur = N'https://<votre-function-app>.azurewebsites.net/api/deposer_classeur', @par = N'<vous>';
+EXEC dbo.pr_poser_parametre @code = 'SITE_CABINET',
+     @valeur = N'<votre-hote>.sharepoint.com:/sites/<votre-site>', @par = N'<vous>';
+EXEC dbo.pr_poser_parametre @code = 'RACCOURCI_SITE_CABINET',
+     @valeur = N'<le nom du raccourci du coffre vers la bibliothèque de ce site>', @par = N'<vous>';
+```
+
+Le troisième est facultatif : il sert à relire un classeur déposé depuis le coffre, pour le
+réimporter. Sans lui, le dépôt fonctionne, mais la procédure ne rend pas de chemin OneLake.
+
+**Deux choses mesurées le 27/09/2026** :
+- le lien rendu porte le nom **localisé** de la bibliothèque, par exemple « Documents partages »
+  dans un locataire en français ;
+- l'écrasement d'un fichier existant a fonctionné. L'éditeur prévient toutefois qu'un fichier
+  porteur d'une étiquette de sensibilité ne peut pas être écrasé en contexte application.
+
+**Un dossier verrouillé s'exporte.** L'export n'écrit rien dans le dossier de travail, et c'est le
+dossier visé qu'on veut archiver. Le réimport, lui, reste refusé sur un dossier verrouillé.
 
 ---
 

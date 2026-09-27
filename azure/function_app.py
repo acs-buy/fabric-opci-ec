@@ -297,3 +297,54 @@ def provisionner_espace(req: func.HttpRequest) -> func.HttpResponse:
         logging.exception("provisionnement en echec")
         corps = {"statut": "ERREUR", "message": str(e)[:1500], "etapes": etapes}
     return func.HttpResponse(json.dumps(corps, ensure_ascii=False), mimetype="application/json", status_code=200)
+
+
+# --- DEPOSER UN CLASSEUR DANS LE SITE DU CABINET -------------------------------------------
+# A l'export du dossier de travail, le reviseur doit obtenir un lien qui
+# s'ouvre au clic. L'adresse OneLake directe rend « Unauthorized, Bearer token is not present »
+# dans un navigateur : c'est un lien mort. Un fichier depose dans SharePoint, lui, s'ouvre.
+#
+# LE SITE N'EST PAS ECRIT ICI. La procedure appelante le lit dans dbo.ref_parametre et le passe
+# dans le corps, pour que le code publie ne designe le site d'aucun cabinet.
+#
+# L'AUTORISATION est Sites.ReadWrite.All, deja affectee a l'identite managee. Graph accepte le
+# depot simple jusqu'a 250 Mo, et l'ecrase si le fichier existe. Une reserve de la documentation :
+# l'ecrasement d'un fichier porteur d'une etiquette de sensibilite n'est pas admis en contexte
+# application, et rendra une erreur que la procedure affiche telle quelle.
+#
+# Corps : {"site": "<hote>:/sites/<nom>", "dossier": "Dossiers de travail/<entite>/<arrete>",
+#          "fichier": "<nom>.xlsx", "contenu_base64": "..."}
+# Reponse : {"statut": "FAIT" | "ERREUR", "web_url": ..., "taille": ..., "message": ...}
+
+def segments(chemin: str) -> str:
+    """Chaque segment encode separement : les espaces et les accents passent, les / restent."""
+    from urllib.parse import quote
+    return "/".join(quote(s, safe="") for s in chemin.strip("/").split("/") if s)
+
+
+@app.route(route="deposer_classeur", methods=["POST"])
+def deposer_classeur(req: func.HttpRequest) -> func.HttpResponse:
+    import base64
+    try:
+        d = req.get_json()
+        site_ref, dossier, fichier = d["site"], d["dossier"], d["fichier"]
+        contenu = base64.b64decode(d["contenu_base64"], validate=True)
+        if not fichier or "/" in fichier or "\\" in fichier:
+            raise ValueError("le nom du fichier ne doit porter aucun separateur de dossier")
+        g = Graph(jeton_graph())
+        r = g.get(f"/sites/{site_ref}?$select=id,webUrl")
+        if r.status_code != 200:
+            raise RuntimeError(f"site introuvable ({r.status_code}) : {r.text[:300]}")
+        site_id = r.json()["id"]
+        chemin = segments(dossier + "/" + fichier)
+        r = g.s.put(f"{GRAPH}/sites/{site_id}/drive/root:/{chemin}:/content", data=contenu,
+                    headers={"Content-Type": "application/octet-stream"}, timeout=120)
+        if r.status_code not in (200, 201):
+            raise RuntimeError(f"depot refuse ({r.status_code}) : {r.text[:500]}")
+        item = r.json()
+        corps = {"statut": "FAIT", "web_url": item.get("webUrl"), "taille": item.get("size"),
+                 "id": item.get("id"), "ecrase": r.status_code == 200}
+    except Exception as e:  # la procedure appelante lit le statut et le message
+        logging.exception("depot de classeur en echec")
+        corps = {"statut": "ERREUR", "message": str(e)[:1500]}
+    return func.HttpResponse(json.dumps(corps, ensure_ascii=False), mimetype="application/json", status_code=200)
