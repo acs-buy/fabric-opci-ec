@@ -1,11 +1,16 @@
-
--- --- 2 : la credential vers la fonction, A EXECUTER UNE FOIS A LA MAIN ----------
+-- --- la credential vers VOTRE fonction, A EXECUTER UNE FOIS A LA MAIN ---------
+-- Le nom de la credential EST l'adresse appelee : sp_invoke_external_rest_endpoint les apparie
+-- par ce nom. Voir azure/README.md du depot, point 5.
+--
 -- IF NOT EXISTS (SELECT 1 FROM sys.symmetric_keys WHERE name = '##MS_DatabaseMasterKey##')
---     CREATE MASTER KEY ENCRYPTION BY PASSWORD = '<mot de passe fort>';
--- CREATE DATABASE SCOPED CREDENTIAL [https://opci-espaces-fn-acs.azurewebsites.net/api/provisionner_espace]
+--     CREATE MASTER KEY ENCRYPTION BY PASSWORD = '<mot de passe fort, garde hors du depot>';
+-- CREATE DATABASE SCOPED CREDENTIAL [https://<votre-function-app>.azurewebsites.net/api/provisionner_espace]
 --     WITH IDENTITY = 'HTTPEndpointHeaders', SECRET = '{"x-functions-key":"<cle de fonction>"}';
+-- EXEC dbo.pr_poser_parametre @code = 'ESPACE_CLIENT_URL',
+--      @valeur = N'https://<votre-function-app>.azurewebsites.net/api/provisionner_espace',
+--      @par = N'<votre adresse>';
 
--- --- 3 : la vue de la feuille, une ligne par entite du perimetre -------------
+-- --- la vue de la feuille, une ligne par entite du perimetre -----------------
 CREATE   VIEW dbo.v_espace_client AS
 SELECT e.code + '|' + ISNULL(CAST(d.id AS VARCHAR (10)), '0') AS cle,
        e.code AS entite, e.denomination, e.forme_vehicule,
