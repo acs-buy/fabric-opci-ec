@@ -20,7 +20,7 @@ Deux personnes s'en servent, et leurs besoins ont dicté ce qu'elle fait.
 
 Le dépôt est écrit en deux parties, et chaque étape figure dans les deux.
 
-La partie **Comprendre** dit pourquoi une étape existe et ce qui peut mal tourner. Sept pages,
+La partie **Comprendre** dit pourquoi une étape existe et ce qui peut mal tourner. Huit pages,
 environ une heure de lecture.
 
 La partie **Faire** donne la procédure, avec le nom exact de chaque bouton. À lire l'écran sous
@@ -41,6 +41,7 @@ Pour installer sans préambule, allez au tableau des douze étapes.
 | 5 | [Les licences, expliquées](docs/comprendre/05-les-licences.md) | Ce que coûte la solution, et la ligne qu'on oublie |
 | 6 | [Les trois couches d'une reproduction](docs/comprendre/06-les-trois-couches.md) | Pourquoi l'installation ne se fait pas d'un seul coup |
 | 7 | [L'environnement intégré](docs/comprendre/07-l-environnement-integre.md) | L'authentification, le cloisonnement des données, où elles sont stockées |
+| 8 | [Les autorisations](docs/comprendre/08-les-autorisations.md) | Toutes les autorisations, qui les pose, à quelle étape, et les deux qui se demandent d'avance |
 
 ---
 

@@ -165,6 +165,6 @@ Les contreparties de ce choix :
 
 ---
 
-**C'est la dernière page de cette partie.** Vous pouvez passer à [l'installation, étape 1](../faire/etape-01-ouvrir-la-capacite.md).
+Suite : [8. Les autorisations : qui les pose, et à quel moment](08-les-autorisations.md)
 
 [Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)
