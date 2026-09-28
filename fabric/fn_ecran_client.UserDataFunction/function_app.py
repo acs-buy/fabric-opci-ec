@@ -354,18 +354,31 @@ def importer_reponses(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCont
 def inscrire_piece(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient,
                    ctx: fn.UserDataFunctionContext, entite: str, chemin: str, nature: str,
                    arrete: str = "", question: str = "") -> str:
-    """Bouton « Déposer une pièce », second temps : le fichier est deja televerse au coffre (chemin
-    relatif a Files/), la fonction en calcule l'empreinte et l'inscrit par pr_deposer_piece."""
-    fichiers = coffre.connectToFiles()
-    client = fichiers.get_file_client(chemin)
-    octets = client.download_file().readall()
+    """Bouton « Rattacher la pièce » : inscrit un fichier DEJA DEPOSE dans la bibliotheque « Dépôt du
+    client » du vehicule.
+
+    REGLE DU 28/09/2026, SANS DEROGATION : un fichier se depose dans SharePoint, et le coffre ne le lit
+    que par un raccourci. « chemin » porte donc le NOM DU FICHIER tel que depose, sous-dossier
+    facultatif, par exemple « 2026-06-30/releve.pdf », et non plus un chemin du coffre. Le nom du
+    parametre reste « chemin » : les boutons des ecrans 1 et 2 le lient sous ce nom.
+
+    pr_resoudre_fichier_depot rend le chemin de lecture par le raccourci sp_<vehicule>_depot, le
+    chemin_coffre et l'adresse SharePoint. La fonction lit le fichier pour son empreinte, et c'est elle
+    qui refuse un fichier absent : la base ne voit pas SharePoint."""
+    fichier = (chemin or "").strip()
+    d = _executer(base, "EXEC dbo.pr_resoudre_fichier_depot @entite=?, @fichier=?", (entite, fichier))
+    try:
+        octets = coffre.connectToFiles().get_file_client(d["chemin_lecture"]).download_file().readall()
+    except Exception:
+        raise fn.UserThrownError(
+            f"Le fichier « {fichier} » n'est pas dans la bibliothèque Dépôt du client de {d.get('vehicule') or entite}. "
+            "Vérifiez son nom et son sous-dossier.", {})
     empreinte = hashlib.sha256(octets).hexdigest().upper()
-    nom = chemin.rsplit("/", 1)[-1]
     r = _executer(base,
                   "EXEC dbo.pr_deposer_piece @entite=?, @nom_fichier=?, @chemin_coffre=?, @empreinte=?, @nature=?, "
-                  "@arrete=?, @question=?, @par=?",
-                  # meme convention que les pieces du jeu : /Coffre/<entite>/<arrete>/..., relative a Files/
-                  (entite, nom, "/Coffre/" + chemin.lstrip("/"), empreinte, nature, _vide(arrete), _vide(question), _qui(ctx)))
+                  "@arrete=?, @question=?, @par=?, @web_url=?",
+                  (entite, d["nom_fichier"], d["chemin_coffre"], empreinte, nature, _vide(arrete), _vide(question),
+                   _qui(ctx), d.get("web_url")))
     return r.get("message", "Pièce inscrite.") + f" {len(octets) // 1024} Ko."
 
 

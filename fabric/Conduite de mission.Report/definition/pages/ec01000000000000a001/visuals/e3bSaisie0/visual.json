@@ -120,7 +120,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Chemin du fichier au coffre'"
+                  "Value": "'Nom du fichier déposé, sous-dossier facultatif'"
                 }
               }
             },

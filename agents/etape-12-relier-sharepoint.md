@@ -28,7 +28,7 @@ sont imposés.
 | 11 | Créer le raccourci `fec` | **Non**, au portail Fabric : la connexion se crée avec votre compte |
 | 12 | Enregistrer `RACCOURCI_SITE_CABINET` | **Oui** |
 | 13 | Créer l'espace du véhicule de démonstration | **Oui** |
-| 14 | Créer les 2 raccourcis du site du véhicule | **Non**, au portail Fabric |
+| 14 | Créer les 3 raccourcis du site du véhicule | **Non**, au portail Fabric |
 | 15 | Déposer les pièces de démonstration | **Oui** |
 
 **Le jeu d'autorisations fourni interdit `az functionapp function keys`** pour cette raison. Ne le
@@ -119,8 +119,9 @@ suivante a échoué ; `message_ecran` dit laquelle.
 
 ## Puis vous, pour le point 14
 
-Dans le coffre, créez les raccourcis `sp_omega_opci_annuel` et `sp_omega_opci_permanent` vers les
-bibliothèques « Dossier annuel » et « Dossier permanent » du site créé au point 13.
+Dans le coffre, créez les raccourcis `sp_omega_opci_annuel`, `sp_omega_opci_permanent` et
+`sp_omega_opci_depot` vers les bibliothèques « Dossier annuel », « Dossier permanent » et « Dépôt du
+client » du site créé au point 13.
 
 ---
 

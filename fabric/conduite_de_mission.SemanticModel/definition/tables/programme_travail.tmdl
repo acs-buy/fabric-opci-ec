@@ -2,6 +2,36 @@
 table programme_travail
 	lineageTag: c4d18c7d-6fe9-4df6-ab89-1bfb4707265f
 
+	measure 'Type choisi' = SELECTEDVALUE ( programme_travail[type_programme] )
+		lineageTag: 96053eac-02be-4553-bbe8-be5ec9613af1
+
+	measure 'Type ALLEGE choisissable' = VAR t = [Type choisi] RETURN IF ( t = "ALLEGE", BLANK (), IF ( NOT ISBLANK ( t ) && [Questions repondues du programme] > 0, BLANK (), "ALLEGE" ) )
+		lineageTag: 4f74acfb-347c-49f9-84ca-64b3edc820cc
+
+	measure 'Type CLASSIQUE choisissable' = VAR t = [Type choisi] RETURN IF ( t = "CLASSIQUE", BLANK (), IF ( NOT ISBLANK ( t ) && [Questions repondues du programme] > 0, BLANK (), "CLASSIQUE" ) )
+		lineageTag: 37b49b5c-10ab-465e-9016-d8108db6db72
+
+	measure 'Type ETENDU choisissable' = VAR t = [Type choisi] RETURN IF ( t = "ETENDU", BLANK (), IF ( NOT ISBLANK ( t ) && [Questions repondues du programme] > 0, BLANK (), "ETENDU" ) )
+		lineageTag: 239bf987-1c15-40c1-bc35-69ad76a13ab9
+
+	measure 'Etat du type ALLEGE' = VAR c = [Type choisi] = "ALLEGE" VAR p = SELECTEDVALUE ( v_complexite_balance[type_propose] ) = "ALLEGE" RETURN IF ( c && p, "choisi, proposé", IF ( c, "choisi", IF ( p, "proposé", "" ) ) )
+		lineageTag: 35cfd9ff-56b1-4dae-9844-7f19cdb9e2ea
+
+	measure 'Etat du type CLASSIQUE' = VAR c = [Type choisi] = "CLASSIQUE" VAR p = SELECTEDVALUE ( v_complexite_balance[type_propose] ) = "CLASSIQUE" RETURN IF ( c && p, "choisi, proposé", IF ( c, "choisi", IF ( p, "proposé", "" ) ) )
+		lineageTag: 138dfa3a-4aec-45b7-9df5-b1503565f6e5
+
+	measure 'Etat du type ETENDU' = VAR c = [Type choisi] = "ETENDU" VAR p = SELECTEDVALUE ( v_complexite_balance[type_propose] ) = "ETENDU" RETURN IF ( c && p, "choisi, proposé", IF ( c, "choisi", IF ( p, "proposé", "" ) ) )
+		lineageTag: f45fa280-d251-4073-b363-025b5fde95b6
+
+	measure 'Fond revProgType0' = IF ( ISBLANK ( [Type ALLEGE choisissable] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 54199cbd-a55c-45d2-9982-75e4b3f97d46
+
+	measure 'Fond revProgType1' = IF ( ISBLANK ( [Type CLASSIQUE choisissable] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 7b58874d-0446-44ac-be52-3dd1a1223c1e
+
+	measure 'Fond revProgType2' = IF ( ISBLANK ( [Type ETENDU choisissable] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 8b14b2af-c03c-491f-a141-6ec2dfeacb84
+
 	column id
 		dataType: int64
 		isNullable: false

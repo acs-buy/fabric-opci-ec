@@ -157,11 +157,12 @@ avant de le créer.
 | # | Ce que vous faites | Qui |
 |---|---|---|
 | 13 | Créer l'espace du véhicule `OMEGA-OPCI` : `EXEC dbo.pr_ecran_provisionner_espace @entite = 'OMEGA-OPCI', @par = N'<votre adresse>';` | Vous |
-| 14 | Dans le coffre, créer 2 raccourcis vers ce site : **Dossier annuel** nommé `sp_omega_opci_annuel`, **Dossier permanent** nommé `sp_omega_opci_permanent` | Vous |
+| 14 | Dans le coffre, créer 3 raccourcis vers ce site : **Dossier annuel** nommé `sp_omega_opci_annuel`, **Dossier permanent** nommé `sp_omega_opci_permanent`, **Dépôt du client** nommé `sp_omega_opci_depot` | Vous |
 | 15 | Déposer les pièces de démonstration : `EXEC dbo.pr_deposer_pieces_de_demonstration @par = N'<votre adresse>';` | Vous |
 
-**Les noms des 2 raccourcis ne sont pas libres non plus.** Les 98 pièces du jeu de démonstration
-désignent leur fichier par ce chemin, par exemple
+**Les noms des 3 raccourcis ne sont pas libres non plus.** Le troisième sert à rattacher une pièce
+que le client a déposée. Les 98 pièces du jeu de démonstration désignent leur fichier par ce chemin,
+par exemple
 `/Coffre/sp_omega_opci_annuel/2024-12-31/Rapport_evaluation_IMM-201_2024-12-31.pdf`.
 
 **Les pièces déposées sont des PDF d'une page blanche.** Leurs propriétés disent « Piece de

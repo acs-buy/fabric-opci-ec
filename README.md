@@ -192,7 +192,7 @@ demandent rien de votre part.
 
 | Le dossier | Ce qu'il porte | Ce que vous en faites |
 |---|---|---|
-| `sql/10_referentiels/` | 3 452 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
+| `sql/10_referentiels/` | 3 456 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
 | `sql/80_demonstration/` | 7 152 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures, 98 fiches de pièces | Vous pourrez l'effacer |
 | `sql/90_vous_inscrire_aux_missions.sql` | Il vous inscrit, vous et un collègue, sur les missions de démonstration | **Obligatoire.** Sans lui, l'écran du réviseur est vide |
 
@@ -229,8 +229,8 @@ C'est ici que les installations échouent.
 
 | Ce qui ne se recolle pas | Combien | Ce qui se passe sans réparation |
 |---|---|---|
-| Les sources des deux modèles vers la base | 74 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
-| Les boutons vers les fonctions | 31 | Les boutons ne font rien, ou écrivent au mauvais endroit |
+| Les sources des deux modèles vers la base | 77 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
+| Les boutons vers les fonctions | 40 | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
 **L'ordre compte :** le modèle d'abord, les boutons ensuite. Actualiser le modèle avant de l'avoir
 relié produit une erreur qui fait croire à une panne générale.

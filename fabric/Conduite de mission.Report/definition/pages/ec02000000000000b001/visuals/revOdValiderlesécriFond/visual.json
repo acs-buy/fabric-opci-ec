@@ -4,10 +4,10 @@
   "position": {
     "x": 540,
     "y": 1098,
-    "z": 8500,
+    "z": 13200,
     "height": 31,
     "width": 138,
-    "tabOrder": 8500
+    "tabOrder": 13200
   },
   "visual": {
     "visualType": "shape",
@@ -39,8 +39,13 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#0F5C8C'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "v_questions_programme"
+                        }
+                      },
+                      "Property": "Fond revOdValiderlesécri"
                     }
                   }
                 }

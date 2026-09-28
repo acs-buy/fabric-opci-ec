@@ -17,6 +17,11 @@
   ],
   "functions": [
     {
+      "name": "activer_cycle",
+      "description": "",
+      "isPublicEndpointEnabled": true
+    },
+    {
       "name": "ajuster_programme",
       "description": "Ecran Revision, maquette 73",
       "isPublicEndpointEnabled": false

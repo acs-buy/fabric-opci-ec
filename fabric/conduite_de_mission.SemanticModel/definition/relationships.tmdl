@@ -446,3 +446,51 @@ relationship 9471dd96-03c8-4f43-af9c-85deecf63c95
 	fromColumn: v_export_dossier.arrete
 	toColumn: v_dim_arrete.arrete
 
+relationship bbe788f7-88ff-4806-9736-4792960cf4b0
+	fromColumn: v_programme_selection.entite
+	toColumn: ref_entite.Entité
+
+relationship 12b341ef-479f-4859-8f0e-ac9ba86ce7ec
+	fromColumn: v_programme_cycles.entite
+	toColumn: ref_entite.Entité
+
+relationship 8187e1b3-6ee9-4318-a565-4aa3f869df91
+	fromColumn: v_complexite_balance.entite
+	toColumn: ref_entite.Entité
+
+relationship bc126783-e279-4606-8528-95ea3b62f48e
+	fromColumn: programme_travail.entite
+	toColumn: ref_entite.Entité
+
+relationship 3f66b5c9-ae53-4553-9469-cbb419046dfe
+	fromColumn: v_couverture_balance.entite
+	toColumn: ref_entite.Entité
+
+relationship a5b55072-94c0-499f-9768-9d03ff0e5e5b
+	fromColumn: v_programme_selection.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 60ef8289-6d3f-40b2-b690-351a1bb6ed7a
+	fromColumn: v_programme_cycles.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship c555d0f0-698b-4cfb-8e0c-900262e62bc3
+	fromColumn: v_complexite_balance.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 9b5ce3c0-b913-4a2a-ade6-a68a26e7a057
+	fromColumn: programme_travail.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship fc6b7988-8609-474f-bfba-474c8ed9829c
+	fromColumn: v_couverture_balance.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 742a3a63-279a-4d93-ad05-4fa25b255f82
+	fromColumn: v_programme_selection.cycle
+	toColumn: ref_cycle.code
+
+relationship 2265f504-a155-4697-95c4-cb539d115e9f
+	fromColumn: v_programme_cycles.cycle
+	toColumn: ref_cycle.code
+

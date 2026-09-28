@@ -4,10 +4,10 @@
   "position": {
     "x": 102,
     "y": 858,
-    "z": 3200,
+    "z": 7900,
     "height": 20,
     "width": 260,
-    "tabOrder": 3200
+    "tabOrder": 7900
   },
   "visual": {
     "visualType": "cardVisual",

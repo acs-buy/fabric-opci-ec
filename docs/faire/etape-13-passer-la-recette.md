@@ -17,7 +17,7 @@ Faites-les dans l'ordre : chacune prépare la suivante.
 | 5 | Modifier une filiale | Section Filiales | Le changement est tracé au journal du périmètre |
 | 6 | Supprimer une filiale | Section Filiales | Refus motivé si la filiale porte des données de mission |
 | 7 | Répondre à une question | Section Questionnaire | La réponse est enregistrée au clic, sans bouton de validation |
-| 8 | Déposer une pièce | Page Pièce justificative | Le bouton ouvre la bibliothèque « Dépôt du client » ; une fois le fichier déposé, « Rattacher la pièce » l'inscrit avec sa nature, sa date et son déposant |
+| 8 | Déposer une pièce | Page Pièce justificative | Le bouton ouvre la bibliothèque « Dépôt du client » ; une fois le fichier déposé et son nom tapé, « Rattacher la pièce » l'inscrit avec sa nature, sa date, son déposant et son lien |
 | 9 | Retirer une pièce | Section Questionnaire | Motif obligatoire, refus si la pièce fonde une donnée |
 | 10 | Soumettre au visa | Section Visa | Le dossier passe en attente d'approbation |
 | 11 | Approuver le visa | Section Visa, **avec un second compte** | Refusé au compte qui a soumis, accepté à l'autre |
@@ -112,8 +112,8 @@ même si l'écran était contourné.
 
 **Les messages des actions 8 et 9 ont changé le 28/09/2026**, quand les fichiers sont passés du
 coffre à SharePoint. Le texte ci-dessus est celui que la base rend depuis, relevé ce jour-là ; le
-parcours complet de l'action 8 à l'écran, dépôt puis rattachement, n'a pas encore été rejoué sur une
-installation neuve.
+parcours complet de l'action 8, dépôt puis rattachement, a été éprouvé au clic le 28/09/2026 sur
+l'installation d'origine, pas encore sur une installation neuve.
 
 **Le refus de suppression d'une filiale qui porte des données.** Lors de l'essai, la filiale créée
 pour l'occasion ne portait ni écriture ni pièce : elle a donc été supprimée sans refus, ce qui est

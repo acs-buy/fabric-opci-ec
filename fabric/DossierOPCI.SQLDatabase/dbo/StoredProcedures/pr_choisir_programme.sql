@@ -1,4 +1,3 @@
-
 -- --- 6. choisir le programme, l'ajuster, verifier la couverture ------------------------------------
 CREATE   PROCEDURE dbo.pr_choisir_programme
     @entite  VARCHAR (20),
@@ -16,6 +15,20 @@ BEGIN
         THROW 50302, N'Le programme se choisit sur un arrêté ouvert ; celui-ci ne l''est pas.', 1;
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé ; le déverrouiller avant de modifier le programme.', 1;
+    -- LE TYPE NE CHANGE PLUS DES QU'UNE REPONSE EXISTE, regle du 28/09/2026. Le premier
+    -- choix reste permis, et rechoisir le meme type aussi : il remet la selection du type en place.
+    DECLARE @type_actuel VARCHAR (10), @pid INT;
+    SELECT @pid = id, @type_actuel = type_programme FROM dbo.programme_travail WHERE entite = @entite AND arrete = @arrete;
+    IF @type_actuel IS NOT NULL AND @type_actuel <> @type
+    BEGIN
+        DECLARE @repondues INT = (SELECT COUNT(*) FROM dbo.v_programme_selection WHERE programme_id = @pid AND repondue = 1);
+        IF @repondues > 0
+        BEGIN
+            DECLARE @m NVARCHAR (400) = N'Le programme est ' + LOWER(@type_actuel) + N' et ' + CAST(@repondues AS NVARCHAR (10))
+                  + N' question(s) portent déjà une réponse : son type ne change plus. Ajustez le programme question par question, ou cycle par cycle.';
+            THROW 50304, @m, 1;
+        END;
+    END;
 
     DECLARE @niveau TINYINT = CASE @type WHEN 'ALLEGE' THEN 1 WHEN 'CLASSIQUE' THEN 2 ELSE 3 END;
     DECLARE @id INT, @ajoutees INT = 0, @retirees INT = 0;

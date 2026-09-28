@@ -21,7 +21,16 @@ BEGIN
         RETURN;
     END;
     DECLARE @modele VARCHAR (20) = ISNULL((SELECT TOP 1 modele_code FROM dbo.ref_question_modele WHERE question_id = @qid ORDER BY modele_code), 'STD');
-    SET @cote = LEFT('FT-' + @reference + '-' + REPLACE(@arrete, '-', ''), 30);
+    -- LA COTE PORTE LE PROGRAMME, depuis le 29/09/2026 : FT-<reference>-P<programme>. Un programme est
+    -- unique par entite et arrete, donc la cote l'est sur toute la base. L'ancienne forme,
+    -- FT-<reference>-<arrete>, ne portait pas l'entite : deux vehicules ne pouvaient pas avoir la
+    -- feuille d'une meme question au meme arrete. Les feuilles deja ouvertes gardent leur cote.
+    DECLARE @programme INT = (SELECT id FROM dbo.programme_travail WHERE entite = @entite AND arrete = @arrete);
+    IF @programme IS NULL
+        THROW 50362, N'Aucun programme n''est choisi pour cet arrêté : la feuille d''une question s''ouvre depuis le programme.', 1;
+    SET @cote = 'FT-' + @reference + '-P' + CAST(@programme AS VARCHAR (10));
+    IF LEN(@cote) > 30
+        THROW 50363, N'La cote de la feuille dépasserait 30 caractères : la référence de la question est trop longue.', 1;
     EXEC dbo.pr_ouvrir_feuille @cote, @modele, @entite, @arrete, @cycle, NULL, @par;
     UPDATE dbo.feuille_travail SET question_id = @qid WHERE cote = @cote;
     SELECT @cote AS cote, @modele AS modele,

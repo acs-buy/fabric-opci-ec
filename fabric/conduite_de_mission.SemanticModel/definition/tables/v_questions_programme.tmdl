@@ -28,6 +28,33 @@ table v_questions_programme
 	measure 'Chemin du dossier' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "fec/Dossiers de travail/" & e & "/" & a & "/dossier_" & e & "_" & a & ".xlsx" )
 		lineageTag: 2730c231-954c-4333-ae52-0a8cb2bef046
 
+	measure 'Fond revDossier1' = IF ( ISBLANK ( [Chemin du dossier] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 31fabf33-df33-41f3-862a-0e24add18dc5
+
+	measure 'Fond revRepOui' = IF ( ISBLANK ( [Reference selectionnee] ), "#D9DFE6", "#E8F3EC" )
+		lineageTag: ebdb63c2-feea-472c-907d-4fd711ba6bee
+
+	measure 'Fond revRepNon' = IF ( ISBLANK ( [Reference selectionnee] ), "#D9DFE6", "#FBEDEE" )
+		lineageTag: c39ccbf1-410d-419d-83dc-274c4d46dbb8
+
+	measure 'Fond revRepNA' = IF ( ISBLANK ( [Reference selectionnee] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 5aea404b-9a59-4afa-9906-a5fae86a910e
+
+	measure 'Fond revOdRéimporter' = IF ( ISBLANK ( [Chemin des OD de la question] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 5e1372b4-e6ee-43d4-9975-61632a386b81
+
+	measure 'Fond revOdValiderlesécri' = IF ( ISBLANK ( [Reference selectionnee] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 11742d5b-b521-45b4-8314-a74c06fd1c13
+
+	measure 'Fond revFeuilleOuvrirlafeui' = IF ( ISBLANK ( [Reference selectionnee] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 29e63538-c95d-468b-9ebe-f43833399f4c
+
+	measure 'Fond revFeuilleRéimporter' = IF ( ISBLANK ( [Chemin de la feuille] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 0a2fe8b8-9657-4cf8-b651-ff7d73f8fc45
+
+	measure 'Fond revFeuilleConclure' = IF ( ISBLANK ( [Feuille de la question] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 2ccc7cbb-33e5-4bb5-9e41-469ef63fa70f
+
 	column entite
 		dataType: string
 		isNullable: false

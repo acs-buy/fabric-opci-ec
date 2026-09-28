@@ -31,7 +31,11 @@ SELECT b.entite, b.arrete, b.compte, b.libelle, b.balance_finale,
                                                 WHERE c.entite = b.entite AND c.arrete = b.arrete AND c.compte = b.compte)) THEN 'COUVERT'
                  WHEN EXISTS (SELECT 1 FROM dbo.programme_travail p WHERE p.entite = b.entite AND p.arrete = b.arrete) THEN 'NON_COUVERT'
                  ELSE 'SANS_PROGRAMME' END AS VARCHAR (14)) AS etat
-FROM dbo.v_balance b;
+-- LA LISTE DES COMPTES EST CELLE DE dbo.v_comptes_en_balance, depuis le 28/09/2026 : la meme que
+-- v_programme_cycles et la garde de retrait du programme.
+FROM dbo.v_balance b
+WHERE EXISTS (SELECT 1 FROM dbo.v_comptes_en_balance c
+              WHERE c.entite = b.entite AND c.arrete = b.arrete AND c.compte = b.compte);
 
 GO
 

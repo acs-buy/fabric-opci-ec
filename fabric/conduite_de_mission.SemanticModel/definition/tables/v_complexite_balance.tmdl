@@ -1,0 +1,125 @@
+/// Etape 2 de l'ecran Revision, contrat du 28/09/2026.
+table v_complexite_balance
+	lineageTag: ffbe33c3-b27e-4a0c-a94f-05f05c26ec85
+
+	measure 'Complexite comptes' = SUM ( v_complexite_balance[comptes_mouvementes] )
+		lineageTag: e88d0325-87af-4c26-8388-9e3fad63f614
+
+	measure 'Complexite cycles' = SUM ( v_complexite_balance[cycles_presents] )
+		lineageTag: cfcc2c2f-3d4b-47e1-b2af-31ca13693bd7
+
+	measure 'Complexite filiales' = SUM ( v_complexite_balance[balances_filiales] )
+		lineageTag: 31ad71f3-51c8-4af2-8eda-e8768e23ff0b
+
+	measure 'Complexite imports' = SUM ( v_complexite_balance[sources_import] )
+		lineageTag: 060ec63b-3a55-4125-ac02-7d1ed45be900
+
+	measure 'Type propose' = VAR t = SELECTEDVALUE ( v_complexite_balance[type_propose] ) RETURN IF ( t = "ALLEGE", "Allégé", IF ( t = "CLASSIQUE", "Classique", IF ( t = "ETENDU", "Étendu", "aucun, faute de balance importée" ) ) )
+		lineageTag: 94841ffd-8c0c-4a06-9df8-6097f77cc369
+
+	measure 'Titre de la complexite' = "Complexité de la balance, type proposé : " & [Type propose]
+		lineageTag: 463fb428-4df0-4073-bc04-a620a1db7f1e
+
+	measure 'Raison du type propose' = SELECTEDVALUE ( v_complexite_balance[raison] )
+		lineageTag: 21a229c9-57ea-46fe-ab9c-53bd7062f534
+
+	measure 'Sous-titre de la couverture' = VAR n = CALCULATE ( COUNTROWS ( v_couverture_balance ) ) VAR c = CALCULATE ( COUNTROWS ( v_couverture_balance ), v_couverture_balance[etat] = "COUVERT" ) RETURN FORMAT ( n, "0" ) & " comptes, " & FORMAT ( c, "0" ) & " couverts par une question du programme"
+		lineageTag: 9c2e9626-ebc2-4920-9a17-65617ab88974
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 9f4811d7-a987-4481-8308-7a7c3fcbbe52
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 538d52e3-be09-4226-b273-48a02115cf8b
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column comptes_mouvementes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f1b79b33-2d6e-406a-aacb-769f540e141f
+		summarizeBy: sum
+		sourceColumn: comptes_mouvementes
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycles_presents
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1a45eff6-670f-4095-a252-0f394412686c
+		summarizeBy: sum
+		sourceColumn: cycles_presents
+
+		annotation SummarizationSetBy = Automatic
+
+	column balances_filiales
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b62f0191-f0c9-45dd-9a26-1735cf0a2fde
+		summarizeBy: sum
+		sourceColumn: balances_filiales
+
+		annotation SummarizationSetBy = Automatic
+
+	column sources_import
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 59427836-bfc0-4da9-b12d-aa2a1bb1c6d8
+		summarizeBy: sum
+		sourceColumn: sources_import
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_propose
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 521d87e3-ebb0-471f-8167-0fba4677d457
+		summarizeBy: none
+		sourceColumn: type_propose
+
+		annotation SummarizationSetBy = Automatic
+
+	column raison
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: a45acc54-ee29-4b36-935b-d07268a4103d
+		summarizeBy: none
+		sourceColumn: raison
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: c3568e7e-82bf-4c7e-a7e9-da940db3ebce
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_complexite_balance = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_complexite_balance = Source{[Schema="dbo",Item="v_complexite_balance"]}[Data]
+				in
+				    dbo_v_complexite_balance
+

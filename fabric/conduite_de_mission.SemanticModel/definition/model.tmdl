@@ -86,6 +86,9 @@ ref table v_od_revision
 ref table v_questions_programme
 ref table v_revision_indicateurs
 ref table v_export_dossier
+ref table v_complexite_balance
+ref table v_programme_cycles
+ref table v_programme_selection
 
 ref role Reviseur
 

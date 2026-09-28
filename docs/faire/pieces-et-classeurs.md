@@ -48,9 +48,15 @@ ensuite à relire.
 
 1. Sur la page **Pièce justificative**, le bouton de dépôt ouvre la bibliothèque « Dépôt du client »
    du véhicule.
-2. Vous y déposez le fichier, comme dans n'importe quelle bibliothèque SharePoint.
-3. **Rattacher la pièce** l'inscrit au dossier : la solution calcule son empreinte, et l'enregistre
-   avec sa nature, sa date et son déposant.
+2. Vous y déposez le fichier, comme dans n'importe quelle bibliothèque SharePoint, dans un
+   sous-dossier si vous le souhaitez.
+3. De retour sur l'écran, vous tapez son nom dans **Nom du fichier déposé, sous-dossier
+   facultatif**, par exemple `2026-06-30/releve.pdf`.
+4. **Rattacher la pièce** l'inscrit au dossier : la solution relit le fichier, calcule son
+   empreinte, et l'enregistre avec sa nature, sa date, son déposant et son lien.
+
+**Un nom mal tapé est refusé**, avec un message qui dit que le fichier n'est pas dans la bibliothèque
+Dépôt du client. Rien n'est inscrit.
 
 **L'empreinte est la garantie de la pièce.** C'est le condensé SHA-256 du fichier : deux fichiers
 différents n'ont pas la même, et la base refuse d'inscrire deux fois le même fichier.
@@ -97,7 +103,7 @@ Le certificat est obligatoire.
 3. Sous **Sources externes**, choisissez **SharePoint Folder**.
 4. Fournissez l'adresse racine du site, créez la connexion en **Compte organisationnel**.
 5. Cochez la bibliothèque voulue, puis, à l'écran de revue, **renommez le raccourci** par l'icône
-   crayon : `fec`, `sp_omega_opci_annuel`, `sp_omega_opci_permanent`.
+   crayon : `fec`, `sp_omega_opci_annuel`, `sp_omega_opci_permanent`, `sp_omega_opci_depot`.
 
 **Les noms ne sont pas libres.** La solution lit les fichiers par ces noms, et un raccourci nommé
 autrement rend la pièce introuvable.

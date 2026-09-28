@@ -1,8 +1,6 @@
--- 226. LES MESSAGES DES PIECES DISENT OU EST LE FICHIER. 28/09/2026.
--- Depuis la regle du 28/09, le fichier d'une piece vit dans SharePoint et le coffre le voit par un
--- raccourci. « deposee au coffre » et « le fichier reste au coffre » etaient devenus faux.
 
--- --- 7. deposer une piece au coffre : l'inscription qui suit le televersement -----------------
+-- --- 7. inscrire une piece au dossier : le fichier est depose dans SharePoint, le coffre le lit par raccourci ---
+-- @web_url, ajoute le 28/09/2026 : le lien SharePoint du fichier, que dbo.pr_resoudre_fichier_depot calcule.
 CREATE   PROCEDURE dbo.pr_deposer_piece
     @entite         VARCHAR (20),
     @nom_fichier    NVARCHAR (400),
@@ -13,7 +11,8 @@ CREATE   PROCEDURE dbo.pr_deposer_piece
     @question       VARCHAR (20)  = NULL,    -- la reference d'une question, quand la piece la justifie
     @periode_debut  DATE          = NULL,
     @periode_fin    DATE          = NULL,
-    @par            NVARCHAR (400)
+    @par            NVARCHAR (400),
+    @web_url        NVARCHAR (800) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -35,14 +34,14 @@ BEGIN
     DECLARE @piece INT = (SELECT TOP (1) id FROM dbo.piece WHERE empreinte_sha256 = @empreinte);
     IF @piece IS NOT NULL
     BEGIN
-        DECLARE @m NVARCHAR (400) = N'Ce fichier est déjà au coffre, pièce n° ' + CAST(@piece AS NVARCHAR (10)) + N' ; il n''est pas déposé deux fois.';
+        DECLARE @m NVARCHAR (400) = N'Ce fichier est déjà inscrit, pièce n° ' + CAST(@piece AS NVARCHAR (10)) + N' ; il n''est pas déposé deux fois.';
         THROW 50276, @m, 1;
     END;
 
     BEGIN TRY
     BEGIN TRANSACTION;
-    INSERT INTO dbo.piece (nom_fichier, chemin_coffre, empreinte_sha256, nature, periode_debut, periode_fin, depose_par, depose_le)
-    VALUES (@nom_fichier, @chemin_coffre, @empreinte, @nature, @periode_debut, @periode_fin, @par, SYSUTCDATETIME());
+    INSERT INTO dbo.piece (nom_fichier, chemin_coffre, empreinte_sha256, nature, periode_debut, periode_fin, depose_par, depose_le, web_url, entite)
+    VALUES (@nom_fichier, @chemin_coffre, @empreinte, @nature, @periode_debut, @periode_fin, @par, SYSUTCDATETIME(), @web_url, @entite);
     SET @piece = SCOPE_IDENTITY();
     INSERT INTO dbo.piece_rattachement (piece_id, entite, arrete, question_id, rattache_par, rattache_le)
     VALUES (@piece, @entite, @arrete, @qid, @par, SYSUTCDATETIME());

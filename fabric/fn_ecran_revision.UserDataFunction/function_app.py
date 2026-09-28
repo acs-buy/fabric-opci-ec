@@ -1,6 +1,6 @@
 """fn_ecran_revision : les boutons de l'ecran Revision, une fonction par bouton.
 
-Ecrit le 16/09/2026 d'apres la maquette 73 validee par le candidat et les scripts 207 et 208. Memes
+Ecrit le 16/09/2026 d'apres la maquette 73 validee et les scripts 207 et 208. Memes
 regles que fn_ecran_client : chaque fonction appelle UNE procedure, rend la phrase du bouton, prend
 l'utilisateur dans le contexte d'execution (PreferredUsername), et un refus remonte en francais par
 UserThrownError. Connexions : « DossierOPCI » (base) et « Coffre » (lakehouse). Bibliotheque : openpyxl.
@@ -102,11 +102,29 @@ def choisir_programme(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCont
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def ajuster_programme(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
-                      entite: str, arrete: str, reference: str, actif: bool) -> str:
-    """Boutons « Ajouter une question » et « Retirer » : la selection change, le journal le dit."""
-    r = _executer(base, "EXEC dbo.pr_ajuster_programme @entite=?, @arrete=?, @reference=?, @actif=?, @par=?",
-                  (entite, arrete, reference, 1 if actif else 0, _qui(ctx)))
+                      entite: str, arrete: str, reference: str, actif: int, motif: str = "") -> str:
+    """Boutons « Ajouter au programme » et « Retirer du programme » : la selection change, le journal le dit.
+
+    actif est un ENTIER, 1 ajoute et 0 retire, porte par une mesure constante comme les reponses Oui et
+    Non ; un booleen ne se lie pas surement a une mesure. Le motif est obligatoire au retrait, la base le
+    refuse sinon, regle du 28/09/2026."""
+    r = _executer(base, "EXEC dbo.pr_ajuster_programme @entite=?, @arrete=?, @reference=?, @actif=?, @par=?, @motif=?",
+                  (entite, arrete, reference, 1 if int(actif) else 0, _qui(ctx), _vide(motif)))
     return r.get("message", "Programme ajusté.")
+
+
+@udf.context(argName="ctx")
+@udf.connection(alias="DossierOPCI", argName="base")
+@udf.function()
+def activer_cycle(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
+                  entite: str, arrete: str, cycle: str, actif: int, motif: str = "") -> str:
+    """Boutons « Activer le cycle » et « Retirer le cycle » : toutes les questions eligibles du cycle.
+
+    Regle du 28/09/2026 : un cycle qui a des comptes en balance ne se retire jamais en entier, la
+    couverture de la balance etant non negociable, et un cycle qui porte des reponses non plus."""
+    r = _executer(base, "EXEC dbo.pr_activer_cycle @entite=?, @arrete=?, @cycle=?, @actif=?, @motif=?, @par=?",
+                  (entite, arrete, cycle, 1 if int(actif) else 0, _vide(motif), _qui(ctx)))
+    return r.get("message", "Cycle mis à jour.")
 
 
 @udf.connection(alias="DossierOPCI", argName="base")
@@ -215,7 +233,7 @@ def saisir_od_double(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
 
     Une ecriture porte toujours au moins 2 lignes. Les saisir une par une obligeait a vider le
     champ oppose entre les 2, et la seconde partait sans sa reference : l'execution d'une
-    fonction efface la ligne choisie dans la grille. Dicte par le candidat le 26/09/2026.
+    fonction efface la ligne choisie dans la grille. Regle du 26/09/2026.
     """
     faits = []
     for c, l, d, cr, p in ((compte1, libelle1, debit1, credit1, piece1),
@@ -289,7 +307,7 @@ def deverrouiller_dossier(base: fn.FabricSqlConnection, ctx: fn.UserDataFunction
 
 # ----------------------------------------------------------------------------- la voie du classeur
 
-# REGLE SANS DEROGATION, rappelee par le candidat le 28/09/2026 : TOUT FICHIER SE DEPOSE DANS
+# REGLE SANS DEROGATION, du 28/09/2026 : TOUT FICHIER SE DEPOSE DANS
 # SHAREPOINT, et le coffre ne le voit que par un raccourci OneLake. Aucun export n'ecrit plus au
 # coffre : chaque classeur part au site du cabinet par _deposer, et le reimport le relit par le
 # raccourci fec. Le 27/09/2026, les exports ecrivaient en natif dans Files/exports/ : c'etait une
@@ -468,7 +486,7 @@ def exporter_dossier(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
                      entite: str, arrete: str) -> str:
     """Etapes 3 et 6, « Exporter le dossier de travail » : Balance, Programme, puis par cycle Q, FT, OD ; OD libres.
 
-    LE CLASSEUR PART AUSSI DANS SHAREPOINT, choix 2 du candidat le 27/09/2026 : le reviseur doit
+    LE CLASSEUR PART AUSSI DANS SHAREPOINT, regle du 27/09/2026 : le reviseur doit
     recevoir un lien qui s'ouvre au clic, et l'adresse OneLake directe rend « Unauthorized » dans
     le navigateur, mesure du meme jour. Le depot passe par la base, pr_deposer_classeur, qui appelle
     l'Azure Function du cabinet sous identite managee : une Data function n'a pas d'identite a elle.

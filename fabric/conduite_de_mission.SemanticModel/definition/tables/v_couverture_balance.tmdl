@@ -22,7 +22,7 @@ table v_couverture_balance
 
 		annotation SummarizationSetBy = Automatic
 
-	column compte
+	column Compte
 		dataType: string
 		isNullable: false
 		sourceProviderType: varchar(20)
@@ -32,7 +32,7 @@ table v_couverture_balance
 
 		annotation SummarizationSetBy = Automatic
 
-	column libelle
+	column Libellé
 		dataType: string
 		sourceProviderType: nvarchar(300)
 		lineageTag: 46af376b-8f4e-4646-ac6b-077f1492f052
@@ -41,8 +41,9 @@ table v_couverture_balance
 
 		annotation SummarizationSetBy = Automatic
 
-	column balance_finale
+	column Solde
 		dataType: double
+		formatString: #,##0.00
 		sourceProviderType: decimal(38, 2)
 		lineageTag: ae707d95-7e4b-4142-919c-04f6643ab974
 		summarizeBy: sum
@@ -52,7 +53,7 @@ table v_couverture_balance
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	column cycles
+	column Cycles
 		dataType: string
 		sourceProviderType: varchar(8000)
 		lineageTag: 1a021e01-ecc5-4195-b745-f65c9c35e077
@@ -61,7 +62,7 @@ table v_couverture_balance
 
 		annotation SummarizationSetBy = Automatic
 
-	column questions_directes
+	column 'Questions directes'
 		dataType: int64
 		formatString: 0
 		sourceProviderType: int
@@ -71,7 +72,7 @@ table v_couverture_balance
 
 		annotation SummarizationSetBy = Automatic
 
-	column questions_du_cycle
+	column 'Questions du cycle'
 		dataType: int64
 		formatString: 0
 		sourceProviderType: int
@@ -87,6 +88,13 @@ table v_couverture_balance
 		lineageTag: bdbbc184-a3f2-4142-8931-ee1b3ab47a57
 		summarizeBy: none
 		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column Couverture = IF ( v_couverture_balance[etat] = "COUVERT", "Couvert", IF ( v_couverture_balance[etat] = "NON_COUVERT", "Hors programme", "Sans cycle" ) )
+		dataType: string
+		lineageTag: 8e11d352-10fc-4c8c-9975-4f385c592c88
+		summarizeBy: none
 
 		annotation SummarizationSetBy = Automatic
 

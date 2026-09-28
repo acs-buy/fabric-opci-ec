@@ -1,0 +1,203 @@
+/// Etape 2 de l'ecran Revision, contrat du 28/09/2026.
+table v_programme_selection
+	lineageTag: f285bcc6-25b9-4258-9c64-a961fd476aa7
+
+	measure 'Question choisie au programme' = IF ( HASONEVALUE ( v_programme_selection[Réf.] ), SELECTEDVALUE ( v_programme_selection[Réf.] ) )
+		lineageTag: e503fdf2-fe9b-464c-a582-c89bf9e0e6e1
+
+	measure 'Question ajoutable' = VAR r = [Question choisie au programme] RETURN IF ( NOT ISBLANK ( r ) && NOT SELECTEDVALUE ( v_programme_selection[actif] ), r )
+		lineageTag: 2a01c64d-b412-4ed2-ab29-e252a9c63c28
+
+	measure 'Question retirable' = VAR r = [Question choisie au programme] RETURN IF ( NOT ISBLANK ( r ) && SELECTEDVALUE ( v_programme_selection[actif] ) && NOT SELECTEDVALUE ( v_programme_selection[repondue] ), r )
+		lineageTag: a2013289-9b22-4ab9-a25b-b56aa6f14a7b
+
+	measure 'Fond revProgAjouterauprogr' = IF ( ISBLANK ( [Question ajoutable] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: cfa811a8-b5cf-4a48-b3e5-c0bfff0302df
+
+	measure 'Fond revProgRetirerduprogr' = IF ( ISBLANK ( [Question retirable] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 8d459a12-5faa-4ff5-8b18-444a0740b65d
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e4636dac-7fb0-47f2-b5dc-da40ec603212
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b7f1859d-6518-4864-a6cf-69fc7073de54
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column programme_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3a5bcf16-8c79-4d00-b0b4-6ab27450cb6e
+		summarizeBy: sum
+		sourceColumn: programme_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_programme
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: cf41ef85-e064-4172-b60f-af371e1c83ca
+		summarizeBy: none
+		sourceColumn: type_programme
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: c3ec9c90-619e-426e-8d25-e961bcc7c3ea
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Réf.'
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 1778b220-bd3b-447d-bcda-fc0f4e26122b
+		summarizeBy: none
+		sourceColumn: reference
+
+		annotation SummarizationSetBy = Automatic
+
+	column Question
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 118afadc-490d-4466-968a-e58d6480a780
+		summarizeBy: none
+		sourceColumn: enonce
+
+		annotation SummarizationSetBy = Automatic
+
+	column niveau_programme
+		dataType: int64
+		formatString: 0
+		sourceProviderType: tinyint
+		lineageTag: 2d2b1630-fcd4-4b30-848a-0d6315f4545a
+		summarizeBy: sum
+		sourceColumn: niveau_programme
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c2e16143-48ee-479f-b9f8-f4401aaba3db
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column actif
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 3401a28c-a9e2-4220-9746-80466fbddd41
+		summarizeBy: none
+		sourceColumn: actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column origine
+		dataType: string
+		sourceProviderType: varchar(5)
+		lineageTag: 39acd4f7-2644-471d-964d-88e32356d210
+		summarizeBy: none
+		sourceColumn: origine
+
+		annotation SummarizationSetBy = Automatic
+
+	column repondue
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: c36e9dae-43e3-4720-9f46-dbca6978bae0
+		summarizeBy: none
+		sourceColumn: repondue
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 6a6b4712-2bfe-4153-820c-4fb9aa4869bd
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 13418737-bb5b-4fa2-8eb1-4c0b91b4a354
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(62)
+		lineageTag: 35b25ed0-f334-4a5f-b4ea-21b9e7f681c8
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column Niveau = IF ( ISBLANK ( v_programme_selection[niveau_programme] ), "Tous", IF ( v_programme_selection[niveau_programme] = 1, "Allégé", IF ( v_programme_selection[niveau_programme] = 2, "Classique", "Étendu" ) ) )
+		dataType: string
+		lineageTag: 1736eb52-8964-40a8-bc23-654fa663b1b2
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Au programme' = IF ( v_programme_selection[actif], "Oui", "—" )
+		dataType: string
+		lineageTag: 7d7fd149-5828-471d-855b-6eb6525617f3
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Entrée par' = IF ( v_programme_selection[origine] = "TYPE", "le type", IF ( v_programme_selection[origine] = "AJOUT", "un ajout", "" ) )
+		dataType: string
+		lineageTag: c3fc564f-2197-4baa-9e09-9418dc08f7e0
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column État = IF ( v_programme_selection[repondue], "répondue", "" )
+		dataType: string
+		lineageTag: 5f59d2f4-fde2-4b4a-b033-5a356c9b0c91
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_programme_selection = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_programme_selection = Source{[Schema="dbo",Item="v_programme_selection"]}[Data]
+				in
+				    dbo_v_programme_selection
+

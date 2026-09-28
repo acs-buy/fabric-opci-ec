@@ -1,0 +1,181 @@
+/// Etape 2 de l'ecran Revision, contrat du 28/09/2026.
+table v_programme_cycles
+	lineageTag: 90ebf2c8-98ef-4958-aa3a-0ec0560d0fc1
+
+	measure Comptes = SUM ( v_programme_cycles[comptes_en_balance] )
+		lineageTag: ca4f3dd0-c0a6-4ba4-895c-d32a6fd6bda0
+
+	measure 'Cycle choisi' = IF ( HASONEVALUE ( ref_cycle[code] ), SELECTEDVALUE ( ref_cycle[code] ) )
+		lineageTag: 84866d53-bfaf-423d-9d38-98b920e9e812
+
+	measure 'Cycle activable' = VAR c = [Cycle choisi] RETURN IF ( NOT ISBLANK ( c ) && SUM ( v_programme_cycles[questions_actives] ) < SUM ( v_programme_cycles[questions_eligibles] ), c )
+		lineageTag: a7718ccb-ddbf-4741-8fd7-f78ef50b1ca7
+
+	measure 'Cycle retirable' = VAR c = [Cycle choisi] RETURN IF ( NOT ISBLANK ( c ) && SUM ( v_programme_cycles[comptes_en_balance] ) = 0 && SUM ( v_programme_cycles[questions_repondues] ) = 0 && SUM ( v_programme_cycles[questions_actives] ) > 0, c )
+		lineageTag: db6214ee-ca75-4063-9d3d-238c091c0245
+
+	measure 'Titre des questions du programme' = VAR c = [Cycle choisi] RETURN IF ( ISBLANK ( c ), "Questions du programme", "Questions du cycle " & c )
+		lineageTag: fa6f197f-7ced-4c51-8987-36ca30661532
+
+	measure 'Sous-titre des questions du programme' = FORMAT ( SUM ( v_programme_cycles[questions_actives] ), "0" ) & " au programme sur " & FORMAT ( SUM ( v_programme_cycles[questions_eligibles] ), "0" ) & " éligibles"
+		lineageTag: 444d5a52-4316-454f-b5b5-1ea6773cf0f2
+
+	measure 'Sous-titre des cycles du programme' = VAR n = CALCULATE ( DISTINCTCOUNT ( v_programme_cycles[cycle] ), REMOVEFILTERS ( ref_cycle ), v_programme_cycles[questions_eligibles] > 0 ) RETURN FORMAT ( n, "0" ) & IF ( n > 1, " cycles", " cycle" )
+		lineageTag: 5273f9c3-d6d5-4a0a-9452-ea1b72756350
+
+	measure 'Questions repondues du programme' = CALCULATE ( SUM ( v_programme_cycles[questions_repondues] ), REMOVEFILTERS ( ref_cycle ) )
+		lineageTag: 19be2242-76b7-48e3-bdbc-988f13b40af0
+
+	measure 'Activer un' = 1
+		lineageTag: 6e0b96ff-b052-4d34-b304-920f4a9be09f
+
+	measure 'Activer zero' = 0
+		lineageTag: bd0c50ad-4a81-4ffb-86ca-544f5254f97e
+
+	measure 'Fond revProgActiverlecyc' = IF ( ISBLANK ( [Cycle activable] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 6c07aa72-f8eb-48d8-9ee2-bdfb04412f65
+
+	measure 'Fond revProgRetirerlecyc' = IF ( ISBLANK ( [Cycle retirable] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: d59afb83-3995-4dd4-bb01-d86c6c1eab7a
+
+	measure 'Fond revProgOuvrirleclasse' = IF ( ISBLANK ( [Cycle choisi] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: cac8c777-cc64-4311-84b2-3ae96bf2a2b8
+
+	measure 'Cycle au programme possible' = IF ( SUM ( v_programme_cycles[questions_eligibles] ) > 0, 1 )
+		lineageTag: dc571e20-ab79-4da5-8168-eb3e6aab26db
+
+	measure Questions = FORMAT ( SUM ( v_programme_cycles[questions_actives] ), "0" ) & " / " & FORMAT ( SUM ( v_programme_cycles[questions_eligibles] ), "0" )
+		lineageTag: 210be39e-1570-4cfe-a6ba-e8b97354bf0b
+
+	measure Statut = VAR e = SELECTEDVALUE ( v_programme_cycles[etat] ) RETURN IF ( e = "ACTIF", "Actif", IF ( e = "PARTIEL", "Partiel", IF ( e = "INACTIF", "Inactif" ) ) )
+		lineageTag: 477921e1-bdbf-45e8-a18a-574a4d19446c
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: c08ab3bd-8912-4b0c-b8f5-52ec8c771394
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 059915f8-6aa7-433a-85b1-6ca2ab928839
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column programme_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b45998b5-26da-4d49-8e96-57d9c282927b
+		summarizeBy: sum
+		sourceColumn: programme_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 1a09f29a-b27b-4015-9baa-014e979eb866
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 39d18a1e-ccfd-46f0-bc9d-2804d09eeecb
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b11aa605-f9f7-498e-a69d-e4887df3230f
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column questions_eligibles
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: fb8f7395-b274-4c7d-9da4-854d5dc5fabe
+		summarizeBy: sum
+		sourceColumn: questions_eligibles
+
+		annotation SummarizationSetBy = Automatic
+
+	column questions_actives
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 69863d2f-e4dc-4cc7-a265-9abb0f2e5354
+		summarizeBy: sum
+		sourceColumn: questions_actives
+
+		annotation SummarizationSetBy = Automatic
+
+	column questions_repondues
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: fda07473-68df-4e02-93fb-60ab89c99e5b
+		summarizeBy: sum
+		sourceColumn: questions_repondues
+
+		annotation SummarizationSetBy = Automatic
+
+	column comptes_en_balance
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 6c9eff4d-3823-4fdc-ba16-fc13f02c84e7
+		summarizeBy: sum
+		sourceColumn: comptes_en_balance
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(7)
+		lineageTag: 9757a6a6-a2a5-4b1f-9398-ea69a5b865c7
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_cycle
+		dataType: string
+		sourceProviderType: varchar(52)
+		lineageTag: 0cab60b2-2c24-4093-a887-d89d605fdaec
+		summarizeBy: none
+		sourceColumn: cle_cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_programme_cycles = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_programme_cycles = Source{[Schema="dbo",Item="v_programme_cycles"]}[Data]
+				in
+				    dbo_v_programme_cycles
+

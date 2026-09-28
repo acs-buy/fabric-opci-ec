@@ -3,7 +3,7 @@ CREATE TABLE [dbo].[programme_journal] (
     [programme_id] INT            NOT NULL,
     [question_id]  INT            NULL,
     [geste]        VARCHAR (8)    NOT NULL,
-    [detail]       NVARCHAR (200) NULL,
+    [detail]       NVARCHAR (400) NULL,
     [par]          NVARCHAR (400) NOT NULL,
     [le]           DATETIME2 (3)  DEFAULT (sysutcdatetime()) NOT NULL,
     CONSTRAINT [pk_programme_journal] PRIMARY KEY CLUSTERED ([id] ASC),
