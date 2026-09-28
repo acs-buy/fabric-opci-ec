@@ -1,0 +1,93 @@
+/// Dernier export reussi du dossier de travail, par entite et arrete : le lien SharePoint.
+table v_export_dossier
+	lineageTag: f256b386-2a80-488a-841a-b413d10a2026
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 18feb571-3085-4f85-b1a4-1a6523a1ad1e
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 29bed405-d7fa-48a5-b2f1-86c38f4fc6e8
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fichier
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 9dfa55df-c759-4cdc-abb7-a7bed50928e8
+		summarizeBy: none
+		sourceColumn: fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ouvrir le dossier'
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 815a1ab0-8f8e-4faa-ae3e-be8d53513211
+		dataCategory: WebUrl
+		summarizeBy: none
+		sourceColumn: web_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column chemin_onelake
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 68b6b8f1-508e-4a1d-9248-a5eada169986
+		summarizeBy: none
+		sourceColumn: chemin_onelake
+
+		annotation SummarizationSetBy = Automatic
+
+	column Taille
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 92dea020-659d-4698-8950-603333b30589
+		summarizeBy: sum
+		sourceColumn: taille
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Déposé par'
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: cfd552ba-4523-4b03-856b-f73175b9817b
+		summarizeBy: none
+		sourceColumn: depose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Déposé le'
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 983d846a-a9ec-4347-9f78-178856e71443
+		summarizeBy: none
+		sourceColumn: depose_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_export_dossier = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_export_dossier = Source{[Schema="dbo",Item="v_export_dossier"]}[Data]
+				in
+				    dbo_v_export_dossier
+

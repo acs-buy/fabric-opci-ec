@@ -24,7 +24,7 @@ un essai d'un acte professionnel.
 
 ## Partie 1. L'écran du réviseur, douze actions
 
-Ce sont les douze actions de [l'étape 12](etape-12-passer-la-recette.md). Le détail de ce que
+Ce sont les douze actions de [l'étape 13](etape-13-passer-la-recette.md). Le détail de ce que
 chacune doit rendre y figure, avec les messages exacts.
 
 | # | L'action | Passé | Par qui | Remarque |

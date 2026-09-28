@@ -101,6 +101,6 @@ volontiers.
 
 ---
 
-Suite : [Étape 12. La recette : douze actions qui prouvent que la solution marche](../docs/faire/etape-12-passer-la-recette.md)
+Suite : [Étape 11. Publier les deux écrans](../docs/faire/etape-11-publier-les-applications.md), puis [l'étape 12 avec un agent](etape-12-relier-sharepoint.md)
 
 [Les demandes à coller](README.md) · [L'avertissement](AVERTISSEMENT.md)

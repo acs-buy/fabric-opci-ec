@@ -19,7 +19,8 @@
 #            az ad sp show --id 00000003-0000-0000-c000-000000000000 --query id -o tsv
 #
 # LES IDENTIFIANTS DE ROLES, EUX, SONT LES MEMES PARTOUT : ils appartiennent a l'application
-# Microsoft Graph, qui est la meme pour tout le monde. Ils ont ete relus le 08/09/2026.
+# Microsoft Graph, qui est la meme pour tout le monde. Ils ont ete relus le 08/09/2026, et
+# Sites.Manage.All le 28/09/2026 : Sites.ReadWrite.All ne suffit pas a creer une colonne.
 
 MI=""          # A RENSEIGNER
 GRAPH_SP=""    # A RENSEIGNER
@@ -38,6 +39,7 @@ declare -A ROLES=(
   [User.Invite.All]=09850681-111b-4a89-9bed-3f2cae46d706       # inviter les personnes du client
   [Sites.ReadWrite.All]=9492366f-7969-46a4-8d15-ed1a20078fff   # creer les bibliotheques du site
   [Directory.Read.All]=7ab1d382-f21e-4acd-a863-ba3e13f7da61    # lire l'annuaire pour ces resolutions
+  [Sites.Manage.All]=0c0bf378-bf22-4481-8f81-9e89a9b4960a      # creer la colonne Entite legale des bibliotheques
 )
 
 for nom in "${!ROLES[@]}"; do
@@ -54,7 +56,7 @@ for nom in "${!ROLES[@]}"; do
   esac
 done
 
-echo "--- relecture : 7 identifiants attendus"
+echo "--- relecture : 8 identifiants attendus"
 az rest --method GET \
   --url "https://graph.microsoft.com/v1.0/servicePrincipals/$MI/appRoleAssignments?\$select=appRoleId,resourceDisplayName" \
   -o tsv --query "value[].appRoleId" 2>&1 | tr '\n' ' '

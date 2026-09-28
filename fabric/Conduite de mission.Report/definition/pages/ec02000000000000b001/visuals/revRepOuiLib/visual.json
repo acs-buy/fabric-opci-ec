@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revRepOuiLib",
   "position": {
-    "x": 984,
-    "y": 564,
-    "z": 3900,
+    "x": 979,
+    "y": 533,
+    "z": 4900,
     "height": 18,
-    "width": 96,
-    "tabOrder": 3900
+    "width": 70,
+    "tabOrder": 4900
   },
   "visual": {
     "visualType": "textbox",
@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "11px",
-                      "color": "#FFFFFF"
+                      "color": "#1F6F43"
                     }
                   }
                 ],

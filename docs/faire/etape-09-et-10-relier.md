@@ -142,9 +142,9 @@ vous en êtes avant d'avoir rien fait.
 Le modèle, qui interroge encore la base d'origine :
 
 ```
-73 source(s) de donnees dans les 2 modeles.
+74 source(s) de donnees dans les 2 modeles.
    deja reliees a votre base : 0
-   restant a relier          : 73
+   restant a relier          : 74
    sources inconnues         : 0
 
 Source portee par ces tables :
@@ -155,9 +155,9 @@ Source portee par ces tables :
 Les boutons, qui appellent encore les fonctions d'origine :
 
 ```
-36 bouton(s) de fonction dans le rapport.
+31 bouton(s) de fonction dans le rapport.
    deja relies a votre espace : 0
-   restant a relier           : 36
+   restant a relier           : 31
    identifiants inconnus      : 0
 
 fn_ecran_client, <n> fonction(s) appelee(s) :
@@ -180,15 +180,15 @@ Les mêmes réserves qu'au paragraphe précédent : ce sont les nombres d'un jou
 **Ce qui compte est le total inchangé, et les deux lignes de restant tombées à zéro.**
 
 ```
-73 source(s) de donnees dans les 2 modeles.
-   deja reliees a votre base : 73
+74 source(s) de donnees dans les 2 modeles.
+   deja reliees a votre base : 74
    restant a relier          : 0
    sources inconnues         : 0
 ```
 
 ```
-36 bouton(s) de fonction dans le rapport.
-   deja relies a votre espace : 36
+31 bouton(s) de fonction dans le rapport.
+   deja relies a votre espace : 31
    restant a relier           : 0
    identifiants inconnus      : 0
 ```

@@ -1,13 +1,16 @@
-# La fonction qui crée l'espace collaboratif d'un client
+# La fonction qui écrit dans SharePoint à la place de la base
 
-Ce dossier porte le code d'une **Azure Function** qui crée, pour un client, un groupe Microsoft 365,
-son site SharePoint, son équipe Teams et quatre bibliothèques.
+Ce dossier porte le code d'une **Azure Function** à deux routes :
 
-**Elle est facultative.** L'installation des douze étapes n'en dépend pas, et la solution sait
-enregistrer l'adresse d'un site que vous avez créé à la main.
+| La route | Ce qu'elle fait |
+|---|---|
+| `provisionner_espace` | Crée, pour un véhicule, un groupe Microsoft 365, son site SharePoint, son équipe Teams, quatre bibliothèques et leur colonne Entité légale |
+| `deposer_classeur` | Dépose un fichier dans SharePoint : un classeur dans le site du cabinet, ou une pièce dans une bibliothèque du site d'un client |
 
-**Le pourquoi de chaque autorisation est dans [l'étape 13](../docs/faire/etape-13-provisionner-les-espaces-clients.md).**
-Cette page-ci donne les commandes.
+**Elle est obligatoire.** La solution ne garde aucun fichier dans le coffre : sans cette fonction,
+aucun classeur ne s'exporte et aucune pièce ne se dépose. Elle se met en place à
+[l'étape 12](../docs/faire/etape-12-relier-sharepoint.md), qui explique aussi le pourquoi de chaque
+autorisation. Cette page-ci donne les commandes.
 
 ---
 
@@ -18,7 +21,7 @@ Cette page-ci donne les commandes.
 | `function_app.py` | Le code de la fonction, Python, deux routes : `provisionner_espace` et `deposer_classeur` |
 | `host.json` | La configuration de l'hôte Azure Functions |
 | `requirements.txt` | Les trois bibliothèques employées |
-| `roles_graph.sh` | L'affectation des sept rôles Graph à l'identité managée |
+| `roles_graph.sh` | L'affectation des huit rôles Graph à l'identité managée |
 
 **Aucun secret ici, et il ne doit jamais y en avoir.** La fonction s'authentifie par son identité
 managée, et la clé d'appel vit dans une `DATABASE SCOPED CREDENTIAL`, côté base.
@@ -50,7 +53,7 @@ az functionapp create --name <votre-function-app> --resource-group <votre-groupe
 
 **Relevez le `principalId` rendu** : c'est la valeur `MI` du script des rôles.
 
-### 3. Les sept rôles Graph
+### 3. Les huit rôles Graph
 
 Relevez d'abord l'identifiant du principal de service Graph **dans votre locataire** :
 
@@ -65,7 +68,10 @@ bash roles_graph.sh
 ```
 
 **Il faut un rôle Entra Administrateur général ou Administrateur de rôle privilégié.** Cette
-affectation ne se fait pas au portail : voir l'étape 13.
+affectation ne se fait pas au portail : voir l'étape 12.
+
+**Faites ce point le jour de l'étape 2.** Une autorisation Graph met jusqu'à 24 heures à
+s'appliquer : posée tôt, elle sera prête à l'étape 12.
 
 ### 4. Le déploiement du code
 
@@ -124,17 +130,22 @@ rien à activer, seulement à donner ces deux droits.
 
 ---
 
-## La seconde route : déposer le dossier de travail dans le site du cabinet
+## La seconde route : déposer un fichier dans SharePoint
 
-La même fonction porte une seconde route, `deposer_classeur`. À l'export du dossier de travail,
-elle dépose le classeur dans le site SharePoint **du cabinet**, jamais dans l'espace du client, et
-rend un lien qui s'ouvre au clic.
+La même fonction porte une seconde route, `deposer_classeur`. Elle sert à 2 procédures de la base :
+
+| La procédure | Ce qu'elle dépose, et où |
+|---|---|
+| `dbo.pr_deposer_classeur` | Chaque classeur exporté de l'écran de révision, dans le site **du cabinet**, sous `Dossiers de travail/<client>/<arrêté>/` |
+| `dbo.pr_deposer_fichier_espace` | Une pièce, dans l'une des 4 bibliothèques du site **du véhicule**, avec son entité légale |
+
+Dans les deux cas, elle rend un lien qui s'ouvre au clic.
 
 **Pourquoi SharePoint et non le coffre.** Une adresse OneLake directe ne s'ouvre pas dans un
 navigateur : elle rend « Unauthorized, Bearer token is not present ». Un fichier SharePoint s'ouvre.
 
-**Aucune autorisation nouvelle** : `Sites.ReadWrite.All`, déjà affectée, couvre le dépôt. Graph
-accepte le dépôt simple jusqu'à 250 Mo.
+**Aucune autorisation de plus pour déposer** : `Sites.ReadWrite.All` couvre le dépôt. Graph accepte
+le dépôt simple jusqu'à 250 Mo. La colonne Entité légale, elle, demande `Sites.Manage.All`.
 
 **Une credential de plus**, parce que la base apparie la credential à l'adresse appelée par son
 nom :
@@ -192,9 +203,9 @@ identité managée est mis en cache environ 24 heures.
 | `Aucun proprietaire` | Aucun rôle de l'entité ne porte d'adresse de connexion. Jouez `sql/90_vous_inscrire_aux_missions.sql` |
 | Un refus d'autorisation | Les rôles Graph ne sont pas encore appliqués. Attendez, le cache dure environ 24 heures |
 | `415` au déploiement | Vous avez employé `az functionapp deploy` au lieu de `deployment source config-zip` |
-| Le site n'est pas créé, le groupe si | Le groupe a été créé sans propriétaire. Voir l'étape 13 |
+| Le site n'est pas créé, le groupe si | Le groupe a été créé sans propriétaire. Voir l'étape 12 |
 
 ---
 
-[L'étape 13, qui explique le pourquoi](../docs/faire/etape-13-provisionner-les-espaces-clients.md) ·
+[L'étape 12, qui explique le pourquoi](../docs/faire/etape-12-relier-sharepoint.md) ·
 [Revenir au sommaire](../README.md)

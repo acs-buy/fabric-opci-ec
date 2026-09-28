@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revFeuilleEtat",
   "position": {
-    "x": 984,
-    "y": 888,
-    "z": 6400,
-    "height": 56,
-    "width": 580,
-    "tabOrder": 6400
+    "x": 979,
+    "y": 912,
+    "z": 9000,
+    "height": 52,
+    "width": 590,
+    "tabOrder": 9000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -23,11 +23,11 @@
                       "Entity": "v_questions_programme"
                     }
                   },
-                  "Property": "Cote du cycle"
+                  "Property": "Etat de la feuille"
                 }
               },
-              "queryRef": "v_questions_programme.Cote du cycle",
-              "nativeQueryRef": "Cote du cycle"
+              "queryRef": "v_questions_programme.Etat de la feuille",
+              "nativeQueryRef": "Etat de la feuille"
             }
           ]
         }
@@ -172,7 +172,7 @@
             "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "100D"
                 }
               }
             }
@@ -236,7 +236,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Feuille de travail'"
+                  "Value": "''"
                 }
               }
             },

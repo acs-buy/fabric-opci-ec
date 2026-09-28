@@ -7,7 +7,7 @@ Lisez cette page avant de changer quoi que ce soit. Elle explique comment un cli
 
 ## La carte de la solution
 
-Ce schéma montre les six éléments de la solution et ce qui circule entre eux. GitHub le dessine
+Ce schéma montre les huit éléments de la solution et ce qui circule entre eux. GitHub le dessine
 directement dans la page.
 
 ```mermaid
@@ -28,13 +28,14 @@ subgraph groupe_donnees["La plateforme de données"]
 end
 
 subgraph groupe_fichiers["Les fichiers"]
-  n_coffre[("Coffre des pièces")]
+  n_azure["Azure Function<br/>écrit dans SharePoint"]
+  n_sharepoint[("Sites SharePoint<br/>du cabinet et des clients")]
+  n_coffre[("Coffre<br/>lecture par raccourci")]
 end
 
 n_reviseur(("Réviseur"))
 n_client(("Client"))
-n_excel["Classeurs Excel"]
-n_sharepoint["Fichiers SharePoint"]
+n_excel["Excel en ligne"]
 
 n_reviseur -->|"conduit la mission"| n_rapport
 n_client -->|"lit sa restitution"| n_rapport
@@ -44,11 +45,12 @@ n_fn_client -->|"exécute les procédures"| n_sql
 n_fn_revision -->|"exécute les procédures"| n_sql
 n_sql -->|"alimente les tables"| n_modele
 n_modele -->|"alimente les visuels"| n_rapport
-n_fn_client -->|"inscrit les pièces"| n_coffre
-n_fn_revision -->|"écrit les exports"| n_coffre
-n_excel -.->|"import d'un classeur"| n_fn_client
-n_excel -.->|"import et export"| n_fn_revision
-n_sharepoint -.->|"apporte les pièces, en lecture seule"| n_coffre
+n_sql -->|"demande un dépôt"| n_azure
+n_azure -->|"dépose classeurs et pièces"| n_sharepoint
+n_excel -.->|"modifie un classeur"| n_sharepoint
+n_sharepoint -.->|"vu sans copie"| n_coffre
+n_coffre -.->|"relit une pièce ou un classeur"| n_fn_client
+n_coffre -.->|"relit un classeur"| n_fn_revision
 
 classDef bleu fill:#dbeafe,stroke:#2563eb,stroke-width:1.5px,color:#172554
 classDef ambre fill:#fef3c7,stroke:#d97706,stroke-width:1.5px,color:#78350f
@@ -58,8 +60,8 @@ classDef indigo fill:#e0e7ff,stroke:#4f46e5,stroke-width:1.5px,color:#312e81
 class n_rapport,n_reviseur,n_client bleu
 class n_fn_client,n_fn_revision ambre
 class n_sql,n_modele vert
-class n_coffre rose
-class n_excel,n_sharepoint indigo
+class n_coffre,n_sharepoint rose
+class n_excel,n_azure indigo
 ```
 
 ### Comment lire ce schéma
@@ -68,9 +70,10 @@ class n_excel,n_sharepoint indigo
 fonction, la fonction exécute une procédure, la procédure écrit dans la base. Le modèle relit la
 base et alimente les visuels.
 
-**Les flèches en pointillés sont les échanges de fichiers.** Ils entrent, ils ne commandent rien.
-Un classeur importé passe par les mêmes procédures que la saisie à l'écran, et SharePoint apporte
-des pièces sans jamais rien recevoir en retour.
+**Les flèches en pointillés sont les échanges de fichiers.** Un fichier vit une seule fois, dans
+SharePoint. La base le fait déposer par l'Azure Function, qui seule sait écrire dans SharePoint, et
+le coffre le relit sur place par un raccourci. Un classeur réimporté passe par les mêmes procédures
+que la saisie à l'écran.
 
 **Ce que le schéma montre et qu'il faut retenir :** aucune flèche ne va de l'écran vers la base
 directement. Tout passe par une fonction, puis par une procédure. C'est ce qui garantit qu'un
@@ -86,7 +89,8 @@ contrôle ne se contourne pas.
 | Actions de révision | [fn_ecran_revision.UserDataFunction/function_app.py](../../fabric/fn_ecran_revision.UserDataFunction/function_app.py) |
 | Base DossierOPCI | [fabric/DossierOPCI.SQLDatabase](../../fabric/DossierOPCI.SQLDatabase) |
 | Modèle sémantique | [fabric/conduite_de_mission.SemanticModel](../../fabric/conduite_de_mission.SemanticModel) |
-| Coffre des pièces | [fabric/Coffre.Lakehouse](../../fabric/Coffre.Lakehouse) |
+| Coffre | [fabric/Coffre.Lakehouse](../../fabric/Coffre.Lakehouse) |
+| Azure Function | [azure/function_app.py](../../azure/function_app.py) |
 
 *Les liens ci-dessus mènent aux fichiers réels. Le diagramme lui-même porte aussi des liens, mais
 leur prise en charge par GitHub n'est pas documentée : fiez-vous au tableau.*
@@ -177,4 +181,4 @@ Gardez la recette des douze actions comme garde-fou : jouez-la après chaque mod
 
 Suite : [5. Les licences, et ce qu'il vous faut avant de commencer](05-les-licences.md)
 
-[Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)
+[Revenir au sommaire](../../README.md) · [Les treize étapes](../faire/etape-01-ouvrir-la-capacite.md)

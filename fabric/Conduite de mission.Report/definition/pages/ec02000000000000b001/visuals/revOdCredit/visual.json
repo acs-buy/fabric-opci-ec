@@ -2,16 +2,29 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revOdCredit",
   "position": {
-    "x": 593,
-    "y": 884,
-    "z": 5600,
-    "height": 62,
+    "x": 666,
+    "y": 910,
+    "z": 6600,
+    "height": 83,
     "width": 118,
-    "tabOrder": 5600
+    "tabOrder": 6600
   },
   "visual": {
     "visualType": "textSlicer",
     "objects": {
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "inputTextBox": [
         {
           "properties": {
@@ -59,7 +72,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFF8E7'"
+                      "Value": "'#F4F6F9'"
                     }
                   }
                 }
@@ -77,7 +90,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E8D9A8'"
+                      "Value": "'#B9C6D6'"
                     }
                   }
                 }
@@ -121,7 +134,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },

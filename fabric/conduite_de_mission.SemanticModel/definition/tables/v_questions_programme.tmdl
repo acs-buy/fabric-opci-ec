@@ -8,6 +8,26 @@ table v_questions_programme
 
 	measure 'Enonce selectionne' = IF ( HASONEVALUE ( v_questions_programme[Réf.] ), SELECTEDVALUE ( v_questions_programme[Question] ) )
 
+	measure 'Pieces de la question' = VAR n = SUM ( v_questions_programme[Pièces] ) RETURN IF ( ISBLANK ( n ) || n = 0, "aucune pièce jointe", FORMAT ( n, "0" ) & IF ( n = 1, " pièce jointe", " pièces jointes" ) )
+
+	measure 'Etat de la feuille' = VAR c = SELECTEDVALUE ( v_questions_programme[Feuille] ) VAR m = SELECTEDVALUE ( v_questions_programme[feuille_modele] ) VAR cl = SELECTEDVALUE ( v_questions_programme[feuille_conclue_le] ) RETURN IF ( ISBLANK ( c ), "Aucune feuille ouverte sur cette question.", "Cote " & c & ", forme " & COALESCE ( m, "STD" ) & IF ( ISBLANK ( cl ), ", ouverte.", ", conclue le " & FORMAT ( cl, "DD/MM/YYYY" ) & "." ) )
+
+	measure 'Compteur du questionnaire' = VAR n = CALCULATE ( COUNTROWS ( v_questions_programme ), REMOVEFILTERS ( v_questions_programme[Réf.] ), REMOVEFILTERS ( v_questions_programme[Question] ), REMOVEFILTERS ( v_questions_programme[Réponse] ), REMOVEFILTERS ( v_questions_programme[Pièces] ), REMOVEFILTERS ( v_questions_programme[Feuille] ), REMOVEFILTERS ( v_questions_programme[OD] ) ) VAR r = CALCULATE ( COUNTROWS ( v_questions_programme ), REMOVEFILTERS ( v_questions_programme[Réf.] ), REMOVEFILTERS ( v_questions_programme[Question] ), REMOVEFILTERS ( v_questions_programme[Réponse] ), REMOVEFILTERS ( v_questions_programme[Pièces] ), REMOVEFILTERS ( v_questions_programme[Feuille] ), REMOVEFILTERS ( v_questions_programme[OD] ), NOT ISBLANK ( v_questions_programme[Réponse] ) ) RETURN FORMAT ( r + 0, "0" ) & " sur " & FORMAT ( n + 0, "0" ) & " répondues"
+
+	measure 'Sous-titre des questions' = VAR n = CALCULATE ( COUNTROWS ( v_questions_programme ), REMOVEFILTERS ( v_questions_programme[Réf.] ), REMOVEFILTERS ( v_questions_programme[Question] ), REMOVEFILTERS ( v_questions_programme[Réponse] ), REMOVEFILTERS ( v_questions_programme[Pièces] ), REMOVEFILTERS ( v_questions_programme[Feuille] ), REMOVEFILTERS ( v_questions_programme[OD] ) ) RETURN IF ( ISBLANK ( n ), "aucune question", FORMAT ( n, "#,##0" ) & " question" & IF ( n > 1, "s", "" ) )
+
+	measure 'Feuille de la question' = IF ( HASONEVALUE ( v_questions_programme[Réf.] ), CALCULATE ( MAX ( v_questions_programme[Feuille] ) ) )
+		lineageTag: 2ac8c129-288f-447b-969e-fdb952dacf04
+
+	measure 'Chemin des OD de la question' = VAR r = [Reference selectionnee] VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( r ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "fec/Dossiers de travail/" & e & "/" & a & "/od_" & r & "_" & e & "_" & a & ".xlsx" )
+		lineageTag: 220cda14-fa2d-4982-a61f-13125a29bd6d
+
+	measure 'Chemin de la feuille' = VAR c = [Feuille de la question] VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( c ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "fec/Dossiers de travail/" & e & "/" & a & "/feuille_" & c & ".xlsx" )
+		lineageTag: 69c368e6-5ca9-4725-a1c4-abd5a7bab72a
+
+	measure 'Chemin du dossier' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "fec/Dossiers de travail/" & e & "/" & a & "/dossier_" & e & "_" & a & ".xlsx" )
+		lineageTag: 2730c231-954c-4333-ae52-0a8cb2bef046
+
 	column entite
 		dataType: string
 		isNullable: false

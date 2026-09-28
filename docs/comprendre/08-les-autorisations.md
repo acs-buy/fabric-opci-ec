@@ -15,12 +15,11 @@ Deux personnes, deux moments, et un délai que vous ne maîtrisez pas.
 | Qui | Ce que vous lui demandez | Quand | Si vous attendez |
 |---|---|---|---|
 | **L'administrateur Microsoft Fabric** | Activer cinq réglages de locataire | Avant l'étape 2 | Rien ne s'installe, et GitHub n'apparaît pas dans la liste |
-| **L'administrateur Microsoft Entra** | Affecter sept rôles d'application à une identité managée | Avant l'étape 13, facultative | Le provisionnement des espaces clients ne fonctionne pas |
+| **L'administrateur Microsoft Entra** | Affecter huit rôles d'application à une identité managée | Le jour de l'étape 2, pour l'étape 12 | Aucun fichier ne se dépose : ni classeur exporté, ni pièce, ni espace client |
 
-**Demandez la première dès le début.** Elle bloque tout le reste.
-
-**La seconde ne concerne que l'étape 13**, qui est facultative et vient après les douze autres :
-ne la demandez pas avant d'en avoir besoin.
+**Demandez les deux dès le début.** La première bloque tout le reste. La seconde ne sert qu'à
+l'étape 12, mais une autorisation Graph met jusqu'à 24 heures à s'appliquer : demandée le jour de
+l'étape 2, elle est prête quand vous arrivez à l'étape 12.
 
 ---
 
@@ -59,14 +58,16 @@ parce qu'aucun rôle de mission ne porte votre adresse. C'est ce que corrige
 
 ---
 
-## Ce que vous devez donner à la base, à l'étape 13 seulement
+## Ce que vous devez donner à la base, à l'étape 12
 
-Ces deux droits ne servent qu'au provisionnement des espaces clients. Si vous ne faites pas
-l'étape 13, vous n'en avez pas besoin.
+Ces droits permettent à la base d'appeler l'Azure Function : pour créer l'espace d'un client, et pour
+déposer un fichier dans SharePoint. Il en faut un par route, `provisionner_espace` et
+`deposer_classeur`, car une credential porte le nom exact de l'adresse appelée.
 
 ```sql
 GRANT EXECUTE ANY EXTERNAL ENDPOINT TO [<le principal qui exécute>];
-GRANT REFERENCES ON DATABASE SCOPED CREDENTIAL::[<l'adresse de votre fonction>] TO [<le même>];
+GRANT REFERENCES ON DATABASE SCOPED CREDENTIAL::[<l'adresse de provisionner_espace>] TO [<le même>];
+GRANT REFERENCES ON DATABASE SCOPED CREDENTIAL::[<l'adresse de deposer_classeur>] TO [<le même>];
 ```
 
 L'appel sortant lui-même est **activé par défaut** dans SQL database in Fabric : il n'y a rien à
@@ -74,7 +75,7 @@ activer, seulement ces deux droits à donner.
 
 ---
 
-## Les sept autorisations Microsoft Graph, à l'étape 13 seulement
+## Les huit autorisations Microsoft Graph, pour l'étape 12
 
 Elles sont affectées à l'identité managée de l'Azure Function, jamais à une personne.
 
@@ -85,14 +86,15 @@ Elles sont affectées à l'identité managée de l'Azure Function, jamais à une
 | `Team.Create` | Créer l'équipe Teams |
 | `User.Read.All` | Résoudre les propriétaires depuis leur adresse |
 | `User.Invite.All` | Inviter les personnes du client |
-| `Sites.ReadWrite.All` | Créer les quatre bibliothèques du site |
+| `Sites.ReadWrite.All` | Créer les quatre bibliothèques du site, déposer les classeurs et les pièces |
+| `Sites.Manage.All` | Créer la colonne Entité légale des bibliothèques |
 | `Directory.Read.All` | Lire l'annuaire pour ces résolutions |
 
 **Deux choses à savoir avant de les demander**, et elles coûtent une demi-journée à qui les ignore :
 elles ne s'affectent pas au portail Entra pour une identité managée, et une autorisation
 fraîchement posée met environ 24 heures à s'appliquer.
 
-Le détail est à [l'étape 13](../faire/etape-13-provisionner-les-espaces-clients.md).
+Le détail est à [l'étape 12](../faire/etape-12-relier-sharepoint.md).
 
 ---
 
@@ -103,7 +105,7 @@ Trois secrets traversent l'installation. Aucun ne doit entrer dans votre dépôt
 | Le secret | Où il vit | Qui le manipule |
 |---|---|---|
 | Le jeton GitHub, portée `repo` | Dans l'écran de connexion Fabric, une seule fois | Vous, jamais un agent |
-| La clé de votre Azure Function | Dans une `DATABASE SCOPED CREDENTIAL`, en base | Vous, jamais un agent |
+| Les 2 clés de votre Azure Function, une par route | Dans 2 `DATABASE SCOPED CREDENTIAL`, en base | Vous, jamais un agent |
 | Le mot de passe de la clé principale de la base | Nulle part : gardez-le dans votre coffre-fort | Vous |
 
 **La solution elle-même n'a aucun mot de passe.** Chaque personne se connecte avec son compte

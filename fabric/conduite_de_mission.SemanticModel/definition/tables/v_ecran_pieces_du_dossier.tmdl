@@ -22,6 +22,13 @@ table v_ecran_pieces_du_dossier
 
 	measure 'Piece selectionnee libelle' = VAR p = [Piece selectionnee] VAR n = CALCULATE ( SELECTEDVALUE ( v_ecran_pieces_du_dossier[Fichier] ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[piece_id] = p ) ) RETURN IF ( ISBLANK ( p ), "Cliquez une pièce dans la liste", n )
 
+	measure 'Adresse du dépôt du client' = VAR s = CALCULATE ( MAX ( v_espace_client[site_url] ) ) RETURN IF ( ISBLANK ( s ), BLANK (), s & "/Dpt%20du%20client/Forms/AllItems.aspx" )
+		lineageTag: cb202df5-c497-44fc-a2d0-54f94dda01a0
+
+	measure 'Piece de l''arrete' = VAR a = SELECTEDVALUE ( v_dim_arrete[arrete] ) VAR p = SELECTEDVALUE ( v_ecran_pieces_du_dossier[arrete] ) RETURN IF ( ISBLANK ( a ) || ISBLANK ( p ) || p = a, 1 )
+		formatString: 0
+		lineageTag: 824f2ac6-7d9f-434d-ad2b-c611cf9e9d70
+
 	column entite
 		dataType: string
 		sourceProviderType: varchar(20)
@@ -203,6 +210,16 @@ table v_ecran_pieces_du_dossier
 		lineageTag: 0e301ce1-fa2c-4c98-a3ff-154ee7d1a30c
 		summarizeBy: none
 		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ouvrir la pièce'
+		dataType: string
+		sourceProviderType: nvarchar
+		lineageTag: 10348760-5ee0-4110-b7bd-2a4efd3a8e91
+		dataCategory: WebUrl
+		summarizeBy: none
+		sourceColumn: web_url
 
 		annotation SummarizationSetBy = Automatic
 

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revPiece",
   "position": {
-    "x": 984,
-    "y": 676,
-    "z": 4900,
-    "height": 32,
-    "width": 150,
-    "tabOrder": 4900
+    "x": 979,
+    "y": 674,
+    "z": 6100,
+    "height": 36,
+    "width": 126,
+    "tabOrder": 6100
   },
   "visual": {
     "visualType": "actionButton",
@@ -123,7 +123,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#D9DFE6'"
                     }
                   }
                 }
@@ -132,7 +132,7 @@
             "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "100D"
+                  "Value": "45D"
                 }
               }
             }
@@ -325,14 +325,14 @@
             "type": {
               "expr": {
                 "Literal": {
-                  "Value": "'Bookmark'"
+                  "Value": "'PageNavigation'"
                 }
               }
             },
-            "bookmark": {
+            "navigationSection": {
               "expr": {
                 "Literal": {
-                  "Value": "'bkRevPiece'"
+                  "Value": "'ec04000000000000d001'"
                 }
               }
             }

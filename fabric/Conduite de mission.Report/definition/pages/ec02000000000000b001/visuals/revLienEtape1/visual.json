@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revLienEtape1",
   "position": {
-    "x": 283,
-    "y": 256,
-    "z": 1500,
+    "x": 266,
+    "y": 235,
+    "z": 2000,
     "height": 44,
-    "width": 255,
-    "tabOrder": 1500
+    "width": 266,
+    "tabOrder": 2000
   },
   "visual": {
     "visualType": "actionButton",
@@ -123,7 +123,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#D9DFE6'"
                     }
                   }
                 }
@@ -132,7 +132,7 @@
             "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "100D"
+                  "Value": "45D"
                 }
               }
             }

@@ -135,10 +135,29 @@ def repondre_question(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCont
 @udf.function()
 def ouvrir_feuille(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
                    entite: str, arrete: str, reference: str) -> str:
-    """Pop-up Feuille, « Ouvrir » : la feuille de la question, son gabarit, sa cote."""
-    r = _executer(base, "EXEC dbo.pr_ouvrir_feuille_question @entite=?, @arrete=?, @reference=?, @par=?",
-                  (entite, arrete, reference, _qui(ctx)))
-    return r.get("message", "Feuille ouverte.")
+    """Pop-up Feuille, « Ouvrir » : la feuille de la question, son gabarit, sa cote.
+
+    LE GABARIT PREREMPLI PART AU COFFRE, depuis le 27/09/2026 : la maquette dit « ouvrir exporte le
+    gabarit ; reimporter rattache le fichier ». Sans ce classeur, le bouton Reimporter n'avait rien a
+    relire. Une feuille deja ouverte n'est pas une erreur ici : son classeur est reecrit."""
+    try:
+        r = _executer(base, "EXEC dbo.pr_ouvrir_feuille_question @entite=?, @arrete=?, @reference=?, @par=?",
+                      (entite, arrete, reference, _qui(ctx)))
+        message = r.get("message", "Feuille ouverte.")
+    except fn.UserThrownError as e:
+        message = str(e)
+        if "déjà ouverte" not in message:
+            raise
+    f = _lire(base, "SELECT TOP 1 f.cote, f.modele_code AS modele, f.entite, f.arrete, f.cycle, q.reference, f.preparateur, "
+                    "f.forme_conclusion AS forme, f.conclusion FROM dbo.feuille_travail f JOIN dbo.ref_question q ON q.id = f.question_id "
+                    "WHERE f.entite=? AND f.arrete=? AND q.reference=? ORDER BY f.prepare_le DESC", (entite, arrete, reference))
+    if not f:
+        return message
+    from openpyxl import Workbook
+    wb = Workbook(); wb.remove(wb.active)
+    _feuille_feuille(wb, f[0]["cote"], f[0])
+    r = _deposer(base, ctx, entite, arrete, f"feuille_{f[0]['cote']}.xlsx", wb)
+    return f"{message} Gabarit déposé au site du cabinet : {r.get('web_url')}"
 
 
 @udf.context(argName="ctx")
@@ -180,6 +199,35 @@ def saisir_od(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
     r = _executer(base, "EXEC dbo.pr_saisir_od @entite=?, @arrete=?, @compte=?, @libelle=?, @debit=?, @credit=?, @reference=?, @journal=?, @piece_ref=?, @par=?",
                   (entite, arrete, compte, libelle, float(debit or 0), float(credit or 0), _vide(reference), journal or "ODR", _vide(piece), _qui(ctx)))
     return r.get("message", "Ligne enregistrée.")
+
+
+@udf.context(argName="ctx")
+@udf.connection(alias="DossierOPCI", argName="base")
+@udf.function()
+def saisir_od_double(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
+                     entite: str, arrete: str, compte1: str, libelle1: str,
+                     compte2: str, libelle2: str,
+                     debit1: float = 0, credit1: float = 0,
+                     debit2: float = 0, credit2: float = 0,
+                     reference: str = "", journal: str = "ODR",
+                     piece1: str = "", piece2: str = "") -> str:
+    """Les 2 lignes d'une ecriture de revision, ecrites en un seul geste.
+
+    Une ecriture porte toujours au moins 2 lignes. Les saisir une par une obligeait a vider le
+    champ oppose entre les 2, et la seconde partait sans sa reference : l'execution d'une
+    fonction efface la ligne choisie dans la grille. Dicte par le candidat le 26/09/2026.
+    """
+    faits = []
+    for c, l, d, cr, p in ((compte1, libelle1, debit1, credit1, piece1),
+                           (compte2, libelle2, debit2, credit2, piece2)):
+        if not (c or "").strip():
+            continue
+        r = _executer(base, "EXEC dbo.pr_saisir_od @entite=?, @arrete=?, @compte=?, @libelle=?, @debit=?, @credit=?, @reference=?, @journal=?, @piece_ref=?, @par=?",
+                      (entite, arrete, c, l, float(d or 0), float(cr or 0), _vide(reference), journal or "ODR", _vide(p), _qui(ctx)))
+        faits.append(r.get("message", "Ligne enregistrée."))
+    if not faits:
+        raise fn.UserThrownError("Aucun compte saisi : une écriture porte au moins une ligne.", {})
+    return " ".join("%d. %s" % (i, m) for i, m in enumerate(faits, 1))
 
 
 @udf.context(argName="ctx")
@@ -241,13 +289,20 @@ def deverrouiller_dossier(base: fn.FabricSqlConnection, ctx: fn.UserDataFunction
 
 # ----------------------------------------------------------------------------- la voie du classeur
 
-# Les exports ecrivent au coffre, Files/exports/, et rendent le chemin ; les imports lisent Files/depots/.
+# REGLE SANS DEROGATION, rappelee par le candidat le 28/09/2026 : TOUT FICHIER SE DEPOSE DANS
+# SHAREPOINT, et le coffre ne le voit que par un raccourci OneLake. Aucun export n'ecrit plus au
+# coffre : chaque classeur part au site du cabinet par _deposer, et le reimport le relit par le
+# raccourci fec. Le 27/09/2026, les exports ecrivaient en natif dans Files/exports/ : c'etait une
+# derogation, levee ici.
 # Meme lecture que 61_DEPLOIEMENT/gabarits_ecran_revision.py et importer_ecran_revision.py.
 
 _COL_Q = [("Cycle", "cycle"), ("Référence", "reference"), ("Question", "enonce"), ("Type", "type"), ("Réponse", "reponse"),
           ("Motif si non applicable", "motif"), ("Commentaire", "commentaire"), ("Feuille", "feuille_cote"), ("OD", "od"), ("Pièces", "pieces")]
 _COL_OD = [("Journal", "journal"), ("Compte", "compte"), ("Libellé", "libelle"), ("Débit", "debit"), ("Crédit", "credit"), ("Pièce", "piece"), ("Actif", "actif")]
-_SAISIE = {"reponse", "motif", "commentaire", "journal", "compte", "libelle", "debit", "credit", "piece", "actif", "forme", "conclusion", "objectif", "methodologie"}
+# L'ONGLET D'OD D'UN CYCLE porte la question de chaque ligne : sans elle, le reimport ne sait pas quel
+# brouillon remplacer, et il ignorait l'onglet. Ajoute le 27/09/2026.
+_COL_OD_CYCLE = [("Question", "reference")] + _COL_OD
+_SAISIE = {"reference", "reponse", "motif", "commentaire", "journal", "compte", "libelle", "debit", "credit", "piece", "actif", "forme", "conclusion", "objectif", "methodologie"}
 
 
 def _entete(ws, colonnes):
@@ -257,6 +312,12 @@ def _entete(ws, colonnes):
         c.fill = PatternFill("solid", fgColor="1D1A10")
         c.font = Font(bold=True, color="FFFFFF") if cle in _SAISIE else Font(color="D9D2C0")
         ws.cell(row=2, column=j, value=cle).font = Font(italic=True, color="8A8578", size=9)
+        # LA LARGEUR SUIT L'EN-TETE, releve le 28/09/2026 dans Excel en ligne : « Balance in »,
+        # « OD de révi », les en-tetes etaient coupes faute de largeur posee. Question et
+        # Libellé prennent plus, leur texte etant long.
+        from openpyxl.utils import get_column_letter
+        large = 60 if cle in ("enonce", "libelle") else max(12, len(lib) + 4)
+        ws.column_dimensions[get_column_letter(j)].width = large
     ws.freeze_panes = "A3"
 
 
@@ -281,8 +342,8 @@ def _feuille_questions(wb, titre, donnees):
     ws = wb.create_sheet(titre[:31]); _entete(ws, _COL_Q); _lignes(ws, _COL_Q, donnees)
 
 
-def _feuille_od(wb, titre, donnees, vides=12):
-    ws = wb.create_sheet(titre[:31]); _entete(ws, _COL_OD); _lignes(ws, _COL_OD, donnees, vides)
+def _feuille_od(wb, titre, donnees, vides=12, colonnes=_COL_OD):
+    ws = wb.create_sheet(titre[:31]); _entete(ws, colonnes); _lignes(ws, colonnes, donnees, vides)
 
 
 def _feuille_feuille(wb, titre, d):
@@ -325,7 +386,7 @@ def _questions(base, entite, arrete, cycle=None):
 
 
 def _od(base, entite, arrete, reference=None, libres=False, cycle=None):
-    sql = ("SELECT journal_code AS journal, compte_num AS compte, libelle, debit, credit, piece_ref AS piece, code_actif AS actif "
+    sql = ("SELECT reference, journal_code AS journal, compte_num AS compte, libelle, debit, credit, piece_ref AS piece, code_actif AS actif "
            "FROM dbo.v_od_revision WHERE entite=? AND arrete=? AND etat='BROUILLON' ")
     if reference:
         return _lire(base, sql + "AND reference=? ORDER BY le", (entite, arrete, reference))
@@ -343,16 +404,22 @@ def _feuilles(base, entite, arrete, cycle=None):
                  (entite, arrete, cycle) if cycle else (entite, arrete))
 
 
-def _ecrire_coffre(coffre, chemin: str, wb) -> str:
+def _deposer(base, ctx, entite: str, arrete: str, fichier: str, wb) -> dict:
+    """Depose le classeur au site du cabinet, Dossiers de travail/<entite>/<arrete>/<fichier>.
+
+    Par la base, pr_deposer_classeur, qui appelle l'Azure Function sous identite managee : une Data
+    function n'a pas d'identite a elle, et un raccourci SharePoint ne sait que lire. Rend web_url,
+    chemin_onelake et message."""
+    import base64
     tampon = io.BytesIO(); wb.save(tampon)
-    coffre.connectToFiles().get_file_client(chemin).upload_data(tampon.getvalue(), overwrite=True)
-    return "Files/" + chemin
+    return _executer(base, "EXEC dbo.pr_deposer_classeur @entite=?, @arrete=?, @fichier=?, @contenu_base64=?, @par=?",
+                     (entite, arrete, fichier, base64.b64encode(tampon.getvalue()).decode("ascii"), _qui(ctx)))
 
 
-@udf.connection(alias="Coffre", argName="coffre")
+@udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
-def exporter_questions(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient, entite: str, arrete: str, cycle: str) -> str:
+def exporter_questions(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str, arrete: str, cycle: str) -> str:
     """Etape 2, « Ouvrir le classeur des questions du cycle » : les questions au programme, reponses comprises."""
     from openpyxl import Workbook
     wb = Workbook(); wb.remove(wb.active)
@@ -360,28 +427,28 @@ def exporter_questions(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseC
     if not d:
         raise fn.UserThrownError(f"Aucune question du cycle {cycle} au programme de cet arrêté.", {})
     _feuille_questions(wb, "Q-" + cycle, d)
-    chemin = _ecrire_coffre(coffre, f"exports/questions_{cycle}_{entite}_{arrete}.xlsx", wb)
-    return f"Classeur écrit au coffre : {chemin}, {len(d)} questions."
+    r = _deposer(base, ctx, entite, arrete, f"questions_{cycle}_{entite}_{arrete}.xlsx", wb)
+    return f"Classeur de {len(d)} questions déposé au site du cabinet : {r.get('web_url')}"
 
 
-@udf.connection(alias="Coffre", argName="coffre")
+@udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
-def exporter_od(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient, entite: str, arrete: str, reference: str = "") -> str:
+def exporter_od(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str, arrete: str, reference: str = "") -> str:
     """Pop-up OD, « Exporter les OD liées » (reference donnee) ou etape 4, « Exporter le gabarit » (OD libres) : preremplies."""
     from openpyxl import Workbook
     wb = Workbook(); wb.remove(wb.active)
     ref = _vide(reference)
     d = _od(base, entite, arrete, reference=ref, libres=ref is None)
     _feuille_od(wb, ("OD " + ref) if ref else "OD libres", d)
-    chemin = _ecrire_coffre(coffre, f"exports/od_{ref or 'libres'}_{entite}_{arrete}.xlsx", wb)
-    return f"Classeur écrit au coffre : {chemin}, {len(d)} ligne(s) préremplie(s)."
+    r = _deposer(base, ctx, entite, arrete, f"od_{ref or 'libres'}_{entite}_{arrete}.xlsx", wb)
+    return f"Classeur de {len(d)} ligne(s) préremplie(s) déposé au site du cabinet : {r.get('web_url')}"
 
 
-@udf.connection(alias="Coffre", argName="coffre")
+@udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
-def exporter_feuille(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient, cote: str) -> str:
+def exporter_feuille(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, cote: str) -> str:
     """Pop-up Feuille, « Exporter » : le gabarit generique prerempli de la feuille."""
     from openpyxl import Workbook
     d = _lire(base, "SELECT f.cote, f.modele_code AS modele, f.entite, f.arrete, f.cycle, q.reference, f.preparateur, f.forme_conclusion AS forme, f.conclusion "
@@ -390,15 +457,22 @@ def exporter_feuille(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCli
         raise fn.UserThrownError(f"La feuille {cote} n'existe pas.", {})
     wb = Workbook(); wb.remove(wb.active)
     _feuille_feuille(wb, cote, d[0])
-    chemin = _ecrire_coffre(coffre, f"exports/feuille_{cote}.xlsx", wb)
-    return f"Classeur écrit au coffre : {chemin}."
+    r = _deposer(base, ctx, d[0]["entite"], d[0]["arrete"], f"feuille_{cote}.xlsx", wb)
+    return f"Feuille déposée au site du cabinet : {r.get('web_url')}"
 
 
-@udf.connection(alias="Coffre", argName="coffre")
+@udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
-def exporter_dossier(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient, entite: str, arrete: str) -> str:
-    """Etapes 3 et 6, « Exporter le dossier de travail » : Balance, Programme, puis par cycle Q, FT, OD ; OD libres."""
+def exporter_dossier(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
+                     entite: str, arrete: str) -> str:
+    """Etapes 3 et 6, « Exporter le dossier de travail » : Balance, Programme, puis par cycle Q, FT, OD ; OD libres.
+
+    LE CLASSEUR PART AUSSI DANS SHAREPOINT, choix 2 du candidat le 27/09/2026 : le reviseur doit
+    recevoir un lien qui s'ouvre au clic, et l'adresse OneLake directe rend « Unauthorized » dans
+    le navigateur, mesure du meme jour. Le depot passe par la base, pr_deposer_classeur, qui appelle
+    l'Azure Function du cabinet sous identite managee : une Data function n'a pas d'identite a elle.
+    Le site est celui du CABINET, jamais l'espace du client : le dossier de travail est au cabinet."""
     from openpyxl import Workbook
     wb = Workbook(); wb.remove(wb.active)
     ws = wb.create_sheet("Balance")
@@ -422,10 +496,10 @@ def exporter_dossier(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCli
         _feuille_questions(wb, "Q-" + cy, _questions(base, entite, arrete, cy))
         for f in _feuilles(base, entite, arrete, cy):
             _feuille_feuille(wb, f["cote"], f)
-        _feuille_od(wb, "OD-" + cy, _od(base, entite, arrete, cycle=cy), vides=6)
+        _feuille_od(wb, "OD-" + cy, _od(base, entite, arrete, cycle=cy), vides=6, colonnes=_COL_OD_CYCLE)
     _feuille_od(wb, "OD libres", _od(base, entite, arrete, libres=True))
-    chemin = _ecrire_coffre(coffre, f"exports/dossier_{entite}_{arrete}.xlsx", wb)
-    return f"Dossier de travail écrit au coffre : {chemin}, {len(wb.sheetnames)} onglets."
+    r = _deposer(base, ctx, entite, arrete, f"dossier_{entite}_{arrete}.xlsx", wb)
+    return f"Dossier de travail, {len(wb.sheetnames)} onglets, déposé au site du cabinet : {r.get('web_url')}"
 
 
 def _lignes_de(ws):
@@ -445,10 +519,23 @@ def _lignes_de(ws):
 def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient, ctx: fn.UserDataFunctionContext,
                       entite: str, arrete: str, chemin: str) -> str:
     """Bouton « Réimporter » de toutes les etapes : le classeur depose au coffre, reconnu a ses feuilles :
-    Q-<cycle> (reponses), OD <reference> ou OD libres (brouillon remplace), <cote> (feuille : forme, conclusion).
-    Balance, Programme et OD-<cycle> ne s'importent pas."""
+    Q-<cycle> (reponses), OD <reference>, OD-<cycle> ou OD libres (brouillon remplace), <cote> (feuille : forme,
+    conclusion). Balance et Programme ne s'importent pas : l'une se calcule, l'autre se choisit a l'etape 2."""
     from openpyxl import load_workbook
     import hashlib
+    # LE DOSSIER DEPOSE DANS SHAREPOINT PRIME SUR SA COPIE DU COFFRE, depuis le 28/09/2026. Le
+    # reviseur modifie le classeur dans Excel en ligne ; relire la copie du coffre perdrait son
+    # travail. La recette l'a montre : l'ecran, non rafraichi apres l'export, envoyait encore le
+    # chemin du coffre. La resolution se fait donc ici, et non dans une mesure.
+    # LA SOURCE SE LIT SUR LE CHEMIN : fec/ est le raccourci du coffre vers le site du cabinet. La
+    # mesure de l'ecran envoie deja ce chemin quand un depot existe, releve le 28/09/2026 ; le
+    # message disait pourtant « coffre », faute d'avoir regarde le chemin recu.
+    # UN ANCIEN CHEMIN exports/ SE LIT DESORMAIS AU SITE DU CABINET : plus aucun classeur n'est ecrit
+    # au coffre, regle du 28/09/2026. Le depot range chaque classeur sous Dossiers de travail/<entite>/
+    # <arrete>/, et le raccourci fec le rend lisible d'ici.
+    if chemin.startswith("exports/"):
+        chemin = f"fec/Dossiers de travail/{entite}/{arrete}/{chemin.rsplit('/', 1)[-1]}"
+    source = "site du cabinet" if chemin.startswith("fec/") else "coffre"
     octets = coffre.connectToFiles().get_file_client(chemin).download_file().readall()
     wb = load_workbook(io.BytesIO(octets), data_only=True)
     par = _qui(ctx)
@@ -456,7 +543,7 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
     for ws in wb.worksheets:
         t = ws.title
         try:
-            if t in ("Balance", "Programme") or t.startswith("OD-"):
+            if t in ("Balance", "Programme"):
                 continue
             if t.startswith("Q-"):
                 l = _lire(base, "SELECT 'Q-' + ? + '-P' + CAST(id AS varchar) AS cote FROM dbo.programme_travail WHERE entite=? AND arrete=?", (t[2:], entite, arrete))
@@ -466,6 +553,26 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                              "motif": d.get("motif"), "commentaire": d.get("commentaire")} for d in _lignes_de(ws) if d.get("reference")]
                 r = _executer(base, "EXEC dbo.pr_importer_reponses @cote=?, @reponses=?, @par=?", (l[0]["cote"], json.dumps(reponses, ensure_ascii=False, default=str), par))
                 faits.append(f"{t} : {r.get('message', 'importé')}")
+            elif t.startswith("OD-"):
+                # L'ONGLET D'OD D'UN CYCLE, dans le dossier de travail. Chaque question du cycle voit son
+                # brouillon REMPLACE par ses lignes de l'onglet ; une question dont toutes les lignes ont
+                # ete effacees voit donc son brouillon vide, ce qui est le sens du geste.
+                cycle = t[3:].strip()
+                lignes = [d for d in _lignes_de(ws)
+                          if d.get("compte") and str(d.get("compte")).strip().lower() not in ("total", "écart")]
+                sans = [d for d in lignes if not d.get("reference")]
+                if sans:
+                    raise fn.UserThrownError(f"{len(sans)} ligne(s) sans question : une OD sans question va dans l'onglet OD libres.", {})
+                refs = {str(d["reference"]).strip() for d in lignes}
+                refs |= {x["reference"] for x in _lire(base, "SELECT DISTINCT reference FROM dbo.v_od_revision WHERE entite=? AND arrete=? "
+                                                             "AND cycle=? AND etat='BROUILLON' AND reference IS NOT NULL", (entite, arrete, cycle))}
+                for ref in sorted(refs):
+                    siennes = [{"journal": d.get("journal") or "ODR", "compte": str(d.get("compte")).strip(), "libelle": d.get("libelle"),
+                                "debit": float(d.get("debit") or 0), "credit": float(d.get("credit") or 0), "piece": d.get("piece"),
+                                "actif": d.get("actif")} for d in lignes if str(d["reference"]).strip() == ref]
+                    r = _executer(base, "EXEC dbo.pr_importer_od @entite=?, @arrete=?, @reference=?, @lignes=?, @par=?",
+                                  (entite, arrete, ref, json.dumps(siennes, ensure_ascii=False, default=str), par))
+                    faits.append(f"{t} {ref} : {r.get('message', 'importé')}")
             elif t == "OD libres" or t.startswith("OD "):
                 ref = None if t == "OD libres" else t[3:].strip()
                 lignes = [{"journal": d.get("journal") or "ODR", "compte": str(d.get("compte")).strip(), "libelle": d.get("libelle"),
@@ -486,7 +593,7 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                 faits.append(f"{t} : {r.get('message', 'importé')}")
         except fn.UserThrownError as e:
             refus.append(f"{t} : {e}")
-    texte = f"{len(faits)} onglet(s) importé(s)." + (" " + " ".join(faits) if faits else "")
+    texte = f"Classeur relu au {source}. {len(faits)} onglet(s) importé(s)." + (" " + " ".join(faits) if faits else "")
     if refus:
         texte += " Refusés : " + " ; ".join(refus)
     return texte

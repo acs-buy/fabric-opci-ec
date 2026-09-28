@@ -53,7 +53,7 @@ BEGIN
     SELECT @piece_id AS piece_id,
            N'Pièce « ' + @nom + N' » retirée du dossier de ' + @entite
          + CASE WHEN @question IS NOT NULL THEN N' (question ' + @question + N')' ELSE N'' END
-         + N'. Le fichier reste au coffre ; le retrait est tracé.' AS message;
+         + N'. Le fichier reste dans SharePoint ; le retrait est tracé.' AS message;
 END;
 
 GO

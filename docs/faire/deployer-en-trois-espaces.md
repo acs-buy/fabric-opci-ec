@@ -16,12 +16,11 @@ Le pourquoi est dans [Trois espaces de travail](../comprendre/09-trois-espaces.m
 |---|---|---|
 | Étapes 1 et 2 | Capacité et réglages, une seule fois | Locataire |
 | Étape 3 | Créer les **trois** espaces et le pipeline | Portail |
-| Étapes 4 à 10 | Installer la solution | **DEV** |
-| **Ici** | **Déployer DEV vers TEST**, puis les cinq actions de remise en service | **TEST** |
-| Étape 12 | Passer la recette, et faire passer le cahier de tests | **TEST** |
-| **Ici** | **Déployer TEST vers PROD**, puis les mêmes cinq actions | **PROD** |
+| Étapes 4 à 10, puis 12 | Installer la solution, et relier SharePoint | **DEV** |
+| **Ici** | **Déployer DEV vers TEST**, puis les six actions de remise en service | **TEST** |
+| Étape 13 | Passer la recette, et faire passer le cahier de tests | **TEST** |
+| **Ici** | **Déployer TEST vers PROD**, puis les mêmes six actions | **PROD** |
 | Étape 11 | Publier les applications | **PROD** |
-| Étape 13 | Provisionner les espaces clients, facultatif | **PROD** |
 
 **L'étape 11 vient après le déploiement en production**, et non avant : une application se publie
 depuis l'espace où vivent les dossiers réels.
@@ -49,7 +48,7 @@ pas, mais il parle de permissions d'espace, alors que vous regardez un pipeline.
 
 ---
 
-## Les cinq actions de remise en service, après chaque déploiement
+## Les six actions de remise en service, après chaque déploiement
 
 **Aucune n'est facultative, et aucune ne produit d'erreur si vous l'oubliez.** L'écran s'affiche,
 et il est vide ou il écrit au mauvais endroit.
@@ -95,6 +94,22 @@ ailleurs.
 
 « Role assignment » ne se copie pas. Recréez un rôle par client dans le modèle `restitution_client`
 de cet espace, et affectez-y les comptes, comme à [l'étape 11](etape-11-publier-les-applications.md).
+
+### 6. Renseigner le dépôt SharePoint de cet espace
+
+Les paramètres de `dbo.ref_parametre` sont des données : le pipeline ne les copie pas. Dans la base
+de l'espace d'arrivée, refaites les points 7, 8, 10 et 12 de [l'étape 12](etape-12-relier-sharepoint.md) :
+les credentials des 2 routes, leurs adresses, le site du cabinet et le nom du raccourci. La fonction
+Azure, elle, sert les trois espaces.
+
+**Les raccourcis du coffre, eux, sont copiés, avec la même cible.** La documentation de l'éditeur
+l'écrit pour les raccourcis SharePoint : « Shortcuts with external targets (ADLS Gen2, S3, and
+others) keep the same targets across all stages after deployment. » Dans un même locataire, TEST
+lit donc les mêmes sites que DEV. En production, faites pointer chaque raccourci vers le site de
+production, au portail ou par les API de OneLake.
+
+**Contrôle :** `SELECT code, valeur FROM dbo.ref_parametre;` rend les 4 paramètres, et
+`SELECT name FROM sys.database_scoped_credentials;` les 2 adresses des routes.
 
 ---
 

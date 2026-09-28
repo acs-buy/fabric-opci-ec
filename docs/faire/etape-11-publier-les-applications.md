@@ -114,6 +114,6 @@ distincts, l'approbation d'un visa étant refusée à la personne qui l'a soumis
 
 ---
 
-Suite : [Étape 12. La recette : douze actions qui prouvent que la solution marche](etape-12-passer-la-recette.md)
+Suite : [Étape 12. Relier SharePoint : le site du cabinet, la fonction, le site de chaque client](etape-12-relier-sharepoint.md)
 
 [Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

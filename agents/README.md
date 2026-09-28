@@ -3,7 +3,7 @@
 Ce dossier contient des demandes prêtes à coller dans un agent de codage, et un exemple
 d'autorisations à lui accorder.
 
-**Rien ici n'est obligatoire.** Les douze étapes du mode opératoire se font entièrement à la main,
+**Rien ici n'est obligatoire.** Les treize étapes du mode opératoire se font entièrement à la main,
 et le résultat est le même. Un agent est un facilitateur sur les étapes répétitives, jamais un
 passage obligé.
 
@@ -14,7 +14,7 @@ responsabilités.
 
 ## Ce qu'un agent fait, et ce qu'il ne fait pas
 
-Trois étapes sur douze. Ce partage tient à ce que la plateforme expose, et il a été établi lors
+Trois étapes sur treize. Ce partage tient à ce que la plateforme expose, et il a été établi lors
 d'une reproduction complète, le 26/09/2026.
 
 | # | L'étape | Confiable à un agent | Pourquoi |
@@ -29,15 +29,15 @@ d'une reproduction complète, le 26/09/2026.
 | 8 | Connecter les fonctions à la base | Non | Se règle au portail, et commence par un simple contrôle |
 | **9 et 10** | **Relier les modèles et les boutons** | **Oui** | [La demande](etape-09-et-10-relier.md) |
 | 11 | Publier les deux écrans | Non | L'application et ses audiences se composent au portail |
-| 12 | Passer la recette | Non | Douze actions à l'écran, et l'action 11 exige deux personnes |
-| 13 | Créer l'espace SharePoint d'un client, facultative | **En partie** | [La demande](etape-13-provisionner.md). Deux points sur neuf restent à vous : les autorisations et la clé |
+| 12 | Relier SharePoint | **En partie** | [Les demandes](etape-12-relier-sharepoint.md). Sept points sur quinze restent à vous : les autorisations, les clés, le site du cabinet et les raccourcis |
+| 13 | Passer la recette | Non | Douze actions à l'écran, et l'action 11 exige deux personnes |
 
 **Ce que cela vous fait gagner**, mesuré le 26/09/2026 : environ 55 minutes de saisie et de
 relecture sur les étapes 7, 9 et 10. Le temps d'attente de la machine, lui, ne change pas.
 
-L'étape 13 s'ajoute à cette liste depuis le 27/09/2026, pour la partie qui se délègue : créer les
-ressources Azure et déployer le code. Affecter les autorisations et manipuler la clé de la fonction
-restent à vous.
+L'étape 12 se délègue en partie : créer les ressources Azure, déployer le code, enregistrer les
+paramètres, créer l'espace du véhicule et déposer les pièces. Affecter les autorisations, manipuler
+les clés, créer le site du cabinet et les raccourcis restent à vous.
 
 Le reste du parcours ne bouge pas. Un agent ne raccourcit ni l'ouverture de la capacité, ni les
 réglages du locataire, ni la recette.
@@ -63,7 +63,7 @@ ailleurs que dans le dossier du dépôt.
    ce refus, et la protection tombe.
 2. **Exigez la sortie brute, jamais un résumé.** « Tout s'est bien passé » ne se vérifie pas.
    `<n> source(s) reliées, 0 restant` se vérifie.
-3. **Une étape à la fois, et vous lisez entre chaque.** Un agent qui enchaîne les douze étapes sans
+3. **Une étape à la fois, et vous lisez entre chaque.** Un agent qui enchaîne les treize étapes sans
    contrôle livre une installation que personne n'a regardée.
 
 ---
@@ -83,4 +83,4 @@ Quand l'agent a fini, ces quatre choses se regardent à l'écran. Aucune ne se d
 
 [L'avertissement, à lire en premier](AVERTISSEMENT.md) ·
 [Revenir au sommaire](../README.md) ·
-[Les douze étapes](../docs/faire/etape-01-ouvrir-la-capacite.md)
+[Les treize étapes](../docs/faire/etape-01-ouvrir-la-capacite.md)

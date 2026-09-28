@@ -1,6 +1,6 @@
 # Reproduire la solution avec un agent d'intelligence artificielle
 
-Cette page est facultative. **Les douze étapes se font entièrement à la main, sans agent et sans
+Cette page est facultative. **Les treize étapes se font entièrement à la main, sans agent et sans
 rien y perdre.** Elle s'adresse à celui qui dispose déjà d'un agent de codage et se demande ce
 qu'il peut raisonnablement lui confier.
 
@@ -46,12 +46,12 @@ Ce partage tient à ce que la plateforme expose, et non à une préférence.
 | 8 | Connecter les fonctions à la base | **Non** | Se règle au portail, et commence de toute façon par un simple contrôle |
 | 9 et 10 | Relier les modèles et les boutons | **Oui** | Deux scripts fournis, qu'il lance et dont il vous lit la sortie |
 | 11 | Publier les deux écrans | **Non** | L'application et ses audiences se composent au portail |
-| 12 | Passer la recette | **Non** | Douze actions à l'écran, et l'action 11 exige deux personnes |
-| 13 | Créer l'espace SharePoint d'un client, facultative | **En partie** | Créer les ressources Azure et déployer, oui ; les autorisations et la clé, non |
+| 12 | Relier SharePoint | **En partie** | Les ressources Azure, le déploiement, les paramètres et le dépôt des pièces, oui ; les autorisations, les clés, le site du cabinet et les raccourcis, non |
+| 13 | Passer la recette | **Non** | Douze actions à l'écran, et l'action 11 exige deux personnes |
 
-Trois étapes sur douze se délèguent entièrement, et ce sont les plus répétitives. L'étape 13,
-facultative, se délègue pour moitié : les demandes sont dans
-[`agents/etape-13-provisionner.md`](../../agents/etape-13-provisionner.md).
+Trois étapes sur treize se délèguent entièrement, et ce sont les plus répétitives. L'étape 12 se
+délègue pour moitié : les demandes sont dans
+[`agents/etape-12-relier-sharepoint.md`](../../agents/etape-12-relier-sharepoint.md).
 
 ---
 
@@ -138,4 +138,4 @@ donne la cause probable.
 
 Suite : [Dépannage](depannage.md)
 
-[Revenir au sommaire](../../README.md) · [Les douze étapes](etape-01-ouvrir-la-capacite.md)
+[Revenir au sommaire](../../README.md) · [Les treize étapes](etape-01-ouvrir-la-capacite.md)

@@ -207,4 +207,4 @@ Disons-le, pour éviter une déception.
 
 Suite : [3. Ce que voit le client](03-ce-que-voit-le-client.md)
 
-[Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)
+[Revenir au sommaire](../../README.md) · [Les treize étapes](../faire/etape-01-ouvrir-la-capacite.md)

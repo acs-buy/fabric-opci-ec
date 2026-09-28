@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revRepNA",
   "position": {
-    "x": 1192,
-    "y": 556,
-    "z": 4600,
-    "height": 34,
-    "width": 96,
-    "tabOrder": 4600
+    "x": 1135,
+    "y": 527,
+    "z": 5600,
+    "height": 31,
+    "width": 70,
+    "tabOrder": 5600
   },
   "visual": {
     "visualType": "actionButton",
@@ -452,7 +452,7 @@
               "metadata": {
                 "dataFunction": {
                   "name": "repondre_question",
-                  "autoRefresh": true,
+                  "autoRefresh": false,
                   "parameters": [
                     {
                       "name": "cote",
@@ -514,7 +514,7 @@
                     {
                       "name": "motif",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revMotif",
@@ -523,7 +523,7 @@
                     {
                       "name": "commentaire",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revCommentaire",

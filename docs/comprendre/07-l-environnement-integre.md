@@ -112,34 +112,39 @@ les deux.
 
 ---
 
-## 4. Un environnement intégré : vous ne sortez jamais de la plateforme
+## 4. Un environnement intégré : vous restez dans votre locataire Microsoft
 
-C'est la garantie qui pèse le plus au quotidien.
+C'est la garantie qui pèse le plus au quotidien. Fabric porte les données et les écrans ; SharePoint,
+dans le même locataire, porte les fichiers ; une Azure Function de votre abonnement fait le lien
+entre les deux.
 
 ### Tout se fait au même endroit
 
 | Ce que vous faites | Où cela se passe |
 |---|---|
-| Stocker les pièces et les données | Le coffre et la base, dans votre espace de travail |
+| Stocker les données | La base, dans votre espace de travail |
+| Stocker les pièces | Le site SharePoint du client, vu depuis le coffre par un raccourci |
 | Saisir, contrôler, viser | L'écran de conduite, dans le même espace |
 | Calculer et analyser | Le modèle sémantique, dans le même espace |
 | Restituer au client | L'écran de restitution, dans le même espace |
-| Exporter vers Excel | Un classeur écrit dans le coffre, dans le même espace |
+| Exporter vers Excel | Un classeur déposé dans le site SharePoint du cabinet, qui s'ouvre au clic |
 | Partager | Une application, dans le même espace |
 
-Aucune recopie entre outils : pas de fichier qui transite par un poste, pas d'export intermédiaire,
-pas de version qui diverge parce qu'elle a été téléchargée la semaine passée.
+Aucune recopie entre outils : pas de fichier qui transite par un poste, pas de version qui diverge
+parce qu'elle a été téléchargée la semaine passée. Un fichier existe une fois, dans SharePoint, et le
+coffre le lit sur place.
 
 ### Les outils que votre cabinet connaît déjà restent utilisables
 
-Rester dans Fabric ne veut pas dire renoncer à Excel. La solution exporte le questionnaire vers un
-classeur, et réimporte un classeur rempli. Les lignes importées entrent **par les mêmes procédures
+Rester dans Fabric ne veut pas dire renoncer à Excel. La solution exporte le questionnaire, les
+feuilles de travail et le dossier vers un classeur, que vous modifiez dans Excel en ligne, puis
+réimporte la version modifiée. Les lignes importées entrent **par les mêmes procédures
 que la saisie à l'écran** : un import ne contourne aucun contrôle.
 
 [Le détail des exports et des imports](../faire/pieces-et-classeurs.md)
 
-Et si votre cabinet range déjà ses pièces dans SharePoint ou OneDrive, un raccourci les fait
-apparaître dans le coffre sans les recopier.
+Les pièces du client vivent dans son site SharePoint, un par véhicule, filiales comprises, classées
+par la colonne Entité légale. Un raccourci les fait apparaître dans le coffre sans les recopier.
 
 ### La partie collaborative, qui est le point d'arrivée
 
@@ -167,4 +172,4 @@ Les contreparties de ce choix :
 
 Suite : [8. Les autorisations : qui les pose, et à quel moment](08-les-autorisations.md)
 
-[Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)
+[Revenir au sommaire](../../README.md) · [Les treize étapes](../faire/etape-01-ouvrir-la-capacite.md)

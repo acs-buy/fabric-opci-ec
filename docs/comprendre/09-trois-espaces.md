@@ -31,7 +31,7 @@ consommation après le second espace.
 
 ## Ce que le pipeline vous évite, et ce qu'il ne vous évite pas
 
-Un pipeline de déploiement copie les éléments d'un espace vers le suivant. Les douze étapes
+Un pipeline de déploiement copie les éléments d'un espace vers le suivant. Les treize étapes
 d'installation ne se refont donc pas. Mais il copie les **définitions**, et rien d'autre.
 
 ### Ce qu'il copie
@@ -55,6 +55,11 @@ restent.**
 | **Les rôles de sécurité** par client | Les recréer et y affecter les comptes | Selon le nombre de clients |
 | **Les autorisations** de l'espace et de l'application | Les poser selon le tableau plus bas | 10 min |
 | **Les boutons vers les fonctions** | Rejouer `scripts/20_relier_les_boutons.py` | 61 s |
+| **Les paramètres du dépôt SharePoint** et leurs credentials | Les renseigner dans la base de l'espace, étape 12 | 10 min, estimation |
+
+**Les raccourcis SharePoint du coffre, eux, passent**, et gardent la même cible dans tous les
+espaces, selon la documentation de l'éditeur. En production, faites-les pointer vers les sites de
+production.
 
 ### Le point des boutons, qui surprend
 

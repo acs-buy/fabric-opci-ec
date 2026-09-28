@@ -8,7 +8,7 @@
 -- Partout ou la table porte une colonne d'entite, la suppression les nomme une par une. Si vous
 -- avez deja cree vos propres dossiers, ils ne sont pas touches.
 --
--- CE QUI EST VIDE ENTIEREMENT : essai_saisie_grille, jeu_mention_refus, jeu_mention_retiree, mesure_reference, releve_coffre, contexte_reviseur, releve_controle, mouvement_porteur, piece, programme_journal, programme_question, rejet_import, expertise, feuille_piece, feuille_question, releve_coffre_refus, ecriture, export_fec_lot.
+-- CE QUI EST VIDE ENTIEREMENT : essai_saisie_grille, jeu_mention_refus, jeu_mention_retiree, mesure_reference, releve_coffre, contexte_reviseur, releve_controle, mouvement_porteur, programme_journal, programme_question, rejet_import, expertise, feuille_piece, feuille_question, releve_coffre_refus, ecriture, export_fec_lot.
 -- Ces tables ne portent aucune colonne d'entite, leur rattachement passant par un lot, une cote ou
 -- un code d'actif. Les distinguer demanderait une jointure par table, et une erreur y couterait des
 -- donnees. Le script les vide donc, et vous previent.
@@ -89,7 +89,7 @@ DELETE FROM dbo.[programme_question] ;
 SET @total = @total + @@ROWCOUNT;
 DELETE FROM dbo.[programme_journal] ;
 SET @total = @total + @@ROWCOUNT;
-DELETE FROM dbo.[piece] ;
+DELETE FROM dbo.[piece] WHERE [entite] IN ('OMEGA-OPCI', 'OMEGA-SCI-1', 'OMEGA-SCI-2', 'OMEGA-SCI-3', 'OMEGA-SCI-4', 'OMEGA-SCI-5', 'OMEGA-SCI-6', 'OMEGA-SCI-7', 'OMEGA-SCI-8', 'OMEGA-SCI-9', 'OMEGA-SCI-10', 'OMEGA-SCI-11', 'OMEGA-SCI-12', 'OPCI-1', 'SCI-NORD', 'SIGMA-SCI-2');
 SET @total = @total + @@ROWCOUNT;
 DELETE FROM dbo.[feuille_travail] WHERE [entite] IN ('OMEGA-OPCI', 'OMEGA-SCI-1', 'OMEGA-SCI-2', 'OMEGA-SCI-3', 'OMEGA-SCI-4', 'OMEGA-SCI-5', 'OMEGA-SCI-6', 'OMEGA-SCI-7', 'OMEGA-SCI-8', 'OMEGA-SCI-9', 'OMEGA-SCI-10', 'OMEGA-SCI-11', 'OMEGA-SCI-12', 'OPCI-1', 'SCI-NORD', 'SIGMA-SCI-2');
 SET @total = @total + @@ROWCOUNT;
@@ -144,6 +144,8 @@ SET @total = @total + @@ROWCOUNT;
 DELETE FROM dbo.[obligation_distribution] WHERE [entite] IN ('OMEGA-OPCI', 'OMEGA-SCI-1', 'OMEGA-SCI-2', 'OMEGA-SCI-3', 'OMEGA-SCI-4', 'OMEGA-SCI-5', 'OMEGA-SCI-6', 'OMEGA-SCI-7', 'OMEGA-SCI-8', 'OMEGA-SCI-9', 'OMEGA-SCI-10', 'OMEGA-SCI-11', 'OMEGA-SCI-12', 'OPCI-1', 'SCI-NORD', 'SIGMA-SCI-2');
 SET @total = @total + @@ROWCOUNT;
 DELETE FROM dbo.[flux_intragroupe] WHERE [entite_debitrice] IN ('OMEGA-OPCI', 'OMEGA-SCI-1', 'OMEGA-SCI-2', 'OMEGA-SCI-3', 'OMEGA-SCI-4', 'OMEGA-SCI-5', 'OMEGA-SCI-6', 'OMEGA-SCI-7', 'OMEGA-SCI-8', 'OMEGA-SCI-9', 'OMEGA-SCI-10', 'OMEGA-SCI-11', 'OMEGA-SCI-12', 'OPCI-1', 'SCI-NORD', 'SIGMA-SCI-2') OR [entite_creditrice] IN ('OMEGA-OPCI', 'OMEGA-SCI-1', 'OMEGA-SCI-2', 'OMEGA-SCI-3', 'OMEGA-SCI-4', 'OMEGA-SCI-5', 'OMEGA-SCI-6', 'OMEGA-SCI-7', 'OMEGA-SCI-8', 'OMEGA-SCI-9', 'OMEGA-SCI-10', 'OMEGA-SCI-11', 'OMEGA-SCI-12', 'OPCI-1', 'SCI-NORD', 'SIGMA-SCI-2');
+SET @total = @total + @@ROWCOUNT;
+DELETE FROM dbo.[export_dossier] WHERE [entite] IN ('OMEGA-OPCI', 'OMEGA-SCI-1', 'OMEGA-SCI-2', 'OMEGA-SCI-3', 'OMEGA-SCI-4', 'OMEGA-SCI-5', 'OMEGA-SCI-6', 'OMEGA-SCI-7', 'OMEGA-SCI-8', 'OMEGA-SCI-9', 'OMEGA-SCI-10', 'OMEGA-SCI-11', 'OMEGA-SCI-12', 'OPCI-1', 'SCI-NORD', 'SIGMA-SCI-2');
 SET @total = @total + @@ROWCOUNT;
 DELETE FROM dbo.[demande_espace_client] WHERE [entite] IN ('OMEGA-OPCI', 'OMEGA-SCI-1', 'OMEGA-SCI-2', 'OMEGA-SCI-3', 'OMEGA-SCI-4', 'OMEGA-SCI-5', 'OMEGA-SCI-6', 'OMEGA-SCI-7', 'OMEGA-SCI-8', 'OMEGA-SCI-9', 'OMEGA-SCI-10', 'OMEGA-SCI-11', 'OMEGA-SCI-12', 'OPCI-1', 'SCI-NORD', 'SIGMA-SCI-2');
 SET @total = @total + @@ROWCOUNT;

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revRepNonLib",
   "position": {
-    "x": 1088,
-    "y": 564,
-    "z": 4200,
+    "x": 1057,
+    "y": 533,
+    "z": 5200,
     "height": 18,
-    "width": 96,
-    "tabOrder": 4200
+    "width": 70,
+    "tabOrder": 5200
   },
   "visual": {
     "visualType": "textbox",
@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "11px",
-                      "color": "#FFFFFF"
+                      "color": "#A4262C"
                     }
                   }
                 ],

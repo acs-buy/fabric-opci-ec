@@ -57,7 +57,7 @@ table v_balance
 
 		annotation SummarizationSetBy = Automatic
 
-	column compte
+	column Compte
 		dataType: string
 		isNullable: false
 		sourceProviderType: varchar(20)
@@ -67,7 +67,7 @@ table v_balance
 
 		annotation SummarizationSetBy = Automatic
 
-	column libelle
+	column Libellé
 		dataType: string
 		sourceProviderType: nvarchar(300)
 		lineageTag: 66effa5e-224f-43e5-be16-38044b651cba
@@ -86,8 +86,9 @@ table v_balance
 
 		annotation SummarizationSetBy = Automatic
 
-	column b0_initiale
+	column 'Balance avant'
 		dataType: double
+		formatString: #,##0.00
 		sourceProviderType: decimal(38, 2)
 		lineageTag: 2a19af56-cbae-4097-af8f-bd1c27fbe872
 		summarizeBy: sum
@@ -97,8 +98,9 @@ table v_balance
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	column od_revision
+	column 'OD de révision'
 		dataType: double
+		formatString: #,##0.00
 		sourceProviderType: decimal(38, 2)
 		lineageTag: f827525b-d150-4c08-9501-c2896dcbfe5a
 		summarizeBy: sum
@@ -108,8 +110,9 @@ table v_balance
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	column od_valorisation
+	column 'OD de valorisation'
 		dataType: double
+		formatString: #,##0.00
 		sourceProviderType: decimal(38, 2)
 		lineageTag: 45bea8aa-a3af-4ce1-b0fd-a52ddddce838
 		summarizeBy: sum
@@ -119,8 +122,9 @@ table v_balance
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	column balance_finale
+	column 'Balance après'
 		dataType: double
+		formatString: #,##0.00
 		sourceProviderType: decimal(38, 2)
 		lineageTag: a98abe4f-b5a2-444b-8578-add018fabca5
 		summarizeBy: sum

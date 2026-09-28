@@ -76,4 +76,4 @@ pas avancer de chiffre tant qu'il n'est pas mesuré.
 
 Suite : [6. Les trois couches d'une reproduction](06-les-trois-couches.md)
 
-[Revenir au sommaire](../../README.md) · [Les douze étapes](../faire/etape-01-ouvrir-la-capacite.md)
+[Revenir au sommaire](../../README.md) · [Les treize étapes](../faire/etape-01-ouvrir-la-capacite.md)

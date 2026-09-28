@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
   "version": "4.0",
   "datasetReference": {
-    "byPath": {
-      "path": "../conduite_de_mission.SemanticModel"
+    "byConnection": {
+      "connectionString": "Data Source=powerbi://api.powerbi.com/v1.0/myorg/OPCI-DEV;initial catalog=conduite_de_mission;integrated security=ClaimsToken;semanticmodelid=d4baf1c0-0ea6-4722-9656-b1fa47400b7e"
     }
   }
 }

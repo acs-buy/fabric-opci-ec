@@ -33,7 +33,9 @@ GRAPH = "https://graph.microsoft.com/v1.0"
 PREFIXE_GROUPE = "OPCI - "
 
 # LES 4 BIBLIOTHEQUES DE CHAQUE ESPACE CLIENT.
-# Adaptez ces noms a l'organisation de votre cabinet : ils n'ont aucun effet technique.
+# Adaptez ces noms a l'organisation de votre cabinet. Deux d'entre eux servent au depot des pieces
+# de demonstration, « Dossier annuel » et « Dossier permanent » : les renommer impose de renommer
+# aussi les bibliotheques que lit dbo.pr_deposer_pieces_de_demonstration.
 BIBLIOTHEQUES = ["Dépôt du client", "Dossier permanent", "Dossier annuel", "Livrables"]
 
 
@@ -189,6 +191,23 @@ class Graph:
             url = d.get("@odata.nextLink")
         return noms
 
+    def poser_colonne_entite(self, site_id: str, liste_id: str, entites: list):
+        """La colonne « Entite legale », en liste de choix, saisie libre admise.
+
+        UN SITE POUR UN VEHICULE ET SES FILIALES : les pieces de toutes les entites du groupe
+        vivent dans le meme site, et se classent par cette colonne.
+        La saisie libre couvre la filiale ajoutee apres le provisionnement.
+        Exige Sites.Manage.All : Sites.ReadWrite.All ne suffit pas a creer une colonne.
+        """
+        r = self.s.get(f"{GRAPH}/sites/{site_id}/lists/{liste_id}/columns?$select=name", timeout=30)
+        if r.status_code == 200 and any(c.get("name") == "EntiteLegale" for c in r.json().get("value", [])):
+            return "EXISTAIT"
+        corps = {"name": "EntiteLegale", "displayName": "Entité légale",
+                 "description": "L'entité juridique que le document concerne : le véhicule ou l'une de ses filiales.",
+                 "choice": {"allowTextEntry": True, "choices": entites or [], "displayAs": "dropDownMenu"}}
+        r = self.s.post(f"{GRAPH}/sites/{site_id}/lists/{liste_id}/columns", json=corps, timeout=60)
+        return "CREEE" if r.status_code == 201 else f"ERREUR {r.status_code} {r.text[:200]}"
+
     def creer_bibliotheque(self, site_id: str, nom: str):
         """Une bibliotheque de documents, POST /sites/{id}/lists avec le gabarit documentLibrary.
 
@@ -273,6 +292,15 @@ def provisionner_espace(req: func.HttpRequest) -> func.HttpResponse:
                         continue
                     faites.append(g.creer_bibliotheque(site["id"], nom))
                 etapes.append({"etape": "bibliotheques", "detail": faites})
+                colonnes, listes = [], g.bibliotheques(site["id"]) or {}
+                for nom_bib in BIBLIOTHEQUES:
+                    if nom_bib in listes:
+                        colonnes.append({"bibliotheque": nom_bib,
+                                         "statut": g.poser_colonne_entite(site["id"], listes[nom_bib],
+                                                                          d.get("entites", [entite]))})
+                etapes.append({"etape": "colonne_entite_legale", "detail": colonnes})
+                if any(c["statut"].startswith("ERREUR") for c in colonnes):
+                    statut = "PARTIEL"
                 if any(f["statut"] == "ERREUR" for f in faites):
                     statut = "PARTIEL"
         elif not site:
@@ -337,13 +365,29 @@ def deposer_classeur(req: func.HttpRequest) -> func.HttpResponse:
             raise RuntimeError(f"site introuvable ({r.status_code}) : {r.text[:300]}")
         site_id = r.json()["id"]
         chemin = segments(dossier + "/" + fichier)
-        r = g.s.put(f"{GRAPH}/sites/{site_id}/drive/root:/{chemin}:/content", data=contenu,
+        # UNE BIBLIOTHEQUE CHOISIE, ou celle du site par defaut. Elle se designe par son nom
+        # affiche, et se resout en lecteur : « Dossier annuel », « Dépôt du client »...
+        lecteur = "drive"
+        if d.get("bibliotheque"):
+            rd = g.get(f"/sites/{site_id}/drives?$select=id,name")
+            ids = {x["name"]: x["id"] for x in rd.json().get("value", [])} if rd.status_code == 200 else {}
+            if d["bibliotheque"] not in ids:
+                raise RuntimeError(f"bibliotheque introuvable dans le site : {d['bibliotheque']}")
+            lecteur = "drives/" + ids[d["bibliotheque"]]
+        base = f"{GRAPH}/sites/{site_id}/{lecteur}" if lecteur == "drive" else f"{GRAPH}/{lecteur}"
+        r = g.s.put(f"{base}/root:/{chemin}:/content", data=contenu,
                     headers={"Content-Type": "application/octet-stream"}, timeout=120)
         if r.status_code not in (200, 201):
             raise RuntimeError(f"depot refuse ({r.status_code}) : {r.text[:500]}")
         item = r.json()
         corps = {"statut": "FAIT", "web_url": item.get("webUrl"), "taille": item.get("size"),
                  "id": item.get("id"), "ecrase": r.status_code == 200}
+        # L'ENTITE LEGALE, posee sur l'element de liste du fichier. Un echec ne defait pas le
+        # depot, qui a reussi : il se signale, et la procedure le rend a l'ecran.
+        if d.get("entite_legale"):
+            rf = g.s.patch(f"{base}/items/{item['id']}/listItem/fields",
+                           json={"EntiteLegale": d["entite_legale"]}, timeout=60)
+            corps["entite_legale"] = "POSEE" if rf.status_code == 200 else f"ERREUR {rf.status_code} {rf.text[:200]}"
     except Exception as e:  # la procedure appelante lit le statut et le message
         logging.exception("depot de classeur en echec")
         corps = {"statut": "ERREUR", "message": str(e)[:1500]}

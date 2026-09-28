@@ -3,6 +3,8 @@ table ref_cycle
 
 	measure 'Cycle selectionne' = IF ( HASONEVALUE ( ref_cycle[code] ), SELECTEDVALUE ( ref_cycle[code] ) )
 
+	measure 'Titre des questions' = "Questions du cycle " & COALESCE ( SELECTEDVALUE ( ref_cycle[Cycle] ), "— choisir un cycle" )
+
 	column code
 		dataType: string
 		isNullable: false

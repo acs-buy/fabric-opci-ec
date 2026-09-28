@@ -2,7 +2,7 @@
 u"""30. Verifier l'installation, et preparer la recette des douze actions.
 
 CE QU'IL VERIFIE TOUT SEUL
-    Les deux liaisons de l'etape 6, en relisant les fichiers du depot. C'est la panne la plus
+    Les deux liaisons des etapes 9 et 10, en relisant les fichiers du depot. C'est la panne la plus
     frequente et la plus difficile a diagnostiquer a l'ecran, puisqu'un bouton mal relie ne dit
     rien : il ne fait rien.
 
@@ -29,7 +29,9 @@ UNION ALL SELECT 'comptes du plan',        COUNT(*), 200 FROM dbo.ref_compte
 UNION ALL SELECT 'articles du reglement',  COUNT(*), 111 FROM dbo.ref_article
 UNION ALL SELECT 'roles',                  COUNT(*),   4 FROM dbo.ref_role
 UNION ALL SELECT 'natures de pieces',      COUNT(*),  10 FROM dbo.ref_nature_piece
-UNION ALL SELECT 'entites de demonstration', COUNT(*), 16 FROM dbo.ref_entite;"""
+UNION ALL SELECT 'entites de demonstration', COUNT(*), 16 FROM dbo.ref_entite
+UNION ALL SELECT 'fiches de pieces',       COUNT(*),  98 FROM dbo.piece
+UNION ALL SELECT 'pieces avec leur lien, apres l''etape 12', COUNT(web_url), 98 FROM dbo.piece;"""
 
 ACTIONS = [
     u"Creer un dossier client, et voir son questionnaire s'ouvrir seul",
@@ -99,7 +101,7 @@ def main():
         print(u"   %2d. %s" % (i, g))
     print(u"")
     print(u"L'action 11 demande deux comptes : l'approbation est refusee a qui a soumis.")
-    print(u"Le detail de chaque action est dans docs/faire/etape-12-passer-la-recette.md.")
+    print(u"Le detail de chaque action est dans docs/faire/etape-13-passer-la-recette.md.")
 
     print(u"")
     if bon:

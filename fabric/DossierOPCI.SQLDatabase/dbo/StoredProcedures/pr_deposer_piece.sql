@@ -1,3 +1,6 @@
+-- 226. LES MESSAGES DES PIECES DISENT OU EST LE FICHIER. 28/09/2026.
+-- Depuis la regle du 28/09, le fichier d'une piece vit dans SharePoint et le coffre le voit par un
+-- raccourci. « deposee au coffre » et « le fichier reste au coffre » etaient devenus faux.
 
 -- --- 7. deposer une piece au coffre : l'inscription qui suit le televersement -----------------
 CREATE   PROCEDURE dbo.pr_deposer_piece
@@ -50,7 +53,7 @@ BEGIN
         THROW;
     END CATCH;
 
-    SELECT @piece AS piece_id, N'Pièce « ' + @nom_fichier + N' » déposée au coffre de ' + @entite
+    SELECT @piece AS piece_id, N'Pièce « ' + @nom_fichier + N' » inscrite au dossier de ' + @entite
          + CASE WHEN @question IS NOT NULL THEN N', rattachée à la question ' + @question ELSE N'' END + N'.' AS message;
 END;
 

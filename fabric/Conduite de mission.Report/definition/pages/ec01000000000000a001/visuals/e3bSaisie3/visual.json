@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "e3bSaisie3",
   "position": {
     "x": 1355,
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "v_questions_acceptation.Réf.",
-              "nativeQueryRef": "Réf."
+              "nativeQueryRef": "Réf.",
+              "active": true
             }
           ]
         }

@@ -37,6 +37,10 @@ table feuille_travail
 		displayFolder: Révision
 		lineageTag: b06afe56-b390-4355-a0a6-c3deeeaa7b6b
 
+	measure 'Feuilles preparees' = VAR n = COUNTROWS ( feuille_travail ) RETURN IF ( n > 0, "préparées : " & FORMAT ( n, "0" ) )
+
+	measure 'Feuilles conclues sur preparees' = FORMAT ( CALCULATE ( COUNTROWS ( feuille_travail ), NOT ISBLANK ( feuille_travail[conclue_le] ) ) + 0, "0" ) & " / " & FORMAT ( COUNTROWS ( feuille_travail ) + 0, "0" )
+
 	column cote
 		dataType: string
 		isNullable: false

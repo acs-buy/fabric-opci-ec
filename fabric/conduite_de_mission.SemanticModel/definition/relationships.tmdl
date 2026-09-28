@@ -406,3 +406,43 @@ relationship 7e9ad8c2-b807-4474-bd50-98ae005997dd
 	fromColumn: v_ecran_maintiens.entite
 	toColumn: ref_entite.Entité
 
+relationship e6ff7b9e-9210-4cce-a05e-a5c404f07fd1
+	fromColumn: v_questions_programme.cycle
+	toColumn: ref_cycle.code
+
+relationship 436cc81d-343c-4d81-9272-2bd74ec9319b
+	fromColumn: v_od_revision.cycle
+	toColumn: ref_cycle.code
+
+relationship f4739551-0290-45bc-bdd8-f621075abb72
+	fromColumn: v_questions_programme.entite
+	toColumn: ref_entite.Entité
+
+relationship 5d285f5a-24e4-40fa-b326-fc46f6581759
+	fromColumn: v_questions_programme.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship d20b3fa5-2b37-48c4-9fb3-70a77be3f278
+	fromColumn: v_od_revision.entite
+	toColumn: ref_entite.Entité
+
+relationship d1e6733a-9bb3-4272-9ea8-1da9a8271cea
+	fromColumn: v_od_revision.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship c605442b-f8bb-48c9-9f2e-d79e218f017a
+	fromColumn: v_revision_indicateurs.entite
+	toColumn: ref_entite.Entité
+
+relationship 327a01ae-d88c-4d3f-b17b-56f6778e403a
+	fromColumn: v_revision_indicateurs.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 5f230622-25ef-42f9-a120-d9d8d6ef6c14
+	fromColumn: v_export_dossier.entite
+	toColumn: ref_entite.Entité
+
+relationship 9471dd96-03c8-4f43-af9c-85deecf63c95
+	fromColumn: v_export_dossier.arrete
+	toColumn: v_dim_arrete.arrete
+

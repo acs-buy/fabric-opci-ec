@@ -90,4 +90,4 @@ la procédure en cause, ce qui désigne directement l'endroit à regarder dans l
 
 ---
 
-[Revenir au sommaire](../../README.md) · [Les douze étapes](../../README.md#partie-2-faire--les-douze-étapes)
+[Revenir au sommaire](../../README.md) · [Les treize étapes](../../README.md#partie-2-faire--les-treize-étapes)

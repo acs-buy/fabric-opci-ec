@@ -2,6 +2,8 @@
 table v_od_revision
 	lineageTag: 0fef6d20-6cfc-46ce-a1aa-59344647129d
 
+	measure 'Equilibre du lot' = VAR db = SUM ( v_od_revision[Débit] ) VAR cr = SUM ( v_od_revision[Crédit] ) RETURN IF ( db + cr > 0, "Équilibre du lot " & FORMAT ( db, "#,##0.00" ) & IF ( db = cr, ", équilibré", ", DÉSÉQUILIBRÉ de " & FORMAT ( ABS ( db - cr ), "#,##0.00" ) ) )
+
 	column entite
 		dataType: string
 		isNullable: false
@@ -123,7 +125,7 @@ table v_od_revision
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	column piece_ref
+	column Pièce
 		dataType: string
 		sourceProviderType: varchar(50)
 		lineageTag: a95bd767-ac00-49aa-8554-f63b9955ac33
@@ -141,7 +143,7 @@ table v_od_revision
 
 		annotation SummarizationSetBy = Automatic
 
-	column par
+	column Par
 		dataType: string
 		isNullable: false
 		sourceProviderType: nvarchar(200)

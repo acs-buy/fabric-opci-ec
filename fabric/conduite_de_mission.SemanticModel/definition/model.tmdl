@@ -85,6 +85,7 @@ ref table v_couverture_balance
 ref table v_od_revision
 ref table v_questions_programme
 ref table v_revision_indicateurs
+ref table v_export_dossier
 
 ref role Reviseur
 

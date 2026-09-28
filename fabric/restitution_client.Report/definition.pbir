@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
   "version": "4.0",
   "datasetReference": {
-    "byPath": {
-      "path": "../restitution_client.SemanticModel"
+    "byConnection": {
+      "connectionString": "Data Source=powerbi://api.powerbi.com/v1.0/myorg/OPCI-DEV;initial catalog=restitution_client;integrated security=ClaimsToken;semanticmodelid=1cc3e265-228f-4cf3-9f2c-3a03f26f6f8e"
     }
   }
 }

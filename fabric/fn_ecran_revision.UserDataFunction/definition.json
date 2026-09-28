@@ -4,15 +4,15 @@
   "connectedDataSources": [
     {
       "alias": "Coffre",
-      "artifactId": "4a1d428b-490a-4bdf-813e-5bc1bd5e4e2b",
+      "artifactId": "eceb5802-f9ae-4e0d-8237-b3b1586c992a",
       "artifactType": "Lakehouse",
-      "workspaceId": "00000000-0000-0000-0000-000000000000"
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
     },
     {
       "alias": "DossierOPCI",
-      "artifactId": "e75236e3-ceab-b437-4253-1d4f3ade2222",
+      "artifactId": "fd9080bb-e3ae-4aab-bf09-edbfcc8606d1",
       "artifactType": "SqlDbNative",
-      "workspaceId": "00000000-0000-0000-0000-000000000000"
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
     }
   ],
   "functions": [
@@ -85,6 +85,11 @@
       "name": "saisir_od",
       "description": "Ecran Revision, maquette 73",
       "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "saisir_od_double",
+      "description": "",
+      "isPublicEndpointEnabled": true
     },
     {
       "name": "valider_od_libres",

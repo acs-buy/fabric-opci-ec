@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revCycles",
   "position": {
-    "x": 24,
-    "y": 308,
-    "z": 3400,
-    "height": 104,
-    "width": 1552,
-    "tabOrder": 3400
+    "x": 0,
+    "y": 287,
+    "z": 2500,
+    "height": 56,
+    "width": 1600,
+    "tabOrder": 2500
   },
   "visual": {
     "visualType": "slicer",
@@ -114,6 +114,26 @@
             }
           }
         }
+      ],
+      "selection": [
+        {
+          "properties": {
+            "strictSingleSelect": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "selectAllCheckboxEnabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -165,7 +185,7 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "4D"
+                  "Value": "3D"
                 }
               }
             }

@@ -26,7 +26,7 @@ environ une heure de lecture.
 La partie **Faire** donne la procédure, avec le nom exact de chaque bouton. À lire l'écran sous
 les yeux, au moment d'exécuter.
 
-Pour installer sans préambule, allez au tableau des douze étapes.
+Pour installer sans préambule, allez au tableau des treize étapes.
 
 ---
 
@@ -42,11 +42,11 @@ Pour installer sans préambule, allez au tableau des douze étapes.
 | 6 | [Les trois couches d'une reproduction](docs/comprendre/06-les-trois-couches.md) | Pourquoi l'installation ne se fait pas d'un seul coup |
 | 7 | [L'environnement intégré](docs/comprendre/07-l-environnement-integre.md) | L'authentification, le cloisonnement des données, où elles sont stockées |
 | 8 | [Les autorisations](docs/comprendre/08-les-autorisations.md) | Toutes les autorisations, qui les pose, à quelle étape, et les deux qui se demandent d'avance |
-| 9 | [Trois espaces de travail](docs/comprendre/09-trois-espaces.md) | Pourquoi un cabinet en tient trois, ce qu'un pipeline copie, et les cinq actions qu'il ne copie pas |
+| 9 | [Trois espaces de travail](docs/comprendre/09-trois-espaces.md) | Pourquoi un cabinet en tient trois, ce qu'un pipeline copie, et les six actions qu'il ne copie pas |
 
 ---
 
-## Partie 2. Faire : les douze étapes
+## Partie 2. Faire : les treize étapes
 
 **Suivez-les dans l'ordre.** Chacune se termine par une vérification. Ne passez à la suivante que
 lorsqu'elle est passée : une étape ratée ne se voit souvent que trois étapes plus loin.
@@ -68,27 +68,27 @@ reste une estimation.
 | 9 | Relier les modèles à votre base | **61 s** | 15 min | Analyste recommandé | [Faire](docs/faire/etape-09-et-10-relier.md) |
 | 10 | Relier les boutons à vos fonctions | | 15 min | Analyste recommandé | [Faire](docs/faire/etape-09-et-10-relier.md) |
 | 11 | Publier les deux écrans | | 30 min | Vous | [Faire](docs/faire/etape-11-publier-les-applications.md) |
-| 12 | Passer la recette | | 60 min | Vous, plus un collègue | [Faire](docs/faire/etape-12-passer-la-recette.md) |
+| 12 | Relier SharePoint | | 2 h, plus jusqu'à 24 h d'attente | Vous, plus un administrateur Entra | [Faire](docs/faire/etape-12-relier-sharepoint.md) |
+| 13 | Passer la recette | | 60 min | Vous, plus un collègue | [Faire](docs/faire/etape-13-passer-la-recette.md) |
 
 L'étape 6 demande 7 minutes d'attente pour ramener les dix éléments.
 L'actualisation du modèle du client, à l'étape 9, prend 20 secondes.
+Les 24 heures de l'étape 12 s'évitent : faites affecter les autorisations de la fonction dès
+l'étape 2, et elles seront prises en compte au moment où vous en aurez besoin.
 
-Six pages s'ajoutent, à lire quand le sujet se présente :
+Quatre pages s'ajoutent, à lire quand le sujet se présente :
 
-- [Les pièces justificatives et les classeurs Excel](docs/faire/pieces-et-classeurs.md), pour
-  SharePoint, OneDrive, et les exports vers Excel.
+- [Les pièces justificatives et les classeurs Excel](docs/faire/pieces-et-classeurs.md) : où va
+  chaque fichier, et pourquoi tout passe par SharePoint.
 - [Le dépannage](docs/faire/depannage.md), qui donne la cause réelle de chaque symptôme.
 - [Déployer en trois espaces](docs/faire/deployer-en-trois-espaces.md), pour un cabinet qui
   installe dans DEV, fait tester dans TEST, et n'ouvre PROD qu'une fois les tests signés.
 - [Le cahier de tests](docs/faire/cahier-de-tests.md), 26 tests à faire passer dans TEST avant
   d'ouvrir la production.
-- [Créer l'espace SharePoint d'un client depuis la solution](docs/faire/etape-13-provisionner-les-espaces-clients.md),
-  étape facultative qui vient après les douze autres. Le code de l'Azure Function est dans
-  [`azure/`](azure/README.md), avec les sept autorisations Microsoft Graph et leur raison d'être.
 - [Reproduire avec un agent d'intelligence artificielle](docs/faire/avec-un-agent.md) : les
-  3 étapes sur 12 qu'un agent sait jouer, et les 4 contrôles qui restent à vous. Les demandes
+  3 étapes sur 13 qu'un agent sait jouer, et les 4 contrôles qui restent à vous. Les demandes
   prêtes à coller sont dans [`agents/`](agents/README.md). Rien de tout cela n'est obligatoire ;
-  les douze étapes se font à la main.
+  les treize étapes se font à la main.
 
 ---
 
@@ -193,7 +193,7 @@ demandent rien de votre part.
 | Le dossier | Ce qu'il porte | Ce que vous en faites |
 |---|---|---|
 | `sql/10_referentiels/` | 3 452 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
-| `sql/80_demonstration/` | 7 152 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures | Vous pourrez l'effacer |
+| `sql/80_demonstration/` | 7 152 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures, 98 fiches de pièces | Vous pourrez l'effacer |
 | `sql/90_vous_inscrire_aux_missions.sql` | Il vous inscrit, vous et un collègue, sur les missions de démonstration | **Obligatoire.** Sans lui, l'écran du réviseur est vide |
 
 Le jeu de démonstration sert à voir l'écran du client rempli. Sans lui, les huit pages de
@@ -229,8 +229,8 @@ C'est ici que les installations échouent.
 
 | Ce qui ne se recolle pas | Combien | Ce qui se passe sans réparation |
 |---|---|---|
-| Les sources des deux modèles vers la base | 73 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
-| Les boutons vers les fonctions | 36 | Les boutons ne font rien, ou écrivent au mauvais endroit |
+| Les sources des deux modèles vers la base | 74 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
+| Les boutons vers les fonctions | 31 | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
 **L'ordre compte :** le modèle d'abord, les boutons ensuite. Actualiser le modèle avant de l'avoir
 relié produit une erreur qui fait croire à une panne générale.
@@ -274,7 +274,28 @@ restitution, ne voit pas la conduite de mission, et ne voit que son propre véhi
 [Comprendre le cloisonnement](docs/comprendre/07-l-environnement-integre.md) ·
 [Faire l'étape 11](docs/faire/etape-11-publier-les-applications.md)
 
-### Étape 12. Passer la recette
+### Étape 12. Relier SharePoint
+
+**Ce que vous faites :** vous créez l'Azure Function du dépôt et vous faites affecter ses huit
+autorisations Microsoft Graph, vous créez le site SharePoint du cabinet et le raccourci `fec`, puis
+le site du client de démonstration, ses raccourcis, et vous y déposez ses 98 pièces.
+
+**Pourquoi :** la solution ne garde aucun fichier dans le coffre. Classeurs exportés et pièces
+justificatives se déposent dans SharePoint, et le coffre les voit par un raccourci. Sans cette
+étape, tout ce qui touche un fichier échoue : exporter, réimporter, ouvrir une pièce.
+
+**Le point qui se rate :** le délai. Une autorisation Graph peut mettre 24 heures à s'appliquer.
+Faites-la affecter dès l'étape 2.
+
+*Vérification :* `Pièces déposées : 98, refusées : 0, restant sans lien : 0`, et le lien d'une
+pièce, lu dans `dbo.piece`, ouvre un PDF blanc dans le site du client.
+
+Le code de la fonction et ses commandes sont dans [`azure/`](azure/README.md).
+
+[Comprendre les autorisations](docs/comprendre/08-les-autorisations.md) ·
+[Faire l'étape 12](docs/faire/etape-12-relier-sharepoint.md)
+
+### Étape 13. Passer la recette
 
 **Ce que vous faites :** vous exécutez douze actions, du clic jusqu'à la base, et vous vérifiez que
 chacune donne le résultat attendu.
@@ -287,7 +308,7 @@ le dossier. C'est la séparation des fonctions, et la base l'impose.
 
 *Vérification :* les douze actions aboutissent.
 
-[Faire l'étape 12](docs/faire/etape-12-passer-la-recette.md)
+[Faire l'étape 13](docs/faire/etape-13-passer-la-recette.md)
 
 ---
 
@@ -315,7 +336,7 @@ Sous la barre des étapes, la fiche du dossier rassemble tout ce qui le concerne
 *Maquette de conception. L'écran de conduite est en cours de pose, et l'écran publié peut différer
 dans le détail.*
 
-### Ce que vous obtenez au bout des douze étapes
+### Ce que vous obtenez au bout des treize étapes
 
 ![L'application et ses deux audiences](captures/application-audiences.png)
 
@@ -339,7 +360,7 @@ zéro signifie que la variation est entièrement expliquée.*
 
 ### Comment les deux tiennent ensemble
 
-Une carte de la solution, avec ses six éléments et ce qui circule entre eux, est dans
+Une carte de la solution, avec ses huit éléments et ce qui circule entre eux, est dans
 [Comment c'est construit](docs/comprendre/04-comment-c-est-construit.md). Chaque élément y renvoie
 au fichier correspondant du dépôt.
 

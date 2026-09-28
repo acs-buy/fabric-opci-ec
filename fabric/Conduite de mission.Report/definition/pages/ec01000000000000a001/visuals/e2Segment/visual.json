@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "e2Segment",
   "position": {
     "x": 728,
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "v_filiale_dependances.Filiale",
-              "nativeQueryRef": "Filiale"
+              "nativeQueryRef": "Filiale",
+              "active": true
             }
           ]
         }

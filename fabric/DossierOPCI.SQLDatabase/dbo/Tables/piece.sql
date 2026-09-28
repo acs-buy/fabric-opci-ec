@@ -8,9 +8,12 @@ CREATE TABLE [dbo].[piece] (
     [periode_fin]      DATE           NULL,
     [depose_par]       NVARCHAR (200) NOT NULL,
     [depose_le]        DATETIME2 (7)  DEFAULT (sysutcdatetime()) NOT NULL,
+    [web_url]          NVARCHAR (800) NULL,
+    [entite]           VARCHAR (20)   NULL,
     CONSTRAINT [pk_piece] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [ck_piece_empreinte_longueur] CHECK (len([empreinte_sha256])=(64)),
     CONSTRAINT [ck_piece_periode] CHECK ([periode_debut] IS NULL OR [periode_fin] IS NULL OR [periode_debut]<=[periode_fin]),
+    CONSTRAINT [fk_piece_entite] FOREIGN KEY ([entite]) REFERENCES [dbo].[ref_entite] ([code]),
     CONSTRAINT [fk_piece_nature] FOREIGN KEY ([nature]) REFERENCES [dbo].[ref_nature_piece] ([code]),
     CONSTRAINT [uq_piece_empreinte] UNIQUE NONCLUSTERED ([empreinte_sha256] ASC)
 );

@@ -12,6 +12,8 @@ table v_dim_arrete
 
 	measure 'Arrete selectionne' = IF ( HASONEVALUE ( v_dim_arrete[arrete] ), SELECTEDVALUE ( v_dim_arrete[arrete] ) )
 
+	measure 'Est arrete ouvert du vehicule' = VAR e = SELECTEDVALUE ( ref_entite[Entité] ) VAR a = SELECTEDVALUE ( v_dim_arrete[arrete] ) RETURN IF ( NOT ISBLANK ( a ) && COUNTROWS ( FILTER ( ALL ( arrete_mission ), arrete_mission[arrete] = a && ( ISBLANK ( e ) || arrete_mission[entite] = e ) ) ) > 0, 1, 0 )
+
 	column arrete
 		dataType: string
 		isNullable: false

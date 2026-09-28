@@ -3,7 +3,7 @@
 -- n'accepte pas de variable : une adresse parametree impose donc un appel construit.
 -- Defaut introduit puis corrige le 27/09/2026, avant publication : sans credential, la cle de la
 -- fonction ne part pas, et l'appel est refuse.
-CREATE PROCEDURE dbo.pr_ecran_provisionner_espace
+CREATE   PROCEDURE dbo.pr_ecran_provisionner_espace
     @entite VARCHAR (20),
     @par    NVARCHAR (400),
     @equipe BIT = 1
@@ -25,6 +25,10 @@ BEGIN
     BEGIN TRY
         IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite)
             THROW 50151, N'Entite inconnue.', 1;
+        -- UN SITE PAR VEHICULE, regle du 28/09/2026 : une filiale se range dans le site du vehicule
+        -- qui la detient, sous la colonne « Entite legale », et ne recoit pas de site a elle.
+        IF EXISTS (SELECT 1 FROM dbo.detention WHERE entite_fille = @entite)
+            THROW 50155, N'Une filiale n''a pas de site à elle : ses documents se rangent dans le site de son véhicule, sous la colonne « Entité légale ». Provisionnez le véhicule.', 1;
         DECLARE @proprietaires NVARCHAR (MAX) =
             (SELECT JSON_QUERY('[' + STRING_AGG('"' + STRING_ESCAPE(r.connexion, 'json') + '"', ',') + ']')
              FROM (SELECT DISTINCT connexion FROM dbo.role_mission
@@ -36,6 +40,13 @@ BEGIN
         DECLARE @charge NVARCHAR (MAX) = JSON_MODIFY(JSON_MODIFY(JSON_MODIFY(JSON_MODIFY('{}',
             '$.entite', @entite), '$.denomination', @denomination),
             '$.proprietaires', JSON_QUERY(@proprietaires)), '$.equipe', CAST(@equipe AS BIT));
+        -- UN SITE POUR LE VEHICULE ET SES FILIALES, regle du 28/09/2026. La fonction
+        -- en fait les choix de la colonne « Entite legale » de chaque bibliotheque.
+        DECLARE @entites NVARCHAR (MAX) =
+            (SELECT JSON_QUERY('[' + STRING_AGG('"' + STRING_ESCAPE(x.code, 'json') + '"', ',') + ']')
+             FROM (SELECT @entite AS code UNION SELECT dt.entite_fille FROM dbo.detention dt
+                   WHERE dt.entite_mere = @entite) AS x);
+        SET @charge = JSON_MODIFY(@charge, '$.entites', JSON_QUERY(@entites));
         DECLARE @reponse NVARCHAR (MAX), @ret INT;
         DECLARE @sql NVARCHAR (MAX) = N'
             EXEC @r = sp_invoke_external_rest_endpoint

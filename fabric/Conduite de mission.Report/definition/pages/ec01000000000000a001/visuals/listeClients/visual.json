@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "listeClients",
   "position": {
     "x": 24,
@@ -190,7 +190,7 @@
             "autoSizeColumnWidth": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
@@ -198,6 +198,13 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            },
+            "columnAdjustment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'fitToContent'"
                 }
               }
             }
@@ -677,5 +684,93 @@
         }
       ]
     }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "8d9c6895e49640808830",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_perimetre_groupe"
+              }
+            },
+            "Property": "Entité"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "da6f7b35c0b21271b00b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "ref_entite"
+              }
+            },
+            "Property": "Dénomination"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "1ff0b0860a759de26897",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_etat_dossier"
+              }
+            },
+            "Property": "Acceptation"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "48f5271085308b450454",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_etat_dossier"
+              }
+            },
+            "Property": "Maintien"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "da7ff4d7c26b203cdc90",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_etat_dossier"
+              }
+            },
+            "Property": "Arrêtés ouverts du client"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "56ab7ac1d551244eb448",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_perimetre_groupe"
+              }
+            },
+            "Property": "Quote-part détenue"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

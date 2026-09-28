@@ -14,7 +14,7 @@ les éléments à ramener.*
 
 | Élément | Type | Ce qu'il porte |
 |---|---|---|
-| Coffre | Lakehouse | Les pièces justificatives et les gabarits |
+| Coffre | Lakehouse | Les raccourcis vers les fichiers SharePoint, créés à l'étape 12 |
 | DossierOPCI | Base de données SQL | Les tables, vues, procédures et contrôles |
 | fn_ecran_client | Fonctions | Ce que les boutons de l'écran de conduite appellent |
 | fn_ecran_revision | Fonctions | Ce que les boutons de l'écran de révision appellent |

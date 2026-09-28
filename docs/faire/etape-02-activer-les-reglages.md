@@ -16,8 +16,8 @@ cause d'échecs qui n'annoncent pas leur cause :
 
 - **sans le quatrième**, GitHub n'apparaît pas dans la liste des fournisseurs Git, et vous
   chercherez longtemps pourquoi ;
-- **sans le cinquième**, vous verrez un classeur exporté dans le coffre sans pouvoir le télécharger,
-  sans message clair.
+- **sans le cinquième**, l'application OneLake file explorer et les outils extérieurs à Fabric ne
+  peuvent pas lire le coffre, sans message clair.
 
 ---
 
@@ -106,6 +106,15 @@ Deux arguments factuels à lui donner :
 
 Si le refus persiste, l'installation n'est pas possible par Git. Une voie de remplacement existe par
 l'interface de programmation, mais elle sort du cadre de ce mode opératoire.
+
+---
+
+## Le même jour, une seconde demande, à votre administrateur Microsoft Entra
+
+L'étape 12 demande que huit autorisations Microsoft Graph soient affectées à l'Azure Function du
+dépôt. Une telle autorisation met jusqu'à 24 heures à s'appliquer. Créez donc la fonction et faites
+affecter ses autorisations dès aujourd'hui : ce sont les points 1 à 5 de
+[l'étape 12](etape-12-relier-sharepoint.md). Elles seront prêtes quand vous y arriverez.
 
 ---
 

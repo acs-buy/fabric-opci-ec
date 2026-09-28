@@ -24,6 +24,18 @@ table v_revision_indicateurs
 
 	measure 'Reponse NA' = "NA"
 
+	measure 'Type de programme' = VAR c = SUM ( v_revision_indicateurs[cycles] ) VAR q = SUM ( v_revision_indicateurs[questions] ) RETURN IF ( q > 0, FORMAT ( c, "0" ) & " cycles, " & FORMAT ( q, "0" ) & " questions" )
+
+	measure 'OD liees ou libres' = "liées ou libres"
+
+	measure 'Cycles conclus et vises' = "conclus et visés : " & FORMAT ( SUM ( v_revision_indicateurs[cycles_vises] ) + 0, "0" )
+
+	measure 'Questions sur le programme' = "sur le programme"
+
+	measure 'Questions repondues sur total' = FORMAT ( SUM ( v_revision_indicateurs[questions_repondues] ) + 0, "0" ) & " / " & FORMAT ( SUM ( v_revision_indicateurs[questions] ) + 0, "0" )
+
+	measure 'Cycles a valider sur total' = FORMAT ( SUM ( v_revision_indicateurs[cycles] ) - SUM ( v_revision_indicateurs[cycles_vises] ) + 0, "0" ) & " / " & FORMAT ( SUM ( v_revision_indicateurs[cycles] ) + 0, "0" )
+
 	column entite
 		dataType: string
 		isNullable: false

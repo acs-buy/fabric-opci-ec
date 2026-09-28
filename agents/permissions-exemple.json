@@ -14,7 +14,7 @@
     "",
     "CE FICHIER NE VOUS DISPENSE DE RIEN. Lisez agents/AVERTISSEMENT.md.",
     "",
-    "L'ETAPE 13 EST OUVERTE COMMANDE PAR COMMANDE, ET NON PAR az:*.",
+    "L'ETAPE 12 EST OUVERTE COMMANDE PAR COMMANDE, ET NON PAR az:*.",
     "Un agent qui peut lancer n'importe quelle commande az peut lire la cle de votre Function App.",
     "Les commandes qui lisent une cle sont donc refusees, et ce refus n'est pas une gene a lever :",
     "la cle s'ecrit en clair dans la DATABASE SCOPED CREDENTIAL, et elle ne doit pas transiter",

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revRepOuiFond",
   "position": {
-    "x": 984,
-    "y": 556,
-    "z": 3800,
-    "height": 34,
-    "width": 96,
-    "tabOrder": 3800
+    "x": 979,
+    "y": 527,
+    "z": 4800,
+    "height": 31,
+    "width": 70,
+    "tabOrder": 4800
   },
   "visual": {
     "visualType": "shape",
@@ -40,7 +40,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#0F5C8C'"
+                      "Value": "'#E8F3EC'"
                     }
                   }
                 }
@@ -65,7 +65,25 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "lineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#9FC7AF'"
+                    }
+                  }
+                }
+              }
+            },
+            "weight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
                 }
               }
             }
