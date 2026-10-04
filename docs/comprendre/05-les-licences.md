@@ -1,6 +1,6 @@
 # 5. Les licences, et ce qu'il vous faut avant de commencer
 
-Lisez cette page avant tout achat. Elle dit ce que coûte la solution, et ce qui ne coûte rien.
+Cette page liste la capacité, les licences, les réglages et les rôles nécessaires à la solution.
 
 ## La capacité de calcul
 
@@ -14,23 +14,43 @@ Pour l'ouvrir : connectez-vous à `app.fabric.microsoft.com`, cliquez sur votre 
 droite, puis sur **Démarrer l'essai**.
 
 **D'où vient le chiffre F4.** Il a été établi par la mesure, et non par un calcul de charge : en
-F2, la création d'une surface de saisie échoue. Cette mesure portait sur un composant que la
+F2, la création d'un élément de saisie échoue. Cette mesure portait sur un composant que la
 présente solution ne contient plus. Il est donc possible que F2 suffise, mais cela n'a pas été
 éprouvé sur ce périmètre. Nous annonçons F4.
 
 ## Les licences des personnes
 
-| Qui | Ce qu'il lui faut |
-|---|---|
-| Vous, qui installez | Power BI Pro ou Premium par utilisateur. L'essai Fabric en fournit l'équivalent. |
-| Vos collaborateurs, capacité F4 à F32 | Power BI Pro ou Premium par utilisateur, chacun |
-| Vos collaborateurs, capacité F64 ou plus | Une licence gratuite suffit, avec le rôle de lecteur |
+Microsoft Fabric se vend en plusieurs tailles de capacité : F2, F4, F8, F16, F32, F64, F128, F256,
+F512, F1024, F2048, F4096 et F8192. Le chiffre est le nombre d'unités de capacité. Les licences
+nécessaires changent à partir de F64.
 
-**Le point de coût, dit franchement.** Passé l'essai, une capacité F4 ne rend pas l'écran gratuit
-pour votre équipe. Tant que la capacité reste sous F64, chaque personne qui ouvre l'écran a besoin
-d'une licence Pro. Pour le prix d'une capacité, consultez le calculateur de tarifs Microsoft Azure :
-les tarifs varient par région et changent, et un chiffre inscrit ici serait faux avant que vous le
-lisiez.
+| Qui | Capacité F2 à F32 | Capacité F64 ou plus |
+|---|---|---|
+| Vous, qui installez | Power BI Pro ou Premium par utilisateur | Power BI Pro ou Premium par utilisateur |
+| Vos collaborateurs, rôle de contributeur | Power BI Pro ou Premium par utilisateur, chacun | Power BI Pro ou Premium par utilisateur, chacun |
+| Vos clients, rôle de lecteur | Power BI Pro ou Premium par utilisateur, chacun | Licence gratuite Microsoft Fabric (Free) |
+
+À partir de F64, la licence gratuite permet de consulter le contenu Power BI avec le rôle de lecteur
+seulement. Tout autre rôle dans l'espace de travail, contributeur compris, exige une licence Pro ou
+Premium par utilisateur.
+
+L'installation demande une licence Pro dans tous les cas : créer un rapport ou un modèle sémantique
+hors de « Mon espace de travail » exige une licence Pro ou Premium par utilisateur, quelle que soit
+la capacité. L'essai Fabric fournit une licence individuelle équivalente à Premium par utilisateur à
+la personne qui l'ouvre.
+
+**Exemple.** Un cabinet de 5 collaborateurs ouvre la restitution à 20 clients.
+
+| Capacité | Licences Power BI Pro à acheter |
+|---|---|
+| F4, F8, F16 ou F32 | 25 : 5 collaborateurs et 20 clients |
+| F64 | 5 : les collaborateurs ; les 20 clients ont la licence gratuite |
+
+Le prix d'une capacité varie selon la région Azure et change dans le temps. Le calculateur de tarifs
+Microsoft Azure donne le prix du jour.
+
+Source : Microsoft Learn, *Understand Microsoft Fabric licenses and capacity*, consulté le
+05/10/2026.
 
 ## Les quatre réglages à faire activer
 
@@ -42,8 +62,8 @@ Votre administrateur Microsoft Fabric les active dans le portail d'administratio
 3. **Créer des espaces de travail**
 4. **Les utilisateurs peuvent synchroniser les éléments d'un espace de travail avec des dépôts GitHub**
 
-Le quatrième est distinct du deuxième, et c'est celui qu'on oublie. Sans lui, GitHub n'apparaît pas
-dans la liste des fournisseurs, et vous chercherez longtemps pourquoi.
+Le quatrième est distinct du deuxième. Sans lui, GitHub n'apparaît pas dans la liste des
+fournisseurs, et aucun message n'en donne la raison.
 
 ## Les rôles
 

@@ -378,9 +378,16 @@ contredire, et le cabinet décide de ce qui est publié et de quand.
 
 **La capacité :** Microsoft Fabric F4 au minimum. L'essai gratuit de 60 jours convient.
 
-**Les licences :** sous une capacité F64, toute personne qui ouvre un écran a besoin d'une licence
-Power BI Pro ou Premium par utilisateur, vos clients compris. Cette ligne pèse lourd dans le budget
-et s'oublie facilement.
+**Les licences :** Microsoft Fabric se vend en plusieurs tailles de capacité, de F2 à F8192. La
+licence de chaque personne qui ouvre un écran dépend de cette taille.
+
+| Qui | Capacité F2, F4, F8, F16 ou F32 | Capacité F64 ou plus, jusqu'à F8192 |
+|---|---|---|
+| Vos collaborateurs, rôle de contributeur | Power BI Pro ou Premium par utilisateur | Power BI Pro ou Premium par utilisateur |
+| Vos clients, rôle de lecteur | Power BI Pro ou Premium par utilisateur | Licence gratuite Microsoft Fabric (Free) |
+
+Exemple : un cabinet de 5 collaborateurs ouvre la restitution à 20 clients. En F4, il achète
+25 licences Power BI Pro. En F64, il en achète 5, et ses 20 clients ont la licence gratuite.
 
 **Sur votre poste :** un navigateur, Python 3, et un compte GitHub gratuit. Les quatre scripts du
 dépôt n'utilisent aucune bibliothèque extérieure.

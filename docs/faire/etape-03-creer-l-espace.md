@@ -76,7 +76,8 @@ connecter le dépôt Git à l'étape suivante.
 
 Si vous prévoyez que plusieurs personnes travaillent dans la solution, ajoutez-les maintenant par
 **Gérer l'accès**. Le rôle de contributeur suffit pour utiliser les écrans. Rappel de la page
-précédente : sous une capacité F64, chacune de ces personnes a besoin d'une licence Power BI Pro.
+précédente : chacune de ces personnes a besoin d'une licence Power BI Pro, quelle que soit la
+capacité, car la licence gratuite ne vaut que pour le rôle de lecteur, et seulement à partir de F64.
 
 ---
 
