@@ -1,5 +1,6 @@
 
 
+
 -- LE RAPPORT DE L'EXPERT-COMPTABLE SUPPOSE LES COMPTES ANNUELS PRODUITS : ATTESTATION est refusee tant que la
 -- derniere version de COMPTES_ANNUELS de l'arrete n'est pas PRODUITE, ou qu'un de ses fichiers est perime.
 CREATE   FUNCTION dbo.fn_obstacle_production (
@@ -26,8 +27,7 @@ BEGIN
         RETURN N'le livrable ' + @livrable + N' n''est pas dû à l''arrêté ' + @arrete + N'.';
     IF dbo.fn_revue_visee(@entite, @arrete) = 0
         RETURN N'la revue de l''arrêté n''est pas visée.';
-    IF (SELECT TOP (1) decision FROM dbo.visa WHERE nature = 'CLOTURE' AND entite = @entite AND arrete = @arrete
-        ORDER BY decide_le DESC, id DESC) = 'VISE'
+    IF dbo.fn_valide_pour_client(@entite, @arrete) = 1
         RETURN N'l''arrêté est validé pour le client ; une nouvelle production suppose sa réouverture.';
     -- le rapport de l'expert-comptable couvre une version produite et non perimee des comptes annuels
     IF @livrable = 'ATTESTATION'

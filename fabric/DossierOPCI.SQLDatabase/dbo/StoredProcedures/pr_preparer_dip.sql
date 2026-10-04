@@ -1,4 +1,5 @@
 
+
 -- --- 2 : le DIP ne se prepare qu'a la fin du premier semestre ----------
 CREATE   PROCEDURE dbo.pr_preparer_dip
     @entite      VARCHAR (20),
@@ -19,7 +20,7 @@ BEGIN
     BEGIN
         DECLARE @m0 NVARCHAR (2000) =
             N'Preparation refusee : aucun arrete ouvert sous ce code. '
-          + N'Ouvrir l''arrete et lui donner sa nature avant l''etape 5.';
+          + N'Ouvrir l''arrete et lui donner sa nature avant de preparer le DIP.';
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_preparer_dip', @entite, @arrete, NULL, @m0, @prepare_par);

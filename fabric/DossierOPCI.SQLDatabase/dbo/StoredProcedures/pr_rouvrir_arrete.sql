@@ -1,3 +1,4 @@
+
 -- 189 -- La reouverture d'un arrete n'a jamais pu s'executer, et voici pourquoi
 -- 13/09/2026. Defaut trouve a l'usage, en rouvrant l'arrete du 31/12/2025 sur instruction du
 -- candidat. Aucune reouverture n'avait jamais ete tentee depuis la creation de la procedure.
@@ -44,11 +45,9 @@ BEGIN
             N'Réouverture refusée : elle exige un motif, qui dit quel lot tardif justifie de rouvrir un arrêté clôturé.',
             1;
 
-    IF NOT EXISTS (SELECT 1 FROM dbo.visa v
-                   WHERE v.nature = 'CLOTURE' AND v.entite = @entite
-                     AND v.arrete = @arrete AND v.decision = 'VISE')
+    IF dbo.fn_valide_pour_client(@entite, @arrete) = 0
         THROW 50095,
-            N'Réouverture refusée : l''étape 5 de cet arrêté n''est pas clôturée, il n''y a rien à rouvrir.',
+            N'Réouverture refusée : l''arrêté n''est pas validé pour le client, il n''y a rien à rouvrir.',
             1;
 
     IF dbo.fn_peut_viser_nature(@entite, @par, 'CLOTURE',

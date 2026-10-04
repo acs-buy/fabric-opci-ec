@@ -1,3 +1,4 @@
+
 -- 171 -- Les libelles d'ecran des 5 etapes, avant la pose de la barre d'avancement
 -- 12/09/2026. Le candidat a arrete que le panneau des 15 ecrans de travail devient la barre
 -- d'avancement de la mission, alimentee par cette vue. L'agent Fabric IQ a releve en la lisant
@@ -10,7 +11,7 @@
 -- LE MOMENT EST CHOISI : la vue alimente le modele semantique, donc cette colonne de plus demande
 -- un rafraichissement. Il se fait maintenant, avant que les 15 ecrans soient poses ; apres, il
 -- aurait coute une repose de chacun d'eux.
-CREATE VIEW dbo.v_avancement_etapes AS
+CREATE   VIEW dbo.v_avancement_etapes AS
 WITH couple AS (
     /* Tout couple entite et arrete connu d'au moins une des 5 sources. */
     SELECT entite, arrete FROM dbo.v_documents_attendus_synthese
@@ -33,8 +34,8 @@ etape AS (
            N'Révision',     N'feuilles de travail'
     UNION ALL SELECT 3, 'VALORISATION', 'actifs a valeur externe',
            N'Valorisation', N'actifs à valeur externe'
-    UNION ALL SELECT 4, 'ARRETE',       'cloture de l''etape 5',
-           N'Arrêté',       N'clôture de l''étape'
+    UNION ALL SELECT 4, 'ARRETE',       'validation pour le client',
+           N'Arrêté',       N'validation pour le client'
     UNION ALL SELECT 5, 'LIVRABLES',    'livrables dus',
            N'Livrables',    N'livrables dus'
 ),

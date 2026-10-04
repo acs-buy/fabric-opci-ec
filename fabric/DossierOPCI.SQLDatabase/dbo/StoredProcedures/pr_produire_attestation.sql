@@ -1,4 +1,5 @@
 
+
 CREATE   PROCEDURE dbo.pr_produire_attestation
     @entite  VARCHAR (20),
     @arrete  VARCHAR (20),
@@ -15,8 +16,7 @@ BEGIN
         THROW 50093, N'Production refusée : la forme du rapport de l''expert-comptable n''est pas arrêtée pour cet arrêté.', 1;
     IF dbo.fn_revue_visee(@entite, @arrete) = 0
         THROW 50619, N'Production refusée : la revue de cet arrêté n''est pas visée.', 1;
-    IF (SELECT TOP (1) decision FROM dbo.visa WHERE nature = 'CLOTURE' AND entite = @entite AND arrete = @arrete
-        ORDER BY decide_le DESC, id DESC) = 'VISE'
+    IF dbo.fn_valide_pour_client(@entite, @arrete) = 1
         THROW 50620, N'Production refusée : l''arrêté est validé pour le client ; une nouvelle version suppose sa réouverture.', 1;
     IF NOT EXISTS (SELECT 1 FROM dbo.demande_document dd
                    WHERE dd.entite = @entite AND dd.arrete = @arrete AND dd.livrable = 'COMPTES_ANNUELS' AND dd.etat = 'PRODUITE'

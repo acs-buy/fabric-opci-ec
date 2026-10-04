@@ -1,5 +1,6 @@
 
 
+
 -- 8. CONCLURE LA REVUE : un vehicule ; admis depuis A_CONCLURE, CONCLUE et RENVOYEE.
 CREATE   PROCEDURE dbo.pr_conclure_revue
     @entite      VARCHAR (20),
@@ -9,6 +10,12 @@ CREATE   PROCEDURE dbo.pr_conclure_revue
 AS
 BEGIN
     SET NOCOUNT ON;
+    -- LA GARDE DE L'EQUIPE : une personne qui tient un role de mission sur l'entite, au jour de la conclusion.
+    IF dbo.fn_tient_role_mission(@entite, @par, CAST(SYSUTCDATETIME() AS DATE)) = 0
+    BEGIN
+        DECLARE @m_role NVARCHAR (400) = N'Conclusion refusée : cette personne ne tient aucun rôle de mission sur l''entité ' + @entite + N' ; la revue se conclut par l''équipe de la mission.';
+        THROW 50639, @m_role, 1;
+    END;
     DECLARE @m NVARCHAR (400);
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND forme_vehicule IS NOT NULL)
     BEGIN

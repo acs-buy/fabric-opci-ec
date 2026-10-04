@@ -28,7 +28,7 @@ BEGIN
         IF @retenu IS NULL
             THROW 50526, N'Rattachement refusé : cette pièce attendue est exigée à chaque arrêté ; désigner un arrêté au référentiel de l''entité.', 1;
     END;
-    IF @retenu IS NULL OR (@vigueur IS NOT NULL AND @vigueur > @date)
+    IF @retenu IS NULL OR (@periodicite <> 'PERMANENT' AND @vigueur IS NOT NULL AND @vigueur > @date)
         THROW 50525, N'Rattachement refusé : la pièce attendue désignée n''existe pas, ou n''est pas en vigueur à cet arrêté.', 1;
     IF EXISTS (SELECT 1 FROM dbo.piece_rattachement WHERE piece_id = @piece_id AND piece_attendue_id = @piece_attendue_id
                AND entite_couverte = @entite AND arrete_couvert = @retenu)

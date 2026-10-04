@@ -1,5 +1,6 @@
 
 
+
 -- 8. « arrete sans annexe » en 50633.
 CREATE   PROCEDURE dbo.pr_saisir_cellule_annexe
     @entite  VARCHAR (20),
@@ -70,8 +71,7 @@ BEGIN
         SET @m = N'Saisie refusée : cette personne ne peut pas saisir l''annexe de l''entité ' + @entite + N' : elle n''y tient aucun rôle de mission.';
         THROW 50606, @m, 1;
     END;
-    IF (SELECT TOP (1) decision FROM dbo.visa WHERE nature = 'CLOTURE' AND entite = @entite AND arrete = @arrete
-        ORDER BY decide_le DESC, id DESC) = 'VISE'
+    IF dbo.fn_valide_pour_client(@entite, @arrete) = 1
         THROW 50607, N'Saisie refusée : l''arrêté est validé pour le client ; la saisie suppose sa réouverture.', 1;
 
     SELECT @existe = id FROM dbo.saisie_annexe

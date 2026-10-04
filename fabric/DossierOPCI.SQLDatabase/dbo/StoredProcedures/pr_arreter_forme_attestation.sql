@@ -1,4 +1,5 @@
 
+
 -- 6. L'ARRET DE LA FORME. Controles dans l'ordre du contrat : 50083, 50632, 50630, regles de l'entite (50628, 50629,
 -- 50631), 50084, puis pour une forme d'attestation 50085 et 50098 sur la forme d'attestation derivee. Tout arret
 -- perime, dans la meme transaction, la derniere version non perimee du rapport de l'arrete.
@@ -25,8 +26,7 @@ BEGIN
         VALUES ('pr_arreter_forme_attestation', @entite, @arrete, @m, N'Faire arrêter la forme par l''associé signataire.', @par, SYSUTCDATETIME());
         THROW 50083, @m, 1;
     END;
-    IF (SELECT TOP (1) decision FROM dbo.visa WHERE nature = 'CLOTURE' AND entite = @entite AND arrete = @arrete
-        ORDER BY decide_le DESC, id DESC) = 'VISE'
+    IF dbo.fn_valide_pour_client(@entite, @arrete) = 1
         THROW 50632, N'Forme refusée : l''arrêté est validé pour le client ; un changement de forme suppose sa réouverture.', 1;
     IF @forme IS NULL OR @forme NOT IN ('COMPTE_RENDU_TRAVAUX', 'SANS_OBSERVATION', 'AVEC_OBSERVATION', 'IMPOSSIBILITE')
     BEGIN
