@@ -19,7 +19,7 @@ BEGIN
             N'Visa refusé : aucune synthèse en cours n''est proposée pour cet arrêté, ou celle qui l''était est périmée par le visa d''un lot postérieur. Proposer la synthèse de nouveau.',
             1;
 
-    DECLARE @ref VARCHAR (30) = @entite + '|' + @arrete;
+    DECLARE @ref VARCHAR (60) = @entite + '|' + @arrete;
     EXEC dbo.pr_garde_visa 'SYNTHESE', @ref, @decision, @par, @motif;
 
     INSERT INTO dbo.visa (nature, objet_ref, entite, arrete, cycle,

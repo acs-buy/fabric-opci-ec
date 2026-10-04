@@ -1,3 +1,4 @@
+
 -- 218. Creer un dossier, c'est en devenir le chef de mission.
 --
 -- DEFAUT MESURE LE 21/09/2026 AU PARCOURS DE BOUT EN BOUT : le temps 4 ne visait rien. Un client cree a
@@ -57,11 +58,13 @@ BEGIN
     INSERT INTO dbo.ref_entite
         (code, denomination, siren, forme_vehicule, forme_sociale, adresse_1, adresse_2, code_postal,
          ville, pays, dirigeant_nom, dirigeant_qualite, contact_nom, contact_courriel, contact_telephone,
-         cloture, modifie_par, modifie_le, plan_propre_en_service, est_client, periodicite_vl, cree_le)
+         cloture, modifie_par, modifie_le, plan_propre_en_service, est_client, periodicite_vl, cree_le,
+         soumise_commissariat_comptes)
     VALUES
         (@code, @denomination, @siren, @forme_vehicule, @forme_sociale, @adresse_1, @adresse_2, @code_postal,
          @ville, @pays, @dirigeant_nom, @dirigeant_qualite, @contact_nom, @contact_courriel, @contact_telephone,
-         @cloture, @par, @maintenant, 0, 1, @periodicite_vl, @maintenant);
+         @cloture, @par, @maintenant, 0, 1, @periodicite_vl, @maintenant,
+         CASE WHEN @forme_vehicule IS NOT NULL THEN 1 END);
 
     -- CELUI QUI CREE LE DOSSIER LE CONDUIT : sans ce role, personne ne peut viser l'acceptation qu'il
     -- vient d'ouvrir, la mesure [Superviseur connecte] lisant role_mission sur le client courant.

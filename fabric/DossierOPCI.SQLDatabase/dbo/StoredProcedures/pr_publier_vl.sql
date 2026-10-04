@@ -30,7 +30,7 @@ BEGIN
         IF @propose IS NULL
             THROW 50034, 'Publication refusee : aucun lot n''a ete propose pour cette entite a cet arrete, il n''y a donc rien a publier.', 1;
 
-        DECLARE @ref VARCHAR (30) = @entite + '|' + @arrete;
+        DECLARE @ref VARCHAR (60) = @entite + '|' + @arrete;
         EXEC dbo.pr_garde_visa 'PUBLICATION', @ref, 'VISE', @par, NULL;
 
         BEGIN TRANSACTION;

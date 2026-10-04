@@ -1,4 +1,4 @@
--- ref_referentiel : 36 ligne(s) de referentiel.
+-- ref_referentiel : 37 ligne(s) de referentiel.
 -- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
 -- Produit depuis la base de reference, ne pas modifier a la main.
 
@@ -20,6 +20,7 @@ BEGIN
         (N'ref_droit_reel',N'Droits réels éligibles, article R. 214-82',N'Fiche immeuble, inventaire du portefeuille',N'BASE',N'35'),
         (N'ref_entite',N'Entités du dossier',N'Tous les écrans, tenues au menu Client',N'BASE',N'20'),
         (N'ref_forme_conclusion',N'Formes de conclusion',N'Conclusion d''une feuille',N'ASSOCIE',N'19'),
+        (N'ref_forme_rapport',N'Formes du rapport de l''expert-comptable, NP 2300 exemples E1 à E4',N'Rapport de l''expert-comptable',N'BASE',N'37'),
         (N'ref_ligne_annexe',N'Lignes des tableaux de l''annexe',N'Annexe, menu Livrables',N'ASSOCIE',N'32'),
         (N'ref_ligne_etat',N'Lignes des états financiers',N'Comptes annuels, menu Livrables',N'ASSOCIE',N'28'),
         (N'ref_livrable',N'Livrables du dossier',N'Menu Livrables',N'ASSOCIE',N'31'),

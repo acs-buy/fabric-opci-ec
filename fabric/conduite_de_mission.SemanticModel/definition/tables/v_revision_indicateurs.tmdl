@@ -6,7 +6,7 @@ table v_revision_indicateurs
 
 	measure 'Questions du programme' = SUM ( v_revision_indicateurs[questions] )
 
-	measure 'OD de revision' = SUM ( v_revision_indicateurs[od_brouillon] ) + CALCULATE ( COUNTROWS ( v_od_revision ), v_od_revision[État] <> "BROUILLON" )
+	measure 'OD de revision' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR lots = COUNTROWS ( FILTER ( ALL ( v_od_revision ), v_od_revision[entite] = e && v_od_revision[arrete] = a && v_od_revision[État] <> "BROUILLON" ) ) RETURN SUM ( v_revision_indicateurs[od_brouillon] ) + lots
 
 	measure 'Cycles a valider' = SUM ( v_revision_indicateurs[cycles] ) - SUM ( v_revision_indicateurs[cycles_vises] )
 

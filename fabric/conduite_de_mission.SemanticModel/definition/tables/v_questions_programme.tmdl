@@ -317,7 +317,7 @@ table v_questions_programme
 
 		annotation SummarizationSetBy = Automatic
 
-	column od_lots
+	column 'Lots d’OD'
 		dataType: int64
 		formatString: 0
 		sourceProviderType: int
@@ -343,6 +343,16 @@ table v_questions_programme
 		lineageTag: 668cffcb-c9c2-420a-bb2e-384ad70933c0
 		summarizeBy: none
 		sourceColumn: cle_cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Lien de la feuille'
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 23059b4e-01a6-4fba-a2fe-bfdf912a4149
+		dataCategory: WebUrl
+		summarizeBy: none
+		sourceColumn: feuille_web_url
 
 		annotation SummarizationSetBy = Automatic
 

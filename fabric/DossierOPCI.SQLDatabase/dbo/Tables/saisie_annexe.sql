@@ -29,17 +29,26 @@ CREATE NONCLUSTERED INDEX [ix_saisie_annexe]
 
 GO
 
-CREATE   TRIGGER dbo.[tr_saisie_annexe_garde]
-ON dbo.[saisie_annexe]
+-- 4. LE FILET DE L'ECRITURE DIRECTE. La procedure pose le contexte saisie_annexe_par le temps de son ecriture ; hors
+-- d'elle, chaque ligne ecrite est jugee sur son entite et sur le compte connecte.
+CREATE   TRIGGER dbo.tr_saisie_annexe_garde
+ON dbo.saisie_annexe
 AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    IF dbo.fn_peut_ecrire_referentiel('saisie_annexe',
-                                      SUSER_SNAME()) = 1 RETURN;
-    THROW 50074,
-        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé ou réviseur. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
-        1;
+    IF TRY_CAST(SESSION_CONTEXT(N'semis') AS INT) = 1 RETURN;
+    IF SESSION_CONTEXT(N'saisie_annexe_par') IS NOT NULL RETURN;
+    DECLARE @qui NVARCHAR (400) = SUSER_SNAME(), @le DATE = CAST(SYSUTCDATETIME() AS DATE), @entite VARCHAR (20), @m NVARCHAR (600);
+    SELECT TOP (1) @entite = x.entite
+    FROM (SELECT entite FROM inserted UNION SELECT entite FROM deleted) x
+    WHERE dbo.fn_peut_saisir_annexe(x.entite, @qui, @le) = 0;
+    IF @entite IS NOT NULL
+    BEGIN
+        SET @m = N'Écriture refusée : une cellule d''annexe de l''entité ' + @entite
+               + N' ne s''écrit que par une personne qui tient un rôle de mission sur cette entité. Passer par la saisie de l''écran.';
+        THROW 50074, @m, 1;
+    END;
 END;
 
 GO

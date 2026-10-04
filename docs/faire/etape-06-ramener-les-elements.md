@@ -18,7 +18,7 @@ les éléments à ramener.*
 | DossierOPCI | Base de données SQL | Les tables, vues, procédures et contrôles |
 | fn_ecran_client | Fonctions | Ce que les boutons de l'écran de conduite appellent |
 | fn_ecran_revision | Fonctions | Ce que les boutons de l'écran de révision appellent |
-| conduite_de_mission | Modèle sémantique | Les 72 tables et les mesures de l'écran de travail |
+| conduite_de_mission | Modèle sémantique | Les 81 tables et les mesures de l'écran de travail |
 | Conduite de mission | Rapport | L'écran de travail du cabinet |
 | restitution_client | Modèle et rapport | L'écran remis au client |
 

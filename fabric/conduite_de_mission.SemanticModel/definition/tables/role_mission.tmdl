@@ -6,9 +6,21 @@ table role_mission
 		displayFolder: Ecran 1 Client
 		lineageTag: b033a5cc-ea07-435c-8be8-b8a124d97c52
 
-	measure 'Superviseur connecte' = VAR r = [Role du connecte] RETURN IF ( r IN { "ASSOCIE", "CHEF_MISSION" }, USERPRINCIPALNAME () )
+	measure 'Superviseur connecte' = VAR u = USERPRINCIPALNAME () VAR n = IF ( ISFILTERED ( role_nature_visa[nature] ), SELECTEDVALUE ( role_nature_visa[nature] ) ) VAR l = IF ( n = "LOT" && ISFILTERED ( v_lots_perimetre ) && HASONEVALUE ( v_lots_perimetre[Lot] ), SELECTEDVALUE ( v_lots_perimetre[Entité] ) ) VAR ent = IF ( ISBLANK ( l ), [Client selectionne], l ) VAR roles = VALUES ( role_nature_visa[role_code] ) VAR ok = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = ent && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[role] IN roles && role_mission[du] <= TODAY () && ( ISBLANK ( role_mission[au] ) || role_mission[au] > TODAY () ) ) ) RETURN IF ( u <> "" && ok > 0, u )
 		displayFolder: Ecran 1 Client
 		lineageTag: 20b1a6f0-b32d-4db3-9161-e98b7a787785
+
+	measure 'Superviseur connecte CYCLE' = CALCULATE ( [Superviseur connecte], role_nature_visa[nature] = "CYCLE" )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 8abe2394-4517-4b70-bf27-fe9f4eaab40e
+
+	measure 'Superviseur connecte REVUE' = CALCULATE ( [Superviseur connecte], role_nature_visa[nature] = "REVUE" )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 49721426-5843-4d71-ba1f-8207336356bf
+
+	measure 'Superviseur connecte LOT' = CALCULATE ( [Superviseur connecte], role_nature_visa[nature] = "LOT" )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 490c4abc-15d4-4ea3-a2b4-d70026383b8c
 
 	column id
 		dataType: int64

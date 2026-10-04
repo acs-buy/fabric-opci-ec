@@ -21,6 +21,7 @@ CREATE TABLE [dbo].[feuille_travail] (
     [message_ecran_le]   DATETIME2 (3)   NULL,
     [message_ecran_pour] NVARCHAR (200)  NULL,
     [question_id]        INT             NULL,
+    [objectif]           NVARCHAR (1000) NULL,
     CONSTRAINT [pk_feuille_travail] PRIMARY KEY CLUSTERED ([cote] ASC),
     CONSTRAINT [ck_ft_conclusion_visa] CHECK ([forme_conclusion] IS NULL AND [conclue_par] IS NULL AND [conclue_le] IS NULL OR [forme_conclusion] IS NOT NULL AND [conclue_par] IS NOT NULL AND [conclue_le] IS NOT NULL),
     CONSTRAINT [ck_ft_empreinte_longueur] CHECK (len([empreinte_sha256])=(64)),

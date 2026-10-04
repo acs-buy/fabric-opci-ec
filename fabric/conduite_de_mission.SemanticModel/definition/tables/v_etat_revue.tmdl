@@ -1,0 +1,312 @@
+/// Etape 5 : une ligne par vehicule et arrete de mission, conclusion generale et verrou.
+table v_etat_revue
+	lineageTag: b2470f63-dea8-4459-b3e8-601bd396036c
+
+	measure 'Ref revue a viser' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR t = FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ) VAR b = MAXX ( t, v_etat_revue[blocage_visa] ) VAR auteur = MAXX ( t, v_etat_revue[conclu_par] ) VAR s = [Superviseur connecte REVUE] RETURN IF ( COUNTROWS ( t ) = 1 && ISBLANK ( b ) && auteur <> u && NOT ISBLANK ( s ), e & "|" & a )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 1cec6508-48c2-473a-afd4-57b22a17d413
+
+	measure 'Ref revue a renvoyer' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR t = FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ) VAR v = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[verrouille], 1, 0 ) ) VAR et = MAXX ( t, v_etat_revue[etat] ) VAR auteur = MAXX ( t, v_etat_revue[conclu_par] ) VAR s = [Superviseur connecte REVUE] RETURN IF ( COUNTROWS ( t ) = 1 && et = "CONCLUE" && v <> 1 && auteur <> u && NOT ISBLANK ( s ), e & "|" & a )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: f170f34a-f7ef-4609-97a0-0d55f52253c3
+
+	measure 'Perimetre couvert' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ) VAR n = MAXX ( t, v_etat_revue[perimetre_entites] ) + 0 VAR p = MAXX ( t, v_etat_revue[perimetre] ) VAR f = n - 1 VAR fil = IF ( f > 0, MID ( p, LEN ( e ) + 3, 4000 ) ) RETURN IF ( COUNTROWS ( t ) <> 1, BLANK (), "Périmètre couvert : " & FORMAT ( n, "0" ) & IF ( n > 1, " entités", " entité" ) & ", le véhicule " & e & SWITCH ( TRUE (), f <= 0, ", sans filiale", f = 1, " et sa filiale · " & fil, " et ses " & FORMAT ( f, "0" ) & " filiales · " & fil ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 53f31100-b5eb-4412-b5d4-1b344a4e5410
+
+	measure 'Etat de la revue' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ) VAR cp = MAXX ( t, v_etat_revue[conclu_par] ) VAR cl = MAXX ( t, v_etat_revue[conclu_le] ) VAR dd = MAXX ( t, v_etat_revue[derniere_decision] ) VAR dp = MAXX ( t, v_etat_revue[decide_par] ) VAR dl = MAXX ( t, v_etat_revue[decide_le] ) VAR vr = MAXX ( t, IF ( v_etat_revue[verrouille], 1, 0 ) ) VAR vp = MAXX ( t, v_etat_revue[verrouille_par] ) VAR vl = MAXX ( t, v_etat_revue[verrouille_le] ) VAR dvp = MAXX ( t, v_etat_revue[dernier_deverrouillage_par] ) VAR dvl = MAXX ( t, v_etat_revue[dernier_deverrouillage_le] ) VAR ncp = IF ( SEARCH ( "@", cp, 1, 0 ) > 1, LEFT ( cp, SEARCH ( "@", cp, 1, 0 ) - 1 ), cp ) VAR ndp = IF ( SEARCH ( "@", dp, 1, 0 ) > 1, LEFT ( dp, SEARCH ( "@", dp, 1, 0 ) - 1 ), dp ) VAR nvp = IF ( SEARCH ( "@", vp, 1, 0 ) > 1, LEFT ( vp, SEARCH ( "@", vp, 1, 0 ) - 1 ), vp ) VAR ndvp = IF ( SEARCH ( "@", dvp, 1, 0 ) > 1, LEFT ( dvp, SEARCH ( "@", dvp, 1, 0 ) - 1 ), dvp ) VAR lc = IF ( ISBLANK ( cl ), "aucune enregistrée", "enregistrée par " & ncp & ", le " & FORMAT ( cl, "dd/MM/yyyy" ) ) VAR lv = SWITCH ( dd, "VISE", "visée par " & ndp & ", le " & FORMAT ( dl, "dd/MM/yyyy" ), "RENVOYE", "renvoyée par " & ndp & ", le " & FORMAT ( dl, "dd/MM/yyyy" ), "aucune décision" ) VAR lk = IF ( vr = 1, "verrouillé par " & nvp & ", le " & FORMAT ( vl, "dd/MM/yyyy" ), IF ( NOT ISBLANK ( dvl ), "déverrouillé par " & ndvp & ", le " & FORMAT ( dvl, "dd/MM/yyyy" ), "non verrouillé" ) ) RETURN IF ( COUNTROWS ( t ) <> 1, BLANK (), "Conclusion générale : " & lc & " · Visa de la revue : " & lv & " · Dossier de travail : " & lk )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 38703657-6b8c-4bb8-a788-34e056885bc5
+
+	measure 'Blocage du visa de la revue' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR t = FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ) VAR b = MAXX ( t, v_etat_revue[blocage_visa] ) VAR cp = MAXX ( t, v_etat_revue[conclu_par] ) VAR p2 = IF ( NOT ISBLANK ( cp ) && cp = u, "le connecté a conclu la revue" ) VAR roles = CALCULATE ( CONCATENATEX ( VALUES ( role_nature_visa[role_code] ), role_nature_visa[role_code], ", ", role_nature_visa[role_code], ASC ), role_nature_visa[nature] = "REVUE" ) VAR p3 = IF ( ISBLANK ( [Superviseur connecte REVUE] ), IF ( roles = "CHEF_MISSION", "visa réservé au chef de mission", "visa réservé aux rôles " & roles ) ) VAR l = b & IF ( NOT ISBLANK ( b ) && NOT ISBLANK ( p2 ), " ; " ) & p2 & IF ( ( NOT ISBLANK ( b ) || NOT ISBLANK ( p2 ) ) && NOT ISBLANK ( p3 ), " ; " ) & p3 RETURN IF ( COUNTROWS ( t ) <> 1, BLANK (), IF ( l = "", "possible", l ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: e82b1f79-2256-4203-963b-9c1c5a24b805
+
+	measure 'Fond revCclRevueViser' = IF ( ISBLANK ( [Ref revue a viser] ) || ISBLANK ( [Superviseur connecte REVUE] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 7a8f22cc-821d-40b0-b1b9-18b798951977
+
+	measure 'Fond revCclRevueRenvoyer' = IF ( ISBLANK ( [Ref revue a renvoyer] ) || ISBLANK ( [Superviseur connecte REVUE] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 32763ddf-8830-4669-9095-d94624aae63f
+
+	measure 'Sous-titre de la revue' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), e & " au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) )
+		lineageTag: b91bea25-6d7b-43cf-83e1-b88b0830fc43
+
+	measure 'Conclusion générale enregistrée' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ) RETURN IF ( COUNTROWS ( t ) = 1, MAXX ( t, v_etat_revue[conclusion] ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 61b75f18-e40e-4fe8-8660-10243e720752
+
+	measure 'Motif du renvoi de la revue' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ) RETURN IF ( COUNTROWS ( t ) = 1, MAXX ( t, v_etat_revue[motif_renvoi] ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 0a49d497-8dbd-4b8b-b013-c71fd3fc564c
+
+	measure 'Entite de la revue a conclure' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ) VAR v = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[verrouille], 1, 0 ) ) VAR et = MAXX ( t, v_etat_revue[etat] ) RETURN IF ( COUNTROWS ( t ) = 1 && v <> 1 && et <> "VISEE", e )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: af19bcea-811a-4e82-84aa-c236914c1e6e
+
+	measure 'Fond revCclRevueEnregistrer' = IF ( ISBLANK ( [Entite de la revue a conclure] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 5e2b5370-c63e-409d-8eae-af9e137b96b4
+
+	measure 'Libelle revCclRevueEnregistrer' = "Enregistrer la conclusion générale"
+		lineageTag: eaeb5844-18cf-4d5f-b0eb-39cce6861d86
+
+	measure 'Libelle revCclRevueViser' = "Viser la revue"
+		lineageTag: 3d9f63fa-358c-4c21-b0a2-f83442681dba
+
+	measure 'Libelle revCclRevueRenvoyer' = "Renvoyer la revue"
+		lineageTag: 21e8c4fc-f5ca-4e66-b256-2559b7bd8808
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 2c30cd59-d7aa-40f7-bc6c-84d80ed15886
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: bde0d17e-6b1f-4611-895b-faa0510e9a41
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion
+		dataType: string
+		sourceProviderType: nvarchar(4000)
+		lineageTag: e963b3be-44de-42aa-b3d9-3cc69968a432
+		summarizeBy: none
+		sourceColumn: conclusion
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclu_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 477d306a-92b0-44ec-aa15-f7503b725886
+		summarizeBy: none
+		sourceColumn: conclu_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclu_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 171f5d3e-0f7d-4c48-a5d4-7245f65118b7
+		summarizeBy: none
+		sourceColumn: conclu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycles
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c65a17cc-22aa-415d-bdac-58b24b1226dc
+		summarizeBy: sum
+		sourceColumn: cycles
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycles_conclus
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: a3a7006e-205a-4dbf-a1bd-7fe0d5f90960
+		summarizeBy: sum
+		sourceColumn: cycles_conclus
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycles_vises
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 2b9bfebc-d24c-4c12-bf5a-f4d4dccb6286
+		summarizeBy: sum
+		sourceColumn: cycles_vises
+
+		annotation SummarizationSetBy = Automatic
+
+	column lots_en_attente
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 51e03686-38a2-47fd-ab59-4c31f62c1e45
+		summarizeBy: sum
+		sourceColumn: lots_en_attente
+
+		annotation SummarizationSetBy = Automatic
+
+	column perimetre_entites
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 741b3022-c661-4277-8b75-50767f3e7f13
+		summarizeBy: none
+		sourceColumn: perimetre_entites
+
+		annotation SummarizationSetBy = Automatic
+
+	column perimetre
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: cb68194e-5a9c-48e0-9ae6-ee2d34b3d37a
+		summarizeBy: none
+		sourceColumn: perimetre
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_decision
+		dataType: string
+		sourceProviderType: varchar(8)
+		lineageTag: 9a996d7d-f933-4d33-a81e-213def3e999a
+		summarizeBy: none
+		sourceColumn: derniere_decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: f5f783ce-cba7-4171-8601-a3474e36da57
+		summarizeBy: none
+		sourceColumn: decide_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 24f20b53-a83d-4c91-a4b5-6efb0726b64d
+		summarizeBy: none
+		sourceColumn: decide_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_renvoi
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 30240b2b-c36f-4341-9467-00370be0949b
+		summarizeBy: none
+		sourceColumn: motif_renvoi
+
+		annotation SummarizationSetBy = Automatic
+
+	column verrouille
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 16d1c75f-9cd0-4f71-902c-8ef17a0e2ff6
+		summarizeBy: none
+		sourceColumn: verrouille
+
+		annotation SummarizationSetBy = Automatic
+
+	column verrouille_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 12ea3e70-e003-4858-9997-62b23d904cf1
+		summarizeBy: none
+		sourceColumn: verrouille_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column verrouille_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 46228339-979d-4852-b179-24781dd33dd5
+		summarizeBy: none
+		sourceColumn: verrouille_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column dernier_deverrouillage_demande_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 9492870d-6475-4a98-8a54-ef7e978a96a2
+		summarizeBy: none
+		sourceColumn: dernier_deverrouillage_demande_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column dernier_deverrouillage_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: bb664d55-3c34-40da-a421-3d0d45dda3d7
+		summarizeBy: none
+		sourceColumn: dernier_deverrouillage_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column dernier_deverrouillage_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 1aabef8f-f6e8-4d5b-bd3a-8eba0b854490
+		summarizeBy: none
+		sourceColumn: dernier_deverrouillage_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column dernier_deverrouillage_motif
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: ec215ae4-4eb7-4c82-9c52-7a604055be1e
+		summarizeBy: none
+		sourceColumn: dernier_deverrouillage_motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: varchar(12)
+		lineageTag: 63b65ac5-7cba-47a4-9472-671e5c7b10f6
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_libelle
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 8d9c9250-8825-4aac-81ae-5c4233f59642
+		summarizeBy: none
+		sourceColumn: etat_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column blocage_visa
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 03caffcf-56c5-402d-ae7e-418da9724ce2
+		summarizeBy: none
+		sourceColumn: blocage_visa
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: b241b006-8a37-483e-aa43-804fe2f85b2c
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_etat_revue = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_etat_revue = Source{[Schema="dbo",Item="v_etat_revue"]}[Data]
+				in
+				    dbo_v_etat_revue
+

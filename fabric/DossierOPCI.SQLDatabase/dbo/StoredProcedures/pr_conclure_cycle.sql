@@ -1,4 +1,7 @@
 
+
+-- 6. CONCLURE UN CYCLE : un cycle au programme d'un vehicule, admis depuis A_CONCLURE,
+-- CONCLU et RENVOYE. La synthese et le compte des feuilles lisent le perimetre.
 CREATE   PROCEDURE dbo.pr_conclure_cycle
     @entite      VARCHAR (20),
     @arrete      VARCHAR (20),
@@ -9,15 +12,28 @@ CREATE   PROCEDURE dbo.pr_conclure_cycle
 AS
 BEGIN
     SET NOCOUNT ON;
+    DECLARE @m NVARCHAR (400);
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_cycle WHERE code = @cycle)
         THROW 50321, N'Le cycle désigné n''existe pas.', 1;
+    IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND forme_vehicule IS NOT NULL)
+    BEGIN
+        SET @m = N'Conclusion refusée : l''entité ' + ISNULL(@entite, N'vide') + N' n''est pas un véhicule ; la revue porte sur le véhicule et couvre ses filiales.';
+        THROW 50520, @m, 1;
+    END;
     IF NOT EXISTS (SELECT 1 FROM dbo.arrete_mission WHERE entite = @entite AND arrete = @arrete)
         THROW 50322, N'Un cycle se conclut sur un arrêté ouvert.', 1;
+    IF dbo.fn_cycle_au_programme(@entite, @arrete, @cycle) = 0
+    BEGIN
+        SET @m = N'Conclusion refusée : le cycle ' + @cycle + N' n''est pas au programme de cet arrêté.';
+        THROW 50519, @m, 1;
+    END;
     IF NULLIF(LTRIM(RTRIM(@conclusion)), N'') IS NULL
         THROW 50323, N'La conclusion du cycle est un texte : ce qui a été vu de bloquant, ce qui a été vu de satisfaisant.', 1;
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé ; le déverrouiller avant de conclure à nouveau.', 1;
-    IF EXISTS (SELECT 1 FROM dbo.visa WHERE nature = 'CYCLE' AND entite = @entite AND arrete = @arrete AND cycle = @cycle AND decision = 'VISE')
+    IF dbo.fn_revue_visee(@entite, @arrete) = 1
+        THROW 50509, N'Refusé : la revue de cet arrêté est visée ; déverrouiller le dossier avant de rouvrir un cycle.', 1;
+    IF dbo.fn_etat_cycle(@entite, @arrete, @cycle) = 'VISE'
         THROW 50324, N'Ce cycle est déjà visé ; sa conclusion ne se modifie plus.', 1;
 
     DECLARE @synthese NVARCHAR (MAX) = dbo.fn_synthese_feuilles(@entite, @arrete, @cycle);
@@ -29,7 +45,7 @@ BEGIN
         INSERT INTO dbo.conclusion_cycle (entite, arrete, cycle, synthese_feuilles, conclusion, forme, conclu_par)
         VALUES (@entite, @arrete, @cycle, @synthese, @conclusion, @forme, @par);
 
-    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.feuille_travail WHERE entite = @entite AND arrete = @arrete AND cycle = @cycle AND cote NOT LIKE 'Q-%');
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.v_feuilles_du_cycle WHERE vehicule = @entite AND arrete = @arrete AND cycle = @cycle);
     SELECT @cycle AS cycle, @n AS feuilles, @synthese AS synthese_feuilles,
            N'Cycle ' + @cycle + N' conclu, synthèse de ' + CAST(@n AS NVARCHAR (10)) + N' feuille(s) régénérée. Le visa du chef de mission peut être demandé.' AS message;
 END;

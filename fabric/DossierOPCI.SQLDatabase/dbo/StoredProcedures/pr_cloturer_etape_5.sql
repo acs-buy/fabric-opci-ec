@@ -46,10 +46,10 @@ BEGIN
                    WHERE a.entite = @entite AND a.arrete = @arrete
                      AND a.arretee_le IS NOT NULL)
         THROW 50089,
-            N'Clôture refusée : la forme de l''attestation n''est pas arrêtée pour cet arrêté. L''associé signataire l''arrête avant la clôture.',
+            N'Clôture refusée : la forme du rapport de l''expert-comptable n''est pas arrêtée pour cet arrêté. L''associé signataire l''arrête avant la clôture.',
             1;
 
-    DECLARE @ref VARCHAR (30) = @entite + '|' + @arrete;
+    DECLARE @ref VARCHAR (60) = @entite + '|' + @arrete;
     DECLARE @propose NVARCHAR (400) =
         (SELECT TOP 1 publie_par FROM dbo.publication_vl
          WHERE entite = @entite AND arrete = @arrete ORDER BY id DESC);

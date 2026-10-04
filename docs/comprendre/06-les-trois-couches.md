@@ -50,8 +50,8 @@ faire arriver le contenu dans votre base.
 
 | Ce que le dépôt charge | Lignes | Ce que vous en faites |
 |---|---|---|
-| Le socle de référentiel | 3 456 | Vous le gardez. Questions d'acceptation, plan de comptes, articles du règlement |
-| Le jeu de démonstration | 7 152 | Vous pourrez l'effacer quand vous passerez à vos dossiers |
+| Le socle de référentiel | 3 529 | Vous le gardez. Questions d'acceptation, plan de comptes, articles du règlement |
+| Le jeu de démonstration | 7 176 | Vous pourrez l'effacer quand vous passerez à vos dossiers |
 
 Sans la couche B, vos écrans sont vides, et l'affichage n'y est pour rien.
 

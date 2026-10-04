@@ -27,7 +27,7 @@
                 "name": {
                   "expr": {
                     "Literal": {
-                      "Value": "'etapes_2.png'"
+                      "Value": "'etapes_2_9f269693e8.png'"
                     }
                   }
                 },
@@ -36,7 +36,7 @@
                     "ResourcePackageItem": {
                       "PackageName": "RegisteredResources",
                       "PackageType": 1,
-                      "ItemName": "etapes_2.png"
+                      "ItemName": "etapes_2_9f269693e8.png"
                     }
                   }
                 },

@@ -1,7 +1,7 @@
 CREATE TABLE [dbo].[visa] (
     [id]          INT            IDENTITY (1, 1) NOT NULL,
     [nature]      VARCHAR (12)   NOT NULL,
-    [objet_ref]   VARCHAR (30)   NOT NULL,
+    [objet_ref]   VARCHAR (60)   NOT NULL,
     [entite]      VARCHAR (20)   NOT NULL,
     [arrete]      VARCHAR (20)   NOT NULL,
     [cycle]       VARCHAR (10)   NULL,
@@ -51,7 +51,7 @@ BEGIN
           AND l.perime_le IS NOT NULL
           AND i.motif IS NULL
     )
-        THROW 50060, 'Visa refuse : ce lot est marque perime, son perimetre ayant change apres sa generation. Le viser exige un motif disant pourquoi la generation n''est pas reprise. Lire dbo.v_lot_perime pour le fait qui l''a perime.', 1;
+        THROW 50060, N'Visa refusé : ce lot est marqué périmé, son périmètre ayant changé après sa génération. Le viser exige un motif disant pourquoi la génération n''est pas reprise. Lire dbo.v_lot_perime pour le fait qui l''a périmé.', 1;
 END
 
 GO
@@ -70,7 +70,7 @@ BEGIN
         WHERE dbo.fn_proposant(i.nature, i.objet_ref) IS NOT NULL
           AND dbo.fn_proposant(i.nature, i.objet_ref) = i.decide_par
     )
-        THROW 50050, 'Visa refuse : le decideur est celui qui a propose l''objet. Nul ne vise son propre travail, quelle que soit la nature de l''objet.', 1;
+        THROW 50050, N'Visa refusé : le décideur est celui qui a proposé l''objet. Nul ne vise son propre travail, quelle que soit la nature de l''objet.', 1;
 
     -- Le role doit etre habilite POUR CETTE NATURE, et non habilite en
     -- general. Corrige le 04/09/2026, ecart E8 de la revue : le drapeau
@@ -81,14 +81,14 @@ BEGIN
         WHERE dbo.fn_peut_viser_nature(i.entite, i.decide_par, i.nature,
                                        CAST(i.decide_le AS DATE)) = 0
     )
-        THROW 50051, 'Visa refuse : le decideur ne tient sur cette entite, a la date de la decision, aucun role habilite a viser CETTE NATURE d''objet. Lire dbo.v_role_nature_visa pour la repartition.', 1;
+        THROW 50051, N'Visa refusé : le décideur ne tient sur cette entité, à la date de la décision, aucun rôle habilité à viser CETTE NATURE d''objet. Lire dbo.v_role_nature_visa pour la répartition.', 1;
 
     IF EXISTS (
         SELECT 1 FROM inserted i
         WHERE dbo.fn_proposant(i.nature, i.objet_ref) IS NOT NULL
           AND dbo.fn_proposant(i.nature, i.objet_ref) <> i.propose_par
     )
-        THROW 50052, 'Visa refuse : le proposant porte par le visa n''est pas celui que la source de l''objet designe. Lire dbo.fn_proposant pour la valeur attendue.', 1;
+        THROW 50052, N'Visa refusé : le proposant porté par le visa n''est pas celui que la source de l''objet désigne. Lire dbo.fn_proposant pour la valeur attendue.', 1;
 END
 
 GO

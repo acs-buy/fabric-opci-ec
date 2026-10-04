@@ -1,12 +1,14 @@
 
+
 -- --- 2. l'import d'une feuille remplie : conclusion, forme, fichier -----------------------------------
 CREATE   PROCEDURE dbo.pr_importer_feuille
     @cote         VARCHAR (30),
-    @conclusion   NVARCHAR (800)  = NULL,
+    @conclusion   NVARCHAR (MAX)  = NULL,
     @forme        VARCHAR (20)    = NULL,        -- SANS_OBSERVATION, AVEC_OBSERVATION, REFUS_ATTESTER : conclut la feuille
     @nom_fichier  NVARCHAR (400)  = NULL,
     @empreinte    CHAR (64)       = NULL,
-    @par          NVARCHAR (400)
+    @par          NVARCHAR (400),
+    @objectif     NVARCHAR (MAX)  = NULL         -- NULL laisse l'objectif en place
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -18,6 +20,11 @@ BEGIN
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé.', 1;
     IF @conclue IS NOT NULL AND EXISTS (SELECT 1 FROM dbo.visa WHERE nature = 'CONCLUSION' AND objet_ref = @cote AND decision = 'VISE')
         THROW 50372, N'Cette feuille est conclue et visée ; elle ne se modifie plus.', 1;
+    -- UN TEXTE TROP LONG EST REFUSE, JAMAIS TRONQUE.
+    IF LEN(@objectif) > 1000
+        THROW 50521, N'Feuille refusée : l''objectif dépasse 1000 caractères.', 1;
+    IF LEN(@conclusion) > 400
+        THROW 50522, N'Feuille refusée : la conclusion dépasse 400 caractères.', 1;
     IF @forme IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.ref_forme_conclusion WHERE code = @forme)
         THROW 50373, N'La forme de conclusion est SANS_OBSERVATION, AVEC_OBSERVATION ou REFUS_ATTESTER.', 1;
     -- texte et forme entrent ensemble ou pas du tout : une porte de la conclusion (pieces du cycle, derogation)
@@ -26,6 +33,7 @@ BEGIN
     BEGIN TRANSACTION;
     UPDATE dbo.feuille_travail
        SET conclusion = COALESCE(@conclusion, conclusion),
+           objectif = COALESCE(@objectif, objectif),
            nom_fichier = COALESCE(@nom_fichier, nom_fichier),
            empreinte_sha256 = COALESCE(@empreinte, empreinte_sha256)
      WHERE cote = @cote;

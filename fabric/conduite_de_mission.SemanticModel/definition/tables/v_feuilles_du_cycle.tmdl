@@ -1,0 +1,217 @@
+/// Etape 5 : les feuilles de cycle hors Q- du perimetre du vehicule, par vehicule.
+table v_feuilles_du_cycle
+	lineageTag: c67bda57-6d76-4e56-8d2f-6db4c8779e34
+
+	measure 'Sous-titre de la synthese des feuilles' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_feuilles_du_cycle ), v_feuilles_du_cycle[vehicule] = e && v_feuilles_du_cycle[arrete] = a && v_feuilles_du_cycle[cycle] = c ) VAR n = COUNTROWS ( t ) + 0 VAR k = COUNTROWS ( FILTER ( t, NOT ISBLANK ( v_feuilles_du_cycle[conclue_le] ) ) ) + 0 VAR f = COUNTROWS ( FILTER ( DISTINCT ( SELECTCOLUMNS ( t, "x", v_feuilles_du_cycle[entite] ) ), [x] <> e ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || ISBLANK ( c ), BLANK (), FORMAT ( n, "0" ) & IF ( n > 1, " feuilles", " feuille" ) & " au périmètre, " & FORMAT ( k, "0" ) & IF ( k > 1, " conclues", " conclue" ) & IF ( f > 0, ", " & FORMAT ( f, "0" ) & IF ( f > 1, " entités", " entité" ) & " de filiale", "" ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: f0550d63-1c70-4d9d-91bf-f746dce83a90
+
+	measure 'Synthèse de la feuille' = VAR e = MAX ( v_feuilles_du_cycle[entite] ) VAR c = MAX ( v_feuilles_du_cycle[conclue_le] ) VAR g = MAX ( v_feuilles_du_cycle[gabarit] ) VAR o = MAX ( v_feuilles_du_cycle[objectif_libelle] ) VAR f = MAX ( v_feuilles_du_cycle[forme_libelle] ) VAR cp = MAX ( v_feuilles_du_cycle[conclue_par] ) VAR ncp = IF ( SEARCH ( "@", cp, 1, 0 ) > 1, LEFT ( cp, SEARCH ( "@", cp, 1, 0 ) - 1 ), cp ) VAR l1 = e & " · " & IF ( ISBLANK ( c ), "non conclue", "conclue" ) & " · " & IF ( ISBLANK ( g ), "sans gabarit", "gabarit " & g ) & " · objectif " & IF ( ISBLANK ( o ), "à remplir", o ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, LEN ( l1 ), 1 ), "p", VAR u = UNICODE ( MID ( l1, [Value], 1 ) ) RETURN IF ( ( u >= 65 && u <= 90 ) || ( u >= 48 && u <= 57 ), 1.65, 1 ) ) VAR k = MAXX ( FILTER ( pd, VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [p] ) <= 69 ), [Value] ) VAR l1c = IF ( SUMX ( pd, [p] ) <= 70, l1, LEFT ( l1, k ) & "…" ) RETURN IF ( HASONEVALUE ( v_feuilles_du_cycle[Feuille] ), l1c & IF ( ISBLANK ( c ), "", UNICHAR ( 10 ) & IF ( ISBLANK ( f ), "", f & ". " ) & MAX ( v_feuilles_du_cycle[conclusion] ) & UNICHAR ( 10 ) & "conclue par " & ncp & ", le " & FORMAT ( c, "dd/MM/yyyy" ) ) )
+		lineageTag: 8f80aedb-11c5-474a-8460-c7d7d8fa4abe
+
+	column vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e146197d-47e1-43be-aec8-c280eb2e65df
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f1a00330-4a61-4f4b-94cb-e34a617eee1d
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 700e2d32-7c5f-4aa5-8643-c5028dcd71b9
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 7fb0352f-de38-4cbe-97d0-0a2a1a501043
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column Feuille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: e2f0accd-680d-424e-a60c-ea7414ab6f5d
+		summarizeBy: none
+		sourceColumn: cote
+		sortByColumn: 'Ordre de la feuille'
+
+		annotation SummarizationSetBy = Automatic
+
+	column question_reference
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: ff8809b5-a5e3-43f6-bcb3-f5c597fe1126
+		summarizeBy: none
+		sourceColumn: question_reference
+
+		annotation SummarizationSetBy = Automatic
+
+	column gabarit
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 94290f65-eede-4821-8527-2d2b832d686a
+		summarizeBy: none
+		sourceColumn: gabarit
+
+		annotation SummarizationSetBy = Automatic
+
+	column gabarit_libelle
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: f746b991-c809-4d67-9fed-d287a0b770da
+		summarizeBy: none
+		sourceColumn: gabarit_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column objectif
+		dataType: string
+		sourceProviderType: nvarchar(1000)
+		lineageTag: 75dbf28e-066a-41b7-8a4a-38cc47915781
+		summarizeBy: none
+		sourceColumn: objectif
+
+		annotation SummarizationSetBy = Automatic
+
+	column objectif_libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(1000)
+		lineageTag: 52ddb9bb-4c2e-406d-a0f4-1e957b0eda59
+		summarizeBy: none
+		sourceColumn: objectif_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 9d732d2c-8dfa-4e1a-859b-5a5fd7cebbfe
+		summarizeBy: none
+		sourceColumn: forme
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_libelle
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 61f67a7d-80d0-4e38-865b-7159991a1338
+		summarizeBy: none
+		sourceColumn: forme_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: eda62e00-4aab-457c-89af-f98b90497a06
+		summarizeBy: none
+		sourceColumn: conclusion
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclue_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: e6f9806c-52b7-4598-8741-e6a284ef18f0
+		summarizeBy: none
+		sourceColumn: conclue_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclue_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: c9f19b34-46b8-4afa-830e-75f281b13644
+		summarizeBy: none
+		sourceColumn: conclue_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column preparateur
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: b2629adf-9088-4e9a-b507-8cad13bdf13c
+		summarizeBy: none
+		sourceColumn: preparateur
+
+		annotation SummarizationSetBy = Automatic
+
+	column prepare_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: aea22b8c-6892-40ed-8e35-bf43bd8c7265
+		summarizeBy: none
+		sourceColumn: prepare_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column web_url
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: c84a6207-a36b-4dd6-bde9-3f376e2c6cd8
+		dataCategory: WebUrl
+		summarizeBy: none
+		sourceColumn: web_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclue_apres_cycle
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 79dfb346-6b07-48ef-95e0-242619226fd8
+		summarizeBy: none
+		sourceColumn: conclue_apres_cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_cycle
+		dataType: string
+		sourceProviderType: varchar(52)
+		lineageTag: a1445023-f246-434c-b8ba-b49dca8c71cc
+		summarizeBy: none
+		sourceColumn: cle_cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ordre de la feuille' = IF ( ISBLANK ( v_feuilles_du_cycle[conclue_le] ), "0", "1" ) & IF ( v_feuilles_du_cycle[entite] = v_feuilles_du_cycle[vehicule], "0", "1" ) & "|" & v_feuilles_du_cycle[entite]
+		dataType: string
+		isHidden
+		lineageTag: e2e1de46-9643-4910-a478-fd2016359606
+		summarizeBy: none
+
+	partition v_feuilles_du_cycle = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_feuilles_du_cycle = Source{[Schema="dbo",Item="v_feuilles_du_cycle"]}[Data]
+				in
+				    dbo_v_feuilles_du_cycle
+

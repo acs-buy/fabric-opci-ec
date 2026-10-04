@@ -14,6 +14,7 @@ CREATE TABLE [dbo].[ref_ligne_annexe] (
     [modifie_par]     NVARCHAR (400) NULL,
     [modifie_le]      DATETIME2 (3)  NULL,
     [globalisable]    INT            DEFAULT ((0)) NOT NULL,
+    [formule_calcul]  NVARCHAR (400) NULL,
     CONSTRAINT [pk_ref_ligne_annexe] PRIMARY KEY CLUSTERED ([article] ASC, [code] ASC),
     CONSTRAINT [ck_ligne_annexe_signe] CHECK ([signe] IS NULL OR ([signe]='=' OR [signe]='+/-' OR [signe]='-' OR [signe]='+')),
     CONSTRAINT [ck_ligne_annexe_type] CHECK ([type_ligne]='TOTAL' OR [type_ligne]='SAISIE' OR [type_ligne]='CALCUL' OR [type_ligne]='RUBRIQUE'),

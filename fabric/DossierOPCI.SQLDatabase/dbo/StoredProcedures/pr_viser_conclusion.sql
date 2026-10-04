@@ -21,7 +21,7 @@ BEGIN
         IF @forme IS NULL
             THROW 50054, 'Visa refuse : la feuille ne porte aucune conclusion. Une feuille se conclut par dbo.pr_conclure_feuille avant de se viser.', 1;
 
-        DECLARE @ref VARCHAR (30) = @cote;
+        DECLARE @ref VARCHAR (60) = @cote;
         EXEC dbo.pr_garde_visa 'CONCLUSION', @ref, @decision, @decide_par, @motif;
 
         BEGIN TRANSACTION;

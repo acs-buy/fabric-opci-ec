@@ -5,6 +5,13 @@ table ref_cycle
 
 	measure 'Titre des questions' = "Questions du cycle " & COALESCE ( SELECTEDVALUE ( ref_cycle[Cycle] ), "— choisir un cycle" )
 
+	measure 'Fond revCclEnregistrer' = IF ( ISBLANK ( [Cycle a conclure] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 7afbcb18-7664-4dd0-a524-7a4d78787a22
+
+	measure 'Cycle a conclure' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) VAR v = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[verrouille], 1, 0 ) ) VAR m = COUNTROWS ( FILTER ( ALL ( arrete_mission ), arrete_mission[entite] = e && arrete_mission[arrete] = a ) ) + 0 VAR r = MAXX ( FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ), v_etat_revue[etat] ) VAR et = MAXX ( t, v_etat_conclusion_cycle[etat] ) RETURN IF ( COUNTROWS ( t ) = 1 && m > 0 && v <> 1 && r <> "VISEE" && et <> "VISE", c )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: dec1ad1f-cf2b-4b97-a5e9-fdc8a2b16cf8
+
 	column code
 		dataType: string
 		isNullable: false

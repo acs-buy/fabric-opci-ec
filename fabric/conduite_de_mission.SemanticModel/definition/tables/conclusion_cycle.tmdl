@@ -2,7 +2,7 @@
 table conclusion_cycle
 	lineageTag: 268c1838-4d4f-469e-92c1-015bc248ec43
 
-	measure 'Cycle conclu' = IF ( CALCULATE ( COUNTROWS ( conclusion_cycle ) ) > 0, "OUI" )
+	measure 'Cycle conclu' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR et = MAXX ( FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ), v_etat_conclusion_cycle[etat] ) RETURN IF ( NOT ISBLANK ( et ) && et <> "A_CONCLURE", "OUI" )
 
 	column id
 		dataType: int64

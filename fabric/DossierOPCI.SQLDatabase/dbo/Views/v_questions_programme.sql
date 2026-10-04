@@ -1,4 +1,5 @@
 
+
 -- --- 4. les vues du rapport ---------------------------------------------------------------------------
 CREATE   VIEW dbo.v_questions_programme AS
 SELECT f.entite, f.arrete, f.cycle, p.id AS programme_id, p.type_programme, fq.cote, fq.id AS feuille_question_id,
@@ -12,7 +13,11 @@ SELECT f.entite, f.arrete, f.cycle, p.id AS programme_id, p.type_programme, fq.c
        (SELECT COUNT(*) FROM dbo.ecriture_brouillon b WHERE b.entite = f.entite AND b.arrete = f.arrete AND b.question_id = q.id) AS od_brouillon,
        (SELECT COUNT(*) FROM dbo.lot_ecritures l WHERE l.entite = f.entite AND l.arrete = f.arrete AND l.question_id = q.id AND l.statut <> 'REJETE') AS od_lots,
        (SELECT COUNT(*) FROM dbo.piece_rattachement pr WHERE pr.question_id = q.id AND pr.entite = f.entite AND (pr.arrete IS NULL OR pr.arrete = f.arrete)) AS pieces,
-       f.entite + '|' + f.arrete + '|' + f.cycle AS cle_cycle
+       f.entite + '|' + f.arrete + '|' + f.cycle AS cle_cycle,
+       -- LE LIEN DE LA FEUILLE, dernier depot FAIT de feuille_<cote>.xlsx ; NULL sans depot.
+       (SELECT TOP 1 x.web_url FROM dbo.export_dossier x WHERE x.entite = f.entite AND x.arrete = f.arrete
+         AND x.fichier = N'feuille_' + ft.cote + N'.xlsx' AND x.statut = 'FAIT' AND x.web_url LIKE N'https://%'
+         ORDER BY x.depose_le DESC, x.id DESC) AS feuille_web_url
 FROM dbo.feuille_question fq
 JOIN dbo.feuille_travail f ON f.cote = fq.cote AND f.cote LIKE 'Q-%'
 JOIN dbo.programme_travail p ON p.entite = f.entite AND p.arrete = f.arrete AND f.cote = 'Q-' + f.cycle + '-P' + CAST(p.id AS VARCHAR (10))

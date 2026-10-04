@@ -1,5 +1,7 @@
 
--- --- 2 : O29, les cellules qui restent a remplir --------------------
+
+-- 4. UNE RUBRIQUE NE PORTE AUCUNE CELLULE : v_cellules_a_remplir ne la compte plus. L'article 331-1, dont la ligne
+-- de principe est une rubrique, n'a donc aucune cellule.
 CREATE   VIEW dbo.v_cellules_a_remplir AS
 SELECT m.entite, m.arrete, m.article, m.tableau,
        CAST(ISNULL(t.indicatif, 0) AS BIT)         AS indicatif,
@@ -13,6 +15,7 @@ SELECT m.entite, m.arrete, m.article, m.tableau,
             END                                    AS lecture
 FROM dbo.v_ligne_annexe_montant m
 LEFT JOIN dbo.ref_tableau_annexe t ON t.article = m.article
+WHERE m.type_ligne <> 'RUBRIQUE'
 GROUP BY m.entite, m.arrete, m.article, m.tableau, t.indicatif;
 
 GO

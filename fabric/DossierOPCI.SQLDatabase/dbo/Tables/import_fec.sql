@@ -23,3 +23,19 @@ CREATE TABLE [dbo].[import_fec] (
 
 GO
 
+-- LA BALANCE CHARGEE SE PORTE SEULE : un import CHARGE fait porter une balance a son arrete de mission de
+-- vehicule. Le declencheur ne remet jamais une valeur a 0.
+CREATE   TRIGGER dbo.tr_import_porte_balance
+ON dbo.import_fec
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE r SET porte_balance = 1
+    FROM dbo.ref_arrete r
+    JOIN (SELECT DISTINCT entite, arrete FROM inserted WHERE statut = 'CHARGE') i ON i.entite = r.entite AND i.arrete = r.arrete
+    JOIN dbo.ref_entite e ON e.code = r.entite AND e.forme_vehicule IS NOT NULL
+    WHERE r.nature_technique = 'MISSION' AND r.porte_balance = 0;
+END;
+
+GO

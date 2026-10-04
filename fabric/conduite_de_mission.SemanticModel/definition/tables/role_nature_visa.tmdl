@@ -1,0 +1,82 @@
+/// Le role qui vise chaque nature de visa.
+table role_nature_visa
+	lineageTag: bfbdf670-ada9-4c35-b8e7-e5ba5eb86702
+
+	measure 'Nature CYCLE' = "CYCLE"
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 91c58df5-5a20-464b-af25-fb90037eea84
+
+	measure 'Nature REVUE' = "REVUE"
+		displayFolder: Ecran 2 etape 5
+		lineageTag: a530cdc2-26fd-4fe4-ba52-cf3fbe73f598
+
+	measure 'Nature LOT' = "LOT"
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 4a732ecd-28e4-4bd1-ad7a-c9076c7c9128
+
+	measure 'Decision VISE' = "VISE"
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 176f47a2-a650-4842-9a92-e0131cf45578
+
+	measure 'Decision RENVOYE' = "RENVOYE"
+		displayFolder: Ecran 2 etape 5
+		lineageTag: b2d5329a-8f0c-4b30-9e9f-a98775c4d333
+
+	column role_code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 8768fa50-453d-4498-bf22-9f66246d111e
+		summarizeBy: none
+		sourceColumn: role_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 3273f9fb-343f-43fc-a04f-3dcfea76956f
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: 53798840-922a-441e-95ab-e49651f8fa7c
+		summarizeBy: none
+		sourceColumn: motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 267ad9e1-aca1-4751-ac3f-b4d1dde34536
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 6df4e9df-18e0-4b46-b5e3-4c5f58534cda
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition role_nature_visa = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_role_nature_visa = Source{[Schema="dbo",Item="role_nature_visa"]}[Data]
+				in
+				    dbo_role_nature_visa
+

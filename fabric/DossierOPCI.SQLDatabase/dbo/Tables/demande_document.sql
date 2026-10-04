@@ -13,7 +13,7 @@ CREATE TABLE [dbo].[demande_document] (
     [motif_refus]   NVARCHAR (2000) NULL,
     CONSTRAINT [pk_demdoc] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [ck_demdoc_etat] CHECK ([etat]='PRODUITE' OR [etat]='REFUSEE' OR [etat]='DEMANDEE'),
-    CONSTRAINT [ck_demdoc_produite] CHECK ([etat]<>'PRODUITE' OR [chemin_coffre] IS NOT NULL AND [produit_le] IS NOT NULL),
+    CONSTRAINT [ck_demdoc_produite] CHECK ([etat]<>'PRODUITE' OR [produit_le] IS NOT NULL),
     CONSTRAINT [ck_demdoc_refus] CHECK ([etat]<>'REFUSEE' OR [motif_refus] IS NOT NULL),
     CONSTRAINT [fk_demdoc_entite] FOREIGN KEY ([entite]) REFERENCES [dbo].[ref_entite] ([code]),
     CONSTRAINT [fk_demdoc_livrable] FOREIGN KEY ([livrable]) REFERENCES [dbo].[ref_livrable] ([code]),

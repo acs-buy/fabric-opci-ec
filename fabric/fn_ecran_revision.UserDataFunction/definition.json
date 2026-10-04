@@ -87,6 +87,11 @@
       "isPublicEndpointEnabled": false
     },
     {
+      "name": "retirer_ligne_od",
+      "description": "Ecran Revision, etape 4",
+      "isPublicEndpointEnabled": false
+    },
+    {
       "name": "saisir_od",
       "description": "Ecran Revision, maquette 73",
       "isPublicEndpointEnabled": false

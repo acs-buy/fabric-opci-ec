@@ -1,6 +1,6 @@
 """fn_ecran_client : les boutons de l'ecran Client et Acceptation, une fonction par bouton.
 
-Ecrit le 16/09/2026 d'apres la maquette 71 validee par le candidat. Chaque fonction appelle UNE
+Ecrit le 16/09/2026 d'apres la maquette 71 ; l'ecran 1 est valide le 15/09/2026. Chaque fonction appelle UNE
 procedure de la base DossierOPCI et rend la phrase que le bouton affiche. Les regles metier ne sont
 jamais ici : elles sont dans la procedure, qui refuse en francais, et le refus remonte tel quel.
 

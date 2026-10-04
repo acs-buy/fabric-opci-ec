@@ -192,8 +192,8 @@ demandent rien de votre part.
 
 | Le dossier | Ce qu'il porte | Ce que vous en faites |
 |---|---|---|
-| `sql/10_referentiels/` | 3 456 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
-| `sql/80_demonstration/` | 7 152 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures, 98 fiches de pièces | Vous pourrez l'effacer |
+| `sql/10_referentiels/` | 3 529 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
+| `sql/80_demonstration/` | 7 176 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures, 98 fiches de pièces | Vous pourrez l'effacer |
 | `sql/90_vous_inscrire_aux_missions.sql` | Il vous inscrit, vous et un collègue, sur les missions de démonstration | **Obligatoire.** Sans lui, l'écran du réviseur est vide |
 
 Le jeu de démonstration sert à voir l'écran du client rempli. Sans lui, les huit pages de

@@ -4,6 +4,49 @@ table v_od_revision
 
 	measure 'Equilibre du lot' = VAR db = SUM ( v_od_revision[Débit] ) VAR cr = SUM ( v_od_revision[Crédit] ) RETURN IF ( db + cr > 0, "Équilibre du lot " & FORMAT ( db, "#,##0.00" ) & IF ( db = cr, ", équilibré", ", DÉSÉQUILIBRÉ de " & FORMAT ( ABS ( db - cr ), "#,##0.00" ) ) )
 
+	measure 'Arrete des OD libres' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR m = COUNTROWS ( FILTER ( ALL ( arrete_mission ), arrete_mission[entite] = e && arrete_mission[arrete] = a ) ) VAR v = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[verrouille], 1, 0 ) ) RETURN IF ( NOT ISBLANK ( e ) && NOT ISBLANK ( a ) && m > 0 && v <> 1, a )
+		displayFolder: Ecran 2 etape 4
+		lineageTag: 018ac921-217d-4f18-87ec-9f20addca0a8
+
+	measure 'Equilibre des OD libres' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_od_revision ), v_od_revision[entite] = e && v_od_revision[arrete] = a && v_od_revision[État] = "BROUILLON" && ISBLANK ( v_od_revision[reference] ) && LEFT ( v_od_revision[cote], 4 ) = "ODL-" ) VAR n = COUNTROWS ( t ) + 0 VAR db = SUMX ( t, v_od_revision[Débit] ) + 0 VAR cr = SUMX ( t, v_od_revision[Crédit] ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "Équilibre du brouillon libre " & FORMAT ( db, "#,##0.00" ) & ", " & IF ( n = 0, "vide", IF ( ROUND ( db - cr, 2 ) = 0, "équilibré", "déséquilibré de " & FORMAT ( ABS ( db - cr ), "#,##0.00" ) ) ) )
+		displayFolder: Ecran 2 etape 4
+		lineageTag: 249db955-e0e6-4740-8e7e-6074464d4c76
+
+	measure 'Arrete du brouillon libre a valider' = VAR g = [Arrete des OD libres] VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_od_revision ), v_od_revision[entite] = e && v_od_revision[arrete] = a && v_od_revision[État] = "BROUILLON" && ISBLANK ( v_od_revision[reference] ) && LEFT ( v_od_revision[cote], 4 ) = "ODL-" ) VAR n = COUNTROWS ( t ) + 0 VAR z = COUNTROWS ( FILTER ( t, v_od_revision[Débit] = 0 && v_od_revision[Crédit] = 0 ) ) + 0 VAR ecart = ROUND ( SUMX ( t, v_od_revision[Débit] ) - SUMX ( t, v_od_revision[Crédit] ), 2 ) RETURN IF ( NOT ISBLANK ( g ) && n > 0 && z = 0 && ecart = 0, g )
+		displayFolder: Ecran 2 etape 4
+		lineageTag: c756c553-d0ed-41cd-8a8d-fb0b2093a2de
+
+	measure 'Chemin des OD libres' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR f = "od_libres_" & e & "_" & a & ".xlsx" VAR n = COUNTROWS ( FILTER ( ALL ( v_export_dossier ), v_export_dossier[entite] = e && v_export_dossier[arrete] = a && v_export_dossier[Fichier] = f ) ) RETURN IF ( NOT ISBLANK ( e ) && NOT ISBLANK ( a ) && n > 0, "fec/Dossiers de travail/" & e & "/" & a & "/" & f )
+		displayFolder: Ecran 2 etape 4
+		lineageTag: 5a9ce600-fa76-48ad-8c9f-7206fc864c34
+
+	measure 'Ligne OD libre choisie' = VAR g = [Arrete des OD libres] RETURN CALCULATE ( VAR n = IF ( ISFILTERED ( v_od_revision ) && HASONEVALUE ( v_od_revision[N°] ), SELECTEDVALUE ( v_od_revision[N°] ) ) VAR libre = COUNTROWS ( FILTER ( v_od_revision, v_od_revision[État] = "BROUILLON" && ISBLANK ( v_od_revision[reference] ) && LEFT ( v_od_revision[cote], 4 ) = "ODL-" && v_od_revision[arrete] = g ) ) RETURN IF ( NOT ISBLANK ( g ) && NOT ISBLANK ( n ) && libre = 1, FORMAT ( n, "0" ) ), REMOVEFILTERS ( ref_cycle ) )
+		displayFolder: Ecran 2 etape 4
+		lineageTag: 8e59ee33-c4a5-47a9-9d13-0d7c5242e32a
+
+	measure 'Compte des OD libres' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_od_revision ), v_od_revision[entite] = e && v_od_revision[arrete] = a && ISBLANK ( v_od_revision[reference] ) && LEFT ( v_od_revision[cote], 4 ) = "ODL-" ) VAR n = COUNTROWS ( t ) + 0 VAR b = COUNTROWS ( FILTER ( t, v_od_revision[État] = "BROUILLON" ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), FORMAT ( n, "0" ) & IF ( n > 1, " lignes", " ligne" ) & " : " & FORMAT ( b, "0" ) & " au brouillon, " & FORMAT ( n - b, "0" ) & " en lot" )
+		displayFolder: Ecran 2 etape 4
+		lineageTag: 9536e49d-0f07-4257-a1ed-beaa17d63a39
+
+	measure 'Sous-titre des OD libres' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR f = MAXX ( FILTER ( ALL ( feuille_travail ), feuille_travail[entite] = e && feuille_travail[arrete] = a && LEFT ( feuille_travail[cote], 4 ) = "ODL-" ), feuille_travail[cote] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "journal ODR, sans question ni cycle, " & IF ( ISBLANK ( f ), "aucune feuille d’OD libres à cet arrêté", "feuille " & f ) )
+		displayFolder: Ecran 2 etape 4
+		lineageTag: 83651d48-0481-4a75-80fc-92a9facfe795
+
+	measure 'Fond revOdlAjout2' = IF ( ISBLANK ( [Arrete des OD libres] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: f58bea65-46d7-4472-bfed-f7db1bf2e2a2
+
+	measure 'Fond revOdlAjout1' = IF ( ISBLANK ( [Arrete des OD libres] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: f8616e0e-c47b-4a67-a2d4-f67f287fa0c1
+
+	measure 'Fond revOdlReimport' = IF ( ISBLANK ( [Arrete des OD libres] ) || ISBLANK ( [Chemin des OD libres] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 647bef5e-cb9a-4b22-bf71-b9232e1a3743
+
+	measure 'Fond revOdlValider' = IF ( ISBLANK ( [Arrete du brouillon libre a valider] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 25eab3bc-8cf8-4b7e-8fe3-acad444e6bcc
+
+	measure 'Fond revOdlRetirer' = IF ( ISBLANK ( [Arrete des OD libres] ) || ISBLANK ( [Ligne OD libre choisie] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 61640c62-867b-4548-8a32-f750ce8bee45
+
 	column entite
 		dataType: string
 		isNullable: false
@@ -153,14 +196,24 @@ table v_od_revision
 
 		annotation SummarizationSetBy = Automatic
 
-	column le
+	column Le
 		dataType: dateTime
 		isNullable: false
-		formatString: General Date
+		formatString: dd/MM/yyyy HH:mm
 		sourceProviderType: datetime2
 		lineageTag: 05255f83-b291-4e97-ae25-17253302fc65
 		summarizeBy: none
 		sourceColumn: le
+
+		annotation SummarizationSetBy = Automatic
+
+	column N°
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1dbb8b61-4a75-43e7-b96b-e92a069cadc6
+		summarizeBy: none
+		sourceColumn: brouillon_id
 
 		annotation SummarizationSetBy = Automatic
 
@@ -169,7 +222,7 @@ table v_od_revision
 		source =
 				let
 				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
-				    dbo_v_od_revision = Source{[Schema="dbo",Item="v_od_revision"]}[Data]
+				    dbo_v_od_revision = Value.NativeQuery(Source, "SELECT entite, arrete, cycle, cote, reference, etat, lot_id, journal_code, compte_num, libelle, debit, credit, piece_ref, code_actif, par, DATETIME2FROMPARTS(YEAR(le), MONTH(le), DAY(le), DATEPART(HOUR, le), DATEPART(MINUTE, le), DATEPART(SECOND, le), 0, 0) AS le, brouillon_id FROM dbo.v_od_revision", null, [EnableFolding = true])
 				in
 				    dbo_v_od_revision
 

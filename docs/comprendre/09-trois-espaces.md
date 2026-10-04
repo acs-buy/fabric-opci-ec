@@ -86,7 +86,7 @@ Une **règle de déploiement** fait pointer le modèle de chaque espace vers la 
 espace, automatiquement, à chaque déploiement.
 
 **Une seule règle par modèle suffit.** Les deux modèles ne déclarent qu'une seule source chacun,
-malgré leurs 73 tables : le modèle du client la déclare une fois dans une expression partagée, et
+malgré leurs 81 et 20 tables : le modèle du client la déclare une fois dans une expression partagée, et
 le modèle de conduite répète le même serveur et la même base dans chaque partition.
 
 Cette règle remplace `scripts/25_relier_le_modele.py` pour les déploiements suivants. **Elle reste

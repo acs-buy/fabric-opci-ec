@@ -1,10 +1,11 @@
--- ref_controle : 108 ligne(s) de referentiel.
+-- ref_controle : 110 ligne(s) de referentiel.
 -- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
 -- Produit depuis la base de reference, ne pas modifier a la main.
 
 IF NOT EXISTS (SELECT 1 FROM dbo.[ref_controle])
 BEGIN
     INSERT INTO dbo.[ref_controle] ([vue], [code], [libelle], [genre], [condition_anomalie], [fondement], [ordre], [modifie_par], [modifie_le]) VALUES
+        (N'v_controle_275_a_partager',N'C88',N'Différence d''estimation 275 non subdivisée alors que des parts 252 sont détenues',N'RAPPROCHEMENT',N'difference_275 <> 0',N'Règlement ANC 2021-09, modèle 321-2 et art. 212-4',N'88',NULL,NULL),
         (N'v_controle_actif_sans_entite_liee',NULL,N'controle actif sans entite liee',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'1',NULL,NULL),
         (N'v_controle_actif_sans_valeur',NULL,N'controle actif sans valeur',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'2',NULL,NULL),
         (N'v_controle_annexe_333_1',N'C61',N'Tableau 333-1 de l''annexe rapproché de l''actif net réévalué',N'RAPPROCHEMENT',N'ecart <> 0',N'Règlement ANC 2021-09, article 333-1',N'3',NULL,NULL),
@@ -58,6 +59,7 @@ BEGIN
         (N'v_controle_import_concurrent',NULL,N'controle import concurrent',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'42',NULL,NULL),
         (N'v_controle_import_exercice_faux',NULL,N'controle import exercice faux',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'43',NULL,NULL),
         (N'v_controle_import_sans_lot',NULL,N'controle import sans lot',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'44',NULL,NULL),
+        (N'v_controle_inventaire_bilan',N'C89',N'Inventaire 336-2 rapproché du bilan : prix de revient et valeur actuelle',N'RAPPROCHEMENT',N'ecart <> 0',N'Règlement ANC 2021-09, art. 336-2 et modèle 321-2',N'89',NULL,NULL),
         (N'v_controle_inventaire_filiales',N'C67',N'Inventaire des filiales : la différence d''estimation rapprochée de sa formule',N'RAPPROCHEMENT',N'ecart_a_la_formule <> 0',N'Règlement ANC 2021-09, articles 336-2 et 212-4',N'45',NULL,NULL),
         (N'v_controle_inventaire_incomplet',NULL,N'controle inventaire incomplet',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'46',NULL,NULL),
         (N'v_controle_ligne_annexe_sans_source',NULL,N'controle ligne annexe sans source',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'47',NULL,NULL),

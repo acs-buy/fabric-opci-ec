@@ -1,4 +1,5 @@
 
+
 -- L'etat de l'etape 5, que l'ecran E5-0 lit : ce qui manque avant la
 -- cloture, dit avant le clic.
 CREATE   VIEW dbo.v_etat_etape_5 AS
@@ -22,7 +23,7 @@ SELECT r.entite, r.arrete, r.type_arrete,
               > COALESCE(ob.visees, 0)
            THEN N'des catégories de sommes distribuables ne sont pas visées'
          WHEN a.arretee_le IS NULL
-           THEN N'la forme de l''attestation n''est pas arrêtée'
+           THEN N'la forme du rapport de l''expert-comptable n''est pas arrêtée'
          ELSE N'tout est réuni : l''étape 5 peut être clôturée' END
                                            AS motif_du_refus
 FROM dbo.ref_arrete r

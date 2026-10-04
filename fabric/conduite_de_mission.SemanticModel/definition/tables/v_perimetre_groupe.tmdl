@@ -25,10 +25,6 @@ table v_perimetre_groupe
 		displayFolder: Ecran 1 Client
 		lineageTag: dbe72ec2-be68-42d1-8cb4-d39913981321
 
-	measure 'L Ordre' = VAR v = CALCULATE ( MAX ( v_perimetre_groupe[vehicule] ) ) VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN v & IF ( c = TRUE (), "0", "1" ) & SELECTEDVALUE ( ref_entite[Entité] )
-		displayFolder: Ecran 1 Client
-		lineageTag: 72f07849-c739-48c6-a58b-6f0fd204c84d
-
 	measure 'Quote-part détenue' = VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( c <> TRUE (), CALCULATE ( MAX ( v_perimetre_groupe[quote_part] ) ) )
 		formatString: 0.00%
 		displayFolder: Ecran 1 Client

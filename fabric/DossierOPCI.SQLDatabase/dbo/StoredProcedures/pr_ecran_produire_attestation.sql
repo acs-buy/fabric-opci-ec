@@ -1,16 +1,17 @@
+
 CREATE   PROCEDURE dbo.pr_ecran_produire_attestation
-    @entite VARCHAR (20),
-    @arrete VARCHAR (20),
-    @chemin NVARCHAR (600),
-    @par NVARCHAR (400)
+    @entite  VARCHAR (20),
+    @arrete  VARCHAR (20),
+    @fichier NVARCHAR (400),
+    @par     NVARCHAR (400),
+    @empreinte_stockee CHAR (64) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
-        EXEC dbo.pr_produire_attestation @entite, @arrete, @chemin, @par;
+        EXEC dbo.pr_produire_attestation @entite, @arrete, @fichier, @par, @empreinte_stockee;
         UPDATE dbo.ref_arrete
-           SET message_ecran = NULL, message_ecran_le = NULL,
-               message_ecran_pour = NULL
+           SET message_ecran = NULL, message_ecran_le = NULL, message_ecran_pour = NULL
          WHERE entite = @entite AND arrete = @arrete;
     END TRY
     BEGIN CATCH
@@ -20,9 +21,7 @@ BEGIN
                message_ecran_le   = SYSUTCDATETIME(),
                message_ecran_pour = LEFT(@par, 200)
          WHERE entite = @entite AND arrete = @arrete;
-    
-        -- 13/09/2026 : la relance rend le refus VISIBLE. Sans elle le
-        -- service repond 200 et le portail affiche un succes.
+        -- la relance rend le refus visible : sans elle le service repond 200 et le portail affiche un succes
         THROW;
     END CATCH;
 END;

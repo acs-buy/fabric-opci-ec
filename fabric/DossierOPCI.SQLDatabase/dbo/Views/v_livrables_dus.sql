@@ -1,4 +1,6 @@
 
+
+-- v_livrables_dus expose le perimetre de production, en derniere colonne ; le reste est inchange.
 CREATE   VIEW dbo.v_livrables_dus AS
 SELECT r.entite, r.arrete, r.type_arrete,
        l.ordre, l.code AS livrable, l.libelle, l.nature, l.article,
@@ -14,8 +16,8 @@ SELECT r.entite, r.arrete, r.type_arrete,
             THEN N'périmé : ' + LEFT(d.perime_motif, 120)
             ELSE N'produit le '
                  + FORMAT(d.produit_le, 'dd/MM/yyyy', 'fr-FR') END AS etat,
-       -- 07/09/2026 : le motif de refus ecrit par la procedure du bouton (138), lu a l'ecran.
-       r.message_ecran
+       r.message_ecran,
+       l.produit_etape_6                   AS produit_a_l_etape_6
 FROM dbo.ref_arrete r
 JOIN dbo.ref_livrable l
   ON l.applicable = 'LES_DEUX'

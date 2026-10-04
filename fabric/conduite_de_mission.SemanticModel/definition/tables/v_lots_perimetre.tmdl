@@ -1,0 +1,302 @@
+/// Etape 5 : les lots du perimetre du vehicule a l'arrete, par vehicule.
+table v_lots_perimetre
+	lineageTag: 243bdcf0-c488-41fe-b48b-20be912664d2
+
+	measure 'Ref lot a decider' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR l = IF ( ISFILTERED ( v_lots_perimetre ) && HASONEVALUE ( v_lots_perimetre[Lot] ), SELECTEDVALUE ( v_lots_perimetre[Lot] ) ) VAR t = FILTER ( ALL ( v_lots_perimetre ), v_lots_perimetre[Lot] = l ) VAR st = MAXX ( t, v_lots_perimetre[Statut du lot] ) VAR auteur = MAXX ( t, v_lots_perimetre[Proposé par] ) VAR ici = COUNTROWS ( FILTER ( t, v_lots_perimetre[vehicule] = e && v_lots_perimetre[arrete] = a ) ) + 0 VAR s = [Superviseur connecte LOT] RETURN IF ( NOT ISBLANK ( l ) && st = "PROPOSE" && ici > 0 && auteur <> u && NOT ISBLANK ( s ), FORMAT ( l, "0" ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 799a6e90-694d-495c-bd95-35ce380cf0c4
+
+	measure 'Sous-titre des lots en attente' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_lots_perimetre ), v_lots_perimetre[vehicule] = e && v_lots_perimetre[arrete] = a ) VAR p = COUNTROWS ( FILTER ( t, v_lots_perimetre[Statut du lot] = "PROPOSE" ) ) + 0 VAR r = COUNTROWS ( FILTER ( t, v_lots_perimetre[Statut du lot] = "REJETE" ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), FORMAT ( p, "0" ) & IF ( p > 1, " lots proposés", " lot proposé" ) & ", véhicule et filiales, au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) & IF ( r > 0, ", " & FORMAT ( r, "0" ) & IF ( r > 1, " renvoyés", " renvoyé" ), "" ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: cf8784d8-9adf-4ee6-84e0-1dfd3773c4b4
+
+	measure 'Fond revCclLotViser' = IF ( ISBLANK ( [Ref lot a decider] ) || ISBLANK ( [Superviseur connecte LOT] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: cb22818b-4d93-4dfe-87b4-baef0af463b6
+
+	measure 'Fond revCclLotRenvoyer' = IF ( ISBLANK ( [Ref lot a decider] ) || ISBLANK ( [Superviseur connecte LOT] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 054106eb-0fda-4f38-987a-26bb26d82d5d
+
+	measure 'Libelle revCclLotViser' = "Viser le lot"
+		lineageTag: 8a6e2b85-9754-487a-ba0f-13a7da13a736
+
+	measure 'Libelle revCclLotRenvoyer' = "Renvoyer le lot"
+		lineageTag: 76009054-591e-4747-acc0-2eb15ba2f9b3
+
+	measure 'Lot du dossier a decider' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = VALUES ( v_lots_perimetre[libelle_choix] ) RETURN IF ( COUNTROWS ( FILTER ( ALL ( v_lots_perimetre ), v_lots_perimetre[vehicule] = e && v_lots_perimetre[arrete] = a && v_lots_perimetre[Statut du lot] = "PROPOSE" && v_lots_perimetre[libelle_choix] IN l ) ) > 0, 1 )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 7b2a7037-7bf2-4b50-8557-4ed072dcaf68
+
+	measure 'État du lot' = VAR s = SELECTEDVALUE ( v_lots_perimetre[Statut du lot] ) VAR p = MAXX ( v_lots_perimetre, IF ( v_lots_perimetre[perime], 1, 0 ) ) VAR pl = MAX ( v_lots_perimetre[perime_le] ) VAR dl = COALESCE ( MAX ( v_lots_perimetre[derniere_decision_le] ), MAX ( v_lots_perimetre[statut_le] ) ) RETURN IF ( HASONEVALUE ( v_lots_perimetre[Lot] ), SWITCH ( s, "PROPOSE", "proposé", "REJETE", "renvoyé le " & FORMAT ( dl, "dd/MM/yyyy" ), "VALIDE", "visé", "ANNULE", "annulé", LOWER ( s ) ) & IF ( p = 1, " · périmé le " & FORMAT ( pl, "dd/MM/yyyy" ), "" ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 5e01ee4f-ec0c-48a8-a811-b8dd6c9cc4b3
+
+	measure 'Fond etat du lot' = VAR s = SELECTEDVALUE ( v_lots_perimetre[Statut du lot] ) VAR p = MAXX ( v_lots_perimetre, IF ( v_lots_perimetre[perime], 1, 0 ) ) RETURN IF ( HASONEVALUE ( v_lots_perimetre[Lot] ), IF ( p = 1 || s = "REJETE", "#F7ECEC", IF ( s = "PROPOSE", "#FAF2E2", "#E7F0EB" ) ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: c7c3e9d7-9020-4307-8274-16bc499502fb
+
+	measure 'Encre etat du lot' = VAR s = SELECTEDVALUE ( v_lots_perimetre[Statut du lot] ) VAR p = MAXX ( v_lots_perimetre, IF ( v_lots_perimetre[perime], 1, 0 ) ) RETURN IF ( HASONEVALUE ( v_lots_perimetre[Lot] ), IF ( p = 1 || s = "REJETE", "#9A2A2A", IF ( s = "PROPOSE", "#8A6710", "#1F6D4A" ) ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 1b7f5d7f-038c-465e-9308-499ef32e55ec
+
+	column vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f2adc128-8b3a-4aaf-98cc-167eea395e25
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column Lot
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e94fdc40-a338-4a89-97db-7601ba0b0617
+		summarizeBy: none
+		sourceColumn: lot_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column Entité
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 70cf935f-38e5-4b64-a75c-389d41bf158a
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 7e0f533a-8359-4ce7-b452-56ebdbc9558a
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 33d97ee7-313a-40bd-b357-cdd7ac1b5668
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column portee
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: b360ae68-e206-4926-b930-047fced82acc
+		summarizeBy: none
+		sourceColumn: portee
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Statut du lot'
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: bb9c7cc9-ce7f-41fa-abea-999d2e9b54a4
+		summarizeBy: none
+		sourceColumn: statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 70a57848-f14e-4b43-a831-48609bffa319
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_libelle
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: d76e862c-dc66-42e4-b05f-0f16765e30d3
+		summarizeBy: none
+		sourceColumn: cycle_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 61f4ad4c-959d-42bf-a82d-bd89d36f2f8d
+		summarizeBy: none
+		sourceColumn: cycle_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Proposé par'
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 40f074b3-6e98-46b7-a404-0827186423ea
+		summarizeBy: none
+		sourceColumn: cree_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column Le
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: 18254668-61f8-4fc5-bc77-ba9fa8ad4d19
+		summarizeBy: none
+		sourceColumn: cree_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 25954c65-c802-441c-887a-59a8b187cd59
+		summarizeBy: none
+		sourceColumn: statut_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: cadcc998-cc80-4bee-a00b-b17c130fb426
+		summarizeBy: none
+		sourceColumn: statut_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 768df42d-fd73-4dce-a0e9-27e836c6c68e
+		summarizeBy: none
+		sourceColumn: perime_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 9f2c6262-e977-4036-b886-09216f8fe6f1
+		summarizeBy: none
+		sourceColumn: perime
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime_motif
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 3a7f1798-cd63-4f97-ba19-da4bee986511
+		summarizeBy: none
+		sourceColumn: perime_motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column Lignes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: a6baff51-67cb-49bd-9899-490417306ab6
+		summarizeBy: sum
+		sourceColumn: lignes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Montant
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal
+		lineageTag: fc576b8d-f205-4e19-913a-fa5dff245f59
+		summarizeBy: sum
+		sourceColumn: montant
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column derniere_decision
+		dataType: string
+		sourceProviderType: varchar(8)
+		lineageTag: 59cbb5a3-8325-42d7-bab1-15ab450fc6fc
+		summarizeBy: none
+		sourceColumn: derniere_decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column dernier_decideur
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 3f54eb4f-dd31-4b85-ab5c-1d04168bbcf9
+		summarizeBy: none
+		sourceColumn: dernier_decideur
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_decision_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 2ef23ef4-402d-4fa3-873f-852378f5e468
+		summarizeBy: none
+		sourceColumn: derniere_decision_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Dernier message'
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 41488f20-2d4f-416e-bc36-972cb8f3f323
+		summarizeBy: none
+		sourceColumn: dernier_message
+
+		annotation SummarizationSetBy = Automatic
+
+	column genre_dernier_message
+		dataType: string
+		sourceProviderType: varchar(8)
+		lineageTag: bb13391e-5d6a-48a1-a67a-9a1120f79894
+		summarizeBy: none
+		sourceColumn: genre_dernier_message
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 3bcd5f91-5391-43ab-bbed-8e2089f2a994
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle_choix
+		dataType: string
+		sourceProviderType: nvarchar(80)
+		lineageTag: 9c54a5f6-85f6-4b9d-9e76-4181b2592d8d
+		summarizeBy: none
+		sourceColumn: libelle_choix
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_lots_perimetre = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_lots_perimetre = Source{[Schema="dbo",Item="v_lots_perimetre"]}[Data]
+				in
+				    dbo_v_lots_perimetre
+

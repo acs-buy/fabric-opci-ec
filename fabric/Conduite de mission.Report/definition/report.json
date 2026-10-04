@@ -46,36 +46,6 @@
           "type": "CustomTheme"
         },
         {
-          "name": "etapes_1.png",
-          "path": "etapes_1.png",
-          "type": "Image"
-        },
-        {
-          "name": "etapes_2.png",
-          "path": "etapes_2.png",
-          "type": "Image"
-        },
-        {
-          "name": "etapes_3.png",
-          "path": "etapes_3.png",
-          "type": "Image"
-        },
-        {
-          "name": "etapes_4.png",
-          "path": "etapes_4.png",
-          "type": "Image"
-        },
-        {
-          "name": "etapes_5.png",
-          "path": "etapes_5.png",
-          "type": "Image"
-        },
-        {
-          "name": "etapes_6.png",
-          "path": "etapes_6.png",
-          "type": "Image"
-        },
-        {
           "name": "fond_ecran_client.png",
           "path": "fond_ecran_client.png",
           "type": "Image"
@@ -93,6 +63,46 @@
         {
           "name": "fond_etape2_3d91f670cc.png",
           "path": "fond_etape2_3d91f670cc.png",
+          "type": "Image"
+        },
+        {
+          "name": "etapes_1_9ef06c2828.png",
+          "path": "etapes_1_9ef06c2828.png",
+          "type": "Image"
+        },
+        {
+          "name": "etapes_2_9f269693e8.png",
+          "path": "etapes_2_9f269693e8.png",
+          "type": "Image"
+        },
+        {
+          "name": "etapes_3_544b56e62d.png",
+          "path": "etapes_3_544b56e62d.png",
+          "type": "Image"
+        },
+        {
+          "name": "etapes_4_297c669f94.png",
+          "path": "etapes_4_297c669f94.png",
+          "type": "Image"
+        },
+        {
+          "name": "etapes_5_8b118eeaa1.png",
+          "path": "etapes_5_8b118eeaa1.png",
+          "type": "Image"
+        },
+        {
+          "name": "etapes_6_8e98ebd7cf.png",
+          "path": "etapes_6_8e98ebd7cf.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_etape4_39f1b45a5e.png",
+          "path": "fond_etape4_39f1b45a5e.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_etape5_8df4d9d572.png",
+          "path": "fond_etape5_8df4d9d572.png",
           "type": "Image"
         }
       ]

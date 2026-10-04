@@ -89,6 +89,11 @@ ref table v_export_dossier
 ref table v_complexite_balance
 ref table v_programme_cycles
 ref table v_programme_selection
+ref table role_nature_visa
+ref table v_lots_perimetre
+ref table v_feuilles_du_cycle
+ref table v_etat_revue
+ref table v_etat_conclusion_cycle
 
 ref role Reviseur
 

@@ -1,8 +1,9 @@
 
+-- LA SEULE VUE QUI COMPOSE UNE REFERENCE TEXTUELLE, « entite|arrete », la composait en 30 caracteres.
 CREATE   VIEW dbo.v_a_viser_publication AS
 SELECT v.entite, v.arrete, CAST(NULL AS VARCHAR (10)) AS cycle,
        'PUBLICATION'                                  AS nature,
-       CAST(v.entite + '|' + v.arrete AS VARCHAR (30)) AS objet_ref,
+       CAST(v.entite + '|' + v.arrete AS VARCHAR (60)) AS objet_ref,
        CAST(NULL AS INT)                              AS objet_id,
        CAST(N'Valeur liquidative de ' + CAST(v.valeur_liquidative AS NVARCHAR (30))
             + N' pour ' + CAST(v.nombre_parts AS NVARCHAR (30)) + N' parts'

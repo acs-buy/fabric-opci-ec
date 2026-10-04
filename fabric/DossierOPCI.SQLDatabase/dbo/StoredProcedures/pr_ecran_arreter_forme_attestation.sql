@@ -1,14 +1,16 @@
+
 CREATE   PROCEDURE dbo.pr_ecran_arreter_forme_attestation
     @entite VARCHAR (20),
     @arrete VARCHAR (20),
     @forme VARCHAR (20),
     @par NVARCHAR (400),
-    @motif NVARCHAR (800) = NULL
+    @motif NVARCHAR (800) = NULL,
+    @motif_considerations NVARCHAR (800) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
-        EXEC dbo.pr_arreter_forme_attestation @entite, @arrete, @forme, @par, @motif;
+        EXEC dbo.pr_arreter_forme_attestation @entite, @arrete, @forme, @par, @motif, @motif_considerations;
         UPDATE dbo.ref_arrete
            SET message_ecran = NULL, message_ecran_le = NULL,
                message_ecran_pour = NULL
@@ -21,7 +23,6 @@ BEGIN
                message_ecran_le   = SYSUTCDATETIME(),
                message_ecran_pour = LEFT(@par, 200)
          WHERE entite = @entite AND arrete = @arrete;
-    
         -- 13/09/2026 : la relance rend le refus VISIBLE. Sans elle le
         -- service repond 200 et le portail affiche un succes.
         THROW;

@@ -6,6 +6,14 @@ table v_ecran_message
 
 	measure 'Fond message ecran' = VAR u = USERPRINCIPALNAME () VAR c = [Client selectionne] VAR gr = CALCULATE ( SELECTEDVALUE ( v_ecran_message[genre] ), FILTER ( ALL ( v_ecran_message ), v_ecran_message[pour] = u && ( v_ecran_message[entite] = c || v_ecran_message[entite] = "-" ) && v_ecran_message[il_y_a_minutes] <= 30 ) ) RETURN SWITCH ( gr, "REFUS", "#F9ECEC", "SUCCES", "#EFF6F2", "#FFFFFF" )
 
+	measure 'Message de la revision' = VAR u = USERPRINCIPALNAME () VAR e = [Entite selectionnee] VAR t = TOPN ( 1, FILTER ( ALL ( v_ecran_message ), v_ecran_message[pour] = u && ( v_ecran_message[entite] = e || v_ecran_message[entite] = "-" ) && v_ecran_message[il_y_a_minutes] <= 30 ), v_ecran_message[pose_le], DESC ) VAR m = MAXX ( t, v_ecran_message[message] ) VAR g = MAXX ( t, v_ecran_message[geste] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( m ), "", m & IF ( ISBLANK ( g ), "", "  ·  " & g ) )
+		displayFolder: Ecran 2 message
+		lineageTag: 6ca649f5-07cb-4cae-8178-e0d68b1d95a8
+
+	measure 'Fond message de la revision' = VAR u = USERPRINCIPALNAME () VAR e = [Entite selectionnee] VAR t = TOPN ( 1, FILTER ( ALL ( v_ecran_message ), v_ecran_message[pour] = u && ( v_ecran_message[entite] = e || v_ecran_message[entite] = "-" ) && v_ecran_message[il_y_a_minutes] <= 30 ), v_ecran_message[pose_le], DESC ) VAR gr = MAXX ( t, v_ecran_message[genre] ) RETURN IF ( ISBLANK ( e ), "#FFFFFF", SWITCH ( gr, "REFUS", "#F9ECEC", "SUCCES", "#EFF6F2", "#FFFFFF" ) )
+		displayFolder: Ecran 2 message
+		lineageTag: 1e2521e1-f1c9-4bd7-abd5-5ee057845d89
+
 	column pour
 		dataType: string
 		isNullable: false

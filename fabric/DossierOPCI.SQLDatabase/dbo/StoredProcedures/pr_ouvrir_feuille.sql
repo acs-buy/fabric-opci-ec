@@ -1,5 +1,6 @@
 
-CREATE PROCEDURE dbo.pr_ouvrir_feuille
+
+CREATE   PROCEDURE dbo.pr_ouvrir_feuille
     @cote         VARCHAR (30),
     @modele_code  VARCHAR (20),
     @entite       VARCHAR (20),
@@ -84,11 +85,13 @@ BEGIN
     DECLARE @empreinte CHAR (64) = CONVERT(CHAR (64),
         HASHBYTES('SHA2_256', @cote + '|' + @modele_code + '|' + ISNULL(@version, '')), 2);
 
+    -- L'OBJECTIF DU GABARIT, copie a l'ouverture ; NULL tant qu'il n'est pas redige.
     INSERT INTO dbo.feuille_travail
         (cote, cycle, phase, arrete, entite, modele_code, origine,
-         nom_fichier, chemin_coffre, empreinte_sha256, preparateur, prepare_le)
+         nom_fichier, chemin_coffre, empreinte_sha256, preparateur, prepare_le, objectif)
     VALUES (@cote, @cycle, @phase, @arrete, @entite, @modele_code, 'HUMAINE',
-            @nom, @chemin, @empreinte, @par, SYSUTCDATETIME());
+            @nom, @chemin, @empreinte, @par, SYSUTCDATETIME(),
+            (SELECT objectif FROM dbo.modele_feuille WHERE code = @modele_code));
 
     SELECT @cote AS cote, @modele_code AS modele, @nom AS nom_fichier,
            @chemin AS chemin_coffre,

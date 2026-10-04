@@ -25,7 +25,7 @@ table v_ecran_pieces_du_dossier
 	measure 'Adresse du dépôt du client' = VAR s = CALCULATE ( MAX ( v_espace_client[site_url] ) ) RETURN IF ( ISBLANK ( s ), BLANK (), s & "/Dpt%20du%20client/Forms/AllItems.aspx" )
 		lineageTag: cb202df5-c497-44fc-a2d0-54f94dda01a0
 
-	measure 'Piece de l''arrete' = VAR a = SELECTEDVALUE ( v_dim_arrete[arrete] ) VAR p = SELECTEDVALUE ( v_ecran_pieces_du_dossier[arrete] ) RETURN IF ( ISBLANK ( a ) || ISBLANK ( p ) || p = a, 1 )
+	measure 'Piece de l''arrete' = VAR a = [Arrete selectionne] RETURN IF ( COUNTROWS ( FILTER ( v_ecran_pieces_du_dossier, ISBLANK ( v_ecran_pieces_du_dossier[arrete] ) || v_ecran_pieces_du_dossier[arrete] = a ) ) > 0, 1 )
 		formatString: 0
 		lineageTag: 824f2ac6-7d9f-434d-ad2b-c611cf9e9d70
 

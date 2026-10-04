@@ -1,0 +1,358 @@
+/// Etape 5 : une ligne par cycle au programme d'un arrete de mission d'un vehicule.
+table v_etat_conclusion_cycle
+	lineageTag: 9bea6e63-e2f9-4d84-a7c5-93cad672a0f0
+
+	measure 'Ref cycle a viser' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR u = USERPRINCIPALNAME () VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) VAR b = MAXX ( t, v_etat_conclusion_cycle[blocage_visa] ) VAR auteur = MAXX ( t, v_etat_conclusion_cycle[conclu_par] ) VAR s = [Superviseur connecte CYCLE] RETURN IF ( COUNTROWS ( t ) = 1 && ISBLANK ( b ) && auteur <> u && NOT ISBLANK ( s ), e & "|" & a & "|" & c )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: fe0ecede-6b79-4a62-898e-5b3c174248f5
+
+	measure 'Ref cycle a renvoyer' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR u = USERPRINCIPALNAME () VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) VAR v = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[verrouille], 1, 0 ) ) VAR et = MAXX ( t, v_etat_conclusion_cycle[etat] ) VAR auteur = MAXX ( t, v_etat_conclusion_cycle[conclu_par] ) VAR r = MAXX ( FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ), v_etat_revue[etat] ) VAR s = [Superviseur connecte CYCLE] RETURN IF ( COUNTROWS ( t ) = 1 && et IN { "CONCLU", "VISE" } && v <> 1 && r <> "VISEE" && auteur <> u && NOT ISBLANK ( s ), e & "|" & a & "|" & c )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 776ab52e-e737-4cf2-9389-e1e2f965247c
+
+	measure 'Titre des questions du cycle' = VAR c = [Cycle selectionne] RETURN IF ( ISBLANK ( c ), "Questions du cycle", "Questions du cycle " & c )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 98cbbd08-bccb-4953-8f22-bfb15daf10ea
+
+	measure 'Titre de la conclusion du cycle' = VAR c = [Cycle selectionne] RETURN IF ( ISBLANK ( c ), "Conclusion du cycle", "Conclusion du cycle " & c )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: ec23433e-9a3b-42fa-9234-ea839175aba9
+
+	measure 'Libelle enregistrer la conclusion du cycle' = VAR c = [Cycle selectionne] RETURN IF ( ISBLANK ( c ), "Enregistrer la conclusion du cycle", "Enregistrer la conclusion de " & c )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: af4c648f-2832-4ea2-bd87-a63641721dbb
+
+	measure 'Sous-titre des questions du cycle' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) RETURN IF ( COUNTROWS ( t ) = 1, FORMAT ( MAXX ( t, v_etat_conclusion_cycle[Questions au programme] ) + 0, "0" ) & " au programme" )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 4d3372d8-1f89-46ae-9502-9d1dcf12350b
+
+	measure 'Questions repondues du cycle' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) RETURN IF ( COUNTROWS ( t ) = 1, FORMAT ( MAXX ( t, v_etat_conclusion_cycle[questions_repondues] ) + 0, "0" ) & " sur " & FORMAT ( MAXX ( t, v_etat_conclusion_cycle[Questions au programme] ) + 0, "0" ) & " répondues" )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 848f8cdd-27ff-47bb-911c-82f3ef35848e
+
+	measure 'Etat de la conclusion du cycle' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) VAR cp = MAXX ( t, v_etat_conclusion_cycle[conclu_par] ) VAR cl = MAXX ( t, v_etat_conclusion_cycle[conclu_le] ) VAR dd = MAXX ( t, v_etat_conclusion_cycle[derniere_decision] ) VAR dp = MAXX ( t, v_etat_conclusion_cycle[decide_par] ) VAR dl = MAXX ( t, v_etat_conclusion_cycle[decide_le] ) VAR mo = MAXX ( t, v_etat_conclusion_cycle[motif_renvoi] ) VAR ncp = IF ( SEARCH ( "@", cp, 1, 0 ) > 1, LEFT ( cp, SEARCH ( "@", cp, 1, 0 ) - 1 ), cp ) VAR ndp = IF ( SEARCH ( "@", dp, 1, 0 ) > 1, LEFT ( dp, SEARCH ( "@", dp, 1, 0 ) - 1 ), dp ) VAR lc = IF ( ISBLANK ( cl ), "aucune enregistrée", "enregistrée par " & ncp & ", le " & FORMAT ( cl, "dd/MM/yyyy" ) ) VAR lv = SWITCH ( dd, "VISE", "visé par " & ndp & ", le " & FORMAT ( dl, "dd/MM/yyyy" ), "RENVOYE", "renvoyé par " & ndp & ", le " & FORMAT ( dl, "dd/MM/yyyy" ) & IF ( ISBLANK ( mo ), "", ", motif : " & mo ), "aucune décision" ) RETURN IF ( COUNTROWS ( t ) <> 1, BLANK (), "Conclusion du cycle : " & lc & " · Visa du cycle : " & lv )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 7bead725-1fe5-42e4-a227-f7cbe90d5d14
+
+	measure 'Supervision du cycle' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) VAR av = MAXX ( t, v_etat_conclusion_cycle[a_viser] ) + 0 VAR vi = MAXX ( t, v_etat_conclusion_cycle[vises] ) + 0 VAR rv = MAXX ( t, v_etat_conclusion_cycle[renvoyes] ) + 0 RETURN IF ( COUNTROWS ( t ) <> 1, BLANK (), "Supervision du cycle : " & FORMAT ( av, "0" ) & IF ( av > 1, " objets", " objet" ) & " à viser · " & FORMAT ( vi, "0" ) & IF ( vi > 1, " visas accordés", " visa accordé" ) & " · " & IF ( rv > 0, FORMAT ( rv, "0" ) & IF ( rv > 1, " renvois en cours", " renvoi en cours" ), "aucun renvoi en cours" ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 4d1553bd-fa03-46d6-914a-fb618896facb
+
+	measure 'Blocage du visa du cycle' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR u = USERPRINCIPALNAME () VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) VAR b = MAXX ( t, v_etat_conclusion_cycle[blocage_visa] ) VAR cp = MAXX ( t, v_etat_conclusion_cycle[conclu_par] ) VAR p2 = IF ( NOT ISBLANK ( cp ) && cp = u, "le connecté a conclu ce cycle" ) VAR roles = CALCULATE ( CONCATENATEX ( VALUES ( role_nature_visa[role_code] ), role_nature_visa[role_code], ", ", role_nature_visa[role_code], ASC ), role_nature_visa[nature] = "CYCLE" ) VAR p3 = IF ( ISBLANK ( [Superviseur connecte CYCLE] ), IF ( roles = "CHEF_MISSION", "visa réservé au chef de mission", "visa réservé aux rôles " & roles ) ) VAR l = b & IF ( NOT ISBLANK ( b ) && NOT ISBLANK ( p2 ), " ; " ) & p2 & IF ( ( NOT ISBLANK ( b ) || NOT ISBLANK ( p2 ) ) && NOT ISBLANK ( p3 ), " ; " ) & p3 RETURN IF ( COUNTROWS ( t ) <> 1, BLANK (), IF ( l = "", "possible", l ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 62da04b7-dad4-4105-8394-fb53bd432bd0
+
+	measure 'Fond revCclViser' = IF ( ISBLANK ( [Ref cycle a viser] ) || ISBLANK ( [Superviseur connecte CYCLE] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 70e87092-3829-4188-accb-1a7846c1b555
+
+	measure 'Fond revCclRenvoyer' = IF ( ISBLANK ( [Ref cycle a renvoyer] ) || ISBLANK ( [Superviseur connecte CYCLE] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: ddc3b92a-8458-4d7b-9359-4289e45ce903
+
+	measure 'Pastilles des cycles du programme' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a ) RETURN IF ( COUNTROWS ( t ) > 0, CONCATENATEX ( t, v_etat_conclusion_cycle[cycle] & " " & LOWER ( v_etat_conclusion_cycle[etat_libelle] ), "  ·  ", v_etat_conclusion_cycle[cycle_ordre], ASC ) )
+		lineageTag: daca4c01-ba32-414e-a9a2-0c9f6b7cb330
+
+	measure 'Conclusion du cycle enregistrée' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) RETURN IF ( COUNTROWS ( t ) = 1, MAXX ( t, v_etat_conclusion_cycle[conclusion] ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: 1e5db753-1de5-4b1d-8e66-4ba0fe6f218f
+
+	measure 'Motif du renvoi du cycle' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) RETURN IF ( COUNTROWS ( t ) = 1, MAXX ( t, v_etat_conclusion_cycle[motif_renvoi] ) )
+		displayFolder: Ecran 2 etape 5
+		lineageTag: d796dd7b-1519-4401-85ac-057dee512366
+
+	measure 'Libelle revCclViser' = "Viser le cycle"
+		lineageTag: df049780-5332-4ff0-90c1-87f2a2f7d373
+
+	measure 'Libelle revCclRenvoyer' = "Renvoyer le cycle"
+		lineageTag: 26fa3496-83f5-4f62-bdd6-9abef4b29a66
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d05b73b6-9502-44ac-882a-cffbdc1e607c
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 827d484f-4f53-40c8-b343-a01c3b38e501
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 57f87906-e6e9-4c2c-99ec-01dbd367c074
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_cycle
+		dataType: string
+		sourceProviderType: varchar(52)
+		lineageTag: c14267e4-f035-4b86-bbfd-062e65502362
+		summarizeBy: none
+		sourceColumn: cle_cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 025554d1-82a4-4ba4-bd1b-b4117f443d5e
+		summarizeBy: none
+		sourceColumn: cycle_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 07219494-3c29-4b91-ad37-905533819ddd
+		summarizeBy: none
+		sourceColumn: cycle_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Questions au programme'
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c82d8ac5-0c32-4ca4-a6a9-571cd608832e
+		summarizeBy: sum
+		sourceColumn: questions
+
+		annotation SummarizationSetBy = Automatic
+
+	column questions_repondues
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 743b2b2a-fbee-4f47-a7de-48039034629b
+		summarizeBy: sum
+		sourceColumn: questions_repondues
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuilles
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b91447ca-0a34-43f8-8db8-5d7cf0cb0591
+		summarizeBy: sum
+		sourceColumn: feuilles
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuilles_ouvertes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c52fffbc-685b-4b6c-8faf-f90b8e401668
+		summarizeBy: sum
+		sourceColumn: feuilles_ouvertes
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuilles_conclues_apres
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f93bce9d-5c74-47c3-a6c8-64021f324a1e
+		summarizeBy: sum
+		sourceColumn: feuilles_conclues_apres
+
+		annotation SummarizationSetBy = Automatic
+
+	column lots_en_attente
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 176e8e37-40e4-47f9-8f1c-2437b0143242
+		summarizeBy: sum
+		sourceColumn: lots_en_attente
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: c1f4b622-7911-48df-841a-dc7d5e927c99
+		summarizeBy: none
+		sourceColumn: conclusion
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclu_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: a622af70-8e92-4ced-ab87-05a16ce998dc
+		summarizeBy: none
+		sourceColumn: conclu_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclu_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: a0cef125-6ee8-49e4-b868-516889e3bdf5
+		summarizeBy: none
+		sourceColumn: conclu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column synthese_enregistree
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 31be4cf8-c9e4-4b38-9493-884fde8de898
+		summarizeBy: none
+		sourceColumn: synthese_enregistree
+
+		annotation SummarizationSetBy = Automatic
+
+	column synthese_courante
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 1ec448c4-acda-4a22-a249-ce6ab579375d
+		summarizeBy: none
+		sourceColumn: synthese_courante
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_decision
+		dataType: string
+		sourceProviderType: varchar(8)
+		lineageTag: 7ca657a1-72d4-4b96-b5b1-568647f29e99
+		summarizeBy: none
+		sourceColumn: derniere_decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 2db2250c-d228-4e26-9fa4-85664dfa9237
+		summarizeBy: none
+		sourceColumn: decide_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 743e870c-03f6-44b0-9d85-c96abf3b2bd7
+		summarizeBy: none
+		sourceColumn: decide_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_renvoi
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: aa44479e-513e-40ba-986c-54c7f4df2200
+		summarizeBy: none
+		sourceColumn: motif_renvoi
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: varchar(12)
+		lineageTag: 54f9ac1b-f415-4684-9999-38318e8561e5
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_libelle
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: cd013d6e-02c4-49a5-ac35-9d45e52d1f44
+		summarizeBy: none
+		sourceColumn: etat_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column blocage_visa
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 82f7e46f-13e0-48e3-8113-5bebed998086
+		summarizeBy: none
+		sourceColumn: blocage_visa
+
+		annotation SummarizationSetBy = Automatic
+
+	column a_viser
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: db831a16-c1f8-47e3-a9d4-a28217a5f111
+		summarizeBy: sum
+		sourceColumn: a_viser
+
+		annotation SummarizationSetBy = Automatic
+
+	column vises
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 7c1ae0b5-78e8-4cee-9026-254d70a5f344
+		summarizeBy: sum
+		sourceColumn: vises
+
+		annotation SummarizationSetBy = Automatic
+
+	column renvoyes
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 911e57cc-e1fd-4c52-a395-9203af8514a4
+		summarizeBy: sum
+		sourceColumn: renvoyes
+
+		annotation SummarizationSetBy = Automatic
+
+	column decisions
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 15a31eb3-d7d0-415f-aacb-e1fb3d104f33
+		summarizeBy: sum
+		sourceColumn: decisions
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_supervision
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 90a4a0a5-fb2d-4ea7-9ddb-869e5b99b872
+		summarizeBy: none
+		sourceColumn: etat_supervision
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_etat_conclusion_cycle = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_etat_conclusion_cycle = Source{[Schema="dbo",Item="v_etat_conclusion_cycle"]}[Data]
+				in
+				    dbo_v_etat_conclusion_cycle
+

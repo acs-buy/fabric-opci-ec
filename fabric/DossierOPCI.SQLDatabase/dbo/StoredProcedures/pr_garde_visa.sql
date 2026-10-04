@@ -9,7 +9,7 @@
 -- directe dans la table.
 CREATE   PROCEDURE dbo.pr_garde_visa
     @nature     VARCHAR (12),
-    @objet_ref  VARCHAR (30),
+    @objet_ref  VARCHAR (60),
     @decision   VARCHAR (8),
     @decide_par NVARCHAR (200),
     @motif      NVARCHAR (600)
@@ -17,11 +17,11 @@ AS
 BEGIN
     SET NOCOUNT ON;
     IF @decision NOT IN ('VISE', 'RENVOYE')
-        THROW 50057, 'Visa refuse : la decision se dit VISE ou RENVOYE, et rien d''autre.', 1;
+        THROW 50057, N'Visa refusé : la décision se dit VISE ou RENVOYE, et rien d''autre.', 1;
     IF @decision = 'RENVOYE' AND @motif IS NULL
-        THROW 50057, 'Renvoi refuse : un renvoi porte son motif. Sans lui, le preparateur ne sait pas ce qu''il doit corriger.', 1;
+        THROW 50057, N'Renvoi refusé : un renvoi porte son motif. Sans lui, le préparateur ne sait pas ce qu''il doit corriger.', 1;
     IF dbo.fn_proposant(@nature, @objet_ref) = @decide_par
-        THROW 50057, 'Visa refuse : le decideur est celui qui a propose l''objet. Nul ne vise son propre travail.', 1;
+        THROW 50057, N'Visa refusé : le décideur est celui qui a proposé l''objet. Nul ne vise son propre travail.', 1;
 END
 
 GO

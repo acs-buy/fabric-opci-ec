@@ -494,3 +494,63 @@ relationship 2265f504-a155-4697-95c4-cb539d115e9f
 	fromColumn: v_programme_cycles.cycle
 	toColumn: ref_cycle.code
 
+relationship 31d2db85-0099-417f-b1b4-8393d7fa8c9f
+	fromColumn: v_etat_conclusion_cycle.entite
+	toColumn: ref_entite.Entité
+
+relationship d4edacb9-7072-4976-b421-936995c341c2
+	fromColumn: v_etat_conclusion_cycle.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 69c55034-bf6b-49e5-b35a-af75231798e9
+	fromColumn: v_etat_conclusion_cycle.cycle
+	toColumn: ref_cycle.code
+
+relationship eaedb236-f747-4e69-b6d0-667519d4aeb8
+	fromColumn: v_etat_revue.entite
+	toColumn: ref_entite.Entité
+
+relationship 535aca85-507a-46bc-b50f-9774f481f6fe
+	fromColumn: v_etat_revue.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship f6cb96ef-2a40-4fab-b300-a2f5e7f27e71
+	fromColumn: v_feuilles_du_cycle.vehicule
+	toColumn: ref_entite.Entité
+
+relationship 74da3e67-ed78-47c0-9a8e-0306c990bc9f
+	fromColumn: v_feuilles_du_cycle.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 8e311438-887b-4543-a03c-7073477238d4
+	fromColumn: v_feuilles_du_cycle.cycle
+	toColumn: ref_cycle.code
+
+relationship 4dcd38de-403d-488d-9d3f-88ee546ab924
+	fromColumn: v_lots_perimetre.vehicule
+	toColumn: ref_entite.Entité
+
+relationship 0773fd36-a387-4c77-8cf1-f5cb125c6542
+	fromColumn: v_lots_perimetre.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 8b39be5d-1434-4848-a771-f5316fbe7efb
+	fromColumn: conclusion_cycle.entite
+	toColumn: ref_entite.Entité
+
+relationship a98de96f-4029-4829-aff7-29a3b63b76d6
+	fromColumn: conclusion_cycle.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 1d9b8cd8-2aef-44a9-b740-9612125d173e
+	fromColumn: conclusion_cycle.cycle
+	toColumn: ref_cycle.code
+
+relationship 348b6123-18c7-40a9-85d6-0b423c0443f2
+	fromColumn: conclusion_revue.entite
+	toColumn: ref_entite.Entité
+
+relationship 2945eaa1-0919-4450-a66f-bbc7ac19894b
+	fromColumn: conclusion_revue.arrete
+	toColumn: v_dim_arrete.arrete
+

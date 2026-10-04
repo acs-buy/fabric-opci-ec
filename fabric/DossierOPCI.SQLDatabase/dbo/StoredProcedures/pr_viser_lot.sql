@@ -21,9 +21,9 @@ BEGIN
 
     BEGIN TRY
         IF @entite IS NULL
-            THROW 50053, 'Visa refuse : ce lot n''existe pas.', 1;
+            THROW 50053, N'Visa refusé : ce lot n''existe pas.', 1;
         IF @statut <> 'PROPOSE'
-            THROW 50053, 'Visa refuse : seul un lot au statut PROPOSE se vise. Un lot deja valide, rejete, exporte ou publie ne se revise pas, il se corrige par un lot d''annulation.', 1;
+            THROW 50053, N'Visa refusé : seul un lot au statut PROPOSE se vise. Un lot déjà validé, rejeté, exporté ou publié ne se révise pas, il se corrige par un lot d''annulation.', 1;
 
         DECLARE @ref VARCHAR (30) = CAST(@lot_id AS VARCHAR (30));
         EXEC dbo.pr_garde_visa 'LOT', @ref, @decision, @decide_par, @motif;
