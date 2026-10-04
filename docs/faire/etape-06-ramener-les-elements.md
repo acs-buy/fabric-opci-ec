@@ -22,23 +22,22 @@ les éléments à ramener.*
 | Conduite de mission | Rapport | L'écran de travail du cabinet |
 | restitution_client | Modèle et rapport | L'écran remis au client |
 
-## À ce stade, rien ne fonctionne, et c'est normal
+## Ce qui ne fonctionne pas encore à ce stade
 
-C'est le moment où l'on croit que l'installation a échoué. Elle n'a pas échoué : elle n'est pas
-finie. Voici précisément où en sont les choses.
+L'installation n'est pas finie.
 
 **La base existe mais elle est vide.** Ses tables, ses vues et ses procédures sont là, mais aucune
 donnée. L'éditeur l'écrit : « Git Integration re-creates item definitions only and does not restore
-item data. » Les données arrivent à l'étape 5.
+item data. » Les données arrivent à l'étape 7.
 
 **Le modèle interroge encore la base d'origine.** Si vous l'ouvrez maintenant, il ne s'actualisera
-pas. C'est attendu, et c'est réparé à l'étape 6.
+pas. C'est réparé à l'étape 9.
 
 **Les boutons appellent encore les fonctions d'origine.** Si vous ouvrez le rapport et cliquez, il
-ne se passera rien. C'est attendu, et c'est réparé à l'étape 6 également.
+ne se passera rien. C'est réparé à l'étape 10.
 
 **Les fonctions n'ont pas encore le droit de parler à la base.** Leur connexion se pose à la main,
-à l'étape 5.
+à l'étape 8.
 
 ## Ce que vous pouvez vérifier utilement dès maintenant
 
@@ -53,7 +52,7 @@ SELECT type_desc, COUNT(*) AS nb
 ```
 
 Vous devez y trouver des tables, des vues, des procédures stockées et des déclencheurs. Si la
-requête ne rend rien, la synchronisation n'a pas abouti : reprenez l'étape 3 et vérifiez le
+requête ne rend rien, la synchronisation n'a pas abouti : reprenez l'étape 5 et vérifiez le
 répertoire `fabric`.
 
 ---

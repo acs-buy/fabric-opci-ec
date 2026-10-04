@@ -14,10 +14,10 @@ possède déjà.
 La solution a besoin d'une capacité de calcul. Sans elle, les éléments Fabric autres que Power BI ne
 fonctionnent pas, et les messages d'erreur ne désignent pas la capacité comme cause.
 
-**Le niveau minimum est F4.** Cette exigence a été établie par la mesure, non par prudence : en F2,
+**Le niveau minimum est F4.** Cette exigence a été établie par la mesure : en F2,
 la création d'une surface de saisie échoue avec un message qui désigne une cause inexistante.
 
-**L'essai gratuit ouvre exactement ce qu'il faut**, pendant 60 jours, avec 1 To de stockage et une
+**L'essai gratuit suffit**, pendant 60 jours, avec 1 To de stockage et une
 licence Power BI individuelle si vous n'en avez pas.
 
 [Comprendre les licences en détail](../comprendre/05-les-licences.md)
@@ -41,12 +41,12 @@ licence Power BI individuelle si vous n'en avez pas.
 5. Dans la fenêtre **Activez votre essai gratuit de 60 jours**, **choisissez votre région**.
 6. Cliquez sur **Activer**.
 
-### Le choix de la région mérite trente secondes d'attention
+### Le choix de la région
 
 Si vos clients relèvent d'exigences de localisation des données, choisissez une région de l'Union
 européenne. **France Centre** en fait partie.
 
-**Attention à une nuance.** La région de votre capacité n'est pas la seule qui compte : la région de
+La région de votre capacité n'est pas la seule qui compte : la région de
 domiciliation de votre locataire, fixée à l'inscription du premier utilisateur, en stocke une
 partie. [Le détail est ici](../comprendre/07-l-environnement-integre.md).
 
@@ -77,7 +77,7 @@ capacité**, onglet **Essai**.
 
 ## Si le bouton « Démarrer l'essai » n'apparaît pas
 
-Trois causes possibles, dans l'ordre de fréquence.
+Trois causes possibles.
 
 | La cause | Ce qu'il faut faire |
 |---|---|
@@ -101,8 +101,6 @@ licence Power BI Pro. Sous ce seuil, chacun doit être licencié, vos clients co
 ---
 
 ## Ce qui se passe à la fin de l'essai
-
-À retenir dès maintenant, pour ne pas le découvrir au 60e jour.
 
 - L'accès à la capacité d'essai est retiré.
 - Les espaces de travail qui lui étaient affectés repassent en licence Pro, et **les éléments Fabric

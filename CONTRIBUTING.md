@@ -1,19 +1,16 @@
 # Contribuer à ce dépôt
 
-Ce dépôt n'est pas un projet logiciel ordinaire. C'est un mode opératoire de reproduction, publié
-pour que des confrères experts-comptables puissent reprendre une solution, l'éprouver et l'adapter à
-leurs dossiers. Les contributions les plus utiles ne sont donc pas toujours du code.
+Ce dépôt est un mode opératoire de reproduction, publié pour que des confrères experts-comptables
+puissent reprendre une solution, l'éprouver et l'adapter à leurs dossiers. Une contribution peut
+porter sur autre chose que du code.
 
 ---
 
-## Les quatre contributions les plus utiles
+## Quatre formes de contribution
 
 Par ordre de valeur pour les autres lecteurs.
 
 ### 1. Signaler une étape qui ne marche pas chez vous
-
-C'est la contribution la plus précieuse. Un mode opératoire n'est éprouvé que par ceux qui le
-suivent, et chaque installation révèle ce que la précédente n'avait pas vu.
 
 Ouvrez une issue avec le modèle **Un problème pendant l'installation**. Donnez le numéro de
 l'étape, le message exact, et ce que vous voyez à l'écran.
@@ -34,7 +31,7 @@ disant sur quelle installation vous l'avez éprouvée.
 
 ### 4. Adapter la solution et partager ce que vous avez appris
 
-Le questionnaire d'acceptation est la partie la plus propre à chaque cabinet. Si vous l'avez adapté
+Le questionnaire d'acceptation est propre à chaque cabinet. Si vous l'avez adapté
 et que la manière de faire peut servir, écrivez-la.
 
 ---
@@ -49,8 +46,8 @@ Elles s'appliquent à toute contribution, et une proposition qui les enfreint se
 d'être écrite**, sur la documentation de l'éditeur ou sur le texte normatif, jamais de mémoire ni
 par déduction.
 
-Une contribution qui affirme sans source est renvoyée à sa source. Ce n'est pas une formalité : ce
-dépôt accompagne un mémoire d'expertise comptable, et une affirmation fausse y coûte cher.
+Une contribution qui affirme sans source est renvoyée à sa source. Ce dépôt accompagne un mémoire
+d'expertise comptable.
 
 ### Aucune donnée réelle
 
@@ -77,7 +74,7 @@ lecteur sur ce qu'il obtiendra.
 procédure est difficile à relire, donc difficile à accepter.
 
 **Dites sur quoi vous avez éprouvé.** La version de votre capacité, la date, et ce que vous avez
-vérifié. Une correction éprouvée vaut mieux qu'une correction raisonnée.
+vérifié.
 
 ---
 
@@ -94,4 +91,4 @@ vérifié. Une correction éprouvée vaut mieux qu'une correction raisonnée.
 
 ## Si vous hésitez
 
-Ouvrez une issue avant de travailler. Une question coûte moins cher qu'une proposition refusée.
+Ouvrez une issue avant de travailler.

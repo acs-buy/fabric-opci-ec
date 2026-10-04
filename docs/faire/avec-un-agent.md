@@ -1,8 +1,7 @@
 # Reproduire la solution avec un agent d'intelligence artificielle
 
-Cette page est facultative. **Les treize étapes se font entièrement à la main, sans agent et sans
-rien y perdre.** Elle s'adresse à celui qui dispose déjà d'un agent de codage et se demande ce
-qu'il peut raisonnablement lui confier.
+Cette page est facultative. **Les treize étapes se font entièrement à la main, sans agent.** Elle
+s'adresse à celui qui dispose déjà d'un agent de codage et se demande ce qu'il peut lui confier.
 
 Elle s'appuie sur une reproduction complète menée le 26/09/2026, où un agent a joué les étapes
 qu'il sait jouer. Les chiffres donnés sont ceux qui ont été relevés.
@@ -25,14 +24,13 @@ Trois conséquences pratiques :
 | Il vous rend une sortie | Lire cette sortie et juger si elle est bonne |
 | Il ne voit jamais l'écran | Ouvrir les deux écrans et vérifier qu'ils portent ce qu'ils doivent porter |
 
-Aucune vérification de cette installation ne se délègue. L'agent accélère la saisie ; la revue
-reste entière.
+Aucune vérification de cette installation ne se délègue.
 
 ---
 
 ## Ce qu'un agent sait faire, et ce qu'il ne sait pas faire
 
-Ce partage tient à ce que la plateforme expose, et non à une préférence.
+Ce partage tient à ce que la plateforme expose.
 
 | # | L'étape | Un agent peut-il la faire ? | Pourquoi |
 |---|---|---|---|
@@ -42,14 +40,14 @@ Ce partage tient à ce que la plateforme expose, et non à une préférence.
 | 4 | Copier ce dépôt sur votre compte | **Oui** | Ce sont des commandes Git, sur votre poste |
 | 5 | Connecter l'espace au dépôt | **Non** | Il faut un jeton GitHub, qui est un secret personnel |
 | 6 | Ramener les éléments | **Non** | Le bouton « Mettre à jour tout » n'a pas d'équivalent sûr |
-| 7 | Charger les données | **Oui**, si vous lui ouvrez la base | 77 fichiers à jouer dans l'ordre, c'est exactement son emploi |
-| 8 | Connecter les fonctions à la base | **Non** | Se règle au portail, et commence de toute façon par un simple contrôle |
+| 7 | Charger les données | **Oui**, si vous lui ouvrez la base | 79 fichiers à jouer dans l'ordre |
+| 8 | Connecter les fonctions à la base | **Non** | Se règle au portail, et commence par un contrôle |
 | 9 et 10 | Relier les modèles et les boutons | **Oui** | Deux scripts fournis, qu'il lance et dont il vous lit la sortie |
 | 11 | Publier les deux écrans | **Non** | L'application et ses audiences se composent au portail |
 | 12 | Relier SharePoint | **En partie** | Les ressources Azure, le déploiement, les paramètres et le dépôt des pièces, oui ; les autorisations, les clés, le site du cabinet et les raccourcis, non |
 | 13 | Passer la recette | **Non** | Douze actions à l'écran, et l'action 11 exige deux personnes |
 
-Trois étapes sur treize se délèguent entièrement, et ce sont les plus répétitives. L'étape 12 se
+Trois étapes sur treize se délèguent entièrement. L'étape 12 se
 délègue pour moitié : les demandes sont dans
 [`agents/etape-12-relier-sharepoint.md`](../../agents/etape-12-relier-sharepoint.md).
 
@@ -57,12 +55,12 @@ délègue pour moitié : les demandes sont dans
 
 ## Ce que l'agent vous fait gagner, en minutes
 
-Mesuré sur la reproduction du 26/09/2026. Le temps machine ne change pas : c'est le temps de saisie
-et de relecture qui bouge.
+Mesuré sur la reproduction du 26/09/2026. Le temps machine ne change pas. Le gain porte sur le temps
+de saisie et de relecture.
 
 | L'étape | À la main | Avec un agent | Ce qui est économisé |
 |---|---|---|---|
-| 7. Charger les données | 30 min, dont l'ouverture de 77 fichiers un par un | 98 s d'attente, et une commande | La copie et le collage, et l'ordre des fichiers qu'on se trompe à suivre |
+| 7. Charger les données | 30 min, dont l'ouverture de 79 fichiers un par un | 98 s d'attente, et une commande | La copie et le collage, et le suivi de l'ordre des fichiers |
 | 9 et 10. Relier | 30 min, dont le relevé de cinq identifiants | 61 s d'attente, et deux commandes | Le report des identifiants, où une faute de frappe ne se voit pas |
 
 **Le reste du parcours ne bouge pas.** Un agent ne raccourcit ni l'ouverture de la capacité, ni les
@@ -103,16 +101,16 @@ Vous lisez, vous décidez, puis :
 > Ne modifie aucun autre fichier, et ne corrige rien de toi-même.
 
 **Ce que vous vérifiez vous-même :** « restant à relier » et « identifiants inconnus » valent zéro
-sur les deux scripts. Si « identifiants inconnus » n'est pas zéro, les scripts refusent d'écrire, et
-c'est voulu : le dépôt a été modifié à la main quelque part.
+sur les deux scripts. Si « identifiants inconnus » n'est pas zéro, les scripts refusent d'écrire : le
+dépôt a été modifié à la main quelque part.
 
 ---
 
-## Les trois consignes qui évitent les ennuis
+## Trois consignes à donner à l'agent
 
 1. **Interdisez-lui de corriger un script.** Ces scripts refusent d'écrire quand ils ne
-   reconnaissent pas un fichier. Un agent cherchant à vous satisfaire lèvera ce refus, et la
-   protection tombe.
+   reconnaissent pas un fichier. Un agent qui modifie le script lève ce refus, et la protection
+   tombe.
 2. **Exigez la sortie brute, jamais un résumé.** « Tout s'est bien passé » ne se vérifie pas.
    `<n> source(s) reliées, 0 restant` se vérifie.
 3. **Ne lui donnez jamais votre jeton GitHub.** L'étape 5 se fait à la main, et elle prend

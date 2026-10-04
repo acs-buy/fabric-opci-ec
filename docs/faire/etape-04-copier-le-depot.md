@@ -10,11 +10,11 @@ Créer votre propre copie de ce dépôt sur GitHub, puis la télécharger sur vo
 
 ## Pourquoi une copie, et pas le dépôt d'origine
 
-Deux raisons, et la première suffit.
+Deux raisons.
 
 1. **L'installation vous fera modifier des fichiers.** Les étapes 9 et 10 réécrivent des
    identifiants dans les définitions. Vous ne pouvez écrire que dans un dépôt qui vous appartient.
-2. **Votre solution va diverger de la nôtre**, et c'est souhaitable : vous adapterez le
+2. **Votre solution va diverger de la nôtre** : vous adapterez le
    questionnaire d'acceptation à votre cabinet.
 
 ---
@@ -49,8 +49,8 @@ Une copie issue d'un dépôt public est publique. Si vous préférez qu'elle soi
 2. Tout en bas, section **Danger Zone**, **Change repository visibility**.
 3. Choisissez **Make private**.
 
-**Rien n'impose de la rendre publique.** Un dépôt privé fonctionne exactement pareil pour
-l'installation, et c'est souvent ce qu'un administrateur préférera.
+**Rien n'impose de la rendre publique.** Un dépôt privé fonctionne de la même façon pour
+l'installation.
 
 ---
 
@@ -65,7 +65,7 @@ Vous avez besoin des fichiers en local pour les étapes 9 et 10, qui lancent des
 3. Décompressez l'archive dans un dossier de votre poste, par exemple `Documents\opci`.
 
 **Contrepartie :** vous devrez renvoyer vos modifications à GitHub par le site web, fichier par
-fichier. C'est faisable, mais fastidieux aux étapes 9 et 10.
+fichier.
 
 ### Voie B, recommandée si vous connaissez : cloner
 
@@ -100,7 +100,7 @@ reconnu », installez Python 3 avant de continuer.
 
 ## Si le téléchargement échoue sur un nom de fichier trop long
 
-C'est Windows, et cela se règle en une commande :
+Sous Windows, cela se règle par une commande :
 
 ```
 git config --global core.longpaths true
@@ -116,7 +116,7 @@ chemin plus court, par exemple `C:\opci`.
 | Le dossier | Ce qu'il porte | Va-t-il dans votre espace de travail ? |
 |---|---|---|
 | `fabric/` | Les huit éléments Fabric | **Oui**, c'est le répertoire à indiquer à l'étape 5 |
-| `sql/` | Les 80 fichiers SQL, dont 77 de données | Non, vous les jouerez à l'étape 7 |
+| `sql/` | Les 83 fichiers SQL, dont 79 de données | Non, vous les jouerez à l'étape 7 |
 | `scripts/` | Les quatre scripts | Non, ils s'exécutent sur votre poste |
 | `docs/` | Ce mode opératoire | Non |
 | `azure/` | Le code de la fonction qui crée l'espace d'un client, facultative | Non, elle se déploie sur Azure |

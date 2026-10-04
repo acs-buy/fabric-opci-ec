@@ -5,7 +5,7 @@ l'écran de travail sans voir l'espace de travail ni ses éléments techniques.
 
 ## Pourquoi passer par une application
 
-Trois raisons, dans l'ordre d'importance.
+Trois raisons.
 
 1. **Vos collaborateurs ne voient que ce qui les concerne.** Ils n'ont accès ni à la base, ni aux
    fonctions, ni au modèle.
@@ -73,12 +73,12 @@ Pour créer le rôle d'un nouveau client, deux voies.
 | La voie | Ce qu'elle demande |
 |---|---|
 | **Modifier le modèle dans le service** | Ouvrir le modèle, onglet de modélisation, définir le rôle et son filtre |
-| Power BI Desktop | Télécharger, définir le rôle, republier. Plus lourd |
+| Power BI Desktop | Télécharger, définir le rôle, republier |
 
 Le filtre à poser reprend celui du rôle livré : il restreint la table des entités au code du
 véhicule du client.
 
-### La limite qui décide de tout
+### La limite de la sécurité au niveau des lignes
 
 **La sécurité au niveau des lignes ne s'applique qu'aux lecteurs.** L'éditeur l'écrit : elle ne
 s'applique ni aux administrateurs, ni aux membres, ni aux contributeurs de l'espace de travail.
@@ -109,7 +109,7 @@ mission pour votre équipe, la restitution client pour vos clients.*
 *Une personne de l'audience client ne voit que la seconde, et les huit pages qu'elle contient.*
 
 
-C'est aussi le bon moment pour préparer la recette : une des douze actions demande deux comptes
+Préparez aussi la recette : une des douze actions demande deux comptes
 distincts, l'approbation d'un visa étant refusée à la personne qui l'a soumis.
 
 ---

@@ -1,11 +1,9 @@
 # Étapes 9 et 10, avec un agent : relier la solution à votre espace
 
-**C'est l'étape qui décide si la solution fonctionne, et celle dont les pannes sont les plus opaques.** Un
-bouton mal relié ne dit rien : il ne fait rien. Un modèle mal relié interroge une base qui n'est pas
-la vôtre.
+Un bouton mal relié ne fait rien et n'affiche aucun message. Un modèle mal relié interroge une base
+qui n'est pas la vôtre.
 
-Un agent y sert bien, parce que le travail consiste à reporter cinq identifiants sans en fausser
-un seul caractère.
+Le travail consiste à reporter cinq identifiants sans en fausser un seul caractère.
 
 ---
 
@@ -96,8 +94,7 @@ Le rapport retrouve son modèle de données seul, parce qu'il le désigne par un
 **La condition : ne renommez aucun élément.** Un renommage casse cette liaison, et le message
 d'erreur ne désigne pas le renommage.
 
-Dites-le à l'agent si vous lui confiez autre chose : un agent qui range volontiers renomme aussi
-volontiers.
+Dites-le à l'agent si vous lui confiez autre chose.
 
 ---
 

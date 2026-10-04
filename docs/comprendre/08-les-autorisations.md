@@ -1,7 +1,7 @@
 # 8. Les autorisations : qui les pose, et à quel moment
 
 Cette page rassemble toutes les autorisations que l'installation demande. Elles sont dispersées
-dans les étapes, ce qui est normal quand on installe, et gênant quand on prépare.
+dans les étapes.
 
 **À lire avant de commencer.** Deux d'entre elles ne dépendent pas de vous, et les obtenir peut
 prendre plusieurs jours. Les demander au bon moment évite d'attendre au milieu du parcours.
@@ -9,8 +9,6 @@ prendre plusieurs jours. Les demander au bon moment évite d'attendre au milieu 
 ---
 
 ## Ce que vous devez demander à quelqu'un d'autre
-
-Deux personnes, deux moments, et un délai que vous ne maîtrisez pas.
 
 | Qui | Ce que vous lui demandez | Quand | Si vous attendez |
 |---|---|---|---|
@@ -52,7 +50,7 @@ Le détail est à [l'étape 2](../faire/etape-02-activer-les-reglages.md).
 | Propriétaire des modèles de données | Saisir leurs informations d'identification | 9 |
 | Titulaire d'un rôle sur un dossier | Écrire dans ce dossier, et le viser | 12 |
 
-**Le troisième surprend.** Vous pouvez avoir installé toute la solution et ne rien voir à l'écran,
+Vous pouvez avoir installé toute la solution et ne rien voir à l'écran,
 parce qu'aucun rôle de mission ne porte votre adresse. C'est ce que corrige
 `sql/90_vous_inscrire_aux_missions.sql`, à l'étape 7.
 
@@ -90,7 +88,7 @@ Elles sont affectées à l'identité managée de l'Azure Function, jamais à une
 | `Sites.Manage.All` | Créer la colonne Entité légale des bibliothèques |
 | `Directory.Read.All` | Lire l'annuaire pour ces résolutions |
 
-**Deux choses à savoir avant de les demander**, et elles coûtent une demi-journée à qui les ignore :
+**Deux choses à savoir avant de les demander :**
 elles ne s'affectent pas au portail Entra pour une identité managée, et une autorisation
 fraîchement posée met environ 24 heures à s'appliquer.
 

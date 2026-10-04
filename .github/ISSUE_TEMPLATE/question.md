@@ -7,12 +7,11 @@ labels: question
 
 ## Votre question
 
-<!-- Aucune question n'est trop simple. Ce dépôt s'adresse à des experts-comptables, pas à des
-     informaticiens. -->
+<!-- Ce dépôt s'adresse à des experts-comptables. -->
 
 ## Ce que vous avez déjà lu
 
-<!-- Les sept pages de docs/comprendre/ répondent à beaucoup de questions de fond.
+<!-- Les sept pages de docs/comprendre/ traitent les questions de fond.
      Dire ce que vous avez lu évite qu'on vous y renvoie sans vous aider. -->
 
 ## Le contexte, s'il compte

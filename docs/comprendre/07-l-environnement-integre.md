@@ -3,8 +3,6 @@
 La solution ne sort jamais de Microsoft Fabric. Ce choix apporte quatre garanties que vous n'auriez
 pas en assemblant des outils séparés, et il a des contreparties.
 
-Cette page dit les unes et les autres.
-
 ---
 
 ## 1. L'authentification, vous n'en écrivez pas une ligne
@@ -50,8 +48,7 @@ autorisations.
 Le modèle de restitution porte **un rôle par client**, qui filtre sur le code du véhicule. Le filtre
 se propage ensuite à toutes les tables qui dépendent de ce véhicule.
 
-**Un point à connaître avant l'installation, et il commande une action de votre part.** Le dépôt
-livre un seul rôle, celui du véhicule de démonstration. **Vous devrez créer un rôle par client réel
+Le dépôt livre un seul rôle, celui du véhicule de démonstration. **Vous devrez créer un rôle par client réel
 et y affecter les comptes concernés.** Ce n'est pas automatique, et c'est la seule façon d'ouvrir
 l'écran à un client sans lui ouvrir ceux des autres.
 
@@ -67,7 +64,7 @@ Donnez-lui accès par l'application, avec le rôle de lecteur, et par son audien
 
 ## 3. Où vos données sont stockées, et ce que vous pouvez en décider
 
-Ce point est souvent mal rapporté. La documentation de l'éditeur dit ceci.
+La documentation de l'éditeur dit ceci.
 
 ### La région de domiciliation n'est pas choisie librement
 
@@ -82,14 +79,14 @@ pouvez la lire dans le portail, par le volet d'aide, puis « À propos » : elle
 Fabric est disponible. En créant votre capacité dans une région de l'Union européenne, les données
 de vos espaces de travail y sont stockées.
 
-### La nuance qu'il faut connaître, et qu'on omet souvent
+### Une nuance sur la localisation des données
 
 > « Choisir une région différente pour votre capacité ne relocalise pas entièrement vos données dans
 > cette région. Certains éléments restent stockés dans la région de domiciliation. »
 
 Ce qui reste dans la région de domiciliation comprend notamment les métadonnées de rapports, les
 autorisations et les informations d'identification des modèles. Ce ne sont pas vos données
-comptables, mais ce ne sont pas rien non plus.
+comptables.
 
 ### Ce qui est garanti, et à quelle condition
 
@@ -107,14 +104,13 @@ les deux.
    locataire, ce qui demande une demande de support et une interruption de service, ou accepter que
    certaines métadonnées restent hors de l'Union.
 3. **Créez votre capacité dans une région de l'Union européenne.**
-4. **Écrivez-le dans votre lettre de mission**, avec la nuance ci-dessus. Un client de la gestion
-   d'actifs posera la question.
+4. **Écrivez-le dans votre lettre de mission**, avec la nuance ci-dessus.
 
 ---
 
 ## 4. Un environnement intégré : vous restez dans votre locataire Microsoft
 
-C'est la garantie qui pèse le plus au quotidien. Fabric porte les données et les écrans ; SharePoint,
+Fabric porte les données et les écrans ; SharePoint,
 dans le même locataire, porte les fichiers ; une Azure Function de votre abonnement fait le lien
 entre les deux.
 

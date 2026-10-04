@@ -9,8 +9,7 @@ fonctionne après l'étape 6.
 
 ## Une solution Fabric ne se reproduit pas en une seule opération
 
-Elle se reproduit en trois couches. Les confondre mène à croire que l'installation a échoué juste
-après la synchronisation, alors qu'elle n'est pas terminée.
+Elle se reproduit en trois couches. Après la synchronisation, l'installation n'est pas terminée.
 
 | La couche | Ce qu'elle contient | Comment elle arrive | Étapes |
 |---|---|---|---|
@@ -22,8 +21,6 @@ après la synchronisation, alors qu'elle n'est pas terminée.
 
 ## Couche A. Les définitions arrivent par Git
 
-C'est la partie la plus simple, et celle qui donne l'impression que tout est fait.
-
 La synchronisation recrée les huit éléments de la solution dans votre espace de travail : le coffre,
 la base avec ses tables, ses vues et ses procédures, les deux ensembles de fonctions, les deux
 modèles de données et les deux rapports.
@@ -32,20 +29,20 @@ modèles de données et les deux rapports.
 un à la base. Ils ne sont pas dans le dépôt, vous n'avez rien à en faire, et leur présence est
 normale.
 
-Tout y est, et rien ne fonctionne. Les deux couches suivantes expliquent pourquoi.
+Rien ne fonctionne encore. Les deux couches suivantes expliquent pourquoi.
 
 ---
 
 ## Couche B. Les données n'arrivent jamais par Git
 
-L'éditeur l'écrit sans ambiguïté :
+L'éditeur l'écrit :
 
 > « Git Integration re-creates item definitions only and does not restore item data. »
 
 **La synchronisation recrée la forme, jamais le contenu.** Votre base a ses tables, ses vues et ses
 procédures, et pas une seule ligne dedans.
 
-Le dépôt porte pour cette raison 80 fichiers SQL, dont 77 de données. C'est la seule façon de
+Le dépôt porte pour cette raison 83 fichiers SQL, dont 79 de données. C'est la seule façon de
 faire arriver le contenu dans votre base.
 
 | Ce que le dépôt charge | Lignes | Ce que vous en faites |
@@ -59,8 +56,6 @@ Sans la couche B, vos écrans sont vides, et l'affichage n'y est pour rien.
 
 ## Couche C. Les liaisons ne se recollent pas toutes seules
 
-C'est la couche qui décide si la solution fonctionne, et celle qu'on oublie.
-
 ### Le problème, en une phrase
 
 Certains éléments en désignent d'autres **par leur identifiant**, et cet identifiant est celui de
@@ -70,8 +65,8 @@ l'espace de travail où la solution a été construite. Pas le vôtre.
 
 | Ce qui ne se recolle pas | Combien | Sans réparation |
 |---|---|---|
-| Les sources des deux modèles vers la base | 73 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
-| Les boutons vers les ensembles de fonctions | 36 | Les boutons ne font rien, ou écrivent au mauvais endroit |
+| Les sources des deux modèles vers la base | 82 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
+| Les boutons vers les ensembles de fonctions | 54 | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
 Ces deux points sont documentés par l'éditeur de la plateforme.
 
@@ -107,8 +102,7 @@ Trois choses ne voyagent pas dans les fichiers et se posent au portail.
 | Les informations d'identification des modèles | Une fois par modèle, en OAuth2 | Étapes 9 et 10 |
 | L'actualisation du modèle du client | Il garde une copie des données, contrairement à l'autre | Étapes 9 et 10 |
 
-**Aucune des trois ne produit de message d'erreur.** Elles produisent un écran vide, ce qui est le
-symptôme le plus opaque de l'installation.
+**Aucune des trois ne produit de message d'erreur.** Elles produisent un écran vide.
 
 ---
 

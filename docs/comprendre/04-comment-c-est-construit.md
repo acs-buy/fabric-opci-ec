@@ -75,7 +75,7 @@ SharePoint. La base le fait déposer par l'Azure Function, qui seule sait écrir
 le coffre le relit sur place par un raccourci. Un classeur réimporté passe par les mêmes procédures
 que la saisie à l'écran.
 
-**Ce que le schéma montre et qu'il faut retenir :** aucune flèche ne va de l'écran vers la base
+**Ce que le schéma montre :** aucune flèche ne va de l'écran vers la base
 directement. Tout passe par une fonction, puis par une procédure. C'est ce qui garantit qu'un
 contrôle ne se contourne pas.
 
@@ -117,7 +117,7 @@ Cinq maillons, et chacun a un rôle distinct.
 **La conséquence pratique :** pour changer une règle de gestion, modifiez la procédure, jamais la
 fonction ni le bouton. Pour changer ce qui s'affiche, modifiez la vue.
 
-## La règle la plus importante : les libellés viennent des vues
+## Une règle : les libellés viennent des vues
 
 Les en-têtes de colonnes que l'utilisateur lit sont **les noms des colonnes dans les vues SQL**, pas
 des libellés posés dans le modèle.
@@ -142,7 +142,7 @@ confort, il ne protège rien.
 
 Trois conséquences :
 
-- Griser un bouton n'est pas une protection, seulement une courtoisie.
+- Griser un bouton n'est pas une protection.
 - Un refus remonte toujours un message explicite, qui nomme la procédure en cause.
 - Ajouter un écran ne crée jamais un trou de sécurité, tant que l'écriture passe par les procédures.
 
@@ -156,10 +156,10 @@ Trois conséquences :
 | Un calcul affiché | Une mesure du modèle sémantique |
 | Ce qu'un bouton appelle | Le nom de la fonction, dans la définition du bouton |
 
-## Deux pièges de Power BI qu'il vaut mieux connaître
+## Deux comportements de Power BI
 
 **Une mesure ne peut pas servir de filtre booléen dans un CALCULATE.** Le message d'erreur parle
-d'un emplacement réservé et n'aide pas. Le motif qui marche est de mettre la valeur dans une
+d'un emplacement réservé. Le motif qui marche est de mettre la valeur dans une
 variable, puis de filtrer une colonne :
 
 ```
@@ -172,7 +172,7 @@ segments reviennent à « tout » en changeant d'état, et l'écran perd la sél
 
 ## Si vous adaptez la solution à votre cabinet
 
-Commencez par le questionnaire d'acceptation, qui est la partie la plus propre à chaque cabinet. Il
+Commencez par le questionnaire d'acceptation, propre à chaque cabinet. Il
 vit dans les tables de référentiel des questions, et se modifie sans toucher au reste.
 
 Gardez la recette des douze actions comme garde-fou : jouez-la après chaque modification.

@@ -102,7 +102,7 @@ CREATE DATABASE SCOPED CREDENTIAL [https://<votre-function-app>.azurewebsites.ne
     WITH IDENTITY = 'HTTPEndpointHeaders', SECRET = '{"x-functions-key":"<votre clé>"}';
 ```
 
-**Le nom de la credential est l'adresse elle-même**, et ce n'est pas une convention d'écriture :
+**Le nom de la credential est l'adresse elle-même** :
 `sp_invoke_external_rest_endpoint` apparie la credential à l'adresse appelée par son nom. Une
 adresse différente impose une credential différente.
 
@@ -198,7 +198,7 @@ identité managée est mis en cache environ 24 heures.
 
 ## Si la fonction refuse
 
-| Ce que vous lisez | La cause la plus probable |
+| Ce que vous lisez | La cause |
 |---|---|
 | `Aucun proprietaire` | Aucun rôle de l'entité ne porte d'adresse de connexion. Jouez `sql/90_vous_inscrire_aux_missions.sql` |
 | Un refus d'autorisation | Les rôles Graph ne sont pas encore appliqués. Attendez, le cache dure environ 24 heures |

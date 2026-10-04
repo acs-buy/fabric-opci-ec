@@ -52,8 +52,8 @@ données de mission.
 
 ---
 
-L'approbation est refusée à la personne qui a soumis le dossier. Ce n'est pas un défaut : c'est la
-séparation des fonctions, et elle est portée par la base, non par l'écran. Un utilisateur qui
+L'approbation est refusée à la personne qui a soumis le dossier. C'est la séparation des fonctions,
+portée par la base. Un utilisateur qui
 contournerait l'écran se verrait opposer le même refus.
 
 Pour l'éprouver, il vous faut deux comptes, et le second doit porter un rôle sur le dossier. La
@@ -61,7 +61,7 @@ désignation se fait sur l'écran lui-même, section **Équipe de la mission**.
 
 ## Ce qu'un échec vous apprend
 
-| Symptôme | Cause la plus probable |
+| Symptôme | Cause |
 |---|---|
 | Le bouton ne fait rien | L'étape 10 n'est pas faite, les boutons appellent encore l'espace d'origine |
 | « Fonction introuvable » | La connexion de l'étape 8 n'est pas posée, ou la publication n'a pas abouti |
@@ -105,7 +105,7 @@ n'a pas produit ce qu'elle devait produire.**
 | Saisir des droits de vote à 75 | `Les droits de vote se donnent entre 0 et 1, par exemple 0,80 pour 80 %.` |
 | Enregistrer un site qui n'est pas un site SharePoint | `Le lien attendu est celui du site SharePoint de l'équipe Teams, de la forme https://<cabinet>.sharepoint.com/sites/<nom>.` |
 
-**Un refus n'est pas une panne.** Chacun de ces trois messages vient de la base, et il tiendrait
+Chacun de ces trois messages vient de la base, et il tiendrait
 même si l'écran était contourné.
 
 ### Ce qui n'a pas été éprouvé, et qu'il faut savoir
@@ -146,7 +146,7 @@ toutes les questions obligatoires, puis approuver.
 **Une fois les deux conditions remplies**, le second compte approuve, et la ligne d'acceptation
 porte alors `APPROUVE`, avec les deux adresses distinctes en `cree_par` et `approuve_par`.
 
-**Ces refus viennent de la base, non de l'écran.** Un utilisateur qui appellerait directement une
+**Ces refus viennent de la base.** Un utilisateur qui appellerait directement une
 fonction, sans passer par le bouton, recevrait le même refus.
 
 **C'est la dernière étape.** Si les douze actions aboutissent, votre installation est bonne.

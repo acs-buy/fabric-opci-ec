@@ -27,7 +27,7 @@ et les requêtes enregistrées.
 ![L'éditeur de la base, avec le bouton New Query](../../captures/base-nouvelle-requete.png)
 
 Jouez les fichiers **dans l'ordre de leur numéro**, d'abord tout le dossier `10_referentiels`, puis
-tout le dossier `80_demonstration`. L'ordre n'est pas décoratif : les clés étrangères imposent
+tout le dossier `80_demonstration`. Les clés étrangères imposent
 qu'une table soit remplie après celles dont elle dépend.
 
 Chaque fichier annonce ce qu'il a fait, par exemple :
@@ -85,7 +85,7 @@ Les fonctions doivent avoir le droit d'interroger la base, et ce droit ne voyage
 4. Faites de même pour `fn_ecran_revision`.
 5. Publiez chaque ensemble de fonctions, par **Publier**.
 
-**Deux surprises qui n'en sont pas :**
+**Deux contraintes :**
 
 - La publication impose **deux minutes d'attente** entre deux publications successives. Si un
   message vous le signale, attendez et recommencez.

@@ -17,7 +17,7 @@ mesurée sur une capacité d'essai F64, et non sur une F4.
 | `...-TEST` | Faire essayer la solution à vos collaborateurs, sur le jeu fictif |
 | `...-PROD` | Les dossiers réels de vos clients |
 
-Le motif tient en une phrase : dès qu'un dossier réel entre dans la solution, vous ne pouvez plus y
+Le motif : dès qu'un dossier réel entre dans la solution, vous ne pouvez plus y
 faire d'essai, chaque clic écrivant en base.
 
 **Si vous en créez trois, créez aussi le pipeline de déploiement**, et lisez
@@ -61,7 +61,7 @@ par espace, par **Gérer l'accès**.
 l'application, avec leur audience et leur rôle de sécurité. Le cloisonnement par rôle ne restreint
 que les lecteurs de l'application, jamais les membres d'un espace.
 
-## Une règle à retenir dès maintenant
+## Une règle
 
 **Ne renommez aucun élément de la solution après l'avoir installé.** Le rapport retrouve son modèle
 de données par son nom. Un renommage casse cette liaison, et l'erreur qui en résulte ne désigne pas

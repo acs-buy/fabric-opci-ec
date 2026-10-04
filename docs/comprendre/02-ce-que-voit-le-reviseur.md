@@ -5,7 +5,7 @@ ne contient aucune manipulation.
 
 > **Les images de cette page sont des maquettes de conception, et non des captures d'écran.**
 > L'écran de conduite est en cours de pose : une capture prise aujourd'hui montrerait un écran
-> incomplet, et elle serait fausse demain. Les maquettes montrent la structure retenue, qui ne
+> incomplet. Les maquettes montrent la structure retenue, qui ne
 > bougera plus. L'écran publié peut différer dans le détail.
 >
 > Les deux images prises sur l'installation réelle sont signalées comme telles.
@@ -39,7 +39,7 @@ Toujours la même, quel que soit le dossier ouvert.
 
 ### Les cinq indicateurs de la bande
 
-Ils ne sont pas décoratifs : chacun est un compteur de ce qui reste ouvert.
+Chacun compte ce qui reste ouvert.
 
 | L'indicateur | Ce qu'il compte |
 |---|---|
@@ -71,8 +71,7 @@ et l'équipe de la mission.
 Deux sous-états : **Nouveau dossier**, pour créer, et **Modifier**, pour corriger.
 
 **Un point de conception :** la création d'un client ouvre aussitôt son questionnaire
-d'acceptation. Le réviseur n'a pas à y penser, et un dossier ne peut pas exister sans son
-questionnaire.
+d'acceptation : un dossier ne peut pas exister sans son questionnaire.
 
 ![La fiche du dossier](../../captures/maquettes/fiche-du-dossier.png)
 
@@ -103,8 +102,7 @@ il vient de la base. Chaque changement de périmètre est tracé dans un journal
 La grille des questions d'acceptation, avec pour chacune sa section, sa référence, son énoncé et sa
 réponse.
 
-**La réponse est enregistrée au clic**, sans bouton de validation. C'est un choix : un formulaire
-qu'on valide à la fin est un formulaire qu'on perd.
+**La réponse est enregistrée au clic**, sans bouton de validation.
 
 En dessous, les pièces justificatives déposées, avec leur nature, leur date de dépôt et leur
 déposant. Un retrait exige un motif et se refuse si la pièce fonde une donnée.
@@ -152,7 +150,7 @@ Ce que vous décidez : relancer le client, ou décaler l'arrêté.
 Ce que vous lisez : la section **Équipe de la mission**, qui rend **une ligne par rôle attendu**,
 tenu ou non.
 
-C'est le point de conception de cette section. Une table qui ne montrerait que les mandats
+Une table qui ne montrerait que les mandats
 existants laisserait le réviseur deviner qu'il manque un associé. Ici, la ligne « Non désigné » se
 lit, et c'est elle qui porte le bouton de désignation.
 
@@ -188,14 +186,12 @@ Ce que vous décidez : revoir un travail avant de le viser.
 Ce refus n'est pas posé par l'écran. Il est posé par la base de données. Un utilisateur qui
 appellerait directement la fonction, sans passer par l'écran, se verrait opposer le même refus.
 
-**La conséquence pratique :** griser un bouton est une courtoisie pour éviter un clic inutile. Ce
-n'est jamais une protection. La protection est ailleurs, et elle ne se contourne pas.
+**La conséquence pratique :** griser un bouton évite un clic inutile, et ne protège rien. La
+protection est en base.
 
 ---
 
 ## Ce que l'écran ne fait pas
-
-Disons-le, pour éviter une déception.
 
 | Ce qu'il ne fait pas | Pourquoi |
 |---|---|

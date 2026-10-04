@@ -48,7 +48,7 @@ vulnerability**. Le signalement n'est visible que des mainteneurs.
 ## Ce qui sort du cadre de cette politique
 
 - Les failles de Microsoft Fabric, de Power BI ou de GitHub. Signalez-les à leur éditeur.
-- Les questions d'installation. Ouvrez une issue, elles sont faites pour cela.
+- Les questions d'installation. Ouvrez une issue.
 - La sécurité de **votre** installation, qui dépend de vos réglages de locataire, de vos
   autorisations et de vos licences. Le mode opératoire dit ce qu'il faut ouvrir et pourquoi, mais
   la configuration reste la vôtre.
@@ -57,7 +57,7 @@ vulnerability**. Le signalement n'est visible que des mainteneurs.
 
 ## Deux points de sécurité que le mode opératoire traite
 
-Ils ne sont pas des failles, mais ils se découvrent souvent trop tard.
+Ils ne sont pas des failles.
 
 **La sécurité au niveau des lignes ne restreint que les lecteurs.** Un membre ou un administrateur
 de l'espace de travail voit tout. N'ajoutez jamais un client comme membre de votre espace : donnez-

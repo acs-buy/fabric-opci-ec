@@ -8,8 +8,6 @@
 
 ## Sur quoi cela a été éprouvé
 
-<!-- Une correction éprouvée vaut mieux qu'une correction raisonnée. -->
-
 - Taille de capacité :
 - Date de l'essai :
 - Ce que j'ai vérifié :

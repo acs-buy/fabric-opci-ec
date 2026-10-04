@@ -58,7 +58,7 @@ ensuite à relire.
 **Un nom mal tapé est refusé**, avec un message qui dit que le fichier n'est pas dans la bibliothèque
 Dépôt du client. Rien n'est inscrit.
 
-**L'empreinte est la garantie de la pièce.** C'est le condensé SHA-256 du fichier : deux fichiers
+**L'empreinte est le condensé SHA-256 du fichier** : deux fichiers
 différents n'ont pas la même, et la base refuse d'inscrire deux fois le même fichier.
 
 ### Les pièces du jeu de démonstration
@@ -75,12 +75,11 @@ refuse de déposer un fichier dont l'empreinte différerait. Chaque fiche reçoi
 
 ### Les autorisations du raccourci
 
-Trois modes d'authentification sont possibles pour un raccourci SharePoint. Ils n'ont pas la même
-difficulté.
+Trois modes d'authentification sont possibles pour un raccourci SharePoint.
 
 | Le mode | Ce qu'il demande | Quand le retenir |
 |---|---|---|
-| **Compte organisationnel** | Rien de plus que vos droits sur le site | **Commencez par celui-ci.** C'est le plus simple, et il suffit à un cabinet |
+| **Compte organisationnel** | Rien de plus que vos droits sur le site | **Commencez par celui-ci.** Il suffit à un cabinet |
 | **Identité d'espace de travail** | Être administrateur de l'espace, puis autoriser cette identité sur le site par Microsoft Graph | Si vous voulez que le raccourci ne dépende plus d'une personne |
 | **Principal de service** | Une inscription d'application, une autorisation `Sites.Selected`, un certificat dans Azure Key Vault | Seulement si votre direction informatique l'impose |
 
@@ -139,7 +138,7 @@ elle-même, côté serveur, et aucune licence Microsoft 365 n'est consommée par
 | Un autre tableur | Rien de Microsoft : le format `.xlsx` se lit par d'autres logiciels |
 
 **Vérifiez ce que votre abonnement comprend avant de vous engager.** Les plans Microsoft 365
-évoluent, et nous ne reproduisons pas ici une liste qui serait périmée.
+évoluent.
 
 ### Deux choses mesurées le 27/09/2026
 
@@ -156,7 +155,7 @@ elle-même, côté serveur, et aucune licence Microsoft 365 n'est consommée par
 2. La solution écrit par l'Azure Function, et relit par un raccourci, qui ne sait que lire.
 3. Un site par véhicule, et la colonne Entité légale pour les filiales.
 4. Les noms des raccourcis sont imposés : `fec` et `sp_<véhicule>_<bibliothèque>`.
-5. Commencez par l'authentification par compte organisationnel, la plus simple.
+5. Commencez par l'authentification par compte organisationnel.
 
 ---
 

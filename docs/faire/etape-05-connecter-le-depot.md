@@ -37,14 +37,14 @@ Le réglage se trouve dans le panneau des paramètres, à la ligne **Git integra
 
 ![L'écran d'intégration Git, avec le fournisseur, le dépôt et le répertoire](../../captures/espace-parametres-git.png)
 
-*Le champ **Git folder**, sous l'adresse du dépôt, est celui qui se rate. Il vaut `fabric`.*
+*Le champ **Git folder**, sous l'adresse du dépôt, vaut `fabric`.*
 
 3. Fournisseur : **GitHub**.
 4. Renseignez votre nom d'utilisateur GitHub, le nom du dépôt, et la branche.
 5. **Répertoire : `fabric`**
 
-Le répertoire est le point qui se rate le plus souvent. Ce dépôt contient aussi des scripts, de la
-documentation et des fichiers SQL, qui n'ont rien à faire dans votre espace de travail. Seul le
+Ce dépôt contient aussi des scripts, de la documentation et des fichiers SQL, qui ne vont pas dans
+votre espace de travail. Seul le
 dossier `fabric` porte les éléments Fabric. Si vous laissez le répertoire vide, Fabric essaiera
 d'interpréter tout le dépôt et la synchronisation échouera.
 

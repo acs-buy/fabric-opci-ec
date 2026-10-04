@@ -14,8 +14,7 @@ Transmettre à votre administrateur une liste de cinq réglages, et vérifier qu
 Ces réglages ouvrent des fonctions que votre locataire ferme par défaut. Deux d'entre eux sont la
 cause d'échecs qui n'annoncent pas leur cause :
 
-- **sans le quatrième**, GitHub n'apparaît pas dans la liste des fournisseurs Git, et vous
-  chercherez longtemps pourquoi ;
+- **sans le quatrième**, GitHub n'apparaît pas dans la liste des fournisseurs Git ;
 - **sans le cinquième**, l'application OneLake file explorer et les outils extérieurs à Fabric ne
   peuvent pas lire le coffre, sans message clair.
 
@@ -73,8 +72,7 @@ Le cinquième se trouve dans la section **Paramètres OneLake** de la même page
 
 ## Un mot sur les groupes de sécurité
 
-Chaque réglage peut être limité à un groupe plutôt qu'ouvert à toute l'organisation. C'est ce que
-font la plupart des administrateurs, et c'est légitime.
+Chaque réglage peut être limité à un groupe plutôt qu'ouvert à toute l'organisation.
 
 **Si votre administrateur choisit cette voie, demandez à figurer dans le groupe**, et vérifiez-le
 avant de passer à l'étape suivante. Un réglage activé pour un groupe dont vous ne faites pas partie
@@ -86,7 +84,7 @@ produit exactement les mêmes symptômes qu'un réglage désactivé.
 
 Les cinq doivent afficher **Activé** dans le portail d'administration.
 
-**Un délai existe.** Un réglage vient d'être activé ne prend pas toujours effet immédiatement. Si
+**Un délai existe.** Un réglage qui vient d'être activé ne prend pas toujours effet immédiatement. Si
 vous ne voyez pas le résultat attendu à l'étape 5, attendez quelques minutes et rafraîchissez la
 page avant de conclure à un problème.
 
@@ -94,7 +92,7 @@ page avant de conclure à un problème.
 
 ## Si votre administrateur refuse
 
-Le plus souvent, c'est le deuxième ou le quatrième qui bloque, par crainte que du code du cabinet
+Le refus peut porter sur le deuxième ou le quatrième réglage, par crainte que du code du cabinet
 parte vers un dépôt externe.
 
 Deux arguments factuels à lui donner :

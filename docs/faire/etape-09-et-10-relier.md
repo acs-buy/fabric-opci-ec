@@ -1,7 +1,6 @@
 # Étapes 9 et 10. Relier la solution à votre espace de travail
 
-C'est l'étape la plus importante de l'installation. Sans elle, les éléments sont chez vous mais
-rien ne fonctionne, et la cause est invisible à l'écran.
+Sans cette étape, les éléments sont chez vous mais rien ne fonctionne, et la cause est invisible à l'écran.
 
 ## Pourquoi cette étape existe
 
@@ -32,12 +31,12 @@ pas accès. Aucun écran ne s'affiche.
 
 Les boutons qui écrivent en base portent, en clair, l'identifiant de l'espace de travail et
 celui de l'ensemble de fonctions qu'ils appellent. **Le script vous dira combien votre version en
-porte** : ce nombre augmente à chaque écran ajouté, et le figer ici le rendrait faux. L'éditeur l'écrit ainsi : « Data function
+porte** : ce nombre augmente à chaque écran ajouté. L'éditeur l'écrit ainsi : « Data function
 buttons don't automatically rebind across workspaces. The button stores an explicit reference to a
 specific Workspace, Function set, and Data function. »
 
 **Sans réparation :** vos boutons appellent l'espace de travail d'origine. Ou bien ils ne font
-rien, ou bien ils écrivent au mauvais endroit. Les deux sont mauvais.
+rien, ou bien ils écrivent au mauvais endroit.
 
 ## Ce qui se refait seul
 
@@ -66,8 +65,8 @@ Le script vous demande de coller cinq choses et vérifie leur forme au passage. 
    fonctions, un par écran. Sans celui-ci, les boutons de l'écran de révision resteraient sans effet.
 4. **Le serveur SQL de votre base.** Ouvrez la base `DossierOPCI`, bandeau **Paramètres**, puis
    **Chaînes de connexion**.
-5. **Le nom complet de votre base.** Sur la même page. Il porte un identifiant après `DossierOPCI`,
-   ce qui est normal. Ne recopiez pas le nom affiché dans la liste des éléments : ce n'est pas
+5. **Le nom complet de votre base.** Sur la même page. Il porte un identifiant après `DossierOPCI`.
+   Ne recopiez pas le nom affiché dans la liste des éléments : ce n'est pas
    celui-là.
 
 À la fin, le script affiche les deux commandes à lancer, et les écrit aussi dans un fichier.
@@ -115,7 +114,7 @@ connexion de s'établir.
 
 #### Deuxièmement, actualiser le modèle du client
 
-Les deux modèles ne lisent pas la base de la même façon, et cela change ce que vous avez à faire.
+Les deux modèles ne lisent pas la base de la même façon.
 
 | Le modèle | Comment il lit la base | Ce que vous devez faire |
 |---|---|---|
@@ -135,16 +134,15 @@ l'état de la dernière actualisation, non l'état de la base à la seconde prè
 ### Avant de relier
 
 Ces sorties sont celles d'une installation réelle, recopiées telles quelles. **Les nombres qu'elles
-portent sont ceux du jour où elles ont été relevées** : votre version peut en compter davantage, et
-c'est le cours normal des choses. Ce qui compte est la ligne « restant a relier », avant puis après. Elles vous disent où
-vous en êtes avant d'avoir rien fait.
+portent sont ceux du jour où elles ont été relevées** : votre version peut en compter davantage.
+Lisez la ligne « restant a relier », avant puis après.
 
 Le modèle, qui interroge encore la base d'origine :
 
 ```
-77 source(s) de donnees dans les 2 modeles.
+82 source(s) de donnees dans les 2 modeles.
    deja reliees a votre base : 0
-   restant a relier          : 77
+   restant a relier          : 82
    sources inconnues         : 0
 
 Source portee par ces tables :
@@ -155,9 +153,9 @@ Source portee par ces tables :
 Les boutons, qui appellent encore les fonctions d'origine :
 
 ```
-40 bouton(s) de fonction dans le rapport.
+54 bouton(s) de fonction dans le rapport.
    deja relies a votre espace : 0
-   restant a relier           : 40
+   restant a relier           : 54
    identifiants inconnus      : 0
 
 fn_ecran_client, <n> fonction(s) appelee(s) :
@@ -177,18 +175,18 @@ elle ne vaut pas zéro, le rapport a été modifié à la main, et les scripts r
 ### Une fois relié
 
 Les mêmes réserves qu'au paragraphe précédent : ce sont les nombres d'un jour donné.
-**Ce qui compte est le total inchangé, et les deux lignes de restant tombées à zéro.**
+**Vérifiez que le total est inchangé et que les deux lignes de restant sont tombées à zéro.**
 
 ```
-77 source(s) de donnees dans les 2 modeles.
-   deja reliees a votre base : 77
+82 source(s) de donnees dans les 2 modeles.
+   deja reliees a votre base : 82
    restant a relier          : 0
    sources inconnues         : 0
 ```
 
 ```
-40 bouton(s) de fonction dans le rapport.
-   deja relies a votre espace : 40
+54 bouton(s) de fonction dans le rapport.
+   deja relies a votre espace : 54
    restant a relier           : 0
    identifiants inconnus      : 0
 ```

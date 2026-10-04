@@ -59,8 +59,7 @@ Le pipeline copie la base avec ses tables, ses vues et ses procédures, et **auc
 les fichiers de `sql/` sur la base de l'espace d'arrivée, comme à
 [l'étape 7](etape-07-charger-les-donnees.md).
 
-En production, vous ne chargez que `sql/10_referentiels/`. Le jeu de démonstration n'a rien à faire
-dans l'espace de vos dossiers réels.
+En production, vous ne chargez que `sql/10_referentiels/`.
 
 ### 2. Vous inscrire aux missions
 
@@ -77,7 +76,7 @@ Puis actualisez `restitution_client`, qui garde une copie des données.
 
 ### 4. Relier les boutons
 
-**C'est celle qu'on oublie, et c'est la plus grave.** Un bouton déployé garde la référence des
+Un bouton déployé garde la référence des
 fonctions de l'espace d'origine, et il écrit donc dans la base de l'espace d'origine.
 
 ```

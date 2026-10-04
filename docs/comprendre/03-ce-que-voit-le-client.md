@@ -34,7 +34,7 @@ Ce que la page porte :
 - l'écart de valeur liquidative par rapport à l'arrêté précédent ;
 - la série des valeurs liquidatives, arrêté par arrêté.
 
-C'est la page d'entrée : le client y arrive, et il y revient.
+C'est la page d'entrée.
 
 ---
 
@@ -42,8 +42,7 @@ C'est la page d'entrée : le client y arrive, et il y revient.
 
 **La question :** pourquoi la valeur a-t-elle bougé depuis l'arrêté précédent ?
 
-C'est la page qui distingue une restitution professionnelle d'un tableau de bord. Elle ne constate
-pas la variation, elle l'explique.
+Elle explique la variation.
 
 Ce que la page porte :
 
@@ -52,7 +51,7 @@ Ce que la page porte :
 - la variation expliquée, et **l'écart de bouclage**, c'est-à-dire ce que les causes n'expliquent
   pas.
 
-**L'écart de bouclage est le chiffre le plus utile de la page.** S'il est nul, la variation est
+S'il est nul, la variation est
 entièrement expliquée. S'il ne l'est pas, le client sait qu'il reste quelque chose à comprendre, et
 il peut le demander.
 
@@ -73,8 +72,7 @@ Ce que la page porte :
 - la différence d'estimation, actif par actif et en total ;
 - l'article du règlement qui fonde le traitement retenu.
 
-**La mention de l'article est un choix de conception.** Un client qui lit une valeur veut savoir ce
-qui la fonde. Le renvoi au texte évite la question, ou permet d'y répondre en une phrase.
+Le renvoi au texte indique ce qui fonde chaque valeur.
 
 ---
 
@@ -102,8 +100,6 @@ Ce que la page porte :
 - les emprunts bancaires du groupe, et les intérêts ;
 - les dettes intragroupe.
 
-C'est la page qui intéresse le directeur financier plus que le porteur.
-
 ---
 
 ## Page 6. Les ratios
@@ -119,9 +115,8 @@ Ce que la page porte, pour chaque ratio :
 
 Plus deux compteurs : les ratios calculés, et ceux qui restent à valider.
 
-**La colonne « ce que le calcul retient » est là pour une raison précise.** Un ratio réglementaire
-se calcule sur un périmètre, et le périmètre se discute. Afficher la règle retenue permet au client
-de la contester, ou de la confirmer, au lieu de subir un chiffre.
+Un ratio réglementaire se calcule sur un périmètre, et le périmètre se discute. La colonne « ce que
+le calcul retient » affiche la règle retenue, que le client peut contester ou confirmer.
 
 ---
 
@@ -147,9 +142,6 @@ Ce que la page porte :
 - le report indirect de l'exercice précédent ;
 - la part revenant au porteur.
 
-**C'est la page qui déclenche le plus de conversations**, et ce sont les bonnes : elles portent sur
-une décision de gestion, pas sur l'état d'avancement des comptes.
-
 ---
 
 ## Ce que cet écran change dans la relation
@@ -159,9 +151,6 @@ pour l'occasion, quelques jours plus tard.
 
 Maintenant, il ouvre son écran et lit. Quand il appelle, c'est pour demander **ce que les chiffres
 impliquent**.
-
-**La conversation se déplace de la production vers le conseil.** C'est le terrain où
-l'expert-comptable apporte le plus, et celui qu'il a le moins le temps d'occuper.
 
 ---
 
@@ -173,7 +162,7 @@ l'expert-comptable apporte le plus, et celui qu'il a le moins le temps d'occuper
 | Les autres clients | Un rôle de sécurité par client filtre les données, [voir l'environnement intégré](07-l-environnement-integre.md) |
 | Un arrêté non visé | La publication suit le visa, jamais l'inverse |
 
-**Une précaution qui compte :** un client ne doit jamais être membre de votre espace de travail. Le
+**Une précaution :** un client ne doit jamais être membre de votre espace de travail. Le
 cloisonnement par rôle ne restreint que les lecteurs. Donnez-lui accès par l'application, avec son
 audience.
 

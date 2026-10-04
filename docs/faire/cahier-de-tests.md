@@ -17,7 +17,7 @@ un essai d'un acte professionnel.
 |---|---|
 | Deux comptes distincts | L'approbation d'un visa est refusée à qui l'a soumis |
 | Les deux comptes inscrits aux missions de TEST | Sans rôle, l'écran est vide |
-| Le jeu de démonstration chargé | Les écrans vides n'apprennent rien |
+| Le jeu de démonstration chargé | Sans lui, les écrans sont vides |
 | Une heure sans interruption pour chaque testeur | Un test interrompu est un test à refaire |
 
 ---
@@ -46,7 +46,7 @@ chacune doit rendre y figure, avec les messages exacts.
 
 ## Partie 2. Les refus, qui prouvent les contrôles
 
-**Un contrôle qui ne se déclenche jamais ne se vérifie pas.** Provoquez ces refus, et lisez le
+Provoquez ces refus, et lisez le
 message : il doit être en français et dire quoi faire.
 
 | # | Ce que vous tentez | Le refus attendu | Passé |
@@ -75,14 +75,13 @@ contrôle absent en TEST sera absent en PROD.
 | 22 | Le compte client **ne voit que son véhicule** | ☐ |
 
 **Ne signez pas le cahier sans le test 22.** Faites-le avec deux clients différents, et
-vérifiez que chacun ne voit que le sien. Un rôle de sécurité oublié se voit ici, et nulle part
-ailleurs.
+vérifiez que chacun ne voit que le sien. Seul ce test détecte un rôle de sécurité oublié.
 
 ---
 
 ## Partie 4. Ce que le déploiement a pu casser
 
-Ces quatre tests ne concernent pas la solution, mais le passage d'un espace à l'autre.
+Ces 4 tests portent sur le passage d'un espace à l'autre.
 
 | # | Ce que vous vérifiez | Comment | Passé |
 |---|---|---|---|
@@ -98,14 +97,13 @@ des fonctions de DEV : il répond normalement, et il écrit au mauvais endroit.
 
 ## Ce qu'on écrit à la fin
 
-Une ligne suffit, et elle vaut mieux qu'un souvenir.
+Une ligne suffit.
 
 > Cahier passé le **<date>**, dans l'espace TEST, par **<noms>**.
 > Tests passés : **<nombre>** sur 26. Tests en échec : **<lesquels>**.
 > Décision : **<déploiement en production autorisé, ou non, et pourquoi>**.
 
-**Ne déployez pas en production tant qu'un test de la partie 2 ou 3 est en échec.** Un contrôle qui
-ne se déclenche pas et un cloisonnement qui fuit ne sont pas des défauts d'affichage.
+**Ne déployez pas en production tant qu'un test de la partie 2 ou 3 est en échec.**
 
 ---
 

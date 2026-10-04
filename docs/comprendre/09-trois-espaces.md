@@ -45,8 +45,8 @@ d'installation ne se refont donc pas. Mais il copie les **définitions**, et rie
 
 ### Ce qu'il ne copie pas, et qui est à refaire dans chaque espace
 
-C'est la même leçon qu'à l'installation : **la forme voyage, le contenu et les branchements
-restent.**
+Comme à l'installation, le pipeline copie la forme des éléments. Il ne copie ni leur contenu ni
+leurs branchements.
 
 | Ce qui ne passe pas | Ce que vous refaites | Combien de temps |
 |---|---|---|
@@ -61,10 +61,9 @@ restent.**
 espaces, selon la documentation de l'éditeur. En production, faites-les pointer vers les sites de
 production.
 
-### Le point des boutons, qui surprend
+### Les boutons
 
-On pourrait croire qu'un pipeline, qui sait relier un rapport à son modèle, sait aussi relier un
-bouton à sa fonction. L'éditeur écrit le contraire :
+Le pipeline relie un rapport à son modèle, mais pas un bouton à sa fonction. L'éditeur l'écrit :
 
 > « Data function buttons don't automatically rebind across workspaces. The button stores an
 > explicit reference to a specific Workspace, Function set, and Data function. **When you deploy

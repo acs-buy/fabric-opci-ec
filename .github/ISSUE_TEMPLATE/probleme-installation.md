@@ -27,12 +27,12 @@ labels: installation
 
 ## Ce que vous avez déjà essayé
 
-<!-- La page de dépannage donne la cause réelle de la plupart des symptômes.
+<!-- La page de dépannage donne la cause des symptômes.
      docs/faire/depannage.md -->
 
-## Les deux vérifications qui règlent la moitié des cas
+## Deux vérifications à faire avant d'écrire
 
-Lancez-les et collez le résultat, cela fait souvent gagner un aller-retour.
+Lancez-les et collez le résultat.
 
 ```
 python scripts/20_relier_les_boutons.py --verifier

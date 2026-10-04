@@ -6,7 +6,7 @@ Cette page dit d'où part la solution. Elle ne contient aucune manipulation.
 
 ## Le point de départ
 
-Le point de départ n'est pas une technologie, mais deux personnes et ce qui leur manquait.
+La solution part de deux personnes et de ce qui leur manquait.
 
 | L'utilisateur | Ce qui lui manquait | Ce qu'il fallait construire |
 |---|---|---|
@@ -27,8 +27,7 @@ jour où il l'a rempli. Pour savoir si un dossier est prêt, il l'ouvre.
 
 ### Les quatre questions auxquelles il doit répondre
 
-Un réviseur ne pilote pas une mission avec une seule information. Il en manipule quatre, et elles
-n'appellent pas les mêmes décisions.
+Le réviseur pilote une mission avec quatre informations, qui n'appellent pas les mêmes décisions.
 
 | La question | La décision qu'elle commande |
 |---|---|
@@ -56,8 +55,8 @@ qu'à la demande :
 - l'approbation d'un visa est refusée à la personne qui l'a soumis.
 
 La séparation des fonctions est portée par la base, non par l'écran. Un utilisateur qui
-contournerait l'écran, en appelant directement une fonction, recevrait le même refus. Griser un
-bouton relève du confort ; le refus, lui, est en base.
+contournerait l'écran, en appelant directement une fonction, recevrait le même refus. Le grisé d'un
+bouton ne protège rien : le refus est en base.
 
 ---
 
@@ -71,8 +70,7 @@ l'occasion.
 
 ### Ce dont il a besoin
 
-Un porteur de parts, une société de gestion ou un directeur financier ne pilotent pas un OPCI une
-fois l'an. Il leur faut :
+Un porteur de parts, une société de gestion ou un directeur financier ont besoin de :
 
 1. **La valeur**, à l'arrêté qui les intéresse, et non au dernier arrêté publié ;
 2. **L'explication de la variation**, cause par cause, et non le seul constat qu'elle a eu lieu ;
@@ -91,14 +89,10 @@ Ici, rien n'arrive sur l'écran du client sans être passé par le visa du cabin
 long qu'avec un branchement direct, et le client sait en échange que ce qu'il lit a été revu, et
 par qui.
 
-C'est la différence entre une donnée brute et une donnée qualifiée.
-
 ### L'effet sur la relation client
 
 Un client qui lit ses ratios, sa variation de valeur liquidative et son plafond distribuable ne
 demande plus où en sont les comptes. Il demande ce que ces chiffres impliquent.
-
-L'écran déplace la conversation de la production vers le conseil.
 
 ---
 
@@ -112,8 +106,8 @@ le réviseur saisit et vise  ->  la base  ->  l'écran du client
 
 Trois conséquences :
 
-1. **Le cabinet ne refait rien en aval.** La restitution du client n'est pas un livrable à produire
-   après la mission : elle est produite par la mission.
+1. **Le cabinet ne refait rien en aval.** La restitution du client est produite par la mission
+   elle-même.
 2. **Les deux écrans ne peuvent pas se contredire**, puisqu'ils lisent la même donnée.
 3. **Le cabinet garde la main** sur ce qui est publié, et sur quand.
 
@@ -121,12 +115,10 @@ Trois conséquences :
 
 ## Ce que cette conception coûte
 
-Ce choix a un prix, qu'il vaut mieux connaître avant de s'engager.
-
 | Le coût | Ce qu'il implique |
 |---|---|
 | Le client a besoin d'une licence | Sous une capacité F64, chaque lecteur client doit être licencié. Voir [les licences](05-les-licences.md) |
-| La donnée doit être visée pour apparaître | Un dossier non visé laisse l'écran client vide. C'est voulu, mais il faut le dire au client |
+| La donnée doit être visée pour apparaître | Un dossier non visé laisse l'écran client vide |
 | L'installation se fait en trois couches | La synchronisation ne suffit pas. Voir [les trois couches](06-les-trois-couches.md) |
 
 ---

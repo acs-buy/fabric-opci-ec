@@ -110,7 +110,7 @@ script : [`azure/roles_graph.sh`](../../azure/roles_graph.sh). **Il exige un rô
 Administrateur général ou Administrateur de rôle privilégié.** Sans l'un des deux, chaque
 affectation est refusée, et le message ne désigne pas votre rôle.
 
-### 2. Un refus dans les 24 heures ne prouve rien
+### 2. Un refus dans les 24 heures
 
 C'est le cache du jeton, décrit plus haut. Attendez avant de conclure que le script a échoué.
 

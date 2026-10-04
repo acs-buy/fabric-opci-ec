@@ -25,7 +25,7 @@ mais pas leur autorisation de parler à la base. Tant que vous ne l'avez pas pos
 
 ## Avant de commencer
 
-- L'étape 7 doit être faite. Une fonction qui joint une base vide ne prouve rien.
+- L'étape 7 doit être faite.
 - **Vous devez être propriétaire des ensembles de fonctions.** Si quelqu'un d'autre a fait la
   synchronisation, c'est lui qui doit faire cette étape, ou vous devez la refaire depuis votre
   compte.
@@ -78,7 +78,7 @@ Reprenez exactement les mêmes points 1 à 7, sur **fn_ecran_revision**.
 
 ---
 
-## Deux comportements qui surprennent, et qui sont normaux
+## Deux comportements attendus
 
 ### Le refroidissement de deux minutes
 
@@ -100,8 +100,6 @@ un transfert de propriété.
 
 ## Vérifier que c'est fait
 
-C'est la vérification la plus directe de tout le mode opératoire.
-
 1. Ouvrez **fn_ecran_client**.
 2. Dans la liste des fonctions, trouvez **qui_suis_je**.
 
@@ -121,16 +119,15 @@ Faites la même chose sur **fn_ecran_revision** si elle porte une fonction équi
 
 ## Si cela ne marche pas
 
-| Le symptôme | La cause la plus probable |
+| Le symptôme | La cause |
 |---|---|
 | « Connexion introuvable » | Le point 4 n'a pas été validé, ou la mauvaise base a été choisie |
 | La publication échoue sans message clair | Les deux minutes de refroidissement. Attendez et recommencez |
 | « Vous n'êtes pas autorisé à publier » | Vous n'êtes pas propriétaire de cet ensemble de fonctions |
 | La fonction répond, mais une erreur SQL apparaît | L'étape 7 n'est pas faite, ou pas entièrement |
 
-**Un point à ne pas confondre.** Si la fonction répond mais qu'un bouton de l'écran ne fait toujours
-rien, ce n'est pas cette étape : c'est l'étape 10, qui n'est pas encore faite. Les deux symptômes se
-ressemblent, et les causes sont différentes.
+Si la fonction répond mais qu'un bouton de l'écran ne fait toujours rien, la cause est l'étape 10,
+qui n'est pas encore faite.
 
 ---
 

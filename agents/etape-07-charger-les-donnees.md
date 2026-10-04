@@ -1,6 +1,6 @@
 # Étape 7, avec un agent : charger les données
 
-**C'est l'étape où un agent sert le plus.** Le dépôt porte 80 fichiers SQL à jouer dans un ordre
+Le dépôt porte 83 fichiers SQL à jouer dans un ordre
 imposé par les clés étrangères. À la main, c'est 30 minutes de copie et de collage, et une seule
 inversion d'ordre fait échouer une dizaine de fichiers d'un coup.
 
@@ -11,8 +11,8 @@ inversion d'ordre fait échouer une dizaine de fichiers d'un coup.
 1. **L'étape 6 doit être passée.** Votre base doit exister, avec ses tables et ses procédures.
 2. **Relevez le serveur et le nom complet de votre base.** Dans votre espace de travail, ouvrez la
    base `DossierOPCI`, bandeau **Paramètres**, puis **Chaînes de connexion**. Le nom de la base
-   porte un identifiant après `DossierOPCI` : c'est normal, et ce n'est pas le nom affiché dans la
-   liste des éléments.
+   porte un identifiant après `DossierOPCI`, et il diffère du nom affiché dans la liste des
+   éléments.
 3. **Vérifiez que l'agent sait se connecter à la base** avec votre compte, par `sqlcmd` et
    l'authentification Microsoft Entra.
 
@@ -29,7 +29,7 @@ inversion d'ordre fait échouer une dizaine de fichiers d'un coup.
 > Serveur : `<votre serveur>`
 > Base : `<le nom complet de votre base>`
 >
-> Trois règles :
+> Quatre règles :
 > - ne saute aucun fichier, et ne change pas l'ordre ;
 > - ne modifie aucun fichier SQL, même si tu penses qu'il contient une erreur ;
 > - si un fichier échoue, arrête-toi immédiatement, et donne-moi son nom et le message exact ;

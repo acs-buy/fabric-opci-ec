@@ -52,7 +52,7 @@ Microsoft Azure donne le prix du jour.
 Source : Microsoft Learn, *Understand Microsoft Fabric licenses and capacity*, consulté le
 05/10/2026.
 
-## Les quatre réglages à faire activer
+## Les cinq réglages à faire activer
 
 Votre administrateur Microsoft Fabric les active dans le portail d'administration, section
 **Paramètres du locataire**.
@@ -61,6 +61,7 @@ Votre administrateur Microsoft Fabric les active dans le portail d'administratio
 2. **Les utilisateurs peuvent synchroniser les éléments d'un espace de travail avec leurs dépôts Git**
 3. **Créer des espaces de travail**
 4. **Les utilisateurs peuvent synchroniser les éléments d'un espace de travail avec des dépôts GitHub**
+5. Section **OneLake** : **Les utilisateurs peuvent accéder aux données stockées dans OneLake avec des applications externes à Fabric**
 
 Le quatrième est distinct du deuxième. Sans lui, GitHub n'apparaît pas dans la liste des
 fournisseurs, et aucun message n'en donne la raison.
@@ -89,8 +90,7 @@ git config --global core.longpaths true
 
 ## Combien de temps
 
-Le temps d'installation sera porté ici après la première reproduction à blanc. Nous préférons ne
-pas avancer de chiffre tant qu'il n'est pas mesuré.
+Le temps d'installation sera porté ici après la première reproduction à blanc.
 
 ---
 

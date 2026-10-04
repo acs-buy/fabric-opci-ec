@@ -1,11 +1,10 @@
 # Dépannage
 
-Les pannes rencontrées pendant la construction de la solution, avec leur cause réelle. Dans presque
-tous les cas, le symptôme ne désigne pas la cause.
+Les pannes rencontrées pendant la construction de la solution, avec leur cause réelle.
 
 ## Un bouton ne fait rien
 
-**Cause la plus fréquente :** l'étape 6 n'a pas été faite, ou n'a pas été renvoyée vers Fabric. Le
+**Première cause :** l'étape 10 n'a pas été faite, ou n'a pas été renvoyée vers Fabric. Le
 bouton appelle encore l'espace de travail d'origine.
 
 **Vérification :**
@@ -14,7 +13,7 @@ bouton appelle encore l'espace de travail d'origine.
 python scripts/20_relier_les_boutons.py --verifier
 ```
 
-Si vous lisez « restant à relier : 16 », vous avez la réponse. Si vous lisez « 16 reliés » mais que
+Si vous lisez « restant à relier : 16 », la cause est celle-ci. Si vous lisez « 16 reliés » mais que
 le bouton ne fait toujours rien, vous avez sans doute relié les fichiers sans renvoyer la
 modification à GitHub, ou sans refaire **Mettre à jour tout** dans Fabric.
 
@@ -34,7 +33,7 @@ d'actualisation qui ressemble à une panne générale de la solution.
 
 ## Les écrans sont vides, mais tout semble en place
 
-Les données ne sont pas chargées. Reportez-vous à l'étape 5. Cette requête vous le confirme :
+Les données ne sont pas chargées. Reportez-vous à l'étape 7. Cette requête vous le confirme :
 
 ```sql
 SELECT COUNT(*) FROM dbo.ref_question;
@@ -52,7 +51,7 @@ compte sans rôle d'associé.
 
 ## La publication d'une fonction échoue
 
-Deux causes, toutes deux normales.
+Deux causes.
 
 - **Deux minutes ne se sont pas écoulées** depuis la publication précédente. Attendez et
   recommencez.
@@ -61,7 +60,7 @@ Deux causes, toutes deux normales.
 ## GitHub n'apparaît pas dans la liste des fournisseurs Git
 
 Le réglage de locataire qui autorise la synchronisation avec **GitHub** n'est pas activé. Il est
-distinct de celui qui autorise Git en général. Les quatre réglages sont listés à l'étape 1.
+distinct de celui qui autorise Git en général. Les cinq réglages sont listés à l'étape 2.
 
 ## La synchronisation Git échoue ou ramène des fichiers étranges
 

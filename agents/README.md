@@ -4,8 +4,7 @@ Ce dossier contient des demandes prêtes à coller dans un agent de codage, et u
 d'autorisations à lui accorder.
 
 **Rien ici n'est obligatoire.** Les treize étapes du mode opératoire se font entièrement à la main,
-et le résultat est le même. Un agent est un facilitateur sur les étapes répétitives, jamais un
-passage obligé.
+et le résultat est le même. Un agent sert aux étapes répétitives.
 
 Lisez [l'avertissement](AVERTISSEMENT.md) avant d'employer ces demandes : il porte le partage des
 responsabilités.
@@ -56,7 +55,7 @@ ailleurs que dans le dossier du dépôt.
 
 ---
 
-## Les trois consignes qui évitent les ennuis
+## Trois consignes à donner à l'agent
 
 1. **Interdisez-lui de corriger un script.** Les scripts du dépôt refusent d'écrire quand ils ne
    reconnaissent pas un fichier : c'est une protection. Un agent cherchant à vous satisfaire lèvera

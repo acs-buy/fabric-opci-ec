@@ -1,7 +1,5 @@
 # Avertissement, à lire avant d'employer un agent
 
-Cette page dit ce que fournir des demandes toutes faites ne veut pas dire.
-
 ---
 
 ## 1. Celui qui installe la solution en répond
@@ -62,7 +60,7 @@ ce point.
 
 ## 5. Si vous préférez vous en passer
 
-**Faites-le.** Le mode opératoire complet, étape par étape, est dans
+Le mode opératoire complet, étape par étape, est dans
 [`docs/faire/`](../docs/faire/etape-01-ouvrir-la-capacite.md). Il ne suppose aucun agent, et il a
 été éprouvé de bout en bout sans agent avant de l'être avec.
 

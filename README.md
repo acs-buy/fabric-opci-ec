@@ -49,7 +49,7 @@ Pour installer sans préambule, allez au tableau des treize étapes.
 ## Partie 2. Faire : les treize étapes
 
 **Suivez-les dans l'ordre.** Chacune se termine par une vérification. Ne passez à la suivante que
-lorsqu'elle est passée : une étape ratée ne se voit souvent que trois étapes plus loin.
+lorsqu'elle est passée : une étape ratée peut ne se voir que trois étapes plus loin.
 
 La colonne « machine » donne des durées relevées lors d'une installation réelle, le 26/09/2026 :
 ce sont des temps d'attente. La colonne « en tout » y ajoute le temps de lecture et de saisie, qui
@@ -76,7 +76,7 @@ L'actualisation du modèle du client, à l'étape 9, prend 20 secondes.
 Les 24 heures de l'étape 12 s'évitent : faites affecter les autorisations de la fonction dès
 l'étape 2, et elles seront prises en compte au moment où vous en aurez besoin.
 
-Quatre pages s'ajoutent, à lire quand le sujet se présente :
+Cinq pages s'ajoutent, à lire quand le sujet se présente :
 
 - [Les pièces justificatives et les classeurs Excel](docs/faire/pieces-et-classeurs.md) : où va
   chaque fichier, et pourquoi tout passe par SharePoint.
@@ -119,7 +119,7 @@ Power BI individuelle. La reproduction complète tient dans cet essai.
 réglages à activer dans le portail d'administration.
 
 **Pourquoi :** sans le quatrième, GitHub n'apparaîtra pas dans la liste des fournisseurs Git. Sans
-le cinquième, vous ne pourrez pas télécharger un classeur exporté, et rien ne vous dira pourquoi.
+le cinquième, vous ne pourrez pas télécharger un classeur exporté, et aucun message n'en donne la cause.
 
 *Vérification :* les cinq sont sur « Activé ».
 
@@ -133,7 +133,7 @@ le cinquième, vous ne pourrez pas télécharger un classeur exporté, et rien n
 « Pro » au lieu de votre capacité, les éléments Fabric ne fonctionneront pas, et les messages
 d'erreur ne désigneront pas la capacité.
 
-**La règle à retenir :** ne renommez aucun élément après l'installation. Le rapport retrouve son
+**La règle :** ne renommez aucun élément après l'installation. Le rapport retrouve son
 modèle de données par son nom.
 
 *Vérification :* les paramètres de l'espace indiquent le nom de votre capacité.
@@ -159,7 +159,7 @@ au dépôt, en pointant le répertoire `fabric`.
 
 **Pourquoi :** c'est ce lien qui apportera les éléments de la solution dans votre espace.
 
-**Le point qui se rate :** le répertoire. Le dépôt contient aussi des scripts, de la documentation
+**Le répertoire :** le dépôt contient aussi des scripts, de la documentation
 et des fichiers SQL, qui n'ont pas leur place dans votre espace de travail. Seul le dossier
 `fabric` porte les éléments Fabric. Laissé vide, ce champ fait échouer la synchronisation.
 
@@ -174,7 +174,7 @@ et des fichiers SQL, qui n'ont pas leur place dans votre espace de travail. Seul
 **Pourquoi rien ne fonctionne encore :** la synchronisation Git recrée la forme des éléments, pas
 leur contenu ni leurs branchements. L'éditeur l'écrit ainsi : « Git Integration re-creates item
 definitions only and does not restore item data ». Les étapes 7 à 10 posent le contenu et les
-branchements. À ce stade, une installation correcte ressemble à une installation ratée.
+branchements.
 
 *Vérification :* dix éléments sont là. Les huit du dépôt, le coffre, la base, les deux ensembles de
 fonctions, les deux modèles de données et les deux rapports, plus deux points de terminaison SQL
@@ -225,15 +225,14 @@ publier.
 ### Étapes 9 et 10. Relier la solution à votre espace
 
 Deux liaisons ne se refont pas seules, et leur absence ne produit aucun message d'erreur clair.
-C'est ici que les installations échouent.
 
 | Ce qui ne se recolle pas | Combien | Ce qui se passe sans réparation |
 |---|---|---|
-| Les sources des deux modèles vers la base | 77 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
-| Les boutons vers les fonctions | 40 | Les boutons ne font rien, ou écrivent au mauvais endroit |
+| Les sources des deux modèles vers la base | 82 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
+| Les boutons vers les fonctions | 54 | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
 **L'ordre compte :** le modèle d'abord, les boutons ensuite. Actualiser le modèle avant de l'avoir
-relié produit une erreur qui fait croire à une panne générale.
+relié produit une erreur.
 
 Un script relève vos identifiants et prépare les deux commandes, que vous n'avez plus qu'à lancer.
 
@@ -265,7 +264,7 @@ ouvrir le dossier de travail du cabinet, ni les dossiers de ses confrères.
 véhicule de démonstration. Il vous en faut un par client réel. Sans ce rôle, un client ouvrant
 l'écran verrait les données de tous les autres.
 
-**Une règle à ne jamais enfreindre :** n'ajoutez jamais un client comme membre de votre espace de travail.
+**Une règle :** n'ajoutez jamais un client comme membre de votre espace de travail.
 Le cloisonnement par rôle ne restreint que les lecteurs.
 
 *Vérification :* un collègue voit l'écran de conduite. Un compte de l'audience client voit la
@@ -284,7 +283,7 @@ le site du client de démonstration, ses raccourcis, et vous y déposez ses 98 p
 justificatives se déposent dans SharePoint, et le coffre les voit par un raccourci. Sans cette
 étape, tout ce qui touche un fichier échoue : exporter, réimporter, ouvrir une pièce.
 
-**Le point qui se rate :** le délai. Une autorisation Graph peut mettre 24 heures à s'appliquer.
+**Le délai :** une autorisation Graph peut mettre 24 heures à s'appliquer.
 Faites-la affecter dès l'étape 2.
 
 *Vérification :* `Pièces déposées : 98, refusées : 0, restant sans lien : 0`, et le lien d'une
@@ -300,8 +299,7 @@ Le code de la fonction et ses commandes sont dans [`azure/`](azure/README.md).
 **Ce que vous faites :** vous exécutez douze actions, du clic jusqu'à la base, et vous vérifiez que
 chacune donne le résultat attendu.
 
-**Pourquoi :** un écran qui s'affiche n'est pas un écran qui fonctionne. La recette fait la
-différence.
+**Pourquoi :** l'affichage d'un écran ne prouve pas que ses actions aboutissent.
 
 **Une action demande deux comptes :** l'approbation d'un visa est refusée à la personne qui a soumis
 le dossier. C'est la séparation des fonctions, et la base l'impose.
@@ -398,8 +396,7 @@ dépôt n'utilisent aucune bibliothèque extérieure.
 
 ## Si quelque chose ne marche pas
 
-[La page de dépannage](docs/faire/depannage.md) donne la cause de chaque symptôme. Ici, le symptôme
-désigne rarement la cause.
+[La page de dépannage](docs/faire/depannage.md) donne la cause de chaque symptôme.
 
 Deux exemples :
 
@@ -418,9 +415,6 @@ Deux exemples :
 | Poser une question sur la solution | Une issue, modèle **Une question sur la solution** |
 | Proposer une modification | [Le guide de contribution](CONTRIBUTING.md) |
 | Signaler une fuite de données ou une faille | [La politique de sécurité](SECURITY.md), jamais une issue publique |
-
-Le récit d'une installation qui a buté nous est plus utile qu'une correction de forme : c'est ainsi
-qu'un mode opératoire s'éprouve.
 
 Les échanges suivent le [code de conduite](CODE_OF_CONDUCT.md). Une règle y prime sur les autres :
 aucune donnée de client réel dans ce dépôt, sous aucune forme, capture d'écran comprise.
