@@ -56,6 +56,23 @@ parce qu'aucun rôle de mission ne porte votre adresse. C'est ce que corrige
 
 ---
 
+## Ce que permet chaque rôle dans un dossier
+
+La base reconnaît une personne par **son adresse de connexion**, jamais par le nom saisi dans le
+rôle. Un rôle compte du jour de son début jusqu'à la veille de sa fin.
+
+| Le geste | Qui peut le faire |
+|---|---|
+| Retirer une pièce du dossier | Un membre de l'équipe : associé, chef de mission, préparateur ou réviseur ; pour une filiale, aussi un membre de l'équipe du véhicule qui la détient |
+| Demander la réouverture d'un arrêté clos | Un membre de l'équipe qui n'est pas chef de mission |
+| Accorder ou écarter cette demande | Le chef de mission, s'il n'est pas l'auteur de la demande |
+| Viser la revue, valider pour le client | Le chef de mission |
+
+Le refus vient de la base, avec le même texte qu'à l'écran : « Demande refusée : votre adresse de
+connexion n'est rattachée à aucun membre de l'équipe de ce dossier. »
+
+---
+
 ## Ce que vous devez donner à la base, à l'étape 12
 
 Ces droits permettent à la base d'appeler l'Azure Function : pour créer l'espace d'un client, et pour

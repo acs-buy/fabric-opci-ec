@@ -53,7 +53,7 @@ message : il doit être en français et dire quoi faire.
 |---|---|---|---|
 | 13 | Approuver un visa que vous avez soumis | L'approbation revient à un autre | ☐ |
 | 14 | Retirer une pièce sans motif | Le motif est obligatoire | ☐ |
-| 15 | Saisir des droits de vote à 75 | Ils se donnent entre 0 et 1 | ☐ |
+| 15 | Saisir des droits de vote à 0 | Ils se saisissent en pourcentage, de plus de 0 à 100 | ☐ |
 | 16 | Approuver une acceptation incomplète | Le nombre de questions sans réponse, et la première nommée | ☐ |
 | 17 | Créer un client avec un code existant | Un client se crée une fois | ☐ |
 
@@ -95,12 +95,28 @@ des fonctions de DEV : il répond normalement, et il écrit au mauvais endroit.
 
 ---
 
+## Partie 5. Les comptes annuels, le retrait d'une pièce, la réouverture
+
+Sur un arrêté de démonstration de TEST. Le test 32 demande 2 comptes : un membre de l'équipe qui
+n'est pas chef de mission, et le chef de mission.
+
+| # | Ce que vous tentez | Ce qui doit se produire | Passé |
+|---|---|---|---|
+| 27 | Ouvrir l'onglet Révision, page d'un article de l'annexe | Chaque cellule porte sa valeur, « à remplir » ou « calcul en attente », et le décompte de l'article | ☐ |
+| 28 | Saisir une cellule à remplir, puis la retirer | La cellule passe saisie, puis revient à remplir ; le message dit si une version de l'annexe est créée | ☐ |
+| 29 | Saisir un montant dans une cellule de total | Refus : la cellule se calcule sur d'autres cellules ; saisissez ses opérandes | ☐ |
+| 30 | Cliquer **Recalculer** deux fois de suite | Le 2e calcul ne crée aucune version | ☐ |
+| 31 | Retirer une pièce qui fonde la conclusion d'une feuille de travail | Refus qui nomme la feuille | ☐ |
+| 32 | Demander la réouverture d'un arrêté clos, puis l'accorder **avec le second compte** | L'arrêté repasse ouvert, ses documents passent périmés, la demande est accordée | ☐ |
+
+---
+
 ## Ce qu'on écrit à la fin
 
 Une ligne suffit.
 
 > Cahier passé le **<date>**, dans l'espace TEST, par **<noms>**.
-> Tests passés : **<nombre>** sur 26. Tests en échec : **<lesquels>**.
+> Tests passés : **<nombre>** sur 32. Tests en échec : **<lesquels>**.
 > Décision : **<déploiement en production autorisé, ou non, et pourquoi>**.
 
 **Ne déployez pas en production tant qu'un test de la partie 2 ou 3 est en échec.**

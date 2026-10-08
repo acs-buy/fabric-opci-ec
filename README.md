@@ -83,7 +83,7 @@ Cinq pages s'ajoutent, à lire quand le sujet se présente :
 - [Le dépannage](docs/faire/depannage.md), qui donne la cause réelle de chaque symptôme.
 - [Déployer en trois espaces](docs/faire/deployer-en-trois-espaces.md), pour un cabinet qui
   installe dans DEV, fait tester dans TEST, et n'ouvre PROD qu'une fois les tests signés.
-- [Le cahier de tests](docs/faire/cahier-de-tests.md), 26 tests à faire passer dans TEST avant
+- [Le cahier de tests](docs/faire/cahier-de-tests.md), 32 tests à faire passer dans TEST avant
   d'ouvrir la production.
 - [Reproduire avec un agent d'intelligence artificielle](docs/faire/avec-un-agent.md) : les
   3 étapes sur 13 qu'un agent sait jouer, et les 4 contrôles qui restent à vous. Les demandes
@@ -315,8 +315,9 @@ le dossier. C'est la séparation des fonctions, et la base l'impose.
 ### L'écran du réviseur
 
 Il porte le dossier d'un client OPCI de bout en bout : créer le dossier, lister les filiales,
-répondre au questionnaire d'acceptation, déposer les pièces, soumettre au visa, ouvrir les arrêtés,
-désigner l'équipe.
+répondre au questionnaire d'acceptation, déposer et retirer les pièces, soumettre au visa, ouvrir
+les arrêtés, désigner l'équipe, réviser les comptes annuels, demander puis décider la réouverture
+d'un arrêté clos.
 
 Chaque bouton écrit en base de données.
 
@@ -331,8 +332,16 @@ Sous la barre des étapes, la fiche du dossier rassemble tout ce qui le concerne
 
 ![La fiche du dossier](captures/maquettes/fiche-du-dossier.png)
 
-*Maquette de conception. L'écran de conduite est en cours de pose, et l'écran publié peut différer
-dans le détail.*
+*Maquette de conception. L'écran publié peut différer dans le détail.*
+
+L'onglet Révision porte les comptes annuels au modèle du règlement ANC n° 2021-09, modifié par le
+règlement ANC n° 2024-01 : le bilan, le compte de résultat et l'annexe, article par article. La base
+calcule chaque cellule de l'annexe ; celles qu'elle ne peut pas établir sont comptées « à remplir »
+et sortent vides dans le Word, sans bloquer la production.
+
+![Le bilan actif à l'écran de révision](captures/comptes-annuels-bilan.png)
+
+*Capture de l'installation réelle, sur le jeu de démonstration.*
 
 ### Ce que vous obtenez au bout des treize étapes
 

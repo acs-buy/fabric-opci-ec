@@ -102,7 +102,7 @@ n'a pas produit ce qu'elle devait produire.**
 | Ce que vous tentez | Le refus attendu |
 |---|---|
 | Retirer une pièce sans motif | `Le motif du retrait est obligatoire : il reste dans la trace du dossier.` |
-| Saisir des droits de vote à 75 | `Les droits de vote se donnent entre 0 et 1, par exemple 0,80 pour 80 %.` |
+| Saisir des droits de vote à 0 | `Les droits de vote se saisissent en pourcentage, de plus de 0 à 100 : 80 pour 80 %.` |
 | Enregistrer un site qui n'est pas un site SharePoint | `Le lien attendu est celui du site SharePoint de l'équipe Teams, de la forme https://<cabinet>.sharepoint.com/sites/<nom>.` |
 
 Chacun de ces trois messages vient de la base, et il tiendrait

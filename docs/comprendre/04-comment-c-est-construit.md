@@ -146,6 +146,31 @@ Trois conséquences :
 - Un refus remonte toujours un message explicite, qui nomme la procédure en cause.
 - Ajouter un écran ne crée jamais un trou de sécurité, tant que l'écriture passe par les procédures.
 
+## Le calcul de l'annexe
+
+Les cellules de l'annexe des comptes annuels ne se calculent ni dans le modèle ni dans le Word :
+une procédure de la base les calcule et les range, et l'écran comme le Word les lisent.
+
+| Ce qui se passe | Où c'est |
+|---|---|
+| Le calcul de toutes les cellules de tous les arrêtés de mission d'un véhicule | `pr_calculer_annexe`, puis une procédure par article, `pr_ann_a_<article>` |
+| Les cellules, une ligne par cellule et par version | la table `cellule_annexe` |
+| La dernière version de chaque arrêté, et la version validée pour le client | `v_annexe_version` |
+| Ce que l'écran et le Word lisent | `v_annexe_cellule` |
+| Le décompte des cellules à remplir, article par article | `v_cellules_a_remplir` |
+| Ce qui refuse la production | `v_annexe_produisible` : le seul rapprochement du tableau 333-3 avec le bilan |
+| Les documents produits et la version qu'ils portent | `v_annexe_document` |
+| Les écritures faites hors du calcul | la table `annexe_retard`, que 27 déclencheurs alimentent, et `v_annexe_retard` |
+
+**Le verrou d'entité.** Un calcul prend un verrou sur le véhicule pour la durée de sa transaction :
+2 calculs du même véhicule ne s'entrelacent pas, et l'enregistrement d'un document attend le calcul
+en cours. Une attente de plus de 120 secondes est refusée : « L'annexe de l'entité … est en cours de
+calcul : réessayez dans un instant. »
+
+**Les procédures qui écrivent une source** (lots, balances, visas d'évaluation, arrêtés, filiales)
+prennent le même verrou au début de leur transaction et posent la marque de retard sans recalculer.
+Leur paramètre `@calculer` vaut 0 par défaut ; un appel qui veut recalculer aussitôt passe 1.
+
 ## Où sont les choses
 
 | Ce que vous cherchez | Où c'est |
@@ -154,6 +179,7 @@ Trois conséquences :
 | Un contrôle qui refuse | Un déclencheur `tr_...` ou le début de la procédure |
 | Ce que l'écran affiche | Une vue `v_ecran_...` |
 | Un calcul affiché | Une mesure du modèle sémantique |
+| Une cellule de l'annexe | `cellule_annexe`, lue par `v_annexe_cellule` |
 | Ce qu'un bouton appelle | Le nom de la fonction, dans la définition du bouton |
 
 ## Deux comportements de Power BI

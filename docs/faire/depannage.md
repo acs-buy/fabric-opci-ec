@@ -49,6 +49,18 @@ Faites-vous désigner sur l'écran de conduite de mission, section **Équipe de 
 Le même refus se produit quand vous jouez le script d'effacement de la démonstration depuis un
 compte sans rôle d'associé.
 
+## « L'annexe de l'entité … est en cours de calcul : réessayez dans un instant. »
+
+Un autre calcul de l'annexe du même véhicule tient son verrou depuis plus de 120 secondes. Un calcul
+dure quelques secondes ; une attente de 2 minutes désigne un calcul resté ouvert, par exemple un
+essai lancé dans une transaction jamais fermée. Attendez sa fin, ou fermez la session qui le tient.
+
+## « Document refusé : les cellules de l'annexe de … sont en retard sur une modification … »
+
+Une écriture a changé une donnée que l'annexe lit, sans recalcul : un lot validé, un classeur
+réimporté, une feuille de saisie. Cliquez **Recalculer**, puis produisez de nouveau. Le message
+nomme la donnée modifiée et l'heure de la modification.
+
 ## La publication d'une fonction échoue
 
 Deux causes.
