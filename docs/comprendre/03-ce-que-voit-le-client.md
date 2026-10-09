@@ -118,6 +118,38 @@ Plus deux compteurs : les ratios calculés, et ceux qui restent à valider.
 Un ratio réglementaire se calcule sur un périmètre, et le périmètre se discute. La colonne « ce que
 le calcul retient » affiche la règle retenue, que le client peut contester ou confirmer.
 
+### Les 4 ratios calculés, et leur texte
+
+Textes lus sur Légifrance le 09/10/2026, dans leur version en vigueur à cette date.
+
+| Le ratio | Le seuil et son texte | Le calcul que le texte prescrit | Les dates de respect |
+|---|---|---|---|
+| Actifs immobiliers | 60 % au moins de l'actif, code monétaire et financier, art. L. 214-37, 1° | R. 214-89 | 30 juin et 31 décembre, après 3 ans (R. 214-90, L. 214-43) |
+| Actifs non cotés, SPPICAV seule | 51 % au moins de l'actif, en actifs des 1° à 3° et du 5° du I de l'art. L. 214-36, art. L. 214-37, 1° | R. 214-89 | idem |
+| Liquidités | 5 % au moins de l'actif, en dépôts et liquidités des 8° et 9°, libres de toute sûreté, art. L. 214-37, 2° | R. 214-100 | aucune date fixée ; régularisation en 1 mois (R. 214-101) |
+| Endettement | 40 % au plus de la valeur des actifs immobiliers des 1° à 3° et du 5°, emprunts des sociétés et organismes détenus compris au prorata, art. L. 214-39 | R. 214-104, modifié par le décret n° 2025-762 du 4 août 2025 | 30 juin et 31 décembre, après 3 ans (R. 214-105) |
+
+Pour un organisme professionnel de placement collectif immobilier, le quota de liquidités ne
+s'applique pas (R. 214-197), et l'organisme peut déroger à la limite d'endettement (R. 214-196).
+
+### Ce que le calcul ne fait pas encore
+
+Le calcul livré s'écarte du texte sur 6 points. Ils sont connus, et la page affiche chaque ratio
+comme « calcul à valider » :
+
+| Le point | Ce que fait le calcul | Ce que dit le texte |
+|---|---|---|
+| Transparence des 60 % et 51 % | Il lit la balance propre de l'OPCI | R. 214-89 compte les immeubles des sociétés détenues au prorata des participations, et retire les avances en compte courant du dénominateur |
+| Liquidités du 9° | Il prend le compte 511 en entier | R. 214-100 ne compte que les dépôts à vue auprès du dépositaire ; les créances d'exploitation relèvent du 9° sans entrer dans le quota |
+| Dépôts du 8° | Il compte le compte 265, dépôts et cautionnements versés | R. 214-92 vise des dépôts à terme auprès d'un établissement de crédit ; le plan de comptes range le 265 parmi les autres actifs immobiliers |
+| Endettement | Il compte l'OPCI et ses sociétés au prorata, avances en compte courant exclues | R. 214-104 compte aussi les organismes du 5°, les participations relevant de R. 214-85 et le crédit-bail |
+| Entités calculées | Il calcule aussi les ratios des sociétés détenues | L. 214-37 et L. 214-39 visent l'actif et les emprunts d'un OPCI |
+| OPCI professionnel | Aucune entité ne porte cette qualité | Les 2 exceptions de R. 214-196 et R. 214-197 en dépendent |
+
+Les autres limites du code (dispersion, emprise sur une catégorie d'instruments financiers d'une même
+entité, plancher d'immeubles construits et loués) et le levier au sens de la directive 2011/61/UE ne
+sont pas calculés.
+
 ---
 
 ## Page 7. Le document d'information périodique
