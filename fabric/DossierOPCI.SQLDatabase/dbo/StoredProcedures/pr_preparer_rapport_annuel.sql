@@ -1,4 +1,5 @@
 
+-- pr_preparer_rapport_annuel : 3 refus
 -- --- 4 : preparer le rapport annuel, garde par la nature de l'arrete ---
 CREATE   PROCEDURE dbo.pr_preparer_rapport_annuel
     @entite      VARCHAR (20),
@@ -29,7 +30,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_preparer_rapport_annuel', @entite, @arrete, NULL, @m1, @prepare_par);
-        THROW 50039, @m1, 1;
+        BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50039, @m1, 1; END
     END;
     -- Les documents de synthese portent la certification : sans elle, le
     -- rapport n'est pas celui que l'article 29 decrit.
@@ -42,10 +43,10 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_preparer_rapport_annuel', @entite, @arrete, NULL, @m2, @prepare_par);
-        THROW 50039, @m2, 1;
+        BEGIN SET @m2 = REPLACE(@m2, N'%', N'%%'); THROW 50039, @m2, 1; END
     END;
     IF NOT EXISTS (SELECT 1 FROM dbo.publication_vl
-                   WHERE entite = @entite AND arrete = @arrete)
+                   WHERE entite = @entite AND arrete = @arrete AND perimee_le IS NULL)
     BEGIN
         DECLARE @m3 NVARCHAR (2000) =
             N'Preparation refusee : la valeur liquidative de la cloture '
@@ -53,7 +54,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_preparer_rapport_annuel', @entite, @arrete, NULL, @m3, @prepare_par);
-        THROW 50039, @m3, 1;
+        BEGIN SET @m3 = REPLACE(@m3, N'%', N'%%'); THROW 50039, @m3, 1; END
     END;
     INSERT INTO dbo.rapport_annuel
         (entite, arrete, exercice, arrete_au, rapport_gestion,

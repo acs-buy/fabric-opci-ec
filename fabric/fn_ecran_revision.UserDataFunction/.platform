@@ -3,7 +3,7 @@
   "metadata": {
     "type": "UserDataFunction",
     "displayName": "fn_ecran_revision",
-    "description": "Les 13 fonctions de l'ecran 1, une par bouton. Ecrites par la session de la base, posees par l'API."
+    "description": "Les fonctions de l'écran Révision, appelées par ses boutons."
   },
   "config": {
     "version": "2.0",

@@ -457,7 +457,7 @@
                     {
                       "name": "entite",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -476,7 +476,7 @@
                     {
                       "name": "role",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -495,7 +495,7 @@
                     {
                       "name": "personne",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e1SecSaisie1_0",
@@ -511,6 +511,18 @@
                       "autoClear": false
                     }
                   ]
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ref_entite"
+                    }
+                  },
+                  "Property": "Infobulle e1Bouton70"
                 }
               }
             }

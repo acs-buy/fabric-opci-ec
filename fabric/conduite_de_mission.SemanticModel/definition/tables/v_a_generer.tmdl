@@ -1,0 +1,170 @@
+/// Actifs du perimetre et leur etat de generation.
+table v_a_generer
+	lineageTag: c40d9823-bc06-4fbb-9335-aa40ac786c33
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 158d2653-4033-4eff-945f-9482d958a229
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 8d77518c-b8f2-4c2c-9255-a30d59cc259a
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: ee5a1815-60a2-492a-883d-6ab48e006eca
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b46905c1-369d-4301-a845-c5b98184553d
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(40)
+		lineageTag: c75ea05e-015d-4253-8663-3e535998a939
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: 46a7e628-aa5a-4f5b-8389-f64953212f4f
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_comptable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 6cc45010-1f8d-4d21-be4d-a21d3eb30e61
+		summarizeBy: sum
+		sourceColumn: valeur_comptable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_actuelle
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: dad63157-8c89-44a2-8e6a-60e784b38716
+		summarizeBy: sum
+		sourceColumn: valeur_actuelle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column difference_estimation
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: edcc2efa-e17e-47df-961c-1e2154b49114
+		summarizeBy: sum
+		sourceColumn: difference_estimation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: f94252cb-b0fa-4da1-9533-7e8a5f077834
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column citation_courte
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 036396a4-3e0d-4ef7-8a30-248338a0b6b6
+		summarizeBy: none
+		sourceColumn: citation_courte
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_generation
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 03f1ed42-b875-43f0-9e8b-ba564baa8831
+		summarizeBy: none
+		sourceColumn: etat_generation
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_blocage
+		dataType: string
+		sourceProviderType: nvarchar(88)
+		lineageTag: 78bb5d7c-034d-4873-8d14-c3cf1aaacc3c
+		summarizeBy: none
+		sourceColumn: motif_blocage
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_expertise
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: c545834a-b52c-4c8e-be7f-e16fc5218bcd
+		summarizeBy: none
+		sourceColumn: date_expertise
+
+		annotation SummarizationSetBy = Automatic
+
+	column expertise_enregistree_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 6066f04f-3c33-4209-a07f-8e627e7a6089
+		summarizeBy: none
+		sourceColumn: expertise_enregistree_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_valeur_retenue
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 5f0d145d-f600-456f-9a0c-077c2ce11a66
+		summarizeBy: none
+		sourceColumn: etat_valeur_retenue
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_a_generer = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_a_generer = Source{[Schema="dbo",Item="v_a_generer"]}[Data]
+				in
+				    dbo_v_a_generer
+

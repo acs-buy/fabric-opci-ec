@@ -19,23 +19,21 @@ CREATE TABLE [dbo].[ref_compte_entite] (
 
 GO
 
-CREATE   TRIGGER dbo.tr_rattachement_meme_classe
-ON dbo.ref_compte_entite
-AFTER INSERT, UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF EXISTS (
-        SELECT 1 FROM inserted i
-        WHERE LEFT(i.compte_entite, 1) <> LEFT(i.compte_modele, 1)
-          AND i.compte_entite <> i.compte_modele
-          AND NOT EXISTS (
-              SELECT 1 FROM dbo.ref_correspondance_plan c
-              WHERE c.compte_source = i.compte_entite
-                AND c.compte_modele = i.compte_modele)
-    )
-        THROW 50048, 'Rattachement refuse : le compte de l''entite et le compte modele ne sont pas de la meme classe, et aucune correspondance n''est declaree entre les 2 plans. Une traduction qui change de classe se justifie : la declarer dans dbo.ref_correspondance_plan avec son motif, comme le passage du compte 4551 du PCG au compte 512 du plan de l''article 411-3.', 1;
-END
+CREATE   TRIGGER dbo.[tr_ref_compte_entite_horodatage]
+ON dbo.[ref_compte_entite]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_compte_entite] t
+    JOIN inserted i ON t.[entite] = i.[entite] AND t.[compte_entite] = i.[compte_entite];
+END;
 
 GO
 
@@ -54,20 +52,44 @@ END;
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_compte_entite_horodatage]
-ON dbo.[ref_compte_entite]
-AFTER UPDATE
+CREATE   TRIGGER dbo.tr_rattachement_meme_classe
+ON dbo.ref_compte_entite
+AFTER INSERT, UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_compte_entite] t
-    JOIN inserted i ON t.[entite] = i.[entite] AND t.[compte_entite] = i.[compte_entite];
+    IF EXISTS (
+        SELECT 1 FROM inserted i
+        WHERE LEFT(i.compte_entite, 1) <> LEFT(i.compte_modele, 1)
+          AND i.compte_entite <> i.compte_modele
+          AND NOT EXISTS (
+              SELECT 1 FROM dbo.ref_correspondance_plan c
+              WHERE c.compte_source = i.compte_entite
+                AND c.compte_modele = i.compte_modele)
+    )
+        THROW 50048, 'Rattachement refuse : le compte de l''entite et le compte modele ne sont pas de la meme classe, et aucune correspondance n''est declaree entre les 2 plans. Une traduction qui change de classe se justifie : la declarer dans dbo.ref_correspondance_plan avec son motif, comme le passage du compte 4551 du PCG au compte 512 du plan de l''article 411-3.', 1;
+END
+
+GO
+
+
+CREATE   TRIGGER dbo.tr_ref_compte_entite_annexe_retard ON dbo.ref_compte_entite
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT entite, compte_entite, compte_modele FROM inserted
+        EXCEPT SELECT entite, compte_entite, compte_modele FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT entite, compte_entite, compte_modele FROM deleted EXCEPT SELECT entite, compte_entite, compte_modele FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'ref_compte_entite', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
 END;
 
 GO

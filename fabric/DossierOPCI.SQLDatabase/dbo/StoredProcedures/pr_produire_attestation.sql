@@ -1,5 +1,5 @@
 
-
+-- pr_produire_attestation : 1 refus
 CREATE   PROCEDURE dbo.pr_produire_attestation
     @entite  VARCHAR (20),
     @arrete  VARCHAR (20),
@@ -30,7 +30,7 @@ BEGIN
                    AND fichier = @fichier AND statut = 'FAIT')
     BEGIN
         SET @m = N'Production refusée : le fichier ' + ISNULL(@fichier, N'(vide)') + N' du rapport de l''expert-comptable n''a aucun dépôt connu dans le dossier Livrables de cet arrêté.';
-        THROW 50623, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50623, @m, 1; END
     END;
     EXEC dbo.pr_enregistrer_document @entite, @arrete, 'ATTESTATION', @fichier, @par, @empreinte_stockee;
 END;

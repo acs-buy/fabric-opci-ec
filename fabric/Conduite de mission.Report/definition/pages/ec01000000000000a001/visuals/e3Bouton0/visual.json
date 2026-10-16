@@ -457,7 +457,7 @@
                     {
                       "name": "cote",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -476,7 +476,7 @@
                     {
                       "name": "reference",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -495,7 +495,7 @@
                     {
                       "name": "reponse",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e3Saisie0",
@@ -520,6 +520,18 @@
                       "autoClear": false
                     }
                   ]
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ref_entite"
+                    }
+                  },
+                  "Property": "Infobulle e3Bouton0"
                 }
               }
             }

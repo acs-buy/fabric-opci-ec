@@ -1,4 +1,4 @@
-/// Etape 2 de l'ecran Revision, contrat du 28/09/2026.
+/// Etape 2 de l'ecran Revision.
 table v_programme_selection
 	lineageTag: f285bcc6-25b9-4258-9c64-a961fd476aa7
 

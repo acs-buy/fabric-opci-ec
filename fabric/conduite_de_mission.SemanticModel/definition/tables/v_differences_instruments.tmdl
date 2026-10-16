@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_differences_instruments
 	lineageTag: 9654c853-8633-4a99-873f-97519f363688
 

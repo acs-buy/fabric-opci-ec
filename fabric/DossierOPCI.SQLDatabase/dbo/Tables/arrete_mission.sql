@@ -18,19 +18,20 @@ CREATE TABLE [dbo].[arrete_mission] (
 
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX [ux_arrete_annuel]
-    ON [dbo].[arrete_mission]([entite] ASC, [exercice] ASC) WHERE ([type_arrete]='ANNUEL');
-
-
-GO
-
 CREATE UNIQUE NONCLUSTERED INDEX [ux_arrete_semestriel]
     ON [dbo].[arrete_mission]([entite] ASC, [exercice] ASC) WHERE ([type_arrete]='SEMESTRIEL');
 
 
 GO
 
+CREATE UNIQUE NONCLUSTERED INDEX [ux_arrete_annuel]
+    ON [dbo].[arrete_mission]([entite] ASC, [exercice] ASC) WHERE ([type_arrete]='ANNUEL');
 
+
+GO
+
+
+-- tr_arrete_portes : 3 refus
 -- --- 4 : la porte 1 n'exige l'expertise que la ou l'article la fonde ----
 -- Seule la premiere requete change : elle ne balaie plus tous les actifs
 -- du perimetre mais ceux dont la nature porte expertise_requise = 1.
@@ -71,7 +72,7 @@ BEGIN
             + @sans_expertise
             + N'. Ces actifs se valorisent a la valeur actuelle par la valeur '
             + N'de marche, article 211-6. Deposer les rapports puis rouvrir.';
-        THROW 50025, @m1, 1;
+        BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50025, @m1, 1; END
     END;
 
     -- Porte 1 : une filiale detenue sans balance validee a l'arrete
@@ -95,7 +96,7 @@ BEGIN
             N'Ouverture refusee, porte 1 : aucune balance validee a l''arrete '
             + N'pour les filiales detenues suivantes : ' + @sans_balance
             + N'. Importer et valider leurs balances puis rouvrir.';
-        THROW 50026, @m2, 1;
+        BEGIN SET @m2 = REPLACE(@m2, N'%', N'%%'); THROW 50026, @m2, 1; END
     END;
 
     -- Porte 3 : le dernier arrete annuel anterieur de l'entite doit porter
@@ -124,7 +125,7 @@ BEGIN
             + @dernier_annuel + N') de l''entite ' + @entite
             + N' ne porte pas de maintien de mission approuve. Le blocage se '
             + N'leve par l''approbation nominative du signataire, jamais par derogation.';
-        THROW 50027, @m3, 1;
+        BEGIN SET @m3 = REPLACE(@m3, N'%', N'%%'); THROW 50027, @m3, 1; END
     END;
 END;
 

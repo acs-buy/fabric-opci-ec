@@ -1,0 +1,83 @@
+/// Sources d une valeur actuelle : saisissables, puis calculees.
+table ref_source_valeur
+	lineageTag: 250cdd66-fadd-4fc9-98f6-f0ede1ade867
+
+	/// « Une seule valeur à cocher dans « Source » » ou « … dans « Pièce de la valeur » », joints par « · » ; vide sinon
+	measure 'Avis proposer la valeur' = VAR p1 = IF ( ISFILTERED ( ref_source_valeur[libelle] ) && COUNTROWS ( VALUES ( ref_source_valeur[libelle] ) ) >= 2, "Une seule valeur à cocher dans « Source »." ) VAR j1 = p1 VAR p2 = IF ( ISFILTERED ( v_ecran_pieces_valorisation[nom_fichier] ) && COUNTROWS ( VALUES ( v_ecran_pieces_valorisation[nom_fichier] ) ) >= 2, "Une seule valeur à cocher dans « Pièce de la valeur »." ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) RETURN IF ( j2 = "", "", j2 ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 8754124a-483e-49d8-8eaa-642d4e00493c
+
+	/// gris quand [Avis proposer la valeur] n’est pas vide
+	measure 'Fond proposer la valeur' = IF ( [Avis proposer la valeur] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: f5d2f171-0bf6-4f51-9fdb-28153d0deb4b
+
+	column source
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 003352f4-bc1c-42c8-945c-aa61c2b6a522
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(60)
+		lineageTag: d9fd4308-ce07-478b-aff4-270f1916130a
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column saisissable
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 76917558-1bd5-4415-99fd-b676fb2f6c68
+		summarizeBy: none
+		sourceColumn: saisissable
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 75a7be1b-5261-4339-9e98-f16b34b114fc
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 7776bbd1-5f49-4c16-91f5-39d776853fa6
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: e8db48a3-8a56-46ec-ab91-c9e58ddcd1a2
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_source_valeur = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_source_valeur = Source{[Schema="dbo",Item="ref_source_valeur"]}[Data]
+				in
+				    dbo_ref_source_valeur
+

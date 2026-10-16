@@ -22,6 +22,9 @@ CREATE TABLE [dbo].[ref_entite] (
     [periodicite_vl]               VARCHAR (13)   NULL,
     [cree_le]                      DATETIME2 (0)  NULL,
     [soumise_commissariat_comptes] BIT            NULL,
+    [devise_comptabilite]          NVARCHAR (40)  NULL,
+    [est_professionnel]            BIT            NULL,
+    [libelle_vehicule]             AS             (CONVERT([nvarchar](240),case when [est_client]=(1) then ([code]+N' · ')+[denomination]  end)),
     CONSTRAINT [pk_ref_entite] PRIMARY KEY CLUSTERED ([code] ASC),
     CONSTRAINT [ck_entite_forme_sociale] CHECK ([forme_sociale] IS NULL OR [forme_sociale]='SA' OR [forme_sociale]='SAS' OR [forme_sociale]='SCI' OR [forme_sociale]='SNC' OR [forme_sociale]='SARL' OR [forme_sociale]='SCA'),
     CONSTRAINT [ck_entite_forme_vehicule] CHECK ([forme_vehicule] IS NULL OR [forme_vehicule]='SPPICAV' OR [forme_vehicule]='FPI'),
@@ -32,6 +35,24 @@ CREATE TABLE [dbo].[ref_entite] (
     CONSTRAINT [ck_entite_vehicule_commissariat] CHECK ([forme_vehicule] IS NULL OR [soumise_commissariat_comptes]=(1))
 );
 
+
+GO
+
+CREATE   TRIGGER dbo.[tr_ref_entite_horodatage]
+ON dbo.[ref_entite]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_entite] t
+    JOIN inserted i ON t.[code] = i.[code];
+END;
 
 GO
 
@@ -50,20 +71,24 @@ END;
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_entite_horodatage]
-ON dbo.[ref_entite]
-AFTER UPDATE
+
+CREATE   TRIGGER dbo.tr_ref_entite_annexe_retard ON dbo.ref_entite
+AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_entite] t
-    JOIN inserted i ON t.[code] = i.[code];
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT code, denomination, devise_comptabilite, forme_vehicule, plan_propre_en_service FROM inserted
+        EXCEPT SELECT code, denomination, devise_comptabilite, forme_vehicule, plan_propre_en_service FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT code, denomination, devise_comptabilite, forme_vehicule, plan_propre_en_service FROM deleted EXCEPT SELECT code, denomination, devise_comptabilite, forme_vehicule, plan_propre_en_service FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.code AS x, CAST(CASE WHEN ch.forme_vehicule IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS vehicule FROM ch) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'ref_entite', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 1, x.vehicule) v
+    GROUP BY v.entite;
 END;
 
 GO

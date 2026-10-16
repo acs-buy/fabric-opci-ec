@@ -24,6 +24,19 @@ table v_dim_arrete
 
 		annotation SummarizationSetBy = Automatic
 
+	column arrete_affiche
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 1e475463-049b-4694-bc32-aac936a685a5
+		summarizeBy: none
+		sourceColumn: arrete_affiche
+		sortByColumn: arrete
+
+		relatedColumnDetails
+			groupByColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
 	partition v_dim_arrete = m
 		mode: directQuery
 		source =

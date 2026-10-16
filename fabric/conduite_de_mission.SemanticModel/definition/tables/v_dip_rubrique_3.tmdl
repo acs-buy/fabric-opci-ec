@@ -1,0 +1,87 @@
+/// DIP, rubrique 3 : la valeur par part.
+table v_dip_rubrique_3
+	lineageTag: 10f80de4-898d-4313-9769-14ac4dd440ee
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d50e4de8-7dbc-47c4-894c-3cb8a9664904
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: fa9d128e-7d8d-48ed-9cc6-8ae42e429956
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 04f980d1-da94-4bfc-ab11-f51940925b37
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column actif_net_reevalue
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: c2a0fa4a-7fef-4568-a1ea-9eca682bd3b8
+		summarizeBy: sum
+		sourceColumn: actif_net_reevalue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column nombre_parts
+		dataType: double
+		sourceProviderType: decimal(19, 4)
+		lineageTag: c2956966-044b-4c03-a2ea-43d39c4244e9
+		summarizeBy: sum
+		sourceColumn: nombre_parts
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_par_part
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 65905907-d571-4308-94d9-6e9271c94088
+		summarizeBy: sum
+		sourceColumn: valeur_par_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: cecc8027-9e9f-45c0-8bf0-9b1748aa261d
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_dip_rubrique_3 = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_dip_rubrique_3 = Source{[Schema="dbo",Item="v_dip_rubrique_3"]}[Data]
+				in
+				    dbo_v_dip_rubrique_3
+

@@ -1,4 +1,5 @@
 
+-- pr_approuver_maintien : 3 refus
 CREATE   PROCEDURE dbo.pr_approuver_maintien
     @entite         VARCHAR (20),
     @arrete_conclu  VARCHAR (20),
@@ -35,7 +36,7 @@ BEGIN
         VALUES ('pr_approuver_maintien', @entite, @arrete_conclu, @cote, @m70,
                 N'Faire approuver par l''associé signataire.', @par,
                 SYSUTCDATETIME());
-        THROW 50070, @m70, 1;
+        BEGIN SET @m70 = REPLACE(@m70, N'%', N'%%'); THROW 50070, @m70, 1; END
     END;
 
     IF dbo.fn_peut_viser_nature(@entite, @par, 'MAINTIEN',
@@ -52,7 +53,7 @@ BEGIN
              refuse_pour, refuse_le)
         VALUES ('pr_approuver_maintien', @entite, @arrete_conclu, @cote, @m71,
                 N'Faire approuver par l''associé.', @par, SYSUTCDATETIME());
-        THROW 50071, @m71, 1;
+        BEGIN SET @m71 = REPLACE(@m71, N'%', N'%%'); THROW 50071, @m71, 1; END
     END;
 
     DECLARE @sans NVARCHAR (20), @reste INT;
@@ -83,7 +84,7 @@ BEGIN
                 @sans, @m69,
                 N'Répondre aux questions obligatoires sans réponse.', @par,
                 SYSUTCDATETIME());
-        THROW 50069, @m69, 1;
+        BEGIN SET @m69 = REPLACE(@m69, N'%', N'%%'); THROW 50069, @m69, 1; END
     END;
 
     IF @decision NOT IN ('MAINTENU', 'ROMPU')

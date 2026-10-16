@@ -1,4 +1,7 @@
 
+-- pr_publier_vl : 1 refus
+-- ------------------------------------------------------------------ n° 8 : les accents de 50034
+
 -- --- 8 : la publication et l'obligation, alignees sur le role --------
 -- Les 2 procedures existaient. Elles verifiaient l'etat des lots, jamais
 -- la qualite de celui qui decide : elles ecrivent desormais dans dbo.visa,
@@ -19,16 +22,16 @@ BEGIN
         IF @lot_propose IS NOT NULL
         BEGIN
             DECLARE @m1 NVARCHAR (2000) =
-                N'Publication refusee : le lot ' + CAST(@lot_propose AS NVARCHAR (20))
-                + N' est propose et non vise. La valeur liquidative ne se publie '
+                N'Publication refusée : le lot ' + CAST(@lot_propose AS NVARCHAR (20))
+                + N' est proposé et non visé. La valeur liquidative ne se publie '
                 + N'pas tant qu''un lot attend le visa du chef de mission.';
-            THROW 50034, @m1, 1;
+            BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50034, @m1, 1; END
         END;
 
         DECLARE @propose NVARCHAR (200) =
             dbo.fn_proposant('PUBLICATION', @entite + '|' + @arrete);
         IF @propose IS NULL
-            THROW 50034, 'Publication refusee : aucun lot n''a ete propose pour cette entite a cet arrete, il n''y a donc rien a publier.', 1;
+            THROW 50034, N'Publication refusée : aucun lot n''a été proposé pour cette entité à cet arrêté, il n''y a donc rien à publier.', 1;
 
         DECLARE @ref VARCHAR (60) = @entite + '|' + @arrete;
         EXEC dbo.pr_garde_visa 'PUBLICATION', @ref, 'VISE', @par, NULL;
@@ -51,7 +54,7 @@ BEGIN
           AND v.valeur_liquidative IS NOT NULL;
         IF @@ROWCOUNT = 0
             THROW 50034,
-                N'Publication refusee : aucune valeur liquidative n''est rendue pour cette entite a cet arrete. Verifier le nombre de parts et les lots valides, ou lire le motif de refus de la vue de la valeur liquidative.',
+                N'Publication refusée : aucune valeur liquidative n''est rendue pour cette entité à cet arrêté. Vérifier le nombre de parts et les lots validés, ou lire le motif de refus de la vue de la valeur liquidative.',
                 1;
         COMMIT TRANSACTION;
     END TRY

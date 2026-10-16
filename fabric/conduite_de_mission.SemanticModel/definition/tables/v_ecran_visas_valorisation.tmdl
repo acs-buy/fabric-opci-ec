@@ -1,0 +1,169 @@
+/// Visas de la valorisation du vehicule et de ses filiales.
+table v_ecran_visas_valorisation
+	lineageTag: ba15bfdb-2596-4a12-a41c-14caeb73bf37
+
+	column vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: feacbfe1-4a28-4c36-a3ca-33f1b9316fd1
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e0c5f5ce-ac1b-49e6-a165-06b00c605e0d
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b244034a-bc87-48d8-a82d-813afb5653b0
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column visa_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c60ae5fc-fb3c-4e0e-9aed-4978c8d2a725
+		summarizeBy: none
+		sourceColumn: visa_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: f0dcc785-4ce8-42cb-bc0a-c33065901026
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature_libelle
+		dataType: string
+		sourceProviderType: nvarchar(30)
+		lineageTag: 99164cec-1afb-4085-80a9-7b27aeeaeda1
+		summarizeBy: none
+		sourceColumn: nature_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column objet_libelle
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: b091bda4-39f7-46ec-933f-489585d73524
+		summarizeBy: none
+		sourceColumn: objet_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column objet_ref
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(60)
+		lineageTag: 39bf2f6e-ec7e-4f61-9d0a-d7e26c047b09
+		summarizeBy: none
+		sourceColumn: objet_ref
+
+		annotation SummarizationSetBy = Automatic
+
+	column decision
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(8)
+		lineageTag: 715b765d-9669-49c7-b1da-17681c311eed
+		summarizeBy: none
+		sourceColumn: decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column decision_libelle
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: 5d369fa8-9073-4129-8b24-0fe1c53a9530
+		summarizeBy: none
+		sourceColumn: decision_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 9677c160-a875-4062-a3f6-49c743b915b0
+		summarizeBy: none
+		sourceColumn: motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column propose_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: ccffd75d-54da-40c6-bd07-bcddbb7f144e
+		summarizeBy: none
+		sourceColumn: propose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 73163b9e-aecc-4ad6-a955-e05d8158b025
+		summarizeBy: none
+		sourceColumn: decide_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column vise_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 13d810de-3b46-4bc2-ad88-08319f4098e0
+		summarizeBy: none
+		sourceColumn: vise_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: a33715ff-95ff-40a0-aa86-02a6828ede40
+		summarizeBy: none
+		sourceColumn: decide_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: varchar(33)
+		lineageTag: 1bdcf637-d482-4f01-bbf9-de0fea0443a4
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_visas_valorisation = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_visas_valorisation = Source{[Schema="dbo",Item="v_ecran_visas_valorisation"]}[Data]
+				in
+				    dbo_v_ecran_visas_valorisation
+

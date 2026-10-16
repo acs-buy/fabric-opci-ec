@@ -1,0 +1,291 @@
+/// Les 18 limites des 6 familles du memoire.
+table ref_ratio_memoire
+	lineageTag: 6e6ce11d-8441-4b70-bdfc-376365564ea7
+
+	/// nombre de limites de ref_ratio_memoire dont [Statut de la limite] n’est pas « sans objet » pour le véhicule et qui n’ont pas de ligne de conclusion_ratio à l’arrêté (VAR e, a puis FILTER ALL (ref_ratio_memoire) et FILTER ALL (conclusion_ratio)), à la française ; valeur de la carte 1, « Limites à con
+	measure 'Carte limites a conclure' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR ntot = COUNTROWS ( ALLNOBLANKROW ( ref_ratio_memoire ) ) VAR nso = SUMX ( ALLNOBLANKROW ( ref_ratio_memoire ), IF ( ( ( NOT ISBLANK ( ref_ratio_memoire[forme_vehicule] ) && ref_ratio_memoire[forme_vehicule] <> fv ) || ( pro && ref_ratio_memoire[statut_professionnel] = "SANS_OBJET" ) ), 1, 0 ) ) + 0 VAR nconc = SUMX ( ALLNOBLANKROW ( ref_ratio_memoire ), IF ( NOT ( ( NOT ISBLANK ( ref_ratio_memoire[forme_vehicule] ) && ref_ratio_memoire[forme_vehicule] <> fv ) || ( pro && ref_ratio_memoire[statut_professionnel] = "SANS_OBJET" ) ) && COUNTROWS ( FILTER ( ALL ( conclusion_ratio ), conclusion_ratio[entite] = e && conclusion_ratio[arrete] = a && conclusion_ratio[code] = ref_ratio_memoire[code] ) ) > 0, 1, 0 ) ) + 0 VAR ncalc = COUNTROWS ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ) ) + 0 VAR necart = SUMX ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ), VAR cc = v_ratio_conclusion[code] VAR lf = CALCULATE ( MAX ( ref_ratio_memoire[forme_vehicule] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = cc ) ) VAR lsp = CALCULATE ( MAX ( ref_ratio_memoire[statut_professionnel] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = cc ) ) VAR so = ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) RETURN IF ( NOT so && ( ( v_ratio_conclusion[sens] = "MINIMUM" && v_ratio_conclusion[ratio] < v_ratio_conclusion[seuil] ) || ( v_ratio_conclusion[sens] = "MAXIMUM" && v_ratio_conclusion[ratio] > v_ratio_conclusion[seuil] ) ), 1, 0 ) ) + 0 VAR nacon = ntot - nso - nconc RETURN FORMAT ( nacon, "0" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 5eedfb6c-664f-4358-8bfb-c2b45a435657
+
+	/// « n limites, n sans objet · n calculées, n en écart au seuil », chaque nombre compté en limites sur toutes les limites de ref_ratio_memoire (ALL), quelle que soit la limite cochée : sans objet par [Statut de la limite] ; calculées, les limites qui ont une ligne de v_ratio_conclusion à l’arrêté (VAR
+	measure 'Sous-ligne limites' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR ntot = COUNTROWS ( ALLNOBLANKROW ( ref_ratio_memoire ) ) VAR nso = SUMX ( ALLNOBLANKROW ( ref_ratio_memoire ), IF ( ( ( NOT ISBLANK ( ref_ratio_memoire[forme_vehicule] ) && ref_ratio_memoire[forme_vehicule] <> fv ) || ( pro && ref_ratio_memoire[statut_professionnel] = "SANS_OBJET" ) ), 1, 0 ) ) + 0 VAR nconc = SUMX ( ALLNOBLANKROW ( ref_ratio_memoire ), IF ( NOT ( ( NOT ISBLANK ( ref_ratio_memoire[forme_vehicule] ) && ref_ratio_memoire[forme_vehicule] <> fv ) || ( pro && ref_ratio_memoire[statut_professionnel] = "SANS_OBJET" ) ) && COUNTROWS ( FILTER ( ALL ( conclusion_ratio ), conclusion_ratio[entite] = e && conclusion_ratio[arrete] = a && conclusion_ratio[code] = ref_ratio_memoire[code] ) ) > 0, 1, 0 ) ) + 0 VAR ncalc = COUNTROWS ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ) ) + 0 VAR necart = SUMX ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ), VAR cc = v_ratio_conclusion[code] VAR lf = CALCULATE ( MAX ( ref_ratio_memoire[forme_vehicule] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = cc ) ) VAR lsp = CALCULATE ( MAX ( ref_ratio_memoire[statut_professionnel] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = cc ) ) VAR so = ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) RETURN IF ( NOT so && ( ( v_ratio_conclusion[sens] = "MINIMUM" && v_ratio_conclusion[ratio] < v_ratio_conclusion[seuil] ) || ( v_ratio_conclusion[sens] = "MAXIMUM" && v_ratio_conclusion[ratio] > v_ratio_conclusion[seuil] ) ), 1, 0 ) ) + 0 VAR nacon = ntot - nso - nconc RETURN FORMAT ( ntot, "0" ) & " limites, " & FORMAT ( nso, "0" ) & " sans objet · " & FORMAT ( ncalc, "0" ) & IF ( ncalc > 1, " calculées", " calculée" ) & ", " & FORMAT ( necart, "0" ) & " en écart"
+		displayFolder: Ecran 4 Arrete
+		lineageTag: fe9c468c-8bb4-4c3f-9ea8-696931099815
+
+	/// alerte quand une limite calculée à l’arrêté, qui n’est pas sans objet pour le véhicule, est en écart au seuil, comptée comme [Sous-ligne limites] (carte 1)
+	measure 'Encre limites' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR ntot = COUNTROWS ( ALLNOBLANKROW ( ref_ratio_memoire ) ) VAR nso = SUMX ( ALLNOBLANKROW ( ref_ratio_memoire ), IF ( ( ( NOT ISBLANK ( ref_ratio_memoire[forme_vehicule] ) && ref_ratio_memoire[forme_vehicule] <> fv ) || ( pro && ref_ratio_memoire[statut_professionnel] = "SANS_OBJET" ) ), 1, 0 ) ) + 0 VAR nconc = SUMX ( ALLNOBLANKROW ( ref_ratio_memoire ), IF ( NOT ( ( NOT ISBLANK ( ref_ratio_memoire[forme_vehicule] ) && ref_ratio_memoire[forme_vehicule] <> fv ) || ( pro && ref_ratio_memoire[statut_professionnel] = "SANS_OBJET" ) ) && COUNTROWS ( FILTER ( ALL ( conclusion_ratio ), conclusion_ratio[entite] = e && conclusion_ratio[arrete] = a && conclusion_ratio[code] = ref_ratio_memoire[code] ) ) > 0, 1, 0 ) ) + 0 VAR ncalc = COUNTROWS ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ) ) + 0 VAR necart = SUMX ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ), VAR cc = v_ratio_conclusion[code] VAR lf = CALCULATE ( MAX ( ref_ratio_memoire[forme_vehicule] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = cc ) ) VAR lsp = CALCULATE ( MAX ( ref_ratio_memoire[statut_professionnel] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = cc ) ) VAR so = ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) RETURN IF ( NOT so && ( ( v_ratio_conclusion[sens] = "MINIMUM" && v_ratio_conclusion[ratio] < v_ratio_conclusion[seuil] ) || ( v_ratio_conclusion[sens] = "MAXIMUM" && v_ratio_conclusion[ratio] > v_ratio_conclusion[seuil] ) ), 1, 0 ) ) + 0 VAR nacon = ntot - nso - nconc RETURN IF ( necart > 0, "#9A2A2A", "#12233C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: cd6707d9-d8c3-491c-b3d8-14ad4727f450
+
+	/// 1 quand chaque limite de ref_ratio_memoire qui n’est pas sans objet pour le véhicule ([Statut de la limite]) porte sa ligne de conclusion_ratio à l’arrêté, que la base la calcule ou non, et qu’il existe au moins 1 telle limite ; 0 sinon ; sur toutes les limites (VAR e, a puis FILTER ALL (ref_ratio_m
+	measure 'Arrete etape 1 faite' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR ntot = COUNTROWS ( ALLNOBLANKROW ( ref_ratio_memoire ) ) VAR nso = SUMX ( ALLNOBLANKROW ( ref_ratio_memoire ), IF ( ( ( NOT ISBLANK ( ref_ratio_memoire[forme_vehicule] ) && ref_ratio_memoire[forme_vehicule] <> fv ) || ( pro && ref_ratio_memoire[statut_professionnel] = "SANS_OBJET" ) ), 1, 0 ) ) + 0 VAR nconc = SUMX ( ALLNOBLANKROW ( ref_ratio_memoire ), IF ( NOT ( ( NOT ISBLANK ( ref_ratio_memoire[forme_vehicule] ) && ref_ratio_memoire[forme_vehicule] <> fv ) || ( pro && ref_ratio_memoire[statut_professionnel] = "SANS_OBJET" ) ) && COUNTROWS ( FILTER ( ALL ( conclusion_ratio ), conclusion_ratio[entite] = e && conclusion_ratio[arrete] = a && conclusion_ratio[code] = ref_ratio_memoire[code] ) ) > 0, 1, 0 ) ) + 0 VAR ncalc = COUNTROWS ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ) ) + 0 VAR necart = SUMX ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ), VAR cc = v_ratio_conclusion[code] VAR lf = CALCULATE ( MAX ( ref_ratio_memoire[forme_vehicule] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = cc ) ) VAR lsp = CALCULATE ( MAX ( ref_ratio_memoire[statut_professionnel] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = cc ) ) VAR so = ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) RETURN IF ( NOT so && ( ( v_ratio_conclusion[sens] = "MINIMUM" && v_ratio_conclusion[ratio] < v_ratio_conclusion[seuil] ) || ( v_ratio_conclusion[sens] = "MAXIMUM" && v_ratio_conclusion[ratio] > v_ratio_conclusion[seuil] ) ), 1, 0 ) ) + 0 VAR nacon = ntot - nso - nconc RETURN IF ( ntot - nso > 0 && nconc = ntot - nso, 1, 0 )
+		formatString: 0
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 6383b339-b24b-42c0-8077-6d5762f014ce
+
+	/// vert quand [Arrete etape 1 faite] vaut 1, gris sinon (mécanisme etape0 de la page ec01)
+	measure 'Fond arrete etape 1' = IF ( [Arrete etape 1 faite] = 1, "#1F6D4A", "#D5DCE4" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: b15e5186-f558-4766-975b-7198376698fa
+
+	/// « OPCI professionnel » ou « OPCI grand public » (ref_entite[est_professionnel]) puis « n limites des 6 familles : n à conclure, n sans objet · n/n conclues », chaque nombre compté en limites, comme [Sous-ligne limites]
+	measure 'Sous-titre grille des limites' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR ntot = COUNTROWS ( ALLNOBLANKROW ( ref_ratio_memoire ) ) VAR nso = SUMX ( ALLNOBLANKROW ( ref_ratio_memoire ), IF ( ( ( NOT ISBLANK ( ref_ratio_memoire[forme_vehicule] ) && ref_ratio_memoire[forme_vehicule] <> fv ) || ( pro && ref_ratio_memoire[statut_professionnel] = "SANS_OBJET" ) ), 1, 0 ) ) + 0 VAR nconc = SUMX ( ALLNOBLANKROW ( ref_ratio_memoire ), IF ( NOT ( ( NOT ISBLANK ( ref_ratio_memoire[forme_vehicule] ) && ref_ratio_memoire[forme_vehicule] <> fv ) || ( pro && ref_ratio_memoire[statut_professionnel] = "SANS_OBJET" ) ) && COUNTROWS ( FILTER ( ALL ( conclusion_ratio ), conclusion_ratio[entite] = e && conclusion_ratio[arrete] = a && conclusion_ratio[code] = ref_ratio_memoire[code] ) ) > 0, 1, 0 ) ) + 0 VAR ncalc = COUNTROWS ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ) ) + 0 VAR necart = SUMX ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ), VAR cc = v_ratio_conclusion[code] VAR lf = CALCULATE ( MAX ( ref_ratio_memoire[forme_vehicule] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = cc ) ) VAR lsp = CALCULATE ( MAX ( ref_ratio_memoire[statut_professionnel] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = cc ) ) VAR so = ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) RETURN IF ( NOT so && ( ( v_ratio_conclusion[sens] = "MINIMUM" && v_ratio_conclusion[ratio] < v_ratio_conclusion[seuil] ) || ( v_ratio_conclusion[sens] = "MAXIMUM" && v_ratio_conclusion[ratio] > v_ratio_conclusion[seuil] ) ), 1, 0 ) ) + 0 VAR nacon = ntot - nso - nconc RETURN IF ( pro, "OPCI professionnel", "OPCI grand public" ) & " · " & FORMAT ( ntot, "0" ) & " limites des 6 familles : " & FORMAT ( nacon, "0" ) & " à conclure, " & FORMAT ( nso, "0" ) & " sans objet · " & FORMAT ( nconc, "0" ) & "/" & FORMAT ( ntot - nso, "0" ) & " conclues"
+		displayFolder: Ecran 4 Arrete
+		lineageTag: c86c9452-faa4-4a3b-a4e8-63ff2edb98d2
+
+	/// « sans objet » quand forme_vehicule de la limite est renseignée et diffère de celle du véhicule ; sinon, pour un véhicule marqué OPCI professionnel (est_professionnel = 1), statut_professionnel à la française : « applicable », « sans objet », « retenue par le cabinet », « à arrêter » ; pour un véhic
+	measure 'Statut de la limite' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR vide = HASONEVALUE ( ref_ratio_memoire[code] ) && ISBLANK ( SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR une = HASONEVALUE ( ref_ratio_memoire[code] ) && NOT vide VAR c = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR lf = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[forme_vehicule] ) ) VAR lsp = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_professionnel] ) ) VAR lsg = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_grand_public] ) ) VAR so = une && ( ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) ) RETURN IF ( vide, BLANK (), ( IF ( une, IF ( so, "sans objet", IF ( pro, SWITCH ( lsp, "APPLICABLE", "applicable", "SANS_OBJET", "sans objet", "RETENUE", "retenue par le cabinet", "A_ARRETER", "à arrêter", lsp ), SWITCH ( lsg, "APPLICABLE", "applicable", "CONDITION", "sous condition", lsg ) ) ), "" ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: c69eff08-1b3d-440e-a64a-b5382c285eee
+
+	/// gris « sans objet », attente « à arrêter » et « sous condition », encre sinon (police de la colonne « Pour ce véhicule »)
+	measure 'Couleur statut de la limite' = VAR s = [Statut de la limite] RETURN IF ( ISBLANK ( s ), BLANK (), SWITCH ( TRUE (), s = "sans objet", "#5B6B7D", s IN { "à arrêter", "sous condition" }, "#C8961E", "#12233C" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: cb62dfce-e56d-41d8-ac5d-d5e1d97719fb
+
+	/// statut de la limite pour un OPCI grand public de la forme du véhicule et son fondement : « applicable », « sous condition : … » (statut_grand_public, fondement_grand_public), ou « sans objet, SPPICAV seulement » (forme_vehicule) ; vide sans exactement 1 limite cochée, test HASONEVALUE ( ref_ratio_me
+	measure 'Fiche limite grand public' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR vide = HASONEVALUE ( ref_ratio_memoire[code] ) && ISBLANK ( SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR une = HASONEVALUE ( ref_ratio_memoire[code] ) && NOT vide VAR c = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR lf = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[forme_vehicule] ) ) VAR lsp = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_professionnel] ) ) VAR lsg = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_grand_public] ) ) VAR so = une && ( ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) ) VAR fg = SELECTEDVALUE ( ref_ratio_memoire[fondement_grand_public] ) RETURN IF ( vide, BLANK (), ( IF ( NOT une, "", IF ( NOT ISBLANK ( lf ) && lf <> fv, "sans objet, " & lf & " seulement", SWITCH ( lsg, "APPLICABLE", "applicable", "CONDITION", "sous condition : " & fg, lsg ) ) ) & "" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: f4b1751e-55e5-49b2-b177-247be10c0f5e
+
+	/// statut de la limite pour un OPCI professionnel et son fondement : « sans objet, R. 214-199 », « retenue par le cabinet : L. 214-39 et R. 214-104, retenus par le cabinet ; R. 214-196 et R. 214-200 permettent aux statuts d’y déroger », « à arrêter : … », « applicable : … » (statut_professionnel, fonde
+	measure 'Fiche limite professionnel' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR vide = HASONEVALUE ( ref_ratio_memoire[code] ) && ISBLANK ( SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR une = HASONEVALUE ( ref_ratio_memoire[code] ) && NOT vide VAR c = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR lf = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[forme_vehicule] ) ) VAR lsp = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_professionnel] ) ) VAR lsg = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_grand_public] ) ) VAR so = une && ( ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) ) VAR fp = SELECTEDVALUE ( ref_ratio_memoire[fondement_professionnel] ) RETURN IF ( vide, BLANK (), ( IF ( NOT une, "", IF ( NOT ISBLANK ( lf ) && lf <> fv, "sans objet, " & lf & " seulement", SWITCH ( lsp, "SANS_OBJET", "sans objet, " & fp, "RETENUE", "retenue par le cabinet : " & fp, "A_ARRETER", "à arrêter : " & fp, "APPLICABLE", "applicable : " & fp, lsp ) ) ) & "" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 6c3f41ec-b207-49a7-975c-4dd0aab2ddcb
+
+	/// le libellé de la limite cochée ; « aucune limite choisie » ; « n limites cochées » (fiche et conclusion de la limite)
+	measure 'Sous-titre fiche de la limite' = VAR sel = ISFILTERED ( ref_ratio_memoire[libelle] ) || ISFILTERED ( ref_ratio_memoire[code] ) VAR k = COUNTROWS ( VALUES ( ref_ratio_memoire[code] ) ) RETURN IF ( sel && k = 1, SELECTEDVALUE ( ref_ratio_memoire[libelle] ), IF ( NOT sel || k = 0, "aucune limite choisie", FORMAT ( k, "0" ) & " limites cochées" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: cef54dad-913f-45b5-9bc3-d6cb90d1e60b
+
+	/// « Aucune limite choisie » sans case cochée ; vide avec 1 case cochée et plus (carte collée, & "") : à 2 cases cochées, seule la carte [Avis limite cochee] énonce le nombre coché, à droite de « Conclure la limite » (décision 10) ; posée dans la fiche et dans la conclusion de la limite, à la place du
+	measure 'Absence de limite choisie' = VAR sel = ISFILTERED ( ref_ratio_memoire[libelle] ) || ISFILTERED ( ref_ratio_memoire[code] ) VAR k = COUNTROWS ( VALUES ( ref_ratio_memoire[code] ) ) RETURN IF ( NOT sel || k = 0, "Aucune limite choisie", "" ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 1d784663-0e6c-4534-bb8b-5d3c9ba9117b
+
+	/// « n limites cochées » quand le segment porte 2 valeurs ou plus ; vide sinon (carte collée, & "") : le service désactive alors « Conclure la limite » avec une bulle anglaise (guide, § 17.29.1), et la carte, à côté du bouton, énonce le fait en français (décision du candidat du 15/10/2026, « Garder, av
+	measure 'Avis limite cochee' = VAR sel = ISFILTERED ( ref_ratio_memoire[libelle] ) || ISFILTERED ( ref_ratio_memoire[code] ) VAR k = COUNTROWS ( VALUES ( ref_ratio_memoire[code] ) ) RETURN IF ( sel && k >= 2, FORMAT ( k, "0" ) & " limites cochées", "" ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: a2d75f45-ded2-4be0-9232-1060721645fa
+
+	/// famille de la limite cochée ; vide sans exactement 1 limite cochée, test HASONEVALUE ( ref_ratio_memoire[code] )
+	measure 'Fiche limite famille' = IF ( HASONEVALUE ( ref_ratio_memoire[code] ), SELECTEDVALUE ( ref_ratio_memoire[famille] ) ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 61080521-05f5-43e9-ba4c-fb9c71f0988c
+
+	/// article de la limite cochée ; vide sans exactement 1 limite cochée, test HASONEVALUE ( ref_ratio_memoire[code] )
+	measure 'Fiche limite article' = IF ( HASONEVALUE ( ref_ratio_memoire[code] ), SELECTEDVALUE ( ref_ratio_memoire[article] ) ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 3413d24c-2f7c-4e63-9b6e-2850d66cc28b
+
+	/// limite_texte de la limite cochée ; vide sans exactement 1 limite cochée, test HASONEVALUE ( ref_ratio_memoire[code] )
+	measure 'Fiche limite du texte' = IF ( HASONEVALUE ( ref_ratio_memoire[code] ), SELECTEDVALUE ( ref_ratio_memoire[limite_texte] ) ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 5aef7aae-bbbe-48f7-8f38-ec815818db33
+
+	/// article_calcul ; vide quand le texte n’en fixe pas ; vide sans exactement 1 limite cochée, test HASONEVALUE ( ref_ratio_memoire[code] )
+	measure 'Fiche limite calcul' = IF ( HASONEVALUE ( ref_ratio_memoire[code] ), SELECTEDVALUE ( ref_ratio_memoire[article_calcul] ) ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 35bbaa00-f0f1-4480-89cd-2150d7d55231
+
+	/// « sans objet pour ce véhicule » quand [Statut de la limite] est « sans objet » (pour un OPCI professionnel, limite que R. 214-197 à R. 214-200 écartent ; pour un FPI, le 51 %) ; sinon dates_respect_professionnel pour un véhicule marqué OPCI professionnel quand la colonne est renseignée, dates_respec
+	measure 'Fiche limite dates de respect' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR vide = HASONEVALUE ( ref_ratio_memoire[code] ) && ISBLANK ( SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR une = HASONEVALUE ( ref_ratio_memoire[code] ) && NOT vide VAR c = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR lf = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[forme_vehicule] ) ) VAR lsp = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_professionnel] ) ) VAR lsg = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_grand_public] ) ) VAR so = une && ( ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) ) VAR dp = SELECTEDVALUE ( ref_ratio_memoire[dates_respect_professionnel] ) VAR d = SELECTEDVALUE ( ref_ratio_memoire[dates_respect] ) VAR x = IF ( pro && NOT ISBLANK ( dp ) && dp <> "", dp, d ) RETURN IF ( vide, BLANK (), ( IF ( NOT une, "", IF ( so, "sans objet pour ce véhicule", IF ( ISBLANK ( x ) || x = "", "aucune date fixée par le texte", x ) ) ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: c4804200-c9e8-46a9-b386-8529b900b4f2
+
+	/// citation du texte de la limite cochée ; vide sans exactement 1 limite cochée, test HASONEVALUE ( ref_ratio_memoire[code] )
+	measure 'Fiche limite citation' = IF ( HASONEVALUE ( ref_ratio_memoire[code] ), SELECTEDVALUE ( ref_ratio_memoire[citation] ) ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 28c0c072-0512-4f3c-a4fe-6e9b76be33e9
+
+	/// gris quand [Blocage conclure la limite] n’est pas « conditions réunies » ou quand [Avis limite cochee] n’est pas vide ; couleur d’action sinon, limite cochée ou non
+	measure 'Fond conclure la limite' = IF ( [Blocage conclure la limite] <> "conditions réunies" || [Avis limite cochee] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 6e9645d9-9b73-4cce-97c0-de98c4a57ff1
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: 8f90246a-7283-48a4-8ef1-deec4d810a4a
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isHidden
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: be3d6176-b418-4b32-9a69-045dc22cbce8
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(40)
+		lineageTag: bd184488-e041-4d0e-bfdb-5c4bc3ef6fd4
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(120)
+		lineageTag: 639acbd2-72d2-4411-a584-b0e532abdad7
+		summarizeBy: none
+		sourceColumn: libelle
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(120)
+		lineageTag: 876649a1-2189-4fdd-9342-98a2e2ab1a3c
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column limite_texte
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(60)
+		lineageTag: c53f0dac-824c-4c21-85cf-2429be41796f
+		summarizeBy: none
+		sourceColumn: limite_texte
+
+		annotation SummarizationSetBy = Automatic
+
+	column article_calcul
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 86b3a645-05ee-4eaa-9e71-1e9c6f1feaa8
+		summarizeBy: none
+		sourceColumn: article_calcul
+
+		annotation SummarizationSetBy = Automatic
+
+	column dates_respect
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 9aaee4ec-dfff-4b9c-bf33-f8fbab27b57e
+		summarizeBy: none
+		sourceColumn: dates_respect
+
+		annotation SummarizationSetBy = Automatic
+
+	column dates_respect_professionnel
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 9de809be-e6f0-4059-b225-4c704f2c60cd
+		summarizeBy: none
+		sourceColumn: dates_respect_professionnel
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_vehicule
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: d4226574-0038-4342-9e3b-d81c6d549b70
+		summarizeBy: none
+		sourceColumn: forme_vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut_grand_public
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 4bae5b82-05d2-4469-8e8b-407f36d738a7
+		summarizeBy: none
+		sourceColumn: statut_grand_public
+
+		annotation SummarizationSetBy = Automatic
+
+	column fondement_grand_public
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 5f2aea83-0412-4984-81c9-38beb6bd3fdb
+		summarizeBy: none
+		sourceColumn: fondement_grand_public
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut_professionnel
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 230de4cd-3529-466f-a904-bef0fe80d1a2
+		summarizeBy: none
+		sourceColumn: statut_professionnel
+
+		annotation SummarizationSetBy = Automatic
+
+	column fondement_professionnel
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 0f687058-d2c2-43aa-b221-9808bff8ecd3
+		summarizeBy: none
+		sourceColumn: fondement_professionnel
+
+		annotation SummarizationSetBy = Automatic
+
+	column citation
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(800)
+		lineageTag: a049e80c-4310-4666-8928-1eb87d10baf0
+		summarizeBy: none
+		sourceColumn: citation
+
+		annotation SummarizationSetBy = Automatic
+
+	column lu_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 0d1aa24b-d453-406e-8f74-51070f8b8f8f
+		summarizeBy: none
+		sourceColumn: lu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: a14bb848-554f-4204-9829-0937c9348891
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: ee7e384b-e568-43ad-ba7a-1d1b30067f6a
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_ratio_memoire = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_ratio_memoire = Source{[Schema="dbo",Item="ref_ratio_memoire"]}[Data]
+				in
+				    dbo_ref_ratio_memoire
+

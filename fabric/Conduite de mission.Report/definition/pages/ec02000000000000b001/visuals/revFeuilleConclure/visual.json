@@ -476,7 +476,7 @@
                     {
                       "name": "forme",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revForme",

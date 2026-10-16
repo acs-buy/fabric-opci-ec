@@ -40,7 +40,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#F4F6F9'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
@@ -74,7 +74,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#D5DCE4'"
+                      "Value": "'#0F5C8C'"
                     }
                   }
                 }

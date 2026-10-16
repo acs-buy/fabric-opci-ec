@@ -1,0 +1,152 @@
+/// Differences par compte de difference d estimation du vehicule.
+table v_ecran_differences_par_compte
+	lineageTag: 313eeca6-58a0-4b90-9ca5-1dc2ed7d13ce
+
+	/// reste à passer nul sur chaque compte, aucun lot DERIVABLE PROPOSE, périmé ou non, reste 275 nul, aucune conclusion VALO ou PART en attente ; un lot périmé puis visé ne compte pas ({c18}) : aucune action ne lèverait son blocage, [Lot annulable] ne valant que pour un lot PROPOSE et [Entite si generabl
+	measure 'Valorisation etape 4 faite' = VAR n = COUNTROWS ( v_ecran_differences_par_compte ) VAR restes = CALCULATE ( COUNTROWS ( v_ecran_differences_par_compte ), ABS ( v_ecran_differences_par_compte[reste_a_passer] ) >= 0.005 ) + 0 VAR lots = CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Cycle] IN { "VALO", "PART" }, v_lots_perimetre[Statut du lot] = "PROPOSE" ) + 0 VAR r275 = ABS ( SUM ( v_reprise_275_a_passer[a_passer] ) + 0 ) VAR concl = CALCULATE ( COUNTROWS ( v_ecran_feuilles_valorisation ), v_ecran_feuilles_valorisation[conclusion_a_viser] = TRUE () ) + 0 RETURN IF ( n > 0 && restes + lots + concl = 0 && r275 < 0.005, 1, 0 )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 9bc3fe84-f659-4c17-b145-5d6edf5c6132
+
+	/// idem, étape 4
+	measure 'Fond valorisation etape 4' = IF ( [Valorisation etape 4 faite] = 1, "#1F6D4A", "#D5DCE4" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 4f97ad46-a803-41fb-b08f-b3e47a02afb7
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: da2c2b9b-9cc5-41c2-8b6f-1204c89e8c88
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 4d4d6a8f-ff4b-4821-9e28-dca18f507cec
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: e8382411-551e-413f-8c66-a1fa6ef2046d
+		summarizeBy: none
+		sourceColumn: compte
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: 7a27575a-9127-4670-a80e-5739adc03677
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille_libelle
+		dataType: string
+		sourceProviderType: nvarchar(16)
+		lineageTag: bd5a3086-a5c1-41ae-96e0-0e2489743213
+		summarizeBy: none
+		sourceColumn: famille_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column contrepartie
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: e8123eb1-4c47-4980-b10d-2a102adef7eb
+		summarizeBy: none
+		sourceColumn: contrepartie
+
+		annotation SummarizationSetBy = Automatic
+
+	column actifs
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b8e8ddf9-a55a-45b8-95e3-14622cd8c4bf
+		summarizeBy: sum
+		sourceColumn: actifs
+
+		annotation SummarizationSetBy = Automatic
+
+	column difference_actifs
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 2819eec3-65f9-4d7c-97a5-d5e9d6d30376
+		summarizeBy: sum
+		sourceColumn: difference_actifs
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column od_valorisation
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 3cc39019-8257-498d-ad99-0e4328caad75
+		summarizeBy: sum
+		sourceColumn: od_valorisation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column solde_compte
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 98f870e6-1c76-4b95-90a7-8a2f711309e7
+		summarizeBy: sum
+		sourceColumn: solde_compte
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column reste_a_passer
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: e213cad9-d7bc-444d-a256-fd9716910d50
+		summarizeBy: sum
+		sourceColumn: reste_a_passer
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 49596c83-6fc3-4752-bd6a-95dba2845571
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: varchar(62)
+		lineageTag: ec40c088-95cb-4d57-8952-b731c899f643
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_differences_par_compte = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_differences_par_compte = Source{[Schema="dbo",Item="v_ecran_differences_par_compte"]}[Data]
+				in
+				    dbo_v_ecran_differences_par_compte
+

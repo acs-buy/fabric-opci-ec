@@ -1,5 +1,5 @@
 
-
+-- pr_viser_cycle : 1 refus
 -- 7. VISER OU RENVOYER UN CYCLE. VISE : le premier obstacle de fn_obstacle_visa_cycle, puis
 -- l'auteur et le role. RENVOYE : admis depuis CONCLU et VISE (§ 7, point 8), jamais sur dossier verrouille ni
 -- revue visee ; il n'est pas soumis a E1, il peut porter sur ce qui manque.
@@ -21,7 +21,7 @@ BEGIN
         IF @o IS NOT NULL
         BEGIN
             SELECT @num = CAST(LEFT(@o, 5) AS INT), @m = SUBSTRING(@o, 7, 2000);
-            THROW @num, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW @num, @m, 1; END
         END;
     END
     ELSE IF @decision = 'RENVOYE'

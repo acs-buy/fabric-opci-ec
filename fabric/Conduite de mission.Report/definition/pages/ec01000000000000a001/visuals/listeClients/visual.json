@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "v_perimetre_groupe"
+                      "Entity": "liste_clients"
                     }
                   },
                   "Property": "Entité"
                 }
               },
-              "queryRef": "v_perimetre_groupe.Entité",
+              "queryRef": "liste_clients.Entité",
               "nativeQueryRef": "Entité"
             },
             {
@@ -34,13 +34,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "ref_entite"
+                      "Entity": "liste_clients"
                     }
                   },
                   "Property": "Dénomination"
                 }
               },
-              "queryRef": "ref_entite.Dénomination",
+              "queryRef": "liste_clients.Dénomination",
               "nativeQueryRef": "Dénomination"
             },
             {
@@ -223,7 +223,7 @@
             }
           },
           "selector": {
-            "metadata": "v_perimetre_groupe.Entité"
+            "metadata": "liste_clients.Entité"
           }
         },
         {
@@ -237,7 +237,7 @@
             }
           },
           "selector": {
-            "metadata": "ref_entite.Dénomination"
+            "metadata": "liste_clients.Dénomination"
           }
         },
         {
@@ -474,7 +474,7 @@
                 }
               }
             ],
-            "metadata": "v_perimetre_groupe.Entité"
+            "metadata": "liste_clients.Entité"
           }
         },
         {
@@ -504,7 +504,7 @@
                 }
               }
             ],
-            "metadata": "ref_entite.Dénomination"
+            "metadata": "liste_clients.Dénomination"
           }
         },
         {
@@ -693,7 +693,7 @@
           "Column": {
             "Expression": {
               "SourceRef": {
-                "Entity": "v_perimetre_groupe"
+                "Entity": "liste_clients"
               }
             },
             "Property": "Entité"
@@ -707,7 +707,7 @@
           "Column": {
             "Expression": {
               "SourceRef": {
-                "Entity": "ref_entite"
+                "Entity": "liste_clients"
               }
             },
             "Property": "Dénomination"

@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_espace_client
 	lineageTag: 4b0212b5-6ec8-46d2-b6f6-cce8c3e1414a
 

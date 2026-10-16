@@ -335,6 +335,13 @@
                   "Value": "'bkEtat2d'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ouvre la confirmation du retrait d''une filiale.'"
+                }
+              }
             }
           }
         }

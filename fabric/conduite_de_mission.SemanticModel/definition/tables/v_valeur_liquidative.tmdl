@@ -61,23 +61,98 @@ table v_valeur_liquidative
 		displayFolder: Le dossier
 		lineageTag: 002d39fb-90ff-401a-aeb3-227e8de99310
 
-	/// Carte 4.1, Valeur liquidative. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 4.1, Valeur liquidative.
 	measure 'R41 Valeur liquidative' = VAR lignes = COUNTROWS ( v_valeur_liquidative ) RETURN IF ( lignes = 1, SUM ( v_valeur_liquidative[valeur_liquidative] ) )
 		formatString: #,0.00
 		displayFolder: Rapports V2
 		lineageTag: e4373db5-9c30-4440-ae2f-1369ccfe441a
 
-	/// Carte 4.1, VL precedente. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 4.1, VL precedente.
 	measure 'R41 VL precedente' = VAR lignes = COUNTROWS ( v_valeur_liquidative ) RETURN IF ( lignes = 1, SUM ( v_valeur_liquidative[valeur_liquidative_precedente] ) )
 		formatString: #,0.00
 		displayFolder: Rapports V2
 		lineageTag: d5d27ff1-b5d5-48e5-b428-12f2078031da
 
-	/// Carte 4.1, Ecart. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 4.1, Ecart.
 	measure 'R41 Ecart de VL' = VAR lignes = COUNTROWS ( v_valeur_liquidative ) RETURN IF ( lignes = 1, SUM ( v_valeur_liquidative[ecart] ) )
 		formatString: +#,0.00;-#,0.00;0
 		displayFolder: Rapports V2
 		lineageTag: 6f6d3f11-9c98-4804-85b1-09e8fe41ebb7
+
+	/// « + x sur le jj/mm/aaaa » : [R41 Ecart de VL] et l’arrêté précédent
+	measure 'Sous-ligne VL calculee' = VAR vl = SUM ( v_valeur_liquidative[valeur_liquidative] ) VAR e = [R41 Ecart de VL] VAR p = MAX ( v_rationalisation_opci[arrete_precedent] ) RETURN IF ( ISBLANK ( vl ), "aucune valeur calculée à l’arrêté", IF ( NOT ISBLANK ( e ), IF ( e >= 0, "+ ", "- " ) & FORMAT ( ABS ( e ), "#,0.00" ) & IF ( NOT ISBLANK ( p ), " sur le " & RIGHT ( p, 2 ) & "/" & MID ( p, 6, 2 ) & "/" & LEFT ( p, 4 ) ), "" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: d8a40ed9-8232-449a-a26a-d0dc2c7129f6
+
+	/// gris quand [Publication a viser] ou [Associe connecte] est vide
+	measure 'Fond publier la VL' = IF ( ISBLANK ( [Publication a viser] ) || ISBLANK ( [Associe connecte] ), "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 003d40e5-d600-44b9-9a3c-592e0fa368b9
+
+	/// vert quand [Blocage publication de la VL] vaut « conditions réunies », alerte sinon
+	measure 'Couleur blocage publication' = IF ( [Blocage publication de la VL] = "conditions réunies", "#1F6D4A", "#9A2A2A" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 4406e8a9-b9b9-4177-8bce-19f7804c5b5c
+
+	/// « visa réservé à l’associé signataire », « n lots proposés, non visés », « synthèse non visée », « aucune valeur calculée », « VL publiée le jj/mm/aaaa » (publication non périmée) ; joints par « · » ; « conditions réunies » sinon
+	measure 'Blocage publication de la VL' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR lots = COUNTROWS ( FILTER ( ALL ( v_lots_perimetre ), v_lots_perimetre[Entité] = e && v_lots_perimetre[arrete] = a && v_lots_perimetre[Statut du lot] = "PROPOSE" ) ) + 0 VAR sv = MAXX ( TOPN ( 1, FILTER ( ALL ( v_journal_visa ), v_journal_visa[entite] = e && v_journal_visa[arrete] = a && v_journal_visa[nature] = "SYNTHESE" ), v_journal_visa[horodatage], DESC ), v_journal_visa[issue] ) VAR v = [R41 Valeur liquidative] VAR dpub = MAXX ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && publication_vl[arrete] = a && ISBLANK ( publication_vl[perimee_le] ) ), publication_vl[publie_le] ) VAR p1 = IF ( ISBLANK ( [Associe connecte] ), "visa réservé à l’associé signataire" ) VAR j1 = p1 VAR p2 = IF ( lots > 0, FORMAT ( lots, "0" ) & IF ( lots > 1, " lots proposés, non visés", " lot proposé, non visé" ) ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) VAR p3 = IF ( sv <> "VISE" || ISBLANK ( sv ), "synthèse non visée" ) VAR j3 = IF ( j2 <> "" && p3 <> "", j2 & " · " & p3, j2 & p3 ) VAR p4 = IF ( ISBLANK ( v ), "aucune valeur calculée" ) VAR j4 = IF ( j3 <> "" && p4 <> "", j3 & " · " & p4, j3 & p4 ) VAR p5 = IF ( NOT ISBLANK ( dpub ), "VL publiée le " & FORMAT ( dpub, "dd/MM/yyyy" ) ) VAR j5 = IF ( j4 <> "" && p5 <> "", j4 & " · " & p5, j4 & p5 ) RETURN IF ( j5 = "", "conditions réunies", j5 )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: a26cf8f2-e792-4933-8857-7ff8b11eb7a4
+
+	/// « entité|arrêté » quand une VL est rendue, aucun lot du véhicule proposé, la synthèse visée et aucune publication non périmée à l’arrêté (perimee_le vide : une publication que la réouverture a périmée ne bloque pas la suivante) ; vide sinon ; paramètre objetRef
+	measure 'Publication a viser' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR lots = COUNTROWS ( FILTER ( ALL ( v_lots_perimetre ), v_lots_perimetre[Entité] = e && v_lots_perimetre[arrete] = a && v_lots_perimetre[Statut du lot] = "PROPOSE" ) ) + 0 VAR sv = MAXX ( TOPN ( 1, FILTER ( ALL ( v_journal_visa ), v_journal_visa[entite] = e && v_journal_visa[arrete] = a && v_journal_visa[nature] = "SYNTHESE" ), v_journal_visa[horodatage], DESC ), v_journal_visa[issue] ) VAR v = [R41 Valeur liquidative] VAR pub = COUNTROWS ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && publication_vl[arrete] = a && ISBLANK ( publication_vl[perimee_le] ) ) ) + 0 RETURN IF ( NOT ISBLANK ( v ) && lots = 0 && sv = "VISE" && pub = 0, e & "|" & a )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: ad6b7921-a8f0-4e0e-8520-5e1799f44126
+
+	/// vert « publiée », alerte « publiée, écart » et « non calculable », attente « calculée, non publiée » (pastille de la grille)
+	measure 'Couleur etat de la VL' = VAR s = [Etat de la VL] RETURN SWITCH ( TRUE (), s = "publiée", "#1F6D4A", s = "calculée, non publiée", "#C8961E", "#9A2A2A" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: e40b171d-50f7-4b1d-a2b1-f2b455a415b6
+
+	/// « publiée », « publiée, écart x », « calculée, non publiée », « non calculable »
+	measure 'Etat de la VL' = VAR a2 = COALESCE ( SELECTEDVALUE ( v_valeur_liquidative[arrete] ), [Arrete selectionne] ) VAR e = [Client selectionne] VAR v = IF ( COUNTROWS ( v_valeur_liquidative ) = 1, SUM ( v_valeur_liquidative[valeur_liquidative] ) ) VAR p = MAXX ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && publication_vl[arrete] = a2 && ISBLANK ( publication_vl[perimee_le] ) ), publication_vl[valeur_liquidative] ) RETURN IF ( ISBLANK ( v ), "non calculable", IF ( ISBLANK ( p ), "calculée, non publiée", IF ( ROUND ( p - v, 2 ) = 0, "publiée", "publiée, écart " & IF ( ROUND ( ( p - v ), 2 ) < 0, "-" & FORMAT ( ABS ( ( p - v ) ), "#,0.00" ), IF ( ROUND ( ( p - v ), 2 ) > 0, "+ " & FORMAT ( ( p - v ), "#,0.00" ), "0,00" ) ) ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 6dcf96af-5625-4a27-ae5a-bb4ec0753aaa
+
+	/// version_regles ; « à remplir »
+	measure 'Version des regles a l ecran' = VAR s = IF ( COUNTROWS ( v_valeur_liquidative ) = 1, MAX ( v_valeur_liquidative[version_regles] ) ) RETURN IF ( ISBLANK ( s ) || s = "", "à remplir", s )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 50d02bd5-7f8b-4769-8b1e-d89bf817029a
+
+	/// source ; « à remplir »
+	measure 'Source des parts a l ecran' = VAR s = IF ( COUNTROWS ( v_valeur_liquidative ) = 1, MAX ( v_valeur_liquidative[source] ) ) RETURN IF ( ISBLANK ( s ) || s = "", "à remplir", s )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 29c524fc-208e-4fcb-8202-e869b5d19d4c
+
+	/// nombre_parts sans décimale ; « à remplir »
+	measure 'Parts a l ecran' = IF ( COUNTROWS ( v_valeur_liquidative ) = 1 && NOT ISBLANK ( SUM ( v_valeur_liquidative[nombre_parts] ) ), FORMAT ( SUM ( v_valeur_liquidative[nombre_parts] ), "#,0" ), "à remplir" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 825b1bc6-6baf-4176-845f-c10ba62e2e32
+
+	/// actif_net_reevalue à la française ; « à remplir » sans ligne
+	measure 'ANR a l ecran' = IF ( COUNTROWS ( v_valeur_liquidative ) = 1, FORMAT ( SUM ( v_valeur_liquidative[actif_net_reevalue] ), "#,0.00" ), "à remplir" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 21edb50f-9f7b-441b-a0bb-aa53c22de7d5
+
+	/// « au jj/mm/aaaa », l’arrêté calculé qui précède ; vide sans arrêté précédent, même règle que [Carte VL precedente]
+	measure 'Sous-ligne VL precedente' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR p = MAXX ( FILTER ( ALL ( v_valeur_liquidative ), v_valeur_liquidative[entite] = e && v_valeur_liquidative[arrete] < a && NOT ISBLANK ( v_valeur_liquidative[valeur_liquidative] ) ), v_valeur_liquidative[arrete] ) RETURN IF ( ISBLANK ( p ), "", "au " & RIGHT ( p, 2 ) & "/" & MID ( p, 6, 2 ) & "/" & LEFT ( p, 4 ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 7900da9e-ea15-4fde-b3c2-f321e0a56626
+
+	/// [R41 VL precedente] à la française, lu sur le dernier arrêté antérieur calculé même quand l’arrêté courant n’a lui-même aucune ligne (cas d’un arrêté semestriel non calculé) : [R41 VL precedente] ne dépend pas de l’existence d’une ligne à l’arrêté courant ; « aucune » seulement sans aucun arrêté ant
+	measure 'Carte VL precedente' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR p = MAXX ( FILTER ( ALL ( v_valeur_liquidative ), v_valeur_liquidative[entite] = e && v_valeur_liquidative[arrete] < a && NOT ISBLANK ( v_valeur_liquidative[valeur_liquidative] ) ), v_valeur_liquidative[arrete] ) VAR v = MAXX ( FILTER ( ALL ( v_valeur_liquidative ), v_valeur_liquidative[entite] = e && v_valeur_liquidative[arrete] = p ), v_valeur_liquidative[valeur_liquidative] ) RETURN IF ( ISBLANK ( v ), "aucune", FORMAT ( v, "#,0.00" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 231b566e-8aab-4b99-a793-9676bb1e01dc
+
+	/// « n arrêtés calculés · n publiés »
+	measure 'Sous-titre grille des VL' = VAR e = [Client selectionne] VAR nc = COUNTROWS ( FILTER ( ALL ( v_valeur_liquidative ), v_valeur_liquidative[entite] = e && NOT ISBLANK ( v_valeur_liquidative[valeur_liquidative] ) ) ) + 0 VAR np = COUNTROWS ( DISTINCT ( SELECTCOLUMNS ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && ISBLANK ( publication_vl[perimee_le] ) ), "a", publication_vl[arrete] ) ) ) + 0 RETURN FORMAT ( nc, "0" ) & IF ( nc > 1, " arrêtés calculés", " arrêté calculé" ) & " · " & FORMAT ( np, "0" ) & IF ( np > 1, " publiés", " publié" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: c33270fe-00eb-4848-add9-8bf71777dd20
+
+	/// [R41 Valeur liquidative] à la française ; « à remplir » sans valeur (carte 2)
+	measure 'Carte VL calculee' = VAR v = [R41 Valeur liquidative] RETURN IF ( ISBLANK ( v ), "à remplir", FORMAT ( v, "#,0.00" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 71efe7fd-049e-480a-923a-f81351ad2127
 
 	column entite
 		dataType: string
@@ -180,6 +255,16 @@ table v_valeur_liquidative
 		annotation SummarizationSetBy = Automatic
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column arrete_libelle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 55e92c83-2845-44f8-a76c-dd4f375dc7d9
+		summarizeBy: none
+		sourceColumn: arrete_libelle
+		sortByColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
 
 	partition v_valeur_liquidative = m
 		mode: directQuery

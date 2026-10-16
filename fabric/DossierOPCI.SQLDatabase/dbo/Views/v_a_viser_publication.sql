@@ -29,7 +29,7 @@ CROSS APPLY (
 ) AS bloq
 WHERE v.valeur_liquidative IS NOT NULL
   AND NOT EXISTS (SELECT 1 FROM dbo.publication_vl p
-                  WHERE p.entite = v.entite AND p.arrete = v.arrete);
+                  WHERE p.entite = v.entite AND p.arrete = v.arrete AND p.perimee_le IS NULL);
 
 GO
 

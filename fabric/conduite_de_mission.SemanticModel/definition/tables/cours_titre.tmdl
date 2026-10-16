@@ -1,0 +1,146 @@
+/// Cours saisis des titres 256 et 258 du vehicule.
+table cours_titre
+	lineageTag: 21b45d47-3bc1-46b0-833e-462d78aba5a5
+
+	/// la quantité saisie du titre de la ligne (256, 258)
+	measure 'Quantite du titre' = VAR c = SELECTEDVALUE ( v_differences_titres[code_actif] ) RETURN CALCULATE ( SUM ( cours_titre[quantite] ), FILTER ( ALL ( cours_titre[code_actif] ), cours_titre[code_actif] = c ) )
+		formatString: #,0.####
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e64ae726-e3bb-47a8-82d3-7beaca59359e
+
+	/// le cours ou la VL saisi du titre de la ligne
+	measure 'Cours du titre' = VAR c = SELECTEDVALUE ( v_differences_titres[code_actif] ) RETURN CALCULATE ( SUM ( cours_titre[cours] ), FILTER ( ALL ( cours_titre[code_actif] ), cours_titre[code_actif] = c ) )
+		formatString: #,0.00##
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 1acd9190-5fa0-44bc-af31-76e519dc9255
+
+	/// « n cours saisis · aucun titre choisi », « n cours saisis · <titre> »
+	measure 'Sous-titre cours de l arrete' = VAR n = COUNTROWS ( cours_titre ) + 0 VAR t = IF ( HASONEVALUE ( v_differences_titres[code_actif] ), SELECTEDVALUE ( v_differences_titres[code_actif] ) ) RETURN FORMAT ( n, "0" ) & " cours saisis · " & IF ( ISBLANK ( t ), "aucun titre choisi", t )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: ff75542e-e11c-4d0d-a536-fe795e24a799
+
+	/// même règle, segment « Titre »
+	measure 'Avis enregistrer le cours' = VAR p1 = IF ( ISFILTERED ( v_differences_titres[code_actif] ) && COUNTROWS ( VALUES ( v_differences_titres[code_actif] ) ) >= 2, "Une seule valeur à cocher dans « Titre »." ) VAR j1 = p1 RETURN IF ( j1 = "", "", j1 ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 49a14480-d4f4-4c4d-ae48-49f95ccad997
+
+	/// gris quand [Avis enregistrer le cours] n’est pas vide
+	measure 'Fond enregistrer le cours' = IF ( [Avis enregistrer le cours] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 87b65bbb-a5f8-4ca8-b78a-c520908506c4
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 7a257cef-722c-4669-9428-5cde0e9c5f40
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 8dc63754-7ed8-4d6d-bcf0-26468845c5f6
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e6ee9bb7-c47e-4675-a944-535e6c274d48
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f297866e-6faf-430f-9b3d-180841774a43
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 59e06616-8756-4f1a-92aa-c286ec87b209
+		summarizeBy: none
+		sourceColumn: compte
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantite
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 4)
+		lineageTag: 172bac26-52fb-4ccd-bcd9-dc1cc896c7cc
+		summarizeBy: sum
+		sourceColumn: quantite
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cours
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 4)
+		lineageTag: 359e48ad-1850-401c-a424-a920b9d4a693
+		summarizeBy: sum
+		sourceColumn: cours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 7b7254e9-56dd-4ab4-b352-5f38f586d149
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column saisi_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 2f7dc7d0-c036-4642-ac00-2bbb6fbe565f
+		summarizeBy: none
+		sourceColumn: saisi_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column saisi_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 8fe50fc5-e05d-4d97-aab6-4a2d2ad55b84
+		summarizeBy: none
+		sourceColumn: saisi_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition cours_titre = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_cours_titre = Source{[Schema="dbo",Item="cours_titre"]}[Data]
+				in
+				    dbo_cours_titre
+

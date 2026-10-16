@@ -44,108 +44,29 @@ CREATE NONCLUSTERED INDEX [ix_ecriture_lot]
 GO
 
 
--- --- 2 : la regle, portee par un declencheur ------------------------
--- CE QUE LE DECLENCHEUR REFUSE, ET CE QU'IL LAISSE PASSER. Il refuse un
--- compte qui n'existe ni au plan de l'entite du lot, ni au plan du
--- modele. Il laisse passer les 2 autres cas, et le controle C81 mesure
--- ceux qui ne sont connus que du modele.
-CREATE   TRIGGER dbo.tr_ecriture_compte_du_plan
-ON dbo.ecriture
-AFTER INSERT, UPDATE
+CREATE   TRIGGER dbo.tr_ecriture_annexe_retard ON dbo.ecriture
+AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-
-    DECLARE @compte VARCHAR (20), @entite VARCHAR (20);
-    SELECT TOP 1 @compte = i.compte_num, @entite = l.entite
-    FROM inserted i
-    JOIN dbo.lot_ecritures l ON l.id = i.lot_id
-    WHERE NOT EXISTS (SELECT 1 FROM dbo.ref_compte_entite rce
-                      WHERE rce.entite = l.entite
-                        AND rce.compte_entite = i.compte_num)
-      AND NOT EXISTS (SELECT 1 FROM dbo.ref_compte rc
-                      WHERE rc.compte = i.compte_num);
-
-    IF @compte IS NOT NULL
-    BEGIN
-        DECLARE @m NVARCHAR (2000) =
-            N'Écriture refusée : le compte ' + @compte
-          + N' n''appartient ni au plan de l''entité ' + @entite
-          + N', déclaré dans dbo.ref_compte_entite, ni au plan du modèle. '
-          + N'Déclarer le compte au plan de l''entité, avec le compte du '
-          + N'modèle auquel il se rattache, ou corriger le numéro.';
-        THROW 50082, @m, 1;
-    END;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM inserted
+        EXCEPT SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM deleted EXCEPT SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT l.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch JOIN dbo.lot_ecritures l ON l.id = ch.lot_id WHERE l.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'ecriture', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
 END;
 
 GO
 
 
-
--- ---------------------------------------------------------------------
--- BLOC 5 : tr_ecriture_lot_non_regenerable. Le refus de supprimer les
--- écritures d'un lot déjà remis. SEUL DANS SON LOT.
--- ---------------------------------------------------------------------
-CREATE   TRIGGER dbo.tr_ecriture_lot_non_regenerable
-ON dbo.ecriture
-AFTER DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    IF (ROWCOUNT_BIG() = 0)
-        RETURN;
-
-    DECLARE @statut VARCHAR (10) = (
-        SELECT MAX(l.statut)
-          FROM dbo.lot_ecritures l
-         WHERE l.id IN (SELECT d.lot_id FROM deleted d)
-           AND l.statut IN ('EXPORTE', 'PUBLIE'));
-
-    IF @statut IS NOT NULL
-    BEGIN
-        DECLARE @msg NVARCHAR (700) =
-            N'Suppression refusee par tr_ecriture_lot_non_regenerable de '
-            + N'63_SQL/33_export_fec.sql : des ecritures supprimees '
-            + N'appartiennent a un lot au statut ' + @statut
-            + N', deja remis. Un lot exporte ou publie n''est plus '
-            + N'regenerable : sa correction passe par une ecriture inverse '
-            + N'dans un nouveau lot, jamais par une destruction. La liste '
-            + N'des lots concernes est rendue par dbo.v_lot_non_regenerable.';
-        THROW 50019, @msg, 5;
-    END
-END
-
-GO
-
-
--- INVARIANT : tout lot est equilibre, verifie a l'enregistrement
-CREATE TRIGGER tr_lot_equilibre
-ON ecriture
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF EXISTS (
-        SELECT e.lot_id
-        FROM ecriture e
-        WHERE e.lot_id IN (
-            SELECT lot_id FROM inserted
-            UNION
-            SELECT lot_id FROM deleted
-        )
-        GROUP BY e.lot_id
-        HAVING SUM(e.debit) <> SUM(e.credit)
-    )
-    BEGIN
-        THROW 50001, 'Lot desequilibre : la somme des debits doit egaler celle des credits.', 1;
-    END
-END
-
-GO
-
-
+-- tr_reevaluation_contrepartie : 2 refus
 -- --- depuis 63_SQL/60_contrepartie_prescrite.sql : tr_reevaluation_contrepartie ---
 -- --- 3 : le refus, sur un lot de reevaluation --------------------------
 -- Un lot DERIVABLE qui touche un compte de difference d'estimation doit
@@ -190,7 +111,7 @@ BEGIN
           + @manquants
           + N'. Article 411-3 du reglement ANC n° 2021-09 modifie par le '
           + N'reglement ANC n° 2024-01, et article 213-4 pour le compte 276.';
-        THROW 50040, @m1, 1;
+        BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50040, @m1, 1; END
     END;
 
     -- Refus 2 : une contrepartie de capital presente dans le lot alors
@@ -217,9 +138,112 @@ BEGIN
           + @intruses + N' alors qu''aucun compte de difference '
           + N'd''estimation du lot ne la prescrit. La correspondance se lit '
           + N'dans ref_contrepartie_estimation.';
-        THROW 50040, @m2, 1;
+        BEGIN SET @m2 = REPLACE(@m2, N'%', N'%%'); THROW 50040, @m2, 1; END
     END;
 END;
+
+GO
+
+
+-- INVARIANT : tout lot est equilibre, verifie a l'enregistrement
+CREATE TRIGGER tr_lot_equilibre
+ON ecriture
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF EXISTS (
+        SELECT e.lot_id
+        FROM ecriture e
+        WHERE e.lot_id IN (
+            SELECT lot_id FROM inserted
+            UNION
+            SELECT lot_id FROM deleted
+        )
+        GROUP BY e.lot_id
+        HAVING SUM(e.debit) <> SUM(e.credit)
+    )
+    BEGIN
+        THROW 50001, 'Lot desequilibre : la somme des debits doit egaler celle des credits.', 1;
+    END
+END
+
+GO
+
+
+-- tr_ecriture_compte_du_plan : 1 refus
+-- --- 2 : la regle, portee par un declencheur ------------------------
+-- CE QUE LE DECLENCHEUR REFUSE, ET CE QU'IL LAISSE PASSER. Il refuse un
+-- compte qui n'existe ni au plan de l'entite du lot, ni au plan du
+-- modele. Il laisse passer les 2 autres cas, et le controle C81 mesure
+-- ceux qui ne sont connus que du modele.
+CREATE   TRIGGER dbo.tr_ecriture_compte_du_plan
+ON dbo.ecriture
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+
+    DECLARE @compte VARCHAR (20), @entite VARCHAR (20);
+    SELECT TOP 1 @compte = i.compte_num, @entite = l.entite
+    FROM inserted i
+    JOIN dbo.lot_ecritures l ON l.id = i.lot_id
+    WHERE NOT EXISTS (SELECT 1 FROM dbo.ref_compte_entite rce
+                      WHERE rce.entite = l.entite
+                        AND rce.compte_entite = i.compte_num)
+      AND NOT EXISTS (SELECT 1 FROM dbo.ref_compte rc
+                      WHERE rc.compte = i.compte_num);
+
+    IF @compte IS NOT NULL
+    BEGIN
+        DECLARE @m NVARCHAR (2000) =
+            N'Écriture refusée : le compte ' + @compte
+          + N' n''appartient ni au plan de l''entité ' + @entite
+          + N', déclaré dans dbo.ref_compte_entite, ni au plan du modèle. '
+          + N'Déclarer le compte au plan de l''entité, avec le compte du '
+          + N'modèle auquel il se rattache, ou corriger le numéro.';
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50082, @m, 1; END
+    END;
+END;
+
+GO
+
+
+-- tr_ecriture_lot_non_regenerable : 1 refus
+-- ---------------------------------------------------------------------
+-- BLOC 5 : tr_ecriture_lot_non_regenerable. Le refus de supprimer les
+-- écritures d'un lot déjà remis. SEUL DANS SON LOT.
+-- ---------------------------------------------------------------------
+CREATE   TRIGGER dbo.tr_ecriture_lot_non_regenerable
+ON dbo.ecriture
+AFTER DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF (ROWCOUNT_BIG() = 0)
+        RETURN;
+
+    DECLARE @statut VARCHAR (10) = (
+        SELECT MAX(l.statut)
+          FROM dbo.lot_ecritures l
+         WHERE l.id IN (SELECT d.lot_id FROM deleted d)
+           AND l.statut IN ('EXPORTE', 'PUBLIE'));
+
+    IF @statut IS NOT NULL
+    BEGIN
+        DECLARE @msg NVARCHAR (700) =
+            N'Suppression refusee par tr_ecriture_lot_non_regenerable de '
+            + N'63_SQL/33_export_fec.sql : des ecritures supprimees '
+            + N'appartiennent a un lot au statut ' + @statut
+            + N', deja remis. Un lot exporte ou publie n''est plus '
+            + N'regenerable : sa correction passe par une ecriture inverse '
+            + N'dans un nouveau lot, jamais par une destruction. La liste '
+            + N'des lots concernes est rendue par dbo.v_lot_non_regenerable.';
+        BEGIN SET @msg = REPLACE(@msg, N'%', N'%%'); THROW 50019, @msg, 5; END
+    END
+END
 
 GO
 

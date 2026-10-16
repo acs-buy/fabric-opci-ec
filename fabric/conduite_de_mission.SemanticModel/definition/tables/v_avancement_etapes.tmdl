@@ -1,4 +1,4 @@
-/// L'avancement des 5 etapes du parcours par entite et arrete : fait, total, part, etape en cours. Script 63_SQL/152_avancement_etapes.sql, definitions arbitrees avec la session de la base le 09/09/2026. Ajoutee le 09/09/2026.
+/// L'avancement des 5 etapes du parcours par entite et arrete : fait, total, part, etape en cours. Script 63_SQL/152_avancement_etapes.sql. Ajoutee le 09/09/2026.
 table v_avancement_etapes
 	lineageTag: f8ac9cc4-fe5d-4988-86de-a3efd8c6758d
 
@@ -127,6 +127,17 @@ table v_avancement_etapes
 		displayFolder: La barre d'avancement
 		lineageTag: 25e53115-9104-4702-9d0c-887e9d7aebcb
 
+	/// vert quand [Fait de l etape] = [Total de l etape] et [Total de l etape] > 0, accent sinon (couleur de la barre « Avancement de l’arrêté »)
+	measure 'Couleur avancement de l etape' = IF ( [Fait de l etape] = [Total de l etape] && [Total de l etape] > 0, "#1F6D4A", "#0F5C8C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 7769b379-e97a-4440-ac71-173acde9c915
+
+	/// DIVIDE ([Fait de l etape], [Total de l etape]) ; la valeur de la barre du clusteredBarChart « Avancement de l’arrêté », une barre par étape, minimum 0 et maximum 1
+	measure 'Part faite de l etape' = DIVIDE ( [Fait de l etape], [Total de l etape] )
+		formatString: 0 %
+		displayFolder: Ecran 4 Arrete
+		lineageTag: c561cb72-fd83-42cf-9d5d-04acad39c37f
+
 	column cle_ecran
 		dataType: string
 		isNullable: false
@@ -244,6 +255,7 @@ table v_avancement_etapes
 		lineageTag: eabfae8b-3300-4713-a088-93df5afa79d9
 		summarizeBy: none
 		sourceColumn: etape_libelle
+		sortByColumn: etape_ordre
 
 		annotation SummarizationSetBy = Automatic
 

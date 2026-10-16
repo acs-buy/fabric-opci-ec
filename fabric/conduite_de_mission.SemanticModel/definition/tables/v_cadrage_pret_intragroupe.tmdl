@@ -1,6 +1,11 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_cadrage_pret_intragroupe
 	lineageTag: 7bb21803-f341-4cf6-ba74-31dfadb85922
+
+	/// « réciproque » quand reciproque_par_construction vaut 1, « à cadrer » sinon
+	measure 'Cadrage du pret' = IF ( HASONEVALUE ( v_cadrage_pret_intragroupe[filiale] ), IF ( SELECTEDVALUE ( v_cadrage_pret_intragroupe[reciproque_par_construction] ) = TRUE (), "réciproque", "à cadrer" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 0afda436-1968-400b-a4f0-ef268fdf2789
 
 	column arrete
 		dataType: string
@@ -19,6 +24,7 @@ table v_cadrage_pret_intragroupe
 		lineageTag: c9324c35-9ed0-49b7-b336-c551bb3e32c7
 		summarizeBy: none
 		sourceColumn: filiale
+		sortByColumn: ordre_filiale
 
 		annotation SummarizationSetBy = Automatic
 
@@ -71,6 +77,17 @@ table v_cadrage_pret_intragroupe
 		lineageTag: 1501349b-9cfe-4a8f-8d01-cf0da677503d
 		summarizeBy: none
 		sourceColumn: reciproque_par_construction
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre_filiale
+		dataType: int64
+		isHidden
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 72bcfd5b-8567-4da8-a24e-5d518dd3b076
+		summarizeBy: none
+		sourceColumn: ordre_filiale
 
 		annotation SummarizationSetBy = Automatic
 

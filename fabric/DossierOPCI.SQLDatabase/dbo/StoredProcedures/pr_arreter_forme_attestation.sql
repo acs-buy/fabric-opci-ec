@@ -1,5 +1,5 @@
 
-
+-- pr_arreter_forme_attestation : 8 refus
 -- 6. L'ARRET DE LA FORME. Controles dans l'ordre du contrat : 50083, 50632, 50630, regles de l'entite (50628, 50629,
 -- 50631), 50084, puis pour une forme d'attestation 50085 et 50098 sur la forme d'attestation derivee. Tout arret
 -- perime, dans la meme transaction, la derniere version non perimee du rapport de l'arrete.
@@ -24,14 +24,14 @@ BEGIN
         SET @m = N'Forme refusée : le rapport de l''expert-comptable est signé par l''associé signataire, et lui seul en arrête la forme.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, message, geste, refuse_pour, refuse_le)
         VALUES ('pr_arreter_forme_attestation', @entite, @arrete, @m, N'Faire arrêter la forme par l''associé signataire.', @par, SYSUTCDATETIME());
-        THROW 50083, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50083, @m, 1; END
     END;
     IF dbo.fn_valide_pour_client(@entite, @arrete) = 1
         THROW 50632, N'Forme refusée : l''arrêté est validé pour le client ; un changement de forme suppose sa réouverture.', 1;
     IF @forme IS NULL OR @forme NOT IN ('COMPTE_RENDU_TRAVAUX', 'SANS_OBSERVATION', 'AVEC_OBSERVATION', 'IMPOSSIBILITE')
     BEGIN
         SET @m = N'Forme refusée : ' + ISNULL(@forme, N'(vide)') + N' n''est pas une forme du rapport de l''expert-comptable ; formes : COMPTE_RENDU_TRAVAUX, SANS_OBSERVATION, AVEC_OBSERVATION, IMPOSSIBILITE.';
-        THROW 50630, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50630, @m, 1; END
     END;
 
     SELECT @soumise = CASE WHEN soumise_commissariat_comptes = 1 THEN 1 ELSE 0 END FROM dbo.ref_entite WHERE code = @entite;
@@ -42,7 +42,7 @@ BEGIN
         IF @forme <> 'COMPTE_RENDU_TRAVAUX' AND @motif_considerations IS NULL
         BEGIN
             SET @m = N'Forme refusée : l''entité ' + @entite + N' est soumise au commissariat aux comptes ; son rapport est un compte rendu de travaux (NP 2300, A10). Une attestation n''y est admise qu''avec le motif des considérations particulières qui la justifient.';
-            THROW 50628, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50628, @m, 1; END
         END;
     END
     ELSE
@@ -50,18 +50,18 @@ BEGIN
         IF @forme = 'COMPTE_RENDU_TRAVAUX'
         BEGIN
             SET @m = N'Forme refusée : le compte rendu de travaux est réservé à une entité soumise au commissariat aux comptes ; pour l''entité ' + @entite + N', cet indicateur est à 0 ou à remplir.';
-            THROW 50631, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50631, @m, 1; END
         END;
         IF @motif_considerations IS NOT NULL
             THROW 50629, N'Forme refusée : un motif de considérations particulières ne se saisit qu''avec une attestation, pour une entité soumise au commissariat aux comptes ; le compte rendu de travaux ne porte aucun motif.', 1;
     END;
 
-    IF NOT EXISTS (SELECT 1 FROM dbo.publication_vl p WHERE p.entite = @entite AND p.arrete = @arrete)
+    IF NOT EXISTS (SELECT 1 FROM dbo.publication_vl p WHERE p.entite = @entite AND p.arrete = @arrete AND p.perimee_le IS NULL)
     BEGIN
         SET @m = N'Forme refusée : la valeur liquidative de cet arrêté n''est pas publiée. Le rapport de l''expert-comptable porte sur des comptes arrêtés.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, message, geste, refuse_pour, refuse_le)
         VALUES ('pr_arreter_forme_attestation', @entite, @arrete, @m, N'Publier la valeur liquidative.', @par, SYSUTCDATETIME());
-        THROW 50084, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50084, @m, 1; END
     END;
 
     SELECT @derivee = forme_attestation_derivee, @limitation = limitation_des_diligences, @proposee = forme_proposee
@@ -76,14 +76,14 @@ BEGIN
                 SET @m = N'Forme refusée : aucune feuille de cycle n''est conclue pour cet arrêté. La NP 2300 traite ce cas : une limitation des diligences appelle une conclusion avec observation, paragraphe 20, ou un refus d''attester, paragraphe 21, selon l''importance de ses incidences. La forme sans observation est fermée.';
                 INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, message, geste, refuse_pour, refuse_le)
                 VALUES ('pr_arreter_forme_attestation', @entite, @arrete, @m, N'Choisir entre l''observation et le refus d''attester.', @par, SYSUTCDATETIME());
-                THROW 50085, @m, 1;
+                BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50085, @m, 1; END
             END;
             IF @motif IS NULL
             BEGIN
                 SET @m = N'Forme refusée : une forme arrêtée sur limitation des diligences exige un motif, qui dit quelles informations ou quels documents n''ont pas été reçus de l''entité.';
                 INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, message, geste, refuse_pour, refuse_le)
                 VALUES ('pr_arreter_forme_attestation', @entite, @arrete, @m, N'Saisir le motif de la limitation.', @par, SYSUTCDATETIME());
-                THROW 50098, @m, 1;
+                BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50098, @m, 1; END
             END;
         END
         ELSE IF @forme <> @derivee
@@ -91,7 +91,7 @@ BEGIN
             SET @m = N'Forme refusée : la forme d''attestation se dérive de la plus sévère des conclusions des feuilles de travail. La forme dérivée est « ' + @derivee + N' ».';
             INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, message, geste, refuse_pour, refuse_le)
             VALUES ('pr_arreter_forme_attestation', @entite, @arrete, @m, N'Arrêter la forme dérivée, ou conclure les feuilles.', @par, SYSUTCDATETIME());
-            THROW 50085, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50085, @m, 1; END
         END;
     END;
 

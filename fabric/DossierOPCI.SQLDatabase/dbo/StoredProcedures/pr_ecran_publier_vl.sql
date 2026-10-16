@@ -1,3 +1,4 @@
+
 CREATE   PROCEDURE dbo.pr_ecran_publier_vl
     @entite VARCHAR (20),
     @arrete VARCHAR (20),
@@ -5,6 +6,9 @@ CREATE   PROCEDURE dbo.pr_ecran_publier_vl
 AS
 BEGIN
     SET NOCOUNT ON;
+    -- 15/10/2026 : une personne vide ou NULL se refuse en francais, avant tout le reste
+    IF NULLIF(LTRIM(RTRIM(@par)), N'') IS NULL
+        THROW 50826, N'Publication refusée : votre compte ne tient pas, sur ce dossier, le rôle d''associé signataire qui publie la valeur liquidative.', 1;
     BEGIN TRY
         EXEC dbo.pr_publier_vl @entite, @arrete, @par;
         UPDATE dbo.ref_arrete

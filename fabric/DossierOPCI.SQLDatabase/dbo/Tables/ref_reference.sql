@@ -25,6 +25,24 @@ CREATE TABLE [dbo].[ref_reference] (
 
 GO
 
+CREATE   TRIGGER dbo.[tr_ref_reference_horodatage]
+ON dbo.[ref_reference]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_reference] t
+    JOIN inserted i ON t.[id] = i.[id];
+END;
+
+GO
+
 CREATE   TRIGGER dbo.[tr_ref_reference_garde]
 ON dbo.[ref_reference]
 AFTER INSERT, UPDATE, DELETE
@@ -40,20 +58,22 @@ END;
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_reference_horodatage]
-ON dbo.[ref_reference]
-AFTER UPDATE
+
+CREATE   TRIGGER dbo.tr_ref_reference_annexe_retard ON dbo.ref_reference
+AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_reference] t
-    JOIN inserted i ON t.[id] = i.[id];
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT id, citation, genre, intitule, lu_le, lu_sur_piece, norme, page_piece, reference FROM inserted
+        EXCEPT SELECT id, citation, genre, intitule, lu_le, lu_sur_piece, norme, page_piece, reference FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT id, citation, genre, intitule, lu_le, lu_sur_piece, norme, page_piece, reference FROM deleted EXCEPT SELECT id, citation, genre, intitule, lu_le, lu_sur_piece, norme, page_piece, reference FROM inserted) d
+    )
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT e.code, SYSUTCDATETIME(), N'ref_reference', (SELECT COUNT(*) FROM ch)
+    FROM dbo.ref_entite e WHERE e.forme_vehicule IS NOT NULL AND EXISTS (SELECT 1 FROM ch);
 END;
 
 GO

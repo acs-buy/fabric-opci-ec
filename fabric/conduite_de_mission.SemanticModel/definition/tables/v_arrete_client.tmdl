@@ -1,0 +1,121 @@
+/// La porte du rapport client : les arretes dont le dernier visa de cloture est VISE.
+table v_arrete_client
+	lineageTag: 6a5f750f-50c1-44c8-aaf5-650e52500be8
+
+	measure 'Porte du client' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_arrete_client ), v_arrete_client[entite] = e ) RETURN IF ( ISBLANK ( e ), BLANK (), IF ( COUNTROWS ( t ) > 0, CONCATENATEX ( t, MID ( v_arrete_client[arrete], 9, 2 ) & "/" & MID ( v_arrete_client[arrete], 6, 2 ) & "/" & LEFT ( v_arrete_client[arrete], 4 ), ", ", v_arrete_client[arrete], ASC ), "aucun arrêté" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: e7e82367-a6f7-400c-8c1e-2e6b1b107e58
+
+	measure 'Aff Porte du client' = [Porte du client] & ""
+		lineageTag: 193d33f3-8754-4456-b02b-58ef704c2df5
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 339bfe43-f9a9-40f7-a356-0a97213e76dd
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 95bee977-772a-415e-8bcd-bbf82e71b95b
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d6eeaa20-e80c-4aa8-b087-844127e9f3a9
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: fec3fee8-b915-4ab2-8dff-c058997c2e44
+		summarizeBy: none
+		sourceColumn: type_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: ac51b3ef-0a37-45ea-9df8-d5414775b673
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_arrete
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: 61f2580a-eaa0-483a-a1f0-0407773f3c7b
+		summarizeBy: none
+		sourceColumn: date_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column visa_cloture_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 73784b96-be23-43cc-b254-69c28fc2393b
+		summarizeBy: none
+		sourceColumn: visa_cloture_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cloture_visee_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: b02a7e3b-d3c5-4097-b9c2-1cb1e94e2e8b
+		summarizeBy: none
+		sourceColumn: cloture_visee_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column cloture_visee_le
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: b88792dc-c6c4-4e0f-abab-777d4fc1d4c5
+		summarizeBy: none
+		sourceColumn: cloture_visee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column selection
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(20)
+		lineageTag: 73baf1d7-975b-467d-bc4e-0e0c3cf0c769
+		summarizeBy: none
+		sourceColumn: selection
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_arrete_client = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_arrete_client = Value.NativeQuery(Source, "SELECT cle_arrete, entite, arrete, type_arrete, exercice, date_arrete, visa_cloture_id, cloture_visee_par, DATETIME2FROMPARTS(YEAR(cloture_visee_le), MONTH(cloture_visee_le), DAY(cloture_visee_le), DATEPART(HOUR, cloture_visee_le), DATEPART(MINUTE, cloture_visee_le), DATEPART(SECOND, cloture_visee_le), 0, 0) AS cloture_visee_le, selection FROM dbo.v_arrete_client", null, [EnableFolding = true])
+				in
+				    dbo_v_arrete_client
+

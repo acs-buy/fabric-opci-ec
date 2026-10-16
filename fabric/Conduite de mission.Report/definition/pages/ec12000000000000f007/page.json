@@ -1,0 +1,1231 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "ec12000000000000f007",
+  "displayName": "321-6 · Bilan passif",
+  "displayOption": "FitToWidth",
+  "width": 1600,
+  "height": 1300,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F4F6F9'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visibility": "HiddenInViewMode",
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "m3P01PageEtat",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_ligne_etat_montant"
+              }
+            },
+            "Property": "etat"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "l",
+              "Entity": "v_ligne_etat_montant",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "l"
+                          }
+                        },
+                        "Property": "etat"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'BILAN_PASSIF'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "isHiddenInViewMode": true,
+        "isLockedInViewMode": true
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "m3Tab0",
+      "target": "m3DossierVehicule",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3DossierArrete",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Filiale",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Val0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Sous0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Val1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Sous1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Val2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Sous2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Val3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Sous3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Val4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Sous4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3LienEtape0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3LienEtape1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3LienEtape2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3LienEtape3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3LienEtape4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3LienEtape5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Tuile0Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Tuile1Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Tuile2Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3LivBande",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Tuile1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Tuile2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docTitre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Calcul",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Signal",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3RecalculerLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Recalculer",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Nav1Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Nav2Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Nav3Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Nav1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Nav2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Nav3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Prec",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Suiv",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Faits",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Tab0Titre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3EcartsP1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Ecarts1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3EcartsP2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Ecarts2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3EcartsP3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Ecarts3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3EcartsP4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Ecarts4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3EcartsP5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Ecarts5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docBilWordLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docBilWord",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docBilExcelLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docBilExcel",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docBilOuvrirLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docBilOuvrir",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docFermer",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docMsg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docMsg2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docVersion",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docValidation",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "docAnnexePied",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men07Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men08Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men09Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men10Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men11Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men12Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men03",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men05",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men07",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men08",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men09",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men10",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men11",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3Men12",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docAnnexePied",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docBilExcel",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docBilExcelFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docBilExcelLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docBilOuvrir",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docBilOuvrirFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docBilOuvrirLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docBilWord",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docBilWordFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docBilWordLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docCarte",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docFermer",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docFermerFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docFermerLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docMsg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docMsg2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docMsgFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docNavLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docTitre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docTitreFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docValidation",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "docVersion",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Bandeau",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Barre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Calcul",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3DossierArrete",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3DossierVehicule",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Ecarts",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Ecarts1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Ecarts2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Ecarts3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Ecarts4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Ecarts5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3EcartsFilet",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3EcartsP1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3EcartsP2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3EcartsP3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3EcartsP4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3EcartsP5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Faits",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Fil",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Filet0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Filet1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Filet2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Filet3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Filet4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3FiletFil",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3FiletMenu",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Filiale",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3FilialeFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3FilialeLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Grp0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Kpi",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3LienEtape0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3LienEtape1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3LienEtape2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3LienEtape3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3LienEtape4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3LienEtape5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men00Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men01Barre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men01Chev",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men01Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men01Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men03",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men03Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men03Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men04Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men04Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men05",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men05Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men05Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men06Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men07",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men07Chev",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men07Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men07Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men07Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men08",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men08Chev",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men08Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men08Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men08Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men09",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men09Chev",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men09Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men09Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men09Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men10",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men10Chev",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men10Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men10Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men10Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men11",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men11Chev",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men11Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men11Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men11Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men12",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men12Chev",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men12Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men12Lib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Men12Tag",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav0Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav0Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav0Titre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav1Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav1Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav1Titre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav2Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav2Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav2Titre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav3Fond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav3Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Nav3Titre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Prec",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3PrecFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3PrecLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Recalculer",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3RecalculerFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3RecalculerLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Signal",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Sous0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Sous1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Sous2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Sous3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Sous4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Suiv",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3SuivFond",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3SuivLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Tab0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Tab0Note0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Tab0Titre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Tuile0Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Tuile1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Tuile1Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Tuile2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Tuile2Sous",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Val0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Val1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Val2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Val3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3Val4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3SansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3LivBande",
+      "target": "m3SansArrete2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3SansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "m3Tab0",
+      "target": "m3SansArrete2",
+      "type": "NoFilter"
+    }
+  ]
+}

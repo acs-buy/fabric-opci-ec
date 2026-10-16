@@ -1,0 +1,126 @@
+/// DIP, rubrique 1 : l'etat du patrimoine par famille, et la valeur nette d'inventaire.
+table v_dip_rubrique_1
+	lineageTag: edd8a98e-ec62-4c30-88ec-d8d8b7d8385a
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 98ca1de5-24dd-46e9-bbcc-ab6819548c7b
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 4d14853e-b35d-4a56-82f3-b70b6c4b582f
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 0e091b49-b0cc-45d8-916a-9220cef3ea73
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Code de la famille'
+		dataType: string
+		sourceProviderType: varchar(14)
+		lineageTag: e23f969b-d6ee-46fa-b696-cd799a3173c3
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column Famille
+		dataType: string
+		sourceProviderType: nvarchar(25)
+		lineageTag: 7bef17e0-fae9-4578-98af-5da884362e35
+		summarizeBy: none
+		sourceColumn: famille_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 81f439dd-755e-47a7-947d-ce42470a652d
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column Actifs
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 50694cf8-f854-4cb5-938b-1a2f664422d0
+		summarizeBy: sum
+		sourceColumn: nombre_actifs
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valeur actuelle'
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 98bf4ee3-e5eb-431b-bdff-06212696b72e
+		summarizeBy: sum
+		sourceColumn: valeur_actuelle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Différence d’estimation'
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 93d22caa-0d42-4b58-b65f-77207e4e80ac
+		summarizeBy: sum
+		sourceColumn: difference_estimation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_nette_inventaire
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 5d8f4a56-121b-4461-903d-69bc1553858d
+		summarizeBy: sum
+		sourceColumn: valeur_nette_inventaire
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 3226e80a-81f0-4f09-9778-492a0e3ec401
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_dip_rubrique_1 = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_dip_rubrique_1 = Source{[Schema="dbo",Item="v_dip_rubrique_1"]}[Data]
+				in
+				    dbo_v_dip_rubrique_1
+

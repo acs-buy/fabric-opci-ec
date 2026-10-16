@@ -1,0 +1,164 @@
+/// Flux intragroupe declares et leur rapprochement.
+table v_ecran_flux_groupe
+	lineageTag: 0f9f0f0c-26eb-41bd-be47-73265cdcb23f
+
+	/// « n flux · n en écart » (bande 5)
+	measure 'Libelle bande groupe' = FORMAT ( COUNTROWS ( v_ecran_flux_groupe ) + 0, "0" ) & " flux · " & FORMAT ( [Flux en ecart], "0" ) & " en écart"
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 5563e6e0-4da6-4050-ac27-1afdb2359384
+
+	/// nombre de flux, par nature
+	measure 'Flux declares' = COUNTROWS ( v_ecran_flux_groupe ) + 0
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e4118744-7572-4a8f-bab0-86fc38efdb00
+
+	/// somme des montants déclarés
+	measure 'Montant declare' = SUM ( v_ecran_flux_groupe[montant_declare] )
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 2a8d96fc-b274-4b3f-bde2-abcc3b884d24
+
+	/// flux dont l’écart du débiteur n’est pas nul
+	measure 'Flux en ecart' = CALCULATE ( COUNTROWS ( v_ecran_flux_groupe ), ABS ( v_ecran_flux_groupe[ecart_debiteur] ) >= 0.005 ) + 0
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 4634c9b7-ddaa-4902-8852-a0c13bdb9c31
+
+	/// « n en écart » ; « concorde »
+	measure 'Rapprochement de la nature' = VAR n = [Flux en ecart] RETURN IF ( n > 0, FORMAT ( n, "0" ) & " en écart", "concorde" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 054f6be0-7e26-4e22-8989-472184278e43
+
+	column vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 51012b89-d78c-4909-852f-8caf9af0ae40
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 03c233f7-2077-4bcc-8a74-6a5d00904249
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 6cb36f8c-d7d6-4c69-b43f-ef3d5a6464c9
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature_libelle
+		dataType: string
+		sourceProviderType: nvarchar(30)
+		lineageTag: 0d4e91f1-f2a0-4562-972d-a746849dea0a
+		summarizeBy: none
+		sourceColumn: nature_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_debitrice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 067398be-c6f9-451a-a534-86ba61afd83a
+		summarizeBy: none
+		sourceColumn: entite_debitrice
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_creditrice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 171c9db5-e9dd-4f0a-bdc3-ff85631f1520
+		summarizeBy: none
+		sourceColumn: entite_creditrice
+
+		annotation SummarizationSetBy = Automatic
+
+	column montant_declare
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 06d60929-5d25-44f5-8e7e-d6f83eb080ed
+		summarizeBy: sum
+		sourceColumn: montant_declare
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column solde_chez_le_debiteur
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: df89d475-012e-4c72-bb35-3e8a1ba4b8ba
+		summarizeBy: sum
+		sourceColumn: solde_chez_le_debiteur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column solde_chez_le_crediteur
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 11e9834c-e04b-482e-a0eb-99ecd1257c4b
+		summarizeBy: sum
+		sourceColumn: solde_chez_le_crediteur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ecart_debiteur
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 7217d608-c278-4062-8333-4d7287fdcf31
+		summarizeBy: sum
+		sourceColumn: ecart_debiteur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lecture
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(71)
+		lineageTag: fc616f10-fbc2-4269-b228-670d7581a431
+		summarizeBy: none
+		sourceColumn: lecture
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(104)
+		lineageTag: ccf7f661-c619-4fa9-9306-46cd0fcb9af9
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_flux_groupe = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_flux_groupe = Source{[Schema="dbo",Item="v_ecran_flux_groupe"]}[Data]
+				in
+				    dbo_v_ecran_flux_groupe
+

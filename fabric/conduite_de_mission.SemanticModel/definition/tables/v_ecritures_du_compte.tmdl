@@ -1,12 +1,18 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_ecritures_du_compte
 	lineageTag: 87c2f3bf-615b-44d6-acfa-2e97e991fb9a
 
-	/// Carte 3.5, sous-titre de la carte Comptes de la balance. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.5, sous-titre de la carte Comptes de la balance.
 	measure 'R35 Ecritures du compte' = COUNTROWS ( v_ecritures_du_compte )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 821bd395-d1f7-4612-a551-3b6cf883e24e
+
+	/// VAR c = [Compte choisi] ; 1 quand SELECTEDVALUE ( v_ecritures_du_compte[Compte] ) = c ; filtre de visuel = 1, évalué écriture par écriture parce que ecriture_id est dans la granularité du tableEx : sans lui, {ex_grain_compte}
+	measure 'Filtre compte choisi' = VAR c = [Compte choisi] RETURN IF ( NOT ISBLANK ( c ) && SELECTEDVALUE ( v_ecritures_du_compte[Compte] ) = c, 1 )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 7a35f6e1-8515-4d34-a007-b8e3f70af4e7
 
 	column ecriture_id
 		dataType: int64

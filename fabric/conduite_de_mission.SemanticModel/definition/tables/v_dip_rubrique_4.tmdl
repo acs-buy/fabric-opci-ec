@@ -1,0 +1,121 @@
+/// DIP, rubrique 4 : l'inventaire du patrimoine.
+table v_dip_rubrique_4
+	lineageTag: 39ffe46a-1664-40a2-9a0e-264f02c97489
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: cee60034-58f5-4b96-8a6c-987f915f5ed5
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: be9a3678-e970-496c-8820-004aa641c528
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 13ceff3b-eff7-490e-a53d-7bc1c3d876b5
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column Actif
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: db2a6959-43c0-4d3a-9847-9a621a0569b1
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column Famille
+		dataType: string
+		sourceProviderType: nvarchar(14)
+		lineageTag: bce06f9c-7577-49df-ad38-b4308e7260ae
+		summarizeBy: none
+		sourceColumn: famille_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column Adresse
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 6312c1d9-a799-4249-889f-5c227000eab5
+		summarizeBy: none
+		sourceColumn: adresse
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Article du règlement'
+		dataType: string
+		sourceProviderType: varchar(40)
+		lineageTag: e78b0b74-3aa1-4801-8173-dca39490c4b0
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Source de la valeur'
+		dataType: string
+		sourceProviderType: nvarchar(32)
+		lineageTag: 859f0a9b-4741-46c5-b243-7a918f5648e2
+		summarizeBy: none
+		sourceColumn: source_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valeur comptable'
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 2d5af7f1-f748-4658-9d46-4d75004ccfb3
+		summarizeBy: sum
+		sourceColumn: valeur_comptable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Valeur actuelle'
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 6b4a9117-4727-4f0d-ab1c-7efa52a28193
+		summarizeBy: sum
+		sourceColumn: valeur_actuelle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 4b75dea4-1256-4494-86c2-e71461257529
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_dip_rubrique_4 = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_dip_rubrique_4 = Source{[Schema="dbo",Item="v_dip_rubrique_4"]}[Data]
+				in
+				    dbo_v_dip_rubrique_4
+

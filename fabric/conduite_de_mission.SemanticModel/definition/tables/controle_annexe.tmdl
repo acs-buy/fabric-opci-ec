@@ -1,0 +1,108 @@
+/// Les ecarts de controle de l'annexe que la base calcule et stocke par article, par cle et par arrete : la valeur de l'ecart et son effet, signal ou obstacle.
+table controle_annexe
+	lineageTag: 973b2e84-461a-4def-b102-26d8dd22fc62
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 97922887-a200-4e91-946e-31ac13ccdbde
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 3f45237f-2add-48b3-a052-19bf2fc2257b
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column controle
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(24)
+		lineageTag: 194d2e2d-62af-496e-9581-e501240ba218
+		summarizeBy: none
+		sourceColumn: controle
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(120)
+		lineageTag: 11b85700-fce3-448f-93d4-db6ce4c7a1b4
+		summarizeBy: none
+		sourceColumn: cle
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(40)
+		lineageTag: 9e990d9a-511e-4275-9d86-fe1af01115a8
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecart
+		dataType: double
+		isNullable: false
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7aeebba1-b522-40b3-bcc7-c6e4caf0627d
+		summarizeBy: sum
+		sourceColumn: ecart
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column effet
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(8)
+		lineageTag: 5f88b117-0a8a-4246-9333-65fb5ecf9b0d
+		summarizeBy: none
+		sourceColumn: effet
+
+		annotation SummarizationSetBy = Automatic
+
+	column version
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b8e42553-a571-4971-87c7-aca90578a630
+		summarizeBy: none
+		sourceColumn: version
+
+		annotation SummarizationSetBy = Automatic
+
+	column calcul_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: baff0ee5-6c69-4fec-9ca0-aaa29be46f23
+		summarizeBy: none
+		sourceColumn: calcul_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition controle_annexe = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_controle_annexe = Source{[Schema="dbo",Item="controle_annexe"]}[Data]
+				in
+				    dbo_controle_annexe
+

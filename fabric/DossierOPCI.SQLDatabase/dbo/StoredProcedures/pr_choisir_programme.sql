@@ -1,3 +1,5 @@
+
+-- pr_choisir_programme : 1 refus
 -- --- 6. choisir le programme, l'ajuster, verifier la couverture ------------------------------------
 CREATE   PROCEDURE dbo.pr_choisir_programme
     @entite  VARCHAR (20),
@@ -26,7 +28,7 @@ BEGIN
         BEGIN
             DECLARE @m NVARCHAR (400) = N'Le programme est ' + LOWER(@type_actuel) + N' et ' + CAST(@repondues AS NVARCHAR (10))
                   + N' question(s) portent déjà une réponse : son type ne change plus. Ajustez le programme question par question, ou cycle par cycle.';
-            THROW 50304, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50304, @m, 1; END
         END;
     END;
 

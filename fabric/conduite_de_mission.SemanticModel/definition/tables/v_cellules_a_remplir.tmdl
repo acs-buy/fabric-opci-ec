@@ -1,0 +1,137 @@
+/// Par article de l'annexe, a la derniere version de l'arrete : les cellules a remplir, en attente et etablies, et la lecture de l'article.
+table v_cellules_a_remplir
+	lineageTag: 5d0cede6-a717-4dd0-96c0-a80d3b6f988c
+
+	measure 'Carte annexe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR duc = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "COMPTES_ANNUELS" ) ) > 0 VAR rem = MAXX ( FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ), v_annexe_produisible[cellules_a_remplir] ) + 0 VAR tot = SUMX ( FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a ), v_cellules_a_remplir[cellules] ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( duc, FORMAT ( rem, "0" ) & " / " & FORMAT ( tot, "0" ), "Sans objet" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 45c4eee1-ca8d-4972-941d-406bd8d23802
+
+	measure 'Carte annexe sous-titre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR typ = MAXX ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ), ref_arrete[Type] ) VAR duc = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "COMPTES_ANNUELS" ) ) > 0 VAR tp = FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ) VAR att = MAXX ( tp, v_annexe_produisible[en_attente] ) + 0 VAR cv = MAXX ( tp, v_annexe_produisible[cases_vides] ) VAR pr = MAXX ( tp, IF ( v_annexe_produisible[produisible], 1, 0 ) ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( duc, IF ( ISBLANK ( cv ), "annexe jamais calculée", IF ( pr = 0, "tableau 333-3 non rapproché du bilan", FORMAT ( att, "0" ) & " en attente, " & FORMAT ( cv, "0" ) & IF ( cv > 1, " cases vides dans le Word", " case vide dans le Word" ) ) ), "comptes annuels non dus à l’arrêté " & LOWER ( typ ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 45dc2d61-458a-4e57-ae3d-b57a02bdc199
+
+	measure 'Carte annexe encre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR duc = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "COMPTES_ANNUELS" ) ) > 0 VAR tp = FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ) VAR rem = MAXX ( tp, v_annexe_produisible[cellules_a_remplir] ) + 0 VAR att = MAXX ( tp, v_annexe_produisible[en_attente] ) + 0 VAR pr = MAXX ( tp, IF ( v_annexe_produisible[produisible], 1, 0 ) ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || NOT duc, "#12233C", IF ( NOT ISBLANK ( pr ) && pr = 0, "#9A2A2A", IF ( rem + att > 0, "#8A6710", "#1F6D4A" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 43d1f373-60b0-4479-ab37-0ad238a0f2e1
+
+	measure 'Aff Carte annexe' = [Carte annexe] & ""
+		lineageTag: b6af6efb-2843-4def-b4d3-177576391d16
+
+	measure 'Aff Carte annexe sous-titre' = [Carte annexe sous-titre] & ""
+		lineageTag: 2869fd64-4e02-427d-987f-46429db43af1
+
+	measure 'Filet Carte annexe' = VAR c = [Carte annexe encre] RETURN SWITCH ( c, "#8A6710", "#C8961E", "#9A2A2A", "#9A2A2A", "#1F6D4A", "#1F6D4A", "#0F5C8C" )
+		lineageTag: c2d7afd4-e9b2-4d98-ba4f-7d29d0dec3b3
+
+	measure 'Lignes a remplir du menu' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR arts = VALUES ( v_cellules_a_remplir[article] ) VAR n = SUMX ( FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a && v_cellules_a_remplir[article] IN arts ), v_cellules_a_remplir[cellules_a_remplir] ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || n = 0, "", FORMAT ( n, "0" ) & IF ( n > 1, " cellules à remplir", " cellule à remplir" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: f416b606-5adb-4681-aa2d-26ac3bcad7bf
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 03220783-c8a2-475b-8444-a60bdf31b847
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 8438a992-779d-4147-ba05-501c1ed2315b
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: f0b80889-7e09-46c5-a629-eb43a2d95084
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column tableau
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: f19d63d9-2119-4221-940b-0ef9c5e74ae3
+		summarizeBy: none
+		sourceColumn: tableau
+
+		annotation SummarizationSetBy = Automatic
+
+	column indicatif
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: fc9196c0-34cb-429f-993d-7cce88ccfb67
+		summarizeBy: none
+		sourceColumn: indicatif
+
+		annotation SummarizationSetBy = Automatic
+
+	column cellules_a_remplir
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 92ba4df3-3f9f-4a82-be29-e28a3fd620b3
+		summarizeBy: sum
+		sourceColumn: cellules_a_remplir
+
+		annotation SummarizationSetBy = Automatic
+
+	column cellules
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4df617db-fbe4-41bd-8f67-55092ee3eb4a
+		summarizeBy: sum
+		sourceColumn: cellules
+
+		annotation SummarizationSetBy = Automatic
+
+	column lecture
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(63)
+		lineageTag: 0e238827-0246-4a15-8487-5f7821dd88b8
+		summarizeBy: none
+		sourceColumn: lecture
+
+		annotation SummarizationSetBy = Automatic
+
+	column imposees
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 86a99c80-1eb7-4d38-b5ac-8f11ec51efba
+		summarizeBy: sum
+		sourceColumn: imposees
+
+		annotation SummarizationSetBy = Automatic
+
+	column en_attente
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8bc985af-1bbf-47d4-aa47-b8ed86a03e1c
+		summarizeBy: sum
+		sourceColumn: en_attente
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_cellules_a_remplir = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_cellules_a_remplir = Source{[Schema="dbo",Item="v_cellules_a_remplir"]}[Data]
+				in
+				    dbo_v_cellules_a_remplir
+

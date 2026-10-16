@@ -22,6 +22,26 @@ table role_mission
 		displayFolder: Ecran 2 etape 5
 		lineageTag: 490c4abc-15d4-4ea3-a2b4-d70026383b8c
 
+	/// CALCULATE ( [Superviseur connecte], role_nature_visa[nature] = "SYNTHESE" ), sur le modèle des variantes publiées [Superviseur connecte CYCLE], [Superviseur connecte REVUE] et [Superviseur connecte LOT] (role_mission.tmdl, getDefinition du 09/10/2026) : le rôle est cherché sur [Client selectionne],
+	measure 'Superviseur connecte SYNTHESE' = CALCULATE ( [Superviseur connecte], role_nature_visa[nature] = "SYNTHESE" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 6492ca62-3e0e-4a41-9b57-6513579dd669
+
+	/// VAR u = USERPRINCIPALNAME () VAR c = [Evaluation choisie] VAR ent = IF ( c <> "", LOOKUPVALUE ( evaluation_actif[entite], evaluation_actif[id], INT ( VALUE ( c ) ) ), [Client selectionne] ) VAR roles = CALCULATETABLE ( VALUES ( role_nature_visa[role_code] ), role_nature_visa[nature] = "EVALUATION" )
+	measure 'Superviseur connecte EVALUATION' = VAR u = USERPRINCIPALNAME () VAR c = [Evaluation choisie] VAR ent = IF ( c <> "", LOOKUPVALUE ( evaluation_actif[entite], evaluation_actif[id], INT ( VALUE ( c ) ) ), [Client selectionne] ) VAR roles = CALCULATETABLE ( VALUES ( role_nature_visa[role_code] ), role_nature_visa[nature] = "EVALUATION" ) VAR ok = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = ent && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[role] IN roles && role_mission[du] <= TODAY () && ( ISBLANK ( role_mission[au] ) || role_mission[au] > TODAY () ) ) ) RETURN IF ( u <> "" && ok > 0, u )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 2b000f4f-16c8-41d6-85f0-0c2fb09c2f0e
+
+	/// la connexion du connecté quand il tient le rôle PREPARATEUR sur le véhicule, vide sinon ; couche du gris par le droit de « Proposer la base »
+	measure 'Reviseur connecte' = VAR u = USERPRINCIPALNAME () VAR e = [Client selectionne] VAR ok = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[role] = "PREPARATEUR" && role_mission[du] <= TODAY () && ( ISBLANK ( role_mission[au] ) || role_mission[au] > TODAY () ) ) ) RETURN IF ( u <> "" && ok > 0, u )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 694fd0ca-ff41-41db-b65b-f7244c70dbc9
+
+	/// la connexion du connecté quand il tient le rôle ASSOCIE sur le véhicule, vide sinon ; paramètre superviseur des visas PUBLICATION et OBLIGATION, couche du gris par le droit
+	measure 'Associe connecte' = VAR u = USERPRINCIPALNAME () VAR e = [Client selectionne] VAR ok = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[role] = "ASSOCIE" && role_mission[du] <= TODAY () && ( ISBLANK ( role_mission[au] ) || role_mission[au] > TODAY () ) ) ) RETURN IF ( u <> "" && ok > 0, u )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: d56162a1-33de-4a15-808b-fca1935b6463
+
 	column id
 		dataType: int64
 		isNullable: false

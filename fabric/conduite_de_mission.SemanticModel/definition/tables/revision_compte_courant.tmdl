@@ -1,0 +1,136 @@
+/// Revisions a la baisse des avances en compte courant, art. 213-4.
+table revision_compte_courant
+	lineageTag: 2490c167-0159-475a-bdb2-de4b430a4236
+
+	/// le montant révisé de l’avance de la ligne (grille 1b)
+	measure 'Montant revise de l avance' = VAR f = SELECTEDVALUE ( v_differences_comptes_courants[entite_liee] ) RETURN IF ( NOT ISBLANK ( f ), CALCULATE ( SUM ( revision_compte_courant[montant_revise] ), FILTER ( ALL ( revision_compte_courant[entite_fille] ), revision_compte_courant[entite_fille] = f ) ) )
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 2d16846b-b1df-4612-a60e-47ee839dd50e
+
+	/// les révisions de la filiale liée à l’avance choisie ; filtre de visuel = 1, évalué révision par révision : l’id de la révision est dans la granularité du tableEx
+	measure 'Filtre revisions de l avance choisie' = VAR c = [Avance choisie] VAR f = CALCULATE ( MAX ( v_differences_comptes_courants[entite_liee] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) RETURN IF ( NOT ISBLANK ( f ) && SELECTEDVALUE ( revision_compte_courant[entite_fille] ) = f, 1 )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 54cdd9ef-2d13-426e-9ea1-669ba0e1017e
+
+	/// « n révisions » ; « aucune »
+	measure 'Revisions de l arrete' = VAR n = COUNTROWS ( revision_compte_courant ) + 0 RETURN IF ( n > 0, FORMAT ( n, "0" ) & " révisions", "aucune" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 86c6f82c-8ecf-433f-894e-c97e16aa67fc
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 2b72a724-1eae-4e63-9d3a-50d1771fe73c
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d0d0fca9-62ba-4033-a2c7-40d19b5f476a
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 540e1c19-f23a-4d5e-a591-b79deefa3672
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_fille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 1c9df80c-c901-44d5-a6dc-a879a4d6ca16
+		summarizeBy: none
+		sourceColumn: entite_fille
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: c0646220-ef35-4473-b093-a30d1d19f5a6
+		summarizeBy: none
+		sourceColumn: compte
+
+		annotation SummarizationSetBy = Automatic
+
+	column montant_nominal
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 0dd1933a-0ea8-4d02-8cc7-f43e62f7fcd0
+		summarizeBy: sum
+		sourceColumn: montant_nominal
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column montant_revise
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: bde6ea5e-70d0-40da-a9a9-d300885b773c
+		summarizeBy: sum
+		sourceColumn: montant_revise
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column motif
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(600)
+		lineageTag: 1c650878-67e9-48c7-9ae1-33a3a64bd9bd
+		summarizeBy: none
+		sourceColumn: motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column saisi_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: d8e93c52-5f4b-49c0-b213-1f15521c2149
+		summarizeBy: none
+		sourceColumn: saisi_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column saisi_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: bca2e693-b201-4d4f-91a1-98deced60bcc
+		summarizeBy: none
+		sourceColumn: saisi_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition revision_compte_courant = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_revision_compte_courant = Source{[Schema="dbo",Item="revision_compte_courant"]}[Data]
+				in
+				    dbo_revision_compte_courant
+

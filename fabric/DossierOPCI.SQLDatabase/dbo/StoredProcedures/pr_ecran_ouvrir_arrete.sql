@@ -1,98 +1,63 @@
 
--- --- 6. l'etape 6 de la maquette : planifier les arretes de l'exercice, ouvrir le premier ----------
+-- pr_ecran_ouvrir_arrete : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_ecran_ouvrir_arrete
     @entite          VARCHAR (20),
     @exercice_debut  DATE,
     @exercice_fin    DATE,
     @periodicite_vl  VARCHAR (13),        -- ANNUELLE, SEMESTRIELLE, TRIMESTRIELLE
     @par             NVARCHAR (400)
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
-    DECLARE @message NVARCHAR (2000), @premier VARCHAR (20), @planifies INT = 0;
+    SET XACT_ABORT ON;
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @par;
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
     BEGIN TRY
-        IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND est_client = 1)
-            THROW 50261, N'Un arrêté s''ouvre sur un client du cabinet.', 1;
-        IF @periodicite_vl NOT IN ('ANNUELLE', 'SEMESTRIELLE', 'TRIMESTRIELLE')
-            THROW 50262, N'La périodicité de la VL est ANNUELLE, SEMESTRIELLE ou TRIMESTRIELLE.', 1;
-        IF @exercice_debut >= @exercice_fin OR DATEDIFF(MONTH, @exercice_debut, @exercice_fin) > 23
-            THROW 50263, N'L''exercice commence avant sa fin et ne dépasse pas 24 mois.', 1;
-
-        BEGIN TRANSACTION;
-        UPDATE dbo.ref_entite SET periodicite_vl = @periodicite_vl WHERE code = @entite;
-
-        -- les dates d'arrete de l'exercice, a rebours depuis la cloture, selon la periodicite
-        DECLARE @pas INT = CASE @periodicite_vl WHEN 'TRIMESTRIELLE' THEN 3 WHEN 'SEMESTRIELLE' THEN 6 ELSE 12 END;
-        DECLARE @dates TABLE (d DATE PRIMARY KEY);
-        DECLARE @d DATE = @exercice_fin;
-        WHILE @d > @exercice_debut
+    BEGIN TRANSACTION;
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
+    BEGIN
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
+    END;
+    -- 2. le corps d'origine
+    EXEC dbo.pr_ecran_ouvrir_arrete_corps @entite = @entite, @exercice_debut = @exercice_debut, @exercice_fin = @exercice_fin, @periodicite_vl = @periodicite_vl, @par = @par;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1
+    BEGIN
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
         BEGIN
-            INSERT INTO @dates VALUES (@d);
-            SET @d = EOMONTH(DATEADD(MONTH, -@pas, @d));
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
         END;
-        DECLARE @c CURSOR;
-        SET @c = CURSOR FAST_FORWARD FOR SELECT d FROM @dates ORDER BY d;
-        OPEN @c; FETCH NEXT FROM @c INTO @d;
-        WHILE @@FETCH_STATUS = 0
-        BEGIN
-            IF NOT EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND arrete = CONVERT(VARCHAR (10), @d, 23))
-            BEGIN
-                DECLARE @type VARCHAR (14) = CASE WHEN @d = @exercice_fin THEN 'ANNUEL'
-                                                  WHEN @periodicite_vl = 'SEMESTRIELLE' THEN 'SEMESTRIEL'
-                                                  ELSE 'INTERMEDIAIRE' END;
-                EXEC dbo.pr_planifier_arrete @entite, @d, @exercice_fin, @type, @par;
-                SET @planifies += 1;
-            END;
-            FETCH NEXT FROM @c INTO @d;
-        END;
-        CLOSE @c; DEALLOCATE @c;
-        SET @premier = (SELECT CONVERT(VARCHAR (10), MIN(d), 23) FROM @dates);
-
-        -- le questionnaire d'acceptation s'etait adosse a la cloture par defaut : s'il vise un
-        -- arrete hors de cet exercice, il se re-adosse a la cloture retenue, et la ligne planifiee
-        -- par defaut est retiree si plus rien ne la reference.
-        DECLARE @cote VARCHAR (30) = 'ACC-' + @entite, @ancien VARCHAR (20);
-        SELECT @ancien = arrete FROM dbo.feuille_travail WHERE cote = @cote;
-        IF @ancien IS NOT NULL AND @ancien NOT IN (SELECT CONVERT(VARCHAR (10), d, 23) FROM @dates)
-        BEGIN
-            UPDATE dbo.feuille_travail SET arrete = CONVERT(VARCHAR (10), @exercice_fin, 23) WHERE cote = @cote;
-            IF NOT EXISTS (SELECT 1 FROM dbo.arrete_mission WHERE entite = @entite AND (arrete = @ancien OR exercice = @ancien))
-               AND NOT EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND exercice = @ancien AND arrete <> @ancien)
-               AND NOT EXISTS (SELECT 1 FROM dbo.feuille_travail WHERE entite = @entite AND arrete = @ancien)
-               AND NOT EXISTS (SELECT 1 FROM dbo.import_fec WHERE entite = @entite AND arrete = @ancien)
-               AND NOT EXISTS (SELECT 1 FROM dbo.piece_rattachement WHERE entite = @entite AND arrete = @ancien)
-                DELETE dbo.ref_arrete WHERE entite = @entite AND arrete = @ancien AND est_arrete_client = 1;
-        END;
-        COMMIT;
-
-        -- ouvrir le premier arrete, si les portes le laissent passer
-        BEGIN TRY
-            IF NOT EXISTS (SELECT 1 FROM dbo.arrete_mission WHERE entite = @entite AND arrete = @premier)
-            BEGIN
-                DECLARE @tp VARCHAR (14) = (SELECT type_arrete FROM dbo.ref_arrete WHERE entite = @entite AND arrete = @premier);
-                DECLARE @ex VARCHAR (20) = CONVERT(VARCHAR (10), @exercice_fin, 23);
-                EXEC dbo.pr_ouvrir_arrete @entite, @premier, @tp, @par, @ex, NULL;
-            END;
-            SET @message = CAST(@planifies AS NVARCHAR (10)) + N' arrêté(s) planifié(s) sur l''exercice, périodicité '
-                         + LOWER(@periodicite_vl) + N'. Arrêté ' + @premier + N' ouvert : la révision peut commencer.';
-            UPDATE dbo.ref_arrete SET message_ecran = NULL, message_ecran_le = NULL, message_ecran_pour = NULL
-             WHERE entite = @entite AND arrete = @premier;
-        END TRY
-        BEGIN CATCH
-            IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
-            SET @message = CAST(@planifies AS NVARCHAR (10)) + N' arrêté(s) planifié(s) sur l''exercice, périodicité '
-                         + LOWER(@periodicite_vl) + N'. L''arrêté ' + @premier + N' n''est pas encore ouvert : '
-                         + LEFT(ERROR_MESSAGE(), 1500) + N' L''ouverture se rejoue depuis la ligne de l''arrêté.';
-            UPDATE dbo.ref_arrete
-               SET message_ecran = LEFT(@message, 2000), message_ecran_le = SYSUTCDATETIME(), message_ecran_pour = LEFT(@par, 200)
-             WHERE entite = @entite AND arrete = @premier;
-        END CATCH;
-        SELECT @premier AS arrete, @planifies AS planifies,
-               CAST(CASE WHEN EXISTS (SELECT 1 FROM dbo.arrete_mission WHERE entite = @entite AND arrete = @premier) THEN 1 ELSE 0 END AS BIT) AS ouvert,
-               @message AS message;
+    END;
+    COMMIT;
     END TRY
     BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
         THROW;
     END CATCH;
 END;

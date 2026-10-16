@@ -1,0 +1,76 @@
+/// Par vehicule, les ecritures des sources posterieures au dernier calcul de l'annexe, et la fin de ce calcul (UTC).
+table v_annexe_retard
+	lineageTag: 79767097-115b-49a5-9dc7-25537cffd46e
+
+	measure 'Retard du calcul de l annexe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tv = FILTER ( ALL ( v_annexe_version ), v_annexe_version[entite] = e && v_annexe_version[arrete] = a ) VAR tr = FILTER ( ALL ( v_annexe_retard ), v_annexe_retard[entite] = e ) VAR r = MAXX ( tr, IF ( v_annexe_retard[en_retard], 1, 0 ) ) + 0 VAR dep = MAXX ( tr, v_annexe_retard[depuis] ) VAR td = FILTER ( ALL ( v_annexe_document ), v_annexe_document[entite] = e && v_annexe_document[arrete] = a && v_annexe_document[livrable] = "COMPTES_ANNUELS" ) VAR vm = MAXX ( td, v_annexe_document[version] ) VAR tdm = FILTER ( td, v_annexe_document[version] = vm ) VAR av = MAXX ( tdm, v_annexe_document[annexe_version] ) VAR dv = MAXX ( tdm, v_annexe_document[derniere_version] ) VAR ant = MAXX ( tdm, IF ( v_annexe_document[sur_version_anterieure], 1, 0 ) ) + 0 VAR pe = MAXX ( tdm, v_annexe_document[perime_le] ) VAR txd = IF ( ISBLANK ( vm ), "", IF ( ant = 1, "Comptes annuels v" & FORMAT ( vm, "0" ) & " produits sur la version " & FORMAT ( av, "0" ) & " de l’annexe, dernière version " & FORMAT ( dv, "0" ), IF ( ISBLANK ( av ), "Comptes annuels v" & FORMAT ( vm, "0" ) & " produits sans version de l’annexe", "" ) ) ) VAR txp = IF ( txd <> "" && NOT ISBLANK ( pe ), txd & ", périmés le " & FORMAT ( pe, "dd/MM/yyyy" ), txd ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || COUNTROWS ( tv ) = 0, "", IF ( r = 1, "Sources modifiées " & IF ( ISBLANK ( dep ), "depuis le dernier calcul", "depuis le " & FORMAT ( dep, "dd/MM/yyyy" ) & " à " & FORMAT ( dep, "hh:nn" ) & " UTC" ) & " : documents produits à vérifier", txp ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: af9a69d0-6d08-43c4-b4d5-7e669fe2ef68
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 261e4e89-428c-45e5-92fa-65a20f295382
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column depuis
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: dfeaacf9-edd9-42b2-bcda-a345ec198a3a
+		summarizeBy: none
+		sourceColumn: depuis
+
+		annotation SummarizationSetBy = Automatic
+
+	column origine
+		dataType: string
+		sourceProviderType: nvarchar(128)
+		lineageTag: e99e4a1a-df2d-49f2-bd3a-8a79728be3e5
+		summarizeBy: none
+		sourceColumn: origine
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecritures
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 562ad7a8-bc2e-4e13-8581-5cac897fccf0
+		summarizeBy: none
+		sourceColumn: ecritures
+
+		annotation SummarizationSetBy = Automatic
+
+	column dernier_calcul
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 3837beb5-b315-46a8-9098-a9bb826474d9
+		summarizeBy: none
+		sourceColumn: dernier_calcul
+
+		annotation SummarizationSetBy = Automatic
+
+	column en_retard
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 8593439b-ba39-41d1-a29a-10ea62c42a17
+		summarizeBy: none
+		sourceColumn: en_retard
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_annexe_retard = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_annexe_retard = Source{[Schema="dbo",Item="v_annexe_retard"]}[Data]
+				in
+				    dbo_v_annexe_retard
+

@@ -1,0 +1,95 @@
+/// Conclusions du reviseur, une par limite et par arrete. Lue par mesures, sans relation.
+table conclusion_ratio
+	lineageTag: 95da8efd-976f-4f2d-9570-420bedf92c1a
+
+	/// la conclusion inscrite (conclusion_ratio) ; « à valider » sans conclusion pour une limite qui n’est pas sans objet, calculée ou non (Q4 retenue) ; « sans objet » sinon ; jamais vide (colonne « Conclusion » de la grille)
+	measure 'Conclusion de la limite a l ecran' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR vide = HASONEVALUE ( ref_ratio_memoire[code] ) && ISBLANK ( SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR une = HASONEVALUE ( ref_ratio_memoire[code] ) && NOT vide VAR c = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR lf = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[forme_vehicule] ) ) VAR lsp = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_professionnel] ) ) VAR lsg = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_grand_public] ) ) VAR so = une && ( ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) ) VAR kc = MAXX ( FILTER ( ALL ( conclusion_ratio ), conclusion_ratio[entite] = e && conclusion_ratio[arrete] = a && conclusion_ratio[code] = c ), conclusion_ratio[conclusion] ) RETURN IF ( vide, BLANK (), ( IF ( NOT ISBLANK ( kc ) && kc <> "", kc, IF ( so, "sans objet", "à valider" ) ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 2f4c7124-aef8-4505-9843-b030f90066e9
+
+	/// « conclusion, par x le jj/mm/aaaa » ; « à remplir » sans ligne ; vide quand le segment ne porte pas exactement 1 limite, test HASONEVALUE ( ref_ratio_memoire[code] )
+	measure 'Conclusion inscrite de la limite' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR vide = HASONEVALUE ( ref_ratio_memoire[code] ) && ISBLANK ( SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR une = HASONEVALUE ( ref_ratio_memoire[code] ) && NOT vide VAR c = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR lf = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[forme_vehicule] ) ) VAR lsp = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_professionnel] ) ) VAR lsg = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_grand_public] ) ) VAR so = une && ( ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) ) VAR tc = FILTER ( ALL ( conclusion_ratio ), conclusion_ratio[entite] = e && conclusion_ratio[arrete] = a && conclusion_ratio[code] = c ) VAR kc = MAXX ( tc, conclusion_ratio[conclusion] ) VAR p = MAXX ( tc, conclusion_ratio[conclu_par] ) VAR d = MAXX ( tc, conclusion_ratio[conclu_le] ) RETURN IF ( vide, BLANK (), ( IF ( NOT une, "", IF ( ISBLANK ( kc ), "à remplir", kc & ", par " & p & " le " & FORMAT ( d, "dd/MM/yyyy" ) ) ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: fe7ac80a-8c6c-4619-b63e-e7dd22a06b04
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8b093a12-b1df-4c00-ab68-93b52feb663e
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: dabc3a6a-74aa-40f3-a72f-ddcda2ad26f2
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d844f351-f689-4d6e-843c-507abe13717a
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: 67f1edbc-ed14-4de9-97ff-7196857c0394
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(600)
+		lineageTag: d01e0ad7-0469-432f-a7a4-45406ea4c392
+		summarizeBy: none
+		sourceColumn: conclusion
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclu_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 5096f522-378e-467c-8645-b7545e38b735
+		summarizeBy: none
+		sourceColumn: conclu_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclu_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 3cff213e-ee89-47aa-8e57-ff03b47f0fad
+		summarizeBy: none
+		sourceColumn: conclu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition conclusion_ratio = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_conclusion_ratio = Source{[Schema="dbo",Item="conclusion_ratio"]}[Data]
+				in
+				    dbo_conclusion_ratio
+

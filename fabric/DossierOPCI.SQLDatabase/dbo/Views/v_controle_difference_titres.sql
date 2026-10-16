@@ -21,6 +21,10 @@ semee AS (
     WHERE l.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')
       AND l.famille = 'DERIVABLE'
       AND e.compte_num LIKE '275%'
+      -- 10/10/2026 : les seuls titres de filiales (sans axe, ou axe d'un titre de filiale)
+      AND (NOT EXISTS (SELECT 1 FROM dbo.ecriture_axe x WHERE x.ecriture_id = e.ecriture_id)
+                         OR EXISTS (SELECT 1 FROM dbo.ecriture_axe x JOIN dbo.actif ax ON ax.code = x.code_actif
+                                    WHERE x.ecriture_id = e.ecriture_id AND ax.nature = 'TITRES_ENTITE_IMMOBILIERE'))
     GROUP BY l.entite, l.arrete
 ),
 calculee AS (

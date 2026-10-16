@@ -21,7 +21,10 @@ SELECT g.entite, g.arrete, g.exercice,
                                                              AS lots_perimes,
        -- 07/09/2026 : le motif de refus ecrit par la procedure du bouton (138), lu a l'ecran.
        (SELECT TOP (1) s.message_ecran FROM dbo.synthese_proposee s
-        WHERE s.entite = g.entite AND s.arrete = g.arrete ORDER BY s.id DESC) AS message_ecran
+        WHERE s.entite = g.entite AND s.arrete = g.arrete ORDER BY s.id DESC) AS message_ecran,
+       -- B2 : les expertises que la garde B6 bis de fn_valorisation refuse (entite detentrice, date de valeur a l'arrete)
+       (SELECT COUNT(*) FROM dbo.v_expertise_sans_rapport x
+        WHERE x.entite_detentrice = g.entite AND x.date_valeur = TRY_CONVERT(DATE, g.arrete)) AS expertises_sans_rapport
 FROM dbo.v_a_generer g
 GROUP BY g.entite, g.arrete, g.exercice;
 

@@ -1,0 +1,54 @@
+/// Les roles de mission, et ceux qui visent.
+table ref_role
+	lineageTag: 21f85a93-219d-43e9-9b98-f6971a9d4ca8
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: b547d5e2-72cc-42e7-b93c-b8146d185682
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(100)
+		lineageTag: 3ac4891a-c7ea-4f56-9eea-ae1b71896058
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column vise
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 6e231aab-0d59-4a9d-a14c-55994e129f5a
+		summarizeBy: none
+		sourceColumn: vise
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: 7b16819b-73c4-4234-a946-6005b700c2eb
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_role = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_role = Source{[Schema="dbo",Item="ref_role"]}[Data]
+				in
+				    dbo_ref_role
+

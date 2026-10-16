@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table acceptation_mission
 	lineageTag: 0bfb622b-1c7c-496b-8e00-0e97d5a0c65e
 

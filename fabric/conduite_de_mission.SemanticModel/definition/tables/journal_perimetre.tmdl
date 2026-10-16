@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table journal_perimetre
 	lineageTag: f3e2e41a-cb30-48cd-9a65-92377dd1a5a1
 

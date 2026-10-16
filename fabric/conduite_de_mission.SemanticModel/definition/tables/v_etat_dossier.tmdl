@@ -56,19 +56,19 @@ table v_etat_dossier
 		displayFolder: Parcours
 		lineageTag: 0acc665a-bdaa-4852-a876-8ebe015db695
 
-	/// Carte 2. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 2.
 	measure 'Acceptations a faire' = CALCULATE ( COUNTROWS ( v_etat_dossier ), ref_entite[est_client] = TRUE (), v_etat_dossier[acceptation_statut] <> "APPROUVE" )
 		formatString: #,0
 		displayFolder: Ecran 1 Client
 		lineageTag: 0de646aa-a06a-4e41-a8ea-d2faccc87897
 
-	/// Carte 3. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.
 	measure 'Maintiens a faire' = CALCULATE ( COUNTROWS ( v_etat_dossier ), ref_entite[est_client] = TRUE (), v_etat_dossier[maintien_statut] <> "APPROUVE" )
 		formatString: #,0
 		displayFolder: Ecran 1 Client
 		lineageTag: 6369d354-9983-43c5-bd19-e05bb115a351
 
-	/// Carte 4. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 4.
 	measure 'Arretes ouverts des clients' = CALCULATE ( SUM ( v_etat_dossier[arretes_ouverts] ), ref_entite[est_client] = TRUE () )
 		formatString: #,0
 		displayFolder: Ecran 1 Client
@@ -78,16 +78,16 @@ table v_etat_dossier
 		displayFolder: Ecran 1 Client
 		lineageTag: 427a6667-f332-4f80-a77d-8ef84c91cdf0
 
-	measure 'Etape courante' = VAR c = [Client selectionne] VAR e = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR fil = CALCULATE ( COUNTROWS ( v_perimetre_groupe ), FILTER ( ALL ( v_perimetre_groupe ), v_perimetre_groupe[Client] = c && v_perimetre_groupe[est_vehicule] = FALSE () ) ) VAR r = CALCULATE ( SUM ( v_etat_dossier[acceptation_questions_repondues] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR q = CALCULATE ( SUM ( v_etat_dossier[acceptation_questions_dues] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( TRUE (), ISBLANK ( c ), 1, ISBLANK ( fil ) || fil = 0, 2, ISBLANK ( q ) || r < q, 3, e <> "APPROUVE", 4, 5 )
+	measure 'Etape courante' = VAR c = [Client selectionne] VAR e = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR fil = CALCULATE ( COUNTROWS ( v_perimetre_groupe ), REMOVEFILTERS ( liste_clients ), FILTER ( ALL ( v_perimetre_groupe ), v_perimetre_groupe[Client] = c && v_perimetre_groupe[est_vehicule] = FALSE () ) ) VAR r = CALCULATE ( SUM ( v_etat_dossier[acceptation_questions_repondues] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR q = CALCULATE ( SUM ( v_etat_dossier[acceptation_questions_dues] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( TRUE (), ISBLANK ( c ), 1, ISBLANK ( fil ) || fil = 0, 2, ISBLANK ( q ) || r < q, 3, e <> "APPROUVE", 4, 5 )
 		formatString: 0
 		displayFolder: Ecran 1 Client
 		lineageTag: 811b7680-e061-4cc3-a68d-22c9d1d54de6
 
-	measure 'M Acceptation' = VAR auNiveauEntite = ISINSCOPE ( ref_entite[Dénomination] ) VAR estClient = SELECTEDVALUE ( ref_entite[est_client] ) VAR s = IF ( auNiveauEntite, IF ( estClient = TRUE (), CALCULATE ( MAX ( v_etat_dossier[acceptation_statut] ) ) ), CALCULATE ( MAX ( v_etat_dossier[acceptation_statut] ), TREATAS ( VALUES ( v_perimetre_groupe[Client] ), ref_entite[Entité] ) ) ) RETURN IF ( NOT ISBLANK ( s ), SWITCH ( s, "APPROUVE", "Approuvée", "ABSENTE", "À faire", "ABSENT", "À faire", "OUVERT", "En cours", "REFUSE", "Refusée", s ) )
+	measure 'M Acceptation' = IF ( ISINSCOPE ( liste_clients[Entité] ), VAR s = IF ( SELECTEDVALUE ( liste_clients[est_vehicule] ) = TRUE (), CALCULATE ( MAX ( v_etat_dossier[acceptation_statut] ) ) ) RETURN IF ( NOT ISBLANK ( s ), SWITCH ( s, "APPROUVE", "Approuvée", "ABSENTE", "À faire", "ABSENT", "À faire", "OUVERT", "En cours", "REFUSE", "Refusée", s ) ), VAR auNiveauEntite = ISINSCOPE ( ref_entite[Dénomination] ) VAR estClient = SELECTEDVALUE ( ref_entite[est_client] ) VAR s = IF ( auNiveauEntite, IF ( estClient = TRUE (), CALCULATE ( MAX ( v_etat_dossier[acceptation_statut] ) ) ), CALCULATE ( MAX ( v_etat_dossier[acceptation_statut] ), TREATAS ( VALUES ( v_perimetre_groupe[Client] ), ref_entite[Entité] ) ) ) RETURN IF ( NOT ISBLANK ( s ), SWITCH ( s, "APPROUVE", "Approuvée", "ABSENTE", "À faire", "ABSENT", "À faire", "OUVERT", "En cours", "REFUSE", "Refusée", s ) ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: 408ab920-cd5a-4355-b105-7eedfc4878b9
 
-	measure 'M Maintien' = VAR auNiveauEntite = ISINSCOPE ( ref_entite[Dénomination] ) VAR estClient = SELECTEDVALUE ( ref_entite[est_client] ) VAR s = IF ( auNiveauEntite, IF ( estClient = TRUE (), CALCULATE ( MAX ( v_etat_dossier[maintien_statut] ) ) ), CALCULATE ( MAX ( v_etat_dossier[maintien_statut] ), TREATAS ( VALUES ( v_perimetre_groupe[Client] ), ref_entite[Entité] ) ) ) RETURN IF ( NOT ISBLANK ( s ), SWITCH ( s, "APPROUVE", "Approuvée", "ABSENTE", "À faire", "ABSENT", "À faire", "OUVERT", "En cours", "REFUSE", "Refusée", s ) )
+	measure 'M Maintien' = IF ( ISINSCOPE ( liste_clients[Entité] ), VAR s = IF ( SELECTEDVALUE ( liste_clients[est_vehicule] ) = TRUE (), CALCULATE ( MAX ( v_etat_dossier[maintien_statut] ) ) ) RETURN IF ( NOT ISBLANK ( s ), SWITCH ( s, "APPROUVE", "Approuvée", "ABSENTE", "À faire", "ABSENT", "À faire", "OUVERT", "En cours", "REFUSE", "Refusée", s ) ), VAR auNiveauEntite = ISINSCOPE ( ref_entite[Dénomination] ) VAR estClient = SELECTEDVALUE ( ref_entite[est_client] ) VAR s = IF ( auNiveauEntite, IF ( estClient = TRUE (), CALCULATE ( MAX ( v_etat_dossier[maintien_statut] ) ) ), CALCULATE ( MAX ( v_etat_dossier[maintien_statut] ), TREATAS ( VALUES ( v_perimetre_groupe[Client] ), ref_entite[Entité] ) ) ) RETURN IF ( NOT ISBLANK ( s ), SWITCH ( s, "APPROUVE", "Approuvée", "ABSENTE", "À faire", "ABSENT", "À faire", "OUVERT", "En cours", "REFUSE", "Refusée", s ) ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: d725bc4a-a618-4c15-a84c-7c715f640a7b
 
@@ -189,27 +189,27 @@ table v_etat_dossier
 		displayFolder: Ecran 1 Client
 		lineageTag: 9a0bce61-c5ec-4472-8142-7ebbfd442fdc
 
-	measure 'Arrêtés ouverts du client' = VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( c = TRUE (), CALCULATE ( SUM ( v_etat_dossier[arretes_ouverts] ) ) )
+	measure 'Arrêtés ouverts du client' = IF ( ISINSCOPE ( liste_clients[Entité] ), IF ( SELECTEDVALUE ( liste_clients[est_vehicule] ) = TRUE (), CALCULATE ( SUM ( v_etat_dossier[arretes_ouverts] ) ) ), VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( c = TRUE (), CALCULATE ( SUM ( v_etat_dossier[arretes_ouverts] ) ) ) )
 		formatString: #,0
 		displayFolder: Ecran 1 Client
 		lineageTag: 0399f0ab-494b-44c9-a1c0-3233cd3a5e7e
 
-	/// Carte pastille de statut, fond. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte pastille de statut, fond.
 	measure 'Fond acceptation' = SWITCH ( [Acceptation], "Approuvée", "#EFF6F2", "À faire", "#F9ECEC", "En cours", "#FFF3D6", BLANK () )
 		displayFolder: Ecran 1 Client
 		lineageTag: 0213b84f-3e59-4491-9b11-f463691c95e0
 
-	/// Carte pastille de statut, encre. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte pastille de statut, encre.
 	measure 'Texte acceptation' = SWITCH ( [Acceptation], "Approuvée", "#1F6D4A", "À faire", "#9A2A2A", "En cours", "#8A5A00", BLANK () )
 		displayFolder: Ecran 1 Client
 		lineageTag: 0e3603a8-112b-4625-959b-0ffc68d1578c
 
-	/// Carte pastille de statut, fond. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte pastille de statut, fond.
 	measure 'Fond maintien' = SWITCH ( [Maintien], "Approuvée", "#EFF6F2", "À faire", "#F9ECEC", "En cours", "#FFF3D6", BLANK () )
 		displayFolder: Ecran 1 Client
 		lineageTag: fde41341-8209-4f08-9556-91df3ab34ec9
 
-	/// Carte pastille de statut, encre. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte pastille de statut, encre.
 	measure 'Texte maintien' = SWITCH ( [Maintien], "Approuvée", "#1F6D4A", "À faire", "#9A2A2A", "En cours", "#8A5A00", BLANK () )
 		displayFolder: Ecran 1 Client
 		lineageTag: 6d899884-64e4-42ce-85eb-4f790dd02f04
@@ -218,42 +218,42 @@ table v_etat_dossier
 		displayFolder: Ecran 1 Client
 		lineageTag: 55fa5aaf-8b28-4795-ad31-8c161f3f97c5
 
-	/// Carte barre des etapes, temps 3. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte barre des etapes, temps 3.
 	measure '3 Questionnaire et pièces' = [Etat etape 3]
 		displayFolder: Ecran 1 Client
 		lineageTag: 4505601f-263f-4e34-bcf4-8ee194a57b4e
 
-	/// Carte barre des etapes, temps 4. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte barre des etapes, temps 4.
 	measure '4 Soumettre au visa' = [Etat etape 5]
 		displayFolder: Ecran 1 Client
 		lineageTag: 49233586-cf43-427b-9632-22167b7c86f3
 
-	/// Carte barre des etapes, temps 5. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte barre des etapes, temps 5.
 	measure '5 Ouvrir l''arrêté' = [Etat etape 6]
 		displayFolder: Ecran 1 Client
 		lineageTag: 51bbbc3b-8da4-482a-9639-0fabfce78a46
 
-	/// Carte barre des etapes, temps 1. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte barre des etapes, temps 1.
 	measure '1 Le dossier' = [Etat etape 1]
 		displayFolder: Ecran 1 Client
 		lineageTag: c14ece5f-1077-4082-b721-7fc900c70f1b
 
-	/// Carte temps 1. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte temps 1.
 	measure '1 Dossier' = [Etat etape 1]
 		displayFolder: Ecran 1 Client
 		lineageTag: 835d8c90-a4ee-4449-a2cb-8ff5f42b3388
 
-	/// Carte temps 2. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte temps 2.
 	measure '2 Filiales' = [Etat etape 2]
 		displayFolder: Ecran 1 Client
 		lineageTag: 608deec9-5def-4129-8adc-0e09628ea5e3
 
-	/// Carte temps 4. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte temps 4.
 	measure '4 Visa' = [Etat etape 5]
 		displayFolder: Ecran 1 Client
 		lineageTag: c8d62106-dcc6-437f-a152-15d1bba2e945
 
-	/// Carte temps 5. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte temps 5.
 	measure '5 Arrêtés' = [Etat etape 6]
 		displayFolder: Ecran 1 Client
 		lineageTag: c7688ea6-36dc-4100-97f4-a8ff3b43f3e8
@@ -295,7 +295,7 @@ table v_etat_dossier
 		displayFolder: Ecran 1 Client
 		lineageTag: 17763249-c7d2-4635-a0ac-5ff8885dd77a
 
-	measure 'Bandeau visa' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR q = [Questions du client] VAR p = [Pieces du client] RETURN SWITCH ( s, "APPROUVE", "Acceptation approuvée " & [Acceptation visee par et le] & ".", "REFUSE", "Acceptation refusée " & [Acceptation visee par et le] & " : reprendre le questionnaire, puis soumettre à nouveau.", IF ( [Questionnaire complet] = "OUI", q & " questions répondues, " & ( p + 0 ) & " pièce(s) au coffre : le dossier peut partir au visa.", q & " questions répondues : le questionnaire n'est pas complet, le visa attend." ) )
+	measure 'Bandeau visa' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR q = [Questions du client] VAR p = [Pieces du client] VAR a = [Cote acceptation] VAR n = CALCULATE ( COUNTROWS ( v_questions_acceptation ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = a ) ) RETURN SWITCH ( s, "APPROUVE", "Acceptation approuvée " & [Acceptation visee par et le] & ".", "REFUSE", "Acceptation refusée " & [Acceptation visee par et le] & " : reprendre le questionnaire, puis soumettre à nouveau.", IF ( ISBLANK ( n ), "Aucun questionnaire d'acceptation ouvert : le visa attend.", IF ( [Questionnaire complet] = "OUI", q & " questions répondues, " & ( p + 0 ) & " pièce(s) au coffre : le dossier peut partir au visa.", q & " questions répondues : le questionnaire n'est pas complet, le visa attend." ) ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: 75488fc5-a92d-4dbd-a8b9-b8160bb86224
 

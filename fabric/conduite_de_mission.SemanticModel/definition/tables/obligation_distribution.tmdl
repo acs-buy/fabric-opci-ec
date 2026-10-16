@@ -1,0 +1,98 @@
+/// Les categories de sommes distribuables d'un exercice, et leur visa.
+table obligation_distribution
+	lineageTag: a1f50cb3-45f8-44ca-8319-5fbf7cce1239
+
+	/// propose_par de la ligne de la catégorie cochée (VAR puis FILTER ALL) ; « aucun proposant inscrit » ; vide quand le segment ne porte pas exactement 1 catégorie ; c’est ce que rendra la branche OBLIGATION de fn_proposant après sa reprise ; la colonne propose_par doit d’abord rejoindre le modèle (« Ce
+	measure 'Proposant designe' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a && v_obligation_par_categorie[categorie_ref] = c ) VAR cc = MAXX ( t, v_obligation_par_categorie[categorie] ) VAR p = MAXX ( FILTER ( ALL ( obligation_distribution ), obligation_distribution[entite] = e && obligation_distribution[exercice] = a && obligation_distribution[categorie] = cc ), obligation_distribution[propose_par] ) RETURN IF ( NOT une, "", IF ( ISBLANK ( p ) || p = "", "aucun proposant inscrit", p ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 06cf891b-61ac-4e71-ae0e-7fbb7289a128
+
+	/// vert quand [Arrete etape 3 faite] vaut 1, gris pâle quand elle est vide (sans objet), gris sinon
+	measure 'Fond arrete etape 3' = VAR f = [Arrete etape 3 faite] RETURN IF ( ISBLANK ( f ), "#EEF1F5", IF ( f = 1, "#1F6D4A", "#D5DCE4" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 1a0c9d90-b201-42ad-9b70-071c1b13319a
+
+	/// à l’annuel, la garde 50088 telle qu’elle est : aucune ligne inscrite de l’exercice dont etat est vide ou autre que VISEE (pr_valider_pour_client relue) ; vide à un autre arrêté (sans objet) ; sur toutes les lignes de l’exercice (VAR e, x puis FILTER ALL), quelle que soit la catégorie cochée ; la règ
+	measure 'Arrete etape 3 faite' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR typ = CALCULATE ( MAX ( ref_arrete[Type] ), FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ) ) VAR nn = COUNTROWS ( FILTER ( ALL ( obligation_distribution ), obligation_distribution[entite] = e && obligation_distribution[exercice] = a && ( ISBLANK ( obligation_distribution[etat] ) || obligation_distribution[etat] <> "VISEE" ) ) ) + 0 RETURN IF ( typ = "ANNUEL", IF ( nn > 0, 0, 1 ) )
+		formatString: 0
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 9158ae47-3797-4f14-ada2-20c49d964026
+
+	/// alerte quand une catégorie inscrite n’est pas VISEE (carte 4)
+	measure 'Encre obligation' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR nn = COUNTROWS ( FILTER ( ALL ( obligation_distribution ), obligation_distribution[entite] = e && obligation_distribution[exercice] = a && ( ISBLANK ( obligation_distribution[etat] ) || obligation_distribution[etat] <> "VISEE" ) ) ) + 0 RETURN IF ( nn > 0, "#9A2A2A", "#12233C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 943e5b89-b678-41ca-b454-76a29c267e6c
+
+	/// « n / n catégories visées · total x », visées au sens de la garde de la validation (etat = VISEE) ; « arrêté semestriel » (carte 4)
+	measure 'Sous-ligne obligation' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR typ = CALCULATE ( MAX ( ref_arrete[Type] ), FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ) ) VAR nc = COUNTROWS ( ALLNOBLANKROW ( ref_obligation_distribution ) ) VAR nv = COUNTROWS ( FILTER ( ALL ( obligation_distribution ), obligation_distribution[entite] = e && obligation_distribution[exercice] = a && obligation_distribution[etat] = "VISEE" ) ) + 0 VAR tot = [R42 Total distribuable] RETURN IF ( typ <> "ANNUEL", "arrêté " & LOWER ( typ ), FORMAT ( nv, "0" ) & " / " & FORMAT ( nc, "0" ) & " catégories visées · total " & IF ( ISBLANK ( tot ), "à remplir", FORMAT ( tot, "#,0.00" ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 7660bb17-99ab-43d0-9194-abb454e78d6b
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d29f1ca2-c7a8-47a3-b7d3-8b2bdf74dd1b
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 0cd09cce-d9e1-4741-ab35-a77275a2b88e
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 70fa4454-7042-4bb7-9c98-88ff3520f05c
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column categorie
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 93197850-67bd-421b-95c9-0b69dc85fa68
+		summarizeBy: none
+		sourceColumn: categorie
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: varchar(12)
+		lineageTag: 2c0a3e30-b80b-4222-af58-bb127aca3f63
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column propose_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: f69d4776-81f7-4277-b7fd-232a1c29f245
+		summarizeBy: none
+		sourceColumn: propose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	partition obligation_distribution = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_obligation_distribution = Source{[Schema="dbo",Item="obligation_distribution"]}[Data]
+				in
+				    dbo_obligation_distribution
+

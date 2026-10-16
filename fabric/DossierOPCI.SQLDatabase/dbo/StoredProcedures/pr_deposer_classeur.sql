@@ -1,4 +1,5 @@
 
+-- pr_deposer_classeur : 2 refus
 -- 4. LE DEPOT.
 CREATE   PROCEDURE dbo.pr_deposer_classeur
     @entite         VARCHAR (20),
@@ -40,7 +41,7 @@ BEGIN
     IF @empreinte IS NOT NULL AND @empreinte <> @recue
     BEGIN
         SET @m = N'Dépôt refusé : l''empreinte transmise ne correspond pas au contenu reçu du fichier ' + @fichier + N'.';
-        THROW 50626, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50626, @m, 1; END
     END;
     IF @sous_dossier = N'Livrables'
        AND EXISTS (SELECT 1 FROM dbo.export_dossier WHERE entite = @entite AND arrete = @arrete AND sous_dossier = N'Livrables'
@@ -77,7 +78,7 @@ BEGIN
             TRY_CAST(JSON_VALUE(@corps, '$.taille') AS INT), @message, @par, @sous_dossier, @recue, @ecrase);
 
     IF @statut <> 'FAIT'
-        THROW 50946, @message, 1;
+        BEGIN SET @message = REPLACE(@message, N'%', N'%%'); THROW 50946, @message, 1; END
     SELECT @web AS web_url, @onelake AS chemin_onelake, @message AS message, @recue AS empreinte_sha256;
 END;
 

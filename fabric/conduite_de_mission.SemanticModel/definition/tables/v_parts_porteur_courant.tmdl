@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_parts_porteur_courant
 	lineageTag: 16035a1e-f1c1-4618-af6e-037a97646605
 

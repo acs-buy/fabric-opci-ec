@@ -1,4 +1,5 @@
 
+-- pr_ouvrir_maintien : 1 refus
 -- Le maintien suit la meme regle. L'ecran C4 porte « Approuver le
 -- maintien », grise tant que le questionnaire n'est pas complet.
 CREATE   PROCEDURE dbo.pr_ouvrir_maintien
@@ -24,7 +25,7 @@ BEGIN
         VALUES ('pr_ouvrir_maintien', @entite, @arrete_conclu, @cote, @m,
                 N'Créer la feuille de la phase Maintien pour cette entité.',
                 @par, SYSUTCDATETIME());
-        THROW 50068, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50068, @m, 1; END
     END;
 
     IF EXISTS (SELECT 1 FROM dbo.maintien_mission

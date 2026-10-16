@@ -554,3 +554,408 @@ relationship 2945eaa1-0919-4450-a66f-bbc7ac19894b
 	fromColumn: conclusion_revue.arrete
 	toColumn: v_dim_arrete.arrete
 
+relationship fc94e644-b0d4-4db0-b114-a6ef6bd56803
+	fromColumn: document_produit.entite
+	toColumn: ref_entite.Entité
+
+relationship a776f1c4-ce38-4207-8f1f-35d9e6e4f1c2
+	fromColumn: document_produit.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 289a2bb6-3955-46a5-a9b6-7c8a93bd6f37
+	fromColumn: demande_document.entite
+	toColumn: ref_entite.Entité
+
+relationship 1cd45290-9cb5-43f2-9029-e0cc038cecbe
+	fromColumn: demande_document.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship d786be7a-b1f8-4bfb-8866-edb70e1cc6be
+	fromColumn: v_livrables_a_valider.entite
+	toColumn: ref_entite.Entité
+
+relationship 9aaaab1e-013f-4e5f-a575-4f65f33bdf35
+	fromColumn: v_livrables_a_valider.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship e5a29561-cce0-4362-b3b8-ab4149d9172c
+	fromColumn: v_ligne_etat_montant.entite
+	toColumn: ref_entite.Entité
+
+relationship 75bd2c0e-2c89-4862-833c-e0b3a08789bf
+	fromColumn: v_ligne_etat_montant.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 0021ab60-c49d-4bf2-90b9-3f0331754c37
+	fromColumn: v_ligne_annexe_montant.entite
+	toColumn: ref_entite.Entité
+
+relationship 5dbf4704-d5fe-45ca-894c-ddb851609eda
+	fromColumn: v_ligne_annexe_montant.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 96e63798-d6df-43a7-ba5f-7bffc65d9190
+	fromColumn: v_cellules_a_remplir.entite
+	toColumn: ref_entite.Entité
+
+relationship 06e7ec98-5105-49f3-87c8-50d25a30a64c
+	fromColumn: v_cellules_a_remplir.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 5dfa8dab-5b53-4a05-b489-e66a79a71e14
+	fromColumn: v_annexe_produisible.entite
+	toColumn: ref_entite.Entité
+
+relationship 7e3516bd-429f-4437-adea-aa8e91e009bd
+	fromColumn: v_annexe_produisible.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship a9b3d512-9aa9-4396-80e2-f4d28ae1e2cf
+	fromColumn: v_rapport_expert_comptable.entite
+	toColumn: ref_entite.Entité
+
+relationship ad10533b-cd3a-4688-a4de-319eddf13e70
+	fromColumn: v_rapport_expert_comptable.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship f0e100fd-1734-4209-8ac4-d28778962fea
+	fromColumn: v_forme_attestation_proposee.entite
+	toColumn: ref_entite.Entité
+
+relationship 0964e7c8-6095-4c64-9c90-442e6f8d4721
+	fromColumn: v_forme_attestation_proposee.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 40fa938e-0060-4b8b-a774-75b335582949
+	fromColumn: v_dip_arrete.entite
+	toColumn: ref_entite.Entité
+
+relationship 7ebb9bed-9662-4abe-8cf9-b15e2c8aaed4
+	fromColumn: v_dip_arrete.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 7bef8fa0-9f12-4189-b9e3-8505c038e5ef
+	fromColumn: v_dip_rubrique_1.entite
+	toColumn: ref_entite.Entité
+
+relationship 34e04f3c-c812-4434-a18e-70101ab0de5d
+	fromColumn: v_dip_rubrique_1.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship c98f4cea-4925-4739-9a4e-72bf8c98cd2e
+	fromColumn: v_dip_rubrique_2.entite
+	toColumn: ref_entite.Entité
+
+relationship a5b498c3-5cff-48bc-9e18-016746af1ce6
+	fromColumn: v_dip_rubrique_2.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 9b19cd97-fcab-4b2f-a913-8605f54fc1a1
+	fromColumn: v_dip_rubrique_3.entite
+	toColumn: ref_entite.Entité
+
+relationship ec4072b2-473b-4c80-9a22-bb053ec38ee2
+	fromColumn: v_dip_rubrique_3.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship e46404f8-1d52-44d4-ac02-a1ab76eda4ef
+	fromColumn: v_dip_rubrique_4.entite
+	toColumn: ref_entite.Entité
+
+relationship 7e6023bf-536d-42e2-a980-20552b23d034
+	fromColumn: v_dip_rubrique_4.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 64645e65-a9e8-4122-b0aa-9e33b3eff5e7
+	fromColumn: v_dip_rubrique_5.entite
+	toColumn: ref_entite.Entité
+
+relationship 4c947cd4-6f81-4300-a2cf-3b875a930e1c
+	fromColumn: v_dip_rubrique_5.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship a8560759-d522-4806-bb4c-5e036319c0ab
+	fromColumn: v_dip_rubrique_6.entite
+	toColumn: ref_entite.Entité
+
+relationship 36dfe7b9-0ee1-4d59-915a-9f6ee95db366
+	fromColumn: v_dip_rubrique_6.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 14980413-811d-44a0-99df-b3635e219d9c
+	fromColumn: v_balance_etats_financiers.entite
+	toColumn: ref_entite.Entité
+
+relationship dab2df09-a2b0-42cf-ae38-f7fcb1e28f98
+	fromColumn: v_balance_etats_financiers.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 6a63e173-4411-46a9-a05d-ac5e1d7eb45d
+	fromColumn: v_arrete_etat.entite
+	toColumn: ref_entite.Entité
+
+relationship ed9ea2ea-a11f-4e36-861f-3669f5696b29
+	fromColumn: v_arrete_etat.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship e072b871-5567-48c3-9129-d0a16059aa41
+	fromColumn: v_arrete_client.entite
+	toColumn: ref_entite.Entité
+
+relationship 783fce64-ffd2-448c-8375-0e215e2b9fdf
+	fromColumn: v_arrete_client.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship dff40ab3-6ed0-4c8d-8774-8e3cdaa1d935
+	fromColumn: publication_client.entite
+	toColumn: ref_entite.Entité
+
+relationship 5d291ce4-a30e-4dda-b613-8c4c746581e6
+	fromColumn: publication_client.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 585acb3b-69b4-4f2f-9317-7d163df30afe
+	fromColumn: v_visa_cloture_courant.entite
+	toColumn: ref_entite.Entité
+
+relationship 55688f0d-a4b6-49e4-b51d-a6cf66363496
+	fromColumn: v_visa_cloture_courant.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 8711f396-3400-46d1-bb69-115a7f9183f2
+	fromColumn: visa_cloture.entite
+	toColumn: ref_entite.Entité
+
+relationship aa9c0006-ee28-4287-8d06-d8a088734d40
+	fromColumn: visa_cloture.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship d928d002-7194-4c55-9c2c-7220c6492d5f
+	fromColumn: publication_vl.entite
+	toColumn: ref_entite.Entité
+
+relationship 7d49aa69-2d4d-4ffb-bd27-cc1e600ce9c7
+	fromColumn: publication_vl.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 76e4d20f-88ca-48aa-b333-637eb973d0bf
+	fromColumn: obligation_distribution.entite
+	toColumn: ref_entite.Entité
+
+relationship 195c6a2d-1e75-586d-b016-8f09464eb174
+	crossFilteringBehavior: bothDirections
+	fromColumn: liste_clients.Client
+	toColumn: ref_entite.Entité
+
+relationship e7eda631-cfc5-47c2-b182-a3c7a096a3f5
+	fromColumn: v_annexe_cellule.entite
+	toColumn: ref_entite.Entité
+
+relationship 717a84d8-6fe5-4eda-b0b9-6440e9deee07
+	fromColumn: v_annexe_cellule.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 4d2237ab-c6c6-56e4-9026-12bc7b836c25
+	fromColumn: v_ecran_membres_equipe.entite
+	toColumn: ref_entite.Entité
+
+relationship a8af7119-08c2-5f92-a2f3-ce0544ba4f9f
+	fromColumn: v_ecran_arretes.entite
+	toColumn: ref_entite.Entité
+
+relationship 51437ef2-ad60-5723-b659-af14c7961bc0
+	fromColumn: v_ecran_demandes_reouverture.entite
+	toColumn: ref_entite.Entité
+
+relationship 9323e46e-5a49-5a9d-88b2-850636bd9c02
+	fromColumn: v_ecran_reouverture_effets.entite
+	toColumn: ref_entite.Entité
+
+relationship 5213a976-1dfb-5374-9d3d-00deed387f07
+	fromColumn: v_ecran_pieces_retirees.entite
+	toColumn: ref_entite.Entité
+
+relationship c0f938d2-48ba-5bc7-82e0-e5cff03c9044
+	fromColumn: v_copie_livrable.entite
+	toColumn: ref_entite.Entité
+
+relationship 4d399c79-5743-4238-aced-43f54be37cf0
+	fromColumn: evaluation_actif.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 3de24c1e-971f-42d0-a984-7673c8bd9aa4
+	fromColumn: valeur_instrument.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 3172161c-6a6c-4af0-b85c-3e594104e85b
+	fromColumn: cours_titre.entite
+	toColumn: ref_entite.Entité
+
+relationship cf48df51-c781-48f1-99dd-340ac2ee3ba5
+	fromColumn: cours_titre.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 309215ad-731a-4558-a718-138950b00ac7
+	fromColumn: revision_compte_courant.entite
+	toColumn: ref_entite.Entité
+
+relationship 4d52d592-3dee-400b-a73a-712ddfba40f1
+	fromColumn: revision_compte_courant.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 621faf0b-54fe-46f4-9a94-9bcc36056c6e
+	fromColumn: synthese_proposee.entite
+	toColumn: ref_entite.Entité
+
+relationship e41336a3-839d-486e-bcc3-a3cb4c5289f3
+	fromColumn: synthese_proposee.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship ab386d85-0edb-44e6-bab2-a556fee02f63
+	fromColumn: eligibilite_participation.entite_mere
+	toColumn: ref_entite.Entité
+
+relationship 0db05fc7-9563-4141-b4c1-95cf2323a9ae
+	fromColumn: v_a_generer.entite
+	toColumn: ref_entite.Entité
+
+relationship c45bf0e1-0a2b-4556-8db1-d25baa9359b6
+	fromColumn: v_a_generer.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 511bc3e0-f1a5-4103-98a0-2144eaf154ce
+	fromColumn: v_reprise_275_a_passer.entite
+	toColumn: ref_entite.Entité
+
+relationship b0b3f38d-95d7-414e-9d9a-16e6bb6bf551
+	fromColumn: v_reprise_275_a_passer.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 9830b234-ea94-4410-9816-6c5bf86bbca2
+	fromColumn: v_controle_rationalisation.entite
+	toColumn: ref_entite.Entité
+
+relationship 49e901a4-761d-4294-b71e-9184e9b864e5
+	fromColumn: v_controle_rationalisation.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 1f741487-28b7-4904-9836-4c5d0b399f4c
+	fromColumn: v_controle_difference_vs_ecritures.entite
+	toColumn: ref_entite.Entité
+
+relationship bd9a529d-baa5-4b7e-8d51-0f9f5e7e0d83
+	fromColumn: v_controle_difference_vs_ecritures.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship a88259f6-8e18-4569-bed0-fb937161496b
+	fromColumn: v_comptes_classe_1_hors_anr.entite
+	toColumn: ref_entite.Entité
+
+relationship 39725b59-02db-4734-a41b-539164cb4883
+	fromColumn: v_comptes_classe_1_hors_anr.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship e14e0491-232a-45a6-a80b-0c9506d9ddd5
+	fromColumn: v_ecran_valeurs_arrete.vehicule
+	toColumn: ref_entite.Entité
+
+relationship 9cf24664-0407-4468-a577-f1b106b51fa3
+	fromColumn: v_ecran_valeurs_arrete.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship acdc761e-86d5-42d0-9dab-fd83af4529e3
+	fromColumn: v_ecran_differences_par_compte.entite
+	toColumn: ref_entite.Entité
+
+relationship 79d50bd3-cd55-4d73-b48f-b48dc08df4b3
+	fromColumn: v_ecran_differences_par_compte.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship daad537c-c907-4c13-96d9-3ec39840fe78
+	fromColumn: v_ecran_visas_valorisation.vehicule
+	toColumn: ref_entite.Entité
+
+relationship 1b022446-01fa-46c0-b110-61d6581f5c4a
+	fromColumn: v_ecran_visas_valorisation.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 309d5afa-8584-429b-bc49-944635f68cbf
+	fromColumn: v_ecran_anr_filiale_detail.vehicule
+	toColumn: ref_entite.Entité
+
+relationship d411693b-6bf2-43d5-95cb-0580aaf2387b
+	fromColumn: v_ecran_anr_filiale_detail.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 71f9e786-3469-4dea-9ed2-3f122854ac06
+	fromColumn: v_ecran_pieces_valorisation.vehicule
+	toColumn: ref_entite.Entité
+
+relationship 52417956-f51e-4198-b4bf-bfcc59c12999
+	fromColumn: v_ecran_pieces_valorisation.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship a4db30a5-6ad9-4eb9-9ab5-0cde3d22f64e
+	fromColumn: v_ecran_feuilles_valorisation.vehicule
+	toColumn: ref_entite.Entité
+
+relationship 814edef4-148d-4a80-b469-a1dab1d2ae7a
+	fromColumn: v_ecran_feuilles_valorisation.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship d9111cb1-f152-4849-8ce0-5fa1fb802979
+	fromColumn: v_ecran_flux_groupe.vehicule
+	toColumn: ref_entite.Entité
+
+relationship b273a2b0-991f-47ae-98e3-752184d3ad65
+	fromColumn: v_ecran_flux_groupe.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 4f1b7246-e1f4-42ac-897f-0acf241ef4b6
+	fromColumn: v_ecran_miroirs_groupe.vehicule
+	toColumn: ref_entite.Entité
+
+relationship c57e69eb-2973-4b6d-b44d-059c45fe9523
+	fromColumn: v_ecran_miroirs_groupe.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 7c2cd226-d92d-4403-ade5-fca79cdbf2a9
+	fromColumn: v_ecran_rationalisation_pas.entite
+	toColumn: ref_entite.Entité
+
+relationship 9dc13631-851c-431a-8343-f6feec51c909
+	fromColumn: v_ecran_rationalisation_pas.arrete
+	toColumn: v_dim_arrete.arrete
+
+relationship 08684cba-3462-4075-8442-672eb4fa06ee
+	fromColumn: v_differences_synthese.famille
+	toColumn: v_famille_actif.famille
+
+relationship 3b241e28-59f3-4500-b442-93227bf4cda2
+	fromColumn: v_differences_detail.famille
+	toColumn: v_famille_actif.famille
+
+relationship 6632fe4a-79e4-4950-a3d3-f7aff25cacd3
+	fromColumn: decision_distribution.entite
+	toColumn: ref_entite.Entité
+
+relationship 824e2554-bfeb-4ef8-bafa-047de052ad8a
+	fromColumn: decision_distribution.exercice
+	toColumn: v_dim_arrete.arrete
+
+relationship 294116b8-2b69-4d0b-aa71-e7cf662e4328
+	fromColumn: v_obligation_par_categorie.categorie_ref
+	toColumn: ref_obligation_distribution.categorie
+
+relationship 9871356d-b864-4e54-9d7b-4d8be3caebf5
+	fromColumn: v_ratio_conclusion.code
+	toColumn: ref_ratio_memoire.code
+
+relationship 50601799-2542-446f-9d08-d9cf1b126d9a
+	fromColumn: v_ecran_actifs_a_valoriser.vehicule
+	toColumn: ref_entite.Entité
+
+relationship 9a6ecdff-2ae6-488c-9a0c-9d4c15fd90ef
+	fromColumn: v_ecran_actifs_a_valoriser.arrete
+	toColumn: v_dim_arrete.arrete
+

@@ -23,6 +23,8 @@ CREATE TABLE [dbo].[import_fec] (
 
 GO
 
+
+
 -- LA BALANCE CHARGEE SE PORTE SEULE : un import CHARGE fait porter une balance a son arrete de mission de
 -- vehicule. Le declencheur ne remet jamais une valeur a 0.
 CREATE   TRIGGER dbo.tr_import_porte_balance
@@ -39,3 +41,4 @@ BEGIN
 END;
 
 GO
+

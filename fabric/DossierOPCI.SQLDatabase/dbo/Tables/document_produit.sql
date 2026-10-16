@@ -16,6 +16,7 @@ CREATE TABLE [dbo].[document_produit] (
     [empreinte_stockee]    CHAR (64)      NULL,
     [empreinte_stockee_le] DATETIME2 (3)  NULL,
     [couvre_version]       INT            NULL,
+    [annexe_version]       INT            NULL,
     CONSTRAINT [pk_document_produit] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [ck_document_empreinte] CHECK (len([empreinte_sha256])=(64)),
     CONSTRAINT [ck_document_empreinte_stockee] CHECK ([empreinte_stockee] IS NULL AND [empreinte_stockee_le] IS NULL OR len([empreinte_stockee])=(64) AND [empreinte_stockee_le] IS NOT NULL),

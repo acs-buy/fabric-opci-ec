@@ -1,3 +1,4 @@
+
 CREATE   PROCEDURE dbo.pr_ecran_decider_distribution
     @entite VARCHAR (20),
     @exercice VARCHAR (20),
@@ -8,6 +9,9 @@ CREATE   PROCEDURE dbo.pr_ecran_decider_distribution
 AS
 BEGIN
     SET NOCOUNT ON;
+    -- 15/10/2026 : une personne vide ou NULL se refuse en francais, avant tout le reste
+    IF NULLIF(LTRIM(RTRIM(@par)), N'') IS NULL
+        THROW 50825, N'Décision refusée : votre compte ne tient pas, sur ce dossier, le rôle habilité à enregistrer la décision de distribution.', 1;
     BEGIN TRY
         EXEC dbo.pr_decider_distribution @entite, @exercice, @categorie, @montant, @assemblee, @par;
         UPDATE dbo.decision_distribution

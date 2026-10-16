@@ -1,4 +1,5 @@
 
+-- pr_demander_reevaluation : 1 refus
 -- --- 9 : pr_demander_reevaluation ------------------------------------
 CREATE   PROCEDURE dbo.pr_demander_reevaluation
     @entite VARCHAR (20),
@@ -33,7 +34,7 @@ BEGIN
                 N'Demande refusee : le lot ' + CAST(@lot_propose AS NVARCHAR (20))
                 + N' est propose et non perime pour cette entite a cet arrete. '
                 + N'Le viser, le renvoyer ou l''annuler avant de regenerer.';
-            THROW 50061, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50061, @m, 1; END
         END;
 
         -- K4, troisieme volet : rien de calculable, rien a generer. Les

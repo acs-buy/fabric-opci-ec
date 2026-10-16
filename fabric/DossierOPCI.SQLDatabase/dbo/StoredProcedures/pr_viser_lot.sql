@@ -1,57 +1,65 @@
 
--- --- 4 : pr_viser_lot ------------------------------------------------
--- Le patron des 4 procedures : elle resout le proposant, ecrit le visa,
--- porte la decision sur l'objet, et journalise tout refus.
+-- pr_viser_lot : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_viser_lot
     @lot_id     INT,
     @decision   VARCHAR (8),
     @decide_par NVARCHAR (200),
     @motif      NVARCHAR (600) = NULL
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    DECLARE @entite VARCHAR (20), @arrete VARCHAR (20), @cycle VARCHAR (10),
-            @statut VARCHAR (20), @propose NVARCHAR (200);
-    SELECT @entite = l.entite, @arrete = l.arrete, @statut = l.statut,
-           @propose = l.cree_par,
-           @cycle = (SELECT f.cycle FROM dbo.feuille_travail f
-                     WHERE f.cote = l.feuille_cote)
-    FROM dbo.lot_ecritures l WHERE l.id = @lot_id;
-
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @decide_par;
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
     BEGIN TRY
-        IF @entite IS NULL
-            THROW 50053, N'Visa refusé : ce lot n''existe pas.', 1;
-        IF @statut <> 'PROPOSE'
-            THROW 50053, N'Visa refusé : seul un lot au statut PROPOSE se vise. Un lot déjà validé, rejeté, exporté ou publié ne se révise pas, il se corrige par un lot d''annulation.', 1;
-
-        DECLARE @ref VARCHAR (30) = CAST(@lot_id AS VARCHAR (30));
-        EXEC dbo.pr_garde_visa 'LOT', @ref, @decision, @decide_par, @motif;
-
-        BEGIN TRANSACTION;
-        INSERT INTO dbo.visa (nature, objet_ref, entite, arrete, cycle,
-                              decision, motif, propose_par, decide_par)
-        VALUES ('LOT', CAST(@lot_id AS VARCHAR (30)), @entite, @arrete, @cycle,
-                @decision, @motif, @propose, @decide_par);
-
-        UPDATE dbo.lot_ecritures
-           SET statut = CASE WHEN @decision = 'VISE' THEN 'VALIDE'
-                             ELSE 'REJETE' END,
-               statut_par = @decide_par, statut_le = SYSUTCDATETIME(),
-               motif = COALESCE(@motif, motif)
-         WHERE id = @lot_id;
-        COMMIT TRANSACTION;
+    BEGIN TRANSACTION;
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT entite AS x, CAST(0 AS BIT) AS lecteurs FROM dbo.lot_ecritures WHERE id = @lot_id) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
+    BEGIN
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
+    END;
+    -- 2. le corps d'origine
+    EXEC dbo.pr_viser_lot_corps @lot_id = @lot_id, @decision = @decision, @decide_par = @decide_par, @motif = @motif;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1
+    BEGIN
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT entite AS x, CAST(0 AS BIT) AS lecteurs FROM dbo.lot_ecritures WHERE id = @lot_id) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
+        BEGIN
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
+        END;
+    END;
+    COMMIT;
     END TRY
     BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
-        INSERT INTO dbo.journal_refus
-            (procedure_nom, entite, arrete, cote, message, refuse_pour)
-        VALUES ('pr_viser_lot', @entite, @arrete,
-                CAST(@lot_id AS VARCHAR (30)),
-                LEFT(ERROR_MESSAGE(), 2000), @decide_par);
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
         THROW;
     END CATCH;
-END
+END;
 
 GO
 

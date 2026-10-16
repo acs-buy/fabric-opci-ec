@@ -30,5 +30,27 @@
         }
       }
     ]
-  }
+  },
+  "visualInteractions": [
+    {
+      "source": "annSegQuestion",
+      "target": "annSansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "annSegQuestion",
+      "target": "annSansArrete2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "annTable",
+      "target": "annSansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "annTable",
+      "target": "annSansArrete2",
+      "type": "NoFilter"
+    }
+  ]
 }

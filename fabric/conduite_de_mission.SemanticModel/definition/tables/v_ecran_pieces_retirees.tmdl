@@ -1,0 +1,125 @@
+/// Les rattachements retirés du dossier, leur motif, leur auteur et leur date.
+table v_ecran_pieces_retirees
+	lineageTag: 58c1673f-609f-588c-bdc9-a861155a4a86
+
+	/// 1 quand la ligne est un retrait du client choisi.
+	measure 'Est client courant (retraits)' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_pieces_retirees ) ) RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( v_ecran_pieces_retirees, v_ecran_pieces_retirees[entite] = c ) ), 1 )
+		formatString: 0
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 5a892a42-f9b2-5905-82f8-b7772a25562c
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 71b0df2b-963d-50d8-8e53-b8c10d7410c1
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 389a724f-fc88-5200-a724-4cde47137428
+		summarizeBy: none
+		sourceColumn: piece_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: f8ef881e-69c0-536f-abdb-88971e80a7f4
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column fait_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: a88d82d8-1e24-5c93-8e4f-2919f0c1f6e2
+		summarizeBy: none
+		sourceColumn: fait_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: varchar(31)
+		lineageTag: c60a7ae8-4cc9-5bd6-a9ed-ff446675b218
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fichier
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: fff09ed4-2603-5ea8-8d7b-6499f141a1b7
+		summarizeBy: none
+		sourceColumn: Fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column Question
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: c378773f-4a3c-5ec2-89c6-f24c4c574019
+		summarizeBy: none
+		sourceColumn: Question
+
+		annotation SummarizationSetBy = Automatic
+
+	column Arrêté
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: 4988d0b6-07b8-5bda-869f-6acafc339b6e
+		summarizeBy: none
+		sourceColumn: Arrêté
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Motif du retrait'
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(800)
+		lineageTag: 03b42443-51da-5bb2-91be-692415e3b70d
+		summarizeBy: none
+		sourceColumn: Motif du retrait
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Retirée par'
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: d3031869-b4fe-5205-9e44-37c00e94d6a2
+		summarizeBy: none
+		sourceColumn: Retirée par
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Retirée le'
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 6f3498be-86c5-5043-ae05-414e483e2deb
+		summarizeBy: none
+		sourceColumn: Retirée le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_pieces_retirees = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_pieces_retirees = Source{[Schema="dbo",Item="v_ecran_pieces_retirees"]}[Data]
+				in
+				    dbo_v_ecran_pieces_retirees
+

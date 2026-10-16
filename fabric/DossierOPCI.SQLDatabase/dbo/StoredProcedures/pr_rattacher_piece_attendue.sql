@@ -1,4 +1,5 @@
 
+-- pr_rattacher_piece_attendue : 1 refus
 CREATE   PROCEDURE dbo.pr_rattacher_piece_attendue
     @entite            VARCHAR (20),
     @piece_id          INT,
@@ -12,7 +13,7 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM dbo.piece WHERE id = @piece_id AND entite = @entite)
     BEGIN
         SET @m = N'Rattachement refusé : la pièce n° ' + ISNULL(CAST(@piece_id AS NVARCHAR (12)), N'vide') + N' n''est pas inscrite au dossier de l''entité ' + ISNULL(@entite, N'vide') + N'.';
-        THROW 50524, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50524, @m, 1; END
     END;
     SELECT @periodicite = periodicite, @vigueur = en_vigueur_depuis FROM dbo.ref_piece_attendue WHERE id = @piece_attendue_id;
     IF @periodicite IS NULL

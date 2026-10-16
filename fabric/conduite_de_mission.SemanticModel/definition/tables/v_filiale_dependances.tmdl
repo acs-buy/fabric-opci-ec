@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_filiale_dependances
 	lineageTag: 381fff26-ddb0-4c5f-b0f7-48dd47d57bd3
 
@@ -6,7 +6,7 @@ table v_filiale_dependances
 		displayFolder: Ecran 1 Client
 		lineageTag: 278a475a-76dd-4668-a51a-53dc73c5a52b
 
-	measure 'Est filiale du client courant' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_filiale_dependances ) ) RETURN IF ( SELECTEDVALUE ( v_filiale_dependances[entite_mere] ) = c, 1 )
+	measure 'Est filiale du client courant' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_filiale_dependances ) ) RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( v_filiale_dependances, v_filiale_dependances[entite_mere] = c ) ), 1 )
 		formatString: 0
 		displayFolder: Ecran 1 Client
 		lineageTag: 0fe1b3ac-323c-459d-9e93-10113aa4cd49
@@ -31,7 +31,7 @@ table v_filiale_dependances
 		displayFolder: Ecran 1 Client
 		lineageTag: 755c9981-652c-4036-9a42-adcd15e84a33
 
-	measure 'Confirmation suppression filiale' = VAR f = [Filiale selectionnee] VAR dn = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[Dénomination] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR a = CALCULATE ( SUM ( v_filiale_dependances[arretes] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR p = CALCULATE ( SUM ( v_filiale_dependances[pieces] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR e = CALCULATE ( SUM ( v_filiale_dependances[ecritures] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR s = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[supprimable] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN IF ( ISBLANK ( f ), BLANK (), "Supprimer " & f & " · " & dn & " ? " & IF ( s = TRUE (), "Cette filiale ne porte aucune donnée : elle sort du périmètre, l'entité est effacée, le geste est tracé.", "Cette filiale porte " & ( a + 0 ) & " arrêté(s), " & ( p + 0 ) & " pièce(s) et " & ( e + 0 ) & " écriture(s) : elle ne se supprime pas, sa sortie du groupe se constate par la détention à l'arrêté suivant." ) )
+	measure 'Confirmation suppression filiale' = VAR f = [Filiale selectionnee] VAR dn = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[Dénomination] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR a = CALCULATE ( SUM ( v_filiale_dependances[arretes] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR p = CALCULATE ( SUM ( v_filiale_dependances[pieces] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR e = CALCULATE ( SUM ( v_filiale_dependances[ecritures] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR s = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[supprimable] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN IF ( ISBLANK ( f ), BLANK (), "Supprimer " & f & " · " & dn & " ? " & IF ( s = TRUE (), "Cette filiale ne porte aucune donnée : elle sort du périmètre, l'entité est effacée, l'action est tracée.", "Cette filiale porte " & ( a + 0 ) & " arrêté(s), " & ( p + 0 ) & " pièce(s) et " & ( e + 0 ) & " écriture(s) : elle ne se supprime pas, sa sortie du groupe se constate par la détention à l'arrêté suivant." ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: 1f2523e8-fbd5-447d-b9b8-876df1795a30
 
@@ -39,6 +39,36 @@ table v_filiale_dependances
 		formatString: #,0
 		displayFolder: Ecran 1 Client
 		lineageTag: aebcc168-58d7-479b-a98e-5e97d1baa4e7
+
+	/// Le classement de la filiale au sens de l'article R. 214-83 du CMF, oui ou non.
+	measure 'Classement R214-83' = VAR n = COUNTROWS ( v_filiale_dependances ) VAR o = CALCULATE ( COUNTROWS ( v_filiale_dependances ), KEEPFILTERS ( v_filiale_dependances[controlee] = TRUE () ) ) RETURN IF ( n = 1 && [Est filiale du client courant] = 1, IF ( o = 1, "oui", "non" ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: e1f6f65b-79e3-4399-836e-bf1899c2b92e
+
+	/// La 1re ligne de la confirmation du retrait : la filiale choisie.
+	measure 'Confirmation retrait question' = VAR f = [Filiale selectionnee] VAR dn = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[Dénomination] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR s = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[supprimable] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN IF ( ISBLANK ( f ), IF ( ISFILTERED ( v_filiale_dependances[Filiale] ), "La filiale choisie n'est pas au périmètre du client.", "Aucune filiale choisie dans la liste « Filiale »." ), IF ( s = TRUE (), "Supprimer " & f & " · " & dn & " ?", f & " · " & dn & " ne se supprime pas." ) )
+		displayFolder: Ecran Client
+		lineageTag: 48f88e54-25f3-4f50-8e3a-a3eaf8003e2d
+
+	/// La conséquence du retrait de la filiale choisie.
+	measure 'Confirmation retrait detail' = VAR f = [Filiale selectionnee] VAR a = CALCULATE ( SUM ( v_filiale_dependances[arretes] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR p = CALCULATE ( SUM ( v_filiale_dependances[pieces] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR e = CALCULATE ( SUM ( v_filiale_dependances[ecritures] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) VAR s = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[supprimable] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN IF ( ISBLANK ( f ), IF ( ISFILTERED ( v_filiale_dependances[Filiale] ), "Choisissez une filiale du client dans la liste « Filiale »." ), IF ( s = TRUE (), "Cette filiale ne porte aucune donnée : elle sort du périmètre, l'entité est effacée, l'action est tracée.", "Elle porte " & ( a + 0 ) & " arrêté(s), " & ( p + 0 ) & " pièce(s) et " & ( e + 0 ) & " écriture(s) ; sa sortie du groupe se constate par la détention à l'arrêté suivant." ) )
+		displayFolder: Ecran Client
+		lineageTag: 72516c93-ed6d-4582-87ca-1317ea7e9052
+
+	/// [Confirmation retrait detail] coupé à 504 px de chasse, 1re ligne.
+	measure 'Confirmation retrait ligne 1' = VAR t = [Confirmation retrait detail] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 504 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 504 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 504 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, t, LEFT ( t, f1 ) )
+		displayFolder: Ecran Client
+		lineageTag: 2cbf3afb-5370-4fe3-b1f0-f0af31a2eff9
+
+	/// [Confirmation retrait detail] coupé à 504 px de chasse, 2e ligne, « … » au-delà.
+	measure 'Confirmation retrait ligne 2' = VAR t = [Confirmation retrait detail] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 504 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 504 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 504 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) VAR c0 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR w2 = 493.25 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = " " && [c] - [w] - c0 <= w2 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c0 <= w2 ), [Value] ) + 0 RETURN IF ( une, "", IF ( tot - c0 <= 504, MID ( t, s2, n ), MID ( t, s2, IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ) ) & "…" ) )
+		displayFolder: Ecran Client
+		lineageTag: 80696b7a-f854-48c8-9841-6c4b6a05baf0
+
+	/// Pourquoi la filiale choisie ne se supprime pas, vide quand elle se supprime.
+	measure 'Retrait de filiale refuse' = VAR f = [Filiale selectionnee] VAR s = CALCULATE ( SELECTEDVALUE ( v_filiale_dependances[supprimable] ), FILTER ( ALL ( v_filiale_dependances ), v_filiale_dependances[Filiale] = f ) ) RETURN IF ( NOT ISBLANK ( f ) && s <> TRUE (), f & " porte des arrêtés, des pièces ou des écritures : elle ne se supprime pas." )
+		displayFolder: Ecran Client
+		lineageTag: 95abc706-7657-4626-be17-ae9d89d78cf6
 
 	column entite_mere
 		dataType: string
@@ -177,6 +207,16 @@ table v_filiale_dependances
 		lineageTag: 93345ed8-920e-4ee9-a7d4-f06012e30dc8
 		summarizeBy: none
 		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column controlee
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 7950fadb-c4f0-43d0-8164-27387f225eed
+		summarizeBy: none
+		sourceColumn: controlee
 
 		annotation SummarizationSetBy = Automatic
 

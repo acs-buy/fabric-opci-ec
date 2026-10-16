@@ -1,4 +1,13 @@
 
+-- ------------------------------------------------------------------ n° 3, 17, 18 : v_ratio_conclusion
+-- ordre et libelle_memoire, lus sur ref_ratio_memoire ; a_respecter, regle des dates de respect (n° 17) :
+--   ACTIFS_IMMO_60, NON_COTE_51 (R. 214-90) et ENDETTEMENT_40 (R. 214-105) : 1 a un arrete du 30 juin ou du 31 decembre,
+--   0 sinon ; LIQUIDITES_5 (R. 214-101, aucune date fixee) : 1 a tout arrete ; la periode de 3 ans de L. 214-43 court
+--   de la creation de l'organisme, que la base ne porte pas : elle est reputee ecoulee ;
+--   OPCI professionnel (ref_entite.est_professionnel = 1) : ENDETTEMENT_40, retenu par le cabinet sans date fixee par
+--   le texte (R. 214-105 ecarte par R. 214-199), et LIQUIDITES_5, sans objet (R. 214-197) : NULL.
+-- arrete_libelle : l'arrete ecrit jj/mm/aaaa.
+
 CREATE   VIEW dbo.v_ratio_conclusion AS
 SELECT r.entite, r.arrete, r.code, r.libelle, r.article, r.sens, r.seuil,
        r.source_du_seuil,
@@ -45,8 +54,16 @@ SELECT r.entite, r.arrete, r.code, r.libelle, r.article, r.sens, r.seuil,
                  + r.article + N'. Régulariser avant la publication, ou '
                  + N'porter une dérogation motivée.'
             END                                  AS conclusion,
-       r.citation, r.lu_le, r.note
-FROM dbo.v_ratio_arrete r;
+       r.citation, r.lu_le, r.note,
+       m.ordre, m.libelle AS libelle_memoire,
+       CAST(CASE WHEN ISNULL(en.est_professionnel, 0) = 1 AND r.code IN ('ENDETTEMENT_40', 'LIQUIDITES_5') THEN NULL
+                 WHEN r.code = 'LIQUIDITES_5' THEN 1
+                 WHEN RIGHT(r.arrete, 5) IN ('06-30', '12-31') THEN 1
+                 ELSE 0 END AS BIT) AS a_respecter,
+       CAST(RIGHT(r.arrete, 2) + '/' + SUBSTRING(r.arrete, 6, 2) + '/' + LEFT(r.arrete, 4) AS VARCHAR (10)) AS arrete_libelle
+FROM dbo.v_ratio_arrete r
+LEFT JOIN dbo.ref_ratio_memoire m ON m.code = r.code
+LEFT JOIN dbo.ref_entite en ON en.code = r.entite;
 
 GO
 

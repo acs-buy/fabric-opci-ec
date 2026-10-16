@@ -37,23 +37,38 @@ table v_anr_entite
 		displayFolder: Le dossier
 		lineageTag: 155ad860-d789-4208-87e9-4bf3fb9d2dfb
 
-	/// Carte 3.3, Actif net reevalue. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.3, Actif net reevalue.
 	measure 'R33 Actif net reevalue' = VAR lignes = CALCULATE ( COUNTROWS ( v_anr_entite ), v_perimetre_groupe[est_vehicule] = TRUE () ) RETURN IF ( lignes = 1, CALCULATE ( SUM ( v_anr_entite[actif_net_reevalue] ), v_perimetre_groupe[est_vehicule] = TRUE () ) )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 30f7fdc9-a49a-4cef-8471-13f385356976
 
-	/// Carte 3.3, Capitaux propres. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.3, Capitaux propres.
 	measure 'R33 Capitaux propres' = VAR lignes = CALCULATE ( COUNTROWS ( v_anr_entite ), v_perimetre_groupe[est_vehicule] = TRUE () ) RETURN IF ( lignes = 1, CALCULATE ( SUM ( v_anr_entite[capitaux_propres_comptables] ), v_perimetre_groupe[est_vehicule] = TRUE () ) )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 26526938-4a66-43eb-bf1f-53584492740a
 
-	/// Carte 3.3, Differences portees. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.3, Differences portees.
 	measure 'R33 Differences portees' = VAR lignes = CALCULATE ( COUNTROWS ( v_anr_entite ), v_perimetre_groupe[est_vehicule] = TRUE () ) RETURN IF ( lignes = 1, CALCULATE ( SUM ( v_anr_entite[differences_d_estimation] ), v_perimetre_groupe[est_vehicule] = TRUE () ) )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 34a953d6-61b4-4643-853e-1048f00c0614
+
+	/// alerte quand [R33 Differences portees] et [R32 Difference d estimation] diffèrent (carte 2)
+	measure 'Encre difference d estimation' = IF ( ROUND ( [R33 Differences portees] + 0, 2 ) <> ROUND ( [R32 Difference d estimation] + 0, 2 ), "#9A2A2A", "#12233C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 6a8de733-969d-4e52-9af0-649341981428
+
+	/// « sur les actifs : » et [R32 Difference d estimation] (carte 2)
+	measure 'Sous-ligne difference d estimation' = "sur les actifs : " & FORMAT ( [R32 Difference d estimation] + 0, "#,0.00" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 9b22bb84-47d6-487d-a904-037a273b03bb
+
+	/// variation de [R33 Actif net reevalue] sur [ANR d ouverture], « + x sur le jj/mm/aaaa » (carte 1)
+	measure 'Sous-ligne actif net reevalue' = VAR v = [R33 Actif net reevalue] - [ANR d ouverture] VAR p = MAX ( v_rationalisation_opci[arrete_precedent] ) RETURN "" & IF ( NOT ISBLANK ( [R33 Actif net reevalue] ), IF ( ROUND ( v, 2 ) < 0, "-" & FORMAT ( ABS ( v ), "#,0.00" ), IF ( ROUND ( v, 2 ) > 0, "+ " & FORMAT ( v, "#,0.00" ), "0,00" ) ) & IF ( NOT ISBLANK ( p ), " sur le " & RIGHT ( p, 2 ) & "/" & MID ( p, 6, 2 ) & "/" & LEFT ( p, 4 ), " sans arrêté précédent" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 78743eb0-794d-4af6-8da1-5e2a87e4d989
 
 	column entite
 		dataType: string

@@ -335,6 +335,13 @@
                   "Value": "'bkEtat2b'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ouvre le formulaire d''ajout d''une filiale.'"
+                }
+              }
             }
           }
         }

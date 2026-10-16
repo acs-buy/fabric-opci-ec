@@ -3,7 +3,7 @@
   "name": "e2dBouton71",
   "position": {
     "x": 1150,
-    "y": 724,
+    "y": 783,
     "z": 56000,
     "height": 36,
     "width": 210,
@@ -333,6 +333,13 @@
               "expr": {
                 "Literal": {
                   "Value": "'bkEtat2'"
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Revient à la liste des filiales sans rien retirer.'"
                 }
               }
             }

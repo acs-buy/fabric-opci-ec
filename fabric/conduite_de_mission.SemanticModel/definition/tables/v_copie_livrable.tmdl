@@ -1,0 +1,152 @@
+/// Les copies des livrables chez le client, et la marque de celles que la réouverture périme.
+table v_copie_livrable
+	lineageTag: 2e358d4a-3ffa-51f2-b948-695bdff5455e
+
+	/// Le nombre de copies chez le client que la réouverture a marquées périmées.
+	measure 'Copies perimees du client' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_copie_livrable ) ) RETURN CALCULATE ( COUNTROWS ( v_copie_livrable ), FILTER ( ALL ( v_copie_livrable ), v_copie_livrable[entite] = c && NOT ISBLANK ( v_copie_livrable[perimee_le] ) ) ) + 0
+		formatString: 0
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 9757c954-d660-56f8-a86c-8e92d741f16e
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 9398eaba-aa93-5744-8dc3-dda54c5c6aff
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 6f4f6635-cfc4-5db6-a792-7540c95091e1
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column document_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e3967918-b153-5f7b-b8d5-829a043b1a78
+		summarizeBy: none
+		sourceColumn: document_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column livrable
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f7d3a17f-4521-5331-81e5-1d6f77d2f213
+		summarizeBy: none
+		sourceColumn: livrable
+
+		annotation SummarizationSetBy = Automatic
+
+	column version
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 60acfab9-f8e8-5c63-9677-c5e1a5eee66f
+		summarizeBy: none
+		sourceColumn: version
+
+		annotation SummarizationSetBy = Automatic
+
+	column format
+		dataType: string
+		sourceProviderType: varchar(4)
+		lineageTag: d37ea9a3-cb58-5fb7-bdbe-5fc8c1cab49e
+		summarizeBy: none
+		sourceColumn: format
+
+		annotation SummarizationSetBy = Automatic
+
+	column fichier
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 7cd29239-c3d7-5b80-83e6-c2e7ec81afa8
+		summarizeBy: none
+		sourceColumn: fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column web_url
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: d2f958a1-0333-56cc-9e1a-c59c9c6e8d00
+		summarizeBy: none
+		sourceColumn: web_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column web_url_copie
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: d6f46e7d-d214-53cd-8f0a-46d577b6143b
+		summarizeBy: none
+		sourceColumn: web_url_copie
+
+		annotation SummarizationSetBy = Automatic
+
+	column copie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 252c7f02-dce5-52fc-97b5-1dc305011b64
+		summarizeBy: none
+		sourceColumn: copie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column copie_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: b80fe0a9-baa9-599e-a40c-8241e7e7f7a2
+		summarizeBy: none
+		sourceColumn: copie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 842f9e94-ae01-55d9-9af9-bc6416fc599b
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column perimee_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 6ef0b09a-b070-554c-b6cc-f501f717a457
+		summarizeBy: none
+		sourceColumn: perimee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_copie
+		dataType: string
+		sourceProviderType: nvarchar(30)
+		lineageTag: 81102710-9ca5-5090-9017-8285a3ec2753
+		summarizeBy: none
+		sourceColumn: etat_copie
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_copie_livrable = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_copie_livrable = Source{[Schema="dbo",Item="v_copie_livrable"]}[Data]
+				in
+				    dbo_v_copie_livrable
+

@@ -1,0 +1,136 @@
+/// La forme du rapport que la base propose, et les formes qu'elle admet.
+table v_forme_attestation_proposee
+	lineageTag: 0993b81d-a822-417d-8ade-7782e18218ab
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: de0b81fb-fcf7-446c-9d9c-c36d2c7082d6
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e2e792f0-4bb5-4cfc-91df-be57f24fd6c5
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuilles
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 595d76de-34a7-4602-989e-2db57b49767c
+		summarizeBy: sum
+		sourceColumn: feuilles
+
+		annotation SummarizationSetBy = Automatic
+
+	column feuilles_conclues
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 091a06f7-3ca7-4ab6-b97a-1bbf1c94b8c8
+		summarizeBy: sum
+		sourceColumn: feuilles_conclues
+
+		annotation SummarizationSetBy = Automatic
+
+	column en_refus
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 112e4696-a611-452f-ae2c-d332eeee3bc5
+		summarizeBy: sum
+		sourceColumn: en_refus
+
+		annotation SummarizationSetBy = Automatic
+
+	column avec_observation
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8001d0c9-e7a0-4188-baca-6c1e7c33680c
+		summarizeBy: sum
+		sourceColumn: avec_observation
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_proposee
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: e3103066-d171-40b0-84dd-b20421d21f82
+		summarizeBy: none
+		sourceColumn: forme_proposee
+
+		annotation SummarizationSetBy = Automatic
+
+	column formes_admises
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: b9b62016-ef54-4826-8bb9-8432f99f194e
+		summarizeBy: none
+		sourceColumn: formes_admises
+
+		annotation SummarizationSetBy = Automatic
+
+	column limitation_des_diligences
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 2fe088ee-eeaf-4971-acf9-d433d3e23b3d
+		summarizeBy: none
+		sourceColumn: limitation_des_diligences
+
+		annotation SummarizationSetBy = Automatic
+
+	column lecture
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 2cd861b6-9810-40c3-8207-2d74f4a225ef
+		summarizeBy: none
+		sourceColumn: lecture
+
+		annotation SummarizationSetBy = Automatic
+
+	column source
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: c83e02d0-2df5-4427-abf7-722b3eb01f70
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column soumise_commissariat_comptes
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 85cc6834-38e8-4d47-addd-24ffbeb0daa6
+		summarizeBy: none
+		sourceColumn: soumise_commissariat_comptes
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_attestation_derivee
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: e8e15d94-8efb-4c2b-bbd9-4d786d09488e
+		summarizeBy: none
+		sourceColumn: forme_attestation_derivee
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_forme_attestation_proposee = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_forme_attestation_proposee = Source{[Schema="dbo",Item="v_forme_attestation_proposee"]}[Data]
+				in
+				    dbo_v_forme_attestation_proposee
+

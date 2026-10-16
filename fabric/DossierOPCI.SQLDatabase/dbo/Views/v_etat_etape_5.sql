@@ -21,7 +21,7 @@ SELECT r.entite, r.arrete, r.type_arrete,
                                            AS motif_du_refus
 FROM dbo.ref_arrete r
 OUTER APPLY (SELECT TOP 1 x.id, x.valeur_liquidative FROM dbo.publication_vl x
-             WHERE x.entite = r.entite AND x.arrete = r.arrete ORDER BY x.id DESC) AS p
+             WHERE x.entite = r.entite AND x.arrete = r.arrete AND x.perimee_le IS NULL ORDER BY x.id DESC) AS p
 OUTER APPLY (SELECT TOP 1 v.id FROM dbo.visa v
              WHERE v.nature = 'SYNTHESE' AND v.entite = r.entite AND v.arrete = r.arrete AND v.decision = 'VISE') AS sy
 LEFT JOIN dbo.v_visa_cloture_courant cl ON cl.entite = r.entite AND cl.arrete = r.arrete

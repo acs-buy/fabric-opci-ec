@@ -335,6 +335,13 @@
                   "Value": "'bkEtat3'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Revient au questionnaire d''acceptation.'"
+                }
+              }
             }
           }
         }

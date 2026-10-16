@@ -457,7 +457,7 @@
                     {
                       "name": "entite",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -476,7 +476,7 @@
                     {
                       "name": "exerciceDebut",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e5Saisie0",
@@ -485,7 +485,7 @@
                     {
                       "name": "exerciceFin",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e5Saisie1",
@@ -494,13 +494,25 @@
                     {
                       "name": "periodiciteVl",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e5Saisie2",
                       "autoClear": false
                     }
                   ]
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ref_entite"
+                    }
+                  },
+                  "Property": "Infobulle e5Bouton0"
                 }
               }
             }

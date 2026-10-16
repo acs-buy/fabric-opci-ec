@@ -2,6 +2,40 @@
 table v_export_dossier
 	lineageTag: f256b386-2a80-488a-841a-b413d10a2026
 
+	measure 'Chemin du dossier exporte' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR n = COUNTROWS ( FILTER ( ALL ( v_export_dossier ), v_export_dossier[entite] = e && v_export_dossier[arrete] = a && v_export_dossier[Fichier] = "dossier_" & e & "_" & a & ".xlsx" ) ) + 0 RETURN IF ( n > 0, [Chemin du dossier] )
+		lineageTag: 350ffd4d-cc32-4c3f-8914-aa4a540f6716
+
+	measure 'Fond revLivReimporter' = IF ( ISBLANK ( [Chemin du dossier exporte] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: b185cca4-37be-42b1-b157-b9bb943afdc5
+
+	measure 'Libelle revLivReimporter' = "Réimporter le dossier"
+		lineageTag: 1708bf30-fea5-47e8-aff0-752a35a0e8e4
+
+	/// « aucun classeur déposé » ; vide sinon ; raison du gris de « Ouvrir le classeur » et de « Réimporter le classeur »
+	measure 'Blocage ouvrir le classeur' = IF ( ISBLANK ( [Adresse du classeur des valeurs] ), "aucun classeur déposé" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 7bdb7e7a-fdfb-464c-8b11-74bbc249c769
+
+	/// « véhicule et filiales · site du cabinet, Dossiers de travail/entité/arrêté »
+	measure 'Sous-titre classeur des valeurs' = "véhicule et filiales · site du cabinet, Dossiers de travail/" & [Client selectionne] & "/" & [Arrete selectionne]
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 76c2bc10-b47c-4ec5-a1ff-d81e58bca278
+
+	/// gris sans dépôt ; fond de « Ouvrir le classeur » et de « Réimporter le classeur », dont le paramètre chemin est vide sans dépôt
+	measure 'Fond ouvrir le classeur' = IF ( ISBLANK ( [Adresse du classeur des valeurs] ), "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 91e2ac8d-cff5-4d5b-85c5-f9f85b9bac25
+
+	/// fec/Dossiers de travail/<entité>/<arrêté>/<fichier>, lu par le raccourci du coffre ; vide sans dépôt
+	measure 'Chemin du classeur des valeurs' = VAR f = "valeurs_" & [Client selectionne] & "_" & [Arrete selectionne] & ".xlsx" RETURN IF ( NOT ISBLANK ( [Adresse du classeur des valeurs] ), "fec/Dossiers de travail/" & [Client selectionne] & "/" & [Arrete selectionne] & "/" & f )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 3c157e2b-4394-4bdf-a2e8-4e51dbcdf95c
+
+	/// web_url du fichier valeurs_<entité>_<arrêté>.xlsx, vide sans dépôt ; adresse SharePoint, jamais OneLake
+	measure 'Adresse du classeur des valeurs' = VAR f = "valeurs_" & [Client selectionne] & "_" & [Arrete selectionne] & ".xlsx" RETURN CALCULATE ( MAX ( v_export_dossier[Ouvrir le dossier] ), FILTER ( ALL ( v_export_dossier[Fichier] ), v_export_dossier[Fichier] = f ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: f6ced604-510b-4e14-9e43-2fd4f1d7df6b
+
 	column entite
 		dataType: string
 		isNullable: false

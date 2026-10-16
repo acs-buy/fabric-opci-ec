@@ -17,103 +17,113 @@
   ],
   "functions": [
     {
+      "name": "accorder_reouverture",
+      "description": "Rouvrir l\u0027arr\u00EAt\u00E9, sur la demande en attente, par le chef de mission : pr_ecran_accorder_reouverture",
+      "isPublicEndpointEnabled": false
+    },
+    {
       "name": "ajouter_filiale",
-      "description": "Etape 2, Ajouter cette filiale : pr_ajouter_filiale",
+      "description": "Ajouter cette filiale : pr_ajouter_filiale ; un champ vide est refus\u00E9 par la base, en fran\u00E7ais",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "approuver_acceptation",
-      "description": "Etape 5, Accepter ou Refuser : pr_ecran_approuver_acceptation",
+      "description": "Accepter la mission ou la refuser, par le superviseur : pr_ecran_approuver_acceptation",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "approuver_maintien",
-      "description": "Client accepte, Viser le maintien : pr_ecran_approuver_maintien",
+      "description": "Viser le maintien, par le superviseur : pr_ecran_approuver_maintien",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "creer_client",
-      "description": "Etape 1, Creer le dossier : pr_creer_client",
+      "description": "Cr\u00E9er le dossier : pr_creer_client, le client, son questionnaire d\u0027acceptation et son site",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "demander_reouverture",
+      "description": "Demander la r\u00E9ouverture d\u0027un arr\u00EAt\u00E9 clos, avec motif, par un membre de l\u0027\u00E9quipe : pr_ecran_demander_reouverture",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "designer_role",
-      "description": "Fiche du dossier, section Equipe : pr_designer_role_mission (ferme le mandat en cours du meme role)",
+      "description": "D\u00E9signer, section \u00C9quipe de la fiche du dossier : pr_designer_role_mission, ferme le mandat en cours du m\u00EAme r\u00F4le",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "ecarter_reouverture",
+      "description": "\u00C9carter la demande de r\u00E9ouverture, avec motif, par le chef de mission ; l\u0027arr\u00EAt\u00E9 reste clos : pr_ecran_ecarter_reouverture",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "exporter_questionnaire",
-      "description": "Exporter le questionnaire : classeur des questions et reponses, ecrit au coffre",
+      "description": "Exporter le questionnaire : classeur des questions et des r\u00E9ponses, d\u00E9pos\u00E9 dans le dossier du client du site du cabinet",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "importer_classeur",
-      "description": "Reimporter : le classeur depose au coffre, Client, Filiales ou Questionnaire",
+      "description": "R\u00E9importer : le classeur Client, Filiales ou Questionnaire, d\u00E9pos\u00E9 dans le dossier du client du site du cabinet et d\u00E9sign\u00E9 par son nom",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "importer_reponses",
-      "description": "Etape 3, Reimporter : pr_importer_reponses",
+      "description": "Importer les r\u00E9ponses du questionnaire, tout ou rien : pr_importer_reponses",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "inscrire_piece",
-      "description": "Etape 4, Deposer une piece : pr_deposer_piece",
+      "description": "Rattacher la pi\u00E8ce d\u00E9pos\u00E9e dans la biblioth\u00E8que D\u00E9p\u00F4t du client : pr_resoudre_fichier_depot puis pr_deposer_piece",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "modifier_client",
-      "description": "Temps 1, fiche du dossier, Enregistrer les modifications : pr_modifier_client (code fixe, vide = inchange)",
+      "description": "Enregistrer les modifications de la fiche du dossier : pr_modifier_client, code fixe, champ vide inchang\u00E9",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "modifier_filiale",
-      "description": "Temps 2, Enregistrer la filiale : pr_modifier_filiale (code fixe, vide = inchange)",
+      "description": "Enregistrer la filiale : pr_modifier_filiale, code fixe, champ vide inchang\u00E9",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "ouvrir_arrete",
-      "description": "Etape 6, Ouvrir l\u0027arrete : pr_ecran_ouvrir_arrete",
+      "description": "Ouvrir l\u0027arr\u00EAt\u00E9 : pr_ecran_ouvrir_arrete, planifie les arr\u00EAt\u00E9s de l\u0027exercice et ouvre le premier",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "ouvrir_maintien",
-      "description": "Client accepte, Ouvrir le maintien : pr_ouvrir_questionnaire_maintien",
+      "description": "Ouvrir le maintien sur un arr\u00EAt\u00E9 conclu : pr_ouvrir_questionnaire_maintien",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "ouvrir_questionnaire_acceptation",
-      "description": "Etape 3, Ouvrir la saisie en ligne : pr_ouvrir_questionnaire_acceptation",
+      "description": "Ouvrir la saisie en ligne du questionnaire d\u0027acceptation : pr_ouvrir_questionnaire_acceptation",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "reclamer_document",
-      "description": "Reclamer : pr_ecran_demander_document",
+      "description": "R\u00E9clamer un document pour l\u0027arr\u00EAt\u00E9 : pr_ecran_demander_document",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "repondre_question",
-      "description": "Une reponse : pr_repondre_question",
+      "description": "Valider la r\u00E9ponse \u00E0 une question : pr_repondre_question",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "reprendre_acceptation",
-      "description": "Reprendre : pr_ecran_reprendre_acceptation",
+      "description": "Reprendre une acceptation refus\u00E9e, avec motif : pr_ecran_reprendre_acceptation",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "retirer_piece",
-      "description": "Temps 3, Retirer la piece : pr_retirer_piece, trace journal_piece, refuse si la piece fonde une donnee",
-      "isPublicEndpointEnabled": false
-    },
-    {
-      "name": "rouvrir_arrete",
-      "description": "Rouvrir : pr_ecran_rouvrir_arrete",
+      "description": "Retirer la pi\u00E8ce du dossier, le rattachement d\u00E9sign\u00E9 dans \u00AB Pi\u00E8ce \u00E0 retirer \u00BB : pr_retirer_piece, trac\u00E9 au journal des pi\u00E8ces, refus\u00E9 hors de l\u0027\u00E9quipe du dossier, sur un dossier verrouill\u00E9 ou si la pi\u00E8ce fonde une donn\u00E9e",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "supprimer_filiale",
-      "description": "Temps 2, Supprimer (pop-up de confirmation) : pr_supprimer_filiale, refuse si la filiale porte des donnees",
+      "description": "Supprimer la filiale, apr\u00E8s confirmation : pr_supprimer_filiale, refus\u00E9 si la filiale porte des donn\u00E9es de mission",
       "isPublicEndpointEnabled": false
     }
   ],

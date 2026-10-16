@@ -457,7 +457,7 @@
                     {
                       "name": "code",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e1bSaisie0",
@@ -466,7 +466,7 @@
                     {
                       "name": "denomination",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e1bSaisie1",
@@ -475,7 +475,7 @@
                     {
                       "name": "formeVehicule",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e1bSaisie3",
@@ -484,7 +484,7 @@
                     {
                       "name": "adresse1",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e1bSaisie5",
@@ -493,7 +493,7 @@
                     {
                       "name": "codePostal",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e1bSaisie7",
@@ -502,7 +502,7 @@
                     {
                       "name": "ville",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e1bSaisie8",
@@ -511,7 +511,7 @@
                     {
                       "name": "dirigeantNom",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e1bSaisie10",
@@ -520,7 +520,7 @@
                     {
                       "name": "dirigeantQualite",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e1bSaisie11",
@@ -599,6 +599,13 @@
                       "autoClear": false
                     }
                   ]
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Crée le dossier du client avec les champs saisis.'"
                 }
               }
             }

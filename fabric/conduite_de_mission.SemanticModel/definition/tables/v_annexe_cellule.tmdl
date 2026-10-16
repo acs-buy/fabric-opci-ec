@@ -1,0 +1,584 @@
+/// Les cellules de l'annexe des comptes annuels, derniere version de chaque arrete de mission, une ligne par cellule : son texte affiche, son etat, sa source ; calculee et stockee par la base.
+table v_annexe_cellule
+	lineageTag: 8e43160a-e16d-4dcf-bab1-3c23f3dd4841
+
+	measure 'Devise de l annexe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), MAXX ( FILTER ( ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e && v_annexe_cellule[arrete] = a && v_annexe_cellule[article] = "311-1" && v_annexe_cellule[ligne] = "DEVISE" && v_annexe_cellule[colonne] = 1 ), v_annexe_cellule[texte_affiche] ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 8a3c0ee6-61ab-407b-99f7-04b6bd7c05b0
+
+	measure 'Ligne saisissable' = IF ( COUNTROWS ( FILTER ( v_annexe_cellule, v_annexe_cellule[nature] IN { "texte", "source" } || v_annexe_cellule[etat] = "A_REMPLIR" ) ) > 0, 1 )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: d707cb90-5039-4267-a046-59e79ebb84be
+
+	measure 'Type de ligne annexe' = VAR ar = SELECTEDVALUE ( v_annexe_cellule[article] ) VAR li = SELECTEDVALUE ( v_annexe_cellule[ligne] ) RETURN SWITCH ( TRUE (), ISBLANK ( li ), BLANK (), ( ( ar, li ) IN { ( "333-1", "CP_TOTAL" ), ( "333-1", "SD_TOTAL" ), ( "333-2", "MONTANTS_NETS" ), ( "333-3", "AN_FIN" ), ( "334-2", "TOTAL" ), ( "334-2", "TOTAL_HORS_FRAIS" ), ( "334-3", "TOTAL" ), ( "334-5", "TOTAL" ), ( "334-5", "TOTAL_HORS_FRAIS" ), ( "334-6", "TOTAL" ), ( "334-7", "TOTAL_AUTRES" ), ( "334-7", "TOTAL_GENERAL" ), ( "334-7", "TOTAL_IMMEUBLES" ), ( "335-10", "TOTAL" ), ( "335-12", "II_A_T" ), ( "335-12", "II_D_T" ), ( "335-12", "I_A_T" ), ( "335-12", "I_D_T" ), ( "335-2", "AC_ST" ), ( "335-2", "CL_ST" ), ( "335-2", "DEP_TOTAL" ), ( "335-2", "TOTAL" ), ( "335-3", "TOTAL" ), ( "335-4", "AUTRES" ), ( "335-4", "EC" ), ( "335-4", "TOTAL" ), ( "335-5", "TOTAL" ), ( "335-6", "TOTAL" ), ( "335-8", "C_ST" ), ( "335-8", "P_ST" ), ( "335-8", "TOTAL" ) } ), "TOTAL", ( ( ar, li ) IN { ( "331-1", "PRINCIPE" ), ( "333-1", "SD" ), ( "333-1", "SD_AC" ), ( "333-1", "SD_REG_AC" ), ( "333-1", "SD_RES" ), ( "333-3", "ACOMPTES" ), ( "333-3", "FRAIS_ACQ" ), ( "333-3", "RESULTAT" ), ( "335-11", "IFT" ), ( "335-12", "I" ), ( "335-12", "II" ), ( "335-12", "II_A" ), ( "335-12", "II_D" ), ( "335-12", "I_A" ), ( "335-12", "I_D" ), ( "335-2", "AC" ), ( "335-2", "CL" ), ( "335-5", "TF" ), ( "335-5", "TV" ), ( "335-8", "C" ), ( "335-8", "P" ), ( "336-2", "FIL_CONTROLEES" ), ( "336-2", "FIL_NON_CONTROLEES" ) } ) || ( li IN { "FIL_CONTROLEES", "FIL_NON_CONTROLEES", "FIL_A_CLASSER" } ), "RUBRIQUE", RIGHT ( li, 6 ) = "_TOTAL", "TOTAL", "" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 4629709f-2b27-459c-9122-d4c24521a0d3
+
+	measure 'Niveau de ligne annexe' = VAR ar = SELECTEDVALUE ( v_annexe_cellule[article] ) VAR li = SELECTEDVALUE ( v_annexe_cellule[ligne] ) RETURN IF ( ( ar, li ) IN { ( "332-1", "ACTIF_NET" ), ( "332-1", "CAPITALISATION" ), ( "332-1", "DIST_CESSION" ), ( "332-1", "DIST_RESULTAT" ), ( "332-1", "NB_PARTS" ), ( "332-1", "VL_UNIT" ), ( "332-2", "COMMISSIONS" ), ( "332-2", "COUTS_ULTERIEURS" ), ( "332-2", "CREDIT_BAIL" ), ( "332-2", "DEPRECIATIONS" ), ( "332-2", "FRAIS_ACQ" ), ( "332-2", "PROVISIONS" ), ( "332-2", "RENTES_VIAGERES" ), ( "332-2", "VALORISATION" ), ( "333-1", "SD_AC" ), ( "333-1", "SD_REG_AC" ), ( "333-1", "SD_REG_PMV" ), ( "333-1", "SD_REG_RES" ), ( "333-1", "SD_REPORT_PMV" ), ( "333-1", "SD_REPORT_RES" ), ( "333-1", "SD_RES" ), ( "333-3", "AC_CESSIONS" ), ( "333-3", "AC_RES_NET" ), ( "333-3", "DE_FIN_N" ), ( "333-3", "DE_FIN_N1" ), ( "333-3", "DE_IMMO_N" ), ( "333-3", "DE_IMMO_N1" ), ( "333-3", "FRAIS_ACQ_N" ), ( "333-3", "FRAIS_ACQ_RES" ), ( "333-3", "RES_NET" ), ( "333-3", "RES_PMV" ), ( "334-2", "AUTRES" ), ( "334-2", "DROITS_REELS" ), ( "334-2", "EN_COURS" ), ( "334-2", "SOL_AUTRUI" ), ( "334-2", "TERRAINS_CONSTR" ), ( "334-2", "TERRAINS_NUS" ), ( "334-3", "ASSIETTE" ), ( "334-3", "PRIX_RESIDUEL" ), ( "334-3", "REDEVANCES_CUM" ), ( "334-3", "REDEVANCES_N" ), ( "334-3", "RESTANT_1AN" ), ( "334-3", "RESTANT_1_5ANS" ), ( "334-3", "RESTANT_5ANS" ), ( "334-5", "PARTS_2" ), ( "334-5", "PARTS_3" ), ( "334-6", "COMPTES_COURANTS" ), ( "334-6", "ECHEANCE" ), ( "334-7", "ACTIONS_4" ), ( "334-7", "AUTRES" ), ( "334-7", "AUTRES_IMMO" ), ( "334-7", "DROITS_REELS" ), ( "334-7", "EN_COURS" ), ( "334-7", "OPCI_5" ), ( "334-7", "PARTS_2" ), ( "334-7", "PARTS_3" ), ( "334-7", "SOL_AUTRUI" ), ( "334-7", "TERRAINS_CONSTR" ), ( "334-7", "TERRAINS_NUS" ), ( "335-10", "F_1" ), ( "335-10", "F_2" ), ( "335-10", "F_3" ), ( "335-10", "F_4" ), ( "335-10", "F_5" ), ( "335-10", "F_6" ), ( "335-11", "IFT_AUTRES" ), ( "335-11", "IFT_GRE_A_GRE" ), ( "335-11", "IFT_REGLEMENTES" ), ( "335-12", "II_A" ), ( "335-12", "II_A_T" ), ( "335-12", "II_D" ), ( "335-12", "II_D_T" ), ( "335-12", "I_A" ), ( "335-12", "I_A_T" ), ( "335-12", "I_D" ), ( "335-12", "I_D_T" ), ( "335-2", "AC_1" ), ( "335-2", "AC_2" ), ( "335-2", "AC_3" ), ( "335-2", "AC_4" ), ( "335-2", "AC_5" ), ( "335-2", "AC_6" ), ( "335-2", "AC_ST" ), ( "335-2", "CL_1" ), ( "335-2", "CL_2" ), ( "335-2", "CL_3" ), ( "335-2", "CL_ST" ), ( "335-2", "DEP_AC" ), ( "335-2", "DEP_CL" ), ( "335-3", "PROVISIONS" ), ( "335-4", "AUTRES_IMMO" ), ( "335-4", "AUTRES_NON_IMMO" ), ( "335-4", "EC_IMMO" ), ( "335-4", "EC_NON_IMMO" ), ( "335-5", "TF_AMORT" ), ( "335-5", "TF_IN_FINE" ), ( "335-5", "TV_AMORT" ), ( "335-5", "TV_IN_FINE" ), ( "335-6", "D_1" ), ( "335-6", "D_2" ), ( "335-6", "D_3" ), ( "335-6", "D_4" ), ( "335-6", "D_5" ), ( "335-7", "ANTERIEURS" ), ( "335-7", "CHARGES_AUTRES" ), ( "335-7", "CHARGES_IMMO" ), ( "335-7", "CHARGES_PARTS" ), ( "335-7", "EXCEPTIONNELS" ), ( "335-7", "PRODUITS_AUTRES" ), ( "335-7", "PRODUITS_IMMO" ), ( "335-7", "PRODUITS_PARTS" ), ( "335-7", "REMBOURSEMENTS" ), ( "335-8", "C_1" ), ( "335-8", "C_2" ), ( "335-8", "C_3" ), ( "335-8", "C_4" ), ( "335-8", "C_5" ), ( "335-8", "C_6" ), ( "335-8", "C_7" ), ( "335-8", "C_ST" ), ( "335-8", "P_1" ), ( "335-8", "P_2" ), ( "335-8", "P_3" ), ( "335-8", "P_4" ), ( "335-8", "P_5" ), ( "335-8", "P_6" ), ( "335-8", "P_7" ), ( "335-8", "P_8" ), ( "335-8", "P_9" ), ( "335-8", "P_ST" ), ( "336-2", "AUTRES_LIBELLE" ), ( "336-2", "AUTRES_PCT" ), ( "336-2", "AUTRES_QUANTITE" ), ( "336-2", "AUTRES_VALEUR" ), ( "336-2", "FIL_COUT" ), ( "336-2", "FIL_DATE" ), ( "336-2", "FIL_DIFFERENCE" ), ( "336-2", "FIL_NATURE" ), ( "336-2", "FIL_SECTEUR" ), ( "336-2", "FIL_VALEUR" ), ( "336-2", "IMM_LIBELLE" ), ( "336-2", "IMM_PCT_ACTIF_NET" ), ( "336-2", "IMM_PRIX_REVIENT" ), ( "336-2", "IMM_VALEUR_ACTUELLE" ), ( "336-3", "DEVISE" ), ( "336-3", "LIBELLE" ), ( "336-3", "PCT" ), ( "336-3", "QUANTITE" ), ( "336-3", "VALEUR" ) }, 1, IF ( ( ar, li ) IN { ( "333-1", "SD_AC_NET" ), ( "333-1", "SD_AC_PMV" ), ( "333-1", "SD_REG_AC_NET" ), ( "333-1", "SD_REG_AC_PMV" ), ( "333-1", "SD_RES_NET" ), ( "333-1", "SD_RES_PMV" ), ( "335-12", "II_A_1" ), ( "335-12", "II_A_2" ), ( "335-12", "II_A_3" ), ( "335-12", "II_D_1" ), ( "335-12", "II_D_2" ), ( "335-12", "II_D_3" ), ( "335-12", "I_A_1" ), ( "335-12", "I_A_2" ), ( "335-12", "I_A_3" ), ( "335-12", "I_D_1" ), ( "335-12", "I_D_2" ), ( "335-12", "I_D_3" ) }, 2, 0 ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 73949452-d02f-40bc-afae-63f2a2f3ed9c
+
+	measure 'Tableau de la ligne annexe' = VAR ar = SELECTEDVALUE ( v_annexe_cellule[article] ) VAR li = SELECTEDVALUE ( v_annexe_cellule[ligne] ) RETURN IF ( ISBLANK ( li ), BLANK (), SWITCH ( TRUE (), ar = "332-1" && ( li IN { "STRATEGIE" } ), 1, ar = "332-1", 2, ar = "332-2" && ( li IN { "MENTIONS_2020_07" } ), 1, ar = "332-2", 2, ar = "334-3" && ( li IN { "ASSIETTE", "REDEVANCES_N", "REDEVANCES_CUM", "RESTANT_1AN", "RESTANT_1_5ANS", "RESTANT_5ANS", "PRIX_RESIDUEL" } ), 2, ar = "334-3", 1, ar = "334-5" && ( li IN { "SECTEURS" } ), 2, ar = "334-5", 1, ar = "335-12" && ( LEFT ( li, 7 ) = "ACPT_N:" || li = "ACPT_N_TOTAL" ), 2, ar = "335-12" && ( LEFT ( li, 8 ) = "ACPT_N1:" || li = "ACPT_N1_TOTAL" ), 3, ar = "335-12", 1, ar = "335-2" && ( li IN { "DEP_CL", "DEP_AC", "DEP_TOTAL" } ), 2, ar = "335-2", 1, ar = "335-4" && ( li IN { "TAUX_FIXE", "RATIOS" } ), 2, ar = "335-4", 1, ar = "336-2" && ( LEFT ( li, 4 ) = "IMM:" || li = "IMM_TOTAL" ), 1, ar = "336-2" && ( LEFT ( li, 4 ) = "FIL:" || li = "FIL_CONTROLEES" || li = "FIL_NON_CONTROLEES" || li = "FIL_A_CLASSER" ), 2, ar = "336-2" && ( LEFT ( li, 4 ) = "AUT:" ), 4, ar = "336-2" && ( li IN { "FIL_NATURE", "FIL_SECTEUR", "FIL_DATE" } ), 5, ar = "336-2", 2, 1 ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 966e2778-5403-4937-98bc-0079aff3630c
+
+	measure 'Ligne annexe' = VAR li = SELECTEDVALUE ( v_annexe_cellule[ligne] ) VAR ar = SELECTEDVALUE ( v_annexe_cellule[article] ) VAR l0 = SELECTEDVALUE ( v_annexe_cellule[libelle] ) VAR p = SEARCH ( " (p. ", l0, 1, 0 ) VAR l = IF ( p > 0, LEFT ( l0, p - 1 ), l0 ) VAR appel = IF ( ar = "333-3" && li IN { "DISTRIB_PREC", "AUTRES" }, UNICHAR ( 185 ), "" ) RETURN IF ( ISBLANK ( li ), BLANK (), IF ( LEFT ( li, 5 ) = "ACPT_", IF ( RIGHT ( li, 6 ) = "_TOTAL", "Total acomptes", "" ), REPT ( UNICHAR ( 8195 ), [Niveau de ligne annexe] ) & l & appel ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 2a3c51d6-a3e8-40bd-9950-f775b3286014
+
+	measure 'Fond ligne annexe' = IF ( [Type de ligne annexe] IN { "TOTAL", "RUBRIQUE" }, "#EDF2F7", "#FFFFFF" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 70687cec-1394-41d6-81f7-66e31deb0e5b
+
+	measure 'Encre ligne annexe' = IF ( ISBLANK ( [Type de ligne annexe] ), BLANK (), "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 84114d8f-c518-4d91-9ba6-7a529a01cb91
+
+	measure 'Signe de la ligne annexe' = SELECTEDVALUE ( v_annexe_cellule[signe] )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 9ca4ce97-884a-4a37-99b6-459870044cda
+
+	measure 'Cellule annexe 1' = CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), v_annexe_cellule[colonne] = 1 )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 780a68b2-5708-4cf3-8e20-25477d7554e5
+
+	measure 'Fond cellule annexe 1' = VAR x = [Cellule annexe 1] RETURN SWITCH ( x, "à remplir", "#FBF4E4", IF ( [Type de ligne annexe] IN { "TOTAL", "RUBRIQUE" }, "#EDF2F7", "#FFFFFF" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 16df8889-be50-4063-aa2d-a2e91850a4ca
+
+	measure 'Encre cellule annexe 1' = SWITCH ( [Cellule annexe 1], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: eb4b66ed-179f-42b4-9cc6-352d2a6acc3b
+
+	measure 'Cellule annexe 2' = CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), v_annexe_cellule[colonne] = 2 )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 4cbf8d8e-9c47-457a-9716-6efa9bc79905
+
+	measure 'Fond cellule annexe 2' = VAR x = [Cellule annexe 2] RETURN SWITCH ( x, "à remplir", "#FBF4E4", IF ( [Type de ligne annexe] IN { "TOTAL", "RUBRIQUE" }, "#EDF2F7", "#FFFFFF" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 2a9acbdb-ec39-48a2-a62c-bb883cfeb9ca
+
+	measure 'Encre cellule annexe 2' = SWITCH ( [Cellule annexe 2], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 7fc5b436-e7eb-4f73-8854-da9537aed303
+
+	measure 'Cellule annexe 3' = CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), v_annexe_cellule[colonne] = 3 )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 5225613f-481c-45f1-a19c-362f245d8b00
+
+	measure 'Fond cellule annexe 3' = VAR x = [Cellule annexe 3] RETURN SWITCH ( x, "à remplir", "#FBF4E4", IF ( [Type de ligne annexe] IN { "TOTAL", "RUBRIQUE" }, "#EDF2F7", "#FFFFFF" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: e64cf29b-a655-468a-b8ee-609189502298
+
+	measure 'Encre cellule annexe 3' = SWITCH ( [Cellule annexe 3], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 35235560-40a2-4602-9584-27008bd1e96e
+
+	measure 'Cellule annexe 4' = CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), v_annexe_cellule[colonne] = 4 )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 1119953b-0f5b-4158-80bd-db53e7a70655
+
+	measure 'Fond cellule annexe 4' = VAR x = [Cellule annexe 4] RETURN SWITCH ( x, "à remplir", "#FBF4E4", IF ( [Type de ligne annexe] IN { "TOTAL", "RUBRIQUE" }, "#EDF2F7", "#FFFFFF" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 38fdbe65-3c1c-4142-b90d-c8785face1e5
+
+	measure 'Encre cellule annexe 4' = SWITCH ( [Cellule annexe 4], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 4b2d4a03-041c-44c1-b552-dff61e402190
+
+	measure 'Cellule annexe 5' = CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), v_annexe_cellule[colonne] = 5 )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: e5e01ddf-4a3c-4786-baa4-1e052ff6c7c9
+
+	measure 'Fond cellule annexe 5' = VAR x = [Cellule annexe 5] RETURN SWITCH ( x, "à remplir", "#FBF4E4", IF ( [Type de ligne annexe] IN { "TOTAL", "RUBRIQUE" }, "#EDF2F7", "#FFFFFF" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: eb6eb200-8f9c-4791-9081-9f2015fbbd6f
+
+	measure 'Encre cellule annexe 5' = SWITCH ( [Cellule annexe 5], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 3177cc7a-b3c1-4730-bdbc-46b1c4874a8c
+
+	measure 'Cellule annexe 6' = CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), v_annexe_cellule[colonne] = 6 )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: af394533-c6f1-46dd-9fda-3f8069ce4d05
+
+	measure 'Fond cellule annexe 6' = VAR x = [Cellule annexe 6] RETURN SWITCH ( x, "à remplir", "#FBF4E4", IF ( [Type de ligne annexe] IN { "TOTAL", "RUBRIQUE" }, "#EDF2F7", "#FFFFFF" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 129ea918-8c6b-40d0-8a3f-d4f9d8300468
+
+	measure 'Encre cellule annexe 6' = SWITCH ( [Cellule annexe 6], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 84802fa3-b9d2-428c-a465-8633c1191c3e
+
+	measure 'Cellule annexe 7' = CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), v_annexe_cellule[colonne] = 7 )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: b32fc877-c248-4048-a357-b8806936e7c8
+
+	measure 'Fond cellule annexe 7' = VAR x = [Cellule annexe 7] RETURN SWITCH ( x, "à remplir", "#FBF4E4", IF ( [Type de ligne annexe] IN { "TOTAL", "RUBRIQUE" }, "#EDF2F7", "#FFFFFF" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 34abe2df-e1f3-401e-9ab6-71a65883cc7d
+
+	measure 'Encre cellule annexe 7' = SWITCH ( [Cellule annexe 7], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 71c50f8f-8016-464d-aae3-ffd9743f1ee6
+
+	measure 'Cellule annexe 1 ou total' = VAR t = [Cellule annexe 1] RETURN IF ( t = "" && [Type de ligne annexe] = "TOTAL", SELECTEDVALUE ( v_annexe_cellule[libelle] ), t )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: f3aea066-c1e8-4472-ae6b-03a2b6126304
+
+	measure 'Cellule 336-3 LIBELLE' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e, v_annexe_cellule[arrete] = a, v_annexe_cellule[article] = "336-3", v_annexe_cellule[ligne] = "LIBELLE", v_annexe_cellule[colonne] = 1 ) & "" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: fa157357-f9a6-453f-ac96-a0f18eb73c26
+
+	measure 'Fond cellule 336-3 LIBELLE' = SWITCH ( [Cellule 336-3 LIBELLE], "à remplir", "#FBF4E4", "#FFFFFF" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 90f5d18a-7ad4-4f5f-8151-df99ba900c11
+
+	measure 'Encre cellule 336-3 LIBELLE' = SWITCH ( [Cellule 336-3 LIBELLE], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: c37c3951-90c7-4304-8bf3-3d71fc0a35b7
+
+	measure 'Cellule 336-3 QUANTITE' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e, v_annexe_cellule[arrete] = a, v_annexe_cellule[article] = "336-3", v_annexe_cellule[ligne] = "QUANTITE", v_annexe_cellule[colonne] = 1 ) & "" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 8a2d0102-2d03-4f4f-806e-34a8856309ba
+
+	measure 'Fond cellule 336-3 QUANTITE' = SWITCH ( [Cellule 336-3 QUANTITE], "à remplir", "#FBF4E4", "#FFFFFF" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 7b888ed6-8b93-4ffe-ba56-e6b79a3a0f10
+
+	measure 'Encre cellule 336-3 QUANTITE' = SWITCH ( [Cellule 336-3 QUANTITE], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 28219331-89a4-4e1e-a765-2130ce329841
+
+	measure 'Cellule 336-3 VALEUR' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e, v_annexe_cellule[arrete] = a, v_annexe_cellule[article] = "336-3", v_annexe_cellule[ligne] = "VALEUR", v_annexe_cellule[colonne] = 1 ) & "" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 6598b16d-8af2-45ac-8ddc-c40f3dbd5c40
+
+	measure 'Fond cellule 336-3 VALEUR' = SWITCH ( [Cellule 336-3 VALEUR], "à remplir", "#FBF4E4", "#FFFFFF" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 260d3e8b-eddf-4826-9d86-1aa3c9f95d6a
+
+	measure 'Encre cellule 336-3 VALEUR' = SWITCH ( [Cellule 336-3 VALEUR], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 510fd104-e126-4a0d-a291-e9eabebeed50
+
+	measure 'Cellule 336-3 DEVISE' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e, v_annexe_cellule[arrete] = a, v_annexe_cellule[article] = "336-3", v_annexe_cellule[ligne] = "DEVISE", v_annexe_cellule[colonne] = 1 ) & "" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: fe71ad38-2f04-46b8-96b4-b004e5d870ba
+
+	measure 'Fond cellule 336-3 DEVISE' = SWITCH ( [Cellule 336-3 DEVISE], "à remplir", "#FBF4E4", "#FFFFFF" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: c0402f75-39ca-448b-baba-a9cfdfbb6ac3
+
+	measure 'Encre cellule 336-3 DEVISE' = SWITCH ( [Cellule 336-3 DEVISE], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 2d35d6ed-0aed-4fd1-85c7-68202535bb72
+
+	measure 'Cellule 336-3 PCT' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", CALCULATE ( MAX ( v_annexe_cellule[texte_affiche] ), ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e, v_annexe_cellule[arrete] = a, v_annexe_cellule[article] = "336-3", v_annexe_cellule[ligne] = "PCT", v_annexe_cellule[colonne] = 1 ) & "" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 49e980e8-23da-491e-a341-09a9b7cadf90
+
+	measure 'Fond cellule 336-3 PCT' = SWITCH ( [Cellule 336-3 PCT], "à remplir", "#FBF4E4", "#FFFFFF" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: f335fd67-bbfc-4324-abfd-3783db202570
+
+	measure 'Encre cellule 336-3 PCT' = SWITCH ( [Cellule 336-3 PCT], "à remplir", "#8A6710", "calcul en attente", "#5B6B7D", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 18941946-f44e-49dc-bc17-f08191a5b2ef
+
+	measure 'Colonne de la cellule choisie' = IF ( HASONEVALUE ( v_annexe_cellule[ligne] ) && HASONEVALUE ( v_annexe_cellule[colonne] ), FORMAT ( SELECTEDVALUE ( v_annexe_cellule[colonne] ), "0" ), VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = [Article choisi] VAR p = FILTER ( ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e && v_annexe_cellule[arrete] = a && v_annexe_cellule[article] = ar && ( v_annexe_cellule[nature] IN { "texte", "source" } || v_annexe_cellule[etat] = "A_REMPLIR" ) ) RETURN IF ( COUNTROWS ( p ) = 1, FORMAT ( MAXX ( p, v_annexe_cellule[colonne] ), "0" ), IF ( HASONEVALUE ( v_annexe_cellule[colonne] ), FORMAT ( SELECTEDVALUE ( v_annexe_cellule[colonne] ), "0" ), "1" ) ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: f2db4923-f3c2-43e6-8088-ec6d8bfd6a6c
+
+	measure 'En-tete exercice N' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ex = MAXX ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ), ref_arrete[Exercice] ) VAR d = IF ( ISBLANK ( ex ) || ex = "", a, ex ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "Exercice " & FORMAT ( VALUE ( LEFT ( d, 4 ) ) - 0, "0" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: f9fd956f-b1ab-4a72-8cc3-42252c3a9fab
+
+	measure 'En-tete exercice N-1' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ex = MAXX ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ), ref_arrete[Exercice] ) VAR d = IF ( ISBLANK ( ex ) || ex = "", a, ex ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "Exercice " & FORMAT ( VALUE ( LEFT ( d, 4 ) ) - 1, "0" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: f012ed6b-589b-4f9c-a923-73daf91bd278
+
+	measure 'En-tete exercice N-2' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ex = MAXX ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ), ref_arrete[Exercice] ) VAR d = IF ( ISBLANK ( ex ) || ex = "", a, ex ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "Exercice " & FORMAT ( VALUE ( LEFT ( d, 4 ) ) - 2, "0" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: a4bccb39-c6e9-442b-a589-8f3c0f19e606
+
+	measure 'En-tete exercice N-3' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ex = MAXX ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ), ref_arrete[Exercice] ) VAR d = IF ( ISBLANK ( ex ) || ex = "", a, ex ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "Exercice " & FORMAT ( VALUE ( LEFT ( d, 4 ) ) - 3, "0" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: aa1842bc-30f7-4a5b-be45-4f4b57ec3cc6
+
+	measure 'En-tete exercice N-4' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ex = MAXX ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ), ref_arrete[Exercice] ) VAR d = IF ( ISBLANK ( ex ) || ex = "", a, ex ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "Exercice " & FORMAT ( VALUE ( LEFT ( d, 4 ) ) - 4, "0" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: ddff9949-b7cd-4779-a35e-9e5d9f2850ef
+
+	measure 'Signal d absence de cellule' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = [Article choisi] VAR n = COUNTROWS ( FILTER ( ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e && v_annexe_cellule[arrete] = a && v_annexe_cellule[article] = ar ) ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || ISBLANK ( ar ), "", IF ( n = 0 && COUNTROWS ( FILTER ( ALL ( v_ligne_annexe_montant ), v_ligne_annexe_montant[article] = ar && v_ligne_annexe_montant[code] = "PRINCIPE" ) ) > 0, "Écart : aucune cellule calculée en base pour cet article.", "" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: eaaa2a43-97ab-4a68-bbb1-5d318a388f87
+
+	measure 'Signal de controle de l annexe 1' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = [Article choisi] VAR t = FILTER ( ALL ( controle_annexe ), controle_annexe[entite] = e && controle_annexe[arrete] = a && controle_annexe[article] = ar && controle_annexe[effet] = "signal" && controle_annexe[ecart] <> 0 ) VAR classe = ADDCOLUMNS ( t, "@r", RANKX ( t, controle_annexe[cle],, ASC, Dense ) ) VAR ligne = FILTER ( classe, [@r] = 1 ) VAR c = MAXX ( ligne, controle_annexe[controle] ) RETURN IF ( COUNTROWS ( ligne ) = 0, "", "« " & SWITCH ( c, "C333_1_CP", "total des capitaux propres et bilan P_CP", "C333_1_SD", "somme des 10 lignes et total des sommes distribuables", "C333_3_AN", "somme algébrique des lignes et actif net de fin", "C334_7_RESULTAT", "plus-values et 761, moins-values et 661", "C334_BILAN", "total du tableau et ligne du bilan actif", "C334_BOUCLAGE", "Exercice N-1 + augmentations - diminutions + variation - Exercice N, par ligne", "C336_2_BILAN", "inventaire et postes du bilan", "S332_1_VL", "valeur liquidative calculée et v_valeur_liquidative", "S333_2_PARTS", "parts nettes et variation des parts en circulation", "S333_2_REGISTRE", "montant brut du registre des porteurs et solde du 1021 ou du 1022, quand le compte porte un solde", "S333_3_REPORTS", "reports et distribution de l’exercice précédent", "S335_10_RESULTAT", "total et compte de résultat R_TVI", "S335_12_ACOMPTES", "distributions et acomptes payés (solde du 129)", "S335_12_AFFECTATION", "sommes affectées et sommes distribuables", "S335_12_DISTRIB_PREC", "distribution de l’exercice N-1 affectée et distribution de l’exercice précédent", "S335_2_BILAN", "sous-totaux et bilan A_AUTRE_1, A_AUTRE_2", "S335_2_DEPRECIATIONS", "bouclage des dépréciations", "S335_3_PROVISIONS", "bouclage des provisions", "S335_4_COMPOSANTES", "emprunts et leurs composantes", "S335_5_TOTAL", "colonne Total et bilan P_DET_1", "S335_6_BILAN", "total et bilan P_DET_5", "S335_8_RESULTAT", "sous-totaux, total et compte de résultat", "S336_2_ACTIF_NET", "actif net de v_anr_entite et bilan P_CP", "S336_2_DIFFERENCE", "différence calculée et v_inventaire_filiales", "S336_2_VUE", "somme d’une colonne de la vue d’inventaire et poste du bilan", c ) & " », " & MAXX ( ligne, controle_annexe[cle] ) & " : écart de " & FORMAT ( MAXX ( ligne, controle_annexe[ecart] ), "#,##0.00" ) & " €" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 87a7c6e8-4755-4da8-9ecf-45b3cc2baaef
+
+	measure 'Signal de controle de l annexe 2' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = [Article choisi] VAR t = FILTER ( ALL ( controle_annexe ), controle_annexe[entite] = e && controle_annexe[arrete] = a && controle_annexe[article] = ar && controle_annexe[effet] = "signal" && controle_annexe[ecart] <> 0 ) VAR classe = ADDCOLUMNS ( t, "@r", RANKX ( t, controle_annexe[cle],, ASC, Dense ) ) VAR ligne = FILTER ( classe, [@r] = 2 ) VAR c = MAXX ( ligne, controle_annexe[controle] ) RETURN IF ( COUNTROWS ( ligne ) = 0, "", "« " & SWITCH ( c, "C333_1_CP", "total des capitaux propres et bilan P_CP", "C333_1_SD", "somme des 10 lignes et total des sommes distribuables", "C333_3_AN", "somme algébrique des lignes et actif net de fin", "C334_7_RESULTAT", "plus-values et 761, moins-values et 661", "C334_BILAN", "total du tableau et ligne du bilan actif", "C334_BOUCLAGE", "Exercice N-1 + augmentations - diminutions + variation - Exercice N, par ligne", "C336_2_BILAN", "inventaire et postes du bilan", "S332_1_VL", "valeur liquidative calculée et v_valeur_liquidative", "S333_2_PARTS", "parts nettes et variation des parts en circulation", "S333_2_REGISTRE", "montant brut du registre des porteurs et solde du 1021 ou du 1022, quand le compte porte un solde", "S333_3_REPORTS", "reports et distribution de l’exercice précédent", "S335_10_RESULTAT", "total et compte de résultat R_TVI", "S335_12_ACOMPTES", "distributions et acomptes payés (solde du 129)", "S335_12_AFFECTATION", "sommes affectées et sommes distribuables", "S335_12_DISTRIB_PREC", "distribution de l’exercice N-1 affectée et distribution de l’exercice précédent", "S335_2_BILAN", "sous-totaux et bilan A_AUTRE_1, A_AUTRE_2", "S335_2_DEPRECIATIONS", "bouclage des dépréciations", "S335_3_PROVISIONS", "bouclage des provisions", "S335_4_COMPOSANTES", "emprunts et leurs composantes", "S335_5_TOTAL", "colonne Total et bilan P_DET_1", "S335_6_BILAN", "total et bilan P_DET_5", "S335_8_RESULTAT", "sous-totaux, total et compte de résultat", "S336_2_ACTIF_NET", "actif net de v_anr_entite et bilan P_CP", "S336_2_DIFFERENCE", "différence calculée et v_inventaire_filiales", "S336_2_VUE", "somme d’une colonne de la vue d’inventaire et poste du bilan", c ) & " », " & MAXX ( ligne, controle_annexe[cle] ) & " : écart de " & FORMAT ( MAXX ( ligne, controle_annexe[ecart] ), "#,##0.00" ) & " €" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 6d28710c-0a10-4207-b81c-624e458cc71a
+
+	measure 'Cellule affichee' = VAR t = CALCULATETABLE ( VALUES ( v_annexe_cellule[cellule] ), FILTER ( v_annexe_cellule, v_annexe_cellule[nature] IN { "texte", "source" } || v_annexe_cellule[etat] = "A_REMPLIR" ) ) RETURN IF ( COUNTROWS ( t ) = 0, "aucune", MINX ( t, v_annexe_cellule[cellule] ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: a17fd800-eaa8-4ee5-8393-e9c748915fa1
+
+	measure 'Signal de controle de l annexe 1 ligne 1 sur 364 px' = VAR t = [Signal de controle de l annexe 1] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 364 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 364 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 364 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, t, LEFT ( t, f1 ) )
+		lineageTag: 8db1234b-bb8d-4d09-807f-8263a271040c
+
+	measure 'Signal de controle de l annexe 1 ligne 2 sur 364 px' = VAR t = [Signal de controle de l annexe 1] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 364 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 364 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 364 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) VAR c0 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR w2 = 353.25 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = " " && [c] - [w] - c0 <= w2 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c0 <= w2 ), [Value] ) + 0 RETURN IF ( une, "", IF ( tot - c0 <= 364, MID ( t, s2, n ), MID ( t, s2, IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ) ) & "…" ) )
+		lineageTag: ff0ae823-9a9a-414b-8b6d-16741345f917
+
+	measure 'Signal de controle de l annexe 2 ligne 1 sur 364 px' = VAR t = [Signal de controle de l annexe 2] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 364 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 364 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 364 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, t, LEFT ( t, f1 ) )
+		lineageTag: c4c512d5-3b0a-4dd5-a72f-9c5ea69cac49
+
+	measure 'Signal de controle de l annexe 2 ligne 2 sur 364 px' = VAR t = [Signal de controle de l annexe 2] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 364 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 364 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 364 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) VAR c0 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR w2 = 353.25 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = " " && [c] - [w] - c0 <= w2 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c0 <= w2 ), [Value] ) + 0 RETURN IF ( une, "", IF ( tot - c0 <= 364, MID ( t, s2, n ), MID ( t, s2, IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ) ) & "…" ) )
+		lineageTag: ebda87a3-2324-4f50-97c2-45084b3e527b
+
+	measure 'Ligne annexe en retrait' = VAR k = SELECTEDVALUE ( v_annexe_cellule[article] ) & "|" & SELECTEDVALUE ( v_annexe_cellule[ligne] ) RETURN SWITCH ( k, "332-1|DIST_CESSION", " La distribution unitaire sur résultat de cession (y compris les acomptes) pour" & UNICHAR ( 10 ) & " chacune des catégories de parts", "332-1|DIST_RESULTAT", " La distribution unitaire sur résultat net (y compris les acomptes) pour chacune" & UNICHAR ( 10 ) & " des catégories de parts", "332-2|COMMISSIONS", " Mode de comptabilisation des commissions de" & UNICHAR ( 10 ) & " souscription, en distinguant la part fixe de la part variable", "332-2|DEPRECIATIONS", " Méthode d'évaluation et de comptabilisation des" & UNICHAR ( 10 ) & " dépréciations sur créances locatives", "332-2|FRAIS_ACQ", " Modalités d'enregistrement des frais d'acquisition en frais" & UNICHAR ( 10 ) & " exclus, détaillées par nature d'actifs", "332-2|PROVISIONS", " Méthode d'évaluation et de comptabilisation des" & UNICHAR ( 10 ) & " provisions pour risques et charges", "332-2|RENTES_VIAGERES", " Méthode d'évaluation des biens acquis moyennant" & UNICHAR ( 10 ) & " paiement de rentes viagères et de la dette associée", "335-7|CHARGES_IMMO", " Charges immobilières : charges ayant leur contrepartie en produits," & UNICHAR ( 10 ) & " charges d'entretien, coût initial des éléments d'actifs renouvelés ou" & UNICHAR ( 10 ) & " remplacés, autres charges en détaillant ce dernier poste", "335-7|PRODUITS_IMMO", " Produits immobiliers : loyers, charges facturées, autres revenus" & UNICHAR ( 10 ) & " immobiliers en détaillant ce dernier poste", "336-2|FIL_DATE", " Date d'acquisition des" & UNICHAR ( 10 ) & " parts ou des" & UNICHAR ( 10 ) & " sous-jacents", "336-2|FIL_NATURE", " Nature des" & UNICHAR ( 10 ) & " immeubles détenus" & UNICHAR ( 10 ) & " (1)", "336-2|FIL_SECTEUR", " Secteur d'activité et" & UNICHAR ( 10 ) & " localisation", [Ligne annexe] )
+		lineageTag: d8946c6e-2a45-4d09-9246-e2cc551ebfb3
+
+	measure 'Encre du deroulant de la cellule' = VAR n = CALCULATE ( COUNTROWS ( CALCULATETABLE ( VALUES ( v_annexe_cellule[cellule] ), FILTER ( v_annexe_cellule, v_annexe_cellule[nature] IN { "texte", "source" } || v_annexe_cellule[etat] = "A_REMPLIR" ) ) ), REMOVEFILTERS ( v_annexe_cellule[cellule] ) ) + 0 RETURN IF ( n <= 1, "#FFFFFF00", "#12233C" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: cc0c2ad0-3d02-499a-95b4-dfe444e12e51
+
+	measure 'Choix de cellule ouvert' = VAR n = CALCULATE ( COUNTROWS ( CALCULATETABLE ( VALUES ( v_annexe_cellule[cellule] ), FILTER ( v_annexe_cellule, v_annexe_cellule[nature] IN { "texte", "source" } || v_annexe_cellule[etat] = "A_REMPLIR" ) ) ), REMOVEFILTERS ( v_annexe_cellule[cellule] ) ) + 0 RETURN IF ( n >= 2 && [Ligne saisissable] = 1, 1 )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: b7c424ae-6147-43df-9e92-c10fd12758c2
+
+	measure 'Cellule sous le deroulant' = VAR n = CALCULATE ( COUNTROWS ( CALCULATETABLE ( VALUES ( v_annexe_cellule[cellule] ), FILTER ( v_annexe_cellule, v_annexe_cellule[nature] IN { "texte", "source" } || v_annexe_cellule[etat] = "A_REMPLIR" ) ) ), REMOVEFILTERS ( v_annexe_cellule[cellule] ) ) + 0 RETURN IF ( n >= 2, "", [Cellule affichee] )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 364019e8-a3b8-422f-9b28-9d99bf67f7c3
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 8c3b27e8-9bb1-4d5a-b588-12befd84adfa
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 57af6d46-6f7a-4f1e-a470-3063cd68a4b4
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column version
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d931e5f0-a7c7-4b2c-937a-2f38828ae088
+		summarizeBy: none
+		sourceColumn: version
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: ece57a0c-1adb-4053-84bf-2eebe9e56ad2
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column ligne
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(120)
+		lineageTag: 7158fd19-0c03-4012-a77d-b182be061a39
+		summarizeBy: none
+		sourceColumn: ligne
+
+		annotation SummarizationSetBy = Automatic
+
+	column colonne
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: tinyint
+		lineageTag: e60f898f-c347-42e3-bef9-6758500dd568
+		summarizeBy: none
+		sourceColumn: colonne
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(500)
+		lineageTag: bb59c49e-2d09-4a96-8266-0592c1ec8d6d
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: cb7ecada-e0d5-4806-bc52-e5006394717d
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column groupe
+		dataType: string
+		sourceProviderType: varchar(40)
+		lineageTag: 7471a972-1669-4aa1-a3dc-0da56b261184
+		summarizeBy: none
+		sourceColumn: groupe
+
+		annotation SummarizationSetBy = Automatic
+
+	column signe
+		dataType: string
+		sourceProviderType: varchar(4)
+		lineageTag: 63dd5b66-d1fa-4895-ac65-1dbeabb5f4e5
+		summarizeBy: none
+		sourceColumn: signe
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_numerique
+		dataType: double
+		sourceProviderType: decimal(19, 6)
+		lineageTag: 3132f171-3320-407d-b0d4-5cb1ee31c9ba
+		summarizeBy: none
+		sourceColumn: valeur_numerique
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_texte
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 13827dde-08e0-48f3-b197-a36416fef26a
+		summarizeBy: none
+		sourceColumn: valeur_texte
+
+		annotation SummarizationSetBy = Automatic
+
+	column format
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 2ebb93ff-266b-48be-8f2e-8c8ecc0aa16c
+		summarizeBy: none
+		sourceColumn: format
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 024272c7-8c58-409a-a67f-1ca9d609ac7d
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column texte_affiche
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(2000)
+		lineageTag: b85e60bb-0555-4061-9361-fecb6bdf56d6
+		summarizeBy: none
+		sourceColumn: texte_affiche
+
+		annotation SummarizationSetBy = Automatic
+
+	column texte_imprime
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(2000)
+		lineageTag: d2fb1bd0-d511-4ff0-be79-e1ce81948f21
+		summarizeBy: none
+		sourceColumn: texte_imprime
+
+		annotation SummarizationSetBy = Automatic
+
+	column obligation
+		dataType: string
+		sourceProviderType: varchar(14)
+		lineageTag: 952ff35e-549c-43da-8e4c-210e10f33228
+		summarizeBy: none
+		sourceColumn: obligation
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(8)
+		lineageTag: 640d2992-db22-4092-ade9-49794cebf399
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column comptee
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 3ebbe6ec-4a89-42ba-b49a-99fd8f8c9489
+		summarizeBy: none
+		sourceColumn: comptee
+
+		annotation SummarizationSetBy = Automatic
+
+	column attend_exigee
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: dff87f54-b5cb-474a-82e7-a8fa25834b31
+		summarizeBy: none
+		sourceColumn: attend_exigee
+
+		annotation SummarizationSetBy = Automatic
+
+	column attend
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: cdac7caf-a22e-4353-8826-61cef791df9c
+		summarizeBy: none
+		sourceColumn: attend
+
+		annotation SummarizationSetBy = Automatic
+
+	column regle
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: f1d32069-ba95-4fdf-85d6-6414ce12b905
+		summarizeBy: none
+		sourceColumn: regle
+
+		annotation SummarizationSetBy = Automatic
+
+	column source
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(max)
+		lineageTag: 3121844a-0630-4748-8b1f-1d05bdaa510e
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column formule
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: ca501b22-84e9-429f-b369-e4edc65f730e
+		summarizeBy: none
+		sourceColumn: formule
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: ce94f9f0-6758-4994-a717-40e12fdff832
+		summarizeBy: none
+		sourceColumn: motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_base
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 6b419c55-6a55-4704-ad77-e2a6558f4b61
+		summarizeBy: none
+		sourceColumn: valeur_base
+
+		annotation SummarizationSetBy = Automatic
+
+	column saisie_ecartee
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 55595da4-6788-4fc1-985c-2b957c759ba6
+		summarizeBy: none
+		sourceColumn: saisie_ecartee
+
+		annotation SummarizationSetBy = Automatic
+
+	column calcul_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 03f165f2-713b-4242-b0fc-82e4662cddc2
+		summarizeBy: none
+		sourceColumn: calcul_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column calcule_le
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 08969ab2-d7f5-47fa-994b-ff901fe46f15
+		summarizeBy: none
+		sourceColumn: calcule_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column calcule_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: d6680175-ee90-44cc-90df-6264c1783c46
+		summarizeBy: none
+		sourceColumn: calcule_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column article_libelle
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: 1b0e976c-76dc-4782-aca9-8af980fd6ef0
+		summarizeBy: none
+		sourceColumn: article_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column indicatif
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: ef1f4ee4-b258-414e-9216-9a8c2ea1b333
+		summarizeBy: none
+		sourceColumn: indicatif
+
+		annotation SummarizationSetBy = Automatic
+
+	column cellule = v_annexe_cellule[ligne] & ", colonne " & v_annexe_cellule[colonne]
+		dataType: string
+		lineageTag: 3f87b9b2-17c8-4dfa-91d1-22eb1a76073b
+		summarizeBy: none
+
+	partition v_annexe_cellule = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_annexe_cellule = Source{[Schema="dbo",Item="v_annexe_cellule"]}[Data]
+				in
+				    dbo_v_annexe_cellule
+

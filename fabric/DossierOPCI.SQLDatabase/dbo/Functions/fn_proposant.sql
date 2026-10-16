@@ -1,4 +1,5 @@
 
+-- ------------------------------------------------------------------ n° 7 : la branche OBLIGATION de fn_proposant
 
 -- 5. LE PROPOSANT D'UN CYCLE : l'auteur de la conclusion en vigueur. REVUE et CLOTURE restent NULL : leur
 -- reference porte 2 sortes de decisions dont le proposant differe ; leurs procedures tiennent la separation.
@@ -27,12 +28,9 @@ BEGIN
     ELSE IF @nature = 'OBLIGATION'
         -- Le proposant de l'obligation est celui qui a publie la valeur
         -- liquidative de la cloture, la base de calcul en decoulant.
-        SET @qui = (SELECT TOP (1) p.publie_par FROM dbo.publication_vl p
-                    JOIN dbo.obligation_distribution o
-                      ON o.entite = p.entite
-                     AND o.id = TRY_CAST(@objet_ref AS INT)
-                    WHERE p.entite = o.entite
-                    ORDER BY p.id DESC);
+        -- ecran 4, objet n° 7 (decision du 09/10/2026) : le reviseur propose la base, l'associe la vise
+        SET @qui = (SELECT o.propose_par FROM dbo.obligation_distribution o
+                    WHERE o.id = TRY_CAST(@objet_ref AS INT));
     ELSE IF @nature = 'CYCLE'
         -- « entite|arrete|cycle » ; une reference mal formee rend NULL
         SET @qui = (SELECT c.conclu_par FROM dbo.conclusion_cycle c

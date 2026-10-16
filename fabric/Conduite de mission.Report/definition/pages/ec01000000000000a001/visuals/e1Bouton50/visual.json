@@ -335,6 +335,13 @@
                   "Value": "'bkEtat1c'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ouvre le formulaire de modification du dossier.'"
+                }
+              }
             }
           }
         }

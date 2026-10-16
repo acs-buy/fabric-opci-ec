@@ -1,8 +1,8 @@
 
-
--- 9. VISER OU RENVOYER LA REVUE. VISE : le premier obstacle de fn_obstacle_visa_revue, puis
--- l'auteur et le role. RENVOYE : depuis CONCLUE seulement ; depuis VISEE, le dossier est verrouille et le seul
--- renvoi est le deverrouillage. Le visa pose le verrou et ne remet plus a NULL le dernier deverrouillage.
+-- pr_viser_revue : 1 refus
+-- ------------------------------------------------------------------------------------------------- revue
+-- Viser ou renvoyer la revue (contrat, 3.1, point 2) : verrou au debut, gardes inchangees, calcul VISA_REVUE apres un
+-- visa favorable, dans la transaction du visa.
 CREATE   PROCEDURE dbo.pr_viser_revue
     @entite      VARCHAR (20),
     @arrete      VARCHAR (20),
@@ -13,14 +13,18 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    DECLARE @etat VARCHAR (12) = dbo.fn_etat_revue(@entite, @arrete), @o NVARCHAR (2000), @num INT, @m NVARCHAR (2000);
+    DECLARE @etat VARCHAR (12), @o NVARCHAR (2000), @num INT, @m NVARCHAR (2000), @tc INT = @@TRANCOUNT;
+    BEGIN TRY
+    BEGIN TRANSACTION;
+    EXEC dbo.pr_ann_verrou @entite = @entite;
+    SET @etat = dbo.fn_etat_revue(@entite, @arrete);
     IF @decision = 'VISE'
     BEGIN
         SET @o = dbo.fn_obstacle_visa_revue(@entite, @arrete);
         IF @o IS NOT NULL
         BEGIN
             SELECT @num = CAST(LEFT(@o, 5) AS INT), @m = SUBSTRING(@o, 7, 2000);
-            THROW @num, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW @num, @m, 1; END
         END;
     END
     ELSE IF @decision = 'RENVOYE'
@@ -39,8 +43,6 @@ BEGIN
         THROW 50343, N'Visa refusé : cette personne n''a pas, sur cette entité, le rôle que le visa de la revue exige, chef de mission.', 1;
     DECLARE @ref VARCHAR (60) = @entite + '|' + @arrete;
     EXEC dbo.pr_garde_visa 'REVUE', @ref, @decision, @decide_par, @motif;
-    BEGIN TRY
-    BEGIN TRANSACTION;
     INSERT INTO dbo.visa (nature, objet_ref, entite, arrete, cycle, decision, motif, propose_par, decide_par)
     VALUES ('REVUE', @ref, @entite, @arrete, NULL, @decision, @motif, @propose, @decide_par);
     IF @decision = 'VISE'
@@ -50,11 +52,13 @@ BEGIN
              WHERE entite = @entite AND arrete = @arrete;
         ELSE
             INSERT INTO dbo.dossier_verrou (entite, arrete, verrouille, verrouille_par) VALUES (@entite, @arrete, 1, @decide_par);
+        IF EXISTS (SELECT 1 FROM dbo.v_arrete_etat WHERE entite = @entite AND arrete = @arrete)
+            EXEC dbo.pr_calculer_annexe @entite = @entite, @arrete = @arrete, @declencheur = 'VISA_REVUE', @par = @decide_par, @rendre = 0;
     END;
     COMMIT;
     END TRY
     BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
+        IF @tc = 0 AND @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
         THROW;
     END CATCH;
     SELECT @decision AS decision,

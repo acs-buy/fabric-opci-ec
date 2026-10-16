@@ -1,0 +1,85 @@
+/// Les visas de cloture, tous, pour dater le visa qu'une publication a suivi.
+table visa_cloture
+	lineageTag: 0c723775-766e-4d7b-9ddf-1ddd9dacdb2c
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f674f899-5cd5-48af-a4ae-52677cfbe765
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: be86bdc1-5f4f-471d-a02f-633d08854072
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e215c8ca-0b50-4431-b4a9-71d43cb89ee2
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column decision
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(8)
+		lineageTag: 02b0e6ab-4f86-4c8a-ad50-5508e17dabe7
+		summarizeBy: none
+		sourceColumn: decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column propose_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: de29cd98-1f81-4b15-aa31-4e545792d997
+		summarizeBy: none
+		sourceColumn: propose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 6e21ebaa-ba60-4816-bc97-734999f20dc9
+		summarizeBy: none
+		sourceColumn: decide_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_le
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 0f5b463b-7f05-4bd0-95ea-cbb8ee8ce39d
+		summarizeBy: none
+		sourceColumn: decide_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition visa_cloture = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_visa_cloture = Value.NativeQuery(Source, "SELECT id, entite, arrete, decision, propose_par, decide_par, DATETIME2FROMPARTS(YEAR(decide_le), MONTH(decide_le), DAY(decide_le), DATEPART(HOUR, decide_le), DATEPART(MINUTE, decide_le), DATEPART(SECOND, decide_le), 0, 0) AS decide_le FROM dbo.visa WHERE nature = 'CLOTURE'", null, [EnableFolding = true])
+				in
+				    dbo_visa_cloture
+

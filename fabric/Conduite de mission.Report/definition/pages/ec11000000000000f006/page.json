@@ -1,0 +1,226 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "ec11000000000000f006",
+  "displayName": "Rapport de l’expert-comptable",
+  "displayOption": "FitToWidth",
+  "width": 1600,
+  "height": 1300,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F4F6F9'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "docRapTexte",
+      "target": "docDossierVehicule",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docDossierArrete",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docTitre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docNav0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docNav1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docNav2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docNav3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docNav4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapForme",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapCadreNote1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docArreterLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docArreter",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapRetenue",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapIntitule",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal5b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal7",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal8",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal9",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapVal9b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapWordLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapWord",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapOuvrirLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docRapOuvrir",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docFermer",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docMsg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docVersion",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docValidation",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapForme",
+      "target": "docSansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapForme",
+      "target": "docSansArrete2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docSansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docSansArrete2",
+      "type": "NoFilter"
+    }
+  ]
+}

@@ -1,72 +1,63 @@
 
--- --- 3. ouvrir le questionnaire d'acceptation d'un client -------------------------------------
+-- pr_ouvrir_questionnaire_acceptation : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_ouvrir_questionnaire_acceptation
     @entite   VARCHAR (20),
     @arrete   VARCHAR (20)   = NULL,   -- l'arrete vise ; par defaut la prochaine cloture, planifiee
     @par      NVARCHAR (400)
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND est_client = 1)
-        THROW 50231, N'L''acceptation ne s''ouvre que sur un client du cabinet. Une filiale n''a pas d''acceptation propre.', 1;
-
-    DECLARE @cote VARCHAR (30) = 'ACC-' + @entite;
-    DECLARE @deja INT = (SELECT COUNT(*) FROM dbo.feuille_question WHERE cote = @cote);
-    IF @deja > 0
-    BEGIN
-        SELECT @cote AS cote, @deja AS questions,
-               N'Le questionnaire d''acceptation de ' + @entite + N' est déjà ouvert, ' + CAST(@deja AS NVARCHAR (10)) + N' questions.' AS message;
-        RETURN;
-    END;
-
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @par;
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
     BEGIN TRY
     BEGIN TRANSACTION;
-    -- l'arrete de rattachement, planifie s'il ne l'est pas encore
-    IF @arrete IS NULL
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
     BEGIN
-        DECLARE @cl DATE = dbo.fn_prochaine_cloture(@entite, CAST(SYSUTCDATETIME() AS DATE));
-        IF @cl IS NULL
-            THROW 50232, N'La date de clôture du client n''est pas lisible ; renseignez-la (jj/mm) avant d''ouvrir l''acceptation.', 1;
-        SET @arrete = CONVERT(VARCHAR (10), @cl, 23);
-        IF NOT EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND arrete = @arrete)
-            EXEC dbo.pr_planifier_arrete @entite, @cl, @cl, 'ANNUEL', @par;
-    END
-    ELSE IF NOT EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND arrete = @arrete)
-        THROW 50233, N'L''arrêté désigné n''est pas au référentiel de ce client. Planifiez-le d''abord.', 1;
-
-    -- la feuille, meme forme que ACC-OMEGA-OPCI sur le jeu
-    DECLARE @nom NVARCHAR (400) = N'questionnaire_acceptation_' + @entite + N'.xlsx';
-    IF NOT EXISTS (SELECT 1 FROM dbo.feuille_travail WHERE cote = @cote)
-        INSERT INTO dbo.feuille_travail
-            (cote, cycle, phase, arrete, entite, modele_code, origine, nom_fichier, chemin_coffre,
-             empreinte_sha256, preparateur, prepare_le)
-        VALUES
-            (@cote, NULL, 'ACCEPT', @arrete, @entite, NULL, 'HUMAINE', @nom,
-             N'/Coffre/' + @entite + N'/permanent/questionnaire_acceptation.xlsx',
-             CONVERT(CHAR (64), HASHBYTES('SHA2_256', CONVERT(NVARCHAR (100), @cote)), 2),
-             @par, SYSUTCDATETIME());
-
-    -- les questions de la phase, toutes, comme le jeu en porte 110 sur ACC-OMEGA-OPCI
-    INSERT INTO dbo.feuille_question (cote, question_id)
-    SELECT @cote, q.id FROM dbo.ref_question q
-    WHERE q.phase = 'ACCEPT' AND q.statut <> 'ECARTEE'
-      AND NOT EXISTS (SELECT 1 FROM dbo.feuille_question fq WHERE fq.cote = @cote AND fq.question_id = q.id);
-    SET @deja = @@ROWCOUNT;
-
-    -- l'acceptation elle-meme, par la procedure qui existe
-    EXEC dbo.pr_ouvrir_acceptation @entite, @cote, @par;
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
+    END;
+    -- 2. le corps d'origine
+    EXEC dbo.pr_ouvrir_questionnaire_acceptation_corps @entite = @entite, @arrete = @arrete, @par = @par;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1
+    BEGIN
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
+        BEGIN
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
+        END;
+    END;
     COMMIT;
     END TRY
     BEGIN CATCH
-        -- un refus ne laisse jamais de transaction condamnee au caller : on annule ici, puis on relance
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
         THROW;
     END CATCH;
-
-    SELECT @cote AS cote, @deja AS questions,
-           N'Questionnaire d''acceptation ouvert : ' + CAST(@deja AS NVARCHAR (10))
-         + N' questions à répondre, en ligne ou par classeur.' AS message;
 END;
 
 GO

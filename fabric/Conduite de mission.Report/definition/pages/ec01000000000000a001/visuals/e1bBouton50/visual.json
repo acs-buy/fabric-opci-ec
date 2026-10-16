@@ -328,6 +328,13 @@
                   "Value": "'ClearAllSlicers'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Vide les champs du formulaire.'"
+                }
+              }
             }
           }
         }

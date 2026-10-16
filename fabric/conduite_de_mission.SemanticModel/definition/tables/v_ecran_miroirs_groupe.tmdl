@@ -1,0 +1,141 @@
+/// Ecritures miroir a passer ou impossibles.
+table v_ecran_miroirs_groupe
+	lineageTag: 7c96e20d-f23c-490c-aa6b-1a8e90c456cd
+
+	/// l’entité quand une écriture miroir possible reste à passer, vide sinon
+	measure 'Entite si miroirs a passer' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_miroirs_groupe ), v_ecran_miroirs_groupe[possible] = TRUE () ) + 0 RETURN IF ( n > 0, [Client selectionne] )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 8dcbf879-fddd-4bd8-957b-042ecbdeb72f
+
+	/// gris quand rien n’est à passer
+	measure 'Fond passer les miroirs' = IF ( ISBLANK ( [Entite si miroirs a passer] ), "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 67b3abbd-dcb3-4dee-bc61-9eb4c025a365
+
+	/// lignes possible = 0 ; 0 sans ligne
+	measure 'Miroirs impossibles' = CALCULATE ( COUNTROWS ( v_ecran_miroirs_groupe ), v_ecran_miroirs_groupe[possible] = FALSE () ) + 0
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: fb2b69ac-d6f2-4783-9c51-bcfc0d496dac
+
+	/// « aucune écriture miroir à passer » ; « conditions réunies »
+	measure 'Blocage des miroirs' = IF ( ISBLANK ( [Entite si miroirs a passer] ), "aucune écriture miroir à passer", "conditions réunies" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: fa6031c0-c308-40a4-8bde-55e17871d82d
+
+	column vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f2e6a488-cbc5-4ecb-98b0-a6d26ea52c83
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ada0565a-a43c-4425-ae9d-3b0011e6d9fe
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column flux_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: fd8af36a-a83d-41bd-91a8-66a7180770ad
+		summarizeBy: none
+		sourceColumn: flux_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 62bd5d42-8d37-42db-9164-0e47b9752720
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: fb7a1fcb-39cd-44d3-b3e0-054862b79e14
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: aeac4a33-cdc3-4e2f-aa41-6bf4cba8d283
+		summarizeBy: none
+		sourceColumn: compte
+
+		annotation SummarizationSetBy = Automatic
+
+	column sens
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(6)
+		lineageTag: 92f0cda5-5233-48b9-bdb9-f4f0395e0eda
+		summarizeBy: none
+		sourceColumn: sens
+
+		annotation SummarizationSetBy = Automatic
+
+	column montant
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: f39a791a-4dbb-4eda-8248-8f5b36b3fb74
+		summarizeBy: sum
+		sourceColumn: montant
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column effet_actif_net
+		dataType: string
+		sourceProviderType: nvarchar(40)
+		lineageTag: 4dd10659-9547-4be5-96f0-66000e3e4ae7
+		summarizeBy: none
+		sourceColumn: effet_actif_net
+
+		annotation SummarizationSetBy = Automatic
+
+	column lecture
+		dataType: string
+		sourceProviderType: nvarchar(102)
+		lineageTag: b1dc5500-1c8f-4279-a9bf-c8a73878212d
+		summarizeBy: none
+		sourceColumn: lecture
+
+		annotation SummarizationSetBy = Automatic
+
+	column possible
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 0318b5d2-8771-4fb4-a3e5-b54150fb1aa3
+		summarizeBy: none
+		sourceColumn: possible
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_miroirs_groupe = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_miroirs_groupe = Source{[Schema="dbo",Item="v_ecran_miroirs_groupe"]}[Data]
+				in
+				    dbo_v_ecran_miroirs_groupe
+

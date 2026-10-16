@@ -18,107 +18,127 @@
   "functions": [
     {
       "name": "activer_cycle",
-      "description": "",
-      "isPublicEndpointEnabled": true
+      "description": "Activer le cycle ou Retirer le cycle : toutes les questions \u00E9ligibles du cycle entrent au programme ou en sortent ; motif exig\u00E9 au retrait.",
+      "isPublicEndpointEnabled": false
     },
     {
       "name": "ajuster_programme",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Ajouter au programme ou Retirer du programme : une question du programme de travail ; motif exig\u00E9 au retrait.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "arreter_forme_rapport",
+      "description": "Arr\u00EAter la forme du rapport de l\u0027expert-comptable, NP 2300, avec ses motifs quand la forme les exige.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "choisir_programme",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Choisir le programme de travail de l\u0027arr\u00EAt\u00E9 : all\u00E9g\u00E9, classique ou \u00E9tendu.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "conclure_cycle",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Enregistrer la conclusion du cycle ; refus\u00E9 en fran\u00E7ais quand la conclusion est vide.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "conclure_feuille",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Conclure la feuille de travail de la question : forme et conclusion ; refus\u00E9 en fran\u00E7ais quand la forme est vide.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "conclure_revue",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Enregistrer la conclusion g\u00E9n\u00E9rale de la revue ; refus\u00E9 en fran\u00E7ais quand la conclusion est vide.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "deverrouiller_dossier",
-      "description": "Ecran Revision, maquette 73",
+      "description": "D\u00E9verrouiller le dossier de travail, avec le motif et la personne qui le demande.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "exporter_dossier",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Exporter le dossier de travail de l\u0027arr\u00EAt\u00E9 en classeur Excel, d\u00E9pos\u00E9 au site du cabinet.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "exporter_feuille",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Exporter la feuille de travail de la question en classeur Excel, d\u00E9pos\u00E9 au site du cabinet.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "exporter_od",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Exporter les OD de la question, ou le gabarit des OD libres, en classeur Excel d\u00E9pos\u00E9 au site du cabinet.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "exporter_questions",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Ouvrir le classeur des questions du cycle, r\u00E9ponses comprises, d\u00E9pos\u00E9 au site du cabinet.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "importer_classeur",
-      "description": "Ecran Revision, maquette 73",
+      "description": "R\u00E9importer un classeur du site du cabinet : r\u00E9ponses, OD, feuille de travail ou dossier entier.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "ouvrir_feuille",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Ouvrir la feuille de travail de la question et d\u00E9poser son gabarit pr\u00E9rempli au site du cabinet.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "recalculer_annexe",
+      "description": "Recalculer les cellules de l\u0027annexe de tous les arr\u00EAt\u00E9s de mission de l\u0027entit\u00E9 ; une version neuve pour chaque arr\u00EAt\u00E9 dont une cellule change.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "repondre_question",
-      "description": "Ecran Revision, maquette 73",
+      "description": "R\u00E9pondre \u00E0 une question du programme : oui, non ou non applicable avec motif.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "retirer_ligne_od",
-      "description": "Ecran Revision, etape 4",
+      "description": "Retirer la ligne choisie du brouillon des OD libres, avec trace du retrait.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "saisir_cellule_annexe",
+      "description": "Enregistrer une cellule de l\u0027annexe des comptes annuels : valeur ou montant selon le format de la cellule, motif quand la saisie recouvre une valeur calcul\u00E9e ; vide, retire la saisie.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "saisir_od",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Ajouter une ligne d\u0027OD de r\u00E9vision ; refus\u00E9 en fran\u00E7ais quand le compte ou le libell\u00E9 est vide.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "saisir_od_double",
-      "description": "",
-      "isPublicEndpointEnabled": true
+      "description": "Ajouter les 2 lignes d\u0027une \u00E9criture de r\u00E9vision en une seule action, toutes les 2 ou aucune ; refus\u00E9 en fran\u00E7ais quand un champ d\u0027une ligne commenc\u00E9e est vide.",
+      "isPublicEndpointEnabled": false
     },
     {
       "name": "valider_od_libres",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Valider le brouillon des OD libres : \u00E9criture \u00E9quilibr\u00E9e exig\u00E9e, lot propos\u00E9 au visa.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "valider_od_question",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Valider les OD de la question : le brouillon devient un lot propos\u00E9 au visa.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "valider_pour_le_client",
+      "description": "Valider l\u0027arr\u00EAt\u00E9 pour le client et copier les livrables valid\u00E9s dans la biblioth\u00E8que Livrables du site du v\u00E9hicule.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "verifier_couverture",
-      "description": "Ecran Revision, maquette 73",
+      "description": "V\u00E9rifier la couverture de la balance par les cycles du programme, sans rien modifier.",
       "isPublicEndpointEnabled": false
     },
     {
       "name": "viser",
-      "description": "Ecran Revision, maquette 73",
+      "description": "Viser ou renvoyer un cycle, un lot ou la revue, par le superviseur connect\u00E9 ; motif exig\u00E9 au renvoi.",
       "isPublicEndpointEnabled": false
     }
   ],

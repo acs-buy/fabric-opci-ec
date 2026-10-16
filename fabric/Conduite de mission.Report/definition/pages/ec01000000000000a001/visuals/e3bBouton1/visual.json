@@ -457,7 +457,7 @@
                     {
                       "name": "entite",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -476,31 +476,42 @@
                     {
                       "name": "chemin",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
-                      "slicer": "e3bSaisie0",
-                      "autoClear": false
+                      "slicer": "e3bSaisie0"
                     },
                     {
                       "name": "nature",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e3bSaisie1",
-                      "autoClear": false
+                      "autoClear": true
                     },
                     {
                       "name": "question",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
-                      "slicer": "e3bSaisie2",
-                      "autoClear": false
+                      "slicer": "e3bSaisie3",
+                      "autoClear": true
                     }
                   ]
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ref_entite"
+                    }
+                  },
+                  "Property": "Infobulle e3bBouton1"
                 }
               }
             }

@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["v_maintien_requis", "v_prerequis_arrete", "v_pieces_manquantes", "v_balance", "v_anr_entite", "v_valeur_liquidative", "v_titres_valeur_actuelle", "feuille_travail", "lot_ecritures", "ref_entite", "ref_cycle", "v_dim_arrete", "v_livrables_dus", "v_differences_synthese", "v_dernier_releve_controle", "v_avancement_etapes", "v_etat_dossier", "v_documents_attendus", "v_perimetre_arrete", "v_supervision_cycle", "v_journal_visa", "v_a_viser", "v_mes_refus", "v_rationalisation_opci", "v_actifs_expertise_requise", "v_ratio_conclusion", "v_sommes_distribuables", "v_obligation_minimale", "v_inventaire_referentiel", "role_mission", "v_a_generer_synthese", "v_anr_filiale", "v_anr_filiale_detail", "v_cadrage_pret_intragroupe", "v_differences_comptes_courants", "v_differences_immeubles", "v_differences_instruments", "v_differences_titres", "v_ecritures_du_compte", "v_flux_intragroupe", "v_obligation_par_categorie", "v_parts_porteur_courant", "v_plafond_distribuable", "v_ratio_arrete", "v_rationalisation_filiale", "v_simulation_distribution", "ecriture", "v_differences_detail", "v_perimetre_groupe", "acceptation_mission", "maintien_mission", "arrete_mission", "ref_arrete", "piece", "piece_rattachement", "ref_nature_piece", "v_questions_acceptation", "v_ecran_pieces_du_dossier", "v_espace_client", "v_filiale_dependances", "journal_perimetre", "v_ecran_maintiens", "v_ecran_message", "v_ecran_equipe_mission"]
+annotation PBI_QueryOrder = ["v_maintien_requis", "v_prerequis_arrete", "v_pieces_manquantes", "v_balance", "v_anr_entite", "v_valeur_liquidative", "v_titres_valeur_actuelle", "feuille_travail", "lot_ecritures", "ref_entite", "ref_cycle", "v_dim_arrete", "v_livrables_dus", "v_differences_synthese", "v_dernier_releve_controle", "v_avancement_etapes", "v_etat_dossier", "v_documents_attendus", "v_perimetre_arrete", "v_supervision_cycle", "v_journal_visa", "v_a_viser", "v_mes_refus", "v_rationalisation_opci", "v_actifs_expertise_requise", "v_ratio_conclusion", "v_sommes_distribuables", "v_obligation_minimale", "v_inventaire_referentiel", "role_mission", "v_a_generer_synthese", "v_anr_filiale", "v_anr_filiale_detail", "v_cadrage_pret_intragroupe", "v_differences_comptes_courants", "v_differences_immeubles", "v_differences_instruments", "v_differences_titres", "v_ecritures_du_compte", "v_flux_intragroupe", "v_obligation_par_categorie", "v_parts_porteur_courant", "v_plafond_distribuable", "v_ratio_arrete", "v_rationalisation_filiale", "v_simulation_distribution", "ecriture", "v_differences_detail", "v_perimetre_groupe", "acceptation_mission", "maintien_mission", "arrete_mission", "ref_arrete", "piece", "piece_rattachement", "ref_nature_piece", "v_questions_acceptation", "v_ecran_pieces_du_dossier", "v_espace_client", "v_filiale_dependances", "journal_perimetre", "v_ecran_maintiens", "v_ecran_message", "v_ecran_equipe_mission", "expertise", "evaluation_actif", "valeur_instrument", "cours_titre", "revision_compte_courant", "synthese_proposee", "eligibilite_participation", "v_famille_actif", "v_a_generer", "v_reprise_275_a_passer", "v_controle_rationalisation", "v_controle_difference_vs_ecritures", "v_comptes_classe_1_hors_anr", "v_ecran_valeurs_arrete", "v_ecran_differences_par_compte", "v_ecran_visas_valorisation", "v_ecran_anr_filiale_detail", "v_ecran_pieces_valorisation", "v_ecran_feuilles_valorisation", "v_ecran_flux_groupe", "v_ecran_miroirs_groupe", "v_ecran_rationalisation_pas", "ref_source_valeur", "conclusion_ratio", "decision_distribution", "ref_obligation_distribution", "ref_ratio_memoire", "ref_ratio_vehicule", "v_ecran_actifs_a_valoriser"]
 
 annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
 
@@ -94,6 +94,77 @@ ref table v_lots_perimetre
 ref table v_feuilles_du_cycle
 ref table v_etat_revue
 ref table v_etat_conclusion_cycle
+ref table obligation_distribution
+ref table publication_vl
+ref table visa_cloture
+ref table v_visa_cloture_courant
+ref table publication_client
+ref table v_arrete_client
+ref table v_arrete_etat
+ref table v_balance_etats_financiers
+ref table v_dip_rubrique_6
+ref table v_dip_rubrique_5
+ref table v_dip_rubrique_4
+ref table v_dip_rubrique_3
+ref table v_dip_rubrique_2
+ref table v_dip_rubrique_1
+ref table v_dip_arrete
+ref table v_forme_attestation_proposee
+ref table v_rapport_expert_comptable
+ref table v_annexe_produisible
+ref table v_cellules_a_remplir
+ref table v_ligne_annexe_montant
+ref table v_ligne_etat_montant
+ref table v_livrables_a_valider
+ref table demande_document
+ref table document_produit
+ref table colonne_annexe
+ref table ref_role
+ref table ref_forme_rapport
+ref table ref_livrable
+ref table liste_clients
+ref table v_annexe_document
+ref table ref_tableau_annexe
+ref table v_annexe_retard
+ref table v_annexe_version
+ref table v_annexe_cellule
+ref table controle_annexe
+ref table v_annexe_article
+ref table v_ecran_membres_equipe
+ref table v_ecran_arretes
+ref table v_ecran_demandes_reouverture
+ref table v_ecran_reouverture_effets
+ref table v_ecran_pieces_retirees
+ref table v_copie_livrable
+ref table expertise
+ref table evaluation_actif
+ref table valeur_instrument
+ref table cours_titre
+ref table revision_compte_courant
+ref table synthese_proposee
+ref table eligibilite_participation
+ref table v_famille_actif
+ref table v_a_generer
+ref table v_reprise_275_a_passer
+ref table v_controle_rationalisation
+ref table v_controle_difference_vs_ecritures
+ref table v_comptes_classe_1_hors_anr
+ref table v_ecran_valeurs_arrete
+ref table v_ecran_differences_par_compte
+ref table v_ecran_visas_valorisation
+ref table v_ecran_anr_filiale_detail
+ref table v_ecran_pieces_valorisation
+ref table v_ecran_feuilles_valorisation
+ref table v_ecran_flux_groupe
+ref table v_ecran_miroirs_groupe
+ref table v_ecran_rationalisation_pas
+ref table ref_source_valeur
+ref table conclusion_ratio
+ref table decision_distribution
+ref table ref_obligation_distribution
+ref table ref_ratio_memoire
+ref table ref_ratio_vehicule
+ref table v_ecran_actifs_a_valoriser
 
 ref role Reviseur
 

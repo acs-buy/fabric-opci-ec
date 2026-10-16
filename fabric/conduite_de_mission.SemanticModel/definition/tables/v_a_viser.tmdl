@@ -8,7 +8,7 @@ table v_a_viser
 		displayFolder: Parcours
 		lineageTag: 5a800d55-aef8-49b3-8e74-f597dc0cc0d5
 
-	/// Carte 2.3, En attente de visa. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 2.3, En attente de visa.
 	measure 'R23 En attente de visa' = COUNTROWS ( v_a_viser )
 		formatString: #,0
 		displayFolder: Rapports V2

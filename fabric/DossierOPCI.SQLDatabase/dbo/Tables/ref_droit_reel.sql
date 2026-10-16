@@ -13,21 +13,6 @@ CREATE TABLE [dbo].[ref_droit_reel] (
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_droit_reel_garde]
-ON dbo.[ref_droit_reel]
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF dbo.fn_peut_ecrire_referentiel('ref_droit_reel',
-                                      SUSER_SNAME()) = 1 RETURN;
-    THROW 50074,
-        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Cette table porte des valeurs livrées avec la base, recopiées depuis un texte : les modifier les fait diverger de leur source. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
-        1;
-END;
-
-GO
-
 CREATE   TRIGGER dbo.[tr_ref_droit_reel_horodatage]
 ON dbo.[ref_droit_reel]
 AFTER UPDATE
@@ -42,6 +27,21 @@ BEGIN
     UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
     FROM dbo.[ref_droit_reel] t
     JOIN inserted i ON t.[droit] = i.[droit];
+END;
+
+GO
+
+CREATE   TRIGGER dbo.[tr_ref_droit_reel_garde]
+ON dbo.[ref_droit_reel]
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF dbo.fn_peut_ecrire_referentiel('ref_droit_reel',
+                                      SUSER_SNAME()) = 1 RETURN;
+    THROW 50074,
+        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Cette table porte des valeurs livrées avec la base, recopiées depuis un texte : les modifier les fait diverger de leur source. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
+        1;
 END;
 
 GO

@@ -335,6 +335,13 @@
                   "Value": "'bkEtat2c'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ouvre le formulaire de modification d''une filiale.'"
+                }
+              }
             }
           }
         }

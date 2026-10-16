@@ -335,6 +335,13 @@
                   "Value": "'bkEtat3'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ouvre l''étape Questionnaire et pièces.'"
+                }
+              }
             }
           }
         }

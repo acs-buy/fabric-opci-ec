@@ -1,0 +1,430 @@
+/// Les donnees du rapport de l'expert-comptable, par arrete auquel il est du.
+table v_rapport_expert_comptable
+	lineageTag: e4a2c433-88ca-49e4-89cc-d62bbe640c15
+
+	measure 'Obstacle a la production du rapport' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR j = TODAY () VAR o = CALCULATE ( [Obstacle a la production], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "ATTESTATION" ) VAR rnpn = SELECTCOLUMNS ( FILTER ( ALL ( role_nature_visa ), role_nature_visa[nature] = "PUBLICATION" ), "r", role_nature_visa[role_code] ) VAR rrpn = SELECTCOLUMNS ( FILTER ( ALL ( ref_role ), ref_role[vise] = TRUE () ), "r", ref_role[code] ) VAR pn = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[du] <= j && ( ISBLANK ( role_mission[au] ) || role_mission[au] > j ) && role_mission[role] IN rnpn && role_mission[role] IN rrpn ) ) + 0 VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR fa = MAXX ( tr, v_rapport_expert_comptable[forme_arretee] ) VAR al = MAXX ( tr, v_rapport_expert_comptable[arretee_le] ) RETURN SWITCH ( TRUE (), NOT ISBLANK ( o ), o, pn = 0, "le rapport de l'expert-comptable est signé par l'associé signataire, et lui seul le produit.", ISBLANK ( al ), "la forme du rapport de l'expert-comptable n'est pas arrêtée pour cet arrêté.", BLANK () )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 8d6f9ab8-2940-47fd-a76a-8fd9e076c3c8
+
+	measure 'Arrete du rapport a produire' = CALCULATE ( [Arrete a produire en Word], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "ATTESTATION" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 098dcc12-6c8d-4eb2-9ce5-c2bd661ad44d
+
+	measure 'Adresse du rapport' = CALCULATE ( [Adresse du livrable choisi], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "ATTESTATION" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: e4e1737e-9f3f-4a8a-b834-4433f7fb9337
+
+	measure 'Carte rapport' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR fa = MAXX ( tr, v_rapport_expert_comptable[forme_arretee] ) VAR al = MAXX ( tr, v_rapport_expert_comptable[arretee_le] ) VAR dur = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "ATTESTATION" ) ) > 0 VAR fr = [Forme retenue] VAR lib = MAXX ( FILTER ( ALL ( ref_forme_rapport ), ref_forme_rapport[code] = fr ), ref_forme_rapport[libelle_court] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( NOT dur, "Sans objet", IF ( NOT ISBLANK ( al ) && NOT ISBLANK ( fa ), lib, "À arrêter" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 87940fd8-9485-4b08-b6f9-5d1ead881ca5
+
+	measure 'Carte rapport sous-titre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR typ = MAXX ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ), ref_arrete[Type] ) VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR fa = MAXX ( tr, v_rapport_expert_comptable[forme_arretee] ) VAR al = MAXX ( tr, v_rapport_expert_comptable[arretee_le] ) VAR sc = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), IF ( ISBLANK ( ref_entite[soumise_commissariat_comptes] ), BLANK (), IF ( ref_entite[soumise_commissariat_comptes], 1, 0 ) ) ) VAR fp0 = MAXX ( FILTER ( ALL ( v_forme_attestation_proposee ), v_forme_attestation_proposee[entite] = e && v_forme_attestation_proposee[arrete] = a ), v_forme_attestation_proposee[forme_proposee] ) VAR fp = IF ( fp0 = "REFUS_ATTESTER", "IMPOSSIBILITE", fp0 ) VAR dur = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "ATTESTATION" ) ) > 0 VAR fr = [Forme retenue] VAR lib = MAXX ( FILTER ( ALL ( ref_forme_rapport ), ref_forme_rapport[code] = fr ), ref_forme_rapport[libelle_court] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( NOT dur, "non dû à l’arrêté " & LOWER ( typ ), IF ( NOT ISBLANK ( al ) && NOT ISBLANK ( fa ), "forme arrêtée le " & FORMAT ( al, "dd/MM/yyyy" ), IF ( NOT ISBLANK ( sc ) && sc = 0 && NOT ISBLANK ( fp ), "proposée", "par défaut" ) & " : " & LOWER ( lib ) ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 15d5f130-f8de-4175-b3c9-b4175515be17
+
+	measure 'Carte rapport encre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR fa = MAXX ( tr, v_rapport_expert_comptable[forme_arretee] ) VAR al = MAXX ( tr, v_rapport_expert_comptable[arretee_le] ) VAR dur = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "ATTESTATION" ) ) > 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || NOT dur, "#12233C", IF ( NOT ISBLANK ( al ) && NOT ISBLANK ( fa ), "#1F6D4A", "#8A6710" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: af1db5ed-f0f6-4864-b69e-d79215281da7
+
+	measure 'Commissariat aux comptes de l entite' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR sc = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), IF ( ISBLANK ( ref_entite[soumise_commissariat_comptes] ), BLANK (), IF ( ref_entite[soumise_commissariat_comptes], 1, 0 ) ) ) RETURN IF ( ISBLANK ( e ), BLANK (), IF ( ISBLANK ( sc ), "à remplir", IF ( sc = 1, "oui", "non" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: f0fcf3a4-b893-4415-b618-3126cb2d08bc
+
+	measure 'Forme proposee par la base' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR fp0 = MAXX ( FILTER ( ALL ( v_forme_attestation_proposee ), v_forme_attestation_proposee[entite] = e && v_forme_attestation_proposee[arrete] = a ), v_forme_attestation_proposee[forme_proposee] ) VAR fp = IF ( fp0 = "REFUS_ATTESTER", "IMPOSSIBILITE", fp0 ) VAR lib = MAXX ( FILTER ( ALL ( ref_forme_rapport ), ref_forme_rapport[code] = fp ), ref_forme_rapport[libelle_court] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( ISBLANK ( lib ), "aucune", lib ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 05752465-4d81-457d-9de4-540b4a3b7c78
+
+	measure 'Intitule de la forme retenue' = VAR fr = [Forme retenue] VAR it = MAXX ( FILTER ( ALL ( ref_forme_rapport ), ref_forme_rapport[code] = fr ), ref_forme_rapport[intitule] ) RETURN IF ( ISBLANK ( it ), BLANK (), "« " & SUBSTITUTE ( it, "PRESENTATION", "PRÉSENTATION" ) & " »" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: edf9bda8-b85a-4f73-a717-cc69c59ce3fe
+
+	measure 'Arret de la forme' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR fa = MAXX ( tr, v_rapport_expert_comptable[forme_arretee] ) VAR al = MAXX ( tr, v_rapport_expert_comptable[arretee_le] ) VAR ap0 = MAXX ( tr, v_rapport_expert_comptable[arretee_par] ) VAR ap = IF ( SEARCH ( "@", ap0, 1, 0 ) > 1, LEFT ( ap0, SEARCH ( "@", ap0, 1, 0 ) - 1 ), ap0 ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( NOT ISBLANK ( al ) && NOT ISBLANK ( fa ), "le " & FORMAT ( al, "dd/MM/yyyy" ) & " par " & ap, "non" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: f9e91ee8-bc30-46da-9ad6-9252f36e2673
+
+	measure 'Derniere version du rapport' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR typ = MAXX ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ), ref_arrete[Type] ) VAR l = "ATTESTATION" VAR td = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l ) VAR vm = MAXX ( td, document_produit[version] ) VAR tv = FILTER ( td, document_produit[version] = vm ) VAR pl = MAXX ( tv, document_produit[produit_le] ) VAR pp = MAXX ( tv, document_produit[produit_par] ) VAR pe = MAXX ( tv, document_produit[perime_le] ) VAR pm = MAXX ( tv, document_produit[perime_motif] ) VAR tq = FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = l ) VAR dv = MAXX ( tq, demande_document[version] ) VAR tdv = FILTER ( tq, demande_document[version] = dv ) VAR dd = MAXX ( tdv, demande_document[etat] ) VAR dl = MAXX ( tdv, demande_document[demande_le] ) VAR dm = MAXX ( tdv, demande_document[motif_refus] ) VAR du = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = l ) ) > 0 VAR fl = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[formats] ) VAR fs = SUBSTITUTE ( fl, ",", "|" ) VAR fx = "," & CONCATENATEX ( tv, document_produit[format], "," ) & "," VAR fm = FILTER ( GENERATESERIES ( 1, IF ( ISBLANK ( fl ), 0, PATHLENGTH ( fs ) ) ), NOT CONTAINSSTRING ( fx, "," & PATHITEM ( fs, [Value] ) & "," ) ) VAR nm = COUNTROWS ( fm ) + 0 VAR mq = CONCATENATEX ( fm, SWITCH ( PATHITEM ( fs, [Value] ), "DOCX", "Word", "XLSX", "classeur Excel", PATHITEM ( fs, [Value] ) ), " et ", [Value], ASC ) VAR dvm = MAXX ( FILTER ( tq, demande_document[version] = vm ), demande_document[etat] ) VAR et = IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), SWITCH ( TRUE (), NOT du, "sans objet", dd IN { "DEMANDEE", "REFUSEE" } && ( ISBLANK ( pl ) || dl > pl ), IF ( dd = "DEMANDEE", "demande posée", "refusé" ), ISBLANK ( vm ), "à produire", NOT ISBLANK ( pe ), "périmé", nm > 0 || dvm = "DEMANDEE", "incomplet", "produit" ) ) VAR mi = IF ( nm > 0, mq & " à produire", "demande de la version " & FORMAT ( vm, "0" ) & " en cours" ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( NOT du, "sans objet à l’arrêté " & LOWER ( typ ) & " du " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ), IF ( ISBLANK ( vm ), "aucune", "v" & FORMAT ( vm, "0" ) & ", produite le " & FORMAT ( pl, "dd/MM/yyyy" ) & IF ( NOT ISBLANK ( pe ), ", périmée le " & FORMAT ( pe, "dd/MM/yyyy" ), "" ) ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: f22ec868-355e-452d-a9c7-fb7e75a2c4b7
+
+	measure 'Comptes couverts par le rapport' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR dur = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "ATTESTATION" ) ) > 0 VAR l = "COMPTES_ANNUELS" VAR td = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l ) VAR vm = MAXX ( td, document_produit[version] ) VAR tv = FILTER ( td, document_produit[version] = vm ) VAR pl = MAXX ( tv, document_produit[produit_le] ) VAR pp = MAXX ( tv, document_produit[produit_par] ) VAR pe = MAXX ( tv, document_produit[perime_le] ) VAR pm = MAXX ( tv, document_produit[perime_motif] ) VAR tq = FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = l ) VAR dv = MAXX ( tq, demande_document[version] ) VAR tdv = FILTER ( tq, demande_document[version] = dv ) VAR dd = MAXX ( tdv, demande_document[etat] ) VAR dl = MAXX ( tdv, demande_document[demande_le] ) VAR dm = MAXX ( tdv, demande_document[motif_refus] ) VAR du = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = l ) ) > 0 VAR fl = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[formats] ) VAR fs = SUBSTITUTE ( fl, ",", "|" ) VAR fx = "," & CONCATENATEX ( tv, document_produit[format], "," ) & "," VAR fm = FILTER ( GENERATESERIES ( 1, IF ( ISBLANK ( fl ), 0, PATHLENGTH ( fs ) ) ), NOT CONTAINSSTRING ( fx, "," & PATHITEM ( fs, [Value] ) & "," ) ) VAR nm = COUNTROWS ( fm ) + 0 VAR mq = CONCATENATEX ( fm, SWITCH ( PATHITEM ( fs, [Value] ), "DOCX", "Word", "XLSX", "classeur Excel", PATHITEM ( fs, [Value] ) ), " et ", [Value], ASC ) VAR dvm = MAXX ( FILTER ( tq, demande_document[version] = vm ), demande_document[etat] ) VAR et = IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), SWITCH ( TRUE (), NOT du, "sans objet", dd IN { "DEMANDEE", "REFUSEE" } && ( ISBLANK ( pl ) || dl > pl ), IF ( dd = "DEMANDEE", "demande posée", "refusé" ), ISBLANK ( vm ), "à produire", NOT ISBLANK ( pe ), "périmé", nm > 0 || dvm = "DEMANDEE", "incomplet", "produit" ) ) VAR mi = IF ( nm > 0, mq & " à produire", "demande de la version " & FORMAT ( vm, "0" ) & " en cours" ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( NOT dur, "comptes annuels, sans objet à cet arrêté", IF ( du && NOT ISBLANK ( vm ), "version " & FORMAT ( vm, "0" ), "aucune version des comptes annuels produite" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: b2eb7e14-a160-4fe7-96fd-492951ed4464
+
+	measure 'Valeur liquidative de l arrete' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR p = MAXX ( FILTER ( ALL ( publication_vl ), ISBLANK ( publication_vl[perimee_le] ) && publication_vl[entite] = e && publication_vl[arrete] = a ), publication_vl[publie_le] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( ISBLANK ( p ), "non publiée", "publiée le " & FORMAT ( p, "dd/MM/yyyy" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 8da14c17-53b6-405b-94ad-a959f4cd6a10
+
+	measure 'Considerations particulieres enregistrees' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR fa = MAXX ( tr, v_rapport_expert_comptable[forme_arretee] ) VAR al = MAXX ( tr, v_rapport_expert_comptable[arretee_le] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), MAXX ( tr, v_rapport_expert_comptable[motif_considerations_particulieres] ) & "" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 54ffd069-c663-4e2e-ade4-48ffc5743914
+
+	measure 'Motif de limitation enregistre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR fa = MAXX ( tr, v_rapport_expert_comptable[forme_arretee] ) VAR al = MAXX ( tr, v_rapport_expert_comptable[arretee_le] ) VAR fr = [Forme retenue] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( fr IN { "COMPTE_RENDU_TRAVAUX", "SANS_OBSERVATION" }, "sans objet pour cette forme", MAXX ( tr, v_rapport_expert_comptable[motif_limitation] ) & "" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 9f83eb83-5e45-4344-9315-1680842ad79a
+
+	measure 'Limitation des diligences' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR li = MAXX ( FILTER ( ALL ( v_forme_attestation_proposee ), v_forme_attestation_proposee[entite] = e && v_forme_attestation_proposee[arrete] = a ), IF ( v_forme_attestation_proposee[limitation_des_diligences], 1, 0 ) ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "limitation des diligences : " & IF ( li = 1, "oui", "non" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 9d4198e0-d81f-45dc-b2f5-b71f21528967
+
+	measure 'Titre du rapport' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR den = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), ref_entite[Dénomination] ) VAR de = IF ( CONTAINSSTRING ( "aeiouyhéèêàâîôûAEIOUYHÉÈÊÀÂÎÔÛ", LEFT ( den, 1 ) ), "de l’", "de " ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "Rapport de l’expert-comptable sur les comptes annuels " & de & den & ", exercice clos le " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 929f0031-6509-4053-b9b6-d08cbfd36015
+
+	measure 'Rapport entite' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR x = MAXX ( tr, v_rapport_expert_comptable[entite_concernee] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( x ) || x = "", "à remplir", x & "" ) )
+		lineageTag: 1bef324c-f814-4a76-91cf-9c40c131ba8c
+
+	measure 'Rapport comptes' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR x = VAR c = MAXX ( tr, v_rapport_expert_comptable[comptes_annuels_ou_intermediaires] ) RETURN IF ( ISBLANK ( c ), BLANK (), c & ", exercice clos le " & FORMAT ( MAXX ( tr, v_rapport_expert_comptable[date_arrete] ), "dd/MM/yyyy" ) ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( x ) || x = "", "à remplir", x & "" ) )
+		lineageTag: ca9a6956-5328-4adb-b94a-bb10da4df4d7
+
+	measure 'Rapport total du bilan' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR x = FORMAT ( MAXX ( tr, v_rapport_expert_comptable[total_du_bilan] ), "#,##0.00" ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( x ) || x = "", "à remplir", x & "" ) )
+		lineageTag: 31346554-77d1-4479-aa77-99ba2debe2e3
+
+	measure 'Rapport chiffre d affaires' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR x = FORMAT ( MAXX ( tr, v_rapport_expert_comptable[chiffre_d_affaires] ), "#,##0.00" ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( x ) || x = "", "à remplir", x & "" ) )
+		lineageTag: b1284bb9-585e-4f92-96cf-06033e24deb2
+
+	measure 'Rapport lecture du chiffre d affaires' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR x = MAXX ( tr, v_rapport_expert_comptable[chiffre_d_affaires_lecture] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( x ) || x = "", "à remplir", x & "" ) )
+		lineageTag: 600d9cb5-bf04-40ad-bb1b-06ebecb04a5a
+
+	measure 'Rapport resultat net' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR x = FORMAT ( MAXX ( tr, v_rapport_expert_comptable[resultat_net_comptable] ), "#,##0.00" ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( x ) || x = "", "à remplir", x & "" ) )
+		lineageTag: 555b15c5-ffc5-4587-86bf-7b189097f520
+
+	measure 'Rapport lettre de mission' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR x = FORMAT ( MAXX ( tr, v_rapport_expert_comptable[lettre_de_mission_du] ), "dd/MM/yyyy" ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( x ) || x = "", "à remplir", x & "" ) )
+		lineageTag: c832ec78-664d-4945-9522-b2fd73af3681
+
+	measure 'Rapport source' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR x = MAXX ( tr, v_rapport_expert_comptable[source] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( x ) || x = "", "à remplir", x & "" ) )
+		lineageTag: 03d75b34-90f6-4018-8d19-9ea3f5744e30
+
+	measure 'Aff Carte rapport' = [Carte rapport] & ""
+		lineageTag: 810de58c-3497-4a2c-a9a6-0999ed7005ef
+
+	measure 'Aff Carte rapport sous-titre' = [Carte rapport sous-titre] & ""
+		lineageTag: 69f96707-8590-4965-a090-ed3a99d83829
+
+	measure 'Aff Limitation des diligences' = [Limitation des diligences] & ""
+		lineageTag: 748c3308-5dc6-4896-9107-cb96b3e4cae7
+
+	measure 'Aff Commissariat aux comptes de l entite' = [Commissariat aux comptes de l entite] & ""
+		lineageTag: cc61563d-2b25-45aa-b5c5-d043e83e4cca
+
+	measure 'Aff Forme proposee par la base' = [Forme proposee par la base] & ""
+		lineageTag: 308b9205-77f7-4cc9-8db0-67ef4a7c40bc
+
+	measure 'Aff Arret de la forme' = [Arret de la forme] & ""
+		lineageTag: a530de8c-1c67-4575-ba54-5e21f9dea606
+
+	measure 'Aff Derniere version du rapport' = [Derniere version du rapport] & ""
+		lineageTag: eaa1b829-29b1-4894-8f8d-d16b3dcd6b43
+
+	measure 'Aff Comptes couverts par le rapport' = [Comptes couverts par le rapport] & ""
+		lineageTag: 203d979f-25d9-4b66-87b7-660ea37075aa
+
+	measure 'Aff Valeur liquidative de l arrete' = [Valeur liquidative de l arrete] & ""
+		lineageTag: 3083088c-26ee-448a-a149-96cffeb9980a
+
+	measure 'Aff Intitule de la forme retenue' = [Intitule de la forme retenue] & ""
+		lineageTag: 83cb6154-3bbe-4b04-a874-aff1e064eb5a
+
+	measure 'Fond revLivProduireRapport' = IF ( ISBLANK ( [Arrete du rapport a produire] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 7f3fbbb5-3e98-4c74-87f8-f8757d480707
+
+	measure 'Libelle revLivProduireRapport' = "Produire le rapport"
+		lineageTag: 67b7717e-7cea-45b9-810a-62bd77dacbc2
+
+	measure 'Aff Titre du rapport' = [Titre du rapport] & ""
+		lineageTag: 0105ea84-237e-465e-b7cc-6abd83b1b397
+
+	measure 'Fond docRapWord' = IF ( ISBLANK ( [Arrete du rapport a produire] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 85c03ec3-e8c2-48d1-b8a2-e46bbf473cc7
+
+	measure 'Libelle docRapWord' = "Produire en Word"
+		lineageTag: 5aafb4a7-5947-4698-bac5-df21138c97e9
+
+	measure 'Fond docRapOuvrir' = IF ( ISBLANK ( [Adresse du rapport] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: d394f29a-27f3-427d-b8dc-684abdb4fbd7
+
+	measure 'Libelle docRapOuvrir' = "Ouvrir"
+		lineageTag: 8bf5ed78-040b-427a-9844-1d65fa473712
+
+	measure 'Filet Carte rapport' = VAR c = [Carte rapport encre] RETURN SWITCH ( c, "#8A6710", "#C8961E", "#9A2A2A", "#9A2A2A", "#1F6D4A", "#1F6D4A", "#0F5C8C" )
+		lineageTag: fc22d8d9-1271-42b5-8f98-25076f6c173a
+
+	measure 'Texte rempli de la forme choisie' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t0 = [Texte de la forme choisie] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR ar = "à remplir" VAR mot = MAXX ( tr, v_rapport_expert_comptable[comptes_annuels_ou_intermediaires] ) & "" VAR jd = MAXX ( tr, v_rapport_expert_comptable[date_arrete] ) VAR ent = MAXX ( tr, v_rapport_expert_comptable[entite_concernee] ) & "" VAR lm = MAXX ( tr, v_rapport_expert_comptable[lettre_de_mission_du] ) VAR tb = MAXX ( tr, v_rapport_expert_comptable[total_du_bilan] ) VAR ca = MAXX ( tr, v_rapport_expert_comptable[chiffre_d_affaires] ) VAR rn = MAXX ( tr, v_rapport_expert_comptable[resultat_net_comptable] ) VAR dp = MAXX ( tr, v_rapport_expert_comptable[description_des_points] ) & "" VAR ls = MAXX ( tr, v_rapport_expert_comptable[lieu_date_signature] ) & "" VAR m = IF ( mot = "", ar, mot ) VAR per = IF ( mot = "annuels" && NOT ISBLANK ( jd ), "l’exercice clos le " & FORMAT ( jd, "dd/MM/yyyy" ), IF ( mot = "intermédiaires" && NOT ISBLANK ( jd ), "la période close le " & FORMAT ( jd, "dd/MM/yyyy" ), ar ) ) VAR de = IF ( ent = "", "de " & ar, IF ( CONTAINSSTRING ( "aeiouyhéèêàâîôû", LEFT ( ent, 1 ) ), "d’", "de " ) & ent ) VAR x1 = SUBSTITUTE ( t0, UNICHAR ( 13 ), "" ) VAR x2 = SUBSTITUTE ( x1, "comptes … (préciser « annuels », « intermédiaires »)", "comptes " & m ) VAR x3 = SUBSTITUTE ( x2, "de … (préciser l’entité concernée)", de ) VAR x4 = SUBSTITUTE ( x3, "relatifs à … (préciser la période ou l’exercice concerné)", "relatifs à " & per ) VAR x5 = SUBSTITUTE ( x4, "en date du …", "en date du " & IF ( ISBLANK ( lm ), ar, FORMAT ( lm, "dd/MM/yyyy" ) ) ) VAR x6 = SUBSTITUTE ( SUBSTITUTE ( x5, "annuels (ou « intermédiaires »)", m ), "annuels (ou intermédiaires)", m ) VAR p0 = SUBSTITUTE ( x6, "· Total du bilan ;", "· Total du bilan : " & IF ( ISBLANK ( tb ), ar, FORMAT ( tb, "#,##0.00" ) ) & " ;" ) VAR p1 = SUBSTITUTE ( p0, "· Chiffre d’affaires ;", "· Chiffre d’affaires : " & IF ( ISBLANK ( ca ), ar, FORMAT ( ca, "#,##0.00" ) ) & " ;" ) VAR p2 = SUBSTITUTE ( p1, "· Résultat net comptable.", "· Résultat net comptable : " & IF ( ISBLANK ( rn ), ar, FORMAT ( rn, "#,##0.00" ) ) & "." ) VAR d1 = SUBSTITUTE ( SUBSTITUTE ( p2, "(Description du (des) point(s) relevé(s) et de son (leur) incidence sur les comptes)", IF ( dp = "", ar, dp ) ), "(Description motivée et chiffrée des désaccords, incertitudes ou limitations faisant l’objet de l’ (des) observation(s))", IF ( dp = "", ar, dp ) ) VAR s1 = SUBSTITUTE ( d1, "Lieu, date et signature", "Lieu, date et signature : " & IF ( ls = "", ar, ls ) ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || ISBLANK ( t0 ), "", s1 )
+		lineageTag: d65197db-a539-4de0-984d-0892e963cb95
+
+	measure 'Rapport devise' = IF ( ISBLANK ( [Entite selectionnee] ), "", "à remplir, devise sans source en base" )
+		lineageTag: 11ea8371-6cc3-45de-aac5-ef7f86b5c0f9
+
+	measure 'Rapport lecture du chiffre d affaires ligne 1' = VAR t = [Rapport lecture du chiffre d affaires] & "" VAR k = SEARCH ( " : ", t, 1, 0 ) RETURN IF ( k > 0, LEFT ( t, k + 1 ), t )
+		lineageTag: ac08f169-7939-4661-9595-308ef5ac9f73
+
+	measure 'Rapport lecture du chiffre d affaires ligne 2' = VAR t = [Rapport lecture du chiffre d affaires] & "" VAR k = SEARCH ( " : ", t, 1, 0 ) RETURN IF ( k > 0, MID ( t, k + 3, 300 ), "" )
+		lineageTag: 8de4174d-3a7a-4fc3-8120-497f146a1148
+
+	measure 'Rapport source ligne 1' = VAR t = [Rapport source] & "" VAR k = SEARCH ( ", ", t, 30, 0 ) RETURN IF ( k > 0, LEFT ( t, k ), t )
+		lineageTag: c3f4f1b8-a454-491c-bc25-2f8b0a8480f0
+
+	measure 'Rapport source ligne 2' = VAR t = [Rapport source] & "" VAR k = SEARCH ( ", ", t, 30, 0 ) RETURN IF ( k > 0, MID ( t, k + 2, 300 ), "" )
+		lineageTag: 7f82ef89-8017-44bf-9617-c865b6401077
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 6b9327f4-1f93-447f-a07a-f0e72042ff8f
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 54dad0bc-b15b-4a0e-8973-32396b862517
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column soumise_commissariat_comptes
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: efda3db6-ee7e-4960-ace0-5cf413ffc050
+		summarizeBy: none
+		sourceColumn: soumise_commissariat_comptes
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_arretee
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 2e925866-d7a9-44e3-9604-a4171e869d31
+		summarizeBy: none
+		sourceColumn: forme_arretee
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_arretee_libelle
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: d1a9ab0f-b18b-4ca9-8e82-55accc740a3e
+		summarizeBy: none
+		sourceColumn: forme_arretee_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column arretee_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 6e33754d-a43a-4a05-b3bd-8a2196d5e661
+		summarizeBy: none
+		sourceColumn: arretee_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column arretee_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 5a2c2ec4-a2c3-48e7-9d32-b0540118acaa
+		summarizeBy: none
+		sourceColumn: arretee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_proposee
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 9d4ad579-63cc-49be-8a02-494d33d86ae8
+		summarizeBy: none
+		sourceColumn: forme_proposee
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_proposee_libelle
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: d954478e-953f-4aca-a5d1-041c81b231b7
+		summarizeBy: none
+		sourceColumn: forme_proposee_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_du_texte
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: de8b9d1e-4e06-4f65-bb9a-88fca10bee15
+		summarizeBy: none
+		sourceColumn: forme_du_texte
+
+		annotation SummarizationSetBy = Automatic
+
+	column intitule
+		dataType: string
+		sourceProviderType: nvarchar(100)
+		lineageTag: 2383b6cf-4103-40a7-af02-ae9e68f982bf
+		summarizeBy: none
+		sourceColumn: intitule
+
+		annotation SummarizationSetBy = Automatic
+
+	column texte
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 829a06f7-28cd-4ab3-be2d-a74db880f3dc
+		summarizeBy: none
+		sourceColumn: texte
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_limitation
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 67a72bf2-b42f-452d-a49e-e792fbaad206
+		summarizeBy: none
+		sourceColumn: motif_limitation
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_considerations_particulieres
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: bf6d16a2-0f58-428e-9b1f-735fa45053d9
+		summarizeBy: none
+		sourceColumn: motif_considerations_particulieres
+
+		annotation SummarizationSetBy = Automatic
+
+	column comptes_annuels_ou_intermediaires
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: a6d55612-9d21-4998-9cc0-6c94659c3b94
+		summarizeBy: none
+		sourceColumn: comptes_annuels_ou_intermediaires
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_concernee
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 283ce27a-b2ab-4901-8857-50dc81b583aa
+		summarizeBy: none
+		sourceColumn: entite_concernee
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 06756d25-b723-4a5f-99b9-eeef4cbec465
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_arrete
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: f24259d1-93da-4a52-970b-67b26e2f8f0d
+		summarizeBy: none
+		sourceColumn: date_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_du_bilan
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: ff63ec72-67c1-4161-91b7-a3119cd5b749
+		summarizeBy: sum
+		sourceColumn: total_du_bilan
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column chiffre_d_affaires
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 9879929e-9d93-4045-b7ac-784cafc3c2e3
+		summarizeBy: sum
+		sourceColumn: chiffre_d_affaires
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column chiffre_d_affaires_lecture
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(80)
+		lineageTag: 73e70e90-3162-4104-a36e-6d7aeeb4c858
+		summarizeBy: none
+		sourceColumn: chiffre_d_affaires_lecture
+
+		annotation SummarizationSetBy = Automatic
+
+	column resultat_net_comptable
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: c1e8ce69-533d-4947-a91d-d1b71513933e
+		summarizeBy: sum
+		sourceColumn: resultat_net_comptable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lettre_de_mission_du
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: b9982474-1cef-49b4-bcc7-8e066f806ced
+		summarizeBy: none
+		sourceColumn: lettre_de_mission_du
+
+		annotation SummarizationSetBy = Automatic
+
+	column description_des_points
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 66de06b3-b49d-419b-aac1-68dc8e82a00c
+		summarizeBy: none
+		sourceColumn: description_des_points
+
+		annotation SummarizationSetBy = Automatic
+
+	column lieu_date_signature
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 1e47726e-e964-4db5-a145-1fbffc628bb0
+		summarizeBy: none
+		sourceColumn: lieu_date_signature
+
+		annotation SummarizationSetBy = Automatic
+
+	column source
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(53)
+		lineageTag: 4f65e5fc-236b-42b3-82c6-f216ad329a09
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_rapport_expert_comptable = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_rapport_expert_comptable = Value.NativeQuery(Source, "SELECT entite, arrete, soumise_commissariat_comptes, forme_arretee, forme_arretee_libelle, arretee_par, DATETIME2FROMPARTS(YEAR(arretee_le), MONTH(arretee_le), DAY(arretee_le), DATEPART(HOUR, arretee_le), DATEPART(MINUTE, arretee_le), DATEPART(SECOND, arretee_le), 0, 0) AS arretee_le, forme_proposee, forme_proposee_libelle, forme_du_texte, intitule, texte, motif_limitation, motif_considerations_particulieres, comptes_annuels_ou_intermediaires, entite_concernee, exercice, date_arrete, total_du_bilan, chiffre_d_affaires, chiffre_d_affaires_lecture, resultat_net_comptable, lettre_de_mission_du, description_des_points, lieu_date_signature, source FROM dbo.v_rapport_expert_comptable", null, [EnableFolding = true])
+				in
+				    dbo_v_rapport_expert_comptable
+

@@ -1,52 +1,63 @@
 
+-- pr_supprimer_filiale : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_supprimer_filiale
     @client   VARCHAR (20),
     @code     VARCHAR (20),
     @par      NVARCHAR (400)
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    IF NOT EXISTS (SELECT 1 FROM dbo.eligibilite_participation WHERE entite_mere = @client AND entite_fille = @code)
-        THROW 50216, N'Cette entité n''est pas une filiale de ce client.', 1;
-
-    DECLARE @arretes INT, @feuilles INT, @pieces INT, @ecritures INT, @comptes INT, @detentions INT, @supprimable BIT, @denomination NVARCHAR (400);
-    SELECT @arretes = arretes, @feuilles = feuilles, @pieces = pieces, @ecritures = ecritures, @comptes = comptes,
-           @detentions = detentions, @supprimable = supprimable, @denomination = denomination
-      FROM dbo.v_filiale_dependances WHERE entite_mere = @client AND entite_fille = @code;
-    IF @supprimable = 0
-    BEGIN
-        DECLARE @m NVARCHAR (1000) = N'La filiale ' + @code + N' porte des données de mission et ne se supprime pas : '
-            + CASE WHEN @arretes > 0 THEN CAST(@arretes AS NVARCHAR (10)) + N' arrêté(s), ' ELSE N'' END
-            + CASE WHEN @feuilles > 0 THEN CAST(@feuilles AS NVARCHAR (10)) + N' feuille(s), ' ELSE N'' END
-            + CASE WHEN @pieces > 0 THEN CAST(@pieces AS NVARCHAR (10)) + N' pièce(s), ' ELSE N'' END
-            + CASE WHEN @ecritures > 0 THEN CAST(@ecritures AS NVARCHAR (10)) + N' écriture(s) ou import(s), ' ELSE N'' END
-            + CASE WHEN @comptes > 0 THEN CAST(@comptes AS NVARCHAR (10)) + N' compte(s), ' ELSE N'' END
-            + CASE WHEN @detentions > 0 THEN CAST(@detentions AS NVARCHAR (10)) + N' détention(s) à un arrêté, ' ELSE N'' END;
-        SET @m = LEFT(@m, LEN(@m) - 1) + N'. Sa sortie du groupe se constate par la détention à l''arrêté suivant.';
-        INSERT INTO dbo.journal_refus (procedure_nom, entite, cote, message, geste, refuse_pour, refuse_le)
-        VALUES ('pr_supprimer_filiale', @code, NULL, @m, N'Constater la sortie par la détention, ne pas supprimer.', @par, SYSUTCDATETIME());
-        THROW 50218, @m, 1;
-    END;
-
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @par;
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
     BEGIN TRY
     BEGIN TRANSACTION;
-    DELETE dbo.role_mission WHERE entite = @code;
-    DELETE dbo.demande_espace_client WHERE entite = @code;
-    DELETE dbo.eligibilite_participation WHERE entite_mere = @client AND entite_fille = @code;
-    -- la ligne d'entite part si aucun autre client ne la detient
-    IF NOT EXISTS (SELECT 1 FROM dbo.eligibilite_participation WHERE entite_fille = @code)
-        DELETE dbo.ref_entite WHERE code = @code AND est_client = 0;
-    INSERT INTO dbo.journal_perimetre (entite_mere, entite_fille, action, detail, fait_par)
-    VALUES (@client, @code, 'SUPPRESSION', N'retirée du périmètre ; ' + @denomination, @par);
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT @client AS x, CAST(0 AS BIT) AS lecteurs UNION ALL SELECT @code, CAST(1 AS BIT)) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
+    BEGIN
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
+    END;
+    -- 2. le corps d'origine
+    EXEC dbo.pr_supprimer_filiale_corps @client = @client, @code = @code, @par = @par;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1
+    BEGIN
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT @client AS x, CAST(0 AS BIT) AS lecteurs UNION ALL SELECT @code, CAST(1 AS BIT)) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
+        BEGIN
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
+        END;
+    END;
     COMMIT;
     END TRY
     BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
         THROW;
     END CATCH;
-
-    SELECT @code AS filiale, N'Filiale ' + @code + N' (' + @denomination + N') retirée du périmètre de ' + @client + N'.' AS message;
 END;
 
 GO

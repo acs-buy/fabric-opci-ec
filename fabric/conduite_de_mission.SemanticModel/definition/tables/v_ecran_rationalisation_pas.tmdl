@@ -1,0 +1,84 @@
+/// Pas de la rationalisation de l actif net, une ligne par pas.
+table v_ecran_rationalisation_pas
+	lineageTag: 59b19ee2-95f7-40bf-9a2c-51d8aac63db8
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ecbbfa69-3461-45de-a757-0aba6f5e2837
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e707ba14-6e69-498e-a111-e40eb433db17
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isHidden
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3ee29762-00fe-417b-b67d-4f4cade7aa3b
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle_court
+		dataType: string
+		sourceProviderType: nvarchar(13)
+		lineageTag: 103284ff-d08a-46fb-baf6-bae52c1a117f
+		summarizeBy: none
+		sourceColumn: libelle_court
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: 2ba88655-dfdf-4ef0-b30d-7d269cc901ab
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column montant
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 8c871664-bea5-4517-b489-72221a83b819
+		summarizeBy: sum
+		sourceColumn: montant
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: varchar(44)
+		lineageTag: acb24848-a383-4a20-9e35-26b7323d2b92
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_rationalisation_pas = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_rationalisation_pas = Source{[Schema="dbo",Item="v_ecran_rationalisation_pas"]}[Data]
+				in
+				    dbo_v_ecran_rationalisation_pas
+

@@ -1,0 +1,441 @@
+/// Les lignes de l'annexe et leurs 7 colonnes, par vehicule et arrete.
+table v_ligne_annexe_montant
+	lineageTag: e640a2e3-e7c9-4c0e-aca6-44f8ec075ab7
+
+	measure 'Article choisi' = IF ( HASONEVALUE ( v_ligne_annexe_montant[article] ), SELECTEDVALUE ( v_ligne_annexe_montant[article] ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: f1176300-d290-41be-98b8-9d940a2c1e08
+
+	measure 'Ligne choisie' = VAR s = IF ( HASONEVALUE ( v_annexe_cellule[ligne] ), SELECTEDVALUE ( v_annexe_cellule[ligne] ) ) RETURN IF ( NOT ISBLANK ( s ), s, VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = [Article choisi] VAR p = FILTER ( ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e && v_annexe_cellule[arrete] = a && v_annexe_cellule[article] = ar && ( v_annexe_cellule[nature] IN { "texte", "source" } || v_annexe_cellule[etat] = "A_REMPLIR" ) ) RETURN IF ( COUNTROWS ( p ) = 1, MAXX ( p, v_annexe_cellule[ligne] ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 1eafcc7e-2f82-49e5-acaa-647e34d0ed8a
+
+	measure 'Obstacle a la saisie de la cellule' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR j = TODAY () VAR ar = [Article choisi] VAR li = [Ligne choisie] VAR co = [Colonne choisie] VAR ae = COUNTROWS ( FILTER ( ALL ( v_arrete_etat ), v_arrete_etat[entite] = e && v_arrete_etat[arrete] = a ) ) + 0 VAR pr = MAXX ( FILTER ( ALL ( v_arrete_etat ), v_arrete_etat[entite] = e && v_arrete_etat[arrete] = a ), IF ( v_arrete_etat[premier_exercice], 1, 0 ) ) + 0 VAR ee = SWITCH ( ar, "321-2", "BILAN_ACTIF", "321-6", "BILAN_PASSIF", "322-2", "RESULTAT" ) VAR detail = COUNTROWS ( FILTER ( ALL ( v_ligne_etat_montant ), v_ligne_etat_montant[etat] = ee && v_ligne_etat_montant[code] = li && v_ligne_etat_montant[type_ligne] = "DETAIL" ) ) + 0 VAR nl = COUNTROWS ( FILTER ( ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e && v_annexe_cellule[arrete] = a && v_annexe_cellule[article] = ar && v_annexe_cellule[ligne] = li ) ) + 0 VAR sa = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[du] <= j && ( ISBLANK ( role_mission[au] ) || role_mission[au] > j ) && role_mission[role] IN { "ASSOCIE", "CHEF_MISSION", "PREPARATEUR", "REVISEUR" } ) ) + 0 VAR cl = MAXX ( FILTER ( ALL ( v_visa_cloture_courant ), v_visa_cloture_courant[entite] = e && v_visa_cloture_courant[arrete] = a ), v_visa_cloture_courant[decision] ) RETURN SWITCH ( TRUE (), ISBLANK ( co ) || NOT ( co IN { "1", "2", "3", "4", "5", "6", "7" } ), "Saisie refusée : la colonne est numérotée de 1 à 7.", ae = 0, "Saisie refusée : l'arrêté " & IF ( ISBLANK ( a ), "vide", a ) & " de l'entité " & IF ( ISBLANK ( e ), "vide", e ) & " n'est pas un arrêté de mission d'un véhicule ; il n'a pas d'annexe.", NOT ISBLANK ( ee ) && detail = 0, "Saisie refusée : la ligne " & IF ( ISBLANK ( li ), "vide", li ) & " n'existe pas à l'article " & ar & ", ou elle se calcule sur les autres lignes.", NOT ISBLANK ( ee ) && ( co <> "2" || pr = 0 ), "Saisie refusée : la colonne N-1 d'un état ne se saisit qu'au 1er exercice suivi.", ISBLANK ( ee ) && NOT ISBLANK ( li ) && nl = 0, "Saisie refusée : la ligne " & li & " n'existe pas à l'article " & IF ( ISBLANK ( ar ), "vide", ar ) & ".", sa = 0, "Saisie refusée : cette personne ne peut pas saisir l'annexe de l'entité " & e & " : elle n'y tient aucun rôle de mission.", cl = "VISE", "Saisie refusée : l'arrêté est validé pour le client ; la saisie suppose sa réouverture.", BLANK () )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: cf1e4474-cb9d-4f69-9a7b-0e836d811882
+
+	measure 'Ligne de la cellule a enregistrer' = VAR li = [Ligne choisie] RETURN IF ( NOT ISBLANK ( li ) && ISBLANK ( [Obstacle a la saisie de la cellule] ), li )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: f7ed9c05-dde8-45ab-b497-e398867c14d3
+
+	measure 'Titre de l annexe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR den = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), ref_entite[Dénomination] ) VAR de = IF ( CONTAINSSTRING ( "aeiouyhéèêàâîôûAEIOUYHÉÈÊÀÂÎÔÛ", LEFT ( den, 1 ) ), "de l’", "de " ) VAR ar = [Article choisi] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "Annexe " & de & den & " au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) & IF ( ISBLANK ( ar ), "", ", article " & ar ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 93acbbf9-f2e5-43a5-8d94-ec9b12648764
+
+	measure 'Article choisi libelle' = VAR ar = [Article choisi] RETURN IF ( ISBLANK ( ar ), "", "Article " & ar )
+		lineageTag: 0d144076-36c8-42fe-834c-370508a0457f
+
+	measure 'Intitule de l article choisi' = VAR ar = [Article choisi] RETURN IF ( ISBLANK ( ar ), "choisir un article", MAXX ( FILTER ( ALL ( v_ligne_annexe_montant ), v_ligne_annexe_montant[article] = ar ), v_ligne_annexe_montant[tableau] ) & "" )
+		lineageTag: bff1f9a7-5502-45ad-bb81-161974a97df0
+
+	measure 'Decompte de l article choisi' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = [Article choisi] VAR t = FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a && v_cellules_a_remplir[article] = ar ) VAR rem = MAXX ( t, v_cellules_a_remplir[cellules_a_remplir] ) + 0 VAR tot = MAXX ( t, v_cellules_a_remplir[cellules] ) VAR ind = MAXX ( t, IF ( v_cellules_a_remplir[indicatif], 1, 0 ) ) VAR car = SUMX ( FILTER ( FILTER ( ALL ( v_ligne_annexe_montant ), v_ligne_annexe_montant[entite] = e && v_ligne_annexe_montant[arrete] = a && v_ligne_annexe_montant[article] = ar ), v_ligne_annexe_montant[a_saisir] = TRUE () && v_ligne_annexe_montant[type_ligne] <> "RUBRIQUE" ), VAR ks = SWITCH ( TRUE (), ar = "331-1" && v_ligne_annexe_montant[code] IN { "PRINCIPE" }, "|1|", ar = "332-1" && v_ligne_annexe_montant[code] IN { "STRATEGIE" }, "|1|", ar = "332-1" && v_ligne_annexe_montant[code] IN { "ACTIF_NET", "NB_PARTS", "VL_UNIT", "DIST_CESSION", "DIST_RESULTAT", "CAPITALISATION" }, "|1|2|3|4|5|", ar = "333-3" && v_ligne_annexe_montant[code] IN { "RENVOI_1" }, "|1|", ar = "334-3" && v_ligne_annexe_montant[code] IN { "TOTAL" }, "|1|2|3|4|5|6|", ar = "334-3" && v_ligne_annexe_montant[code] IN { "ASSIETTE", "REDEVANCES_N", "REDEVANCES_CUM", "RESTANT_1AN", "RESTANT_1_5ANS", "RESTANT_5ANS", "PRIX_RESIDUEL", "PRIX_RESIDUEL_1AN", "PRIX_RESIDUEL_1_5ANS", "PRIX_RESIDUEL_5ANS" }, "|1|", ar = "334-5" && v_ligne_annexe_montant[code] IN { "PARTS_2", "PARTS_3", "TOTAL", "TOTAL_HORS_FRAIS" }, "|1|2|3|4|5|6|", ar = "334-5" && v_ligne_annexe_montant[code] IN { "SECTEURS" }, "|1|", ar = "334-6" && v_ligne_annexe_montant[code] IN { "COMPTES_COURANTS", "ECHEANCE", "TOTAL" }, "|1|2|3|4|5|", ar = "335-10" && v_ligne_annexe_montant[code] IN { "PCT_ACTIF_NET_MOYEN" }, "|1|", ar = "335-10" && v_ligne_annexe_montant[code] IN { "FRAIS_EXTERNES_NATURE" }, "|1|", ar = "335-10" && v_ligne_annexe_montant[code] IN { "SURPERFORMANCE" }, "|1|", ar = "335-12" && v_ligne_annexe_montant[code] IN { "DETAIL_CATEGORIES" }, "|1|", ar = "335-2" && v_ligne_annexe_montant[code] IN { "CL", "CL_1", "CL_2", "CL_3", "CL_ST", "AC", "AC_1", "AC_2", "AC_3", "AC_4", "AC_5", "AC_6", "AC_ST", "TOTAL" }, "|1|2|", ar = "335-2" && v_ligne_annexe_montant[code] IN { "DEP_CL", "DEP_AC", "DEP_TOTAL" }, "|1|2|3|4|", ar = "335-4" && v_ligne_annexe_montant[code] IN { "EC", "EC_IMMO", "EC_NON_IMMO", "AUTRES", "AUTRES_IMMO", "AUTRES_NON_IMMO", "TOTAL" }, "|1|2|", ar = "335-4" && v_ligne_annexe_montant[code] IN { "TAUX_FIXE", "RATIOS" }, "|1|", ar = "335-8" && v_ligne_annexe_montant[code] IN { "DETAIL_NATURE" }, "|1|", ar = "332-2", "|1|", ar = "333-1", "|1|2|", ar = "333-2", "|1|3|4|", ar = "333-3", "|1|2|", ar = "334-1", "|1|", ar = "334-2", "|1|2|3|4|5|6|", ar = "334-7", "|1|2|3|4|", ar = "334-8", "|1|", ar = "335-1", "|1|", ar = "335-10", "|1|2|", ar = "335-11", "|1|", ar = "335-12", "|1|2|", ar = "335-3", "|1|2|3|4|", ar = "335-5", "|1|2|3|4|", ar = "335-6", "|1|2|", ar = "335-7", "|1|", ar = "335-8", "|1|2|", ar = "335-9", "|1|", ar = "336-1", "|1|", ar = "336-3", "|1|", "|1|2|" ) RETURN ( LEN ( ks ) - LEN ( SUBSTITUTE ( ks, "|", "" ) ) - 1 ) ) + 0 VAR fe = SUMX ( FILTER ( ALL ( v_ligne_annexe_montant ), v_ligne_annexe_montant[entite] = e && v_ligne_annexe_montant[arrete] = a && v_ligne_annexe_montant[article] = ar ), VAR ks = SWITCH ( TRUE (), ar = "331-1" && v_ligne_annexe_montant[code] IN { "PRINCIPE" }, "|1|", ar = "332-1" && v_ligne_annexe_montant[code] IN { "STRATEGIE" }, "|1|", ar = "332-1" && v_ligne_annexe_montant[code] IN { "ACTIF_NET", "NB_PARTS", "VL_UNIT", "DIST_CESSION", "DIST_RESULTAT", "CAPITALISATION" }, "|1|2|3|4|5|", ar = "333-3" && v_ligne_annexe_montant[code] IN { "RENVOI_1" }, "|1|", ar = "334-3" && v_ligne_annexe_montant[code] IN { "TOTAL" }, "|1|2|3|4|5|6|", ar = "334-3" && v_ligne_annexe_montant[code] IN { "ASSIETTE", "REDEVANCES_N", "REDEVANCES_CUM", "RESTANT_1AN", "RESTANT_1_5ANS", "RESTANT_5ANS", "PRIX_RESIDUEL", "PRIX_RESIDUEL_1AN", "PRIX_RESIDUEL_1_5ANS", "PRIX_RESIDUEL_5ANS" }, "|1|", ar = "334-5" && v_ligne_annexe_montant[code] IN { "PARTS_2", "PARTS_3", "TOTAL", "TOTAL_HORS_FRAIS" }, "|1|2|3|4|5|6|", ar = "334-5" && v_ligne_annexe_montant[code] IN { "SECTEURS" }, "|1|", ar = "334-6" && v_ligne_annexe_montant[code] IN { "COMPTES_COURANTS", "ECHEANCE", "TOTAL" }, "|1|2|3|4|5|", ar = "335-10" && v_ligne_annexe_montant[code] IN { "PCT_ACTIF_NET_MOYEN" }, "|1|", ar = "335-10" && v_ligne_annexe_montant[code] IN { "FRAIS_EXTERNES_NATURE" }, "|1|", ar = "335-10" && v_ligne_annexe_montant[code] IN { "SURPERFORMANCE" }, "|1|", ar = "335-12" && v_ligne_annexe_montant[code] IN { "DETAIL_CATEGORIES" }, "|1|", ar = "335-2" && v_ligne_annexe_montant[code] IN { "CL", "CL_1", "CL_2", "CL_3", "CL_ST", "AC", "AC_1", "AC_2", "AC_3", "AC_4", "AC_5", "AC_6", "AC_ST", "TOTAL" }, "|1|2|", ar = "335-2" && v_ligne_annexe_montant[code] IN { "DEP_CL", "DEP_AC", "DEP_TOTAL" }, "|1|2|3|4|", ar = "335-4" && v_ligne_annexe_montant[code] IN { "EC", "EC_IMMO", "EC_NON_IMMO", "AUTRES", "AUTRES_IMMO", "AUTRES_NON_IMMO", "TOTAL" }, "|1|2|", ar = "335-4" && v_ligne_annexe_montant[code] IN { "TAUX_FIXE", "RATIOS" }, "|1|", ar = "335-8" && v_ligne_annexe_montant[code] IN { "DETAIL_NATURE" }, "|1|", ar = "332-2", "|1|", ar = "333-1", "|1|2|", ar = "333-2", "|1|3|4|", ar = "333-3", "|1|2|", ar = "334-1", "|1|", ar = "334-2", "|1|2|3|4|5|6|", ar = "334-7", "|1|2|3|4|", ar = "334-8", "|1|", ar = "335-1", "|1|", ar = "335-10", "|1|2|", ar = "335-11", "|1|", ar = "335-12", "|1|2|", ar = "335-3", "|1|2|3|4|", ar = "335-5", "|1|2|3|4|", ar = "335-6", "|1|2|", ar = "335-7", "|1|", ar = "335-8", "|1|2|", ar = "335-9", "|1|", ar = "336-1", "|1|", ar = "336-3", "|1|", "|1|2|" ) VAR f = ( v_ligne_annexe_montant[formule] & v_ligne_annexe_montant[formule_calcul] & "" ) <> "" VAR seul = CONTAINSSTRING ( v_ligne_annexe_montant[formule_calcul] & "", "; colonne 1 seule" ) RETURN IF ( v_ligne_annexe_montant[type_ligne] <> "RUBRIQUE" && v_ligne_annexe_montant[a_saisir] = FALSE () && f, IF ( CONTAINSSTRING ( ks, "|1|" ) && ISBLANK ( v_ligne_annexe_montant[colonne_1] ) && v_ligne_annexe_montant[valeur_saisie] & "" = "", 1, 0 ) + IF ( CONTAINSSTRING ( ks, "|2|" ) && NOT seul && ISBLANK ( v_ligne_annexe_montant[colonne_2] ), 1, 0 ) + IF ( CONTAINSSTRING ( ks, "|3|" ) && NOT seul && ISBLANK ( v_ligne_annexe_montant[colonne_3] ), 1, 0 ) + IF ( CONTAINSSTRING ( ks, "|4|" ) && NOT seul && ISBLANK ( v_ligne_annexe_montant[colonne_4] ), 1, 0 ) + IF ( CONTAINSSTRING ( ks, "|5|" ) && NOT seul && ISBLANK ( v_ligne_annexe_montant[colonne_5] ), 1, 0 ) + IF ( CONTAINSSTRING ( ks, "|6|" ) && NOT seul && ISBLANK ( v_ligne_annexe_montant[colonne_6] ), 1, 0 ) + IF ( CONTAINSSTRING ( ks, "|7|" ) && NOT seul && ISBLANK ( v_ligne_annexe_montant[colonne_7] ), 1, 0 ), 0 ) ) + 0 RETURN IF ( ISBLANK ( ar ) || ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( tot ), "aucune cellule en base pour cet article", IF ( ind = 1, "modèle indicatif", "modèle imposé" ) & " ; " & FORMAT ( rem, "0" ) & IF ( rem > 1, " lignes à remplir", " ligne à remplir" ) & " sur " & FORMAT ( tot, "0" ) & IF ( rem > 0, ", soit " & FORMAT ( car, "0" ) & IF ( car > 1, " cellules", " cellule" ), "" ) & IF ( fe > 0, " ; " & FORMAT ( fe, "0" ) & IF ( fe > 1, " cellules", " cellule" ) & " « formule à évaluer par la base »", "" ) ) )
+		lineageTag: 19404385-2d60-4549-bd6e-7d69612f8376
+
+	measure 'Aff Titre de l annexe' = [Titre de l annexe] & ""
+		lineageTag: 728df22e-0ed5-41ec-9b5c-19dc055fc502
+
+	measure 'Fond docEnregistrer' = IF ( ISBLANK ( [Article de la cellule a enregistrer] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: e90fce9b-8735-42a4-8071-c5a542dd23aa
+
+	measure 'Libelle docEnregistrer' = "Enregistrer la cellule"
+		lineageTag: fb39eea6-c4f8-47e0-ad6b-38ca063bc7b4
+
+	measure 'Aff Article choisi libelle' = [Article choisi libelle] & ""
+		lineageTag: eaa24577-c395-4358-9b40-feae7e426c9d
+
+	measure 'Annexe colonnes de l article' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = [Article choisi] VAR k = MAXX ( FILTER ( ALL ( v_ligne_annexe_montant ), v_ligne_annexe_montant[entite] = e && v_ligne_annexe_montant[arrete] = a && v_ligne_annexe_montant[article] = ar ), IF ( NOT ISBLANK ( v_ligne_annexe_montant[colonne_7] ), 7, IF ( NOT ISBLANK ( v_ligne_annexe_montant[colonne_6] ), 6, IF ( NOT ISBLANK ( v_ligne_annexe_montant[colonne_5] ), 5, IF ( NOT ISBLANK ( v_ligne_annexe_montant[colonne_4] ), 4, IF ( NOT ISBLANK ( v_ligne_annexe_montant[colonne_3] ), 3, IF ( NOT ISBLANK ( v_ligne_annexe_montant[colonne_2] ), 2, 1 ) ) ) ) ) ) ) RETURN IF ( ISBLANK ( ar ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), MAX ( k, 1 ) )
+		lineageTag: f0b5a79d-0790-4b3d-a34a-14afc7335580
+
+	measure 'Annexe cellule 1' = VAR t = SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) VAR s = COUNTROWS ( FILTER ( v_ligne_annexe_montant, v_ligne_annexe_montant[a_saisir] = TRUE () ) ) > 0 VAR tx = MAX ( v_ligne_annexe_montant[valeur_saisie] ) & "" VAR fc = MAX ( v_ligne_annexe_montant[formule_calcul] ) & "" VAR fo = MAX ( v_ligne_annexe_montant[formule] ) & "" VAR ks = [Annexe colonnes de la ligne] VAR v = MAX ( v_ligne_annexe_montant[colonne_1] ) RETURN SWITCH ( TRUE (), ISBLANK ( t ), BLANK (), t = "RUBRIQUE", "", NOT CONTAINSSTRING ( ks, "|1|" ), "", FALSE (), "", s, "à remplir", NOT ISBLANK ( v ), FORMAT ( v, "#,##0.00" ), tx <> "", tx, fc <> "" || fo <> "", "formule à évaluer par la base", "" )
+		lineageTag: 390c36ee-1b30-472b-8c3a-5038b956a050
+
+	measure 'Fond annexe cellule 1' = VAR x = [Annexe cellule 1] RETURN IF ( x = "à remplir", "#FBF4E4", IF ( SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) = "TOTAL", "#EEF1F5", "#FFFFFF" ) )
+		lineageTag: 8b89f47b-623b-4250-a4dc-c00cd8763733
+
+	measure 'Encre annexe cellule 1' = VAR x = [Annexe cellule 1] RETURN IF ( x = "à remplir", "#8A6710", IF ( x = "formule à évaluer par la base", "#5B6B7D", "#12233C" ) )
+		lineageTag: 1d09a89c-d5a2-437c-81aa-52be762f207a
+
+	measure 'Annexe cellule 2' = VAR t = SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) VAR s = COUNTROWS ( FILTER ( v_ligne_annexe_montant, v_ligne_annexe_montant[a_saisir] = TRUE () ) ) > 0 VAR tx = MAX ( v_ligne_annexe_montant[valeur_saisie] ) & "" VAR fc = MAX ( v_ligne_annexe_montant[formule_calcul] ) & "" VAR fo = MAX ( v_ligne_annexe_montant[formule] ) & "" VAR ks = [Annexe colonnes de la ligne] VAR v = MAX ( v_ligne_annexe_montant[colonne_2] ) RETURN SWITCH ( TRUE (), ISBLANK ( t ), BLANK (), t = "RUBRIQUE", "", NOT CONTAINSSTRING ( ks, "|2|" ), "", CONTAINSSTRING ( fc, "; colonne 1 seule" ), "", s, "à remplir", NOT ISBLANK ( v ), FORMAT ( v, "#,##0.00" ), FALSE (), "", fc <> "" || fo <> "", "formule à évaluer par la base", "" )
+		lineageTag: 2fb7c62a-7d98-4cee-98a1-ee35ac7e4c97
+
+	measure 'Fond annexe cellule 2' = VAR x = [Annexe cellule 2] RETURN IF ( x = "à remplir", "#FBF4E4", IF ( SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) = "TOTAL", "#EEF1F5", "#FFFFFF" ) )
+		lineageTag: c9af20e6-003a-4d5f-a055-b42f72507051
+
+	measure 'Encre annexe cellule 2' = VAR x = [Annexe cellule 2] RETURN IF ( x = "à remplir", "#8A6710", IF ( x = "formule à évaluer par la base", "#5B6B7D", "#12233C" ) )
+		lineageTag: 6c0858d8-e862-4a0d-9380-33d04c667901
+
+	measure 'Annexe autres colonnes' = VAR x = { ( 3, MAX ( v_ligne_annexe_montant[colonne_3] ) ), ( 4, MAX ( v_ligne_annexe_montant[colonne_4] ) ), ( 5, MAX ( v_ligne_annexe_montant[colonne_5] ) ), ( 6, MAX ( v_ligne_annexe_montant[colonne_6] ) ), ( 7, MAX ( v_ligne_annexe_montant[colonne_7] ) ) } RETURN IF ( ISBLANK ( SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) ), BLANK (), CONCATENATEX ( FILTER ( x, NOT ISBLANK ( [Value2] ) ), "colonne " & [Value1] & " : " & FORMAT ( [Value2], "#,##0.00" ), " ; ", [Value1], ASC ) & "" )
+		lineageTag: 340a80a3-63b9-4a16-bc59-2790798c141c
+
+	measure 'Annexe ligne' = VAR n = SELECTEDVALUE ( v_ligne_annexe_montant[niveau] ) + 0 VAR l = SELECTEDVALUE ( v_ligne_annexe_montant[libelle] ) RETURN IF ( ISBLANK ( l ), BLANK (), REPT ( UNICHAR ( 8195 ), n ) & l )
+		lineageTag: 6c839009-8afc-4d3d-be3b-3474bb8663cf
+
+	measure 'Fond annexe ligne' = IF ( SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) = "TOTAL", "#EEF1F5", "#FFFFFF" )
+		lineageTag: 8c7bd4b6-7bb4-40e4-8ff3-fba298e7e320
+
+	measure 'Encre annexe ligne' = IF ( SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) = "RUBRIQUE", "#2B4666", "#12233C" )
+		lineageTag: 568c5bb2-366e-406f-ad37-745d99c019b4
+
+	measure 'Tuile de l article' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = SELECTEDVALUE ( v_ligne_annexe_montant[article] ) VAR t = FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a && v_cellules_a_remplir[article] = ar ) VAR rem = MAXX ( t, v_cellules_a_remplir[cellules_a_remplir] ) VAR tot = MAXX ( t, v_cellules_a_remplir[cellules] ) RETURN IF ( ISBLANK ( ar ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( ISBLANK ( tot ), "sans cellule", FORMAT ( rem, "0" ) & " / " & FORMAT ( tot, "0" ) & IF ( tot > 1, " lignes", " ligne" ) ) )
+		lineageTag: e91f13c0-81c5-42ec-9aed-7a6a72a71a76
+
+	measure 'Fond tuile de l article' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = SELECTEDVALUE ( v_ligne_annexe_montant[article] ) VAR t = FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a && v_cellules_a_remplir[article] = ar ) VAR rem = MAXX ( t, v_cellules_a_remplir[cellules_a_remplir] ) VAR tot = MAXX ( t, v_cellules_a_remplir[cellules] ) RETURN IF ( ISBLANK ( tot ), "#F4F6F8", IF ( rem > 0, "#FBF4E4", "#F2F7F3" ) )
+		lineageTag: 223da284-d141-4ec9-b477-ed9680a67e2d
+
+	measure 'Encre tuile de l article' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = SELECTEDVALUE ( v_ligne_annexe_montant[article] ) VAR t = FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a && v_cellules_a_remplir[article] = ar ) VAR rem = MAXX ( t, v_cellules_a_remplir[cellules_a_remplir] ) VAR tot = MAXX ( t, v_cellules_a_remplir[cellules] ) RETURN IF ( ISBLANK ( tot ), "#5B6B7D", IF ( rem > 0, "#8A6710", "#1F6D4A" ) )
+		lineageTag: d8d5e913-a116-4156-8795-fd7dbbc0d4b3
+
+	measure 'Aide de la cellule' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = [Article choisi] VAR fe = [Saisie de l annexe fermee] VAR tc = FILTER ( ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e && v_annexe_cellule[arrete] = a && v_annexe_cellule[article] = ar ) VAR np = COUNTROWS ( FILTER ( tc, v_annexe_cellule[nature] IN { "texte", "source" } || v_annexe_cellule[etat] = "A_REMPLIR" ) ) + 0 VAR nr = COUNTROWS ( FILTER ( tc, v_annexe_cellule[etat] = "A_REMPLIR" ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( NOT ISBLANK ( fe ), fe, IF ( ISBLANK ( ar ), "", IF ( np = 0, "aucune cellule à remplir ni à saisir", FORMAT ( np, "0" ) & IF ( np > 1, " cellules proposées : ", " cellule proposée : " ) & FORMAT ( nr, "0" ) & " à remplir" ) ) ) )
+		lineageTag: 4ab5f950-e74a-456a-b295-59fbd639c5a5
+
+	measure 'Annexe colonnes de la ligne' = VAR ar = SELECTEDVALUE ( v_ligne_annexe_montant[article] ) VAR co = SELECTEDVALUE ( v_ligne_annexe_montant[code] ) RETURN SWITCH ( TRUE (), ar = "331-1" && co IN { "PRINCIPE" }, "|1|", ar = "332-1" && co IN { "STRATEGIE" }, "|1|", ar = "332-1" && co IN { "ACTIF_NET", "NB_PARTS", "VL_UNIT", "DIST_CESSION", "DIST_RESULTAT", "CAPITALISATION" }, "|1|2|3|4|5|", ar = "333-3" && co IN { "RENVOI_1" }, "|1|", ar = "334-3" && co IN { "TOTAL" }, "|1|2|3|4|5|6|", ar = "334-3" && co IN { "ASSIETTE", "REDEVANCES_N", "REDEVANCES_CUM", "RESTANT_1AN", "RESTANT_1_5ANS", "RESTANT_5ANS", "PRIX_RESIDUEL", "PRIX_RESIDUEL_1AN", "PRIX_RESIDUEL_1_5ANS", "PRIX_RESIDUEL_5ANS" }, "|1|", ar = "334-5" && co IN { "PARTS_2", "PARTS_3", "TOTAL", "TOTAL_HORS_FRAIS" }, "|1|2|3|4|5|6|", ar = "334-5" && co IN { "SECTEURS" }, "|1|", ar = "334-6" && co IN { "COMPTES_COURANTS", "ECHEANCE", "TOTAL" }, "|1|2|3|4|5|", ar = "335-10" && co IN { "PCT_ACTIF_NET_MOYEN" }, "|1|", ar = "335-10" && co IN { "FRAIS_EXTERNES_NATURE" }, "|1|", ar = "335-10" && co IN { "SURPERFORMANCE" }, "|1|", ar = "335-12" && co IN { "DETAIL_CATEGORIES" }, "|1|", ar = "335-2" && co IN { "CL", "CL_1", "CL_2", "CL_3", "CL_ST", "AC", "AC_1", "AC_2", "AC_3", "AC_4", "AC_5", "AC_6", "AC_ST", "TOTAL" }, "|1|2|", ar = "335-2" && co IN { "DEP_CL", "DEP_AC", "DEP_TOTAL" }, "|1|2|3|4|", ar = "335-4" && co IN { "EC", "EC_IMMO", "EC_NON_IMMO", "AUTRES", "AUTRES_IMMO", "AUTRES_NON_IMMO", "TOTAL" }, "|1|2|", ar = "335-4" && co IN { "TAUX_FIXE", "RATIOS" }, "|1|", ar = "335-8" && co IN { "DETAIL_NATURE" }, "|1|", ar = "332-2", "|1|", ar = "333-1", "|1|2|", ar = "333-2", "|1|3|4|", ar = "333-3", "|1|2|", ar = "334-1", "|1|", ar = "334-2", "|1|2|3|4|5|6|", ar = "334-7", "|1|2|3|4|", ar = "334-8", "|1|", ar = "335-1", "|1|", ar = "335-10", "|1|2|", ar = "335-11", "|1|", ar = "335-12", "|1|2|", ar = "335-3", "|1|2|3|4|", ar = "335-5", "|1|2|3|4|", ar = "335-6", "|1|2|", ar = "335-7", "|1|", ar = "335-8", "|1|2|", ar = "335-9", "|1|", ar = "336-1", "|1|", ar = "336-3", "|1|", "|1|2|" )
+		lineageTag: 6f9c7c8f-a065-48ab-9db6-3451dd2014b1
+
+	measure 'Legende des colonnes de l article' = VAR ar = [Article choisi] RETURN IF ( ISBLANK ( ar ), "", VAR x = SWITCH ( ar, "332-1", "Un tableau des éléments caractéristiques de l’OPCI au cours des cinq derniers exercices fait apparaître distinctement : : 1 Exercice N, 2 Exercice N-1, 3 Exercice N-2, 4 Exercice N-3, 5 Exercice N-4", "333-1", "Décomposition du poste « capitaux propres » au bilan : 1 Exercice N, 2 Exercice N-1", "333-2", "Souscriptions et rachats de l’exercice : 3 Nombre de parts ou actions, 1 Montants bruts (hors frais et commissions), 4 Frais et commissions*", "333-3", "Evolution de l’actif net (= capitaux propres) au cours de l’exercice : 1 Exercice N, 2 Exercice N-1", "334-2", "Ventilation par nature : 2 Exercice N-1, 3 Augmentations, 4 Diminutions, 5 Variation des différences d’estimation, 1 Exercice N, 6 Frais", "334-3", "Ventilation par contrat : 3 Assiette du contrat, 2 Exercice N-1, 4 Augmentations, 5 Diminutions, 6 Variation des différences d’estimation, 1 Exercice N | Information : 1 Montant", "334-5", "Évolution des parts et actions des sociétés visées à l’article L214-36 du code monétaire et financier (2° et 3° du I) : 2 Exercice N-1, 3 Cessions, 4 Acquisitions, 5 Variation des différences d’estimation, 1 Exercice N, 6 Frais", "334-6", "Ventilation par contrat : 2 Exercice N-1, 3 Augmentations, 4 Diminutions, 5 Variation des différences d’estimation, 1 Exercice N", "334-7", "Ventilation par nature : 3 Plus-values, 4 Moins-values, 1 Plus et moins-values N, 2 Plus et moins-values N-1", "335-10", "Frais de gestion et de fonctionnement externes : 1 Exercice N, 2 Exercice N-1", "335-12", "Tableau d’affectation des sommes distribuables : 1 Exercice N, 2 Exercice N-1", "335-2", "Décomposition des postes du bilan : 1 Exercice N, 2 Exercice N-1 | Evolution des dépréciations : 2 Situation N-1, 3 Dotations de l’exercice, 4 Reprises de l’exercice, 1 Situation N", "335-3", "Détail des provisions pour risques et charges : 2 Situation Exercice N-1, 3 Dotations de l’exercice, 4 Reprises de l’exercice, 1 Situation Exercice N", "335-4", "Détail des emprunts : 1 Exercice N, 2 Exercice N-1", "335-5", "Ventilation par maturité résiduelle : 1 Jusqu’à 1 an, 2 [1 - 5 ans], 3 > 5 ans, 4 Total", "335-6", "Décomposition du poste « Autres dettes d’exploitation » au bilan : 1 Exercice N, 2 Exercice N-1", "335-8", "Revenus financiers : 1 Exercice N, 2 Exercice N-1", "" ) RETURN IF ( x = "", "", "Colonnes du tableau, numéro et en-tête du document : " & x ) )
+		lineageTag: 45ce7aba-a40e-45e5-81d8-aa03a0d5847a
+
+	measure 'Annexe cellule 3' = VAR t = SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) VAR s = COUNTROWS ( FILTER ( v_ligne_annexe_montant, v_ligne_annexe_montant[a_saisir] = TRUE () ) ) > 0 VAR tx = MAX ( v_ligne_annexe_montant[valeur_saisie] ) & "" VAR fc = MAX ( v_ligne_annexe_montant[formule_calcul] ) & "" VAR fo = MAX ( v_ligne_annexe_montant[formule] ) & "" VAR ks = [Annexe colonnes de la ligne] VAR v = MAX ( v_ligne_annexe_montant[colonne_3] ) RETURN SWITCH ( TRUE (), ISBLANK ( t ), BLANK (), t = "RUBRIQUE", "", NOT CONTAINSSTRING ( ks, "|3|" ), "", CONTAINSSTRING ( fc, "; colonne 1 seule" ), "", s, "à remplir", NOT ISBLANK ( v ), FORMAT ( v, "#,##0.00" ), FALSE (), "", fc <> "" || fo <> "", "formule à évaluer par la base", "" )
+		lineageTag: e7392459-40d9-41af-a7fa-7562ed0c9a96
+
+	measure 'Fond annexe cellule 3' = VAR x = [Annexe cellule 3] RETURN IF ( x = "à remplir", "#FBF4E4", IF ( SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) = "TOTAL", "#EEF1F5", "#FFFFFF" ) )
+		lineageTag: a9e55478-daaf-4aed-8709-6171b670284c
+
+	measure 'Encre annexe cellule 3' = VAR x = [Annexe cellule 3] RETURN IF ( x = "à remplir", "#8A6710", IF ( x = "formule à évaluer par la base", "#5B6B7D", "#12233C" ) )
+		lineageTag: 0cbf9fb1-9082-4a53-b1c6-5ba8b6100a9f
+
+	measure 'Annexe cellule 4' = VAR t = SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) VAR s = COUNTROWS ( FILTER ( v_ligne_annexe_montant, v_ligne_annexe_montant[a_saisir] = TRUE () ) ) > 0 VAR tx = MAX ( v_ligne_annexe_montant[valeur_saisie] ) & "" VAR fc = MAX ( v_ligne_annexe_montant[formule_calcul] ) & "" VAR fo = MAX ( v_ligne_annexe_montant[formule] ) & "" VAR ks = [Annexe colonnes de la ligne] VAR v = MAX ( v_ligne_annexe_montant[colonne_4] ) RETURN SWITCH ( TRUE (), ISBLANK ( t ), BLANK (), t = "RUBRIQUE", "", NOT CONTAINSSTRING ( ks, "|4|" ), "", CONTAINSSTRING ( fc, "; colonne 1 seule" ), "", s, "à remplir", NOT ISBLANK ( v ), FORMAT ( v, "#,##0.00" ), FALSE (), "", fc <> "" || fo <> "", "formule à évaluer par la base", "" )
+		lineageTag: f01f8929-f296-4b10-bda1-7e9814fc9c46
+
+	measure 'Fond annexe cellule 4' = VAR x = [Annexe cellule 4] RETURN IF ( x = "à remplir", "#FBF4E4", IF ( SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) = "TOTAL", "#EEF1F5", "#FFFFFF" ) )
+		lineageTag: 73fd5d7e-c0c1-4347-9d74-2a87c9cc8d91
+
+	measure 'Encre annexe cellule 4' = VAR x = [Annexe cellule 4] RETURN IF ( x = "à remplir", "#8A6710", IF ( x = "formule à évaluer par la base", "#5B6B7D", "#12233C" ) )
+		lineageTag: 442193fb-5340-4c54-bbfe-d9c0d9c8dadb
+
+	measure 'Annexe cellule 5' = VAR t = SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) VAR s = COUNTROWS ( FILTER ( v_ligne_annexe_montant, v_ligne_annexe_montant[a_saisir] = TRUE () ) ) > 0 VAR tx = MAX ( v_ligne_annexe_montant[valeur_saisie] ) & "" VAR fc = MAX ( v_ligne_annexe_montant[formule_calcul] ) & "" VAR fo = MAX ( v_ligne_annexe_montant[formule] ) & "" VAR ks = [Annexe colonnes de la ligne] VAR v = MAX ( v_ligne_annexe_montant[colonne_5] ) RETURN SWITCH ( TRUE (), ISBLANK ( t ), BLANK (), t = "RUBRIQUE", "", NOT CONTAINSSTRING ( ks, "|5|" ), "", CONTAINSSTRING ( fc, "; colonne 1 seule" ), "", s, "à remplir", NOT ISBLANK ( v ), FORMAT ( v, "#,##0.00" ), FALSE (), "", fc <> "" || fo <> "", "formule à évaluer par la base", "" )
+		lineageTag: 55da7ebc-3e9c-4766-8ace-9b1381d27eec
+
+	measure 'Fond annexe cellule 5' = VAR x = [Annexe cellule 5] RETURN IF ( x = "à remplir", "#FBF4E4", IF ( SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) = "TOTAL", "#EEF1F5", "#FFFFFF" ) )
+		lineageTag: bf18ee9a-82bf-4def-a502-3e6e9628d0be
+
+	measure 'Encre annexe cellule 5' = VAR x = [Annexe cellule 5] RETURN IF ( x = "à remplir", "#8A6710", IF ( x = "formule à évaluer par la base", "#5B6B7D", "#12233C" ) )
+		lineageTag: c270a52f-e3b8-467c-bdcc-e91a4d51e746
+
+	measure 'Annexe cellule 6' = VAR t = SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) VAR s = COUNTROWS ( FILTER ( v_ligne_annexe_montant, v_ligne_annexe_montant[a_saisir] = TRUE () ) ) > 0 VAR tx = MAX ( v_ligne_annexe_montant[valeur_saisie] ) & "" VAR fc = MAX ( v_ligne_annexe_montant[formule_calcul] ) & "" VAR fo = MAX ( v_ligne_annexe_montant[formule] ) & "" VAR ks = [Annexe colonnes de la ligne] VAR v = MAX ( v_ligne_annexe_montant[colonne_6] ) RETURN SWITCH ( TRUE (), ISBLANK ( t ), BLANK (), t = "RUBRIQUE", "", NOT CONTAINSSTRING ( ks, "|6|" ), "", CONTAINSSTRING ( fc, "; colonne 1 seule" ), "", s, "à remplir", NOT ISBLANK ( v ), FORMAT ( v, "#,##0.00" ), FALSE (), "", fc <> "" || fo <> "", "formule à évaluer par la base", "" )
+		lineageTag: aacce9a1-1ded-4450-b08f-2fd37ee7d6e6
+
+	measure 'Fond annexe cellule 6' = VAR x = [Annexe cellule 6] RETURN IF ( x = "à remplir", "#FBF4E4", IF ( SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) = "TOTAL", "#EEF1F5", "#FFFFFF" ) )
+		lineageTag: 43c32aea-0a3c-47a2-aafa-79f8efeec6ac
+
+	measure 'Encre annexe cellule 6' = VAR x = [Annexe cellule 6] RETURN IF ( x = "à remplir", "#8A6710", IF ( x = "formule à évaluer par la base", "#5B6B7D", "#12233C" ) )
+		lineageTag: 3b74ffb4-f934-4c55-b661-dec43936c345
+
+	measure 'Annexe cellule 7' = VAR t = SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) VAR s = COUNTROWS ( FILTER ( v_ligne_annexe_montant, v_ligne_annexe_montant[a_saisir] = TRUE () ) ) > 0 VAR tx = MAX ( v_ligne_annexe_montant[valeur_saisie] ) & "" VAR fc = MAX ( v_ligne_annexe_montant[formule_calcul] ) & "" VAR fo = MAX ( v_ligne_annexe_montant[formule] ) & "" VAR ks = [Annexe colonnes de la ligne] VAR v = MAX ( v_ligne_annexe_montant[colonne_7] ) RETURN SWITCH ( TRUE (), ISBLANK ( t ), BLANK (), t = "RUBRIQUE", "", NOT CONTAINSSTRING ( ks, "|7|" ), "", CONTAINSSTRING ( fc, "; colonne 1 seule" ), "", s, "à remplir", NOT ISBLANK ( v ), FORMAT ( v, "#,##0.00" ), FALSE (), "", fc <> "" || fo <> "", "formule à évaluer par la base", "" )
+		lineageTag: 80a327a0-4b38-4e45-a69b-ff8bd54fc9fb
+
+	measure 'Fond annexe cellule 7' = VAR x = [Annexe cellule 7] RETURN IF ( x = "à remplir", "#FBF4E4", IF ( SELECTEDVALUE ( v_ligne_annexe_montant[type_ligne] ) = "TOTAL", "#EEF1F5", "#FFFFFF" ) )
+		lineageTag: 7287e32a-8ca1-46f5-aae9-c394ce878c30
+
+	measure 'Encre annexe cellule 7' = VAR x = [Annexe cellule 7] RETURN IF ( x = "à remplir", "#8A6710", IF ( x = "formule à évaluer par la base", "#5B6B7D", "#12233C" ) )
+		lineageTag: b6b51a0c-fe93-405a-854f-72d64883a189
+
+	measure 'Titre du tableau 335-8' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR d = [Devise de l annexe] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "Revenus financiers au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) & IF ( ISBLANK ( d ) || d = "", "", IF ( d = "à remplir", ", devise à remplir", " en " & d ) ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 81168b32-38cb-42b3-aea0-bf1c0b42792b
+
+	measure 'Article de la cellule a enregistrer' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = [Article choisi] VAR np = COUNTROWS ( FILTER ( ALL ( v_annexe_cellule ), v_annexe_cellule[entite] = e && v_annexe_cellule[arrete] = a && v_annexe_cellule[article] = ar && ( v_annexe_cellule[nature] IN { "texte", "source" } || v_annexe_cellule[etat] = "A_REMPLIR" ) ) ) + 0 RETURN IF ( NOT ISBLANK ( ar ) && np > 0 && ISBLANK ( [Obstacle a la saisie de la cellule] ), ar )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: fa0e161c-ae1e-4a03-b678-a2ec415e119c
+
+	measure 'Saisie de l annexe fermee' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR j = TODAY () VAR ae = COUNTROWS ( FILTER ( ALL ( v_arrete_etat ), v_arrete_etat[entite] = e && v_arrete_etat[arrete] = a ) ) + 0 VAR sa = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[du] <= j && ( ISBLANK ( role_mission[au] ) || role_mission[au] > j ) && role_mission[role] IN { "ASSOCIE", "CHEF_MISSION", "PREPARATEUR", "REVISEUR" } ) ) + 0 VAR cl = MAXX ( FILTER ( ALL ( v_visa_cloture_courant ), v_visa_cloture_courant[entite] = e && v_visa_cloture_courant[arrete] = a ), v_visa_cloture_courant[decision] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), SWITCH ( TRUE (), ae = 0, "saisie fermée : l’arrêté n’a pas d’annexe", sa = 0, "saisie fermée : aucun rôle de mission sur cette entité", cl = "VISE", "saisie fermée : arrêté validé pour le client", BLANK () ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 9bca965f-74fa-415a-a04b-9cb581fa1bfb
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 597b665a-e054-49f0-91f6-c9b43ffc8626
+		summarizeBy: none
+		sourceColumn: article
+		sortByColumn: rang_article
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(24)
+		lineageTag: df35518f-47f9-492a-9d18-ee783745c9e0
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: a28e6fcb-654a-48ef-9052-bcc1a3ca36fc
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column niveau
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 300f8f9e-5eb8-4e7a-a58e-5ba4847ad3ec
+		summarizeBy: none
+		sourceColumn: niveau
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_ligne
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: afddbb4b-a841-4530-9744-c10b8d5b88d2
+		summarizeBy: none
+		sourceColumn: type_ligne
+
+		annotation SummarizationSetBy = Automatic
+
+	column signe
+		dataType: string
+		sourceProviderType: varchar(4)
+		lineageTag: 3c306b4e-0c7a-43b1-929d-1dd4b64421ba
+		summarizeBy: none
+		sourceColumn: signe
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 167ce10d-7a2d-4825-9160-128904d59c87
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column renvoi
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 4bcc37cf-1759-479f-a577-e53f2c172842
+		summarizeBy: none
+		sourceColumn: renvoi
+
+		annotation SummarizationSetBy = Automatic
+
+	column formule
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: d351534f-d402-492b-b7e3-dbe63b4e5a01
+		summarizeBy: none
+		sourceColumn: formule
+
+		annotation SummarizationSetBy = Automatic
+
+	column tableau
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: f69defc6-6d0c-4433-a5c6-947d16602349
+		summarizeBy: none
+		sourceColumn: tableau
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 21aa3c92-5148-41a1-a1f8-c1691996141b
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 0a0b7cf1-822b-429d-9efd-048b51a9ed89
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice_n
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 906727e7-91fc-49bf-8af8-286d7d9b1fa7
+		summarizeBy: sum
+		sourceColumn: exercice_n
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column exercice_n_1
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 6d793211-8a49-451c-b39e-7dfbf167faa5
+		summarizeBy: sum
+		sourceColumn: exercice_n_1
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_saisie
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 49ab2e5e-e076-4c99-b290-09d00cdc95a7
+		summarizeBy: none
+		sourceColumn: valeur_saisie
+
+		annotation SummarizationSetBy = Automatic
+
+	column montant_saisi
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 79c7a7d2-ec81-434d-81ae-a7feedaab29c
+		summarizeBy: sum
+		sourceColumn: montant_saisi
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column a_saisir
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 5e6d3257-6606-4672-81d1-049afb63157b
+		summarizeBy: none
+		sourceColumn: a_saisir
+
+		annotation SummarizationSetBy = Automatic
+
+	column colonne_1
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: ad33ca98-b2ee-4665-b8b6-232981b363df
+		summarizeBy: sum
+		sourceColumn: colonne_1
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column colonne_2
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 27409fd2-1303-4cd4-8c39-b20750739539
+		summarizeBy: sum
+		sourceColumn: colonne_2
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column colonne_3
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: d44a0a65-35f0-42db-b74d-707dd9a96c97
+		summarizeBy: sum
+		sourceColumn: colonne_3
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column colonne_4
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 0b73271f-6b7d-407c-9685-cb2f0af3f21d
+		summarizeBy: sum
+		sourceColumn: colonne_4
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column colonne_5
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: db65f056-00b4-4e07-9da7-a99477bb1b03
+		summarizeBy: sum
+		sourceColumn: colonne_5
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column colonne_6
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7b5e1c74-0ccb-4461-8032-1d132f7cc686
+		summarizeBy: sum
+		sourceColumn: colonne_6
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column colonne_7
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: d54a4622-23ee-4e4c-bd57-970e0f715223
+		summarizeBy: sum
+		sourceColumn: colonne_7
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column formule_calcul
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 8e2a5d97-43c6-4e9e-bee3-bf7861a3f52a
+		summarizeBy: none
+		sourceColumn: formule_calcul
+
+		annotation SummarizationSetBy = Automatic
+
+	column rang_article
+		dataType: int64
+		isHidden
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 48f3aa2b-ff9b-4abc-bcfc-9c01d3ef333e
+		summarizeBy: none
+		sourceColumn: rang_article
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ligne_annexe_montant = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ligne_annexe_montant = Value.NativeQuery(Source, "SELECT article, code, libelle, niveau, type_ligne, signe, ordre, renvoi, formule, tableau, entite, arrete, exercice_n, exercice_n_1, valeur_saisie, montant_saisi, a_saisir, colonne_1, colonne_2, colonne_3, colonne_4, colonne_5, colonne_6, colonne_7, formule_calcul, CAST(ISNULL(TRY_CAST(LEFT(article, 3) AS INT), 0) * 1000 + ISNULL(TRY_CAST(SUBSTRING(article, 5, 4) AS INT), 0) AS INT) AS rang_article FROM dbo.v_ligne_annexe_montant", null, [EnableFolding = true])
+				in
+				    dbo_v_ligne_annexe_montant
+

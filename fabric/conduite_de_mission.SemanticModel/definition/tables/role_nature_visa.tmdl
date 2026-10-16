@@ -22,6 +22,16 @@ table role_nature_visa
 		displayFolder: Ecran 2 etape 5
 		lineageTag: b2d5329a-8f0c-4b30-9e9f-a98775c4d333
 
+	/// Nature du visa d une valeur retenue, parametre de fn_ecran_revision.viser.
+	measure 'Nature EVALUATION' = "EVALUATION"
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 6f7489b8-2721-4e2b-8e14-e5acf3d98541
+
+	/// Nature du visa de publication de la valeur liquidative, parametre de fn_ecran_revision.viser (ecran 4, Publier la VL).
+	measure 'Nature PUBLICATION' = "PUBLICATION"
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 5a113250-15bc-43e4-82f3-9aef5a975b36
+
 	column role_code
 		dataType: string
 		isNullable: false

@@ -1,0 +1,161 @@
+/// Expertises des immeubles, une par actif et date de valeur. Aucune relation : l actif choisi et la date de l arrete par mesure.
+table expertise
+	lineageTag: 91e8e5ef-f9e4-4f2e-933e-a4c9e63ccc00
+
+	/// VAR c = [Actif choisi] ; 1 quand SELECTEDVALUE ( expertise[code_actif] ) = c ; filtre de visuel = 1 du tableEx des expertises, évalué ligne par ligne parce que code_actif est dans sa granularité : sans lui, une date et un expert communs à plusieurs actifs forment une seule ligne ({ex_grain_expertise
+	measure 'Filtre expertises de l actif choisi' = VAR c = [Actif choisi] RETURN IF ( NOT ISBLANK ( c ) && SELECTEDVALUE ( expertise[code_actif] ) = c, 1 )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 84aa6ec4-820e-4580-8a35-0be549c8be4f
+
+	/// écart avec l’expertise précédente du même actif (barre de données)
+	measure 'Variation de l expertise' = VAR a = SELECTEDVALUE ( expertise[code_actif] ) VAR d = SELECTEDVALUE ( expertise[date_valeur] ) VAR v = SELECTEDVALUE ( expertise[valeur_actuelle] ) VAR dp = CALCULATE ( MAX ( expertise[date_valeur] ), FILTER ( ALL ( expertise ), expertise[code_actif] = a && expertise[date_valeur] < d ) ) VAR vp = CALCULATE ( SUM ( expertise[valeur_actuelle] ), FILTER ( ALL ( expertise ), expertise[code_actif] = a && expertise[date_valeur] = dp ) ) RETURN IF ( NOT ISBLANK ( dp ) && NOT ISBLANK ( v ), v - vp )
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e73f356c-99eb-4243-bd99-5a37b9febcff
+
+	/// expert de l’expertise de l’actif choisi à la date de l’arrêté : VAR c = [Actif choisi], VAR d = la date de l’arrêté choisi, puis FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ; vide quand la base ne le porte pas (D7) ; vide sans ligne choisie
+	measure 'Expert du rapport de l actif' = ( VAR c = [Actif choisi] VAR a = [Arrete selectionne] VAR d = IF ( NOT ISBLANK ( a ), DATE ( VALUE ( LEFT ( a, 4 ) ), VALUE ( MID ( a, 6, 2 ) ), VALUE ( RIGHT ( a, 2 ) ) ) ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( expertise[expert] ), FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ) ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 0f3dd4b7-f1ca-495d-b688-2bec505ddd74
+
+	/// methode de l’expertise de l’actif choisi à la date de l’arrêté : VAR c = [Actif choisi], VAR d = la date de l’arrêté choisi, puis FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ; idem ; vide sans ligne choisie
+	measure 'Methode du rapport de l actif' = ( VAR c = [Actif choisi] VAR a = [Arrete selectionne] VAR d = IF ( NOT ISBLANK ( a ), DATE ( VALUE ( LEFT ( a, 4 ) ), VALUE ( MID ( a, 6, 2 ) ), VALUE ( RIGHT ( a, 2 ) ) ) ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( expertise[methode] ), FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ) ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 8577c395-078b-44c2-91b5-84b3780d457a
+
+	/// date_valeur de l’expertise de l’actif choisi à la date de l’arrêté : VAR c = [Actif choisi], VAR d = la date de l’arrêté choisi, puis FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ; vide sans ligne choisie
+	measure 'Date de valeur du rapport de l actif' = FORMAT ( VAR c = [Actif choisi] VAR a = [Arrete selectionne] VAR d = IF ( NOT ISBLANK ( a ), DATE ( VALUE ( LEFT ( a, 4 ) ), VALUE ( MID ( a, 6, 2 ) ), VALUE ( RIGHT ( a, 2 ) ) ) ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( expertise[date_valeur] ), FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ) ), "dd/MM/yyyy" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: dd1097a2-851f-4878-9cc0-487f67fd8a5e
+
+	/// valeur_actuelle de l’expertise de l’actif choisi à la date de l’arrêté : VAR c = [Actif choisi], VAR d = la date de l’arrêté choisi, puis FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ; vide sans ligne choisie
+	measure 'Valeur d expertise du rapport de l actif' = FORMAT ( VAR c = [Actif choisi] VAR a = [Arrete selectionne] VAR d = IF ( NOT ISBLANK ( a ), DATE ( VALUE ( LEFT ( a, 4 ) ), VALUE ( MID ( a, 6, 2 ) ), VALUE ( RIGHT ( a, 2 ) ) ) ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( expertise[valeur_actuelle] ), FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ) ), "#,0.00" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 5aea6dd8-fc2e-4d12-a834-5fc149e13432
+
+	/// enregistre_le de l’expertise de l’actif choisi à la date de l’arrêté : VAR c = [Actif choisi], VAR d = la date de l’arrêté choisi, puis FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ; vide sans ligne choisie
+	measure 'Enregistree le du rapport de l actif' = FORMAT ( VAR c = [Actif choisi] VAR a = [Arrete selectionne] VAR d = IF ( NOT ISBLANK ( a ), DATE ( VALUE ( LEFT ( a, 4 ) ), VALUE ( MID ( a, 6, 2 ) ), VALUE ( RIGHT ( a, 2 ) ) ) ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( expertise[enregistre_le] ), FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ) ), "dd/MM/yyyy" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 0fa00726-109e-478f-94b9-90b1895b6bce
+
+	/// piece_id de l’expertise de l’actif choisi à la date de l’arrêté : VAR c = [Actif choisi], VAR d = la date de l’arrêté choisi, puis FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ), puis LOOKUPVALUE ( piece[nom_fichier], piece[id], piece_id ) ; vide sans ligne cho
+	measure 'Fichier du rapport de l actif' = ( VAR c = [Actif choisi] VAR a = [Arrete selectionne] VAR d = IF ( NOT ISBLANK ( a ), DATE ( VALUE ( LEFT ( a, 4 ) ), VALUE ( MID ( a, 6, 2 ) ), VALUE ( RIGHT ( a, 2 ) ) ) ) VAR p = CALCULATE ( MAX ( expertise[piece_id] ), FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ) RETURN IF ( NOT ISBLANK ( p ), LOOKUPVALUE ( piece[nom_fichier], piece[id], p ) ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 801c8cde-ce43-4257-9cb7-c3c06ea6161c
+
+	/// « Aucun actif choisi » ; « à remplir : aucune expertise à l’arrêté » ; vide quand l’expertise de l’arrêté existe
+	measure 'Absence du rapport de l actif' = IF ( ISBLANK ( [Actif choisi] ), "Aucun actif choisi", IF ( [Valeur d expertise du rapport de l actif] = "", "à remplir : aucune expertise à l’arrêté" ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 4add04b3-c866-4876-b4cf-edc0a14560ab
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 72d8962a-228a-4fff-a1f0-614c1e632475
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 63bb5592-dbb1-4fa0-95b1-0a41255f0797
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_valeur
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 35358f39-aecd-48e6-8b38-c536555a3cd5
+		summarizeBy: none
+		sourceColumn: date_valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_actuelle
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 6d540488-c1f4-4991-9fd8-ca6b8a906e92
+		summarizeBy: sum
+		sourceColumn: valeur_actuelle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column expert
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 89b4b5ba-d3c1-41b6-8e71-bdc714966758
+		summarizeBy: none
+		sourceColumn: expert
+
+		annotation SummarizationSetBy = Automatic
+
+	column methode
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 2dacf068-5aaa-4a43-9923-ad69402aebc0
+		summarizeBy: none
+		sourceColumn: methode
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: fbbf6d63-a682-4c14-a4bd-8293d072a99b
+		summarizeBy: none
+		sourceColumn: piece_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column enregistre_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 27e27df1-cb57-4624-83b0-ad50a0205f40
+		summarizeBy: none
+		sourceColumn: enregistre_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column enregistre_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 559a746a-ea96-4b41-b321-37fdb578bf40
+		summarizeBy: none
+		sourceColumn: enregistre_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column version
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f5038496-3af9-4195-a9ef-72647ae4b775
+		summarizeBy: none
+		sourceColumn: version
+
+		annotation SummarizationSetBy = Automatic
+
+	partition expertise = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_expertise = Source{[Schema="dbo",Item="expertise"]}[Data]
+				in
+				    dbo_expertise
+

@@ -1,3 +1,4 @@
+
 -- =====================================================================
 -- LES ECRITURES DE SOLDE, SCINDEES COMME LES CHARGES QU'ELLES SOLDENT.
 --
@@ -39,23 +40,35 @@ WITH solde AS (
     -- Les ecritures de solde, avec le compte du modele qu'elles soldent.
     SELECT e.id AS ecriture_id, e.lot_id, l.entite, l.arrete,
            e.compte_num AS compte_ecrit,
-           dbo.fn_compte_du_modele(l.entite, e.compte_num) AS compte_modele,
+           cm.compte_modele AS compte_modele,
            e.debit, e.credit, e.ecriture_num, e.ecriture_lib,
            e.journal_code, e.journal_lib, e.ecriture_date, e.compte_lib,
            e.famille
     FROM dbo.ecriture e
     JOIN dbo.lot_ecritures l ON l.id = e.lot_id
+CROSS APPLY (SELECT CAST(CASE WHEN ISNULL((SELECT TOP (1) xe.plan_propre_en_service FROM dbo.ref_entite xe WHERE xe.code = l.entite), 0) = 0
+                              AND EXISTS (SELECT 1 FROM dbo.ref_compte xc WHERE xc.compte = e.compte_num)
+                         THEN e.compte_num
+                         ELSE ISNULL((SELECT TOP (1) xr.compte_modele FROM dbo.ref_compte_entite xr
+                                      WHERE xr.entite = l.entite AND xr.compte_entite = e.compte_num AND xr.compte_modele IS NOT NULL),
+                                     e.compte_num) END AS VARCHAR (20)) AS compte_modele) cm
     WHERE e.ecriture_num = 'DET'
 ),
 soldees AS (
     -- Les ecritures que le solde annule, ventilees par compte ecrit.
     SELECT l.entite, l.arrete,
-           dbo.fn_compte_du_modele(l.entite, e.compte_num) AS compte_modele,
+           cm.compte_modele AS compte_modele,
            e.compte_num                                    AS compte_ecrit,
            MAX(e.comp_aux_num)                             AS comp_aux_num,
            SUM(e.debit - e.credit)                         AS mouvement
     FROM dbo.ecriture e
     JOIN dbo.lot_ecritures l ON l.id = e.lot_id
+CROSS APPLY (SELECT CAST(CASE WHEN ISNULL((SELECT TOP (1) xe.plan_propre_en_service FROM dbo.ref_entite xe WHERE xe.code = l.entite), 0) = 0
+                              AND EXISTS (SELECT 1 FROM dbo.ref_compte xc WHERE xc.compte = e.compte_num)
+                         THEN e.compte_num
+                         ELSE ISNULL((SELECT TOP (1) xr.compte_modele FROM dbo.ref_compte_entite xr
+                                      WHERE xr.entite = l.entite AND xr.compte_entite = e.compte_num AND xr.compte_modele IS NOT NULL),
+                                     e.compte_num) END AS VARCHAR (20)) AS compte_modele) cm
     WHERE e.ecriture_num <> 'DET'
     -- LE GROUPE EST LE COMPTE ECRIT, NON LE COUPLE AVEC L AUXILIAIRE.
     -- Grouper aussi par auxiliaire ferait compter 2 parts la ou une
@@ -63,7 +76,7 @@ soldees AS (
     -- auxiliaire : la scission n aurait alors rien a separer, les 2
     -- parts visant le meme compte.
     GROUP BY l.entite, l.arrete,
-             dbo.fn_compte_du_modele(l.entite, e.compte_num),
+             cm.compte_modele,
              e.compte_num
     HAVING SUM(e.debit - e.credit) <> 0
 )

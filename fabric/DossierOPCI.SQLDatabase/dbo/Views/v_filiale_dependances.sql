@@ -1,6 +1,6 @@
 
 CREATE   VIEW dbo.v_filiale_dependances AS
-SELECT ep.entite_mere, ep.entite_fille, e.denomination, e.forme_sociale, ep.droits_de_vote,
+SELECT ep.entite_mere, ep.entite_fille, e.denomination, e.forme_sociale, ep.droits_de_vote, ep.controlee,
        (SELECT COUNT(*) FROM dbo.ref_arrete a WHERE a.entite = ep.entite_fille)                                   AS arretes,
        (SELECT COUNT(*) FROM dbo.feuille_travail f WHERE f.entite = ep.entite_fille)                              AS feuilles,
        (SELECT COUNT(*) FROM dbo.piece_rattachement p WHERE p.entite = ep.entite_fille OR p.entite_couverte = ep.entite_fille) AS pieces,

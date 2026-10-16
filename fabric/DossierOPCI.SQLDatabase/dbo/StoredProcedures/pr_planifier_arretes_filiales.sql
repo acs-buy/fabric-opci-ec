@@ -1,38 +1,63 @@
 
--- PLANIFIER LES ARRETES DES FILIALES D'UN VEHICULE A LA DATE D'UN DE SES ARRETES.
+-- pr_planifier_arretes_filiales : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_planifier_arretes_filiales
     @entite  VARCHAR (20),
     @arrete  VARCHAR (20),
     @par     NVARCHAR (400)
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
-    DECLARE @date DATE, @type VARCHAR (14);
-    SELECT @date = date_arrete, @type = type_arrete FROM dbo.ref_arrete WHERE entite = @entite AND arrete = @arrete;
-    IF @date IS NULL OR NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND forme_vehicule IS NOT NULL) RETURN;
-    DECLARE @f VARCHAR (20), @cl VARCHAR (10), @fin DATE, @m NVARCHAR (400), @n INT = 0;
-    DECLARE c CURSOR LOCAL FAST_FORWARD FOR
-        SELECT DISTINCT ep.entite_fille, e.cloture FROM dbo.eligibilite_participation ep JOIN dbo.ref_entite e ON e.code = ep.entite_fille
-        WHERE ep.entite_mere = @entite AND NOT EXISTS (SELECT 1 FROM dbo.ref_arrete x WHERE x.entite = ep.entite_fille AND x.arrete = @arrete);
-    OPEN c; FETCH NEXT FROM c INTO @f, @cl;
-    WHILE @@FETCH_STATUS = 0
+    SET XACT_ABORT ON;
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @par;
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
+    BEGIN TRY
+    BEGIN TRANSACTION;
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
     BEGIN
-        SET @fin = dbo.fn_cloture_contenant(@cl, @date);
-        IF @fin IS NULL
-        BEGIN
-            SET @m = N'Planification refusée : la date de clôture de la filiale ' + @f + N', « ' + ISNULL(@cl, N'') + N' », ne se lit pas comme un jour et un mois ; son exercice ne se détermine pas.';
-            THROW 50601, @m, 1;
-        END;
-        INSERT INTO dbo.ref_arrete (entite, arrete, date_arrete, exercice, date_cloture, type_arrete, nature_technique,
-                                    trimestre, rang_exercice, est_arrete_client, porte_balance)
-        VALUES (@f, @arrete, @date, CONVERT(VARCHAR (10), @fin, 23), @fin, CASE WHEN @date = @fin THEN 'ANNUEL' ELSE @type END, 'HORS_MISSION',
-                DATEPART(QUARTER, @date),
-                1 + ISNULL((SELECT COUNT(DISTINCT exercice) FROM dbo.ref_arrete WHERE entite = @f AND exercice < CONVERT(VARCHAR (10), @fin, 23)), 0),
-                0, 0);
-        SET @n += 1;
-        FETCH NEXT FROM c INTO @f, @cl;
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
     END;
-    CLOSE c; DEALLOCATE c;
+    -- 2. le corps d'origine
+    EXEC dbo.pr_planifier_arretes_filiales_corps @entite = @entite, @arrete = @arrete, @par = @par;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1
+    BEGIN
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
+        BEGIN
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
+        END;
+    END;
+    COMMIT;
+    END TRY
+    BEGIN CATCH
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
+        THROW;
+    END CATCH;
 END;
 
 GO

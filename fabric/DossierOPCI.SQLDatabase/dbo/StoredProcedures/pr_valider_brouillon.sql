@@ -1,107 +1,64 @@
 
--- --- 6 : pr_valider_brouillon, refaite -------------------------------
+-- pr_valider_brouillon : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_valider_brouillon
     @entite       VARCHAR (20),
     @arrete       VARCHAR (20),
     @feuille_cote VARCHAR (30),
     @question_id  INT,
     @valide_par   NVARCHAR (200)
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-
-    -- Le perimetre est la QUESTION, non la feuille entiere : un lot est
-    -- par question depuis le script 56, et valider une question ne doit
-    -- pas emporter le brouillon des autres.
-    IF NOT EXISTS (SELECT 1 FROM dbo.ecriture_brouillon
-                   WHERE entite = @entite AND arrete = @arrete
-                     AND feuille_cote = @feuille_cote
-                     AND question_id = @question_id)
-        THROW 50031,
-            N'Aucune ligne de brouillon pour cette question : rien a valider. Le perimetre de la validation est la question, non la feuille entiere.', 1;
-
-    -- Une ligne restee a zero ne se valide pas. Le brouillon l'admet, la
-    -- validation la refuse : une ligne s'ouvre vide et se remplit.
-    DECLARE @a_completer INT =
-        (SELECT COUNT(*) FROM dbo.ecriture_brouillon
-         WHERE entite = @entite AND arrete = @arrete
-           AND feuille_cote = @feuille_cote AND question_id = @question_id
-           AND debit = 0 AND credit = 0);
-    IF @a_completer > 0
-    BEGIN
-        DECLARE @m0 NVARCHAR (2000) =
-            N'Validation refusee : ' + CAST(@a_completer AS NVARCHAR (10))
-            + N' ligne(s) du brouillon n''ont ni debit ni credit. Une ligne '
-            + N'peut rester vide pendant la saisie, jamais a la validation : '
-            + N'renseigner son montant ou la retirer.';
-        THROW 50046, @m0, 1;
-    END
-
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @valide_par;
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
     BEGIN TRY
-        BEGIN TRANSACTION;
-        -- question_id est pose sur le lot : ck_lot_source_par_famille
-        -- l'exige pour la famille DECIDEE, et son absence faisait echouer
-        -- cette procedure depuis le script 56.
-        INSERT INTO dbo.lot_ecritures
-            (arrete, famille, portee, entite, feuille_cote, question_id,
-             statut, cree_par)
-        VALUES (@arrete, 'DECIDEE', 'ENTITE', @entite, @feuille_cote,
-                @question_id, 'PROPOSE', @valide_par);
-        DECLARE @lot INT = CAST(SCOPE_IDENTITY() AS INT);
-
-        -- Les 10 colonnes du format passent au complet : le code tiers en
-        -- compte auxiliaire, la reference en reference de piece, le libelle
-        -- du compte repris du plan de comptes.
-        INSERT INTO dbo.ecriture
-            (lot_id, journal_code, journal_lib, ecriture_num, ecriture_date,
-             compte_num, compte_lib, comp_aux_num, comp_aux_lib, piece_ref,
-             ecriture_lib, debit, credit, famille)
-        SELECT @lot, b.journal_code, N'OD de revision',
-               CAST(@lot AS VARCHAR (20)),
-               COALESCE(r.date_arrete, CONVERT(DATE, LEFT(@arrete, 10))),
-               b.compte_num,
-               COALESCE(c.libelle_complet, c.libelle, b.compte_num),
-               b.code_tiers,
-               e.denomination,
-               b.reference,
-               b.libelle, b.debit, b.credit, 'DECIDEE'
-        FROM dbo.ecriture_brouillon b
-        LEFT JOIN dbo.ref_compte c ON c.compte = b.compte_num
-        LEFT JOIN dbo.ref_entite e ON e.code = b.code_tiers
-        LEFT JOIN dbo.ref_arrete r ON r.entite = b.entite AND r.arrete = b.arrete
-        WHERE b.entite = @entite AND b.arrete = @arrete
-          AND b.feuille_cote = @feuille_cote
-          AND b.question_id = @question_id;
-
-        -- L'axe analytique suit, ligne par ligne. L'appariement se fait sur
-        -- le compte et le libelle, qui identifient la ligne dans son lot.
-        INSERT INTO dbo.ecriture_axe (ecriture_id, entite, code_actif)
-        SELECT x.id, @entite, b.code_actif
-        FROM dbo.ecriture_brouillon b
-        JOIN dbo.ecriture x ON x.lot_id = @lot
-                           AND x.compte_num = b.compte_num
-                           AND x.ecriture_lib = b.libelle
-        WHERE b.entite = @entite AND b.arrete = @arrete
-          AND b.feuille_cote = @feuille_cote
-          AND b.question_id = @question_id
-          AND b.code_actif IS NOT NULL
-          AND NOT EXISTS (SELECT 1 FROM dbo.ecriture_axe z
-                          WHERE z.ecriture_id = x.id);
-
-        DELETE FROM dbo.ecriture_brouillon
-        WHERE entite = @entite AND arrete = @arrete
-          AND feuille_cote = @feuille_cote
-          AND question_id = @question_id;
-        COMMIT TRANSACTION;
+    BEGIN TRANSACTION;
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
+    BEGIN
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
+    END;
+    -- 2. le corps d'origine
+    EXEC dbo.pr_valider_brouillon_corps @entite = @entite, @arrete = @arrete, @feuille_cote = @feuille_cote, @question_id = @question_id, @valide_par = @valide_par;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1
+    BEGIN
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
+        BEGIN
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
+        END;
+    END;
+    COMMIT;
     END TRY
     BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
-        DECLARE @motif NVARCHAR (400) = LEFT(ERROR_MESSAGE(), 400);
-        DECLARE @m NVARCHAR (2000) =
-            N'Validation refusee, le brouillon est conserve tel quel. Motif rendu par la base : '
-            + @motif;
-        THROW 50030, @m, 1;
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
+        THROW;
     END CATCH;
 END;
 

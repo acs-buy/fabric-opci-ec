@@ -1,5 +1,5 @@
 
-
+-- pr_saisir_od_paire : 1 refus
 -- LES 2 LIGNES D'UNE ECRITURE, en une seule transaction. Les 2 sont controlees avant toute
 -- ecriture : un refus de l'une n'ecrit aucune des 2, et son message dit de quelle ligne il vient.
 CREATE   PROCEDURE dbo.pr_saisir_od_paire
@@ -38,7 +38,7 @@ BEGIN
         BEGIN CATCH
             SELECT @n = ERROR_NUMBER(), @m = LEFT(N'Ligne ' + CAST(@k AS NVARCHAR (1)) + N' : ' + dbo.fn_sans_entete_ligne(ERROR_MESSAGE()), 2000);
             IF @n < 50000 THROW;
-            THROW @n, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW @n, @m, 1; END
         END CATCH;
         SET @k += 1;
     END;

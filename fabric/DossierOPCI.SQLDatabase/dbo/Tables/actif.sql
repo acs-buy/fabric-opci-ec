@@ -25,3 +25,25 @@ CREATE TABLE [dbo].[actif] (
 
 GO
 
+
+CREATE   TRIGGER dbo.tr_actif_annexe_retard ON dbo.actif
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT code, adresse, date_acquisition, entite_detentrice, entite_liee, nature, poste_bilan, prix_de_revient, secteur, surface_m2 FROM inserted
+        EXCEPT SELECT code, adresse, date_acquisition, entite_detentrice, entite_liee, nature, poste_bilan, prix_de_revient, secteur, surface_m2 FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT code, adresse, date_acquisition, entite_detentrice, entite_liee, nature, poste_bilan, prix_de_revient, secteur, surface_m2 FROM deleted EXCEPT SELECT code, adresse, date_acquisition, entite_detentrice, entite_liee, nature, poste_bilan, prix_de_revient, secteur, surface_m2 FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite_detentrice AS x, CAST(NULL AS BIT) AS vehicule FROM ch) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'actif', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
+
+GO
+

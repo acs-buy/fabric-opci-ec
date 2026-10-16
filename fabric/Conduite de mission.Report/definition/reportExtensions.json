@@ -1,0 +1,1301 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/reportExtension/1.0.0/schema.json",
+  "name": "extension",
+  "entities": [
+    {
+      "name": "v_ecran_valeurs_arrete",
+      "measures": [
+        {
+          "name": "Valo sous-ligne rationalisation",
+          "dataType": "Text",
+          "expression": "[Sous-ligne rationalisation] & \"\""
+        },
+        {
+          "name": "Valo fond etat de l actif",
+          "dataType": "Text",
+          "expression": "VAR e = SELECTEDVALUE ( v_ecran_valeurs_arrete[etat] ) RETURN SWITCH ( e, \"calculable\", \"#E7F0EB\", \"dans l’ANR\", \"#E7F0EB\", \"valeur à viser\", \"#FAF2E2\", BLANK (), \"#FFFFFF\", \"#F7ECEC\" )"
+        },
+        {
+          "name": "Valo encre etat de l actif",
+          "dataType": "Text",
+          "expression": "VAR e = SELECTEDVALUE ( v_ecran_valeurs_arrete[etat] ) RETURN SWITCH ( e, \"calculable\", \"#1F6D4A\", \"dans l’ANR\", \"#1F6D4A\", \"valeur à viser\", \"#8A6710\", BLANK (), \"#12233C\", \"#9A2A2A\" )"
+        },
+        {
+          "name": "Valo fond absence rapport",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\", \"#FFFFFF00\", \"#F4F6F9\" )"
+        },
+        {
+          "name": "Valo fond absence valeur retenue",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de valeur retenue de l actif] = \"\", \"#FFFFFF00\", \"#F4F6F9\" )"
+        },
+        {
+          "name": "Valo lib expert",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\", \"Expert\" ) & \"\""
+        },
+        {
+          "name": "Valo lib methode",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\", \"Méthode\" ) & \"\""
+        },
+        {
+          "name": "Valo lib date de valeur",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\", \"Date de valeur\" ) & \"\""
+        },
+        {
+          "name": "Valo lib valeur d expertise",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\", \"Valeur d’expertise\" ) & \"\""
+        },
+        {
+          "name": "Valo lib enregistree le",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\", \"Enregistrée le\" ) & \"\""
+        },
+        {
+          "name": "Valo lib fichier",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\", \"Fichier\" ) & \"\""
+        },
+        {
+          "name": "Valo lib valeur retenue",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de valeur retenue de l actif] = \"\", \"Valeur retenue\" ) & \"\""
+        },
+        {
+          "name": "Valo lib source",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de valeur retenue de l actif] = \"\", \"Source\" ) & \"\""
+        },
+        {
+          "name": "Valo lib proposee par",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de valeur retenue de l actif] = \"\", \"Proposée par\" ) & \"\""
+        },
+        {
+          "name": "Valo lib proposee le",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de valeur retenue de l actif] = \"\", \"Proposée le\" ) & \"\""
+        },
+        {
+          "name": "Valo lib etat",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de valeur retenue de l actif] = \"\", \"État\" ) & \"\""
+        },
+        {
+          "name": "Valo etat de la valeur retenue",
+          "dataType": "Text",
+          "expression": "[Etat de la valeur retenue] & \"\""
+        },
+        {
+          "name": "Valo encre etat de la valeur retenue",
+          "dataType": "Text",
+          "expression": "IF ( LEFT ( [Etat de la valeur retenue] & \"\", 8 ) = \"renvoyée\", \"#9A2A2A\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo blocage ouvrir le classeur",
+          "dataType": "Text",
+          "expression": "[Blocage ouvrir le classeur] & \"\""
+        },
+        {
+          "name": "Valo bouton enregistrer l expertise",
+          "dataType": "Text",
+          "expression": "\"Enregistrer l’expertise\""
+        },
+        {
+          "name": "Valo bouton proposer la valeur",
+          "dataType": "Text",
+          "expression": "\"Proposer la valeur retenue\""
+        },
+        {
+          "name": "Valo bouton ouvrir le classeur",
+          "dataType": "Text",
+          "expression": "\"Ouvrir le classeur\""
+        },
+        {
+          "name": "Valo bouton reimporter le classeur",
+          "dataType": "Text",
+          "expression": "\"Réimporter le classeur\""
+        },
+        {
+          "name": "Valo bouton viser la valeur",
+          "dataType": "Text",
+          "expression": "\"Viser la valeur\""
+        },
+        {
+          "name": "Valo bouton renvoyer la valeur",
+          "dataType": "Text",
+          "expression": "\"Renvoyer la valeur\""
+        },
+        {
+          "name": "Valo filiale liee de l avance",
+          "dataType": "Text",
+          "expression": "VAR c = [Avance choisie] VAR v = IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( v_differences_comptes_courants[entite_liee] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) ) RETURN v & \"\""
+        },
+        {
+          "name": "Valo nominal de l avance",
+          "dataType": "Text",
+          "expression": "VAR c = [Avance choisie] VAR v = IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( v_differences_comptes_courants[valeur_comptable] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) ) RETURN IF ( NOT ISBLANK ( v ), FORMAT ( v, \"#,0.00\" ) ) & \"\""
+        },
+        {
+          "name": "Valo interets courus de l avance",
+          "dataType": "Text",
+          "expression": "VAR c = [Avance choisie] VAR v = IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( v_differences_comptes_courants[interets_courus] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) ) RETURN IF ( NOT ISBLANK ( c ) && NOT ISBLANK ( v ), FORMAT ( v, \"#,0.00\" ) ) & \"\""
+        },
+        {
+          "name": "Valo valeur actuelle de l avance",
+          "dataType": "Text",
+          "expression": "VAR c = [Avance choisie] VAR v = IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( v_differences_comptes_courants[valeur_actuelle] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) ) RETURN IF ( NOT ISBLANK ( v ), FORMAT ( v, \"#,0.00\" ) ) & \"\""
+        },
+        {
+          "name": "Valo lib cc filiale liee",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Avance choisie] ), \"Filiale liée\" ) & \"\""
+        },
+        {
+          "name": "Valo lib cc nominal",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Avance choisie] ), \"Nominal de l’avance\" ) & \"\""
+        },
+        {
+          "name": "Valo lib cc interets courus",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Avance choisie] ), \"Intérêts courus\" ) & \"\""
+        },
+        {
+          "name": "Valo lib cc valeur actuelle",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Avance choisie] ), \"Valeur actuelle de l’avance\" ) & \"\""
+        },
+        {
+          "name": "Valo lib cc quote-part",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Avance choisie] ), \"Quote-part\" ) & \"\""
+        },
+        {
+          "name": "Valo lib cc actif net reevalue",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Avance choisie] ), \"Actif net réévalué\" ) & \"\""
+        },
+        {
+          "name": "Valo lib cc difference 275",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Avance choisie] ), \"Différence au 275\" ) & \"\""
+        },
+        {
+          "name": "Valo lib cc cascade",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Avance choisie] ), \"Cascade 212-5\" ) & \"\""
+        },
+        {
+          "name": "Valo cascade de l avance",
+          "dataType": "Text",
+          "expression": "VAR v = [Cascade 212-5 de l avance] RETURN IF ( NOT ISBLANK ( [Avance choisie] ), IF ( ISBLANK ( v ), \"sans objet\", v ) ) & \"\""
+        },
+        {
+          "name": "Valo encre difference 275",
+          "dataType": "Text",
+          "expression": "IF ( LEFT ( [Difference 275 de la filiale de l avance] & \"\", 1 ) = \"-\", \"#9A2A2A\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo interets courus de la ligne",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_differences_comptes_courants[interets_courus] ) RETURN IF ( NOT ISEMPTY ( v_differences_comptes_courants ), IF ( ISINSCOPE ( v_differences_comptes_courants[code_actif] ), IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) ), IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) ) ) )"
+        },
+        {
+          "name": "Valo encre interets courus de la ligne",
+          "dataType": "Text",
+          "expression": "IF ( ISBLANK ( SUM ( v_differences_comptes_courants[interets_courus] ) ), \"#B9C6D6\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo fond absence instrument",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de valeur de l instrument] = \"\", \"#FFFFFF\", \"#F4F6F9\" )"
+        },
+        {
+          "name": "Valo lib ins valeur",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de valeur de l instrument] = \"\", \"Valeur actuelle\" ) & \"\""
+        },
+        {
+          "name": "Valo lib ins source",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de valeur de l instrument] = \"\", \"Source\" ) & \"\""
+        },
+        {
+          "name": "Valo lib ins piece",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de valeur de l instrument] = \"\", \"Pièce\" ) & \"\""
+        },
+        {
+          "name": "Valo bouton enregistrer la valeur",
+          "dataType": "Text",
+          "expression": "\"Enregistrer la valeur\""
+        },
+        {
+          "name": "Valo carte actif net",
+          "dataType": "Text",
+          "expression": "VAR v = [R33 Actif net reevalue] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo carte differences",
+          "dataType": "Text",
+          "expression": "VAR v = [R33 Differences portees] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo carte actifs suivis",
+          "dataType": "Text",
+          "expression": "VAR v = [R34 Actifs de l entite] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"0\" ) )"
+        },
+        {
+          "name": "Valo carte lots",
+          "dataType": "Text",
+          "expression": "VAR v = [Lots de valorisation proposes] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"0\" ) )"
+        },
+        {
+          "name": "Valo carte rationalisation",
+          "dataType": "Text",
+          "expression": "VAR v = [R35 Ecart de rationalisation] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo a remplir interets courus de l avance",
+          "dataType": "Text",
+          "expression": "VAR c = [Avance choisie] VAR v = IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( v_differences_comptes_courants[interets_courus] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) ) RETURN IF ( NOT ISBLANK ( c ) && ISBLANK ( v ), \"à remplir\" ) & \"\""
+        },
+        {
+          "name": "Valo quote-part de l avance",
+          "dataType": "Text",
+          "expression": "VAR c = [Avance choisie] VAR f = CALCULATE ( MAX ( v_differences_comptes_courants[entite_liee] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) VAR v = IF ( NOT ISBLANK ( f ), CALCULATE ( SUM ( v_titres_valeur_actuelle[quote_part] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = f ) ) ) RETURN IF ( NOT ISBLANK ( c ), IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v * 100, \"0.00\" ) & UNICHAR ( 8239 ) & \"%\" ) ) & \"\""
+        },
+        {
+          "name": "Valo actif net reevalue de l avance",
+          "dataType": "Text",
+          "expression": "VAR c = [Avance choisie] VAR f = CALCULATE ( MAX ( v_differences_comptes_courants[entite_liee] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) VAR v = IF ( NOT ISBLANK ( f ), CALCULATE ( SUM ( v_titres_valeur_actuelle[actif_net_reevalue] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = f ) ) ) RETURN IF ( NOT ISBLANK ( c ), IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) ) ) & \"\""
+        },
+        {
+          "name": "Valo difference 275 de l avance",
+          "dataType": "Text",
+          "expression": "VAR c = [Avance choisie] VAR f = CALCULATE ( MAX ( v_differences_comptes_courants[entite_liee] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) VAR v = IF ( NOT ISBLANK ( f ), CALCULATE ( SUM ( v_titres_valeur_actuelle[difference_estimation_titres] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = f ) ) ) RETURN IF ( NOT ISBLANK ( c ), IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"+ #,0.00;-#,0.00;0.00\" ) ) ) & \"\""
+        },
+        {
+          "name": "Valo sous-titre revision de l avance",
+          "dataType": "Text",
+          "expression": "VAR c = [Avance choisie] RETURN IF ( ISBLANK ( c ), \"aucune avance choisie\", c & \" · nominal \" & FORMAT ( [Nominal de l avance choisie], \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo nominal des avances",
+          "dataType": "Text",
+          "expression": "FORMAT ( SUM ( v_differences_comptes_courants[valeur_comptable] ) + 0, \"#,0.00\" )"
+        },
+        {
+          "name": "Valo revisions de l arrete",
+          "dataType": "Text",
+          "expression": "VAR n = COUNTROWS ( revision_compte_courant ) + 0 RETURN IF ( n = 0, \"aucune\", FORMAT ( n, \"0\" ) & IF ( n < 2, \" révision\", \" révisions\" ) )"
+        },
+        {
+          "name": "Valo difference des comptes courants",
+          "dataType": "Text",
+          "expression": "FORMAT ( [Difference des comptes courants] + 0, \"#,0.00\" )"
+        },
+        {
+          "name": "Valo cascade de la ligne",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISEMPTY ( v_differences_comptes_courants ) && ISINSCOPE ( v_differences_comptes_courants[code_actif] ), VAR v = [Cascade 212-5 de l avance] RETURN IF ( ISBLANK ( v ), \"sans objet\", v ) )"
+        },
+        {
+          "name": "Valo sous-titre grille des instruments",
+          "dataType": "Text",
+          "expression": "VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = \"INSTRUMENT\" ) + 0 RETURN \"classe 3, véhicule et filiales · \" & IF ( n > 0, FORMAT ( n, \"0\" ) & IF ( n < 2, \" actif\", \" actifs\" ), \"aucun actif\" )"
+        },
+        {
+          "name": "Valo valeur de l instrument choisi",
+          "dataType": "Text",
+          "expression": "FORMAT ( VAR c = [Actif choisi] VAR t = FILTER ( ALL ( valeur_instrument[code_actif] ), valeur_instrument[code_actif] = c ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( valeur_instrument[valeur_actuelle] ), t ) ), \"#,0.00\" )"
+        },
+        {
+          "name": "Valo difference des instruments",
+          "dataType": "Text",
+          "expression": "VAR d = CALCULATE ( SUM ( v_differences_synthese[difference_estimation] ), v_differences_synthese[famille] = \"INSTRUMENT\" ) RETURN IF ( ISBLANK ( d ), \"aucun actif\", FORMAT ( d, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo libelle de la famille",
+          "dataType": "Text",
+          "expression": "VAR art = SELECTEDVALUE ( v_famille_actif[article] ) VAR n = SUM ( v_differences_synthese[nombre_actifs] ) + 0 VAR d = SUM ( v_differences_synthese[difference_estimation] ) + 0 RETURN IF ( NOT ISBLANK ( art ), \"art. \" & art & IF ( n > 0, \" · \" & FORMAT ( n, \"0\" ) & IF ( n < 2, \" actif · \", \" actifs · \" ) & FORMAT ( d, \"#,0.00\" ), \" · aucun actif\" ) )"
+        },
+        {
+          "name": "Valo titre detail de la famille",
+          "dataType": "Text",
+          "expression": "VAR f = SELECTEDVALUE ( v_famille_actif[libelle_court] ) RETURN IF ( NOT ISBLANK ( f ), f & \" du véhicule, actif par actif\" ) & \"\""
+        },
+        {
+          "name": "Valo valeur actuelle de l immeuble de filiale",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_ecran_valeurs_arrete[valeur_actuelle] ) RETURN IF ( NOT ISEMPTY ( v_ecran_valeurs_arrete ), IF ( ISINSCOPE ( v_ecran_valeurs_arrete[code_actif] ), IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) ), \"\" ) )"
+        },
+        {
+          "name": "Valo encre valeur actuelle de l immeuble de filiale",
+          "dataType": "Text",
+          "expression": "IF ( ISBLANK ( SUM ( v_ecran_valeurs_arrete[valeur_actuelle] ) ), \"#B9C6D6\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo libelle de la filiale",
+          "dataType": "Text",
+          "expression": "VAR q = SELECTEDVALUE ( v_titres_valeur_actuelle[quote_part] ) RETURN IF ( NOT ISBLANK ( q ), \"quote-part \" & FORMAT ( q * 100, \"0.00\" ) & UNICHAR ( 8239 ) & \"%\" )"
+        },
+        {
+          "name": "Valo titre actif net de la filiale",
+          "dataType": "Text",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) RETURN IF ( NOT ISBLANK ( c ), \"Actif net réévalué \" & IF ( LEFT ( c, 1 ) IN { \"A\", \"E\", \"I\", \"O\", \"U\", \"Y\", \"É\", \"È\" }, \"d’\", \"de \" ) & c ) & \"\""
+        },
+        {
+          "name": "Valo sous-titre actif net de la filiale",
+          "dataType": "Text",
+          "expression": "\"capitaux propres de la balance, puis différences de ses actifs\""
+        },
+        {
+          "name": "Valo difference des titres de la filiale",
+          "dataType": "Text",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) VAR v = IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( v_titres_valeur_actuelle[difference_estimation_titres] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = c ) ) ) RETURN IF ( NOT ISBLANK ( v ), FORMAT ( v, \"+ #,0.00;-#,0.00;0.00\" ) ) & \"\""
+        },
+        {
+          "name": "Valo encre difference des titres de la filiale",
+          "dataType": "Text",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) VAR v = IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( v_titres_valeur_actuelle[difference_estimation_titres] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = c ) ) ) RETURN IF ( v < 0, \"#9A2A2A\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo quote-part de la filiale",
+          "dataType": "Text",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) VAR v = IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( v_titres_valeur_actuelle[quote_part] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = c ) ) ) RETURN IF ( NOT ISBLANK ( v ), FORMAT ( v * 100, \"0.00\" ) & UNICHAR ( 8239 ) & \"%\" ) & \"\""
+        },
+        {
+          "name": "Valo compte de la difference de la filiale",
+          "dataType": "Text",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) VAR v = IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( v_titres_valeur_actuelle[compte_difference_estimation] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = c ) ) ) RETURN v & \"\""
+        },
+        {
+          "name": "Valo contrepartie de la filiale",
+          "dataType": "Text",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) VAR v = IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( v_titres_valeur_actuelle[compte_contrepartie] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = c ) ) ) RETURN v & \"\""
+        },
+        {
+          "name": "Valo sous-titre cours de l arrete",
+          "dataType": "Text",
+          "expression": "VAR n = COUNTROWS ( cours_titre ) + 0 VAR t = IF ( ISFILTERED ( v_ecran_actifs_a_valoriser[code_actif] ) && HASONEVALUE ( v_ecran_actifs_a_valoriser[code_actif] ), SELECTEDVALUE ( v_ecran_actifs_a_valoriser[code_actif] ) ) RETURN FORMAT ( n, \"0\" ) & IF ( n < 2, \" cours saisi · \", \" cours saisis · \" ) & IF ( ISBLANK ( t ), \"aucun titre choisi\", t )"
+        },
+        {
+          "name": "Valo bouton enregistrer le cours",
+          "dataType": "Text",
+          "expression": "\"Enregistrer le cours\""
+        },
+        {
+          "name": "Valo sous-titre valeur negative",
+          "dataType": "Text",
+          "expression": "VAR n = [Filiales a actif net negatif] + 0 RETURN IF ( n = 0, \"aucune filiale à actif net réévalué négatif\", FORMAT ( n, \"0\" ) & IF ( n < 2, \" filiale\", \" filiales\" ) & \" à actif net réévalué négatif\" )"
+        },
+        {
+          "name": "Valo pas de la cascade",
+          "dataType": "Text",
+          "expression": "IF ( [Filiales a actif net negatif] + 0 > 0, \"à passer\", \"sans objet\" )"
+        },
+        {
+          "name": "Valo engagement de la filiale",
+          "dataType": "Text",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) VAR t = FILTER ( ALL ( eligibilite_participation[entite_fille] ), eligibilite_participation[entite_fille] = c ) VAR n_oui = CALCULATE ( COUNTROWS ( eligibilite_participation ), t, eligibilite_participation[engagement_couvrir_pertes] == TRUE () ) + 0 VAR n_non = CALCULATE ( COUNTROWS ( eligibilite_participation ), t, eligibilite_participation[engagement_couvrir_pertes] == FALSE () ) + 0 VAR v = IF ( NOT ISBLANK ( c ), IF ( n_oui > 0, \"oui\", IF ( n_non > 0, \"non\", \"à remplir\" ) ) ) RETURN IF ( v <> \"à remplir\", v ) & \"\""
+        },
+        {
+          "name": "Valo a remplir engagement de la filiale",
+          "dataType": "Text",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) VAR t = FILTER ( ALL ( eligibilite_participation[entite_fille] ), eligibilite_participation[entite_fille] = c ) VAR n_oui = CALCULATE ( COUNTROWS ( eligibilite_participation ), t, eligibilite_participation[engagement_couvrir_pertes] == TRUE () ) + 0 VAR n_non = CALCULATE ( COUNTROWS ( eligibilite_participation ), t, eligibilite_participation[engagement_couvrir_pertes] == FALSE () ) + 0 VAR v = IF ( NOT ISBLANK ( c ), IF ( n_oui > 0, \"oui\", IF ( n_non > 0, \"non\", \"à remplir\" ) ) ) RETURN IF ( v = \"à remplir\", v ) & \"\""
+        },
+        {
+          "name": "Valo difference des actifs du compte",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISEMPTY ( v_ecran_differences_par_compte ) && ISINSCOPE ( v_ecran_differences_par_compte[cle_ecran] ), IF ( SELECTEDVALUE ( v_ecran_differences_par_compte[etat] ) = \"aucun actif\", \"\", FORMAT ( SUM ( v_ecran_differences_par_compte[difference_actifs] ), \"#,0.00\" ) ) )"
+        },
+        {
+          "name": "Valo od de valorisation du compte",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISEMPTY ( v_ecran_differences_par_compte ) && ISINSCOPE ( v_ecran_differences_par_compte[cle_ecran] ), IF ( SELECTEDVALUE ( v_ecran_differences_par_compte[etat] ) = \"aucun actif\", \"\", FORMAT ( SUM ( v_ecran_differences_par_compte[od_valorisation] ), \"#,0.00\" ) ) )"
+        },
+        {
+          "name": "Valo reste a passer du compte",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISEMPTY ( v_ecran_differences_par_compte ) && ISINSCOPE ( v_ecran_differences_par_compte[cle_ecran] ), IF ( SELECTEDVALUE ( v_ecran_differences_par_compte[etat] ) = \"aucun actif\", \"\", FORMAT ( SUM ( v_ecran_differences_par_compte[reste_a_passer] ), \"+ #,0.00;-#,0.00;0.00\" ) ) )"
+        },
+        {
+          "name": "Valo bouton generer le lot",
+          "dataType": "Text",
+          "expression": "\"Générer le lot\""
+        },
+        {
+          "name": "Valo bouton reprendre l ecart du 275",
+          "dataType": "Text",
+          "expression": "\"Reprendre l’écart du 275\""
+        },
+        {
+          "name": "Valo bouton annuler le lot",
+          "dataType": "Text",
+          "expression": "\"Annuler le lot\""
+        },
+        {
+          "name": "Valo bouton creer la derogation",
+          "dataType": "Text",
+          "expression": "\"Créer la dérogation\""
+        },
+        {
+          "name": "Valo reprise valeur actuelle des titres",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_reprise_275_a_passer[valeur_actuelle_titres] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo reprise titres au compte 254",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_reprise_275_a_passer[titres_254] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo reprise cible du compte 275",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_reprise_275_a_passer[ecart_275_cible] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo compte 275 a l arrete",
+          "dataType": "Text",
+          "expression": "VAR s = CALCULATE ( SUM ( v_balance[Balance après] ), v_balance[Compte] = \"275\" ) RETURN IF ( NOT ISBLANK ( s ), FORMAT ( s, \"#,0.00\" ) ) & \"\""
+        },
+        {
+          "name": "Valo a remplir compte 275 a l arrete",
+          "dataType": "Text",
+          "expression": "IF ( ISBLANK ( CALCULATE ( SUM ( v_balance[Balance après] ), v_balance[Compte] = \"275\" ) ), \"à remplir\" ) & \"\""
+        },
+        {
+          "name": "Valo reprise reste a passer",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_reprise_275_a_passer[a_passer] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo encre reprise reste a passer",
+          "dataType": "Text",
+          "expression": "IF ( ABS ( SUM ( v_reprise_275_a_passer[a_passer] ) + 0 ) >= 0.005, \"#9A2A2A\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo libelle bande balance",
+          "dataType": "Text",
+          "expression": "VAR t = [Libelle bande balance] VAR a = IF ( LEFT ( t, 10 ) IN { \"0 comptes \", \"1 comptes \" }, SUBSTITUTE ( t, \" comptes \", \" compte \" ), t ) RETURN IF ( RIGHT ( a, 8 ) IN { \" 0 revus\", \" 1 revus\" }, SUBSTITUTE ( a, \" revus\", \" revu\" ), a )"
+        },
+        {
+          "name": "Valo libelle bande synthese",
+          "dataType": "Text",
+          "expression": "VAR e = SUM ( v_controle_rationalisation[ecart] ) VAR s = CALCULATE ( MAX ( synthese_proposee[propose_le] ), ISBLANK ( synthese_proposee[perime_le] ) ) VAR d = CALCULATE ( MAX ( v_ecran_visas_valorisation[decide_le] ), v_ecran_visas_valorisation[nature] = \"SYNTHESE\" ) VAR dv = CALCULATE ( MAX ( v_ecran_visas_valorisation[decide_le] ), v_ecran_visas_valorisation[nature] = \"SYNTHESE\", v_ecran_visas_valorisation[decision] = \"VISE\" ) VAR etat = IF ( ISBLANK ( s ), \"synthèse non proposée\", IF ( NOT ISBLANK ( d ) && d >= s, IF ( dv = d, \"synthèse visée\", \"synthèse renvoyée\" ), \"synthèse proposée\" ) ) RETURN IF ( NOT ISBLANK ( e ), \"écart \" & FORMAT ( e, \"#,0.00\" ) & \" · \", \"\" ) & etat"
+        },
+        {
+          "name": "Valo libelle du compte choisi",
+          "dataType": "Text",
+          "expression": "[Libelle du compte choisi] & \"\""
+        },
+        {
+          "name": "Valo libelle solde du compte choisi",
+          "dataType": "Text",
+          "expression": "VAR k = [Compte choisi] RETURN IF ( NOT ISBLANK ( [Difference de la famille du compte choisi] ), \"Solde du compte \" & k & \" à l’arrêté\" ) & \"\""
+        },
+        {
+          "name": "Valo solde du compte choisi",
+          "dataType": "Text",
+          "expression": "VAR d = [Difference de la famille du compte choisi] RETURN IF ( NOT ISBLANK ( d ), FORMAT ( d - [Ecart du compte choisi], \"#,0.00\" ) ) & \"\""
+        },
+        {
+          "name": "Valo libelle difference de la famille",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Difference de la famille du compte choisi] ), \"Différence des actifs de la famille\" ) & \"\""
+        },
+        {
+          "name": "Valo difference de la famille du compte choisi",
+          "dataType": "Text",
+          "expression": "VAR v = [Difference de la famille du compte choisi] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo libelle ecart du compte",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Difference de la famille du compte choisi] ), \"Écart\" ) & \"\""
+        },
+        {
+          "name": "Valo ecart du compte choisi",
+          "dataType": "Text",
+          "expression": "VAR v = [Ecart du compte choisi] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"+ #,0.00;-#,0.00;0.00\" ) )"
+        },
+        {
+          "name": "Valo encre ecart du compte",
+          "dataType": "Text",
+          "expression": "IF ( ABS ( [Ecart du compte choisi] + 0 ) >= 0.005, \"#9A2A2A\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo debit de l ecriture du compte",
+          "dataType": "Text",
+          "expression": "VAR s = SUM ( v_ecritures_du_compte[debit] ) RETURN IF ( ISINSCOPE ( v_ecritures_du_compte[ecriture_id] ), IF ( s = 0, \"\", FORMAT ( s, \"#,0.00\" ) ), FORMAT ( s, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo credit de l ecriture du compte",
+          "dataType": "Text",
+          "expression": "VAR s = SUM ( v_ecritures_du_compte[credit] ) RETURN IF ( ISINSCOPE ( v_ecritures_du_compte[ecriture_id] ), IF ( s = 0, \"\", FORMAT ( s, \"#,0.00\" ) ), FORMAT ( s, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo etat du compte choisi",
+          "dataType": "Text",
+          "expression": "[Etat du compte choisi] & \"\""
+        },
+        {
+          "name": "Valo etat comptes revus",
+          "dataType": "Text",
+          "expression": "VAR t = [Comptes revus de la valorisation] VAR i = FIND ( \" sur \", t, 1, 0 ) RETURN IF ( i > 0 && LEFT ( t, i - 1 ) = MID ( t, i + 5, 20 ), \"ok\", \"no\" )"
+        },
+        {
+          "name": "Valo c84 difference des actifs",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_controle_difference_vs_ecritures[difference_des_actifs] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo c84 difference des ecritures",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_controle_difference_vs_ecritures[difference_des_ecritures] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo c84 ecart",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_controle_difference_vs_ecritures[ecart] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"+ #,0.00;-#,0.00;0.00\" ) )"
+        },
+        {
+          "name": "Valo c84 dont immeubles",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_controle_difference_vs_ecritures[ecart_immeubles] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"+ #,0.00;-#,0.00;0.00\" ) )"
+        },
+        {
+          "name": "Valo c84 dont titres",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_controle_difference_vs_ecritures[ecart_titres] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"+ #,0.00;-#,0.00;0.00\" ) )"
+        },
+        {
+          "name": "Valo c84 difference des comptes courants",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_controle_difference_vs_ecritures[difference_comptes_courants] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo encre c84 ecart",
+          "dataType": "Text",
+          "expression": "IF ( ABS ( SUM ( v_controle_difference_vs_ecritures[ecart] ) + 0 ) >= 0.005, \"#9A2A2A\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo etat du controle c84",
+          "dataType": "Text",
+          "expression": "[Etat du controle C84] & \"\""
+        },
+        {
+          "name": "Valo bouton passer les ecritures miroir",
+          "dataType": "Text",
+          "expression": "\"Passer les écritures miroir\""
+        },
+        {
+          "name": "Valo cadrage du pret",
+          "dataType": "Text",
+          "expression": "IF ( ISINSCOPE ( v_cadrage_pret_intragroupe[filiale] ), [Cadrage du pret] )"
+        },
+        {
+          "name": "Valo actif net precedent de la rationalisation",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_rationalisation_opci[actif_net_precedent] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo actif net rationalise",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_rationalisation_opci[actif_net_rationalise] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo actif net calcule de la rationalisation",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_controle_rationalisation[actif_net_calcule] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo ecart de la rationalisation",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_controle_rationalisation[ecart] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo encre boucle de la rationalisation",
+          "dataType": "Text",
+          "expression": "IF ( CALCULATE ( COUNTROWS ( v_controle_rationalisation ), v_controle_rationalisation[boucle] = FALSE () ) + 0 > 0, \"#9A2A2A\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo interets intragroupe produit chez la mere",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_rationalisation_opci[interets_internes_produit_mere] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo interets intragroupe charge chez les filiales",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( v_rationalisation_opci[interets_internes_charge_filiales] ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo vl calculee",
+          "dataType": "Text",
+          "expression": "VAR v = [R41 Valeur liquidative] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo vl precedente",
+          "dataType": "Text",
+          "expression": "VAR v = [R41 VL precedente] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo vl publiee par le",
+          "dataType": "Text",
+          "expression": "VAR t = [VL publiee par le] RETURN IF ( LEFT ( t, 4 ) = \"par \", MID ( t, 5, 500 ), t ) & \"\""
+        },
+        {
+          "name": "Valo actif net reevalue de la vl",
+          "dataType": "Text",
+          "expression": "VAR v = [R33 Actif net reevalue] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo nombre de parts",
+          "dataType": "Text",
+          "expression": "VAR v = [Nombre de parts] RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0\" ) )"
+        },
+        {
+          "name": "Valo lecture de la rationalisation",
+          "dataType": "Text",
+          "expression": "VAR n = COUNTROWS ( v_controle_rationalisation ) + 0 VAR h = CALCULATE ( COUNTROWS ( v_controle_rationalisation ), v_controle_rationalisation[boucle] = FALSE () ) + 0 RETURN IF ( n = 1, IF ( h = 0, MAX ( v_controle_rationalisation[lecture] ), \"hors du seuil\" ) ) & \"\""
+        },
+        {
+          "name": "Valo encre lot propose non vise",
+          "dataType": "Text",
+          "expression": "IF ( [Lot propose non vise] <> \"aucun\", \"#9A2A2A\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo encre comptes de classe 1",
+          "dataType": "Text",
+          "expression": "IF ( [Comptes de classe 1 hors actif net] > 0, \"#9A2A2A\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo bouton proposer la synthese",
+          "dataType": "Text",
+          "expression": "\"Proposer la synthèse\""
+        },
+        {
+          "name": "Valo fond absence synthese",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de synthese] = \"\", \"#FFFFFF\", \"#F4F6F9\" )"
+        },
+        {
+          "name": "Valo absence de synthese",
+          "dataType": "Text",
+          "expression": "[Absence de synthese] & \"\""
+        },
+        {
+          "name": "Valo lib synthese proposee par",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de synthese] = \"\", \"Proposée par\" ) & \"\""
+        },
+        {
+          "name": "Valo lib synthese proposee le",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de synthese] = \"\", \"Proposée le\" ) & \"\""
+        },
+        {
+          "name": "Valo lib synthese actif net rationalise",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de synthese] = \"\", \"Actif net rationalisé\" ) & \"\""
+        },
+        {
+          "name": "Valo lib synthese actif net calcule",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de synthese] = \"\", \"Actif net calculé\" ) & \"\""
+        },
+        {
+          "name": "Valo lib synthese ecart",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de synthese] = \"\", \"Écart\" ) & \"\""
+        },
+        {
+          "name": "Valo lib synthese valeur liquidative",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de synthese] = \"\", \"Valeur liquidative\" ) & \"\""
+        },
+        {
+          "name": "Valo proposee par de la synthese",
+          "dataType": "Text",
+          "expression": "CALCULATE ( MAX ( synthese_proposee[propose_par] ), ISBLANK ( synthese_proposee[perime_le] ) ) & \"\""
+        },
+        {
+          "name": "Valo proposee le de la synthese",
+          "dataType": "Text",
+          "expression": "VAR d = CALCULATE ( MAX ( synthese_proposee[propose_le] ), ISBLANK ( synthese_proposee[perime_le] ) ) RETURN IF ( NOT ISBLANK ( d ), FORMAT ( d, \"dd/MM/yyyy\" ) ) & \"\""
+        },
+        {
+          "name": "Valo actif net rationalise de la synthese",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( SUM ( synthese_proposee[actif_net_rationalise] ), ISBLANK ( synthese_proposee[perime_le] ) ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo actif net calcule de la synthese",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( SUM ( synthese_proposee[actif_net_calcule] ), ISBLANK ( synthese_proposee[perime_le] ) ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo ecart de la synthese",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( SUM ( synthese_proposee[ecart] ), ISBLANK ( synthese_proposee[perime_le] ) ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo valeur liquidative de la synthese",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( SUM ( synthese_proposee[valeur_liquidative] ), ISBLANK ( synthese_proposee[perime_le] ) ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Valo bouton viser la synthese",
+          "dataType": "Text",
+          "expression": "\"Viser la synthèse\""
+        },
+        {
+          "name": "Valo bouton renvoyer la synthese",
+          "dataType": "Text",
+          "expression": "\"Renvoyer la synthèse\""
+        },
+        {
+          "name": "Valo a remplir expert du rapport",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\" && [Expert du rapport de l actif] = \"\", \"à remplir\" ) & \"\""
+        },
+        {
+          "name": "Valo a remplir methode du rapport",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\" && [Methode du rapport de l actif] = \"\", \"à remplir\" ) & \"\""
+        },
+        {
+          "name": "Valo a remplir enregistree le du rapport",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\" && [Enregistree le du rapport de l actif] = \"\", \"à remplir\" ) & \"\""
+        },
+        {
+          "name": "Valo a remplir fichier du rapport",
+          "dataType": "Text",
+          "expression": "IF ( [Absence du rapport de l actif] = \"\" && [Fichier du rapport de l actif] = \"\", \"à remplir\" ) & \"\""
+        },
+        {
+          "name": "Valo expert de l expertise",
+          "dataType": "Text",
+          "expression": "IF ( ISINSCOPE ( expertise[id] ), VAR v = MAX ( expertise[expert] ) RETURN IF ( ISBLANK ( v ) || v = \"\", \"à remplir\", v ) )"
+        },
+        {
+          "name": "Valo encre expert de l expertise",
+          "dataType": "Text",
+          "expression": "VAR v = MAX ( expertise[expert] ) RETURN IF ( ISBLANK ( v ) || v = \"\", \"#B9C6D6\", \"#12233C\" )"
+        },
+        {
+          "name": "Valo montant de la filiale effective",
+          "dataType": "Double",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) RETURN CALCULATE ( SUM ( v_ecran_anr_filiale_detail[montant] ), FILTER ( ALL ( v_ecran_anr_filiale_detail[entite] ), v_ecran_anr_filiale_detail[entite] = c ) )"
+        },
+        {
+          "name": "Valo valeur actuelle des titres de la filiale effective",
+          "dataType": "Double",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) RETURN IF ( SELECTEDVALUE ( v_ecran_anr_filiale_detail[entite] ) = c, CALCULATE ( SUM ( v_titres_valeur_actuelle[valeur_actuelle_titres] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = c ) ) )"
+        },
+        {
+          "name": "Valo valeur comptable des titres de la filiale effective",
+          "dataType": "Double",
+          "expression": "VAR c0 = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t0 = CALCULATETABLE ( SUMMARIZE ( v_titres_valeur_actuelle, v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ), REMOVEFILTERS ( v_titres_valeur_actuelle[entite_fille], v_titres_valeur_actuelle[ordre_filiale] ) ) VAR p0 = MAXX ( TOPN ( 1, t0, v_titres_valeur_actuelle[ordre_filiale], ASC ), v_titres_valeur_actuelle[entite_fille] ) VAR c = IF ( NOT ISBLANK ( c0 ), c0, p0 ) RETURN IF ( SELECTEDVALUE ( v_ecran_anr_filiale_detail[entite] ) = c, CALCULATE ( SUM ( v_titres_valeur_actuelle[valeur_comptable_titres] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = c ) ) )"
+        },
+        {
+          "name": "Valo debut axe de la rationalisation",
+          "dataType": "Double",
+          "expression": "VAR t = ADDCOLUMNS ( SUMMARIZE ( v_ecran_rationalisation_pas, v_ecran_rationalisation_pas[ordre] ), \"c\", VAR o = v_ecran_rationalisation_pas[ordre] RETURN CALCULATE ( SUM ( v_ecran_rationalisation_pas[montant] ), REMOVEFILTERS ( v_ecran_rationalisation_pas[ordre], v_ecran_rationalisation_pas[libelle_court] ), v_ecran_rationalisation_pas[ordre] <= o ) ) VAR bas = MIN ( 0, MINX ( t, [c] ) ) VAR haut = MAX ( 0, MAXX ( t, [c] ) ) RETURN bas - 0.15 * ( haut - bas )"
+        },
+        {
+          "name": "Valo fin axe de la rationalisation",
+          "dataType": "Double",
+          "expression": "VAR t = ADDCOLUMNS ( SUMMARIZE ( v_ecran_rationalisation_pas, v_ecran_rationalisation_pas[ordre] ), \"c\", VAR o = v_ecran_rationalisation_pas[ordre] RETURN CALCULATE ( SUM ( v_ecran_rationalisation_pas[montant] ), REMOVEFILTERS ( v_ecran_rationalisation_pas[ordre], v_ecran_rationalisation_pas[libelle_court] ), v_ecran_rationalisation_pas[ordre] <= o ) ) VAR bas = MIN ( 0, MINX ( t, [c] ) ) VAR haut = MAX ( 0, MAXX ( t, [c] ) ) RETURN haut + 0.15 * ( haut - bas )"
+        },
+        {
+          "name": "Valo invite de valoCoursTitre",
+          "dataType": "Text",
+          "expression": "VAR n = CALCULATE ( COUNTROWS ( FILTER ( VALUES ( v_ecran_actifs_a_valoriser[code_actif] ), NOT ISBLANK ( v_ecran_actifs_a_valoriser[code_actif] ) ) ), REMOVEFILTERS ( v_ecran_actifs_a_valoriser[code_actif] ) ) + 0 RETURN IF ( n = 0 && NOT ISFILTERED ( v_ecran_actifs_a_valoriser[code_actif] ), \"à saisir\" ) & \"\""
+        },
+        {
+          "name": "Valo invite de valoDerogFeuille",
+          "dataType": "Text",
+          "expression": "VAR n = CALCULATE ( COUNTROWS ( FILTER ( VALUES ( v_ecran_feuilles_valorisation[cote] ), NOT ISBLANK ( v_ecran_feuilles_valorisation[cote] ) ) ), REMOVEFILTERS ( v_ecran_feuilles_valorisation[cote] ) ) + 0 RETURN IF ( n = 0 && NOT ISFILTERED ( v_ecran_feuilles_valorisation[cote] ), \"à saisir\" ) & \"\""
+        },
+        {
+          "name": "Valo invite de valoExpRapportListe",
+          "dataType": "Text",
+          "expression": "VAR n = CALCULATE ( COUNTROWS ( FILTER ( VALUES ( v_ecran_pieces_valorisation[nom_fichier] ), NOT ISBLANK ( v_ecran_pieces_valorisation[nom_fichier] ) ) ), REMOVEFILTERS ( v_ecran_pieces_valorisation[nom_fichier] ) ) + 0 RETURN IF ( n = 0 && NOT ISFILTERED ( v_ecran_pieces_valorisation[nom_fichier] ), \"à saisir\" ) & \"\""
+        },
+        {
+          "name": "Valo invite de valoInsActifListe",
+          "dataType": "Text",
+          "expression": "VAR n = CALCULATE ( COUNTROWS ( FILTER ( VALUES ( v_ecran_actifs_a_valoriser[code_actif] ), NOT ISBLANK ( v_ecran_actifs_a_valoriser[code_actif] ) ) ), REMOVEFILTERS ( v_ecran_actifs_a_valoriser[code_actif] ) ) + 0 RETURN IF ( n = 0 && NOT ISFILTERED ( v_ecran_actifs_a_valoriser[code_actif] ), \"à saisir\" ) & \"\""
+        },
+        {
+          "name": "Valo invite de valoInsPieceListe",
+          "dataType": "Text",
+          "expression": "VAR n = CALCULATE ( COUNTROWS ( FILTER ( VALUES ( v_ecran_pieces_valorisation[nom_fichier] ), NOT ISBLANK ( v_ecran_pieces_valorisation[nom_fichier] ) ) ), REMOVEFILTERS ( v_ecran_pieces_valorisation[nom_fichier] ) ) + 0 RETURN IF ( n = 0 && NOT ISFILTERED ( v_ecran_pieces_valorisation[nom_fichier] ), \"à saisir\" ) & \"\""
+        },
+        {
+          "name": "Valo invite de valoRetPieceListe",
+          "dataType": "Text",
+          "expression": "VAR n = CALCULATE ( COUNTROWS ( FILTER ( VALUES ( v_ecran_pieces_valorisation[nom_fichier] ), NOT ISBLANK ( v_ecran_pieces_valorisation[nom_fichier] ) ) ), REMOVEFILTERS ( v_ecran_pieces_valorisation[nom_fichier] ) ) + 0 RETURN IF ( n = 0 && NOT ISFILTERED ( v_ecran_pieces_valorisation[nom_fichier] ), \"à saisir\" ) & \"\""
+        },
+        {
+          "name": "Valo invite de valoRetSourceListe",
+          "dataType": "Text",
+          "expression": "VAR n = CALCULATE ( COUNTROWS ( FILTER ( VALUES ( ref_source_valeur[libelle] ), NOT ISBLANK ( ref_source_valeur[libelle] ) ) ), REMOVEFILTERS ( ref_source_valeur[libelle] ) ) + 0 RETURN IF ( n = 0 && NOT ISFILTERED ( ref_source_valeur[libelle] ), \"à saisir\" ) & \"\""
+        },
+        {
+          "name": "Valo lib motif de l ecart",
+          "dataType": "Text",
+          "expression": "IF ( [Motif de l ecart de la valeur retenue] <> \"\", \"Motif de l’écart\" ) & \"\""
+        },
+        {
+          "name": "Valo lib motif du renvoi",
+          "dataType": "Text",
+          "expression": "IF ( [Motif du renvoi de la valeur retenue] <> \"\", \"Motif du renvoi\" ) & \"\""
+        },
+        {
+          "name": "Valo tri v_ecran_valeurs_arrete entite",
+          "dataType": "Double",
+          "expression": "MIN ( 'v_ecran_valeurs_arrete'[ordre_entite] )"
+        },
+        {
+          "name": "Valo tri v_ecran_valeurs_arrete code_actif",
+          "dataType": "Text",
+          "expression": "MIN ( 'v_ecran_valeurs_arrete'[code_actif] )"
+        },
+        {
+          "name": "Valo tri expertise date_valeur",
+          "dataType": "DateTime",
+          "expression": "MIN ( 'expertise'[date_valeur] )"
+        },
+        {
+          "name": "Valo tri v_ecran_visas_valorisation decide_le",
+          "dataType": "DateTime",
+          "expression": "MIN ( 'v_ecran_visas_valorisation'[decide_le] )"
+        },
+        {
+          "name": "Valo tri v_differences_comptes_courants code_actif",
+          "dataType": "Text",
+          "expression": "MIN ( 'v_differences_comptes_courants'[code_actif] )"
+        },
+        {
+          "name": "Valo tri revision_compte_courant id",
+          "dataType": "Double",
+          "expression": "MIN ( 'revision_compte_courant'[id] )"
+        },
+        {
+          "name": "Valo tri v_differences_detail code_actif",
+          "dataType": "Text",
+          "expression": "MIN ( 'v_differences_detail'[code_actif] )"
+        },
+        {
+          "name": "Valo tri v_differences_synthese famille_libelle_court",
+          "dataType": "Double",
+          "expression": "MIN ( 'v_differences_synthese'[famille_ordre] )"
+        },
+        {
+          "name": "Valo tri v_titres_valeur_actuelle entite_fille",
+          "dataType": "Double",
+          "expression": "MIN ( 'v_titres_valeur_actuelle'[ordre_filiale] )"
+        },
+        {
+          "name": "Valo tri v_ecran_differences_par_compte compte",
+          "dataType": "Text",
+          "expression": "MIN ( 'v_ecran_differences_par_compte'[compte] )"
+        },
+        {
+          "name": "Valo tri v_lots_perimetre Lot",
+          "dataType": "Double",
+          "expression": "MIN ( 'v_lots_perimetre'[Lot] )"
+        },
+        {
+          "name": "Valo tri ecriture id",
+          "dataType": "Double",
+          "expression": "MIN ( 'ecriture'[id] )"
+        },
+        {
+          "name": "Valo tri v_ecran_feuilles_valorisation cote",
+          "dataType": "Text",
+          "expression": "MIN ( 'v_ecran_feuilles_valorisation'[cote] )"
+        },
+        {
+          "name": "Valo tri v_balance Compte",
+          "dataType": "Text",
+          "expression": "MIN ( 'v_balance'[Compte] )"
+        },
+        {
+          "name": "Valo tri v_ecritures_du_compte ecriture_id",
+          "dataType": "Double",
+          "expression": "MIN ( 'v_ecritures_du_compte'[ecriture_id] )"
+        },
+        {
+          "name": "Valo tri v_rationalisation_filiale filiale",
+          "dataType": "Double",
+          "expression": "MIN ( 'v_rationalisation_filiale'[ordre_filiale] )"
+        },
+        {
+          "name": "Valo tri v_cadrage_pret_intragroupe filiale",
+          "dataType": "Double",
+          "expression": "MIN ( 'v_cadrage_pret_intragroupe'[ordre_filiale] )"
+        },
+        {
+          "name": "Valo tri v_ecran_flux_groupe nature_libelle",
+          "dataType": "Text",
+          "expression": "MIN ( 'v_ecran_flux_groupe'[nature_libelle] )"
+        },
+        {
+          "name": "Valo tri v_ecran_flux_groupe entite_debitrice",
+          "dataType": "Text",
+          "expression": "MIN ( 'v_ecran_flux_groupe'[entite_debitrice] )"
+        },
+        {
+          "name": "Valo tri v_ecran_miroirs_groupe flux_id",
+          "dataType": "Double",
+          "expression": "MIN ( 'v_ecran_miroirs_groupe'[flux_id] )"
+        },
+        {
+          "name": "Valo libelle nature du miroir",
+          "dataType": "Text",
+          "expression": "VAR f = SELECTEDVALUE ( v_ecran_miroirs_groupe[flux_id] ) RETURN IF ( NOT ISBLANK ( f ), CALCULATE ( MAX ( v_flux_intragroupe[nature_libelle] ), REMOVEFILTERS ( v_flux_intragroupe ), v_flux_intragroupe[id] = f ) )"
+        },
+        {
+          "name": "Valo fond masque fiche de l avance",
+          "dataType": "Text",
+          "expression": "IF ( NOT ISBLANK ( [Avance choisie] ), \"#FFFFFF00\", \"#FFFFFF\" )"
+        },
+        {
+          "name": "Message sans arrete ouvert ligne 1",
+          "dataType": "Text",
+          "expression": "VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( arrete_mission ), arrete_mission[entite] = e ) VAR n = COALESCE ( COUNTROWS ( t ), 0 ) VAR o = COALESCE ( COUNTROWS ( FILTER ( t, arrete_mission[arrete] = a ) ), 0 ) RETURN IF ( NOT ISBLANK ( e ), IF ( n = 0, \"Aucun arrêté ouvert pour ce véhicule\", IF ( NOT ISBLANK ( a ) && o = 0, \"L’arrêté choisi n’est pas ouvert pour ce véhicule\" ) ) ) & \"\""
+        },
+        {
+          "name": "Message sans arrete ouvert ligne 2",
+          "dataType": "Text",
+          "expression": "VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( arrete_mission ), arrete_mission[entite] = e ) VAR n = COALESCE ( COUNTROWS ( t ), 0 ) VAR o = COALESCE ( COUNTROWS ( FILTER ( t, arrete_mission[arrete] = a ) ), 0 ) VAR liste = CONCATENATEX ( TOPN ( 2, t, arrete_mission[arrete], DESC ), RIGHT ( arrete_mission[arrete], 2 ) & \"/\" & MID ( arrete_mission[arrete], 6, 2 ) & \"/\" & LEFT ( arrete_mission[arrete], 4 ), \", \", arrete_mission[arrete], DESC ) VAR reste = n - 2 RETURN IF ( NOT ISBLANK ( e ), IF ( n = 0, \"Un arrêté s’ouvre à l’écran Client et Acceptation\", IF ( NOT ISBLANK ( a ) && o = 0, \"Ouverts pour ce véhicule : \" & liste & IF ( reste = 1, \" et 1 autre\", IF ( reste > 1, \" et \" & reste & \" autres\" ) ) ) ) ) & \"\""
+        },
+        {
+          "name": "Valo message une ligne",
+          "dataType": "Text",
+          "expression": "VAR t = [Message ecran] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 1487 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] <= 1487 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 1487 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, t, \"\" )"
+        },
+        {
+          "name": "Valo message ligne 1",
+          "dataType": "Text",
+          "expression": "VAR t = [Message ecran] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 1487 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] <= 1487 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 1487 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, \"\", LEFT ( t, f1 ) )"
+        },
+        {
+          "name": "Valo message ligne 2",
+          "dataType": "Text",
+          "expression": "VAR t = [Message ecran] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 1487 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] <= 1487 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 1487 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) VAR c0 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR w2 = 1476.25 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c0 <= w2 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c0 <= w2 ), [Value] ) + 0 RETURN IF ( une, \"\", IF ( tot - c0 <= 1487, MID ( t, s2, n ), MID ( t, s2, IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ) ) & \"…\" ) )"
+        },
+        {
+          "name": "Valo avis enregistrer la valeur de l instrument",
+          "dataType": "Text",
+          "expression": "VAR p1 = IF ( ISFILTERED ( v_ecran_actifs_a_valoriser[code_actif] ) && COUNTROWS ( VALUES ( v_ecran_actifs_a_valoriser[code_actif] ) ) >= 2, \"Une seule valeur à cocher dans « Instrument ».\" ) VAR j1 = p1 VAR p2 = IF ( ISFILTERED ( v_ecran_pieces_valorisation[nom_fichier] ) && COUNTROWS ( VALUES ( v_ecran_pieces_valorisation[nom_fichier] ) ) >= 2, \"Une seule valeur à cocher dans « Pièce de la valeur ».\" ) VAR j2 = IF ( j1 <> \"\" && p2 <> \"\", j1 & \" · \" & p2, j1 & p2 ) RETURN IF ( j2 = \"\", \"\", j2 ) & \"\""
+        },
+        {
+          "name": "Valo fond enregistrer la valeur de l instrument",
+          "dataType": "Text",
+          "expression": "IF ( ( ISFILTERED ( v_ecran_actifs_a_valoriser[code_actif] ) && COUNTROWS ( VALUES ( v_ecran_actifs_a_valoriser[code_actif] ) ) >= 2 ) || ( ISFILTERED ( v_ecran_pieces_valorisation[nom_fichier] ) && COUNTROWS ( VALUES ( v_ecran_pieces_valorisation[nom_fichier] ) ) >= 2 ), \"#D9DFE6\", \"#0F5C8C\" )"
+        },
+        {
+          "name": "Valo avis enregistrer le cours",
+          "dataType": "Text",
+          "expression": "VAR p1 = IF ( ISFILTERED ( v_ecran_actifs_a_valoriser[code_actif] ) && COUNTROWS ( VALUES ( v_ecran_actifs_a_valoriser[code_actif] ) ) >= 2, \"Une seule valeur à cocher dans « Titre ».\" ) VAR j1 = p1 RETURN IF ( j1 = \"\", \"\", j1 ) & \"\""
+        },
+        {
+          "name": "Valo fond enregistrer le cours",
+          "dataType": "Text",
+          "expression": "IF ( ( ISFILTERED ( v_ecran_actifs_a_valoriser[code_actif] ) && COUNTROWS ( VALUES ( v_ecran_actifs_a_valoriser[code_actif] ) ) >= 2 ), \"#D9DFE6\", \"#0F5C8C\" )"
+        },
+        {
+          "name": "Valo quantite du titre",
+          "dataType": "Double",
+          "expression": "VAR c = SELECTEDVALUE ( v_ecran_actifs_a_valoriser[code_actif] ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( cours_titre[quantite] ), FILTER ( ALL ( cours_titre[code_actif] ), cours_titre[code_actif] = c ) ) )"
+        },
+        {
+          "name": "Valo cours du titre",
+          "dataType": "Double",
+          "expression": "VAR c = SELECTEDVALUE ( v_ecran_actifs_a_valoriser[code_actif] ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( cours_titre[cours] ), FILTER ( ALL ( cours_titre[code_actif] ), cours_titre[code_actif] = c ) ) )"
+        },
+        {
+          "name": "Valo valeur actuelle du titre",
+          "dataType": "Double",
+          "expression": "VAR c = SELECTEDVALUE ( v_ecran_actifs_a_valoriser[code_actif] ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( v_ecran_valeurs_arrete[valeur_actuelle] ), FILTER ( ALL ( v_ecran_valeurs_arrete[code_actif] ), v_ecran_valeurs_arrete[code_actif] = c ) ) )"
+        },
+        {
+          "name": "Valo prix de revient du titre",
+          "dataType": "Double",
+          "expression": "VAR c = SELECTEDVALUE ( v_ecran_actifs_a_valoriser[code_actif] ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( v_ecran_valeurs_arrete[prix_de_revient] ), FILTER ( ALL ( v_ecran_valeurs_arrete[code_actif] ), v_ecran_valeurs_arrete[code_actif] = c ) ) )"
+        },
+        {
+          "name": "Valo tri v_ecran_actifs_a_valoriser code_actif",
+          "dataType": "Text",
+          "expression": "MIN ( 'v_ecran_actifs_a_valoriser'[code_actif] )"
+        },
+        {
+          "name": "Arr message une ligne",
+          "dataType": "Text",
+          "expression": "VAR t = [Message ecran] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 1487 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] <= 1487 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 1487 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, t, \"\" )"
+        },
+        {
+          "name": "Arr message ligne 1",
+          "dataType": "Text",
+          "expression": "VAR t = [Message ecran] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 1487 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] <= 1487 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 1487 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, \"\", LEFT ( t, f1 ) )"
+        },
+        {
+          "name": "Arr message ligne 2",
+          "dataType": "Text",
+          "expression": "VAR t = [Message ecran] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 1487 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] <= 1487 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 1487 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) VAR c0 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR w2 = 1476.25 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c0 <= w2 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c0 <= w2 ), [Value] ) + 0 RETURN IF ( une, \"\", IF ( tot - c0 <= 1487, MID ( t, s2, n ), MID ( t, s2, IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ) ) & \"…\" ) )"
+        },
+        {
+          "name": "Arr tri limite",
+          "dataType": "Double",
+          "expression": "MIN ( 'ref_ratio_memoire'[ordre] )"
+        },
+        {
+          "name": "Arr masque absence limite",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de limite choisie] = \"\", \"#FFFFFF00\", \"#FFFFFF\" )"
+        },
+        {
+          "name": "Arr fond absence limite",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de limite choisie] = \"\", \"#FFFFFF00\", \"#F4F6F9\" )"
+        },
+        {
+          "name": "Arr marge au seuil",
+          "dataType": "Text",
+          "expression": "VAR m = [Marge au seuil] RETURN IF ( ISBLANK ( m ), \"\", IF ( m < 0, \"- \", \"+ \" ) & FORMAT ( ABS ( m ), \"0.00\" ) & \" pt\" )"
+        },
+        {
+          "name": "Arr couleur du ratio calcule",
+          "dataType": "Text",
+          "expression": "VAR e = [Client selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR c = SELECTEDVALUE ( v_ratio_conclusion[code] ) VAR lf = CALCULATE ( MAX ( ref_ratio_memoire[forme_vehicule] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = c ) ) VAR lsp = CALCULATE ( MAX ( ref_ratio_memoire[statut_professionnel] ), FILTER ( ALL ( ref_ratio_memoire ), ref_ratio_memoire[code] = c ) ) VAR so = NOT ISBLANK ( c ) && ( ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = \"SANS_OBJET\" ) ) VAR r = MAX ( v_ratio_conclusion[ratio] ) VAR s = MAX ( v_ratio_conclusion[seuil] ) VAR sens = MAX ( v_ratio_conclusion[sens] ) RETURN IF ( ISBLANK ( r ), BLANK (), IF ( so, \"#5B6B7D\", IF ( ( sens = \"MINIMUM\" && r < s ) || ( sens = \"MAXIMUM\" && r > s ), \"#9A2A2A\", \"\" ) ) )"
+        },
+        {
+          "name": "Arr valeur du ratio de mission",
+          "dataType": "Double",
+          "expression": "IF ( [Arrete de mission] = 1, [Valeur du ratio] )"
+        },
+        {
+          "name": "Arr conclusion feuille ligne 1",
+          "dataType": "Text",
+          "expression": "VAR t = [Conclusion de la feuille du cycle] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 539 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] <= 539 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 539 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, t, LEFT ( t, f1 ) )"
+        },
+        {
+          "name": "Arr conclusion feuille ligne 2",
+          "dataType": "Text",
+          "expression": "VAR t = [Conclusion de la feuille du cycle] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 539 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] <= 539 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 539 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) VAR c0 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR w2 = 528.25 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c0 <= w2 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c0 <= w2 ), [Value] ) + 0 RETURN IF ( une, \"\", IF ( tot - c0 <= 539, MID ( t, s2, n ), MID ( t, s2, IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ) ) & \"…\" ) )"
+        },
+        {
+          "name": "Arr composante actif total",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( SUM ( v_ratio_arrete[actif_total] ), FILTER ( ALL ( v_ratio_arrete[code] ), v_ratio_arrete[code] = \"ACTIFS_IMMO_60\" ) ) RETURN IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Arr composante immeubles directs",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( SUM ( v_ratio_arrete[immeubles_directs] ), FILTER ( ALL ( v_ratio_arrete[code] ), v_ratio_arrete[code] = \"ACTIFS_IMMO_60\" ) ) RETURN IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Arr composante immeubles quote part",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( SUM ( v_ratio_arrete[immeubles_quote_part] ), FILTER ( ALL ( v_ratio_arrete[code] ), v_ratio_arrete[code] = \"ACTIFS_IMMO_60\" ) ) RETURN IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Arr composante emprunts propres",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( SUM ( v_ratio_arrete[emprunts_propres] ), FILTER ( ALL ( v_ratio_arrete[code] ), v_ratio_arrete[code] = \"ACTIFS_IMMO_60\" ) ) RETURN IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Arr composante emprunts filiales quote part",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( SUM ( v_ratio_arrete[emprunts_filiales_quote_part] ), FILTER ( ALL ( v_ratio_arrete[code] ), v_ratio_arrete[code] = \"ACTIFS_IMMO_60\" ) ) RETURN IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Arr tri arrete VL",
+          "dataType": "Text",
+          "expression": "MIN ( 'v_valeur_liquidative'[arrete] )"
+        },
+        {
+          "name": "Arr ligne de VL",
+          "dataType": "Double",
+          "expression": "COUNTROWS ( 'v_valeur_liquidative' )"
+        },
+        {
+          "name": "Arr tri visa",
+          "dataType": "Text",
+          "expression": "FORMAT ( MIN ( 'v_journal_visa'[horodatage] ), \"yyyy-MM-dd HH:mm:ss\" )"
+        },
+        {
+          "name": "Arr tri categorie",
+          "dataType": "Double",
+          "expression": "MIN ( 'v_obligation_par_categorie'[ordre] )"
+        },
+        {
+          "name": "Arr ligne obligation",
+          "dataType": "Double",
+          "expression": "COUNTROWS ( 'v_obligation_par_categorie' )"
+        },
+        {
+          "name": "Arr taux de la ligne",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( 'v_obligation_par_categorie'[taux] ) RETURN IF ( ISBLANK ( v ), BLANK (), FORMAT ( v / 100, \"0.00 %\" ) )"
+        },
+        {
+          "name": "Arr resultat distribuable",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( 'v_sommes_distribuables'[resultat_distribuable] ) RETURN IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Arr plus-values distribuables",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( 'v_sommes_distribuables'[plus_values_distribuables] ) RETURN IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Arr total distribuable",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( 'v_sommes_distribuables'[total_distribuable] ) RETURN IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Arr acomptes verses",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( 'v_sommes_distribuables'[acomptes_verses] ) RETURN IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"#,0.00\" ) )"
+        },
+        {
+          "name": "Arr source des sommes",
+          "dataType": "Text",
+          "expression": "VAR s = MAX ( 'v_sommes_distribuables'[source] ) RETURN IF ( ISBLANK ( s ) || s = \"\", \"à remplir\", s )"
+        },
+        {
+          "name": "Arr categories renseignees",
+          "dataType": "Text",
+          "expression": "VAR v = SUM ( 'v_obligation_minimale'[categories_renseignees] ) RETURN IF ( ISBLANK ( v ), \"à remplir\", FORMAT ( v, \"0\" ) )"
+        },
+        {
+          "name": "Arr masque absence categorie",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de categorie choisie] = \"\", \"#FFFFFF00\", \"#FFFFFF\" )"
+        },
+        {
+          "name": "Arr fond absence categorie",
+          "dataType": "Text",
+          "expression": "IF ( [Absence de categorie choisie] = \"\", \"#FFFFFF00\", \"#F4F6F9\" )"
+        },
+        {
+          "name": "Arr texte categorie ligne 1",
+          "dataType": "Text",
+          "expression": "VAR t = [Fiche categorie texte] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR s1 = 1 VAR c1 = 0 VAR a1 = FALSE () VAR f1 = tot - c1 <= 571.0 VAR b1 = MAXX ( FILTER ( pc, [Value] > s1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c1 <= 571.0 ), [Value] ) + 0 VAR h1 = MAXX ( FILTER ( pc, [Value] >= s1 && [c] - c1 <= 571.0 ), [Value] ) + 0 VAR l1 = MAX ( IF ( b1 > 0, b1 - s1, h1 - s1 + 1 ), 0 ) RETURN IF ( a1, \"\", IF ( f1, MID ( t, s1, n ), MID ( t, s1, l1 ) ) )"
+        },
+        {
+          "name": "Arr texte categorie ligne 2",
+          "dataType": "Text",
+          "expression": "VAR t = [Fiche categorie texte] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR s1 = 1 VAR c1 = 0 VAR a1 = FALSE () VAR f1 = tot - c1 <= 571.0 VAR b1 = MAXX ( FILTER ( pc, [Value] > s1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c1 <= 571.0 ), [Value] ) + 0 VAR h1 = MAXX ( FILTER ( pc, [Value] >= s1 && [c] - c1 <= 571.0 ), [Value] ) + 0 VAR l1 = MAX ( IF ( b1 > 0, b1 - s1, h1 - s1 + 1 ), 0 ) VAR s2 = IF ( b1 > 0, b1 + 1, h1 + 1 ) VAR c2 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR a2 = a1 || f1 VAR f2 = tot - c2 <= 571.0 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c2 <= 560.25 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c2 <= 560.25 ), [Value] ) + 0 VAR l2 = MAX ( IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ), 0 ) RETURN IF ( a2, \"\", IF ( f2, MID ( t, s2, n ), MID ( t, s2, l2 ) & \"…\" ) )"
+        },
+        {
+          "name": "Arr source du calcul ligne 1",
+          "dataType": "Text",
+          "expression": "VAR t = [Fiche categorie source du calcul] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR s1 = 1 VAR c1 = 0 VAR a1 = FALSE () VAR f1 = tot - c1 <= 507.0 VAR b1 = MAXX ( FILTER ( pc, [Value] > s1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c1 <= 507.0 ), [Value] ) + 0 VAR h1 = MAXX ( FILTER ( pc, [Value] >= s1 && [c] - c1 <= 507.0 ), [Value] ) + 0 VAR l1 = MAX ( IF ( b1 > 0, b1 - s1, h1 - s1 + 1 ), 0 ) RETURN IF ( a1, \"\", IF ( f1, MID ( t, s1, n ), MID ( t, s1, l1 ) ) )"
+        },
+        {
+          "name": "Arr source du calcul ligne 2",
+          "dataType": "Text",
+          "expression": "VAR t = [Fiche categorie source du calcul] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR s1 = 1 VAR c1 = 0 VAR a1 = FALSE () VAR f1 = tot - c1 <= 507.0 VAR b1 = MAXX ( FILTER ( pc, [Value] > s1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c1 <= 507.0 ), [Value] ) + 0 VAR h1 = MAXX ( FILTER ( pc, [Value] >= s1 && [c] - c1 <= 507.0 ), [Value] ) + 0 VAR l1 = MAX ( IF ( b1 > 0, b1 - s1, h1 - s1 + 1 ), 0 ) VAR s2 = IF ( b1 > 0, b1 + 1, h1 + 1 ) VAR c2 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR a2 = a1 || f1 VAR f2 = tot - c2 <= 507.0 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c2 <= 507.0 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c2 <= 507.0 ), [Value] ) + 0 VAR l2 = MAX ( IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ), 0 ) RETURN IF ( a2, \"\", IF ( f2, MID ( t, s2, n ), MID ( t, s2, l2 ) ) )"
+        },
+        {
+          "name": "Arr source du calcul ligne 3",
+          "dataType": "Text",
+          "expression": "VAR t = [Fiche categorie source du calcul] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR s1 = 1 VAR c1 = 0 VAR a1 = FALSE () VAR f1 = tot - c1 <= 507.0 VAR b1 = MAXX ( FILTER ( pc, [Value] > s1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c1 <= 507.0 ), [Value] ) + 0 VAR h1 = MAXX ( FILTER ( pc, [Value] >= s1 && [c] - c1 <= 507.0 ), [Value] ) + 0 VAR l1 = MAX ( IF ( b1 > 0, b1 - s1, h1 - s1 + 1 ), 0 ) VAR s2 = IF ( b1 > 0, b1 + 1, h1 + 1 ) VAR c2 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR a2 = a1 || f1 VAR f2 = tot - c2 <= 507.0 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c2 <= 507.0 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c2 <= 507.0 ), [Value] ) + 0 VAR l2 = MAX ( IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ), 0 ) VAR s3 = IF ( b2 > 0, b2 + 1, h2 + 1 ) VAR c3 = MAXX ( FILTER ( pc, [Value] = s3 - 1 ), [c] ) + 0 VAR a3 = a2 || f2 VAR f3 = tot - c3 <= 507.0 VAR b3 = MAXX ( FILTER ( pc, [Value] > s3 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c3 <= 496.25 ), [Value] ) + 0 VAR h3 = MAXX ( FILTER ( pc, [Value] >= s3 && [c] - c3 <= 496.25 ), [Value] ) + 0 VAR l3 = MAX ( IF ( b3 > 0, b3 - s3, h3 - s3 + 1 ), 0 ) RETURN IF ( a3, \"\", IF ( f3, MID ( t, s3, n ), MID ( t, s3, l3 ) & \"…\" ) )"
+        },
+        {
+          "name": "Arr ecart des bornes",
+          "dataType": "Text",
+          "expression": "VAR v = [Ecart des bornes basses] VAR bb = [Borne basse de la decision] VAR e = IF ( ISBLANK ( v ) || ISBLANK ( bb ), BLANK (), ROUND ( CURRENCY ( bb ), 2 ) - ROUND ( CURRENCY ( bb ) - CURRENCY ( v ), 2 ) ) RETURN IF ( ISBLANK ( e ), \"\", FORMAT ( e, \"+ #,0.00;-#,0.00;0.00\" ) )"
+        },
+        {
+          "name": "Arr couleur montant decide",
+          "dataType": "Text",
+          "expression": "IF ( [Montant decide ou a remplir] = \"à remplir\", \"#B9C6D6\", \"#12233C\" )"
+        },
+        {
+          "name": "Arr couleur date d assemblee",
+          "dataType": "Text",
+          "expression": "IF ( [Date d assemblee ou a remplir] = \"à remplir\", \"#B9C6D6\", \"#12233C\" )"
+        },
+        {
+          "name": "Arr ligne decision",
+          "dataType": "Double",
+          "expression": "COUNTROWS ( 'decision_distribution' )"
+        },
+        {
+          "name": "Arr decide le",
+          "dataType": "Text",
+          "expression": "FORMAT ( MIN ( 'decision_distribution'[decide_le] ), \"dd/MM/yyyy\" )"
+        },
+        {
+          "name": "Arr fait sur total de l etape",
+          "dataType": "Text",
+          "expression": "FORMAT ( [Fait de l etape], \"#,0\" ) & \" / \" & FORMAT ( [Total de l etape], \"#,0\" )"
+        },
+        {
+          "name": "Arr sous-ligne limites",
+          "dataType": "Text",
+          "expression": "SUBSTITUTE ( [Sous-ligne limites], \" en écart au seuil\", \" en écart\" ) & \"\""
+        },
+        {
+          "name": "Arr ratio barre 1",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( MAX ( v_ratio_conclusion[ratio] ), FILTER ( ALL ( v_ratio_conclusion[code] ), v_ratio_conclusion[code] = \"ACTIFS_IMMO_60\" ) ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"0.00 %\" ) )"
+        },
+        {
+          "name": "Arr ratio barre 2",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( MAX ( v_ratio_conclusion[ratio] ), FILTER ( ALL ( v_ratio_conclusion[code] ), v_ratio_conclusion[code] = \"NON_COTE_51\" ) ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"0.00 %\" ) )"
+        },
+        {
+          "name": "Arr ratio barre 3",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( MAX ( v_ratio_conclusion[ratio] ), FILTER ( ALL ( v_ratio_conclusion[code] ), v_ratio_conclusion[code] = \"LIQUIDITES_5\" ) ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"0.00 %\" ) )"
+        },
+        {
+          "name": "Arr ratio barre 4",
+          "dataType": "Text",
+          "expression": "VAR v = CALCULATE ( MAX ( v_ratio_conclusion[ratio] ), FILTER ( ALL ( v_ratio_conclusion[code] ), v_ratio_conclusion[code] = \"ENDETTEMENT_40\" ) ) RETURN IF ( ISBLANK ( v ), \"\", FORMAT ( v, \"0.00 %\" ) )"
+        },
+        {
+          "name": "Arr vl publiee le",
+          "dataType": "Text",
+          "expression": "VAR t = TOPN ( 1, publication_vl, publication_vl[publie_le], DESC ) RETURN MAXX ( t, \"le \" & FORMAT ( publication_vl[publie_le], \"dd/MM/yyyy\" ) ) & \"\""
+        },
+        {
+          "name": "Arr pub blocage ligne 1",
+          "dataType": "Text",
+          "expression": "VAR t = [Blocage publication de la VL] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR s1 = 1 VAR c1 = 0 VAR a1 = FALSE () VAR f1 = tot - c1 <= 486.0 VAR b1 = MAXX ( FILTER ( pc, [Value] > s1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c1 <= 486.0 ), [Value] ) + 0 VAR h1 = MAXX ( FILTER ( pc, [Value] >= s1 && [c] - c1 <= 486.0 ), [Value] ) + 0 VAR l1 = MAX ( IF ( b1 > 0, b1 - s1, h1 - s1 + 1 ), 0 ) RETURN IF ( a1, \"\", IF ( f1, MID ( t, s1, n ), MID ( t, s1, l1 ) ) )"
+        },
+        {
+          "name": "Arr pub blocage ligne 2",
+          "dataType": "Text",
+          "expression": "VAR t = [Blocage publication de la VL] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR s1 = 1 VAR c1 = 0 VAR a1 = FALSE () VAR f1 = tot - c1 <= 486.0 VAR b1 = MAXX ( FILTER ( pc, [Value] > s1 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c1 <= 486.0 ), [Value] ) + 0 VAR h1 = MAXX ( FILTER ( pc, [Value] >= s1 && [c] - c1 <= 486.0 ), [Value] ) + 0 VAR l1 = MAX ( IF ( b1 > 0, b1 - s1, h1 - s1 + 1 ), 0 ) VAR s2 = IF ( b1 > 0, b1 + 1, h1 + 1 ) VAR c2 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR a2 = a1 || f1 VAR f2 = tot - c2 <= 486.0 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = \" \" && [c] - [w] - c2 <= 475.25 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c2 <= 475.25 ), [Value] ) + 0 VAR l2 = MAX ( IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ), 0 ) RETURN IF ( a2, \"\", IF ( f2, MID ( t, s2, n ), MID ( t, s2, l2 ) & \"…\" ) )"
+        },
+        {
+          "name": "Arr pub blocage fond 2",
+          "dataType": "Text",
+          "expression": "VAR t = [Blocage publication de la VL] & \"\" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), \"w\", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, \"c\", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR s1 = 1 VAR c1 = 0 VAR a1 = FALSE () RETURN IF ( tot > 486.0, \"#F7ECEC\", \"#FFFFFF00\" )"
+        },
+        {
+          "name": "Arr ecart des bornes basses",
+          "dataType": "Double",
+          "expression": "VAR v = [Ecart des bornes basses] VAR bb = [Borne basse de la decision] VAR e = IF ( ISBLANK ( v ) || ISBLANK ( bb ), BLANK (), ROUND ( CURRENCY ( bb ), 2 ) - ROUND ( CURRENCY ( bb ) - CURRENCY ( v ), 2 ) ) RETURN e"
+        }
+      ]
+    }
+  ]
+}

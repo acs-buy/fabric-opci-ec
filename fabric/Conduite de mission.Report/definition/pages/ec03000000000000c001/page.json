@@ -30,5 +30,17 @@
         }
       }
     ]
-  }
+  },
+  "visualInteractions": [
+    {
+      "source": "annTable",
+      "target": "annSansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "annTable",
+      "target": "annSansArrete2",
+      "type": "NoFilter"
+    }
+  ]
 }

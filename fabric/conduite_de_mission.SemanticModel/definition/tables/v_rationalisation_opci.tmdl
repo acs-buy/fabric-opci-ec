@@ -86,23 +86,33 @@ table v_rationalisation_opci
 		displayFolder: Le dossier
 		lineageTag: 3d1f96ff-537b-4659-b377-0d6e8403429f
 
-	/// Carte 3.5, Actif net rationalise. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.5, Actif net rationalise.
 	measure 'R35 Actif net rationalise' = VAR lignes = COUNTROWS ( v_rationalisation_opci ) RETURN IF ( lignes = 1, SUM ( v_rationalisation_opci[actif_net_rationalise] ) )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 3d4d03c8-3c6a-4d44-81ac-b8e99695659f
 
-	/// Carte 3.5, Actif net calcule. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.5, Actif net calcule.
 	measure 'R35 Actif net calcule' = VAR lignes = COUNTROWS ( v_rationalisation_opci ) RETURN IF ( lignes = 1, SUM ( v_rationalisation_opci[actif_net_calcule] ) )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 50c7f810-c199-4014-8ad4-6f74a9e6c144
 
-	/// Carte 3.5, Ecart. Le nom porte « de rationalisation » parce qu'un ecart de VL existe aussi en 4.1 : deux grandeurs differentes ne partagent jamais un nom.. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.5, Ecart. Le nom porte « de rationalisation » parce qu'un ecart de VL existe aussi en 4.1 : deux grandeurs differentes ne partagent jamais un nom..
 	measure 'R35 Ecart de rationalisation' = VAR arretes = COUNTROWS ( VALUES ( v_dim_arrete[arrete] ) ) RETURN IF ( arretes = 1, [R35 Actif net rationalise] - [R35 Actif net calcule] )
 		formatString: #,0.00
 		displayFolder: Rapports V2
 		lineageTag: 24bfa5c4-dd87-43f5-aba7-c73187a7ffb7
+
+	/// alerte hors du seuil (carte 5)
+	measure 'Encre rationalisation' = VAR e = SUM ( v_rationalisation_opci[actif_net_rationalise] ) - SUM ( v_rationalisation_opci[actif_net_calcule] ) RETURN IF ( ABS ( e ) > 1000, "#9A2A2A", "#12233C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: f04b4c89-fa33-444f-8b9b-356fd254f33a
+
+	/// « boucle au seuil de 1 000,00 » ou « hors du seuil de 1 000,00 » (carte 5)
+	measure 'Sous-ligne rationalisation' = VAR n = COUNTROWS ( v_rationalisation_opci ) VAR e = SUM ( v_rationalisation_opci[actif_net_rationalise] ) - SUM ( v_rationalisation_opci[actif_net_calcule] ) RETURN IF ( n > 0, IF ( ABS ( e ) <= 1000, "boucle au seuil de 1 000,00", "hors du seuil de 1 000,00" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 0fb2f534-584a-4012-a05b-e0d631c7b2f9
 
 	column entite
 		dataType: string

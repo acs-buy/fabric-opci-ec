@@ -1,0 +1,113 @@
+/// Reste a passer au compte 275, titres de filiales.
+table v_reprise_275_a_passer
+	lineageTag: d7050fdb-75d9-4fdf-916a-81012ac1dcd2
+
+	/// l’entité quand le reste à passer n’est pas nul, vide sinon
+	measure 'Entite si reprise 275' = VAR c = [Client selectionne] VAR a = SUM ( v_reprise_275_a_passer[a_passer] ) VAR lp = CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Entité] = c, v_lots_perimetre[famille] = "DERIVABLE", v_lots_perimetre[Cycle] = "PART", v_lots_perimetre[Statut du lot] = "PROPOSE" ) + 0 RETURN IF ( NOT ISBLANK ( a ) && ABS ( a ) >= 0.005 && lp = 0, c )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 9893bf80-b72b-43d3-a16e-1afb51ecf120
+
+	/// gris quand le reste à passer est nul
+	measure 'Fond reprendre 275' = IF ( ISBLANK ( [Entite si reprise 275] ), "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: a0305b34-6bbd-40be-aef6-5fd1714a0138
+
+	/// « reste à passer nul » ; « conditions réunies »
+	measure 'Blocage reprise 275' = VAR c = [Client selectionne] VAR a = SUM ( v_reprise_275_a_passer[a_passer] ) VAR lp = CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Entité] = c, v_lots_perimetre[famille] = "DERIVABLE", v_lots_perimetre[Cycle] = "PART", v_lots_perimetre[Statut du lot] = "PROPOSE" ) + 0 RETURN IF ( lp > 0, "lot de reprise proposé, en attente du visa", IF ( ISBLANK ( a ) || ABS ( a ) < 0.005, "reste à passer nul", "conditions réunies" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 22acd445-db49-40f3-adde-2374af037d8f
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 2d8b3331-4e4b-44de-84b2-7a2388c27374
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d5ad6ea1-7e11-46c1-9651-ae2447335369
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_actuelle_titres
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 1a35242b-5d49-4059-9703-2555549e062a
+		summarizeBy: sum
+		sourceColumn: valeur_actuelle_titres
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column titres_254
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: 52f660c1-2af9-4f0a-b33f-7f993759d9c8
+		summarizeBy: sum
+		sourceColumn: titres_254
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ecart_275
+		dataType: double
+		sourceProviderType: decimal(38, 2)
+		lineageTag: d3dff806-fa0e-4754-b614-4a9d01491c10
+		summarizeBy: sum
+		sourceColumn: ecart_275
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ecart_275_cible
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: d4da8b8e-1b12-4ea2-a502-2b1e7a9df568
+		summarizeBy: sum
+		sourceColumn: ecart_275_cible
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column a_passer
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: f753430d-bc7e-4a4f-85a3-ea2ed24ef8a0
+		summarizeBy: sum
+		sourceColumn: a_passer
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lecture
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(78)
+		lineageTag: 0e28b328-52f8-4e9f-aee5-0cb482bb5864
+		summarizeBy: none
+		sourceColumn: lecture
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_reprise_275_a_passer = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_reprise_275_a_passer = Source{[Schema="dbo",Item="v_reprise_275_a_passer"]}[Data]
+				in
+				    dbo_v_reprise_275_a_passer
+

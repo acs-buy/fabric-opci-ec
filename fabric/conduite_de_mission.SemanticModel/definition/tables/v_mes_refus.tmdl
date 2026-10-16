@@ -8,7 +8,7 @@ table v_mes_refus
 		displayFolder: Parcours
 		lineageTag: d7f08893-9654-4d40-b61b-413f350cb724
 
-	/// Carte 2.3, Refus ouverts. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 2.3, Refus ouverts.
 	measure 'R23 Refus ouverts' = COUNTROWS ( v_mes_refus )
 		formatString: #,0
 		displayFolder: Rapports V2

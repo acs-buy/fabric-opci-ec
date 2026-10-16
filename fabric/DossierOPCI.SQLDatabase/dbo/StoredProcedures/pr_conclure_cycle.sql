@@ -1,6 +1,5 @@
 
-
-
+-- pr_conclure_cycle : 3 refus
 -- 6. CONCLURE UN CYCLE : un cycle au programme d'un vehicule, admis depuis A_CONCLURE,
 -- CONCLU et RENVOYE. La synthese et le compte des feuilles lisent le perimetre.
 CREATE   PROCEDURE dbo.pr_conclure_cycle
@@ -17,7 +16,7 @@ BEGIN
     IF dbo.fn_tient_role_mission(@entite, @par, CAST(SYSUTCDATETIME() AS DATE)) = 0
     BEGIN
         DECLARE @m_role NVARCHAR (400) = N'Conclusion refusée : cette personne ne tient aucun rôle de mission sur l''entité ' + @entite + N' ; le cycle se conclut par l''équipe de la mission.';
-        THROW 50639, @m_role, 1;
+        BEGIN SET @m_role = REPLACE(@m_role, N'%', N'%%'); THROW 50639, @m_role, 1; END
     END;
     DECLARE @m NVARCHAR (400);
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_cycle WHERE code = @cycle)
@@ -25,14 +24,14 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND forme_vehicule IS NOT NULL)
     BEGIN
         SET @m = N'Conclusion refusée : l''entité ' + ISNULL(@entite, N'vide') + N' n''est pas un véhicule ; la revue porte sur le véhicule et couvre ses filiales.';
-        THROW 50520, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50520, @m, 1; END
     END;
     IF NOT EXISTS (SELECT 1 FROM dbo.arrete_mission WHERE entite = @entite AND arrete = @arrete)
         THROW 50322, N'Un cycle se conclut sur un arrêté ouvert.', 1;
     IF dbo.fn_cycle_au_programme(@entite, @arrete, @cycle) = 0
     BEGIN
         SET @m = N'Conclusion refusée : le cycle ' + @cycle + N' n''est pas au programme de cet arrêté.';
-        THROW 50519, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50519, @m, 1; END
     END;
     IF NULLIF(LTRIM(RTRIM(@conclusion)), N'') IS NULL
         THROW 50323, N'La conclusion du cycle est un texte : ce qui a été vu de bloquant, ce qui a été vu de satisfaisant.', 1;

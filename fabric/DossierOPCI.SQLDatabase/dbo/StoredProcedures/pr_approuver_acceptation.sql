@@ -1,4 +1,5 @@
 
+-- pr_approuver_acceptation : 3 refus
 CREATE   PROCEDURE dbo.pr_approuver_acceptation
     @entite    VARCHAR (20),
     @decision  VARCHAR (10),          -- ACCEPTEE ou REFUSEE
@@ -24,7 +25,7 @@ BEGIN
 
     IF @statut = 'REFUSE'
         THROW 50072,
-            N'Approbation refusée : l''acceptation de cette entité est au statut refusé. Le geste attendu est la reprise, qui exige un motif et remet le dossier à l''état ouvert.',
+            N'Approbation refusée : l''acceptation de cette entité est au statut refusé. L''action attendue est la reprise, qui exige un motif et remet le dossier à l''état ouvert.',
             1;
 
     -- Le proposant ne s'approuve pas lui-meme.
@@ -40,7 +41,7 @@ BEGIN
         VALUES ('pr_approuver_acceptation', @entite, @cote, @m70,
                 N'Faire approuver par l''associé signataire.', @par,
                 SYSUTCDATETIME());
-        THROW 50070, @m70, 1;
+        BEGIN SET @m70 = REPLACE(@m70, N'%', N'%%'); THROW 50070, @m70, 1; END
     END;
 
     -- Le role que la nature exige, lu de dbo.role_nature_visa.
@@ -58,7 +59,7 @@ BEGIN
             (procedure_nom, entite, cote, message, geste, refuse_pour, refuse_le)
         VALUES ('pr_approuver_acceptation', @entite, @cote, @m71,
                 N'Faire approuver par l''associé.', @par, SYSUTCDATETIME());
-        THROW 50071, @m71, 1;
+        BEGIN SET @m71 = REPLACE(@m71, N'%', N'%%'); THROW 50071, @m71, 1; END
     END;
 
     -- Le questionnaire complet. Une question obligatoire de la phase sans
@@ -92,7 +93,7 @@ BEGIN
         VALUES ('pr_approuver_acceptation', @entite, @cote, @sans, @m69,
                 N'Répondre aux questions obligatoires sans réponse.', @par,
                 SYSUTCDATETIME());
-        THROW 50069, @m69, 1;
+        BEGIN SET @m69 = REPLACE(@m69, N'%', N'%%'); THROW 50069, @m69, 1; END
     END;
 
     IF @decision NOT IN ('ACCEPTEE', 'REFUSEE')

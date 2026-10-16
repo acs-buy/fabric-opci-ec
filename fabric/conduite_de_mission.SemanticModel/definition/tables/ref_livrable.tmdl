@@ -1,0 +1,422 @@
+/// Les livrables du referentiel ; l'etape 6 produit ceux dont produit_etape_6 vaut 1.
+table ref_livrable
+	lineageTag: 78759ef4-9319-41ce-b4e9-8adfd6ac8d96
+
+	measure 'Livrable choisi' = IF ( HASONEVALUE ( ref_livrable[code] ), SELECTEDVALUE ( ref_livrable[code] ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 8d8b7981-e954-4ab7-a406-604ac238b5ed
+
+	measure 'Livrable comptes annuels' = "COMPTES_ANNUELS"
+		displayFolder: Ecran 2 etape 6
+		lineageTag: feb7e51b-5498-4a10-ac66-72ea9d2f145d
+
+	measure 'Livrable rapport' = "ATTESTATION"
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 75429abe-0258-4511-b3cf-fc6454d13c37
+
+	measure 'Livrable DIP' = "DIP"
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 44bb8ec0-7418-40bb-b741-2dbb41b4ba11
+
+	measure 'Format Word' = "DOCX"
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 0201365f-1992-40f9-9cce-12d0c40b0daf
+
+	measure 'Format Excel' = "XLSX"
+		displayFolder: Ecran 2 etape 6
+		lineageTag: b2d666c8-1dd4-4bc7-945f-82a2802f75d5
+
+	measure 'Obstacle a la production' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR u = USERPRINCIPALNAME () VAR j = TODAY () VAR connu = COUNTROWS ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ) ) + 0 VAR p6 = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), IF ( ref_livrable[produit_etape_6], 1, 0 ) ) + 0 VAR arr = COUNTROWS ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ) ) + 0 VAR role = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[du] <= j && ( ISBLANK ( role_mission[au] ) || role_mission[au] > j ) ) ) + 0 VAR due = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = l ) ) > 0 VAR rv = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[revue_visee], 1, 0 ) ) + 0 VAR cl = MAXX ( FILTER ( ALL ( v_visa_cloture_courant ), v_visa_cloture_courant[entite] = e && v_visa_cloture_courant[arrete] = a ), v_visa_cloture_courant[decision] ) VAR vca = MAXX ( FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = "COMPTES_ANNUELS" ), document_produit[version] ) VAR dca = COUNTROWS ( FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = "COMPTES_ANNUELS" && demande_document[etat] = "PRODUITE" && demande_document[version] = vca ) ) + 0 VAR pca = COUNTROWS ( FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = "COMPTES_ANNUELS" && document_produit[version] = vca && NOT ISBLANK ( document_produit[perime_le] ) ) ) + 0 VAR sva = COUNTROWS ( FILTER ( ALL ( v_annexe_document ), v_annexe_document[entite] = e && v_annexe_document[arrete] = a && v_annexe_document[livrable] = "COMPTES_ANNUELS" && v_annexe_document[version] = vca && ISBLANK ( v_annexe_document[annexe_version] ) ) ) + 0 RETURN SWITCH ( TRUE (), ISBLANK ( l ) || connu = 0, "livrable inconnu : " & IF ( ISBLANK ( l ), "vide", l ) & ".", ISBLANK ( e ) || ISBLANK ( a ) || arr = 0, "arrêté inconnu pour cette entité.", role = 0, "cette personne ne tient aucun rôle de mission sur l'entité " & e & ".", p6 <> 1, "le livrable " & l & " n'est pas produit par la solution ; seuls les comptes annuels, le rapport de l'expert-comptable et le DIP le sont.", NOT due, "le livrable " & l & " n'est pas dû à l'arrêté " & a & ".", rv <> 1, "la revue de l'arrêté n'est pas visée.", cl = "VISE", "l'arrêté est validé pour le client ; une nouvelle production suppose sa réouverture.", l = "ATTESTATION" && ( ISBLANK ( vca ) || dca = 0 || pca > 0 || sva > 0 ), "les comptes annuels de l'arrêté ne sont pas produits, ou leur dernière version est périmée ; le rapport de l'expert-comptable les couvre.", l = "COMPTES_ANNUELS", MAXX ( FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ), v_annexe_produisible[message_obstacle] ), BLANK () )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 0a7ae80f-d23e-4b26-b887-fbf764fe720b
+
+	measure 'Arrete a produire en Word' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR f = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[formats] ) VAR o = IF ( l = "ATTESTATION", [Obstacle a la production du rapport], [Obstacle a la production] ) VAR tq = FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = l ) VAR dv = MAXX ( tq, demande_document[version] ) VAR dd = MAXX ( FILTER ( tq, demande_document[version] = dv ), demande_document[etat] ) VAR tf = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l && document_produit[version] = dv ) VAR nf = COUNTROWS ( tf ) + 0 VAR nfo = COUNTROWS ( FILTER ( tf, document_produit[format] = "DOCX" ) ) + 0 VAR npe = COUNTROWS ( FILTER ( tf, NOT ISBLANK ( document_produit[perime_le] ) ) ) + 0 VAR pr = MINX ( tf, document_produit[produit_le] ) VAR rl = MAXX ( FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ), v_etat_revue[decide_le] ) VAR deja = dd = "DEMANDEE" && nf > 0 && npe = 0 && NOT ISBLANK ( pr ) && NOT ISBLANK ( rl ) && pr > rl && nfo > 0 RETURN IF ( NOT ISBLANK ( l ) && NOT ISBLANK ( a ) && ISBLANK ( o ) && CONTAINSSTRING ( "," & f & ",", ",DOCX," ) && NOT deja, a )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 908aa110-0968-4ff9-90fa-2f8ef3d417d4
+
+	measure 'Arrete a produire en Excel' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR f = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[formats] ) VAR o = [Obstacle a la production] VAR tq = FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = l ) VAR dv = MAXX ( tq, demande_document[version] ) VAR dd = MAXX ( FILTER ( tq, demande_document[version] = dv ), demande_document[etat] ) VAR tf = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l && document_produit[version] = dv ) VAR nf = COUNTROWS ( tf ) + 0 VAR nfo = COUNTROWS ( FILTER ( tf, document_produit[format] = "XLSX" ) ) + 0 VAR npe = COUNTROWS ( FILTER ( tf, NOT ISBLANK ( document_produit[perime_le] ) ) ) + 0 VAR pr = MINX ( tf, document_produit[produit_le] ) VAR rl = MAXX ( FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ), v_etat_revue[decide_le] ) VAR deja = dd = "DEMANDEE" && nf > 0 && npe = 0 && NOT ISBLANK ( pr ) && NOT ISBLANK ( rl ) && pr > rl && nfo > 0 RETURN IF ( NOT ISBLANK ( l ) && NOT ISBLANK ( a ) && ISBLANK ( o ) && CONTAINSSTRING ( "," & f & ",", ",XLSX," ) && NOT deja, a )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 3bdc153e-f40e-4430-aec1-8bbcffc694a3
+
+	measure 'Arrete des comptes annuels a produire' = CALCULATE ( [Arrete a produire en Word], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "COMPTES_ANNUELS" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: b5872c76-07e1-4d90-aac5-ac62cb150b11
+
+	measure 'Arrete du classeur a produire' = CALCULATE ( [Arrete a produire en Excel], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "COMPTES_ANNUELS" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 1343c89d-63fa-4ca9-9736-c54df28c06bd
+
+	measure 'Arrete du DIP a produire' = CALCULATE ( [Arrete a produire en Word], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "DIP" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 65c63da2-35b2-4792-8b24-8e62fde78288
+
+	measure 'Adresse du livrable choisi' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR td = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l ) VAR vm = MAXX ( td, document_produit[version] ) VAR tv = FILTER ( td, document_produit[version] = vm ) VAR w = MAXX ( FILTER ( tv, document_produit[format] = "DOCX" ), document_produit[web_url] ) VAR x = MINX ( FILTER ( tv, NOT ISBLANK ( document_produit[web_url] ) ), document_produit[web_url] ) VAR u0 = IF ( ISBLANK ( w ), x, w ) RETURN IF ( NOT ISBLANK ( l ) && NOT ISBLANK ( e ) && NOT ISBLANK ( a ), IF ( ISBLANK ( u0 ), BLANK (), ( VAR lsP1 = FIND ( "&action=", u0, 1, 0 ) VAR lsP = IF ( lsP1 > 0, lsP1, FIND ( "?action=", u0, 1, 0 ) ) VAR lsQ = IF ( lsP > 0, FIND ( "&", u0, lsP + 1, 0 ), 0 ) RETURN IF ( lsP > 0, LEFT ( u0, lsP ) & "action=view" & IF ( lsQ > 0, MID ( u0, lsQ, 4000 ), "" ), u0 & IF ( FIND ( "?", u0, 1, 0 ) > 0, "&", "?" ) & "action=view" ) ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: e9c6843a-2077-442a-837b-1e651296a41c
+
+	measure 'Adresse du classeur choisi' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR td = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l ) VAR vm = MAXX ( td, document_produit[version] ) VAR tv = FILTER ( td, document_produit[version] = vm ) VAR w = MAXX ( FILTER ( tv, document_produit[format] = "XLSX" ), document_produit[web_url] ) RETURN IF ( NOT ISBLANK ( l ) && NOT ISBLANK ( e ) && NOT ISBLANK ( a ), IF ( ISBLANK ( w ), BLANK (), ( VAR lsP1 = FIND ( "&action=", w, 1, 0 ) VAR lsP = IF ( lsP1 > 0, lsP1, FIND ( "?action=", w, 1, 0 ) ) VAR lsQ = IF ( lsP > 0, FIND ( "&", w, lsP + 1, 0 ), 0 ) RETURN IF ( lsP > 0, LEFT ( w, lsP ) & "action=view" & IF ( lsQ > 0, MID ( w, lsQ, 4000 ), "" ), w & IF ( FIND ( "?", w, 1, 0 ) > 0, "&", "?" ) & "action=view" ) ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: fdc67c27-a3e9-4683-8347-aabf07cc9119
+
+	measure 'Adresse des comptes annuels' = CALCULATE ( [Adresse du livrable choisi], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "COMPTES_ANNUELS" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 12c7c38a-cb2f-469c-9dd1-897177a7c75b
+
+	measure 'Adresse du classeur des comptes annuels' = CALCULATE ( [Adresse du classeur choisi], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "COMPTES_ANNUELS" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: d3527938-e254-4e9e-8b70-0c181ff3b610
+
+	measure 'Adresse du DIP' = CALCULATE ( [Adresse du livrable choisi], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "DIP" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 4df1bcb7-4cf0-46f7-9551-5195f828f106
+
+	measure 'Etat du livrable' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR td = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l ) VAR vm = MAXX ( td, document_produit[version] ) VAR tv = FILTER ( td, document_produit[version] = vm ) VAR pl = MAXX ( tv, document_produit[produit_le] ) VAR pp = MAXX ( tv, document_produit[produit_par] ) VAR pe = MAXX ( tv, document_produit[perime_le] ) VAR pm = MAXX ( tv, document_produit[perime_motif] ) VAR tq = FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = l ) VAR dv = MAXX ( tq, demande_document[version] ) VAR tdv = FILTER ( tq, demande_document[version] = dv ) VAR dd = MAXX ( tdv, demande_document[etat] ) VAR dl = MAXX ( tdv, demande_document[demande_le] ) VAR dm = MAXX ( tdv, demande_document[motif_refus] ) VAR du = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = l ) ) > 0 VAR fl = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[formats] ) VAR fs = SUBSTITUTE ( fl, ",", "|" ) VAR fx = "," & CONCATENATEX ( tv, document_produit[format], "," ) & "," VAR fm = FILTER ( GENERATESERIES ( 1, IF ( ISBLANK ( fl ), 0, PATHLENGTH ( fs ) ) ), NOT CONTAINSSTRING ( fx, "," & PATHITEM ( fs, [Value] ) & "," ) ) VAR nm = COUNTROWS ( fm ) + 0 VAR mq = CONCATENATEX ( fm, SWITCH ( PATHITEM ( fs, [Value] ), "DOCX", "Word", "XLSX", "classeur Excel", PATHITEM ( fs, [Value] ) ), " et ", [Value], ASC ) VAR dvm = MAXX ( FILTER ( tq, demande_document[version] = vm ), demande_document[etat] ) VAR et = IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), SWITCH ( TRUE (), NOT du, "sans objet", dd IN { "DEMANDEE", "REFUSEE" } && ( ISBLANK ( pl ) || dl > pl ), IF ( dd = "DEMANDEE", "demande posée", "refusé" ), ISBLANK ( vm ), "à produire", NOT ISBLANK ( pe ), "périmé", nm > 0 || dvm = "DEMANDEE", "incomplet", "produit" ) ) VAR mi = IF ( nm > 0, mq & " à produire", "demande de la version " & FORMAT ( vm, "0" ) & " en cours" ) RETURN et
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 82b8f601-5bd7-401a-ac0d-4ce027416d39
+
+	measure 'Version du livrable' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR td = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l ) VAR vm = MAXX ( td, document_produit[version] ) VAR tv = FILTER ( td, document_produit[version] = vm ) VAR pl = MAXX ( tv, document_produit[produit_le] ) VAR pp = MAXX ( tv, document_produit[produit_par] ) VAR pe = MAXX ( tv, document_produit[perime_le] ) VAR pm = MAXX ( tv, document_produit[perime_motif] ) VAR tq = FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = l ) VAR dv = MAXX ( tq, demande_document[version] ) VAR tdv = FILTER ( tq, demande_document[version] = dv ) VAR dd = MAXX ( tdv, demande_document[etat] ) VAR dl = MAXX ( tdv, demande_document[demande_le] ) VAR dm = MAXX ( tdv, demande_document[motif_refus] ) VAR du = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = l ) ) > 0 VAR fl = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[formats] ) VAR fs = SUBSTITUTE ( fl, ",", "|" ) VAR fx = "," & CONCATENATEX ( tv, document_produit[format], "," ) & "," VAR fm = FILTER ( GENERATESERIES ( 1, IF ( ISBLANK ( fl ), 0, PATHLENGTH ( fs ) ) ), NOT CONTAINSSTRING ( fx, "," & PATHITEM ( fs, [Value] ) & "," ) ) VAR nm = COUNTROWS ( fm ) + 0 VAR mq = CONCATENATEX ( fm, SWITCH ( PATHITEM ( fs, [Value] ), "DOCX", "Word", "XLSX", "classeur Excel", PATHITEM ( fs, [Value] ) ), " et ", [Value], ASC ) VAR dvm = MAXX ( FILTER ( tq, demande_document[version] = vm ), demande_document[etat] ) VAR et = IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), SWITCH ( TRUE (), NOT du, "sans objet", dd IN { "DEMANDEE", "REFUSEE" } && ( ISBLANK ( pl ) || dl > pl ), IF ( dd = "DEMANDEE", "demande posée", "refusé" ), ISBLANK ( vm ), "à produire", NOT ISBLANK ( pe ), "périmé", nm > 0 || dvm = "DEMANDEE", "incomplet", "produit" ) ) VAR mi = IF ( nm > 0, mq & " à produire", "demande de la version " & FORMAT ( vm, "0" ) & " en cours" ) RETURN IF ( NOT ISBLANK ( et ) && du && NOT ISBLANK ( vm ), "v" & FORMAT ( vm, "0" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: fc56ee19-b2d6-4bf3-b51d-9566ec58a65e
+
+	measure 'Produit par et le' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR td = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l ) VAR vm = MAXX ( td, document_produit[version] ) VAR tv = FILTER ( td, document_produit[version] = vm ) VAR pl = MAXX ( tv, document_produit[produit_le] ) VAR pp = MAXX ( tv, document_produit[produit_par] ) VAR pe = MAXX ( tv, document_produit[perime_le] ) VAR pm = MAXX ( tv, document_produit[perime_motif] ) VAR tq = FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = l ) VAR dv = MAXX ( tq, demande_document[version] ) VAR tdv = FILTER ( tq, demande_document[version] = dv ) VAR dd = MAXX ( tdv, demande_document[etat] ) VAR dl = MAXX ( tdv, demande_document[demande_le] ) VAR dm = MAXX ( tdv, demande_document[motif_refus] ) VAR du = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = l ) ) > 0 VAR fl = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[formats] ) VAR fs = SUBSTITUTE ( fl, ",", "|" ) VAR fx = "," & CONCATENATEX ( tv, document_produit[format], "," ) & "," VAR fm = FILTER ( GENERATESERIES ( 1, IF ( ISBLANK ( fl ), 0, PATHLENGTH ( fs ) ) ), NOT CONTAINSSTRING ( fx, "," & PATHITEM ( fs, [Value] ) & "," ) ) VAR nm = COUNTROWS ( fm ) + 0 VAR mq = CONCATENATEX ( fm, SWITCH ( PATHITEM ( fs, [Value] ), "DOCX", "Word", "XLSX", "classeur Excel", PATHITEM ( fs, [Value] ) ), " et ", [Value], ASC ) VAR dvm = MAXX ( FILTER ( tq, demande_document[version] = vm ), demande_document[etat] ) VAR et = IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), SWITCH ( TRUE (), NOT du, "sans objet", dd IN { "DEMANDEE", "REFUSEE" } && ( ISBLANK ( pl ) || dl > pl ), IF ( dd = "DEMANDEE", "demande posée", "refusé" ), ISBLANK ( vm ), "à produire", NOT ISBLANK ( pe ), "périmé", nm > 0 || dvm = "DEMANDEE", "incomplet", "produit" ) ) VAR mi = IF ( nm > 0, mq & " à produire", "demande de la version " & FORMAT ( vm, "0" ) & " en cours" ) RETURN IF ( NOT ISBLANK ( et ) && du && NOT ISBLANK ( pp ), pp & ", " & FORMAT ( pl, "dd/MM/yyyy" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 1902bd93-cca6-4f8c-8f26-b4b5c7f7d313
+
+	measure 'Lignes a remplir du livrable' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR r = MAXX ( FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ), v_annexe_produisible[cellules_a_remplir] ) RETURN IF ( l = "COMPTES_ANNUELS" && COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = l ) ) > 0 && r > 0, r )
+		formatString: 0
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 96856496-923f-4cc0-8bce-010092c5fed8
+
+	measure 'Message de l etat du livrable' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR td = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l ) VAR vm = MAXX ( td, document_produit[version] ) VAR tv = FILTER ( td, document_produit[version] = vm ) VAR pl = MAXX ( tv, document_produit[produit_le] ) VAR pp = MAXX ( tv, document_produit[produit_par] ) VAR pe = MAXX ( tv, document_produit[perime_le] ) VAR pm = MAXX ( tv, document_produit[perime_motif] ) VAR tq = FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = l ) VAR dv = MAXX ( tq, demande_document[version] ) VAR tdv = FILTER ( tq, demande_document[version] = dv ) VAR dd = MAXX ( tdv, demande_document[etat] ) VAR dl = MAXX ( tdv, demande_document[demande_le] ) VAR dm = MAXX ( tdv, demande_document[motif_refus] ) VAR du = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = l ) ) > 0 VAR fl = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[formats] ) VAR fs = SUBSTITUTE ( fl, ",", "|" ) VAR fx = "," & CONCATENATEX ( tv, document_produit[format], "," ) & "," VAR fm = FILTER ( GENERATESERIES ( 1, IF ( ISBLANK ( fl ), 0, PATHLENGTH ( fs ) ) ), NOT CONTAINSSTRING ( fx, "," & PATHITEM ( fs, [Value] ) & "," ) ) VAR nm = COUNTROWS ( fm ) + 0 VAR mq = CONCATENATEX ( fm, SWITCH ( PATHITEM ( fs, [Value] ), "DOCX", "Word", "XLSX", "classeur Excel", PATHITEM ( fs, [Value] ) ), " et ", [Value], ASC ) VAR dvm = MAXX ( FILTER ( tq, demande_document[version] = vm ), demande_document[etat] ) VAR et = IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), SWITCH ( TRUE (), NOT du, "sans objet", dd IN { "DEMANDEE", "REFUSEE" } && ( ISBLANK ( pl ) || dl > pl ), IF ( dd = "DEMANDEE", "demande posée", "refusé" ), ISBLANK ( vm ), "à produire", NOT ISBLANK ( pe ), "périmé", nm > 0 || dvm = "DEMANDEE", "incomplet", "produit" ) ) VAR mi = IF ( nm > 0, mq & " à produire", "demande de la version " & FORMAT ( vm, "0" ) & " en cours" ) VAR nd = MINX ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[livrable] = "DIP" && v_livrables_dus[arrete] > a ), v_livrables_dus[arrete] ) VAR ndt = MAXX ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[livrable] = "DIP" && v_livrables_dus[arrete] = nd ), v_livrables_dus[type_arrete] ) VAR k = SEARCH ( " : ", pm, 1, 0 ) RETURN IF ( ISBLANK ( et ), BLANK (), SWITCH ( et, "demande posée", "demandée le " & FORMAT ( dl, "dd/MM/yyyy" ), "refusé", dm & "", "périmé", IF ( k > 0, LEFT ( pm, k - 1 ), pm & "" ), "incomplet", mi, "sans objet", IF ( l = "DIP" && NOT ISBLANK ( nd ), "dû à l’arrêté " & LOWER ( ndt ) & " du " & MID ( nd, 9, 2 ) & "/" & MID ( nd, 6, 2 ) & "/" & LEFT ( nd, 4 ), "" ), "" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: b7d2cca8-5a54-462c-b420-eb10fb7b9743
+
+	measure 'Message du livrable' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR td = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l ) VAR vm = MAXX ( td, document_produit[version] ) VAR tv = FILTER ( td, document_produit[version] = vm ) VAR pl = MAXX ( tv, document_produit[produit_le] ) VAR pp = MAXX ( tv, document_produit[produit_par] ) VAR pe = MAXX ( tv, document_produit[perime_le] ) VAR pm = MAXX ( tv, document_produit[perime_motif] ) VAR tq = FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = l ) VAR dv = MAXX ( tq, demande_document[version] ) VAR tdv = FILTER ( tq, demande_document[version] = dv ) VAR dd = MAXX ( tdv, demande_document[etat] ) VAR dl = MAXX ( tdv, demande_document[demande_le] ) VAR dm = MAXX ( tdv, demande_document[motif_refus] ) VAR du = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = l ) ) > 0 VAR fl = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[formats] ) VAR fs = SUBSTITUTE ( fl, ",", "|" ) VAR fx = "," & CONCATENATEX ( tv, document_produit[format], "," ) & "," VAR fm = FILTER ( GENERATESERIES ( 1, IF ( ISBLANK ( fl ), 0, PATHLENGTH ( fs ) ) ), NOT CONTAINSSTRING ( fx, "," & PATHITEM ( fs, [Value] ) & "," ) ) VAR nm = COUNTROWS ( fm ) + 0 VAR mq = CONCATENATEX ( fm, SWITCH ( PATHITEM ( fs, [Value] ), "DOCX", "Word", "XLSX", "classeur Excel", PATHITEM ( fs, [Value] ) ), " et ", [Value], ASC ) VAR dvm = MAXX ( FILTER ( tq, demande_document[version] = vm ), demande_document[etat] ) VAR et = IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), SWITCH ( TRUE (), NOT du, "sans objet", dd IN { "DEMANDEE", "REFUSEE" } && ( ISBLANK ( pl ) || dl > pl ), IF ( dd = "DEMANDEE", "demande posée", "refusé" ), ISBLANK ( vm ), "à produire", NOT ISBLANK ( pe ), "périmé", nm > 0 || dvm = "DEMANDEE", "incomplet", "produit" ) ) VAR mi = IF ( nm > 0, mq & " à produire", "demande de la version " & FORMAT ( vm, "0" ) & " en cours" ) VAR rv = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[revue_visee], 1, 0 ) ) + 0 VAR cl = MAXX ( FILTER ( ALL ( v_visa_cloture_courant ), v_visa_cloture_courant[entite] = e && v_visa_cloture_courant[arrete] = a ), v_visa_cloture_courant[decision] ) VAR sc = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), IF ( ISBLANK ( ref_entite[soumise_commissariat_comptes] ), BLANK (), IF ( ref_entite[soumise_commissariat_comptes], 1, 0 ) ) ) VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR fa = MAXX ( tr, v_rapport_expert_comptable[forme_arretee] ) VAR al = MAXX ( tr, v_rapport_expert_comptable[arretee_le] ) VAR mc = MAXX ( tr, v_rapport_expert_comptable[motif_considerations_particulieres] ) VAR m0 = [Message de l etat du livrable] VAR eca = CALCULATE ( [Etat du livrable], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "COMPTES_ANNUELS" ) VAR actif = NOT ( et IN { "produit", "sans objet" } ) VAR g1 = IF ( l = "ATTESTATION", IF ( ISBLANK ( al ), "forme non arrêtée", IF ( fa IN { "SANS_OBSERVATION", "AVEC_OBSERVATION", "IMPOSSIBILITE" } && ( ISBLANK ( sc ) || sc = 1 ) && LEN ( TRIM ( mc ) ) = 0, "attestation sans motif de considérations particulières" ) ), IF ( et = "demande posée", "demande en cours" ) ) VAR g2 = IF ( l = "ATTESTATION", IF ( eca <> "produit", "comptes annuels non produits" ), IF ( rv <> 1, "revue non visée" ) ) VAR g3 = IF ( cl = "VISE", "arrêté validé pour le client" ) VAR pr = MAXX ( FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ), IF ( v_annexe_produisible[produisible], 1, 0 ) ) VAR g5 = IF ( l = "COMPTES_ANNUELS" && actif && NOT ISBLANK ( pr ) && pr = 0, "tableau 333-3 non rapproché du bilan" ) VAR p = { ( 1, m0 ), ( 2, IF ( actif, g1 ) ), ( 3, IF ( actif, g2 ) ), ( 4, IF ( actif, g3 ) ), ( 5, IF ( actif, g5 ) ) } RETURN IF ( ISBLANK ( et ), BLANK (), CONCATENATEX ( FILTER ( p, [Value2] <> "" ), [Value2], " ; ", [Value1], ASC ) & "" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 6c1f4d7d-57b9-45bd-a261-5d86ca2ab10d
+
+	measure 'Version produite du livrable' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] VAR td = FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = l ) VAR vm = MAXX ( td, document_produit[version] ) VAR tv = FILTER ( td, document_produit[version] = vm ) VAR pl = MAXX ( tv, document_produit[produit_le] ) VAR pp = MAXX ( tv, document_produit[produit_par] ) VAR pe = MAXX ( tv, document_produit[perime_le] ) VAR pm = MAXX ( tv, document_produit[perime_motif] ) VAR tq = FILTER ( ALL ( demande_document ), demande_document[entite] = e && demande_document[arrete] = a && demande_document[livrable] = l ) VAR dv = MAXX ( tq, demande_document[version] ) VAR tdv = FILTER ( tq, demande_document[version] = dv ) VAR dd = MAXX ( tdv, demande_document[etat] ) VAR dl = MAXX ( tdv, demande_document[demande_le] ) VAR dm = MAXX ( tdv, demande_document[motif_refus] ) VAR du = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = l ) ) > 0 VAR fl = MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[formats] ) VAR fs = SUBSTITUTE ( fl, ",", "|" ) VAR fx = "," & CONCATENATEX ( tv, document_produit[format], "," ) & "," VAR fm = FILTER ( GENERATESERIES ( 1, IF ( ISBLANK ( fl ), 0, PATHLENGTH ( fs ) ) ), NOT CONTAINSSTRING ( fx, "," & PATHITEM ( fs, [Value] ) & "," ) ) VAR nm = COUNTROWS ( fm ) + 0 VAR mq = CONCATENATEX ( fm, SWITCH ( PATHITEM ( fs, [Value] ), "DOCX", "Word", "XLSX", "classeur Excel", PATHITEM ( fs, [Value] ) ), " et ", [Value], ASC ) VAR dvm = MAXX ( FILTER ( tq, demande_document[version] = vm ), demande_document[etat] ) VAR et = IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), BLANK (), SWITCH ( TRUE (), NOT du, "sans objet", dd IN { "DEMANDEE", "REFUSEE" } && ( ISBLANK ( pl ) || dl > pl ), IF ( dd = "DEMANDEE", "demande posée", "refusé" ), ISBLANK ( vm ), "à produire", NOT ISBLANK ( pe ), "périmé", nm > 0 || dvm = "DEMANDEE", "incomplet", "produit" ) ) VAR mi = IF ( nm > 0, mq & " à produire", "demande de la version " & FORMAT ( vm, "0" ) & " en cours" ) VAR m0 = [Message de l etat du livrable] RETURN IF ( ISBLANK ( et ), BLANK (), IF ( du && NOT ISBLANK ( vm ), IF ( et = "incomplet", "version " & FORMAT ( vm, "0" ), "version " & FORMAT ( vm, "0" ) & ", produite le " & FORMAT ( pl, "dd/MM/yyyy" ) & IF ( NOT ISBLANK ( pe ), ", périmée le " & FORMAT ( pe, "dd/MM/yyyy" ), "" ) ), IF ( m0 <> "", m0, "aucune version produite" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: d14af384-eb86-4167-8770-ffb2f037a0fa
+
+	measure 'Nom du livrable choisi' = VAR l = [Livrable choisi] RETURN MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[nom] )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: a7984e1e-65ee-4b5e-94a7-20535d5fd864
+
+	measure 'Depot des livrables' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "Dossiers de travail/" & e & "/" & a & "/Livrables" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 0f7f0a72-88c5-4867-8273-afee679ea32f
+
+	measure 'Sous-titre des livrables de l arrete' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR typ = MAXX ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ), ref_arrete[Type] ) VAR nl = COUNTROWS ( FILTER ( ALL ( ref_livrable ), ref_livrable[produit_etape_6] = TRUE () ) ) + 0 VAR p6 = SELECTCOLUMNS ( FILTER ( ALL ( ref_livrable ), ref_livrable[produit_etape_6] = TRUE () ), "c", ref_livrable[code] ) VAR td6 = FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a ) VAR nds = COUNTROWS ( FILTER ( td6, v_livrables_dus[livrable] IN p6 ) ) + 0 VAR hors = CONCATENATEX ( FILTER ( td6, NOT ( v_livrables_dus[livrable] IN p6 ) && v_livrables_dus[livrable] <> "INVENTAIRE" ), SWITCH ( v_livrables_dus[livrable], "RAPPORT_ANNUEL", "rapport annuel", "DISTRIBUTION", "distribution", LOWER ( v_livrables_dus[libelle] ) ), ", ", v_livrables_dus[ordre], ASC ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), FORMAT ( nl, "0" ) & " livrables, " & FORMAT ( nds, "0" ) & IF ( nds > 1, " dus", " dû" ) & " à l’arrêté " & LOWER ( typ ) & IF ( hors <> "", " ; dus aussi, hors de l’étape : " & hors, "" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 08310b32-0f73-46d1-8740-ac3ce4c6530f
+
+	measure 'Carte livrables' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = ADDCOLUMNS ( FILTER ( ALL ( ref_livrable ), ref_livrable[produit_etape_6] = TRUE () ), "et", CALCULATE ( [Etat du livrable] ) ) VAR nd = COUNTROWS ( FILTER ( t, [et] <> "sans objet" ) ) + 0 VAR np = COUNTROWS ( FILTER ( t, [et] = "produit" ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), FORMAT ( np, "0" ) & " / " & FORMAT ( nd, "0" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: cf70fff6-a383-4818-94c4-bc64fef00eb6
+
+	measure 'Carte livrables sous-titre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = ADDCOLUMNS ( FILTER ( ALL ( ref_livrable ), ref_livrable[produit_etape_6] = TRUE () ), "et", CALCULATE ( [Etat du livrable] ) ) VAR n1 = COUNTROWS ( FILTER ( t, [et] = "demande posée" ) ) + 0 VAR n2 = COUNTROWS ( FILTER ( t, [et] = "refusé" ) ) + 0 VAR n3 = COUNTROWS ( FILTER ( t, [et] = "périmé" ) ) + 0 VAR n4 = COUNTROWS ( FILTER ( t, [et] = "à produire" ) ) + 0 VAR n5 = COUNTROWS ( FILTER ( t, [et] = "incomplet" ) ) + 0 VAR nh = COUNTROWS ( FILTER ( t, [et] = "sans objet" ) ) + 0 VAR hb = MAXX ( FILTER ( t, [et] = "sans objet" ), SWITCH ( ref_livrable[code], "COMPTES_ANNUELS", "comptes annuels", "ATTESTATION", "rapport", "DIP", "DIP", ref_livrable[code] ) ) VAR p = { ( 1, IF ( n1 > 0, FORMAT ( n1, "0" ) & IF ( n1 > 1, " demandes posées", " demande posée" ) ) ), ( 2, IF ( n2 > 0, FORMAT ( n2, "0" ) & IF ( n2 > 1, " refusés", " refusé" ) ) ), ( 3, IF ( n3 > 0, FORMAT ( n3, "0" ) & IF ( n3 > 1, " périmés", " périmé" ) ) ), ( 4, IF ( n5 > 0, FORMAT ( n5, "0" ) & IF ( n5 > 1, " incomplets", " incomplet" ) ) ), ( 5, IF ( n4 > 0, FORMAT ( n4, "0" ) & " à produire" ) ), ( 6, IF ( nh = 1, hb & " sans objet", IF ( nh > 1, FORMAT ( nh, "0" ) & " sans objet" ) ) ) } RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), CONCATENATEX ( FILTER ( p, [Value2] <> "" ), [Value2], ", ", [Value1], ASC ) & "" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: bf6a0801-06c2-4ff0-bc39-d4e7f6f42d01
+
+	measure 'Carte livrables encre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = ADDCOLUMNS ( FILTER ( ALL ( ref_livrable ), ref_livrable[produit_etape_6] = TRUE () ), "et", CALCULATE ( [Etat du livrable] ) ) VAR nd = COUNTROWS ( FILTER ( t, [et] <> "sans objet" ) ) + 0 VAR np = COUNTROWS ( FILTER ( t, [et] = "produit" ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "#12233C", IF ( np = nd, "#1F6D4A", "#8A6710" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: ff07f010-388e-4b15-bf42-17b8fac5d9fe
+
+	measure 'Tuile comptes annuels' = VAR et = CALCULATE ( [Etat du livrable], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "COMPTES_ANNUELS" ) VAR v = CALCULATE ( [Version du livrable], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "COMPTES_ANNUELS" ) VAR r = CALCULATE ( [Lignes a remplir du livrable], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "COMPTES_ANNUELS" ) RETURN IF ( ISBLANK ( et ), "", et & IF ( ISBLANK ( v ), "", ", " & v ) & IF ( r > 0, ", " & FORMAT ( r, "0" ) & IF ( r > 1, " cellules à remplir", " cellule à remplir" ), "" ) )
+		lineageTag: 14461495-5e74-4536-95b0-70898e96212e
+
+	measure 'Tuile rapport' = VAR et = CALCULATE ( [Etat du livrable], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "ATTESTATION" ) VAR v = CALCULATE ( [Version du livrable], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "ATTESTATION" ) VAR r = CALCULATE ( [Lignes a remplir du livrable], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "ATTESTATION" ) RETURN IF ( ISBLANK ( et ), "", et & IF ( ISBLANK ( v ), "", ", " & v ) & IF ( r > 0, ", " & FORMAT ( r, "0" ) & IF ( r > 1, " cellules à remplir", " cellule à remplir" ), "" ) )
+		lineageTag: 16941197-1351-43a8-b78c-abb6e3bc0913
+
+	measure 'Tuile DIP' = VAR et = CALCULATE ( [Etat du livrable], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "DIP" ) VAR v = CALCULATE ( [Version du livrable], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "DIP" ) VAR r = CALCULATE ( [Lignes a remplir du livrable], REMOVEFILTERS ( ref_livrable ), ref_livrable[code] = "DIP" ) RETURN IF ( ISBLANK ( et ), "", et & IF ( ISBLANK ( v ), "", ", " & v ) & IF ( r > 0, ", " & FORMAT ( r, "0" ) & IF ( r > 1, " cellules à remplir", " cellule à remplir" ), "" ) )
+		lineageTag: aa30d8b2-2713-4ab7-ba34-afd33a9fed02
+
+	measure 'Livrable choisi libelle 1' = VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ), "", SWITCH ( l, "COMPTES_ANNUELS", "État", "ATTESTATION", "État", "DIP", "État", "" ) )
+		lineageTag: 4158365a-c4e7-4de9-b996-9dca2083845f
+
+	measure 'Livrable choisi valeur 1' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( IF ( ISBLANK ( [Etat du livrable] ), "", [Etat du livrable] & " ; " & [Version produite du livrable] & [Formats manquants du livrable] ) ), "ATTESTATION", ( IF ( ISBLANK ( [Etat du livrable] ), "", [Etat du livrable] & " ; " & [Version produite du livrable] & [Formats manquants du livrable] ) ), "DIP", ( IF ( ISBLANK ( [Etat du livrable] ), "", [Etat du livrable] & " ; " & [Version produite du livrable] & [Formats manquants du livrable] ) ), "" ) )
+		lineageTag: cd22a64a-af94-48e2-a04f-5719f6771db3
+
+	measure 'Livrable choisi libelle 2' = VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ), "", SWITCH ( l, "COMPTES_ANNUELS", "Pièces, art. 311-1", "ATTESTATION", "Contenu", "DIP", "Contenu", "" ) )
+		lineageTag: 5de2393f-8fa8-4194-a086-bf7c5afe11a5
+
+	measure 'Livrable choisi valeur 2' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( "Bilan, art. 321-2 et 321-6, " & FORMAT ( COUNTROWS ( FILTER ( ALL ( v_ligne_etat_montant ), v_ligne_etat_montant[entite] = e && v_ligne_etat_montant[arrete] = a && v_ligne_etat_montant[etat] IN { "BILAN_ACTIF", "BILAN_PASSIF" } ) ) + 0, "0" ) & " lignes" ), "ATTESTATION", ( MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[article] ) & "" ), "DIP", ( MAXX ( FILTER ( ALL ( ref_livrable ), ref_livrable[code] = l ), ref_livrable[article] ) & "" ), "" ) )
+		lineageTag: 324d5085-1a87-46e2-9dfc-f622f564bb48
+
+	measure 'Livrable choisi libelle 3' = VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ), "", SWITCH ( l, "COMPTES_ANNUELS", "Cellules d’annexe à remplir", "ATTESTATION", "Forme", "DIP", "Rubriques", "" ) )
+		lineageTag: c81f61d9-d051-4ec7-b9f1-e30bf577682c
+
+	measure 'Livrable choisi valeur 3' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( VAR rem = MAXX ( FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ), v_annexe_produisible[cellules_a_remplir] ) + 0 VAR att = MAXX ( FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ), v_annexe_produisible[en_attente] ) + 0 VAR imp = SUMX ( FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a ), v_cellules_a_remplir[imposees] ) + 0 VAR tot = SUMX ( FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a ), v_cellules_a_remplir[cellules] ) + 0 RETURN FORMAT ( rem, "0" ) & " sur " & FORMAT ( tot, "0" ) & " ; " & FORMAT ( att, "0" ) & " en attente ; " & FORMAT ( imp, "0" ) & " d’obligation imposée" ), "ATTESTATION", ( [Carte rapport sous-titre] & "" ), "DIP", ( "6 rubriques sortent de la mission ; la 7e relève de la société de gestion" ), "" ) )
+		lineageTag: 3d66c8b6-570e-40d8-92cd-0c0b14404cf2
+
+	measure 'Livrable choisi libelle 4' = VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ), "", SWITCH ( l, "COMPTES_ANNUELS", "Articles bloquants", "ATTESTATION", "Dépôt", "DIP", "Dépôt", "" ) )
+		lineageTag: d132bd66-2006-42d3-812e-f10684972832
+
+	measure 'Livrable choisi valeur 4' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( VAR af = MAXX ( FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ), v_annexe_produisible[articles_fautifs] ) & "" VAR n = LEN ( af ) VAR p = IF ( n > 60, SEARCH ( ", ", af, 48, 0 ), 0 ) VAR r = IF ( p > 0, MID ( af, p + 2, n ), "" ) VAR n2 = LEN ( r ) VAR p2 = IF ( n2 > 60, SEARCH ( ", ", r, 48, 0 ), 0 ) RETURN IF ( af = "", "aucun", IF ( p > 0, LEFT ( af, p ), af ) ) ), "ATTESTATION", ( IF ( ISBLANK ( [Depot des livrables] ), "", "site du cabinet, " & [Depot des livrables] ) ), "DIP", ( IF ( ISBLANK ( [Depot des livrables] ), "", "site du cabinet, " & [Depot des livrables] ) ), "" ) )
+		lineageTag: c4c554de-c808-41c2-a418-316af366fa0b
+
+	measure 'Livrable choisi libelle 5' = VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ), "", SWITCH ( l, "COMPTES_ANNUELS", "Articles sans cellule en base", "" ) )
+		lineageTag: aa8042fe-e9fe-416e-bb20-6573052a79f9
+
+	measure 'Livrable choisi valeur 5' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( VAR s = EXCEPT ( DISTINCT ( SELECTCOLUMNS ( FILTER ( ALL ( v_ligne_annexe_montant ), v_ligne_annexe_montant[entite] = e && v_ligne_annexe_montant[arrete] = a ), "x", v_ligne_annexe_montant[article] ) ), DISTINCT ( SELECTCOLUMNS ( FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a ), "x", v_cellules_a_remplir[article] ) ) ) VAR n = COUNTROWS ( s ) + 0 VAR t = COUNTROWS ( DISTINCT ( SELECTCOLUMNS ( FILTER ( ALL ( v_ligne_annexe_montant ), v_ligne_annexe_montant[entite] = e && v_ligne_annexe_montant[arrete] = a ), "x", v_ligne_annexe_montant[article] ) ) ) + 0 RETURN FORMAT ( n, "0" ) & " sur " & FORMAT ( t, "0" ) & IF ( n > 0, " : " & CONCATENATEX ( s, [x], ", ", [x], ASC ), "" ) ), "" ) )
+		lineageTag: 254315cc-560f-4ebb-99a2-2f22e6395e08
+
+	measure 'Livrable choisi libelle 6' = VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ), "", SWITCH ( l, "COMPTES_ANNUELS", "Inventaire du portefeuille", "" ) )
+		lineageTag: acc56e64-7d18-4d48-8f1b-e1aafaae055b
+
+	measure 'Livrable choisi valeur 6' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( VAR t3 = FILTER ( FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a ), LEFT ( v_cellules_a_remplir[article], 4 ) = "336-" ) RETURN "dans l’annexe, art. 336-1 à 336-3 : " & FORMAT ( SUMX ( t3, v_cellules_a_remplir[cellules_a_remplir] ) + 0, "0" ) & " cellules à remplir sur " & FORMAT ( SUMX ( t3, v_cellules_a_remplir[cellules] ) + 0, "0" ) ), "" ) )
+		lineageTag: 6341e744-ac49-492d-9d3c-c3261d82fbbe
+
+	measure 'Page du livrable choisi' = SWITCH ( [Livrable choisi], "COMPTES_ANNUELS", "Bilan", "ATTESTATION", "Rapport de l’expert-comptable", "DIP", "Document d’information périodique" )
+		lineageTag: 18290e43-e624-4c1e-bcc9-21ba07821bf6
+
+	measure 'Aff Carte livrables' = [Carte livrables] & ""
+		lineageTag: b4ef0b22-e5d3-4f63-8be6-376c6fc0b4ee
+
+	measure 'Aff Carte livrables sous-titre' = [Carte livrables sous-titre] & ""
+		lineageTag: 2ecfaff5-57a4-4151-aacc-9c90f71b6f89
+
+	measure 'Aff Sous-titre des livrables de l arrete' = [Sous-titre des livrables de l arrete] & ""
+		lineageTag: 64a5facc-6d97-46c5-a1f2-acba7944f4f7
+
+	measure 'Aff Nom du livrable choisi' = [Nom du livrable choisi] & ""
+		lineageTag: b9f294c8-188c-4bff-b452-a1673ea533d1
+
+	measure 'Fond revLivProduireWord' = IF ( ISBLANK ( [Arrete a produire en Word] ) || ISBLANK ( [Livrable choisi] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: b9888ff9-35d3-4f74-8374-1f4e2cc5a2e2
+
+	measure 'Libelle revLivProduireWord' = "Produire en Word"
+		lineageTag: 88700b0f-1419-4006-81df-e60366afb4a4
+
+	measure 'Fond revLivProduireExcel' = IF ( ISBLANK ( [Arrete a produire en Excel] ) || ISBLANK ( [Livrable choisi] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 32a0dda3-fd62-49cb-baaf-6dfa5bcaa461
+
+	measure 'Libelle revLivProduireExcel' = "Produire en Excel"
+		lineageTag: fbd14365-9870-46ef-a330-e128305de1de
+
+	measure 'Fond revLivOuvrir' = IF ( ISBLANK ( [Adresse du livrable choisi] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: e6ac3a88-8f8d-4886-b9ea-9a8bb7417bbc
+
+	measure 'Libelle revLivOuvrir' = "Ouvrir"
+		lineageTag: f140c737-eeaf-40dd-9eda-5da92f15d8e4
+
+	measure 'Fond docBilWord' = IF ( ISBLANK ( [Arrete des comptes annuels a produire] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: b5c47c53-132e-4096-acef-97d95f865f7a
+
+	measure 'Libelle docBilWord' = "Produire en Word"
+		lineageTag: 490a947c-d914-4bb3-b883-4f27d72e7c71
+
+	measure 'Fond docBilExcel' = IF ( ISBLANK ( [Arrete du classeur a produire] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: b1c65253-a8b5-4d9c-87d7-da2d92ce7909
+
+	measure 'Libelle docBilExcel' = "Produire en Excel"
+		lineageTag: 7c7b8dfb-f367-4bb3-9b98-8041c7b40443
+
+	measure 'Fond docBilOuvrir' = IF ( ISBLANK ( [Adresse des comptes annuels] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: cd4c1a7a-bcea-4edc-b6ce-62ae8f5374d8
+
+	measure 'Libelle docBilOuvrir' = "Ouvrir"
+		lineageTag: 5bde0a05-2e4d-4590-9488-4458cdcd349c
+
+	measure 'Fond docResWord' = IF ( ISBLANK ( [Arrete des comptes annuels a produire] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 6ddbdb90-2031-4192-9766-ed879ce1508b
+
+	measure 'Libelle docResWord' = "Produire en Word"
+		lineageTag: 31be907d-e6b3-40ad-841b-f9bf70f3a905
+
+	measure 'Fond docResExcel' = IF ( ISBLANK ( [Arrete du classeur a produire] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 49a87d1e-959a-4a7a-a49b-61071858c607
+
+	measure 'Libelle docResExcel' = "Produire en Excel"
+		lineageTag: cac81b83-733a-4620-b565-f30a5d564488
+
+	measure 'Fond docResOuvrir' = IF ( ISBLANK ( [Adresse des comptes annuels] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 83e2aedc-1f46-4e56-ac88-27d2eabd5588
+
+	measure 'Libelle docResOuvrir' = "Ouvrir"
+		lineageTag: f0c9924c-3527-48fb-83e1-3b7cdc8741c2
+
+	measure 'Fond docAnnWord' = IF ( ISBLANK ( [Arrete des comptes annuels a produire] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 81113b9e-2406-4012-9646-78ebd1646fa3
+
+	measure 'Libelle docAnnWord' = "Produire en Word"
+		lineageTag: ebf30963-08ec-453c-8033-4a38747d8952
+
+	measure 'Fond docAnnOuvrir' = IF ( ISBLANK ( [Adresse des comptes annuels] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: ef26b6ad-fdb5-43a7-bb69-88b423482baa
+
+	measure 'Libelle docAnnOuvrir' = "Ouvrir"
+		lineageTag: 96baa1e3-858b-4b13-90d1-d7e720db86cd
+
+	measure 'Fond docBalExcel' = IF ( ISBLANK ( [Arrete du classeur a produire] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: c25db9c5-e926-4e71-aa9b-cc508e5c58c1
+
+	measure 'Libelle docBalExcel' = "Produire en Excel"
+		lineageTag: 3c43374e-9307-4080-bebd-5d0856809d84
+
+	measure 'Fond docBalOuvrir' = IF ( ISBLANK ( [Adresse du classeur des comptes annuels] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 7e0c8708-d360-4967-9ddb-07f81d3a8e9b
+
+	measure 'Libelle docBalOuvrir' = "Ouvrir"
+		lineageTag: e5d9d92f-bfbc-43c8-99cf-4fb00e65d5c6
+
+	measure 'Fond docDipWord' = IF ( ISBLANK ( [Arrete du DIP a produire] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: cb84e8b4-498a-4982-b914-a3f8dda89679
+
+	measure 'Libelle docDipWord' = "Produire en Word"
+		lineageTag: b13a89cc-f80a-429e-9c90-593529e280b1
+
+	measure 'Fond docDipOuvrir' = IF ( ISBLANK ( [Adresse du DIP] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: 398f4fc4-e7a8-4b9b-b5ab-ee3c44c15f1f
+
+	measure 'Libelle docDipOuvrir' = "Ouvrir"
+		lineageTag: b0600fca-0d06-47a3-aa62-874f5cc79841
+
+	measure 'Formats manquants du livrable' = IF ( [Etat du livrable] = "incomplet", " ; " & [Message de l etat du livrable], "" )
+		lineageTag: c417ed86-46a5-4f31-b140-107847d1ea68
+
+	measure 'Livrable choisi valeur 2 ligne 2' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( "Compte de résultat, art. 322-2, " & FORMAT ( COUNTROWS ( FILTER ( ALL ( v_ligne_etat_montant ), v_ligne_etat_montant[entite] = e && v_ligne_etat_montant[arrete] = a && v_ligne_etat_montant[etat] IN { "RESULTAT" } ) ) + 0, "0" ) & " lignes" ), "" ) )
+		lineageTag: a4796599-5e98-4af5-b8c8-6f7f2d3a3650
+
+	measure 'Livrable choisi valeur 2 ligne 3' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( "Annexe, art. 331-1 à 336-3, " & FORMAT ( SUMX ( FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a ), v_cellules_a_remplir[cellules] ) + 0, "0" ) & " cellules" ), "" ) )
+		lineageTag: aa6ebf2c-77bd-461c-9bf1-9e1d485c405f
+
+	measure 'Livrable choisi valeur 4 ligne 2' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( VAR af = MAXX ( FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ), v_annexe_produisible[articles_fautifs] ) & "" VAR n = LEN ( af ) VAR p = IF ( n > 60, SEARCH ( ", ", af, 48, 0 ), 0 ) VAR r = IF ( p > 0, MID ( af, p + 2, n ), "" ) VAR n2 = LEN ( r ) VAR p2 = IF ( n2 > 60, SEARCH ( ", ", r, 48, 0 ), 0 ) RETURN IF ( p2 > 0, LEFT ( r, p2 ), r ) ), "ATTESTATION", ( "adresse SharePoint : " & IF ( ISBLANK ( [Adresse du livrable choisi] ), "aucune version déposée", [Adresse du livrable choisi] ) ), "DIP", ( "adresse SharePoint : " & IF ( ISBLANK ( [Adresse du livrable choisi] ), "aucune version déposée", [Adresse du livrable choisi] ) ), "" ) )
+		lineageTag: 674a9a23-d3b1-4ce9-bd8e-737ad132d388
+
+	measure 'Livrable choisi valeur 4 ligne 3' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( VAR af = MAXX ( FILTER ( ALL ( v_annexe_produisible ), v_annexe_produisible[entite] = e && v_annexe_produisible[arrete] = a ), v_annexe_produisible[articles_fautifs] ) & "" VAR n = LEN ( af ) VAR p = IF ( n > 60, SEARCH ( ", ", af, 48, 0 ), 0 ) VAR r = IF ( p > 0, MID ( af, p + 2, n ), "" ) VAR n2 = LEN ( r ) VAR p2 = IF ( n2 > 60, SEARCH ( ", ", r, 48, 0 ), 0 ) RETURN IF ( p2 > 0, MID ( r, p2 + 2, n2 ), "" ) ), "" ) )
+		lineageTag: 4ff249e0-b599-49c2-a542-1b4cce482260
+
+	measure 'Livrable choisi libelle 7' = VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ), "", SWITCH ( l, "COMPTES_ANNUELS", "Dépôt", "" ) )
+		lineageTag: 105a805d-9518-442d-8293-ed477197e7ac
+
+	measure 'Livrable choisi valeur 7' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( IF ( ISBLANK ( [Depot des livrables] ), "", "site du cabinet, " & [Depot des livrables] ) ), "" ) )
+		lineageTag: e6874d39-88ad-400b-89db-ae19eb4851e0
+
+	measure 'Livrable choisi valeur 7 ligne 2' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR l = [Livrable choisi] RETURN IF ( ISBLANK ( l ) || ISBLANK ( e ) || ISBLANK ( a ), "", SWITCH ( l, "COMPTES_ANNUELS", ( "adresse SharePoint : " & IF ( ISBLANK ( [Adresse du livrable choisi] ), "aucune version déposée", [Adresse du livrable choisi] ) ), "" ) )
+		lineageTag: 65ef6429-2f27-4926-868f-ccfe5a5675f5
+
+	measure 'Filet Carte livrables' = VAR c = [Carte livrables encre] RETURN SWITCH ( c, "#8A6710", "#C8961E", "#9A2A2A", "#9A2A2A", "#1F6D4A", "#1F6D4A", "#0F5C8C" )
+		lineageTag: f9103a96-fb93-4993-a162-14413db655e0
+
+	measure 'Navigation balance sous-titre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "COMPTES_ANNUELS" ) ) > 0, "après OD de révision", "sans objet" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: db8879e5-6c49-47c0-8b5a-6603506acb13
+
+	measure 'Navigation DIP sous-titre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "DIP" ) ) > 0, "arrêté semestriel", "sans objet" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 784ac39a-3812-49bd-824c-45a8baaea3a1
+
+	measure 'Navigation rapport sous-titre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "ATTESTATION" ) ) > 0, "NP 2300", "sans objet" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: f8cffae7-8aaa-4aac-bf3f-9ca9e6da7084
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: c3b31087-3185-4d98-a3a1-dca73d1f0b2a
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 271817d8-4e68-4e2a-93e3-5d3e58142254
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: c2208c0b-8192-4b23-8b09-450645d71b8a
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column applicable
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a13bc7ee-ec06-426b-bcc0-5948ac2cc4a8
+		summarizeBy: none
+		sourceColumn: applicable
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: dfcdd092-01f2-41ed-aaba-9293795a47b0
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 7304daef-f7b1-4c08-88ee-179f6a8ad326
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column formats
+		dataType: string
+		sourceProviderType: varchar(40)
+		lineageTag: 49c24c50-f1cb-41e7-a2bb-4bf29bd6f5e0
+		summarizeBy: none
+		sourceColumn: formats
+
+		annotation SummarizationSetBy = Automatic
+
+	column produit_etape_6
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: d9cbc1e9-06ec-4446-9626-e251e8c1f8d1
+		summarizeBy: none
+		sourceColumn: produit_etape_6
+
+		annotation SummarizationSetBy = Automatic
+
+	column nom
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: b83b5bcb-e0c7-4a06-a15b-680c51009e39
+		summarizeBy: none
+		sourceColumn: nom
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column court
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 2a9fc5f1-e070-4ceb-83b0-67940656df6a
+		summarizeBy: none
+		sourceColumn: court
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_livrable = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_livrable = Value.NativeQuery(Source, "SELECT code, libelle, nature, applicable, article, ordre, formats, produit_etape_6, CAST(REPLACE(CASE WHEN CHARINDEX(N' : ', libelle) > 0 THEN LEFT(libelle, CHARINDEX(N' : ', libelle) - 1) ELSE libelle END, N'''', N'’') AS NVARCHAR (200)) AS nom, CAST(CASE WHEN code = 'DIP' THEN N'DIP' ELSE REPLACE(CASE WHEN CHARINDEX(N' : ', libelle) > 0 THEN LEFT(libelle, CHARINDEX(N' : ', libelle) - 1) ELSE libelle END, N'''', N'’') END AS NVARCHAR (200)) AS court FROM dbo.ref_livrable", null, [EnableFolding = true])
+				in
+				    dbo_ref_livrable
+

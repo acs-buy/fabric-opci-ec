@@ -4,10 +4,10 @@
   "position": {
     "x": 1120,
     "y": 1256,
-    "z": 23800,
+    "z": 24100,
     "height": 31,
     "width": 216,
-    "tabOrder": 23800
+    "tabOrder": 24100
   },
   "visual": {
     "visualType": "actionButton",
@@ -495,7 +495,7 @@
                     {
                       "name": "conclusion",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revConclRevue",

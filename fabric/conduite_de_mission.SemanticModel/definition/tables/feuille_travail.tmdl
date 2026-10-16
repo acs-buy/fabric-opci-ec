@@ -41,6 +41,11 @@ table feuille_travail
 
 	measure 'Feuilles conclues sur preparees' = FORMAT ( SUM ( v_revision_indicateurs[feuilles_conclues] ) + 0, "0" ) & " / " & FORMAT ( SUM ( v_revision_indicateurs[feuilles] ) + 0, "0" )
 
+	/// « forme, le jj/mm/aaaa, conclue par : conclusion » de la feuille de feuille_regularisation, la forme à la française (forme_conclusion, « _ » en espace, en minuscules) ; « à remplir » sans conclusion
+	measure 'Conclusion de la feuille du cycle' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR f = MAXX ( FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] = a ), v_ratio_conclusion[feuille_regularisation] ) VAR t = FILTER ( ALL ( feuille_travail ), feuille_travail[cote] = f ) VAR fc = MAXX ( t, feuille_travail[forme_conclusion] ) VAR d = MAXX ( t, feuille_travail[conclue_le] ) VAR kc = MAXX ( t, feuille_travail[conclusion] ) VAR qui = MAXX ( t, feuille_travail[conclue_par] ) RETURN IF ( ISBLANK ( kc ) || kc = "", "à remplir", IF ( ISBLANK ( fc ), "", LOWER ( SUBSTITUTE ( fc, "_", " " ) ) & ", " ) & IF ( ISBLANK ( d ), "", "le " & FORMAT ( d, "dd/MM/yyyy" ) & ", " ) & IF ( ISBLANK ( qui ) || qui = "", "", qui & " : " ) & kc )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: f1cdd33c-4bf0-4bad-96b4-22d243e56e7c
+
 	column cote
 		dataType: string
 		isNullable: false

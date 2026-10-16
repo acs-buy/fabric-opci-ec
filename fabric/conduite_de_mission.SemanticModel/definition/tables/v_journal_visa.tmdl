@@ -20,17 +20,52 @@ table v_journal_visa
 		displayFolder: Le dossier
 		lineageTag: d7dce49a-0f1a-444d-b3ae-1e5585d4d777
 
-	/// Carte 2.3, Visas poses. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 2.3, Visas poses.
 	measure 'R23 Visas poses' = COUNTROWS ( v_journal_visa )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: f787881d-4699-4c9f-a0ee-2dcaa70be556
 
-	/// Carte 2.3, Dernier geste. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 2.3, Dernier geste.
 	measure 'R23 Dernier visa' = MAX ( v_journal_visa[horodatage] )
 		formatString: dd/MM/yyyy HH:mm
 		displayFolder: Rapports V2
 		lineageTag: 3ccd57ce-05d8-4a95-beb3-7f6aac699554
+
+	/// « n visas » ; « aucun visa de clôture »
+	measure 'Sous-titre visas de cloture' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR n = COUNTROWS ( FILTER ( ALL ( v_journal_visa ), v_journal_visa[entite] = e && v_journal_visa[arrete] = a && v_journal_visa[nature] = "CLOTURE" ) ) + 0 RETURN IF ( n = 0, "aucun visa de clôture", FORMAT ( n, "0" ) & IF ( n > 1, " visas", " visa" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 06217fba-1adb-487b-8505-28ef8ddafc87
+
+	/// horodatage de la ligne écrit jj/mm/aaaa ; colonne « Le » des tableaux de visas des étapes 2 et 4 (horodatage est une date à format « General Date » au modèle publié, qui rendrait l’heure, INFO.VIEW.COLUMNS relu le 10/10/2026 ; horodatage reste la colonne de tri invisible de ces tableaux)
+	measure 'Date du visa de la ligne' = FORMAT ( MAX ( v_journal_visa[horodatage] ), "dd/MM/yyyy" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 756c16b8-464f-4de2-9586-e11f5281e1da
+
+	/// vert « visé », alerte « renvoyé » (pastille des tableaux de visas des étapes 2 et 4)
+	measure 'Couleur issue du visa' = IF ( SELECTEDVALUE ( v_journal_visa[issue] ) = "RENVOYE", "#9A2A2A", "#1F6D4A" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 58ef3a06-bfbc-4af0-bf82-95923736d054
+
+	/// issue de la ligne à la française : VISE « visé », RENVOYE « renvoyé » ; la vue rend le code
+	measure 'Libelle issue du visa' = VAR x = SELECTEDVALUE ( v_journal_visa[issue] ) RETURN SWITCH ( x, "VISE", "visé", "RENVOYE", "renvoyé", x ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 23d91382-0daa-48f7-b384-0ecbf9d78c0a
+
+	/// nature de la ligne à la française : PUBLICATION « Publication de la VL », SYNTHESE « Synthèse de l’arrêté », OBLIGATION « Catégorie distribuable », CLOTURE « Clôture » ; la vue rend le code
+	measure 'Libelle nature du visa' = VAR x = SELECTEDVALUE ( v_journal_visa[nature] ) RETURN SWITCH ( x, "PUBLICATION", "Publication de la VL", "SYNTHESE", "Synthèse de l’arrêté", "OBLIGATION", "Catégorie distribuable", "CLOTURE", "Clôture", x ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: ccda987e-a688-4945-a331-15ec53415659
+
+	/// « publication, synthèse, catégories et clôture » ; « aucun visa de publication, de synthèse, de catégorie ni de clôture »
+	measure 'Sous-titre visas de l arrete' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR n = COUNTROWS ( FILTER ( ALL ( v_journal_visa ), v_journal_visa[entite] = e && v_journal_visa[arrete] = a && v_journal_visa[nature] IN { "PUBLICATION", "SYNTHESE", "OBLIGATION", "CLOTURE" } ) ) + 0 RETURN IF ( n = 0, "aucun visa de publication, de synthèse, de catégorie ni de clôture", "publication, synthèse, catégories et clôture" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 40f7d30d-4100-446e-b719-86827ba1b483
+
+	/// « oui, le jj/mm/aaaa » ; « non » (nature SYNTHESE, issue VISE)
+	measure 'Synthese de l arrete visee' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR d = MAXX ( FILTER ( ALL ( v_journal_visa ), v_journal_visa[entite] = e && v_journal_visa[arrete] = a && v_journal_visa[nature] = "SYNTHESE" && v_journal_visa[issue] = "VISE" ), v_journal_visa[horodatage] ) RETURN IF ( ISBLANK ( d ), "non", "oui, le " & FORMAT ( d, "dd/MM/yyyy" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 596b4c7e-361b-4715-a5a1-3a6f27ee6976
 
 	column entite
 		dataType: string

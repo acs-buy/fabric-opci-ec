@@ -1,37 +1,42 @@
+
+-- ------------------------------------------------------------------ n° 6 : l'enveloppe d'ecran du visa d'une categorie
+-- Refuse d'abord, avant tout appel : categorie vide, decision hors VISE et RENVOYE, renvoi sans motif ; puis appelle la
+-- reprise n° 5, dont les 5 refus 50036 remontent tels quels.
 CREATE   PROCEDURE dbo.pr_ecran_viser_obligation_distribution
-    @entite VARCHAR (20),
-    @exercice VARCHAR (20),
-    @categorie VARCHAR (20),
-    @base_calcul DECIMAL (19,2),
-    @taux DECIMAL (9,6),
-    @source NVARCHAR (400),
-    @vise_par NVARCHAR (200)
+    @entite    VARCHAR (20),
+    @arrete    VARCHAR (20),
+    @categorie NVARCHAR (300),
+    @decision  VARCHAR (10),
+    @motif     NVARCHAR (600) = NULL,
+    @vise_par  NVARCHAR (200)
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRY
-        EXEC dbo.pr_viser_obligation_distribution @entite, @exercice, @categorie, @base_calcul, @taux, @source, @vise_par;
-        UPDATE dbo.obligation_distribution
-           SET message_ecran = NULL, message_ecran_le = NULL,
-               message_ecran_pour = NULL
-         WHERE id = (SELECT TOP 1 id FROM dbo.obligation_distribution
-                    WHERE entite = @entite AND exercice = @exercice
-                      AND categorie = @categorie ORDER BY id DESC);
-    END TRY
-    BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
-        UPDATE dbo.obligation_distribution
-           SET message_ecran      = LEFT(ERROR_MESSAGE(), 2000),
-               message_ecran_le   = SYSUTCDATETIME(),
-               message_ecran_pour = LEFT(@vise_par, 200)
-         WHERE id = (SELECT TOP 1 id FROM dbo.obligation_distribution
-                    WHERE entite = @entite AND exercice = @exercice
-                      AND categorie = @categorie ORDER BY id DESC);
-    
-        -- 13/09/2026 : la relance rend le refus VISIBLE. Sans elle le
-        -- service repond 200 et le portail affiche un succes.
-        THROW;
-    END CATCH;
+    SET XACT_ABORT ON;
+    -- 15/10/2026 : une personne vide ou NULL se refuse en francais, avant tout le reste
+    IF NULLIF(LTRIM(RTRIM(@vise_par)), N'') IS NULL
+        THROW 50824, N'Visa refusé : votre compte ne tient pas, sur ce dossier, le rôle d''associé signataire qui vise la catégorie.', 1;
+    DECLARE @m NVARCHAR (1000);
+    SET @categorie = NULLIF(LTRIM(RTRIM(@categorie)), N'');
+    IF @categorie IS NULL
+        THROW 50820, N'Choisissez la catégorie dans la liste « Catégorie ».', 1;
+    SET @decision = UPPER(LTRIM(RTRIM(@decision)));
+    IF ISNULL(@decision, '') NOT IN ('VISE', 'RENVOYE')
+        THROW 50821, N'La décision est « VISE » ou « RENVOYE ».', 1;
+    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    IF @decision = 'RENVOYE' AND @motif IS NULL
+        THROW 50822, N'Le motif du renvoi est obligatoire : il dit au préparateur ce qui est à reprendre.', 1;
+    DECLARE @cat VARCHAR (20) = dbo.fn_e4_categorie(@categorie);
+    IF @cat IS NULL
+    BEGIN
+        SET @m = N'La catégorie « ' + REPLACE(@categorie, N'%', N'%%') + N' » n''est pas une catégorie de l''obligation de distribution.';
+        THROW 50823, @m, 1;
+    END;
+    EXEC dbo.pr_viser_obligation_distribution @entite = @entite, @exercice = @arrete, @categorie = @cat, @decision = @decision,
+         @motif = @motif, @vise_par = @vise_par;
+    SELECT @entite AS vehicule,
+           N'Catégorie ' + CASE @decision WHEN 'VISE' THEN N'visée' ELSE N'renvoyée au préparateur' END
+           + N' pour l''exercice clos le ' + dbo.fn_date_ecran(@arrete) + N'.' AS message;
 END;
 
 GO

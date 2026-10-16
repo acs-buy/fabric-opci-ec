@@ -7,11 +7,68 @@ table v_balance
 		displayFolder: Balance
 		lineageTag: 422a42f8-4d4c-4efd-93d3-e1928a172d8b
 
-	/// Carte 3.5, Comptes de la balance. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.5, Comptes de la balance.
 	measure 'R35 Comptes de la balance' = COUNTROWS ( v_balance )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 55614471-d719-4b80-a5b8-f18ff5bf5ec2
+
+	/// VAR e = SELECTEDVALUE ( v_balance[etat] ) RETURN SWITCH ( e, "CONCLUE", "conclu", "EN_COURS", "en cours", "à faire" ) : le libellé de l’état de ref_croisee (ck_ref_croisee_etat admet A_FAIRE, EN_COURS et CONCLUE, relu en base ; v_balance rend A_FAIRE pour un compte sans ligne de ref_croisee). Colonn
+	measure 'Etat du compte' = VAR e = SELECTEDVALUE ( v_balance[etat] ) RETURN IF ( HASONEVALUE ( v_balance[Compte] ) && COUNTROWS ( v_balance ) > 0, SWITCH ( e, "CONCLUE", "conclu", "EN_COURS", "en cours", "à faire" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: dbb679d1-0b48-4ffd-8fe5-44a886aeae4d
+
+	/// VAR c = [Compte choisi] RETURN CALCULATE ( [Etat du compte], FILTER ( ALL ( v_balance[Compte] ), v_balance[Compte] = c ) ) : « à faire », « en cours » ou « conclu », le libellé d’A3 [Etat du compte] pour le compte choisi
+	measure 'Etat du compte choisi' = VAR c = [Compte choisi] RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( [Etat du compte], FILTER ( ALL ( v_balance[Compte] ), v_balance[Compte] = c ) ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 10a39bc4-0e04-4c55-88fe-4ded90a7d652
+
+	/// « compte k » ; « aucun compte choisi »
+	measure 'Sous-titre revue du compte' = VAR k = [Compte choisi] RETURN IF ( ISBLANK ( k ), "aucun compte choisi", "compte " & k )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: daf128a6-9061-4e91-ad0a-cd0e32d38c35
+
+	/// le libellé du compte choisi
+	measure 'Libelle du compte choisi' = VAR k = [Compte choisi] RETURN IF ( NOT ISBLANK ( k ), CALCULATE ( MAX ( v_balance[Libellé] ), FILTER ( ALL ( v_balance[Compte] ), v_balance[Compte] = k ) ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 3abf815b-285c-4fd7-9dcf-fbc4466da452
+
+	/// « Écritures du compte k » ; « Aucun compte choisi »
+	measure 'Titre ecritures du compte' = VAR k = [Compte choisi] RETURN IF ( ISBLANK ( k ), "Aucun compte choisi", "Écritures du compte " & k )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 4fd671ef-4614-47a1-bf3a-d8c0a59c267b
+
+	/// le solde du 276 à l’arrêté ; « aucun solde »
+	measure 'Solde du compte 276' = VAR s = CALCULATE ( SUM ( v_balance[Balance après] ), v_balance[Compte] = "276" ) RETURN IF ( ISBLANK ( s ), "aucun solde", FORMAT ( s, "#,0.00" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 680e8538-fc0c-493e-82b9-570066c9d326
+
+	/// [Difference de la famille du compte choisi] moins le solde du compte choisi
+	measure 'Ecart du compte choisi' = VAR k = [Compte choisi] VAR d = [Difference de la famille du compte choisi] VAR s = CALCULATE ( SUM ( v_balance[Balance après] ), FILTER ( ALL ( v_balance[Compte] ), v_balance[Compte] = k ) ) + 0 RETURN IF ( NOT ISBLANK ( d ), d - s )
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 00f1e78b-6c68-4672-927e-577e613f5a48
+
+	/// « n comptes · n revus » (bande 5)
+	measure 'Libelle bande balance' = VAR m = COUNTROWS ( FILTER ( v_balance, ( LEFT ( v_balance[Compte], 1 ) IN { "2", "3" } || LEFT ( v_balance[Compte], 3 ) = "105" ) ) ) + 0 VAR n = COUNTROWS ( FILTER ( v_balance, ( LEFT ( v_balance[Compte], 1 ) IN { "2", "3" } || LEFT ( v_balance[Compte], 3 ) = "105" ) && v_balance[etat] = "CONCLUE" ) ) + 0 RETURN FORMAT ( m, "0" ) & " comptes · " & FORMAT ( n, "0" ) & " revus"
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 458f13d1-4adf-4b03-9475-7d0054c18cfb
+
+	/// « n sur m » des comptes de la valorisation, comptés sur tous les comptes de classe 2, de la série 105 et de classe 3 : la grille de la balance ne filtre pas la carte (interaction coupée), sans quoi le {ex_compte} choisi rendrait « {ex_comptes} » ; [Etat du compte choisi], posée à côté, suit la ligne
+	measure 'Comptes revus de la valorisation' = VAR m = COUNTROWS ( FILTER ( v_balance, ( LEFT ( v_balance[Compte], 1 ) IN { "2", "3" } || LEFT ( v_balance[Compte], 3 ) = "105" ) ) ) + 0 VAR n = COUNTROWS ( FILTER ( v_balance, ( LEFT ( v_balance[Compte], 1 ) IN { "2", "3" } || LEFT ( v_balance[Compte], 3 ) = "105" ) && v_balance[etat] = "CONCLUE" ) ) + 0 RETURN FORMAT ( n, "0" ) & " sur " & FORMAT ( m, "0" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 46e6a218-8b3b-4493-bd0d-b13c667431fb
+
+	/// le compte de la ligne choisie
+	measure 'Compte choisi' = IF ( HASONEVALUE ( v_balance[Compte] ), SELECTEDVALUE ( v_balance[Compte] ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e39e23c9-1a85-4c12-a642-679657bb4658
+
+	/// compte de classe 2, de la série 105 ou de classe 3 ; filtre de visuel = 1
+	measure 'Compte de la valorisation' = VAR k = SELECTEDVALUE ( v_balance[Compte] ) RETURN IF ( LEFT ( k, 1 ) IN { "2", "3" } || LEFT ( k, 3 ) = "105", 1, 0 )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 531d7d1b-bc8b-4153-86e7-9efb1eb118c0
 
 	column arrete
 		dataType: string

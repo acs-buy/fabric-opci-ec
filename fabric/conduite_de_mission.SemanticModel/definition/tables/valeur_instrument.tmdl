@@ -1,0 +1,155 @@
+/// Valeurs actuelles saisies des instruments financiers de classe 3.
+table valeur_instrument
+	lineageTag: 20a432f1-70dc-4977-a26c-88aa0fbae53a
+
+	/// valeur de la ligne de valeur_instrument de l’instrument choisi à l’arrêté : VAR c = [Actif choisi], puis FILTER ( ALL ( valeur_instrument[code_actif] ), valeur_instrument[code_actif] = c ) ; vide sans ligne choisie
+	measure 'Valeur de l instrument choisi' = FORMAT ( VAR c = [Actif choisi] VAR t = FILTER ( ALL ( valeur_instrument[code_actif] ), valeur_instrument[code_actif] = c ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( valeur_instrument[valeur_actuelle] ), t ) ), "#,0" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e5e74569-862f-41f1-8d04-69fa719d4f47
+
+	/// source de la ligne de valeur_instrument de l’instrument choisi à l’arrêté : VAR c = [Actif choisi], puis FILTER ( ALL ( valeur_instrument[code_actif] ), valeur_instrument[code_actif] = c ) ; vide sans ligne choisie
+	measure 'Source de l instrument choisi' = ( VAR c = [Actif choisi] VAR t = FILTER ( ALL ( valeur_instrument[code_actif] ), valeur_instrument[code_actif] = c ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( valeur_instrument[source] ), t ) ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 75c2d80b-06b9-4d74-809b-6caf2339f74e
+
+	/// piece_id de la ligne de valeur_instrument de l’instrument choisi à l’arrêté : VAR c = [Actif choisi], puis FILTER ( ALL ( valeur_instrument[code_actif] ), valeur_instrument[code_actif] = c ), puis LOOKUPVALUE ( piece[nom_fichier], piece[id], piece_id ) ; vide sans ligne choisie
+	measure 'Piece de l instrument choisi' = ( VAR c = [Actif choisi] VAR t = FILTER ( ALL ( valeur_instrument[code_actif] ), valeur_instrument[code_actif] = c ) VAR p = CALCULATE ( MAX ( valeur_instrument[piece_id] ), t ) RETURN IF ( NOT ISBLANK ( p ), LOOKUPVALUE ( piece[nom_fichier], piece[id], p ) ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: f3216631-c15f-4505-bc5f-09261abf3427
+
+	/// « Aucun instrument choisi » ; « à remplir : aucune valeur à l’arrêté » ; vide sinon
+	measure 'Absence de valeur de l instrument' = IF ( ISBLANK ( [Actif choisi] ), "Aucun instrument choisi", IF ( [Valeur de l instrument choisi] = "", "à remplir : aucune valeur à l’arrêté" ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 53e0ec38-33d0-4169-a496-6a973a850190
+
+	/// lignes du véhicule et de ses filiales à l’arrêté ; 0 sans ligne
+	measure 'Valeurs d instruments saisies' = VAR ent = VALUES ( v_ecran_valeurs_arrete[entite] ) RETURN COUNTROWS ( FILTER ( valeur_instrument, valeur_instrument[entite] IN ent ) ) + 0
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 450a57b8-e24f-4aeb-b97d-e403f5895992
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d6357024-23f8-440f-9ea2-ca981980c0f6
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 287eb1a1-28d7-4136-881e-781fc7dc4b3e
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: db5e3a26-1a62-42ca-9cc7-efc145de54d8
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 5b223c8e-7802-4740-9d9e-1152cca05ad3
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 5ac4d4fb-c279-4432-930b-de4283b67112
+		summarizeBy: none
+		sourceColumn: compte
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_comptable
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: f9ccac87-29de-4d87-a75d-9cf0b2ec2210
+		summarizeBy: sum
+		sourceColumn: valeur_comptable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_actuelle
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 9c81cb29-f25b-4ee4-a9dd-cf910b977825
+		summarizeBy: sum
+		sourceColumn: valeur_actuelle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 941edc59-81fd-413a-b0e9-4d2a6927f480
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column saisi_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 935f0214-be19-45aa-845c-8a20e63ea67a
+		summarizeBy: none
+		sourceColumn: saisi_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column saisi_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 96164561-26d8-43db-89a0-f096e0e3e553
+		summarizeBy: none
+		sourceColumn: saisi_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3392975b-6f36-4ba1-ae4b-bfc2eebc8e85
+		summarizeBy: none
+		sourceColumn: piece_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition valeur_instrument = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_valeur_instrument = Source{[Schema="dbo",Item="valeur_instrument"]}[Data]
+				in
+				    dbo_valeur_instrument
+

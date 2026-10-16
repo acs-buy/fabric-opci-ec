@@ -1,3 +1,4 @@
+
 -- =====================================================================
 -- LA REPRISE SUR LE SOCLE : LES DEFINITIONS QUI LISENT
 -- v_ecriture_normalisee OU fn_compte_du_modele, REGROUPEES APRES LE 131.
@@ -35,7 +36,7 @@ SELECT
     -- est le document de son entite : elle porte le compte tel que
     -- l'entite le tient. La colonne suivante permet d'agreger les
     -- entites entre elles sans deformer ce qui est remis au client.
-    dbo.fn_compte_du_modele(l.entite, e.compte_num) AS compte_modele,
+    MAX(cm.compte_modele) AS compte_modele,
     MAX(COALESCE(c.libelle_complet, c.libelle))      AS libelle,
     MAX(CAST(c.porte_actif AS INT))                  AS porte_actif,
 
@@ -67,6 +68,12 @@ SELECT
     MAX(x.date_etat)                                 AS date_etat
 FROM ecriture e
 JOIN lot_ecritures l ON l.id = e.lot_id
+CROSS APPLY (SELECT CAST(CASE WHEN ISNULL((SELECT TOP (1) xe.plan_propre_en_service FROM dbo.ref_entite xe WHERE xe.code = l.entite), 0) = 0
+                              AND EXISTS (SELECT 1 FROM dbo.ref_compte xc WHERE xc.compte = e.compte_num)
+                         THEN e.compte_num
+                         ELSE ISNULL((SELECT TOP (1) xr.compte_modele FROM dbo.ref_compte_entite xr
+                                      WHERE xr.entite = l.entite AND xr.compte_entite = e.compte_num AND xr.compte_modele IS NOT NULL),
+                                     e.compte_num) END AS VARCHAR (20)) AS compte_modele) cm
 JOIN ref_compte    c ON c.compte = e.compte_num
 LEFT JOIN ref_croisee x ON x.arrete = l.arrete
                        AND x.entite = l.entite

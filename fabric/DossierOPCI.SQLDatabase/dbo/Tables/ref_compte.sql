@@ -21,6 +21,24 @@ CREATE TABLE [dbo].[ref_compte] (
 
 GO
 
+CREATE   TRIGGER dbo.[tr_ref_compte_horodatage]
+ON dbo.[ref_compte]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_compte] t
+    JOIN inserted i ON t.[compte] = i.[compte];
+END;
+
+GO
+
 CREATE   TRIGGER dbo.[tr_ref_compte_garde]
 ON dbo.[ref_compte]
 AFTER INSERT, UPDATE, DELETE
@@ -36,20 +54,22 @@ END;
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_compte_horodatage]
-ON dbo.[ref_compte]
-AFTER UPDATE
+
+CREATE   TRIGGER dbo.tr_ref_compte_annexe_retard ON dbo.ref_compte
+AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_compte] t
-    JOIN inserted i ON t.[compte] = i.[compte];
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT compte, libelle FROM inserted
+        EXCEPT SELECT compte, libelle FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT compte, libelle FROM deleted EXCEPT SELECT compte, libelle FROM inserted) d
+    )
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT e.code, SYSUTCDATETIME(), N'ref_compte', (SELECT COUNT(*) FROM ch)
+    FROM dbo.ref_entite e WHERE e.forme_vehicule IS NOT NULL AND EXISTS (SELECT 1 FROM ch);
 END;
 
 GO

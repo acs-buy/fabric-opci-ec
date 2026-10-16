@@ -1,6 +1,5 @@
--- 50090 : le montant decide sort des bornes.
--- 50091 : la mise en paiement doit avoir lieu dans le mois qui suit
---         l'assemblee, article L. 214-69, IV.
+
+-- pr_decider_distribution : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_decider_distribution
     @entite    VARCHAR (20),
     @exercice  VARCHAR (20),
@@ -8,65 +7,60 @@ CREATE   PROCEDURE dbo.pr_decider_distribution
     @montant   DECIMAL (19,2),
     @assemblee DATE = NULL,
     @par       NVARCHAR (400)
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
-
-    DECLARE @mini DECIMAL (19,2), @total DECIMAL (19,2), @taux DECIMAL (9,4);
-    SELECT @taux = o.taux FROM dbo.ref_obligation_distribution o
-    WHERE o.categorie = @categorie;
-    IF @taux IS NULL
-        THROW 50090,
-            N'Décision refusée : cette catégorie de sommes distribuables n''est pas au référentiel. Les 3 catégories de l''article L. 214-69 sont le résultat, les plus-values et les produits de sociétés exonérées.',
-            1;
-
-    SELECT @total = CASE WHEN @categorie = 'PLUS_VALUES'
-                         THEN s.plus_values_distribuables
-                         ELSE s.resultat_distribuable END
-    FROM dbo.v_sommes_distribuables s
-    WHERE s.entite = @entite AND s.arrete = @exercice;
-
-    IF @total IS NULL
-        THROW 50090,
-            N'Décision refusée : les sommes distribuables ne sont pas calculables pour cet exercice. Vérifier que les lots sont validés.',
-            1;
-
-    SET @mini = CAST(@total * @taux AS DECIMAL (19,2));
-
-    IF @montant < @mini OR @montant > @total
+    SET XACT_ABORT ON;
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @par;
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
+    BEGIN TRY
+    BEGIN TRANSACTION;
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
     BEGIN
-        DECLARE @m90 NVARCHAR (2000) =
-            N'Décision refusée : le montant de '
-            + FORMAT(@montant, 'N2', 'fr-FR')
-            + N' sort des bornes. L''obligation minimale est de '
-            + FORMAT(@mini, 'N2', 'fr-FR') + N', soit '
-            + FORMAT(@taux, 'P2', 'fr-FR')
-            + N' des sommes distribuables, et le total distribuable est de '
-            + FORMAT(@total, 'N2', 'fr-FR') + N'. Article L. 214-69, II.';
-        INSERT INTO dbo.journal_refus
-            (procedure_nom, entite, arrete, message, geste, refuse_pour, refuse_le)
-        VALUES ('pr_decider_distribution', @entite, @exercice, @m90,
-                N'Saisir un montant compris entre l''obligation minimale et le total distribuable.',
-                @par, SYSUTCDATETIME());
-        THROW 50090, @m90, 1;
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
     END;
-
-    IF EXISTS (SELECT 1 FROM dbo.decision_distribution
-               WHERE entite = @entite AND exercice = @exercice
-                 AND categorie = @categorie)
-        UPDATE dbo.decision_distribution
-        SET obligation_minimale = @mini, total_distribuable = @total,
-            montant_decide = @montant, date_assemblee = @assemblee,
-            decide_par = @par, decide_le = SYSUTCDATETIME()
-        WHERE entite = @entite AND exercice = @exercice
-          AND categorie = @categorie;
-    ELSE
-        INSERT INTO dbo.decision_distribution
-            (entite, exercice, categorie, obligation_minimale,
-             total_distribuable, montant_decide, date_assemblee, decide_par,
-             decide_le)
-        VALUES (@entite, @exercice, @categorie, @mini, @total, @montant,
-                @assemblee, @par, SYSUTCDATETIME());
+    -- 2. le corps d'origine
+    EXEC dbo.pr_decider_distribution_corps @entite = @entite, @exercice = @exercice, @categorie = @categorie, @montant = @montant, @assemblee = @assemblee, @par = @par;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1
+    BEGIN
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
+        BEGIN
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
+        END;
+    END;
+    COMMIT;
+    END TRY
+    BEGIN CATCH
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
+        THROW;
+    END CATCH;
 END;
 
 GO

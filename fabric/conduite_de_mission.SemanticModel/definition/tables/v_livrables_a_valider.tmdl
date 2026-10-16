@@ -1,0 +1,147 @@
+/// Les fichiers de la derniere version de chaque livrable du, et si chaque format attendu a sa ligne non perimee.
+table v_livrables_a_valider
+	lineageTag: 0e867391-cc47-4055-849d-820057e9dc4e
+
+	measure 'Obstacle a la validation pour le client' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR j = TODAY () VAR chef = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[du] <= j && ( ISBLANK ( role_mission[au] ) || role_mission[au] > j ) && role_mission[role] = "CHEF_MISSION" ) ) + 0 VAR cl = MAXX ( FILTER ( ALL ( v_visa_cloture_courant ), v_visa_cloture_courant[entite] = e && v_visa_cloture_courant[arrete] = a ), v_visa_cloture_courant[decision] ) VAR rv = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[revue_visee], 1, 0 ) ) + 0 VAR vr = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[verrouille], 1, 0 ) ) + 0 VAR typ = MAXX ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ), ref_arrete[Type] ) VAR vl = COUNTROWS ( FILTER ( ALL ( publication_vl ), ISBLANK ( publication_vl[perimee_le] ) && publication_vl[entite] = e && publication_vl[arrete] = a ) ) + 0 VAR nv = COUNTROWS ( FILTER ( ALL ( obligation_distribution ), obligation_distribution[entite] = e && LEFT ( obligation_distribution[exercice], 4 ) = LEFT ( a, 4 ) && ( ISBLANK ( obligation_distribution[etat] ) || obligation_distribution[etat] <> "VISEE" ) ) ) + 0 VAR tv = FILTER ( ALL ( v_livrables_a_valider ), v_livrables_a_valider[entite] = e && v_livrables_a_valider[arrete] = a ) VAR manq = CONCATENATEX ( DISTINCT ( SELECTCOLUMNS ( FILTER ( tv, v_livrables_a_valider[produit_complet] = FALSE () ), "lib", v_livrables_a_valider[libelle] ) ), [lib], ", ", [lib], ASC ) VAR att = COUNTROWS ( FILTER ( tv, v_livrables_a_valider[livrable] = "ATTESTATION" ) ) + 0 VAR vca = MAXX ( FILTER ( ALL ( document_produit ), document_produit[entite] = e && document_produit[arrete] = a && document_produit[livrable] = "COMPTES_ANNUELS" ), document_produit[version] ) VAR cov = COUNTROWS ( FILTER ( tv, v_livrables_a_valider[livrable] = "ATTESTATION" && IF ( ISBLANK ( v_livrables_a_valider[couvre_version] ), -1, v_livrables_a_valider[couvre_version] ) <> IF ( ISBLANK ( vca ), -2, vca ) )) + 0 VAR pers = SELECTCOLUMNS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && role_mission[connexion] = u ), "p", role_mission[personne] ) VAR cnx = SELECTCOLUMNS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && role_mission[personne] = u && NOT ISBLANK ( role_mission[connexion] ) ), "p", role_mission[connexion] ) VAR auteur = COUNTROWS ( FILTER ( tv, NOT ISBLANK ( v_livrables_a_valider[produit_par] ) && ( v_livrables_a_valider[produit_par] = u || v_livrables_a_valider[produit_par] IN pers || v_livrables_a_valider[produit_par] IN cnx ) ) ) + 0 RETURN SWITCH ( TRUE (), chef = 0, "Validation refusée : cette personne n'a pas, sur cette entité, le rôle de chef de mission.", cl = "VISE", "Validation refusée : l'arrêté est déjà validé pour le client.", rv <> 1 || vr <> 1, "Validation refusée : la revue de cet arrêté n'est pas visée.", vl = 0, "Validation refusée : la valeur liquidative de cet arrêté n'est pas publiée.", typ = "ANNUEL" && nv > 0, "Validation refusée : " & FORMAT ( nv, "0" ) & " catégorie(s) de sommes distribuables ne sont pas visées pour cet exercice. À l'arrêté annuel, les 3 catégories se visent avant la validation.", manq <> "", "Validation refusée : livrables dus non produits ou périmés : " & manq & ".", att > 0 && cov > 0, "Validation refusée : le rapport de l'expert-comptable ne couvre pas la dernière version des comptes annuels.", auteur > 0, "Validation refusée : le décideur a produit les livrables validés ; nul ne valide son propre travail.", BLANK () )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: de221d60-f48f-4e1f-b860-dd689cc5efea
+
+	measure 'Arrete a valider pour le client' = VAR a = [Arrete selectionne] RETURN IF ( NOT ISBLANK ( a ) && ISBLANK ( [Obstacle a la validation pour le client] ), a )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: ac34b8bd-49e7-4940-ad62-e0bd99e07800
+
+	measure 'Fond revLivValider' = IF ( ISBLANK ( [Arrete a valider pour le client] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 7e3157d6-d729-48de-afd4-3a921c5d2f6e
+
+	measure 'Libelle revLivValider' = "Valider pour le client"
+		lineageTag: a327e3d6-88eb-4513-9990-70e0d32753ac
+
+	measure 'Refus de validation au connecte' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR j = TODAY () VAR chef = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[du] <= j && ( ISBLANK ( role_mission[au] ) || role_mission[au] > j ) && role_mission[role] = "CHEF_MISSION" ) ) + 0 RETURN IF ( ISBLANK ( e ) || chef > 0, BLANK (), "Validation refusée : cette personne n'a pas, sur cette entité, le rôle de chef de mission." )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: f88fc580-fd48-458f-9505-49e46ad64639
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d760aa69-c3a4-48a0-8735-1bafe7406eed
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 8eaa847e-54e0-4bba-b108-e721e74f80d3
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column livrable
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 0d349c79-e04f-4de4-be7a-1aebd80541f7
+		summarizeBy: none
+		sourceColumn: livrable
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: cc7085cc-4d8d-4207-b4b4-7c8c162316ce
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column version
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 11e86f96-4c35-4911-9633-ba433c711ce0
+		summarizeBy: none
+		sourceColumn: version
+
+		annotation SummarizationSetBy = Automatic
+
+	column produit_complet
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 5649f125-256d-4b8e-9aac-3ddbb3165c10
+		summarizeBy: none
+		sourceColumn: produit_complet
+
+		annotation SummarizationSetBy = Automatic
+
+	column document_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 58ce212a-74b4-4434-bacc-3e6d48a126d1
+		summarizeBy: none
+		sourceColumn: document_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column format
+		dataType: string
+		sourceProviderType: varchar(4)
+		lineageTag: d0f4b5c4-a017-4bd1-80b2-789b58518b3d
+		summarizeBy: none
+		sourceColumn: format
+
+		annotation SummarizationSetBy = Automatic
+
+	column fichier
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 8ff68504-9bd7-49ac-a217-7b873ed12b68
+		summarizeBy: none
+		sourceColumn: fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column web_url
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: d8f529b9-0740-4365-88f4-a99856fbae6e
+		dataCategory: WebUrl
+		summarizeBy: none
+		sourceColumn: web_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column produit_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 118cc6d4-6549-4b20-9d51-5275c1513eeb
+		summarizeBy: none
+		sourceColumn: produit_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvre_version
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 80023121-9173-4920-9919-dc46c95d1ef1
+		summarizeBy: none
+		sourceColumn: couvre_version
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_livrables_a_valider = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_livrables_a_valider = Source{[Schema="dbo",Item="v_livrables_a_valider"]}[Data]
+				in
+				    dbo_v_livrables_a_valider
+

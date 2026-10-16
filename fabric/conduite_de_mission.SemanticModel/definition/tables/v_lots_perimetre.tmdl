@@ -26,7 +26,7 @@ table v_lots_perimetre
 		displayFolder: Ecran 2 etape 5
 		lineageTag: 7b2a7037-7bf2-4b50-8557-4ed072dcaf68
 
-	measure 'État du lot' = VAR s = SELECTEDVALUE ( v_lots_perimetre[Statut du lot] ) VAR p = MAXX ( v_lots_perimetre, IF ( v_lots_perimetre[perime], 1, 0 ) ) VAR pl = MAX ( v_lots_perimetre[perime_le] ) VAR dl = COALESCE ( MAX ( v_lots_perimetre[derniere_decision_le] ), MAX ( v_lots_perimetre[statut_le] ) ) RETURN IF ( HASONEVALUE ( v_lots_perimetre[Lot] ), SWITCH ( s, "PROPOSE", "proposé", "REJETE", "renvoyé le " & FORMAT ( dl, "dd/MM/yyyy" ), "VALIDE", "visé", "ANNULE", "annulé", LOWER ( s ) ) & IF ( p = 1, " · périmé le " & FORMAT ( pl, "dd/MM/yyyy" ), "" ) )
+	measure 'État du lot' = VAR s = SELECTEDVALUE ( v_lots_perimetre[Statut du lot] ) VAR p = MAXX ( v_lots_perimetre, IF ( v_lots_perimetre[perime], 1, 0 ) ) VAR pl = MAX ( v_lots_perimetre[perime_le] ) VAR dl = COALESCE ( MAX ( v_lots_perimetre[derniere_decision_le] ), MAX ( v_lots_perimetre[statut_le] ) ) RETURN IF ( HASONEVALUE ( v_lots_perimetre[Lot] ), SWITCH ( s, "PROPOSE", "proposé", "REJETE", IF ( SELECTEDVALUE ( v_lots_perimetre[derniere_decision] ) = "RENVOYE", "renvoyé le ", "annulé le " ) & FORMAT ( dl, "dd/MM/yyyy" ), "VALIDE", "visé", "ANNULE", "annulé", LOWER ( s ) ) & IF ( p = 1, " · périmé le " & FORMAT ( pl, "dd/MM/yyyy" ), "" ) )
 		displayFolder: Ecran 2 etape 5
 		lineageTag: 5e01ee4f-ec0c-48a8-a811-b8dd6c9cc4b3
 
@@ -37,6 +37,57 @@ table v_lots_perimetre
 	measure 'Encre etat du lot' = VAR s = SELECTEDVALUE ( v_lots_perimetre[Statut du lot] ) VAR p = MAXX ( v_lots_perimetre, IF ( v_lots_perimetre[perime], 1, 0 ) ) RETURN IF ( HASONEVALUE ( v_lots_perimetre[Lot] ), IF ( p = 1 || s = "REJETE", "#9A2A2A", IF ( s = "PROPOSE", "#8A6710", "#1F6D4A" ) ) )
 		displayFolder: Ecran 2 etape 5
 		lineageTag: 1b7f5d7f-038c-465e-9308-499ef32e55ec
+
+	/// le lot PROPOSE du véhicule, quelle que soit sa famille (refus 50077, sans filtre de famille) ; « aucun »
+	measure 'Lot propose non vise' = VAR e = [Client selectionne] VAR l = CALCULATE ( MIN ( v_lots_perimetre[Lot] ), FILTER ( ALL ( v_lots_perimetre[Entité] ), v_lots_perimetre[Entité] = e ), v_lots_perimetre[Statut du lot] = "PROPOSE" ) RETURN IF ( ISBLANK ( l ), "aucun", "lot " & l )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 0f8e6922-60c3-49e6-8362-bc196e117e98
+
+	/// « lot n » suivi du texte de [État du lot], mesure publiée de la grille, quand le lot choisi n’est pas proposé (« {ex_blocage_lot} ») ; « aucun lot choisi » ; « conditions réunies » : la carte et la grille disent le même état dans les mêmes mots
+	measure 'Blocage annulation du lot' = VAR c = [Lot choisi] VAR st = IF ( c <> "", CALCULATE ( [État du lot], FILTER ( ALL ( v_lots_perimetre[Lot] ), v_lots_perimetre[Lot] = VALUE ( c ) ) ) ) RETURN IF ( c = "", "aucun lot choisi", IF ( NOT ISBLANK ( [Lot annulable] ), "conditions réunies", "lot " & c & " " & st ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 53074db4-f691-4b47-84ce-dbfa64ccd409
+
+	/// « lot n » ; « aucun lot choisi »
+	measure 'Sous-titre du lot choisi' = VAR c = [Lot choisi] RETURN IF ( c <> "", "lot " & c, "aucun lot choisi" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 110a5674-62a6-4c2e-b5b0-4087698561c9
+
+	/// « Écritures du lot n » ; « Aucun lot choisi »
+	measure 'Titre ecritures du lot' = VAR c = [Lot choisi] RETURN IF ( c <> "", "Écritures du lot " & c, "Aucun lot choisi" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: d6f958fa-66d9-48b9-b7d8-ecb04cdb004c
+
+	/// gris quand [Lot annulable] est vide
+	measure 'Fond annuler le lot' = IF ( ISBLANK ( [Lot annulable] ), "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 28a9d14c-8d4f-4a27-aaa2-199fb5ec3b43
+
+	/// le lot choisi quand il est PROPOSE, vide sinon
+	measure 'Lot annulable' = VAR c = [Lot choisi] VAR s = IF ( c <> "", CALCULATE ( MAX ( v_lots_perimetre[Statut du lot] ), FILTER ( ALL ( v_lots_perimetre[Lot] ), v_lots_perimetre[Lot] = VALUE ( c ) ) ) ) RETURN IF ( s = "PROPOSE", c )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 48c82fd0-f056-4af5-a8da-aa5a52d759ab
+
+	/// le lot_id de la ligne choisie, en texte (FORMAT, pour servir de paramètre aux boutons Data function, qui ne prennent pas de valeur numérique)
+	measure 'Lot choisi' = FORMAT ( SELECTEDVALUE ( v_lots_perimetre[Lot] ), "0" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 963e5df5-1b21-49cf-9b85-8348ee114b82
+
+	/// alerte quand un lot PROPOSE est périmé (carte 4), comme v_a_generer_synthese[lots_perimes], qui ne compte que les lots PROPOSE ; un lot périmé puis visé n’alerte pas : son visa est motivé, donné en connaissance de la péremption ({c18})
+	measure 'Encre lots de valorisation' = IF ( CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Cycle] IN { "VALO", "PART" }, v_lots_perimetre[Statut du lot] = "PROPOSE", v_lots_perimetre[perime] = TRUE () ) + 0 > 0, "#9A2A2A", "#12233C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 56ebbc3d-09b3-4e27-ad84-fd20295b3838
+
+	/// « véhicule et filiales : n périmés, n visés » (carte 4), comptés sur tous les lots DERIVABLE du véhicule et de ses filiales à l’arrêté : la grille des lots ne filtre pas la carte (interaction coupée, section « Interactions »), sans quoi {ex_lot} choisi rendrait « {ex_sous_ligne} »
+	measure 'Sous-ligne lots de valorisation' = VAR p = CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Cycle] IN { "VALO", "PART" }, v_lots_perimetre[perime] = TRUE () ) + 0 + 0 VAR v = CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Cycle] IN { "VALO", "PART" }, v_lots_perimetre[Statut du lot] IN { "VALIDE", "EXPORTE", "PUBLIE" } ) + 0 + 0 RETURN "véhicule et filiales : " & FORMAT ( p, "0" ) & IF ( p > 1, " périmés, ", " périmé, " ) & FORMAT ( v, "0" ) & IF ( v > 1, " visés", " visé" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 7a34fcde-b100-4135-beae-42ef2e18486f
+
+	/// lots DERIVABLE PROPOSE du véhicule et de ses filiales ; remplace [Lots proposes], qui ne compte que le véhicule (carte 4)
+	measure 'Lots de valorisation proposes' = CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Cycle] IN { "VALO", "PART" }, v_lots_perimetre[Statut du lot] = "PROPOSE" ) + 0
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 6fefd935-21d7-45fc-a5a7-2820f801be6c
 
 	column vehicule
 		dataType: string
@@ -288,6 +339,15 @@ table v_lots_perimetre
 		lineageTag: 9c54a5f6-85f6-4b9d-9e76-4181b2592d8d
 		summarizeBy: none
 		sourceColumn: libelle_choix
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle_vehicule
+		dataType: string
+		sourceProviderType: nvarchar(240)
+		lineageTag: 76a851af-d0c1-4069-b9c3-711d559401a9
+		summarizeBy: none
+		sourceColumn: libelle_vehicule
 
 		annotation SummarizationSetBy = Automatic
 

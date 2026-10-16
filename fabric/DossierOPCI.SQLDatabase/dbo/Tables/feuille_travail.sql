@@ -41,6 +41,12 @@ CREATE TABLE [dbo].[feuille_travail] (
 
 GO
 
+CREATE NONCLUSTERED INDEX [ix_ft_phase]
+    ON [dbo].[feuille_travail]([phase] ASC);
+
+
+GO
+
 CREATE NONCLUSTERED INDEX [ix_ft_cycle]
     ON [dbo].[feuille_travail]([cycle] ASC);
 
@@ -53,13 +59,8 @@ CREATE NONCLUSTERED INDEX [ix_ft_modele]
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_ft_phase]
-    ON [dbo].[feuille_travail]([phase] ASC);
 
-
-GO
-
-
+-- tr_feuille_conclusion : 1 refus
 CREATE   TRIGGER dbo.tr_feuille_conclusion
 ON dbo.feuille_travail
 AFTER UPDATE
@@ -98,7 +99,7 @@ BEGIN
             + N'arrêté. Manquent : ' + @manquantes
             + N'. Déposer les pièces au coffre, les rattacher à la '
             + N'question, puis conclure.';
-        THROW 50028, @m1, 1;
+        BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50028, @m1, 1; END
     END;
 
     IF EXISTS (SELECT 1

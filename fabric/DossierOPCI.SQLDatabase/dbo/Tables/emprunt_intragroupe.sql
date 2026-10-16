@@ -36,3 +36,25 @@ CREATE NONCLUSTERED INDEX [ix_ei_emprunteur]
 
 GO
 
+
+CREATE   TRIGGER dbo.tr_emprunt_intragroupe_annexe_retard ON dbo.emprunt_intragroupe
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT id, capital_restant, date_echeance, date_versement, entite_emprunt, entite_preteuse, reference FROM inserted
+        EXCEPT SELECT id, capital_restant, date_echeance, date_versement, entite_emprunt, entite_preteuse, reference FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT id, capital_restant, date_echeance, date_versement, entite_emprunt, entite_preteuse, reference FROM deleted EXCEPT SELECT id, capital_restant, date_echeance, date_versement, entite_emprunt, entite_preteuse, reference FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT v.x, CAST(NULL AS BIT) AS vehicule FROM ch CROSS APPLY (VALUES (ch.entite_preteuse), (ch.entite_emprunt)) v (x)) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'emprunt_intragroupe', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
+
+GO
+

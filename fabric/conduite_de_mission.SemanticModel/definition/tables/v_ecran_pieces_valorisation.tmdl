@@ -1,0 +1,115 @@
+/// Pieces deposees du vehicule et de ses filiales.
+table v_ecran_pieces_valorisation
+	lineageTag: 2709c9bb-2663-4901-8605-a5920788b24e
+
+	/// « actif · n rapports déposés à la Collecte » : pièces RAPPORT_EVALUATION du véhicule et de ses filiales à l’arrêté
+	measure 'Sous-titre valeur d expertise' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_pieces_valorisation ), v_ecran_pieces_valorisation[nature] = "RAPPORT_EVALUATION" ) + 0 RETURN IF ( ISBLANK ( [Actif choisi] ), "aucun actif choisi", [Actif choisi] ) & " · " & FORMAT ( n, "0" ) & " rapports déposés à la Collecte"
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: a672ee34-2cac-4f13-8695-c85ffa36a50e
+
+	/// « Une seule pièce à cocher dans « Rapport au coffre ». » quand le segment porte 2 valeurs ou plus ; vide sinon (carte collée, & "")
+	measure 'Avis enregistrer l expertise' = VAR p1 = IF ( ISFILTERED ( v_ecran_pieces_valorisation[nom_fichier] ) && COUNTROWS ( VALUES ( v_ecran_pieces_valorisation[nom_fichier] ) ) >= 2, "Une seule valeur à cocher dans « Rapport au coffre »." ) VAR j1 = p1 RETURN IF ( j1 = "", "", j1 ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: bc3bcfd3-ece4-4de1-84a7-d865aeeca34a
+
+	/// gris quand [Avis enregistrer l expertise] n’est pas vide, couleur d’action sinon
+	measure 'Fond enregistrer l expertise' = IF ( [Avis enregistrer l expertise] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 068407b7-d452-4fa4-8be6-0edec04666c4
+
+	/// même règle, segments « Instrument » et « Pièce de la valeur » de l’étape 1c
+	measure 'Avis enregistrer la valeur de l instrument' = VAR p1 = IF ( ISFILTERED ( v_ecran_valeurs_arrete[code_actif] ) && COUNTROWS ( VALUES ( v_ecran_valeurs_arrete[code_actif] ) ) >= 2, "Une seule valeur à cocher dans « Instrument »." ) VAR j1 = p1 VAR p2 = IF ( ISFILTERED ( v_ecran_pieces_valorisation[nom_fichier] ) && COUNTROWS ( VALUES ( v_ecran_pieces_valorisation[nom_fichier] ) ) >= 2, "Une seule valeur à cocher dans « Pièce de la valeur »." ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) RETURN IF ( j2 = "", "", j2 ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e72181c8-5754-4c8f-9b6e-e2202b0499e8
+
+	/// gris quand [Avis enregistrer la valeur de l instrument] n’est pas vide
+	measure 'Fond enregistrer la valeur de l instrument' = IF ( [Avis enregistrer la valeur de l instrument] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 4a6d10dc-c230-4184-9f5e-983aa7830020
+
+	column vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ffd85c1b-3158-4d8b-adba-50178cf6ed10
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: e858d180-5b3f-4b84-a8e9-963540f294ce
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 2857e3b5-f723-428e-ade0-7422b7960fb0
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 9ca01c0a-e5b6-46bf-b108-c8a004271102
+		summarizeBy: none
+		sourceColumn: piece_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column nom_fichier
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: edc0f308-97b1-41d4-ba8d-12f1431ebe8c
+		summarizeBy: none
+		sourceColumn: nom_fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(40)
+		lineageTag: f9aae984-2dd0-42c8-a390-36d3ba17eaea
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column web_url
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 50e906c5-e684-4075-b621-311b64a153c7
+		summarizeBy: none
+		sourceColumn: web_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: varchar(33)
+		lineageTag: 11a9cc1c-d034-4fdc-823f-0b7900b9328a
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_pieces_valorisation = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_pieces_valorisation = Source{[Schema="dbo",Item="v_ecran_pieces_valorisation"]}[Data]
+				in
+				    dbo_v_ecran_pieces_valorisation
+

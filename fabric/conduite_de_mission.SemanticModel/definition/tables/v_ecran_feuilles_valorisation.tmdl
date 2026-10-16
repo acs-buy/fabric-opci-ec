@@ -1,0 +1,166 @@
+/// Feuilles VALO et PART, conclusions et derogations.
+table v_ecran_feuilles_valorisation
+	lineageTag: 99d3b3e0-a0ea-499b-b1cb-17a84d1fa0b9
+
+	/// même règle, segment « Feuille »
+	measure 'Avis creer la derogation' = VAR p1 = IF ( ISFILTERED ( v_ecran_feuilles_valorisation[cote] ) && COUNTROWS ( VALUES ( v_ecran_feuilles_valorisation[cote] ) ) >= 2, "Une seule valeur à cocher dans « Feuille »." ) VAR j1 = p1 RETURN IF ( j1 = "", "", j1 ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 27e4e78d-d15f-4744-b8f2-6e34049e0e17
+
+	/// gris quand [Avis creer la derogation] n’est pas vide
+	measure 'Fond creer la derogation' = IF ( [Avis creer la derogation] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e74e4a07-62b1-4fa8-98d1-e9ddf8b2f536
+
+	column vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 38c7e334-3054-4d9a-9df6-936ad55084ee
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 725087d6-f95e-43bc-a00e-ed28e52b4420
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 2cd3f0fb-5e9c-4bf3-a9eb-34b5874b9083
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column cote
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: c4bb25a4-1fab-4ad1-beed-234609b0abdf
+		summarizeBy: none
+		sourceColumn: cote
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: fea7e01b-c90f-47c0-9369-16daa7a66a89
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion_a_viser
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 7217771c-9368-4807-b66b-af87537adf5f
+		summarizeBy: none
+		sourceColumn: conclusion_a_viser
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion_libelle
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 753693a6-4361-4123-ae78-e5704b5fc947
+		summarizeBy: none
+		sourceColumn: conclusion_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion_proposee_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: fba765c7-9e8a-4f9e-9590-827bd735d6cd
+		summarizeBy: none
+		sourceColumn: conclusion_proposee_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column conclusion_proposee_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 812be5bf-3dd7-4be1-a53d-a31126f70531
+		summarizeBy: none
+		sourceColumn: conclusion_proposee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column derogation_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1357d45b-edf5-4b90-bbe6-74985ecfc8d6
+		summarizeBy: none
+		sourceColumn: derogation_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column derogation_motif
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: d23bdff3-069b-45cb-8c66-291f2905a164
+		summarizeBy: none
+		sourceColumn: derogation_motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column derogation_proposee_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: f8e357e4-a5be-44d8-b0b0-902dbeb85df7
+		summarizeBy: none
+		sourceColumn: derogation_proposee_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column derogation_proposee_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 115acb88-42c1-4b20-89a7-673cbe5593d2
+		summarizeBy: none
+		sourceColumn: derogation_proposee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column derogation_visa
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: b945e759-411f-4403-9790-4eb3bbc18e1a
+		summarizeBy: none
+		sourceColumn: derogation_visa
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(51)
+		lineageTag: 84485143-7450-4725-8d86-8b00999e1ec2
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_feuilles_valorisation = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_feuilles_valorisation = Source{[Schema="dbo",Item="v_ecran_feuilles_valorisation"]}[Data]
+				in
+				    dbo_v_ecran_feuilles_valorisation
+

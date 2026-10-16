@@ -1,4 +1,24 @@
+
 CREATE   VIEW dbo.v_controle_flux_vs_ecritures AS
+WITH f AS (
+    SELECT f.*, dbo.fn_compte_du_modele(f.entite_debitrice, f.compte_debiteur) AS compte_modele_debiteur,
+           dbo.fn_compte_du_modele(f.entite_creditrice, f.compte_crediteur) AS compte_modele_crediteur
+    FROM dbo.flux_intragroupe f
+    JOIN dbo.ref_arrete r ON r.entite = f.entite_debitrice AND r.arrete = f.arrete AND r.porte_balance = 1
+),
+k AS (
+    SELECT entite_debitrice AS entite, arrete FROM f UNION SELECT entite_creditrice, arrete FROM f
+),
+agg AS (
+    SELECT e.entite, e.arrete, e.compte_num, e.comp_aux_num,
+           SUM(e.debit) AS debit, SUM(e.credit) AS credit,
+           SUM(CASE WHEN e.ecriture_num <> 'DET' THEN e.debit ELSE 0 END) AS debit_hors_det,
+           SUM(CASE WHEN e.ecriture_num <> 'DET' THEN e.credit ELSE 0 END) AS credit_hors_det
+    FROM dbo.v_ecriture_normalisee e
+    JOIN k ON k.entite = e.entite AND k.arrete = e.arrete
+    WHERE e.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')
+    GROUP BY e.entite, e.arrete, e.compte_num, e.comp_aux_num
+)
 SELECT f.arrete, f.nature, f.entite_debitrice, f.entite_creditrice,
        SUM(f.montant)                      AS montant_declare,
        chez_debiteur.grandeur              AS solde_chez_le_debiteur,
@@ -10,65 +30,27 @@ SELECT f.arrete, f.nature, f.entite_debitrice, f.entite_creditrice,
             THEN N'le flux déclaré égale ce que portent les écritures du débiteur'
             ELSE N'le flux déclaré diffère de ce que portent les écritures du débiteur'
             END                             AS lecture
-FROM dbo.flux_intragroupe f
--- UN ARRETE SANS BALANCE N EST PAS RAPPROCHABLE. Les arretes de 2026 ne
--- portent aucune ecriture : leurs 48 flux ressortaient en ecart alors
--- qu ils sont seulement a venir.
-JOIN dbo.ref_arrete r ON r.entite = f.entite_debitrice
-                     AND r.arrete = f.arrete
-                     AND r.porte_balance = 1
+FROM f
 OUTER APPLY (
-    -- LA GRANDEUR QUI SE COMPARE DEPEND DE LA CLASSE DU COMPTE. Un
-    -- compte de bilan se lit par son solde ; un compte de charges ou de
-    -- produits, solde a zero par la determination du resultat, se lit
-    -- par son MOUVEMENT, et les ecritures de solde en sont ecartees.
-    SELECT CASE WHEN f.compte_debiteur LIKE '6%'
-                THEN SUM(CASE WHEN e.ecriture_num <> 'DET'
-                              THEN e.debit ELSE 0 END)
-                WHEN f.compte_debiteur LIKE '7%'
-                THEN SUM(CASE WHEN e.ecriture_num <> 'DET'
-                              THEN e.credit ELSE 0 END)
-                ELSE ABS(SUM(e.debit) - SUM(e.credit)) END AS grandeur
-    FROM dbo.v_ecriture_normalisee e
-    WHERE e.entite = f.entite_debitrice AND e.arrete = f.arrete
-      AND e.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')
-      -- LES 2 COMPTES SE LISENT DANS LE MEME PLAN. dbo.flux_intragroupe
-      -- designe tantot un compte du modele, le 623 des charges
-      -- d'emprunt, tantot un compte du plan d'une filiale, le 4551. Les
-      -- 2 se ramenent au modele avant d'etre compares, faute de quoi le
-      -- 4551 d'un flux ne rencontre jamais le 512 d'une ecriture.
-      AND e.compte_num LIKE
-          dbo.fn_compte_du_modele(f.entite_debitrice, f.compte_debiteur)
-          + '%'
-      -- ET L'AUXILIAIRE ISOLE L'INTERNE. Le compte 623 du modele porte
-      -- aussi les interets bancaires : sans ce filtre, le flux
-      -- intragroupe se comparerait a la totalite des charges d'emprunt.
-      -- Le filtre ne joue que si une ecriture porte cet auxiliaire, un
-      -- compte de bilan comme le 4551 n'en portant pas toujours.
-      AND (e.comp_aux_num = f.entite_creditrice
-           OR NOT EXISTS (SELECT 1 FROM dbo.v_ecriture_normalisee z
-                          WHERE z.entite = f.entite_debitrice
-                            AND z.arrete = f.arrete
+    SELECT CASE WHEN f.compte_debiteur LIKE '6%' THEN SUM(a.debit_hors_det)
+                WHEN f.compte_debiteur LIKE '7%' THEN SUM(a.credit_hors_det)
+                ELSE ABS(SUM(a.debit) - SUM(a.credit)) END AS grandeur
+    FROM agg a
+    WHERE a.entite = f.entite_debitrice AND a.arrete = f.arrete
+      AND a.compte_num LIKE f.compte_modele_debiteur + '%'
+      AND (a.comp_aux_num = f.entite_creditrice
+           OR NOT EXISTS (SELECT 1 FROM agg z
+                          WHERE z.entite = f.entite_debitrice AND z.arrete = f.arrete
                             AND z.comp_aux_num = f.entite_creditrice
-                            AND z.compte_num LIKE
-                                dbo.fn_compte_du_modele(
-                                    f.entite_debitrice,
-                                    f.compte_debiteur) + '%'))
+                            AND z.compte_num LIKE f.compte_modele_debiteur + '%'))
 ) AS chez_debiteur
 OUTER APPLY (
-    SELECT CASE WHEN f.compte_crediteur LIKE '6%'
-                THEN SUM(CASE WHEN e.ecriture_num <> 'DET'
-                              THEN e.debit ELSE 0 END)
-                WHEN f.compte_crediteur LIKE '7%'
-                THEN SUM(CASE WHEN e.ecriture_num <> 'DET'
-                              THEN e.credit ELSE 0 END)
-                ELSE ABS(SUM(e.debit) - SUM(e.credit)) END AS grandeur
-    FROM dbo.v_ecriture_normalisee e
-    WHERE e.entite = f.entite_creditrice AND e.arrete = f.arrete
-      AND e.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')
-      AND e.compte_num LIKE
-          dbo.fn_compte_du_modele(f.entite_creditrice, f.compte_crediteur)
-          + '%'
+    SELECT CASE WHEN f.compte_crediteur LIKE '6%' THEN SUM(a.debit_hors_det)
+                WHEN f.compte_crediteur LIKE '7%' THEN SUM(a.credit_hors_det)
+                ELSE ABS(SUM(a.debit) - SUM(a.credit)) END AS grandeur
+    FROM agg a
+    WHERE a.entite = f.entite_creditrice AND a.arrete = f.arrete
+      AND a.compte_num LIKE f.compte_modele_crediteur + '%'
 ) AS chez_crediteur
 GROUP BY f.arrete, f.nature, f.entite_debitrice, f.entite_creditrice,
          chez_debiteur.grandeur, chez_crediteur.grandeur;

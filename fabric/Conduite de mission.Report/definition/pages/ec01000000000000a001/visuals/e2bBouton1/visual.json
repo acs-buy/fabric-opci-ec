@@ -332,7 +332,14 @@
             "webUrl": {
               "expr": {
                 "Literal": {
-                  "Value": "'https://app.powerbi.com/groups/3d36cceb-a461-4e21-a285-9e40297fe906/lakehouses/eceb5802-f9ae-4e0d-8237-b3b1586c992a'"
+                  "Value": "'https://dataupsolutionscom.sharepoint.com/sites/gestion-cabinet-ec/_layouts/15/download.aspx?SourceUrl=%2Fsites%2Fgestion-cabinet-ec%2FDocuments%20partages%2FModeles%2Fmodele_filiales.xlsx'"
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Télécharge le modèle de classeur des filiales à remplir.'"
                 }
               }
             }

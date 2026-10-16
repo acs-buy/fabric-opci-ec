@@ -1,6 +1,112 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_obligation_par_categorie
 	lineageTag: 7c311389-3181-41bf-98bd-8333524c078e
+
+	/// gris quand [Blocage decision] n’est pas « conditions réunies » ou quand [Avis categorie cochee] n’est pas vide
+	measure 'Fond enregistrer la decision' = IF ( [Blocage decision] <> "conditions réunies" || [Avis categorie cochee] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: b771c94e-fbbd-4d8e-bb48-f4bf32391807
+
+	/// vert quand [Blocage decision] vaut « conditions réunies », alerte sinon
+	measure 'Couleur blocage decision' = IF ( [Blocage decision] = "conditions réunies", "#1F6D4A", "#9A2A2A" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 0dcb6add-e725-4bec-85f6-b1565307640a
+
+	/// « arrêté non annuel » ; « conditions réunies » sinon ; une catégorie non choisie ne bloque pas
+	measure 'Blocage decision' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR typ = CALCULATE ( MAX ( ref_arrete[Type] ), FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ) ) VAR p1 = IF ( typ <> "ANNUEL", "arrêté non annuel" ) VAR j1 = p1 RETURN IF ( j1 = "", "conditions réunies", j1 )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 8517b990-8ddf-40ee-a88b-5ce9f945328f
+
+	/// date_assemblee de la vue, jj/mm/aaaa ; « à remplir »
+	measure 'Date d assemblee ou a remplir' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a && v_obligation_par_categorie[categorie_ref] = c ) VAR d = MAXX ( t, v_obligation_par_categorie[date_assemblee] ) RETURN IF ( NOT une, "", IF ( ISBLANK ( d ), "à remplir", FORMAT ( d, "dd/MM/yyyy" ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 174cfce0-e982-40be-91d3-b0ef8796b191
+
+	/// montant_decide de la vue, qui joint decision_distribution ; « à remplir »
+	measure 'Montant decide ou a remplir' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a && v_obligation_par_categorie[categorie_ref] = c ) VAR m = MAXX ( t, v_obligation_par_categorie[montant_decide] ) RETURN IF ( NOT une, "", IF ( ISBLANK ( m ), "à remplir", FORMAT ( m, "#,0.00" ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 4a1b6eac-f773-4e64-b08b-b3b149081354
+
+	/// alerte quand [Ecart des bornes basses] n’est pas nul (grille et fiche 3b)
+	measure 'Couleur ecart des bornes' = VAR x = [Ecart des bornes basses] RETURN IF ( NOT ISBLANK ( x ) && ROUND ( x, 2 ) <> 0, "#9A2A2A", "#12233C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 07ce0e08-18d2-47a6-b028-f3547aa3a446
+
+	/// [Borne basse de la decision] moins l’obligation de la vue (montant_propose)
+	measure 'Ecart des bornes basses' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a && v_obligation_par_categorie[categorie_ref] = c ) VAR bb = [Borne basse de la decision] VAR mp = MAXX ( t, v_obligation_par_categorie[montant_propose] ) RETURN IF ( NOT ISBLANK ( bb ) && NOT ISBLANK ( mp ), bb - mp )
+		formatString: #,0.00
+		displayFolder: Ecran 4 Arrete
+		lineageTag: f5ce9980-b868-4a31-a1a4-bc60d7111688
+
+	/// gris quand [Blocage visa de la categorie] n’est pas « conditions réunies » ou quand [Avis categorie cochee] n’est pas vide ; fond de « Viser la catégorie » et de « Renvoyer la catégorie »
+	measure 'Fond viser la categorie' = IF ( [Blocage visa de la categorie] <> "conditions réunies" || [Avis categorie cochee] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 9e241677-87a8-4bb0-88ec-8b3c330cfd5a
+
+	/// vert quand [Blocage visa de la categorie] vaut « conditions réunies », alerte sinon
+	measure 'Couleur blocage visa' = IF ( [Blocage visa de la categorie] = "conditions réunies", "#1F6D4A", "#9A2A2A" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 3f67b1ef-bbbf-4ae6-9f07-0220a0ff9f14
+
+	/// « visa réservé à l’associé signataire », « VL de la clôture non publiée » (aucune publication non périmée de l’arrêté annuel), « base non proposée » (etat_obligation ni PROPOSEE ni VISEE), « catégorie visée » (etat_obligation VISEE) ; « conditions réunies » sinon ; une catégorie non choisie ne bloqu
+	measure 'Blocage visa de la categorie' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a && v_obligation_par_categorie[categorie_ref] = c ) VAR eo = MAXX ( t, v_obligation_par_categorie[etat_obligation] ) VAR pub = COUNTROWS ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && publication_vl[arrete] = a && ISBLANK ( publication_vl[perimee_le] ) ) ) + 0 VAR p1 = IF ( ISBLANK ( [Associe connecte] ), "visa réservé à l’associé signataire" ) VAR j1 = p1 VAR p2 = IF ( pub = 0, "VL de la clôture non publiée" ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) VAR p3 = IF ( une && NOT ( eo IN { "PROPOSEE", "VISEE" } ), "base non proposée" ) VAR j3 = IF ( j2 <> "" && p3 <> "", j2 & " · " & p3, j2 & p3 ) VAR p4 = IF ( une && eo = "VISEE", "catégorie visée" ) VAR j4 = IF ( j3 <> "" && p4 <> "", j3 & " · " & p4, j3 & p4 ) RETURN IF ( j4 = "", "conditions réunies", j4 )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 96cb8cbb-f8fa-42c5-a973-6f3c0452d006
+
+	/// gris quand [Blocage proposition de la base] n’est pas « conditions réunies » ou quand [Avis categorie cochee] n’est pas vide
+	measure 'Fond proposer la base' = IF ( [Blocage proposition de la base] <> "conditions réunies" || [Avis categorie cochee] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 62a19edb-67f3-4b3c-92b6-e8b27dd2297f
+
+	/// vert quand [Blocage proposition de la base] vaut « conditions réunies », alerte sinon
+	measure 'Couleur blocage proposition' = IF ( [Blocage proposition de la base] = "conditions réunies", "#1F6D4A", "#9A2A2A" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: d82e0537-e578-4c43-9ee1-d85ea1c7be29
+
+	/// « proposition réservée au réviseur », « arrêté non annuel », « catégorie visée le jj/mm/aaaa » ; « conditions réunies » sinon ; une catégorie non choisie ne bloque pas, la fonction refuse en français
+	measure 'Blocage proposition de la base' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR typ = CALCULATE ( MAX ( ref_arrete[Type] ), FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ) ) VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a && v_obligation_par_categorie[categorie_ref] = c ) VAR eo = MAXX ( t, v_obligation_par_categorie[etat_obligation] ) VAR vl = MAXX ( t, v_obligation_par_categorie[vise_le] ) VAR p1 = IF ( ISBLANK ( [Reviseur connecte] ), "proposition réservée au réviseur" ) VAR j1 = p1 VAR p2 = IF ( typ <> "ANNUEL", "arrêté non annuel" ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) VAR p3 = IF ( une && eo = "VISEE", "catégorie visée le " & FORMAT ( vl, "dd/MM/yyyy" ) ) VAR j3 = IF ( j2 <> "" && p3 <> "", j2 & " · " & p3, j2 & p3 ) RETURN IF ( j3 = "", "conditions réunies", j3 )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: fbd426ae-d0b6-4aac-bf01-4df9e23bac44
+
+	/// montant_propose à la française (base × taux) ; « à remplir » sans valeur ; vide quand le segment ne porte pas exactement 1 catégorie (proposition de la base)
+	measure 'Fiche categorie montant propose' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a && v_obligation_par_categorie[categorie_ref] = c ) VAR b = MAXX ( t, v_obligation_par_categorie[montant_propose] ) RETURN IF ( NOT une, "", IF ( ISBLANK ( b ), "à remplir", FORMAT ( b, "#,0.00" ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 22e924c2-721d-4449-a9e2-3b99cb5f482f
+
+	/// base_calcul à la française ; « à remplir » sans valeur ; vide quand le segment ne porte pas exactement 1 catégorie (proposition de la base)
+	measure 'Fiche categorie base calculee' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a && v_obligation_par_categorie[categorie_ref] = c ) VAR b = MAXX ( t, v_obligation_par_categorie[base_calcul] ) RETURN IF ( NOT une, "", IF ( ISBLANK ( b ), "à remplir", FORMAT ( b, "#,0.00" ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: afc75f9c-103c-4a49-9153-08edb5f0502c
+
+	/// source de la vue
+	measure 'Fiche categorie source du calcul' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a && v_obligation_par_categorie[categorie_ref] = c ) RETURN IF ( une, MAXX ( t, v_obligation_par_categorie[source] ), "" ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 425064ff-8429-4334-9e32-f4cd32643979
+
+	/// article
+	measure 'Fiche categorie article' = VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) RETURN IF ( une, CALCULATE ( MAX ( ref_obligation_distribution[article] ), FILTER ( ALL ( ref_obligation_distribution ), ref_obligation_distribution[categorie] = c ) ), "" ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: ddbcfdf0-5fd9-4f78-ba8c-275d2822400b
+
+	/// « n catégories · n visées », sur toutes les lignes de l’exercice (VAR e, x puis FILTER ALL)
+	measure 'Libelle bande base et visa' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a ) VAR n = COUNTROWS ( t ) + 0 VAR nv = COUNTROWS ( FILTER ( t, v_obligation_par_categorie[etat_obligation] = "VISEE" ) ) + 0 RETURN FORMAT ( n, "0" ) & IF ( n > 1, " catégories", " catégorie" ) & " · " & FORMAT ( nv, "0" ) & IF ( nv > 1, " visées", " visée" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 5cbbb261-fd28-4aef-b14b-0b03c3c2aa76
+
+	/// vise_le de la ligne écrit jj/mm/aaaa ; vide sans visa ; colonne « Le » de la grille de l’étape 3a (vise_le est une date à format « General Date » au modèle publié, qui rendrait l’heure, INFO.VIEW.COLUMNS relu le 10/10/2026)
+	measure 'Vise le de la categorie' = FORMAT ( MAX ( v_obligation_par_categorie[vise_le] ), "dd/MM/yyyy" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 2a7c3e6b-e801-468e-a1d1-3d8dc2b1f620
+
+	/// vert « visée », attente « proposée » et « à inscrire », alerte « renvoyée » et « inscrite, non visée » (pastille de la grille, état du bloc de visa)
+	measure 'Couleur etat de la categorie' = VAR s = [Etat de la categorie] RETURN SWITCH ( TRUE (), s = "visée", "#1F6D4A", s IN { "proposée", "à inscrire" }, "#C8961E", s = "", "#12233C", "#9A2A2A" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 3df94459-edb0-4cbc-83b1-b2ba68a296b6
+
+	/// lu sur etat_obligation, comme la garde de la validation : « visée », « proposée », « renvoyée », « inscrite, non visée » (ligne sans état), « à inscrire » ; la colonne etat de la vue dit « VISEE » dès qu’une ligne existe ; vide quand le contexte ne porte pas exactement 1 catégorie (HASONEVALUE de ca
+	measure 'Etat de la categorie' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a && v_obligation_par_categorie[categorie_ref] = c ) VAR eo = MAXX ( t, v_obligation_par_categorie[etat_obligation] ) VAR oid = MAXX ( t, v_obligation_par_categorie[obligation_id] ) RETURN IF ( NOT une, "", SWITCH ( TRUE (), eo = "VISEE", "visée", eo = "PROPOSEE", "proposée", eo = "RENVOYEE", "renvoyée", NOT ISBLANK ( oid ), "inscrite, non visée", "à inscrire" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 5e85bd6c-3d74-4f19-9803-cc34b29720f9
 
 	column cle
 		dataType: string

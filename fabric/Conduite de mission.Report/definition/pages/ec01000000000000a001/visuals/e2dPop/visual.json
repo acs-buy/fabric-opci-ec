@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "e2dPop",
   "position": {
-    "x": 900,
-    "y": 560,
+    "x": 860,
+    "y": 619,
     "z": 55300,
     "height": 220,
-    "width": 480,
+    "width": 560,
     "tabOrder": 55300
   },
   "visual": {

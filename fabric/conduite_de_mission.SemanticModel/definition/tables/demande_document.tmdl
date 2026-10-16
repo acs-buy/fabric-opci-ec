@@ -1,0 +1,115 @@
+/// Les demandes de production, une par version d'un livrable.
+table demande_document
+	lineageTag: 8a3ab848-e028-49c6-b51c-23646cf6024e
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d278efef-43ef-42a0-a3d9-58dcfcf8516b
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: cc3c8383-5eac-4961-b145-26539552f3d7
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 94ab6e99-8f1c-44e9-a8ac-fe915fa37456
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column livrable
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: fc11ecb5-24e7-4e8b-8740-86a28e009b34
+		summarizeBy: none
+		sourceColumn: livrable
+
+		annotation SummarizationSetBy = Automatic
+
+	column version
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: eb24b565-be1b-4491-9f9b-450d5c165885
+		summarizeBy: none
+		sourceColumn: version
+
+		annotation SummarizationSetBy = Automatic
+
+	column demande_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 47845c5d-d577-4500-891a-070a63427e3a
+		summarizeBy: none
+		sourceColumn: demande_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column demande_le
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 9e89651a-2f61-4b62-8471-50400b30fa39
+		summarizeBy: none
+		sourceColumn: demande_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 68b7883b-84af-4b54-a623-44f869c377c6
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column produit_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 4a85da70-f6ee-421f-9eac-abb7abeab66d
+		summarizeBy: none
+		sourceColumn: produit_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_refus
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: bc2d53c1-2e3f-4404-893d-f7b9303fa799
+		summarizeBy: none
+		sourceColumn: motif_refus
+
+		annotation SummarizationSetBy = Automatic
+
+	partition demande_document = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_demande_document = Value.NativeQuery(Source, "SELECT id, entite, arrete, livrable, version, demande_par, DATETIME2FROMPARTS(YEAR(demande_le), MONTH(demande_le), DAY(demande_le), DATEPART(HOUR, demande_le), DATEPART(MINUTE, demande_le), DATEPART(SECOND, demande_le), 0, 0) AS demande_le, etat, DATETIME2FROMPARTS(YEAR(produit_le), MONTH(produit_le), DAY(produit_le), DATEPART(HOUR, produit_le), DATEPART(MINUTE, produit_le), DATEPART(SECOND, produit_le), 0, 0) AS produit_le, motif_refus FROM dbo.demande_document", null, [EnableFolding = true])
+				in
+				    dbo_demande_document
+

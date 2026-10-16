@@ -1,4 +1,5 @@
 
+-- pr_deposer_modele : 1 refus
 -- 5. LE DEPOT D'UN MODELE DE DOCUMENT. Le modele est un parametrage du cabinet : l'associe d'un dossier le depose.
 -- Il va dans « Modeles », a la racine de la bibliotheque du site du cabinet, que le raccourci du coffre couvre ; le
 -- nom de fichier est celui que les fonctions de production lisent. Un modele se redepose sous le meme nom.
@@ -42,7 +43,7 @@ BEGIN
     BEGIN
         SET @m = LEFT(N'Dépôt refusé, retour ' + CAST(@ret AS NVARCHAR (10)) + N' : '
                       + ISNULL(JSON_VALUE(@corps, '$.message'), ISNULL(@reponse, N'aucune réponse')), 800);
-        THROW 50637, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50637, @m, 1; END
     END;
     SELECT JSON_VALUE(@corps, '$.web_url') AS web_url, dbo.fn_empreinte_base64(@contenu_base64) AS empreinte_sha256,
            TRY_CAST(JSON_VALUE(@corps, '$.taille') AS INT) AS taille,

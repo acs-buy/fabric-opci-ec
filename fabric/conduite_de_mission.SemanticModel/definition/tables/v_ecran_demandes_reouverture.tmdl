@@ -1,0 +1,197 @@
+/// Les demandes de réouverture d'un arrêté clos, leur auteur, leur décision.
+table v_ecran_demandes_reouverture
+	lineageTag: c2928105-7691-5805-928e-b2e8bdd6b4cd
+
+	/// 1 quand la ligne est une demande du client choisi.
+	measure 'Est demande du client courant' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_demandes_reouverture ) ) RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( v_ecran_demandes_reouverture, v_ecran_demandes_reouverture[entite] = c ) ), 1 )
+		formatString: 0
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: e5a8580e-5fb1-5e13-8bb8-8087b10ff810
+
+	/// La demande en attente sur l'arrêté choisi, ou son absence.
+	measure 'Demande en attente' = VAR c = [Client selectionne] VAR a = [Arrete choisi reouverture] VAR d = FILTER ( ALL ( v_ecran_demandes_reouverture ), v_ecran_demandes_reouverture[entite] = c && v_ecran_demandes_reouverture[arrete] = a && v_ecran_demandes_reouverture[etat] = "EN_ATTENTE" ) VAR jour = CALCULATE ( MAX ( v_ecran_arretes[Arrêté] ), FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = c && v_ecran_arretes[arrete] = a ) ) VAR p = MAXX ( d, v_ecran_demandes_reouverture[Demandée par] ) VAR de = IF ( CONTAINSSTRING ( "AEIOUYÉÈÊÀÂÎÔÛ", LEFT ( p, 1 ) ), "d'", "de " ) RETURN IF ( ISBLANK ( a ), "", IF ( ISEMPTY ( d ), "Aucune demande n'attend sur l'arrêté du " & jour & ".", "Demande " & de & p & " du " & MAXX ( d, v_ecran_demandes_reouverture[Demandée le] ) & " pour l'arrêté du " & jour & ", en attente de décision." ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 5cc8ae6b-39d8-5902-a11d-f4e40ef15efb
+
+	/// Le fond de la cellule « État » d'une demande en attente.
+	measure 'Fond etat demande' = IF ( SELECTEDVALUE ( v_ecran_demandes_reouverture[État] ) = "En attente", "#FAF2E2" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: e1a421f4-a779-5bc6-9d4d-55f6093636f1
+
+	/// L'encre de la cellule « État » d'une demande en attente.
+	measure 'Encre etat demande' = IF ( SELECTEDVALUE ( v_ecran_demandes_reouverture[État] ) = "En attente", "#8A6710", "#12233C" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: e7d2d77b-5eb4-5af7-ad1f-00181edcae12
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 7313a07a-04b6-58ac-bd4c-be4e4e679a3a
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d4c75d2b-97d8-5799-9f5c-3e7bfe5c8265
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e98a1228-37ba-513a-a7b5-520f56c5f4a3
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: f4ab0e48-0837-525d-b6d8-f6a3fa9e1dcb
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column demande_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 3a5ecc76-ef6c-5563-b70e-c29a10d7053d
+		summarizeBy: none
+		sourceColumn: demande_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: dc4aff22-6c6a-557e-9960-aeec480e1358
+		summarizeBy: none
+		sourceColumn: decide_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column visa_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 739e9f4a-cc0f-5fcf-b006-bd926d2642d7
+		summarizeBy: none
+		sourceColumn: visa_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column demande_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 8c1f66c3-682e-5c61-b490-86e29a71b8dd
+		summarizeBy: none
+		sourceColumn: demande_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: varchar(31)
+		lineageTag: f4cc36d9-a067-5d50-96c2-00c5fba186b0
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column Arrêté
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: 6d324a5c-cf45-5686-b0b6-15b3ae838732
+		summarizeBy: none
+		sourceColumn: Arrêté
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Demandée par'
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: d4fc1624-e48c-5221-b103-dde9df530971
+		summarizeBy: none
+		sourceColumn: Demandée par
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Demandée le'
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: 49e54d73-f2f4-5585-b39c-fdc64e8bf62d
+		summarizeBy: none
+		sourceColumn: Demandée le
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Motif de la demande'
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(800)
+		lineageTag: c82b83a4-4b3e-5c3a-b5fa-ee7ddd3ed0c8
+		summarizeBy: none
+		sourceColumn: Motif de la demande
+
+		annotation SummarizationSetBy = Automatic
+
+	column État
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 854b2fc5-c5e2-5d6a-9cbe-7ef3450cedbd
+		summarizeBy: none
+		sourceColumn: État
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Décidée par'
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 0c1579a5-f5a6-5287-9fc1-f8abf6a93e6c
+		summarizeBy: none
+		sourceColumn: Décidée par
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Décidée le'
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: 980a2b80-1c7a-586e-a2e1-2f9ee436e88a
+		summarizeBy: none
+		sourceColumn: Décidée le
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Motif de l''écart'
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 9d197e79-e96f-504a-a168-d7de8e2797f6
+		summarizeBy: none
+		sourceColumn: Motif de l'écart
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_demandes_reouverture = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_demandes_reouverture = Source{[Schema="dbo",Item="v_ecran_demandes_reouverture"]}[Data]
+				in
+				    dbo_v_ecran_demandes_reouverture
+

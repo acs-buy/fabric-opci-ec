@@ -46,11 +46,6 @@
           "type": "CustomTheme"
         },
         {
-          "name": "fond_ecran_client.png",
-          "path": "fond_ecran_client.png",
-          "type": "Image"
-        },
-        {
           "name": "fond_ecran_revision_4f0aaca336.png",
           "path": "fond_ecran_revision_4f0aaca336.png",
           "type": "Image"
@@ -104,8 +99,106 @@
           "name": "fond_etape5_8df4d9d572.png",
           "path": "fond_etape5_8df4d9d572.png",
           "type": "Image"
+        },
+        {
+          "name": "fond_etape6_363bfc2cab.png",
+          "path": "fond_etape6_363bfc2cab.png",
+          "type": "Image"
+        },
+        {
+          "name": "kpi_etape6_f4d57b2368.png",
+          "path": "kpi_etape6_f4d57b2368.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_valo_5b_8a53874aa8.png",
+          "path": "fond_valo_5b_8a53874aa8.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_valo_2_4d9db44222.png",
+          "path": "fond_valo_2_4d9db44222.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_ecran_client_7bcd5cfa63.png",
+          "path": "fond_ecran_client_7bcd5cfa63.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_valo_5a_21988e20eb.png",
+          "path": "fond_valo_5a_21988e20eb.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_valo_1b_84650e4718.png",
+          "path": "fond_valo_1b_84650e4718.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_valo_1c_a5541cde9f.png",
+          "path": "fond_valo_1c_a5541cde9f.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_valo_3_6d34723f25.png",
+          "path": "fond_valo_3_6d34723f25.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_valo_4_4cd6df4956.png",
+          "path": "fond_valo_4_4cd6df4956.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_valo_1a_69953f501d.png",
+          "path": "fond_valo_1a_69953f501d.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_ecran_arrete_175e9f5688.png",
+          "path": "fond_ecran_arrete_175e9f5688.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_arr_1_6647eb0199.png",
+          "path": "fond_arr_1_6647eb0199.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_arr_2_c2a76d7c5f.png",
+          "path": "fond_arr_2_c2a76d7c5f.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_arr_3a_f0de2d4eec.png",
+          "path": "fond_arr_3a_f0de2d4eec.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_arr_3b_af316eb6c9.png",
+          "path": "fond_arr_3b_af316eb6c9.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_arr_4_775810d166.png",
+          "path": "fond_arr_4_775810d166.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_ecran_valorisation_7a9fd9b541.png",
+          "path": "fond_ecran_valorisation_7a9fd9b541.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_valo_5c_c2908847bd.png",
+          "path": "fond_valo_5c_c2908847bd.png",
+          "type": "Image"
         }
       ]
     }
-  ]
+  ],
+  "settings": {
+    "locale": "fr-FR"
+  }
 }

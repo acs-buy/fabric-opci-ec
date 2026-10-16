@@ -335,6 +335,13 @@
                   "Value": "'bkEtat2'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ouvre l''étape Filiales.'"
+                }
+              }
             }
           }
         }

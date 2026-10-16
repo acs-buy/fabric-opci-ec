@@ -1,4 +1,5 @@
 
+-- pr_activer_cycle : 2 refus
 -- ACTIVER OU RETIRER UN CYCLE ENTIER. A l'activation, toutes ses questions eligibles entrent ; au
 -- retrait, toutes sortent, avec les memes refus que pour une question : motif obligatoire, aucune
 -- question repondue, et pas de retrait d'un cycle qui a des comptes en balance.
@@ -33,7 +34,7 @@ BEGIN
         BEGIN
             SET @m = N'Le cycle ' + @cycle + N' compte ' + CAST(@n AS NVARCHAR (10))
                    + N' question(s) répondue(s) : il reste au programme, et ses réponses au dossier.';
-            THROW 50322, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50322, @m, 1; END
         END;
         SET @n = (SELECT COUNT(*) FROM dbo.fn_comptes_du_cycle(@entite, @arrete, @cycle));
         IF @n > 0
@@ -43,7 +44,7 @@ BEGIN
                       FROM (SELECT TOP 10 compte FROM dbo.fn_comptes_du_cycle(@entite, @arrete, @cycle) ORDER BY compte) t)
                    + CASE WHEN @n > 10 THEN N' et ' + CAST(@n - 10 AS NVARCHAR (10)) + N' autre(s)' ELSE N'' END
                    + N'. Un compte de la balance reste couvert par au moins une question.';
-            THROW 50323, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50323, @m, 1; END
         END;
     END;
 

@@ -1,6 +1,11 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_differences_detail
 	lineageTag: 80e9914b-21a5-428b-9b92-8a327a1b7b58
+
+	/// VAR s = SELECTEDVALUE ( v_differences_detail[source] ) RETURN IF ( ISINSCOPE ( v_differences_detail[code_actif] ), LOOKUPVALUE ( ref_source_valeur[libelle], ref_source_valeur[source], s ) ) : le libellé de la source de l’actif (EXPERTISE, MARCHE, MODELE, une source de valeur retenue visée, ou ANR_FI
+	measure 'Libelle de la source du detail' = VAR s = SELECTEDVALUE ( v_differences_detail[source] ) RETURN IF ( ISINSCOPE ( v_differences_detail[code_actif] ), LOOKUPVALUE ( ref_source_valeur[libelle], ref_source_valeur[source], s ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: f6f63ed3-18af-4707-a6ea-bf6ffa5b713a
 
 	column entite
 		dataType: string

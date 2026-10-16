@@ -1,5 +1,5 @@
 
-
+-- pr_preparer_dip : 4 refus
 -- --- 2 : le DIP ne se prepare qu'a la fin du premier semestre ----------
 CREATE   PROCEDURE dbo.pr_preparer_dip
     @entite      VARCHAR (20),
@@ -24,7 +24,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_preparer_dip', @entite, @arrete, NULL, @m0, @prepare_par);
-        THROW 50037, @m0, 1;
+        BEGIN SET @m0 = REPLACE(@m0, N'%', N'%%'); THROW 50037, @m0, 1; END
     END;
     IF @exercice IS NULL
     BEGIN
@@ -34,7 +34,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_preparer_dip', @entite, @arrete, NULL, @m0b, @prepare_par);
-        THROW 50037, @m0b, 1;
+        BEGIN SET @m0b = REPLACE(@m0b, N'%', N'%%'); THROW 50037, @m0b, 1; END
     END;
     -- La seule nature qui porte le DIP.
     IF @type <> 'SEMESTRIEL'
@@ -51,11 +51,11 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_preparer_dip', @entite, @arrete, NULL, @m1, @prepare_par);
-        THROW 50037, @m1, 1;
+        BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50037, @m1, 1; END
     END;
     -- Rubrique 3 de l'article 28 V : la valeur nette d'inventaire par part.
     IF NOT EXISTS (SELECT 1 FROM dbo.publication_vl
-                   WHERE entite = @entite AND arrete = @arrete)
+                   WHERE entite = @entite AND arrete = @arrete AND perimee_le IS NULL)
     BEGIN
         DECLARE @m2 NVARCHAR (2000) =
             N'Preparation refusee : la valeur liquidative de l''arrete '
@@ -64,7 +64,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_preparer_dip', @entite, @arrete, NULL, @m2, @prepare_par);
-        THROW 50037, @m2, 1;
+        BEGIN SET @m2 = REPLACE(@m2, N'%', N'%%'); THROW 50037, @m2, 1; END
     END;
     INSERT INTO dbo.dip
         (entite, arrete, exercice, etabli_au, prepare_par,

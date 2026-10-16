@@ -1,0 +1,102 @@
+/// DIP, rubrique 5 : les mouvements du portefeuille dans la periode.
+table v_dip_rubrique_5
+	lineageTag: ad5ff769-79a5-4f71-8655-d39228f2ef2e
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 7e17a6a4-45e1-4ee0-8393-79cca3ba67fb
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 4e6b31d0-0130-435f-8b6a-b915824bfc6f
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 9fb6462f-9114-40c8-94d4-694222f8cf28
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column nombre_mouvements
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 883765b2-bed6-47af-8648-a9aa51ff063a
+		summarizeBy: none
+		sourceColumn: nombre_mouvements
+
+		annotation SummarizationSetBy = Automatic
+
+	column Actif
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 3d955996-0e9f-4b5c-ad59-413bbab75ef5
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nature
+		dataType: string
+		sourceProviderType: varchar(14)
+		lineageTag: 1c516fc6-bcba-41a6-8a77-015cd7ba018e
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date du mouvement'
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: 95e10fc4-c772-486f-b3d1-c2d4b141bba5
+		summarizeBy: none
+		sourceColumn: date_mouvement
+
+		annotation SummarizationSetBy = Automatic
+
+	column Montant
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: e0a67bde-6ec9-4be3-a336-91dad26c61f7
+		summarizeBy: sum
+		sourceColumn: montant
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 99aec9cb-5042-4111-a68c-0cea315ba637
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_dip_rubrique_5 = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_dip_rubrique_5 = Source{[Schema="dbo",Item="v_dip_rubrique_5"]}[Data]
+				in
+				    dbo_v_dip_rubrique_5
+

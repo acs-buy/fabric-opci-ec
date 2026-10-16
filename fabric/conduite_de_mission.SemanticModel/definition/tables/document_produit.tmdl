@@ -1,0 +1,143 @@
+/// Les fichiers produits, une ligne par version et par format, avec leur adresse SharePoint.
+table document_produit
+	lineageTag: 9e0f4b74-baa2-4448-babc-908eaf423c4d
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: cf463757-32a5-4f26-b9db-618e289d8c9d
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a042afde-7376-40f3-b1c8-3dacaf0f3dea
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a97bd7da-3636-4b23-8428-cdb401f5d889
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column livrable
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 2e60f220-72ad-41f0-a856-a18015beab20
+		summarizeBy: none
+		sourceColumn: livrable
+
+		annotation SummarizationSetBy = Automatic
+
+	column version
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ca6a6d25-2ef4-4421-8168-c8ffaaa6080f
+		summarizeBy: none
+		sourceColumn: version
+
+		annotation SummarizationSetBy = Automatic
+
+	column produit_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 031e4c52-2aad-4e67-bfb2-f94148d20b87
+		summarizeBy: none
+		sourceColumn: produit_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column produit_le
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 29ba3308-6374-4a22-9198-69805629a7b3
+		summarizeBy: none
+		sourceColumn: produit_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 0e0c4c2a-359f-4e40-989a-938631eef6fe
+		summarizeBy: none
+		sourceColumn: perime_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime_motif
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: a2da9791-b1df-43f7-be46-c54d7f027498
+		summarizeBy: none
+		sourceColumn: perime_motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column format
+		dataType: string
+		sourceProviderType: varchar(4)
+		lineageTag: ba5d9522-6b1f-4df6-b61e-d0c36659aee9
+		summarizeBy: none
+		sourceColumn: format
+
+		annotation SummarizationSetBy = Automatic
+
+	column fichier
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 3ce5c2fa-429c-4506-9b1e-172160e132eb
+		summarizeBy: none
+		sourceColumn: fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column web_url
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 41d8afc6-9f14-43bf-8f8a-407f18bec866
+		dataCategory: WebUrl
+		summarizeBy: none
+		sourceColumn: web_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvre_version
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 906ab965-7ab0-47b3-a6bc-ff53016fad31
+		summarizeBy: none
+		sourceColumn: couvre_version
+
+		annotation SummarizationSetBy = Automatic
+
+	partition document_produit = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_document_produit = Value.NativeQuery(Source, "SELECT id, entite, arrete, livrable, version, produit_par, DATETIME2FROMPARTS(YEAR(produit_le), MONTH(produit_le), DAY(produit_le), DATEPART(HOUR, produit_le), DATEPART(MINUTE, produit_le), DATEPART(SECOND, produit_le), 0, 0) AS produit_le, DATETIME2FROMPARTS(YEAR(perime_le), MONTH(perime_le), DAY(perime_le), DATEPART(HOUR, perime_le), DATEPART(MINUTE, perime_le), DATEPART(SECOND, perime_le), 0, 0) AS perime_le, perime_motif, format, fichier, web_url, couvre_version FROM dbo.document_produit", null, [EnableFolding = true])
+				in
+				    dbo_document_produit
+

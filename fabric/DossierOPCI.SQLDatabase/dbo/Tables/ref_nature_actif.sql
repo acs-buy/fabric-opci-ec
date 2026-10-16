@@ -38,17 +38,22 @@ END
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_nature_actif_garde]
-ON dbo.[ref_nature_actif]
+
+CREATE   TRIGGER dbo.tr_ref_nature_actif_annexe_retard ON dbo.ref_nature_actif
 AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    IF dbo.fn_peut_ecrire_referentiel('ref_nature_actif',
-                                      SUSER_SNAME()) = 1 RETURN;
-    THROW 50074,
-        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
-        1;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT nature, expertise_requise, reference_id FROM inserted
+        EXCEPT SELECT nature, expertise_requise, reference_id FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT nature, expertise_requise, reference_id FROM deleted EXCEPT SELECT nature, expertise_requise, reference_id FROM inserted) d
+    )
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT e.code, SYSUTCDATETIME(), N'ref_nature_actif', (SELECT COUNT(*) FROM ch)
+    FROM dbo.ref_entite e WHERE e.forme_vehicule IS NOT NULL AND EXISTS (SELECT 1 FROM ch);
 END;
 
 GO
@@ -67,6 +72,21 @@ BEGIN
     UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
     FROM dbo.[ref_nature_actif] t
     JOIN inserted i ON t.[nature] = i.[nature];
+END;
+
+GO
+
+CREATE   TRIGGER dbo.[tr_ref_nature_actif_garde]
+ON dbo.[ref_nature_actif]
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF dbo.fn_peut_ecrire_referentiel('ref_nature_actif',
+                                      SUSER_SNAME()) = 1 RETURN;
+    THROW 50074,
+        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
+        1;
 END;
 
 GO

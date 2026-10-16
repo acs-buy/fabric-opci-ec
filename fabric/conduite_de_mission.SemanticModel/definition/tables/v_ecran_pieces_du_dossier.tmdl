@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_ecran_pieces_du_dossier
 	lineageTag: 50416a1d-0ad7-451a-96b1-67a9cf69c79a
 
@@ -7,7 +7,7 @@ table v_ecran_pieces_du_dossier
 		displayFolder: Ecran 1 Client
 		lineageTag: d69b10fe-445c-4bcb-83db-319559ff01fb
 
-	measure 'Est client courant (pieces)' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_pieces_du_dossier ) ) RETURN IF ( SELECTEDVALUE ( v_ecran_pieces_du_dossier[entite] ) = c, 1 )
+	measure 'Est client courant (pieces)' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_pieces_du_dossier ) ) RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( v_ecran_pieces_du_dossier, v_ecran_pieces_du_dossier[entite] = c ) ), 1 )
 		formatString: 0
 		displayFolder: Ecran 1 Client
 		lineageTag: 67b8bab6-1020-4415-87dc-abcb82778c51
@@ -28,6 +28,121 @@ table v_ecran_pieces_du_dossier
 	measure 'Piece de l''arrete' = VAR a = [Arrete selectionne] RETURN IF ( COUNTROWS ( FILTER ( v_ecran_pieces_du_dossier, ISBLANK ( v_ecran_pieces_du_dossier[arrete] ) || v_ecran_pieces_du_dossier[arrete] = a ) ) > 0, 1 )
 		formatString: 0
 		lineageTag: 824f2ac6-7d9f-434d-ad2b-c611cf9e9d70
+
+	/// La bibliothèque Dépôt du client du site SharePoint du client choisi à l'écran, vide sans site.
+	measure 'Adresse du dépôt du client selectionne' = VAR c = [Client selectionne] VAR s = CALCULATE ( MAX ( v_espace_client[site_url] ), REMOVEFILTERS ( v_perimetre_groupe ), REMOVEFILTERS ( ref_entite ), FILTER ( ALL ( v_espace_client ), v_espace_client[entite] = c && v_espace_client[statut] = "FAIT" ) ) RETURN IF ( ISBLANK ( s ), BLANK (), s & "/Dpt%20du%20client/Forms/AllItems.aspx" )
+		lineageTag: b87a3249-5a4c-4c52-8722-1af97c4ae762
+
+	/// Gris quand le client choisi n'a pas de Dépôt du client, couleur d'action sinon.
+	measure 'Fond e3bBouton0' = IF ( ISBLANK ( [Adresse du dépôt du client selectionne] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client
+		lineageTag: a4b3c4f7-e7ad-4072-b6f9-0e43b224b1f7
+
+	measure 'Libelle e3bBouton0' = "Ouvrir le dépôt du client"
+		displayFolder: Ecran Client
+		lineageTag: e1a92a91-155a-442f-982a-d8f6658500cf
+
+	/// L'infobulle du bouton : ce qu'il ouvre, ou pourquoi il est gris.
+	measure 'Infobulle e3bBouton0' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( [Adresse du dépôt du client selectionne] ), IF ( ISBLANK ( c ), "Aucun client choisi.", c & " n'a pas d'espace SharePoint : son Dépôt du client n'existe pas." ), "Ouvre la bibliothèque Dépôt du client dans SharePoint." )
+		displayFolder: Ecran Client
+		lineageTag: 042f7543-188b-4eac-bdeb-a32581bcbd7e
+
+	/// Pourquoi « Rattacher la pièce » ne peut pas aboutir, vide sinon : client sans espace SharePoint, plusieurs questions ou plusieurs natures cochées.
+	measure 'Rattachement de piece refuse' = VAR c = [Client selectionne] VAR nq = IF ( ISFILTERED ( v_questions_acceptation[Réf.] ), COUNTROWS ( VALUES ( v_questions_acceptation[Réf.] ) ), 0 ) VAR nn = IF ( ISFILTERED ( ref_nature_piece[libelle] ), COUNTROWS ( VALUES ( ref_nature_piece[libelle] ) ), 0 ) RETURN SWITCH ( TRUE (), NOT ISBLANK ( c ) && ISBLANK ( [Adresse du dépôt du client selectionne] ), c & " n'a pas d'espace SharePoint : aucune pièce ne se dépose dans son Dépôt du client.", nq > 1, "Une seule question par pièce : ne cochez qu'une question dans « Question ».", nn > 1, "Une seule nature par pièce : ne cochez qu'une nature dans « Nature »." )
+		displayFolder: Ecran Client
+		lineageTag: e1e56e7d-0c1d-4e18-80fa-4f2bccdc9980
+
+	/// La ligne d'avis de « Rattacher la pièce » : la raison du gris, un texte vide sinon.
+	measure 'Avis rattachement' = [Rattachement de piece refuse] & ""
+		displayFolder: Ecran Client
+		lineageTag: 8bc77a0d-0ecc-4099-aabc-a2baf1c73508
+
+	/// La clé du rattachement désigné dans « Pièce à retirer », quand il en désigne un seul du client.
+	measure 'Rattachement a retirer' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_pieces_du_dossier ) ) VAR n = IF ( ISFILTERED ( v_ecran_pieces_du_dossier[Pièce] ), COUNTROWS ( VALUES ( v_ecran_pieces_du_dossier[Pièce] ) ), 0 ) RETURN IF ( n = 1, CALCULATE ( IF ( COUNTROWS ( v_ecran_pieces_du_dossier ) = 1, MAX ( v_ecran_pieces_du_dossier[cle_ecran] ) ), v_ecran_pieces_du_dossier[entite] = c ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 108ac11e-b151-5252-9222-7f40daaea3f6
+
+	/// La raison pour laquelle le retrait serait refusé, vide sinon : le droit, plusieurs pièces cochées, puis motif_non_retirable du rattachement choisi. Aucune pièce choisie ne grise pas.
+	measure 'Retrait de piece refuse' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_pieces_du_dossier ) ) VAR n = IF ( ISFILTERED ( v_ecran_pieces_du_dossier[Pièce] ), COUNTROWS ( VALUES ( v_ecran_pieces_du_dossier[Pièce] ) ), 0 ) VAR dans = IF ( n = 1, CALCULATE ( COUNTROWS ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[entite] = c ) + 0, 0 ) VAR motif = IF ( dans = 1, CALCULATE ( MAX ( v_ecran_pieces_du_dossier[motif_non_retirable] ), v_ecran_pieces_du_dossier[entite] = c ) ) RETURN SWITCH ( TRUE (), ISBLANK ( c ), BLANK (), ISBLANK ( [Membre de l equipe connecte] ), "Votre adresse de connexion n'est rattachée à aucun membre de l'équipe de ce dossier.", n > 1, "Plusieurs pièces cochées dans « Pièce à retirer » : le retrait porte sur une seule.", motif )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 110caef9-7115-59f8-9318-8089edaa409e
+
+	/// La ligne d'avis du sous-état 3c.
+	measure 'Avis retrait' = [Retrait de piece refuse] & ""
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 2691b6f1-0700-59d2-98a2-3fd2c61f6081
+
+	/// La valeur brute de la carte, avant sa coupe.
+	measure 'Fiche fichier texte' = VAR k = [Rattachement a retirer] RETURN IF ( NOT ISBLANK ( k ), CALCULATE ( MAX ( v_ecran_pieces_du_dossier[Fichier] ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[cle_ecran] = k ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: daf95a83-ce7a-5375-aa2e-833602669cb9
+
+	/// La carte de la fiche du rattachement choisi, coupée à 440 px de chasse.
+	measure 'Fiche fichier' = VAR t = [Fiche fichier texte] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 429.25 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 429.25 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 429.25 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( tot <= 440, t, LEFT ( t, f1 ) & "…" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 6ed9c15d-5861-578f-a966-53d92985aa21
+
+	/// La valeur brute de la carte, avant sa coupe.
+	measure 'Fiche nature texte' = VAR k = [Rattachement a retirer] RETURN IF ( NOT ISBLANK ( k ), CALCULATE ( MAX ( v_ecran_pieces_du_dossier[Nature] ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[cle_ecran] = k ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: d31ca635-ed5f-5a58-8748-cd113f320715
+
+	/// La carte de la fiche du rattachement choisi, coupée à 335 px de chasse.
+	measure 'Fiche nature' = VAR t = [Fiche nature texte] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 324.25 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 324.25 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 324.25 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( tot <= 335, t, LEFT ( t, f1 ) & "…" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 6ccadc01-f3ff-5d6b-be1b-62b362527e4a
+
+	/// La valeur brute de la carte, avant sa coupe.
+	measure 'Fiche question et arrete texte' = VAR k = [Rattachement a retirer] RETURN IF ( NOT ISBLANK ( k ), CALCULATE ( VAR q = MAX ( v_ecran_pieces_du_dossier[Question] ) VAR a = MAX ( v_ecran_pieces_du_dossier[Arrêté] ) RETURN IF ( ISBLANK ( q ), "dossier", q ) & " · " & IF ( ISBLANK ( a ), "sans arrêté", a ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[cle_ecran] = k ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: b3d3fd4a-4dac-5016-8572-8eceb9e09c8d
+
+	/// La carte de la fiche du rattachement choisi, coupée à 182 px de chasse.
+	measure 'Fiche question et arrete' = VAR t = [Fiche question et arrete texte] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 171.25 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 171.25 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 171.25 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( tot <= 182, t, LEFT ( t, f1 ) & "…" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 1261aa21-6831-57bc-9101-16d2425402fa
+
+	/// La valeur brute de la carte, avant sa coupe.
+	measure 'Fiche deposee texte' = VAR k = [Rattachement a retirer] RETURN IF ( NOT ISBLANK ( k ), CALCULATE ( FORMAT ( MAX ( v_ecran_pieces_du_dossier[Déposée le] ), "dd/MM/yyyy" ) & ", " & MAX ( v_ecran_pieces_du_dossier[Déposée par] ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[cle_ecran] = k ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 84c53f0b-92b5-50d8-a7db-c6f7e109762e
+
+	/// La carte de la fiche du rattachement choisi, coupée à 380 px de chasse.
+	measure 'Fiche deposee' = VAR t = [Fiche deposee texte] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 369.25 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 369.25 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 369.25 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( tot <= 380, t, LEFT ( t, f1 ) & "…" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: ae650f7b-cb32-5cb7-950c-2c9f9ab80d69
+
+	/// La valeur brute de la carte, avant sa coupe.
+	measure 'Fiche retrait texte' = VAR k = [Rattachement a retirer] RETURN IF ( NOT ISBLANK ( k ), CALCULATE ( MAX ( v_ecran_pieces_du_dossier[Retrait] ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[cle_ecran] = k ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 20830b66-9397-5602-9b27-a548d3f7a15a
+
+	/// La carte de la fiche du rattachement choisi, coupée à 182 px de chasse.
+	measure 'Fiche retrait' = VAR t = [Fiche retrait texte] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 171.25 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 171.25 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 171.25 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( tot <= 182, t, LEFT ( t, f1 ) & "…" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 7016ea80-440d-5071-9742-1b2fc2e57fb0
+
+	/// Rouge quand le rattachement choisi ne se retire pas.
+	measure 'Encre fiche retrait' = IF ( [Fiche retrait texte] & "" IN { "", "possible" }, "#12233C", "#9A2A2A" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: dfa20792-71ec-5a16-bf7b-36d9a1fd49ac
+
+	/// L'adresse SharePoint de la pièce du rattachement choisi, vide sinon.
+	measure 'Adresse de la piece a retirer' = VAR k = [Rattachement a retirer] RETURN IF ( NOT ISBLANK ( k ), CALCULATE ( MAX ( v_ecran_pieces_du_dossier[Ouvrir la pièce] ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[cle_ecran] = k ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: efde5401-6a95-5771-834c-e6f2e5cdb861
+
+	measure 'Fond e3cBouton1' = IF ( ISBLANK ( [Adresse de la piece a retirer] ), "#E4E9EF", "#FFFFFF" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 4215c5bf-81c6-57c7-bcbf-ef66eddef32e
+
+	measure 'Libelle e3cBouton1' = "Ouvrir la pièce"
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: c9209043-df3e-529d-af0a-79bdb7e6ad7f
+
+	measure 'Infobulle e3cBouton1' = IF ( NOT ISBLANK ( [Adresse de la piece a retirer] ), "Ouvre le fichier dans SharePoint.", IF ( ISBLANK ( [Rattachement a retirer] ), "Aucune pièce du dossier choisie dans « Pièce à retirer ».", "La pièce choisie n'a pas d'adresse dans SharePoint." ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 268b597b-107c-5f38-89ba-a5547636b7c5
 
 	column entite
 		dataType: string
@@ -220,6 +335,42 @@ table v_ecran_pieces_du_dossier
 		dataCategory: WebUrl
 		summarizeBy: none
 		sourceColumn: web_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pièce
+		dataType: string
+		sourceProviderType: nvarchar(500)
+		lineageTag: 491194fb-5fe8-5faa-ba37-fadfcfb5d7f0
+		summarizeBy: none
+		sourceColumn: Pièce
+
+		annotation SummarizationSetBy = Automatic
+
+	column Arrêté
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: 6a10009b-c2b4-5103-b001-1cf33e041357
+		summarizeBy: none
+		sourceColumn: Arrêté
+
+		annotation SummarizationSetBy = Automatic
+
+	column Retrait
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: 55f6be98-2f49-5bf0-94d7-80e26f546857
+		summarizeBy: none
+		sourceColumn: Retrait
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_non_retirable
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: e5fe7b5c-0ab7-5802-8f51-f1e3d1269028
+		summarizeBy: none
+		sourceColumn: motif_non_retirable
 
 		annotation SummarizationSetBy = Automatic
 

@@ -1,18 +1,5 @@
 
--- 218. Creer un dossier, c'est en devenir le chef de mission.
---
--- DEFAUT MESURE LE 21/09/2026 AU PARCOURS DE BOUT EN BOUT : le temps 4 ne visait rien. Un client cree a
--- l'ecran ne portait AUCUNE ligne de role_mission, donc [Role du connecte] rendait vide, donc
--- [Superviseur connecte] aussi, et le bouton « Approuver » restait sans parametre. Le dossier etait
--- impossible a viser par celui-la meme qui venait de l'ouvrir.
---
--- Regle metier retenue : celui qui cree le dossier en devient CHEF DE MISSION, a la date du jour. C'est
--- ce que fait un cabinet : le collaborateur qui ouvre le dossier le conduit. L'ASSOCIE SIGNATAIRE, lui,
--- ne se donne pas : il se designe, et cela reste un geste de l'ecran Referentiels.
--- Le maintien et l'acceptation acceptent l'un comme l'autre (mesure [Superviseur connecte]).
---
--- Prerequis : 211, 213. Rejouable : la ligne n'est posee que si le createur n'a pas deja un role vivant.
-
+-- pr_creer_client : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_creer_client
     @code               VARCHAR (20),
     @denomination       NVARCHAR (400),
@@ -33,63 +20,60 @@ CREATE   PROCEDURE dbo.pr_creer_client
     @periodicite_vl     VARCHAR (13)   = NULL,
     @site_url           NVARCHAR (800) = NULL,
     @par                NVARCHAR (400)
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    IF @code IS NULL OR LTRIM(RTRIM(@code)) = ''
-        THROW 50201, N'Le code du client est obligatoire.', 1;
-    IF EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @code)
-        THROW 50202, N'Ce code existe déjà. Un client se crée une fois ; pour le modifier, passez par les référentiels.', 1;
-    IF @forme_vehicule IS NULL
-        THROW 50203, N'Un client est un véhicule : SPPICAV ou FPI. Une filiale s''ajoute depuis le périmètre du client.', 1;
-    IF @forme_vehicule = 'FPI' AND (@forme_sociale IS NOT NULL OR @siren IS NOT NULL)
-        THROW 50204, N'Un FPI n''a ni forme sociale ni SIREN.', 1;
-    IF TRY_CONVERT(DATE, @cloture + '/2001', 103) IS NULL
-        THROW 50205, N'La clôture s''écrit jour/mois, par exemple 31/12 ou 30/06.', 1;
-    SET @site_url = NULLIF(LTRIM(RTRIM(@site_url)), N'');
-
-    DECLARE @maintenant DATETIME2 (0) = SYSUTCDATETIME();
-    DECLARE @cote VARCHAR (30) = 'ACC-' + @code;
-    DECLARE @questions INT;
-
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @par;
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
     BEGIN TRY
     BEGIN TRANSACTION;
-    INSERT INTO dbo.ref_entite
-        (code, denomination, siren, forme_vehicule, forme_sociale, adresse_1, adresse_2, code_postal,
-         ville, pays, dirigeant_nom, dirigeant_qualite, contact_nom, contact_courriel, contact_telephone,
-         cloture, modifie_par, modifie_le, plan_propre_en_service, est_client, periodicite_vl, cree_le,
-         soumise_commissariat_comptes)
-    VALUES
-        (@code, @denomination, @siren, @forme_vehicule, @forme_sociale, @adresse_1, @adresse_2, @code_postal,
-         @ville, @pays, @dirigeant_nom, @dirigeant_qualite, @contact_nom, @contact_courriel, @contact_telephone,
-         @cloture, @par, @maintenant, 0, 1, @periodicite_vl, @maintenant,
-         CASE WHEN @forme_vehicule IS NOT NULL THEN 1 END);
-
-    -- CELUI QUI CREE LE DOSSIER LE CONDUIT : sans ce role, personne ne peut viser l'acceptation qu'il
-    -- vient d'ouvrir, la mesure [Superviseur connecte] lisant role_mission sur le client courant.
-    IF NOT EXISTS (SELECT 1 FROM dbo.role_mission
-                    WHERE entite = @code AND connexion = @par AND au IS NULL)
-        INSERT INTO dbo.role_mission (entite, role, personne, du, au, pose_par, pose_le, connexion)
-        VALUES (@code, 'CHEF_MISSION', @par, CAST(@maintenant AS DATE), NULL,
-                N'création du dossier à l''écran', @maintenant, @par);
-
-    EXEC dbo.pr_ouvrir_questionnaire_acceptation @entite = @code, @par = @par;
-    SET @questions = (SELECT COUNT(*) FROM dbo.feuille_question WHERE cote = @cote);
-    IF @site_url IS NOT NULL
-        EXEC dbo.pr_enregistrer_site_client @entite = @code, @site_url = @site_url, @par = @par;
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT @code AS x, CAST(1 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
+    BEGIN
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
+    END;
+    -- 2. le corps d'origine
+    EXEC dbo.pr_creer_client_corps @code = @code, @denomination = @denomination, @siren = @siren, @forme_vehicule = @forme_vehicule, @forme_sociale = @forme_sociale, @adresse_1 = @adresse_1, @adresse_2 = @adresse_2, @code_postal = @code_postal, @ville = @ville, @pays = @pays, @dirigeant_nom = @dirigeant_nom, @dirigeant_qualite = @dirigeant_qualite, @contact_nom = @contact_nom, @contact_courriel = @contact_courriel, @contact_telephone = @contact_telephone, @cloture = @cloture, @periodicite_vl = @periodicite_vl, @site_url = @site_url, @par = @par;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1
+    BEGIN
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT @code AS x, CAST(1 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
+        BEGIN
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
+        END;
+    END;
     COMMIT;
     END TRY
     BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
         THROW;
     END CATCH;
-
-    SELECT @code AS code, @cote AS cote, @questions AS questions,
-           N'Client ' + @code + N' créé, vous en êtes le chef de mission. Questionnaire d''acceptation ouvert : '
-         + CAST(@questions AS NVARCHAR (10)) + N' questions.'
-         + CASE WHEN @site_url IS NULL THEN N'' ELSE N' Site SharePoint enregistré.' END
-         + N' Passez à l''étape 3.' AS message;
 END;
 
 GO

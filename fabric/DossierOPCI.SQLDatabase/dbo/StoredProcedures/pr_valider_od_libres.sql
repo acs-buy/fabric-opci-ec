@@ -1,55 +1,61 @@
 
+-- pr_valider_od_libres : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_valider_od_libres
     @entite      VARCHAR (20),
     @arrete      VARCHAR (20),
     @valide_par  NVARCHAR (400)
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    DECLARE @cote VARCHAR (30) = 'ODL-' + LEFT(@entite, 15) + '-' + REPLACE(@arrete, '-', '');
-    IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
-        THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé.', 1;
-    IF NOT EXISTS (SELECT 1 FROM dbo.ecriture_brouillon WHERE entite = @entite AND arrete = @arrete AND feuille_cote = @cote AND question_id IS NULL)
-        THROW 50391, N'Aucune OD libre au brouillon : rien à valider.', 1;
-    DECLARE @sd DECIMAL (19, 2), @sc DECIMAL (19, 2), @vides INT;
-    SELECT @sd = SUM(debit), @sc = SUM(credit), @vides = SUM(CASE WHEN debit = 0 AND credit = 0 THEN 1 ELSE 0 END)
-    FROM dbo.ecriture_brouillon WHERE entite = @entite AND arrete = @arrete AND feuille_cote = @cote AND question_id IS NULL;
-    IF @vides > 0
-        THROW 50392, N'Validation refusée : des lignes n''ont ni débit ni crédit. Les renseigner ou les retirer.', 1;
-    IF @sd <> @sc
-    BEGIN
-        DECLARE @m NVARCHAR (400) = N'Validation refusée : les OD libres ne sont pas équilibrées, débit ' + FORMAT(@sd, 'N2', 'fr-FR') + N', crédit ' + FORMAT(@sc, 'N2', 'fr-FR') + N'.';
-        THROW 50393, @m, 1;
-    END;
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @valide_par;
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
     BEGIN TRY
-        BEGIN TRANSACTION;
-        INSERT INTO dbo.lot_ecritures (arrete, famille, portee, entite, feuille_cote, question_id, statut, cree_par)
-        VALUES (@arrete, 'DECIDEE', 'ENTITE', @entite, @cote, NULL, 'PROPOSE', @valide_par);
-        DECLARE @lot INT = CAST(SCOPE_IDENTITY() AS INT);
-        INSERT INTO dbo.ecriture (lot_id, journal_code, journal_lib, ecriture_num, ecriture_date, compte_num, compte_lib,
-                                  comp_aux_num, comp_aux_lib, piece_ref, ecriture_lib, debit, credit, famille)
-        SELECT @lot, b.journal_code, N'OD de revision libres', CAST(@lot AS VARCHAR (20)),
-               COALESCE(r.date_arrete, CONVERT(DATE, LEFT(@arrete, 10))), b.compte_num,
-               COALESCE(c.libelle_complet, c.libelle, b.compte_num), b.code_tiers, e.denomination, b.reference,
-               b.libelle, b.debit, b.credit, 'DECIDEE'
-        FROM dbo.ecriture_brouillon b
-        LEFT JOIN dbo.ref_compte c ON c.compte = b.compte_num
-        LEFT JOIN dbo.ref_entite e ON e.code = b.code_tiers
-        LEFT JOIN dbo.ref_arrete r ON r.entite = b.entite AND r.arrete = b.arrete
-        WHERE b.entite = @entite AND b.arrete = @arrete AND b.feuille_cote = @cote AND b.question_id IS NULL;
-        INSERT INTO dbo.ecriture_axe (ecriture_id, entite, code_actif)
-        SELECT x.id, @entite, b.code_actif
-        FROM dbo.ecriture_brouillon b
-        JOIN dbo.ecriture x ON x.lot_id = @lot AND x.compte_num = b.compte_num AND x.ecriture_lib = b.libelle
-        WHERE b.entite = @entite AND b.arrete = @arrete AND b.feuille_cote = @cote AND b.question_id IS NULL AND b.code_actif IS NOT NULL
-          AND NOT EXISTS (SELECT 1 FROM dbo.ecriture_axe z WHERE z.ecriture_id = x.id);
-        DELETE dbo.ecriture_brouillon WHERE entite = @entite AND arrete = @arrete AND feuille_cote = @cote AND question_id IS NULL;
-        COMMIT TRANSACTION;
-        SELECT @lot AS lot_id, N'Lot ' + CAST(@lot AS NVARCHAR (10)) + N' proposé : les OD libres attendent le visa du chef de mission.' AS message;
+    BEGIN TRANSACTION;
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
+    BEGIN
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
+    END;
+    -- 2. le corps d'origine
+    EXEC dbo.pr_valider_od_libres_corps @entite = @entite, @arrete = @arrete, @valide_par = @valide_par;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1
+    BEGIN
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(0 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
+        BEGIN
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
+        END;
+    END;
+    COMMIT;
     END TRY
     BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
         THROW;
     END CATCH;
 END;

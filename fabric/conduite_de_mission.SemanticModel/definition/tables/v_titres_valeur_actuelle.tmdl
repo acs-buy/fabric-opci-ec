@@ -25,11 +25,69 @@ table v_titres_valeur_actuelle
 		displayFolder: Titres de filiales
 		lineageTag: 5d61e764-334a-4133-884f-d8fc5820c007
 
-	/// Carte 3.3, Filiales valorisees. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.3, Filiales valorisees.
 	measure 'R33 Filiales valorisees' = COUNTROWS ( v_titres_valeur_actuelle )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 4e15667c-8adc-408b-be37-f6624fc78190
+
+	/// « aucune filiale à actif net réévalué négatif » ; « n filiales à actif net réévalué négatif »
+	measure 'Sous-titre valeur negative' = VAR n = [Filiales a actif net negatif] RETURN IF ( n = 0, "aucune filiale à actif net réévalué négatif", FORMAT ( n, "0" ) & " filiales à actif net réévalué négatif" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: a811ca0b-67bf-4b77-be6c-7ebc3a53ee0d
+
+	/// « Actif net réévalué de <filiale> », « d’ » devant une voyelle (« Actif net réévalué d’OMEGA-SCI-3 »)
+	measure 'Titre actif net de la filiale' = VAR c = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) RETURN IF ( NOT ISBLANK ( c ), "Actif net réévalué " & IF ( LEFT ( c, 1 ) IN { "A", "E", "I", "O", "U", "Y", "É", "È" }, "d’", "de " ) & c )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: b6f902cc-ae1d-4703-b5fd-b258fa3d8598
+
+	/// difference_estimation_titres de la filiale liée à l’avance choisie : VAR f = l’entite_liee de [Avance choisie], puis FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = f ) ; vide sans ligne choisie
+	measure 'Difference 275 de la filiale de l avance' = FORMAT ( VAR c = [Avance choisie] VAR f = CALCULATE ( MAX ( v_differences_comptes_courants[entite_liee] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) RETURN IF ( NOT ISBLANK ( f ), CALCULATE ( SUM ( v_titres_valeur_actuelle[difference_estimation_titres] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = f ) ) ), "#,0" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: da091885-ce93-4a5a-ad52-3f7fc852096d
+
+	/// actif_net_reevalue de la filiale liée à l’avance choisie : VAR f = l’entite_liee de [Avance choisie], puis FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = f ) ; vide sans ligne choisie
+	measure 'Actif net reevalue de la filiale de l avance' = FORMAT ( VAR c = [Avance choisie] VAR f = CALCULATE ( MAX ( v_differences_comptes_courants[entite_liee] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) RETURN IF ( NOT ISBLANK ( f ), CALCULATE ( SUM ( v_titres_valeur_actuelle[actif_net_reevalue] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = f ) ) ), "#,0" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: a84396f7-0a16-498f-bcfd-e547b87329a1
+
+	/// quote_part de la filiale liée à l’avance choisie : VAR f = l’entite_liee de [Avance choisie], puis FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = f ) ; vide sans ligne choisie
+	measure 'Quote-part de la filiale de l avance' = FORMAT ( VAR c = [Avance choisie] VAR f = CALCULATE ( MAX ( v_differences_comptes_courants[entite_liee] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) RETURN IF ( NOT ISBLANK ( f ), CALCULATE ( SUM ( v_titres_valeur_actuelle[quote_part] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = f ) ) ), "0.##%" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e5247cb9-3996-4fcc-8699-d1ff17be4dc2
+
+	/// « à passer » ou « sans objet »
+	measure 'Pas de la cascade 212-5' = VAR c = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR anr = CALCULATE ( SUM ( v_titres_valeur_actuelle[actif_net_reevalue] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = c ) ) RETURN IF ( NOT ISBLANK ( c ), IF ( anr < 0, "à passer", "sans objet" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 30f303cf-8955-4415-a977-9a17703a9e8a
+
+	/// filiales dont actif_net_reevalue < 0
+	measure 'Filiales a actif net negatif' = CALCULATE ( COUNTROWS ( v_titres_valeur_actuelle ), v_titres_valeur_actuelle[actif_net_reevalue] < 0 ) + 0
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 3b297179-ea71-4ff1-b627-55e9717542dd
+
+	/// « quote-part x % » ; étiquette de mise en évidence du segment bouton
+	measure 'Libelle de la filiale' = VAR q = SELECTEDVALUE ( v_titres_valeur_actuelle[quote_part] ) RETURN IF ( NOT ISBLANK ( q ), "quote-part " & FORMAT ( q, "0.## %" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 76f5d1e2-34cb-4fa3-8e1a-457f7dc5a3e5
+
+	/// la filiale liée à l’avance choisie ; filtre de visuel = 1
+	measure 'Filtre filiale de l avance choisie' = VAR c = [Avance choisie] VAR f = CALCULATE ( MAX ( v_differences_comptes_courants[entite_liee] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) RETURN IF ( NOT ISBLANK ( f ) && SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) = f, 1 )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 800c9029-9d1a-4691-8b07-e3b1702399ad
+
+	/// idem, étape 3
+	measure 'Fond valorisation etape 3' = IF ( [Valorisation etape 3 faite] = 1, "#1F6D4A", "#D5DCE4" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: aba39ade-fa74-4753-9df9-038666481c36
+
+	/// chaque filiale a la valeur actuelle de ses titres, titres tous CALCULABLE dans v_a_generer, aucun actif net réévalué négatif
+	measure 'Valorisation etape 3 faite' = VAR n = COUNTROWS ( v_titres_valeur_actuelle ) VAR sans = CALCULATE ( COUNTROWS ( v_titres_valeur_actuelle ), ISBLANK ( v_titres_valeur_actuelle[valeur_actuelle_titres] ) ) + 0 VAR neg = CALCULATE ( COUNTROWS ( v_titres_valeur_actuelle ), v_titres_valeur_actuelle[actif_net_reevalue] < 0 ) + 0 VAR bloq = CALCULATE ( COUNTROWS ( v_a_generer ), v_a_generer[famille] = "TITRE", v_a_generer[etat_generation] <> "CALCULABLE" ) + 0 RETURN IF ( n > 0 && sans + neg + bloq = 0, 1, 0 )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: aeecd037-9070-4477-88c1-be02a92b3a8b
 
 	column entite_mere
 		dataType: string
@@ -48,6 +106,7 @@ table v_titres_valeur_actuelle
 		lineageTag: 883f39bb-c829-4772-9e90-78cb533bf829
 		summarizeBy: none
 		sourceColumn: entite_fille
+		sortByColumn: ordre_filiale
 
 		annotation SummarizationSetBy = Automatic
 
@@ -154,6 +213,17 @@ table v_titres_valeur_actuelle
 		lineageTag: 02fb8665-d308-4cdf-bda7-2fc9ae273fb8
 		summarizeBy: none
 		sourceColumn: compte_contrepartie
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre_filiale
+		dataType: int64
+		isHidden
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 83407bc2-6d36-427c-8001-ee8678f5920b
+		summarizeBy: none
+		sourceColumn: ordre_filiale
 
 		annotation SummarizationSetBy = Automatic
 

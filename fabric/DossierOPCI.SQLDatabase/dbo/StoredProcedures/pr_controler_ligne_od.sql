@@ -1,4 +1,5 @@
 
+-- pr_controler_ligne_od : 3 refus
 -- LES CONTROLES D'UNE LIGNE D'OD, sans resultat ni ecriture. Rend la question et sa feuille.
 CREATE   PROCEDURE dbo.pr_controler_ligne_od
     @entite     VARCHAR (20),
@@ -18,13 +19,13 @@ BEGIN
     IF NULLIF(LTRIM(RTRIM(@journal)), '') IS NOT NULL AND LTRIM(RTRIM(@journal)) <> 'ODR'
     BEGIN
         SET @m = N'Ligne refusée : les OD de révision se passent au journal ODR ; le journal « ' + LTRIM(RTRIM(@journal)) + N' » n''est pas admis.';
-        THROW 50402, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50402, @m, 1; END
     END;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_compte WHERE compte = @compte)
        AND NOT EXISTS (SELECT 1 FROM dbo.ref_compte_entite WHERE entite = @entite AND compte_entite = @compte)
     BEGIN
         SET @m = N'Le compte ' + ISNULL(@compte, N'vide') + N' n''est ni au plan OPCI ni au plan de l''entité.';
-        THROW 50382, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50382, @m, 1; END
     END;
     IF ISNULL(@debit, 0) < 0 OR ISNULL(@credit, 0) < 0 OR (ISNULL(@debit, 0) > 0 AND ISNULL(@credit, 0) > 0)
         THROW 50383, N'Une ligne porte un débit OU un crédit, positif.', 1;
@@ -41,7 +42,7 @@ BEGIN
         IF @qid IS NULL
         BEGIN
             SET @m = N'La question ' + @reference + N' n''est pas au programme de cet arrêté.';
-            THROW 50384, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50384, @m, 1; END
         END;
     END;
 END;

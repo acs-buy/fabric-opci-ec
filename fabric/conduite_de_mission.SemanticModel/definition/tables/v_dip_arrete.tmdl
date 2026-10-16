@@ -1,0 +1,128 @@
+/// Les arretes auxquels le DIP est du.
+table v_dip_arrete
+	lineageTag: 87b51556-9782-4d0b-8598-3c8f3e2fb325
+
+	measure 'Titre du DIP' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR den = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), ref_entite[Dénomination] ) VAR de = IF ( CONTAINSSTRING ( "aeiouyhéèêàâîôûAEIOUYHÉÈÊÀÂÎÔÛ", LEFT ( den, 1 ) ), "de l’", "de " ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "Document d’information périodique " & de & den & " au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 6e7d7197-4515-4e0a-8c2a-3b15eced3a69
+
+	measure 'DIP valeur nette d inventaire' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR v = MAXX ( FILTER ( ALL ( v_dip_rubrique_1 ), v_dip_rubrique_1[entite] = e && v_dip_rubrique_1[arrete] = a ), v_dip_rubrique_1[valeur_nette_inventaire] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( ISBLANK ( v ), "aucune valeur au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ), FORMAT ( v, "#,##0.00" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 819902b3-bbac-4498-ad27-cd3eca8166c9
+
+	measure 'DIP parts en circulation' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR v = MAXX ( FILTER ( ALL ( v_dip_rubrique_2 ), v_dip_rubrique_2[entite] = e && v_dip_rubrique_2[arrete] = a ), v_dip_rubrique_2[nombre_parts] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( ISBLANK ( v ), "aucune valeur au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ), FORMAT ( v, "#,##0.00" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: e9c1e910-d495-40d7-a058-058a6d833d0d
+
+	measure 'DIP valeur par part' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR v = MAXX ( FILTER ( ALL ( v_dip_rubrique_3 ), v_dip_rubrique_3[entite] = e && v_dip_rubrique_3[arrete] = a ), v_dip_rubrique_3[valeur_par_part] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( ISBLANK ( v ), "aucune valeur au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ), FORMAT ( v, "#,##0.00" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: a2ca8f30-ec96-479b-b383-af686b8c7051
+
+	measure 'DIP distribution par part' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR v = MAXX ( FILTER ( ALL ( v_dip_rubrique_6 ), v_dip_rubrique_6[entite] = e && v_dip_rubrique_6[arrete] = a ), v_dip_rubrique_6[distribution_par_part] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( ISBLANK ( v ), "aucune valeur au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ), FORMAT ( v, "#,##0.00" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: f66e3388-7e78-47d9-9500-818cfe28cd41
+
+	measure 'DIP mouvements de la periode' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR n = MAXX ( FILTER ( ALL ( v_dip_rubrique_5 ), v_dip_rubrique_5[entite] = e && v_dip_rubrique_5[arrete] = a ), v_dip_rubrique_5[nombre_mouvements] ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), FORMAT ( n, "0" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 19adbd9b-192a-4bff-ace2-e1f5d3d4cf88
+
+	measure 'DIP lecture de la rubrique 6' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", MAXX ( FILTER ( ALL ( v_dip_rubrique_6 ), v_dip_rubrique_6[entite] = e && v_dip_rubrique_6[arrete] = a ), v_dip_rubrique_6[lecture] ) & "" )
+		lineageTag: b8ba5b1e-442f-4ce3-bbed-9bd35196570b
+
+	measure 'Aff Titre du DIP' = [Titre du DIP] & ""
+		lineageTag: a17bc968-309f-45cb-b704-ff4e89f0ee66
+
+	measure 'Aff DIP valeur nette d inventaire' = [DIP valeur nette d inventaire] & ""
+		lineageTag: 04b4caa6-5f6e-424f-b752-7e51588c9473
+
+	measure 'Aff DIP parts en circulation' = [DIP parts en circulation] & ""
+		lineageTag: af70b36f-48a6-4c64-8d88-26a66c5eff5b
+
+	measure 'Aff DIP valeur par part' = [DIP valeur par part] & ""
+		lineageTag: 1ef8c72c-0c88-4ba9-a033-5415d67d53b1
+
+	measure 'Aff DIP distribution par part' = [DIP distribution par part] & ""
+		lineageTag: df4993a9-2b09-471a-9c3a-1e4e3e1d5e3f
+
+	measure 'Aff DIP mouvements de la periode' = [DIP mouvements de la periode] & ""
+		lineageTag: 588c898e-62ff-48f4-810d-886f067e8cd1
+
+	measure 'Ecran DIP carte 1' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR v = MAXX ( FILTER ( ALL ( v_dip_rubrique_1 ), v_dip_rubrique_1[entite] = e && v_dip_rubrique_1[arrete] = a ), v_dip_rubrique_1[valeur_nette_inventaire] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( v ), "à remplir", FORMAT ( v, "#,##0.00" ) ) )
+		lineageTag: e058e631-7988-42d0-a9a3-83c147eaf267
+
+	measure 'Ecran DIP carte 2' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR v = MAXX ( FILTER ( ALL ( v_dip_rubrique_2 ), v_dip_rubrique_2[entite] = e && v_dip_rubrique_2[arrete] = a ), v_dip_rubrique_2[nombre_parts] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( v ), "à remplir", IF ( v = INT ( v ), FORMAT ( v, "#,##0" ), FORMAT ( v, "#,##0.##########" ) ) ) )
+		lineageTag: 01e2df30-2231-4a90-815b-8564fa819c04
+
+	measure 'Ecran DIP carte 3' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR v = MAXX ( FILTER ( ALL ( v_dip_rubrique_3 ), v_dip_rubrique_3[entite] = e && v_dip_rubrique_3[arrete] = a ), v_dip_rubrique_3[valeur_par_part] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( v ), "à remplir", FORMAT ( v, "#,##0.00" ) ) )
+		lineageTag: 280b0d5f-e78f-4a11-806e-cd2aeb6908e3
+
+	measure 'Ecran DIP carte 4' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR v = MAXX ( FILTER ( ALL ( v_dip_rubrique_6 ), v_dip_rubrique_6[entite] = e && v_dip_rubrique_6[arrete] = a ), v_dip_rubrique_6[distribution_par_part] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( v ), "à remplir", FORMAT ( v, "#,##0.00" ) ) )
+		lineageTag: af4e01ad-60f2-43f9-9d0f-adb3a301b3d5
+
+	measure 'Ecran DIP carte 5' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR n = MAXX ( FILTER ( FILTER ( ALL ( v_dip_rubrique_5 ), v_dip_rubrique_5[entite] = e && v_dip_rubrique_5[arrete] = a ), v_dip_rubrique_5[etat] & "" = "" ), v_dip_rubrique_5[nombre_mouvements] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( n ), "à remplir", FORMAT ( n, "0" ) ) )
+		lineageTag: f773c7ba-1a1e-4245-99e9-e938cc2d762a
+
+	measure 'DIP lecture de la rubrique 6 ligne 1' = VAR t = [DIP lecture de la rubrique 6] & "" VAR k = SEARCH ( " ; ", t, 1, 0 ) RETURN IF ( k > 0, LEFT ( t, k - 1 ), t )
+		lineageTag: b721d075-4bb9-4af3-b3a6-10b7bece389b
+
+	measure 'DIP lecture de la rubrique 6 ligne 2' = VAR t = [DIP lecture de la rubrique 6] & "" VAR k = SEARCH ( " ; ", t, 1, 0 ) RETURN IF ( k > 0, MID ( t, k + 3, 300 ), "" )
+		lineageTag: 99d44cfc-fd97-4f5e-846d-c806ffb48468
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 4617d421-8bc9-4371-a23d-7ef53c4c6a70
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f6f33b8a-4971-4f42-8e83-28667b6e2b03
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 32a89b84-402a-43f6-ab66-2854674bf56a
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: 82ccd159-fed1-4d3c-98b8-5b377ce7ed34
+		summarizeBy: none
+		sourceColumn: type_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice_distribution
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: e19f0aa8-77a5-427e-8236-05282dc64202
+		summarizeBy: none
+		sourceColumn: exercice_distribution
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_dip_arrete = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_dip_arrete = Source{[Schema="dbo",Item="v_dip_arrete"]}[Data]
+				in
+				    dbo_v_dip_arrete
+

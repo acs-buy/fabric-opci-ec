@@ -1,0 +1,69 @@
+/// Les membres de l'équipe de la mission, une ligne par véhicule et par connexion, à la date du jour : le droit de retirer, de demander et de décider.
+table v_ecran_membres_equipe
+	lineageTag: af1c352a-35f8-527a-a668-a943c0334835
+
+	/// La connexion de la personne connectée si elle est membre de l'équipe du client choisi, vide sinon.
+	measure 'Membre de l equipe connecte' = VAR u = USERPRINCIPALNAME () VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_membres_equipe ) ) RETURN IF ( u <> "" && NOT ISBLANK ( c ), CALCULATE ( MAX ( v_ecran_membres_equipe[connexion] ), FILTER ( ALL ( v_ecran_membres_equipe ), v_ecran_membres_equipe[entite] = c && v_ecran_membres_equipe[connexion] = u ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 037e13b5-a7d4-5ae9-9da5-bb9a3fdbedf0
+
+	/// La connexion de la personne connectée si elle décide les réouvertures du client choisi, vide sinon.
+	measure 'Superviseur connecte CLOTURE' = VAR u = USERPRINCIPALNAME () VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_membres_equipe ) ) RETURN IF ( u <> "" && NOT ISBLANK ( c ), CALCULATE ( MAX ( v_ecran_membres_equipe[connexion] ), FILTER ( ALL ( v_ecran_membres_equipe ), v_ecran_membres_equipe[entite] = c && v_ecran_membres_equipe[connexion] = u && v_ecran_membres_equipe[decide_reouverture] = TRUE () ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: b4fda356-51eb-5c09-b022-9be2a50b7b1f
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 86e94700-7c56-56df-b231-047b6cc2b166
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column connexion
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: ff219b85-d6f1-5b0c-96b4-fb5d2892fede
+		summarizeBy: none
+		sourceColumn: connexion
+
+		annotation SummarizationSetBy = Automatic
+
+	column roles
+		dataType: string
+		sourceProviderType: nvarchar(4000)
+		lineageTag: 240ebd59-d626-59b9-ba08-362fc8e2a8bb
+		summarizeBy: none
+		sourceColumn: roles
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_reouverture
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 801aac53-9d33-5c70-a77d-ff5b16af845b
+		summarizeBy: none
+		sourceColumn: decide_reouverture
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: nvarchar(421)
+		lineageTag: 88e87b38-2780-5574-9575-bf2c12c7c588
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_membres_equipe = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_membres_equipe = Source{[Schema="dbo",Item="v_ecran_membres_equipe"]}[Data]
+				in
+				    dbo_v_ecran_membres_equipe
+

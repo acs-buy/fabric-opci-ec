@@ -1,4 +1,5 @@
 
+-- pr_deposer_piece : 1 refus
 -- --- 7. inscrire une piece au dossier : le fichier est depose dans SharePoint, le coffre le lit par raccourci ---
 -- @web_url, ajoute le 28/09/2026 : le lien SharePoint du fichier, que dbo.pr_resoudre_fichier_depot calcule.
 CREATE   PROCEDURE dbo.pr_deposer_piece
@@ -35,7 +36,7 @@ BEGIN
     IF @piece IS NOT NULL
     BEGIN
         DECLARE @m NVARCHAR (400) = N'Ce fichier est déjà inscrit, pièce n° ' + CAST(@piece AS NVARCHAR (10)) + N' ; il n''est pas déposé deux fois.';
-        THROW 50276, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50276, @m, 1; END
     END;
 
     BEGIN TRY

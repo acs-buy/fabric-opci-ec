@@ -1,8 +1,8 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_plafond_distribuable
 	lineageTag: 0a7ff6be-2c48-4001-83b0-fb627c4a363d
 
-	/// Carte 4.2, Plafond distribuable. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 4.2, Plafond distribuable.
 	measure 'R42 Plafond distribuable' = VAR lignes = COUNTROWS ( v_plafond_distribuable ) RETURN IF ( lignes = 1, SUM ( v_plafond_distribuable[plafond_distribuable] ) )
 		formatString: #,0
 		displayFolder: Rapports V2

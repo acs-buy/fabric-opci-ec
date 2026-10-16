@@ -1,4 +1,5 @@
 
+-- pr_ajuster_programme : 2 refus
 -- AJUSTER LE PROGRAMME QUESTION PAR QUESTION. Le motif est obligatoire au retrait, et va au journal.
 -- Trois refus au retrait : sans motif, question repondue, derniere question active d'un cycle qui a
 -- des comptes en balance. Un ajout n'admet qu'une question eligible a l'arrete.
@@ -33,7 +34,7 @@ BEGIN
         IF EXISTS (SELECT 1 FROM dbo.v_programme_selection WHERE programme_id = @id AND reference = @reference AND repondue = 1)
         BEGIN
             SET @m = N'La question ' + @reference + N' porte une réponse : elle reste au programme, et sa réponse au dossier.';
-            THROW 50314, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50314, @m, 1; END
         END;
         IF NOT EXISTS (SELECT 1 FROM dbo.v_programme_selection
                        WHERE programme_id = @id AND cycle = @cycle AND actif = 1 AND reference <> @reference)
@@ -46,7 +47,7 @@ BEGIN
                       FROM (SELECT TOP 10 compte FROM dbo.fn_comptes_du_cycle(@entite, @arrete, @cycle) ORDER BY compte) t)
                    + CASE WHEN @n > 10 THEN N' et ' + CAST(@n - 10 AS NVARCHAR (10)) + N' autre(s)' ELSE N'' END
                    + N'. Un compte de la balance reste couvert par au moins une question.';
-            THROW 50315, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50315, @m, 1; END
         END;
     END;
 

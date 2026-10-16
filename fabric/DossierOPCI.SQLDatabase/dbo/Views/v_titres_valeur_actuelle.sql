@@ -1,4 +1,6 @@
 
+-- ------------------------------------------------------------------ n° 26 : ordre_filiale, lu sur v_ordre_entite
+
 -- --- depuis 63_SQL/42_valorisation_participations.sql : v_titres_valeur_actuelle ---
 -- ---------------------------------------------------------------------
 -- BLOC 6 : dbo.v_titres_valeur_actuelle, la valeur actuelle des titres
@@ -104,7 +106,8 @@ SELECT
     -- instruments financiers ». Aucun des 2 ne couvre les titres. Le
     -- script 68 a passe ses ecritures au 105, cette vue rendait 1052 : un
     -- ecran qui l'aurait lue aurait ecrit au mauvais compte.
-    CAST(ce.compte_contrepartie AS VARCHAR (20))       AS compte_contrepartie
+    CAST(ce.compte_contrepartie AS VARCHAR (20))       AS compte_contrepartie,
+    (SELECT o.ordre FROM dbo.v_ordre_entite o WHERE o.entite = r.entite_fille) AS ordre_filiale
 FROM retenu AS r
 CROSS JOIN dbo.ref_contrepartie_estimation AS ce
 LEFT JOIN portage AS p

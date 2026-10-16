@@ -1,4 +1,5 @@
 
+-- pr_repondre_question : 7 refus
 -- --- 9. pr_repondre_question, meme corps qu'au 205, plus la garde du verrou ----------------------
 CREATE   PROCEDURE dbo.pr_repondre_question
     @cote                  VARCHAR (30),
@@ -17,7 +18,7 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM dbo.feuille_question WHERE cote = @cote AND question_id = @qid)
     BEGIN
         DECLARE @m1 NVARCHAR (400) = N'La question ' + @reference + N' n''est pas au questionnaire ' + @cote + N'.';
-        THROW 50242, @m1, 1;
+        BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50242, @m1, 1; END
     END;
     SELECT @entite = entite, @arrete = arrete FROM dbo.feuille_travail WHERE cote = @cote;
     IF EXISTS (SELECT 1 FROM dbo.feuille_travail WHERE cote = @cote AND conclue_le IS NOT NULL)
@@ -43,17 +44,17 @@ BEGIN
         BEGIN
             DECLARE @m2 NVARCHAR (400) = N'La question ' + @reference + N' se répond par OUI ou NON'
                 + CASE WHEN @type = 'OUI_NON_NA' THEN N', ou NA avec un motif' ELSE N'' END + N'. Reçu : « ' + @reponse + N' ».';
-            THROW 50244, @m2, 1;
+            BEGIN SET @m2 = REPLACE(@m2, N'%', N'%%'); THROW 50244, @m2, 1; END
         END;
         IF @bin = 'NON_APPLICABLE' AND @type = 'OUI_NON'
         BEGIN
             DECLARE @m3 NVARCHAR (400) = N'La question ' + @reference + N' n''admet pas la non-applicabilité.';
-            THROW 50245, @m3, 1;
+            BEGIN SET @m3 = REPLACE(@m3, N'%', N'%%'); THROW 50245, @m3, 1; END
         END;
         IF @bin = 'NON_APPLICABLE' AND NULLIF(LTRIM(RTRIM(@motif_non_applicable)), N'') IS NULL
         BEGIN
             DECLARE @m4 NVARCHAR (400) = N'La question ' + @reference + N' est déclarée non applicable sans motif. Le motif est obligatoire.';
-            THROW 50246, @m4, 1;
+            BEGIN SET @m4 = REPLACE(@m4, N'%', N'%%'); THROW 50246, @m4, 1; END
         END;
     END
     ELSE
@@ -63,17 +64,17 @@ BEGIN
            AND NOT EXISTS (SELECT 1 FROM STRING_SPLIT(@options, '|') s WHERE LTRIM(RTRIM(s.value)) = @val)
         BEGIN
             DECLARE @m5 NVARCHAR (600) = N'La question ' + @reference + N' se répond parmi : ' + REPLACE(@options, '|', N', ') + N'. Reçu : « ' + @val + N' ».';
-            THROW 50247, @m5, 1;
+            BEGIN SET @m5 = REPLACE(@m5, N'%', N'%%'); THROW 50247, @m5, 1; END
         END;
         IF @type = 'DATE' AND TRY_CONVERT(DATE, @val, 103) IS NULL AND TRY_CONVERT(DATE, @val, 23) IS NULL
         BEGIN
             DECLARE @m6 NVARCHAR (400) = N'La question ' + @reference + N' attend une date, jj/mm/aaaa. Reçu : « ' + @val + N' ».';
-            THROW 50248, @m6, 1;
+            BEGIN SET @m6 = REPLACE(@m6, N'%', N'%%'); THROW 50248, @m6, 1; END
         END;
         IF @type = 'MONTANT' AND TRY_CONVERT(DECIMAL (18, 2), REPLACE(REPLACE(@val, N' ', N''), N',', N'.')) IS NULL
         BEGIN
             DECLARE @m7 NVARCHAR (400) = N'La question ' + @reference + N' attend un montant. Reçu : « ' + @val + N' ».';
-            THROW 50249, @m7, 1;
+            BEGIN SET @m7 = REPLACE(@m7, N'%', N'%%'); THROW 50249, @m7, 1; END
         END;
     END;
     UPDATE dbo.feuille_question

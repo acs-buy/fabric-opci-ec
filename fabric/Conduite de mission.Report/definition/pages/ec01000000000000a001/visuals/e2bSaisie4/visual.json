@@ -18,7 +18,7 @@
             "placeholder": {
               "expr": {
                 "Literal": {
-                  "Value": "'à saisir'"
+                  "Value": "'nom du fichier .xlsx'"
                 }
               }
             },
@@ -120,7 +120,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Chemin du classeur'"
+                  "Value": "'Nom du classeur déposé'"
                 }
               }
             },

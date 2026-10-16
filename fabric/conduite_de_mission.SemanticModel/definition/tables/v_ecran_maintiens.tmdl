@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_ecran_maintiens
 	lineageTag: 743e0174-66be-432a-ad0f-94b9366b862d
 
@@ -15,7 +15,7 @@ table v_ecran_maintiens
 		displayFolder: Ecran 1 Client
 		lineageTag: 4d366a57-ea4d-46ef-a494-2141eebbb179
 
-	measure 'Est maintien du client courant' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_maintiens ) ) RETURN IF ( SELECTEDVALUE ( v_ecran_maintiens[entite] ) = c, 1 )
+	measure 'Est maintien du client courant' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_maintiens ) ) RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( v_ecran_maintiens, v_ecran_maintiens[entite] = c ) ), 1 )
 		formatString: 0
 		displayFolder: Ecran 1 Client
 		lineageTag: f80b979b-6931-4da9-9ed3-7facb6625ab3

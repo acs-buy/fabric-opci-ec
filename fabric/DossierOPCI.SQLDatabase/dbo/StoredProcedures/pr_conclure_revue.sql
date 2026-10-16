@@ -1,6 +1,5 @@
 
-
-
+-- pr_conclure_revue : 2 refus
 -- 8. CONCLURE LA REVUE : un vehicule ; admis depuis A_CONCLURE, CONCLUE et RENVOYEE.
 CREATE   PROCEDURE dbo.pr_conclure_revue
     @entite      VARCHAR (20),
@@ -14,13 +13,13 @@ BEGIN
     IF dbo.fn_tient_role_mission(@entite, @par, CAST(SYSUTCDATETIME() AS DATE)) = 0
     BEGIN
         DECLARE @m_role NVARCHAR (400) = N'Conclusion refusée : cette personne ne tient aucun rôle de mission sur l''entité ' + @entite + N' ; la revue se conclut par l''équipe de la mission.';
-        THROW 50639, @m_role, 1;
+        BEGIN SET @m_role = REPLACE(@m_role, N'%', N'%%'); THROW 50639, @m_role, 1; END
     END;
     DECLARE @m NVARCHAR (400);
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND forme_vehicule IS NOT NULL)
     BEGIN
         SET @m = N'Conclusion refusée : l''entité ' + ISNULL(@entite, N'vide') + N' n''est pas un véhicule ; la revue porte sur le véhicule et couvre ses filiales.';
-        THROW 50520, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50520, @m, 1; END
     END;
     IF NOT EXISTS (SELECT 1 FROM dbo.arrete_mission WHERE entite = @entite AND arrete = @arrete)
         THROW 50322, N'La revue se conclut sur un arrêté ouvert.', 1;

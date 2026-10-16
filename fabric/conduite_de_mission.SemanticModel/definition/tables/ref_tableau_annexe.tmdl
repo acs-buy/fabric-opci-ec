@@ -1,0 +1,126 @@
+/// Les tableaux de l'annexe du recueil, un par article : intitule, modele indicatif ou impose.
+table ref_tableau_annexe
+	lineageTag: 5a5838d2-6cd7-4ad4-b081-5da48d601605
+
+	measure 'Faits de l article choisi' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = SELECTEDVALUE ( ref_tableau_annexe[article] ) VAR ind = SELECTEDVALUE ( ref_tableau_annexe[indicatif] ) VAR t = FILTER ( ALL ( v_cellules_a_remplir ), v_cellules_a_remplir[entite] = e && v_cellules_a_remplir[arrete] = a && v_cellules_a_remplir[article] = ar ) VAR n = MAXX ( t, v_cellules_a_remplir[cellules] ) VAR rem = MAXX ( t, v_cellules_a_remplir[cellules_a_remplir] ) + 0 VAR att = MAXX ( t, v_cellules_a_remplir[en_attente] ) + 0 VAR lec = MAXX ( t, v_cellules_a_remplir[lecture] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || ISBLANK ( ar ), "", "Modèle " & IF ( ind = 1, "indicatif", "imposé" ) & " ; " & IF ( ISBLANK ( n ), "aucune cellule dans la dernière version de l’annexe", FORMAT ( n, "0" ) & IF ( n > 1, " cellules", " cellule" ) & IF ( rem + att > 0, ", dont " & IF ( rem > 0, FORMAT ( rem, "0" ) & " à remplir", "" ) & IF ( rem > 0 && att > 0, " et ", "" ) & IF ( att > 0, FORMAT ( att, "0" ) & " en attente", "" ), "" ) & " ; " & IF ( rem = 0 && att > 0, "incomplet, cellules en attente de calcul : le Word les imprime vides", lec ) ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: f9014da9-55ee-4481-888e-286e34d6a13c
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 1571f8f3-3a28-4137-bf36-d9553d927b68
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: 3e0a65e3-3135-46d4-9c47-b4a21dfc14d4
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_valeur
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: e1af58ff-fa01-430f-847e-a380bcbb2cf3
+		summarizeBy: none
+		sourceColumn: source_valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	column cellules
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 736d3696-1c93-40bd-ae70-83bcab56a37d
+		summarizeBy: none
+		sourceColumn: cellules
+
+		annotation SummarizationSetBy = Automatic
+
+	column note
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 618cd138-bcf4-401f-876f-b95123160211
+		summarizeBy: none
+		sourceColumn: note
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0818c23f-ce21-4a0d-952a-aa62482a989f
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: a6db7004-5c41-4d22-acc7-9990342517b2
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: f81ebf2c-1873-47b5-aed0-fb157d960038
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column indicatif
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 30d789e1-8367-4541-8b3c-64598aaa6604
+		summarizeBy: none
+		sourceColumn: indicatif
+
+		annotation SummarizationSetBy = Automatic
+
+	column principe
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 294bbdc8-9dc3-4536-b395-c2907f514392
+		summarizeBy: none
+		sourceColumn: principe
+
+		annotation SummarizationSetBy = Automatic
+
+	column texte_principe
+		dataType: string
+		sourceProviderType: nvarchar(1000)
+		lineageTag: d93fe1a3-4991-409f-b7a9-31adebf0c717
+		summarizeBy: none
+		sourceColumn: texte_principe
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_tableau_annexe = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_tableau_annexe = Source{[Schema="dbo",Item="ref_tableau_annexe"]}[Data]
+				in
+				    dbo_ref_tableau_annexe
+

@@ -1,6 +1,12 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_rationalisation_filiale
 	lineageTag: ccbdc7dd-f36e-4fbf-8cde-93d324ba935b
+
+	/// intérêts réintégrés × quote-part, par filiale
+	measure 'Interets a la quote-part' = SUMX ( v_rationalisation_filiale, v_rationalisation_filiale[interets_reintegres] * v_rationalisation_filiale[quote_part] )
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: bfc0667b-dc16-4db9-8914-15ced2622861
 
 	column filiale
 		dataType: string
@@ -9,6 +15,7 @@ table v_rationalisation_filiale
 		lineageTag: 2189ac10-895d-4a88-905a-f292094cee5a
 		summarizeBy: none
 		sourceColumn: filiale
+		sortByColumn: ordre_filiale
 
 		annotation SummarizationSetBy = Automatic
 
@@ -131,6 +138,17 @@ table v_rationalisation_filiale
 		annotation SummarizationSetBy = Automatic
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ordre_filiale
+		dataType: int64
+		isHidden
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 204610b5-06c0-495d-92c3-4bf8424c3d67
+		summarizeBy: none
+		sourceColumn: ordre_filiale
+
+		annotation SummarizationSetBy = Automatic
 
 	partition v_rationalisation_filiale = m
 		mode: directQuery

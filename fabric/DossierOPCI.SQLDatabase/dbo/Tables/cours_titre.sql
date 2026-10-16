@@ -22,3 +22,25 @@ CREATE TABLE [dbo].[cours_titre] (
 
 GO
 
+
+CREATE   TRIGGER dbo.tr_cours_titre_annexe_retard ON dbo.cours_titre
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT id, arrete, code_actif, cours, entite, quantite FROM inserted
+        EXCEPT SELECT id, arrete, code_actif, cours, entite, quantite FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT id, arrete, code_actif, cours, entite, quantite FROM deleted EXCEPT SELECT id, arrete, code_actif, cours, entite, quantite FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'cours_titre', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
+
+GO
+

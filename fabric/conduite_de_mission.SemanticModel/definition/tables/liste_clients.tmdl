@@ -1,0 +1,132 @@
+/// La liste des clients de l'écran Client, une ligne par véhicule et par filiale. Sa relation part du véhicule : la ligne d'une filiale désigne le véhicule qui la détient.
+table liste_clients
+	lineageTag: 7ed57765-43f4-54ba-9194-7771e9fd638e
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: e7ed49b6-667e-517b-84e5-c1dfe1262125
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column Client
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 7c862df4-853c-5101-a32a-a663758d2b47
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicule_denomination
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 3dac650c-6632-55a1-8681-b09721c4b2c4
+		summarizeBy: none
+		sourceColumn: vehicule_denomination
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a34425be-715f-5031-b786-f3a7428871e8
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dénomination
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: ec749650-10d8-5f3b-a19e-1ccb7bc4d6ae
+		summarizeBy: none
+		sourceColumn: entite_denomination
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_sociale
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: fb07fc1c-1df7-5929-9331-7928341a644e
+		summarizeBy: none
+		sourceColumn: forme_sociale
+
+		annotation SummarizationSetBy = Automatic
+
+	column est_vehicule
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 20df172b-35f4-5154-8f35-c37604b9a1a3
+		summarizeBy: none
+		sourceColumn: est_vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column quote_part
+		dataType: double
+		formatString: 0.00 %
+		sourceProviderType: decimal(9, 6)
+		lineageTag: a3f570e7-157d-5a07-8cf8-c1a3e1895771
+		summarizeBy: sum
+		sourceColumn: quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column rang
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 932a39c7-e9c8-58c3-8f65-e43e762e87c5
+		summarizeBy: sum
+		sourceColumn: rang
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(4000)
+		lineageTag: e1209ddd-78f1-5bcc-8bb0-0acc09bceb77
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column Entité
+		dataType: string
+		sourceProviderType: nvarchar
+		lineageTag: 64f2bb0e-7166-541e-8a07-af9397a86b19
+		summarizeBy: none
+		sourceColumn: entite_affichee
+		sortByColumn: ordre_affichage
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre_affichage
+		dataType: string
+		sourceProviderType: varchar
+		lineageTag: e914f538-e9a5-5fb8-8242-4f3fc61fa84b
+		summarizeBy: none
+		sourceColumn: ordre_affichage
+
+		annotation SummarizationSetBy = Automatic
+
+	partition liste_clients = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_perimetre_groupe = Source{[Schema="dbo",Item="v_perimetre_groupe"]}[Data]
+				in
+				    dbo_v_perimetre_groupe
+

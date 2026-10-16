@@ -1,4 +1,6 @@
 
+-- ------------------------------------------------------------------ n° 9 : v_client_ratio, la source retiree de ck_ratio_source n'y est plus traduite
+
 -- --- 5 : les ratios, avec leur conclusion en clair ----------------------
 CREATE   VIEW dbo.v_client_ratio AS
 SELECT v.entite + '|' + v.arrete AS cle_arrete, v.entite, v.arrete,
@@ -10,7 +12,6 @@ SELECT v.entite + '|' + v.arrete AS cle_arrete, v.entite, v.arrete,
        -- 06/09/2026 : la source du seuil en clair pour le client, le corps promettant
        -- « le seuil applicable au vehicule, seuil legal ou seuil du prospectus ».
        CASE v.source_du_seuil WHEN 'TEXTE' THEN N'Seuil légal'
-                              WHEN 'PROSPECTUS' THEN N'Seuil du prospectus'
                               WHEN 'CABINET' THEN N'Seuil du cabinet'
                               ELSE v.source_du_seuil END AS source_du_seuil,
        -- 06/09/2026 : 3 etats, non 2. Un calcul que le reviseur n'a pas valide ne

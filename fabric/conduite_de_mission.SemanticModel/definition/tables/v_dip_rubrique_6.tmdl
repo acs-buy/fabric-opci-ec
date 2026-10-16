@@ -1,0 +1,135 @@
+/// DIP, rubrique 6 : l'obligation de distribution et le dividende par part.
+table v_dip_rubrique_6
+	lineageTag: aab7e39f-6670-4671-b3ee-25f1cbaa3d0b
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: aa5c8bf3-b7d7-4261-997d-726e42be3ab3
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 1da10089-7b8e-4df6-968e-8f26bfcd2214
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 8d8db4cf-04f8-4784-a879-8e91dd5a713c
+		summarizeBy: none
+		sourceColumn: cle_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice_lu
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: d9a5654c-2a2a-46c3-99cc-a3d4468b6d90
+		summarizeBy: none
+		sourceColumn: exercice_lu
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 276b547a-088c-4811-b629-7d2bb2d6fea0
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column Catégorie
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: 52d5dd1b-8306-4ada-9bc0-842695b7bb3b
+		summarizeBy: none
+		sourceColumn: categorie
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Base de calcul'
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 991a3b9d-26f7-4cd4-a25f-9e59c2c60b92
+		summarizeBy: sum
+		sourceColumn: base_calcul
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Taux
+		dataType: double
+		sourceProviderType: decimal(9, 4)
+		lineageTag: 7e7141d8-0cc2-472f-83e3-49f5ca85a4da
+		summarizeBy: sum
+		sourceColumn: taux
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Obligation
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: de1c5884-e91e-429c-a416-897b15b3256f
+		summarizeBy: sum
+		sourceColumn: obligation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column distribution_par_part
+		dataType: double
+		sourceProviderType: decimal(19, 4)
+		lineageTag: 9ae3e8b8-fe71-4f90-81b6-04e89d15b7d9
+		summarizeBy: sum
+		sourceColumn: distribution_par_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lecture
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 2069ed2f-d1a5-4fa8-ba21-9bbd27bf80a0
+		summarizeBy: none
+		sourceColumn: lecture
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 19bedaa9-25f3-43f6-be9e-43a79616f458
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_dip_rubrique_6 = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_dip_rubrique_6 = Source{[Schema="dbo",Item="v_dip_rubrique_6"]}[Data]
+				in
+				    dbo_v_dip_rubrique_6
+

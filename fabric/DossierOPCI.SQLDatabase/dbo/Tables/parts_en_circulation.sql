@@ -14,3 +14,25 @@ CREATE TABLE [dbo].[parts_en_circulation] (
 
 GO
 
+
+CREATE   TRIGGER dbo.tr_parts_en_circulation_annexe_retard ON dbo.parts_en_circulation
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT entite, arrete, nombre_parts, source FROM inserted
+        EXCEPT SELECT entite, arrete, nombre_parts, source FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT entite, arrete, nombre_parts, source FROM deleted EXCEPT SELECT entite, arrete, nombre_parts, source FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'parts_en_circulation', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
+
+GO
+

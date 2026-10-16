@@ -5,7 +5,7 @@
     "x": 728,
     "y": 374,
     "z": 63400,
-    "height": 64,
+    "height": 70,
     "width": 824,
     "tabOrder": 63400
   },
@@ -23,11 +23,11 @@
                       "Entity": "v_ecran_message"
                     }
                   },
-                  "Property": "Message ecran"
+                  "Property": "Message ecran vide"
                 }
               },
-              "queryRef": "v_ecran_message.Message ecran",
-              "nativeQueryRef": "Message ecran"
+              "queryRef": "v_ecran_message.Message ecran vide",
+              "nativeQueryRef": "Message ecran vide"
             }
           ]
         }
@@ -143,6 +143,19 @@
           },
           "selector": {
             "id": "default"
+          }
+        }
+      ],
+      "fillCustom": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ]

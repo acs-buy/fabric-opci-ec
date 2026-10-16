@@ -32,15 +32,30 @@ CREATE TABLE [dbo].[ref_question] (
 
 GO
 
+CREATE NONCLUSTERED INDEX [ix_ref_question_phase]
+    ON [dbo].[ref_question]([phase] ASC);
+
+
+GO
+
 CREATE NONCLUSTERED INDEX [ix_ref_question_cycle]
     ON [dbo].[ref_question]([cycle] ASC);
 
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_ref_question_phase]
-    ON [dbo].[ref_question]([phase] ASC);
-
+CREATE   TRIGGER dbo.[tr_ref_question_garde]
+ON dbo.[ref_question]
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF dbo.fn_peut_ecrire_referentiel('ref_question',
+                                      SUSER_SNAME()) = 1 RETURN;
+    THROW 50074,
+        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé ou réviseur. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
+        1;
+END;
 
 GO
 
@@ -80,21 +95,6 @@ BEGIN
             N'Validation refusée : seul l''associé valide une question de référence. Une question ajoutée par un réviseur reste « à auditer » jusqu''à ce que l''associé la valide.',
             1;
     END;
-END;
-
-GO
-
-CREATE   TRIGGER dbo.[tr_ref_question_garde]
-ON dbo.[ref_question]
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF dbo.fn_peut_ecrire_referentiel('ref_question',
-                                      SUSER_SNAME()) = 1 RETURN;
-    THROW 50074,
-        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé ou réviseur. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
-        1;
 END;
 
 GO

@@ -1,0 +1,215 @@
+/// Les arrêtés du client, leur statut et ce qui permet de demander leur réouverture.
+table v_ecran_arretes
+	lineageTag: 110e28cc-3910-5a03-bc0e-71f50616db21
+
+	/// 1 pour un arrêté du client dont la réouverture peut se demander, ou sur lequel une demande attend.
+	measure 'Arrete du segment reouverture' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_arretes ) ) RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( v_ecran_arretes, v_ecran_arretes[entite] = c && ( v_ecran_arretes[est_reouvrable] = TRUE () || v_ecran_arretes[demande_en_attente] = TRUE () ) ) ), 1 )
+		formatString: 0
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: e11db853-3e67-5031-a228-9e1bed495466
+
+	/// Le nombre d'arrêtés cochés dans « Arrêté clos ».
+	measure 'Arretes coches' = IF ( ISFILTERED ( v_ecran_arretes[Arrêté] ), COUNTROWS ( VALUES ( v_ecran_arretes[Arrêté] ) ), 0 )
+		formatString: 0
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 5c813c16-a5e4-582f-92f2-3e83b04fdc35
+
+	/// L'arrêté choisi dans « Arrêté clos », aaaa-mm-jj, quand un seul l'est.
+	measure 'Arrete choisi reouverture' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_arretes ) ) RETURN IF ( [Arretes coches] = 1, CALCULATE ( MAX ( v_ecran_arretes[arrete] ), v_ecran_arretes[entite] = c ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 8075da49-851a-54ed-a0a5-e6ecd938e704
+
+	/// La raison du gris du bouton « Demander la réouverture ». Vide quand le bouton est actif.
+	measure 'Refus demande reouverture' = VAR c = [Client selectionne] VAR n = [Arretes coches] VAR a = [Arrete choisi reouverture] VAR motif = IF ( n = 1, CALCULATE ( MAX ( v_ecran_arretes[motif_non_reouvrable] ), FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = c && v_ecran_arretes[arrete] = a ) ) ) VAR attend = IF ( n = 1, CALCULATE ( COUNTROWS ( v_ecran_arretes ), FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = c && v_ecran_arretes[arrete] = a && v_ecran_arretes[demande_en_attente] = TRUE () ) ) ) + 0 RETURN SWITCH ( TRUE (), ISBLANK ( c ), BLANK (), ISBLANK ( [Membre de l equipe connecte] ), "Votre adresse de connexion n'est rattachée à aucun membre de l'équipe de ce dossier.", NOT ISBLANK ( [Superviseur connecte CLOTURE] ), "Vous décidez les réouvertures de ce dossier ; la demande vient d'un autre membre de l'équipe.", n > 1, "Plusieurs arrêtés sont cochés dans « Arrêté clos » : un arrêté se rouvre seul.", NOT ISBLANK ( motif ), motif, attend > 0, "Une demande attend déjà la décision du chef de mission pour cet arrêté." )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: fa534ed7-bc31-5c60-bb0c-8d20cf15d5c7
+
+	/// La raison du gris du bouton « Rouvrir l'arrêté ». Vide quand le bouton est actif.
+	measure 'Refus accord reouverture' = VAR c = [Client selectionne] VAR n = [Arretes coches] VAR a = [Arrete choisi reouverture] VAR motif = IF ( n = 1, CALCULATE ( MAX ( v_ecran_arretes[motif_non_reouvrable] ), FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = c && v_ecran_arretes[arrete] = a ) ) ) VAR auteur = IF ( n = 1, CALCULATE ( MAX ( v_ecran_demandes_reouverture[demande_par] ), FILTER ( ALL ( v_ecran_demandes_reouverture ), v_ecran_demandes_reouverture[entite] = c && v_ecran_demandes_reouverture[arrete] = a && v_ecran_demandes_reouverture[etat] = "EN_ATTENTE" ) ) ) RETURN SWITCH ( TRUE (), ISBLANK ( c ), BLANK (), ISBLANK ( [Superviseur connecte CLOTURE] ), "La réouverture d'un arrêté se décide par le chef de mission du dossier.", n > 1, "Plusieurs arrêtés sont cochés dans « Arrêté clos » : un arrêté se rouvre seul.", n = 1 && ISBLANK ( auteur ), "Aucune demande de réouverture n'attend sur cet arrêté.", n = 1 && auteur = USERPRINCIPALNAME (), "Vous avez demandé cette réouverture ; un autre membre habilité la décide.", n = 1 && NOT ISBLANK ( motif ), motif )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: b0162f32-601f-5ae1-9fc3-9e165ccbca35
+
+	/// La raison du gris du bouton « Écarter la demande ». Vide quand le bouton est actif.
+	measure 'Refus ecart reouverture' = VAR c = [Client selectionne] VAR n = [Arretes coches] VAR a = [Arrete choisi reouverture] VAR motif = IF ( n = 1, CALCULATE ( MAX ( v_ecran_arretes[motif_non_reouvrable] ), FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = c && v_ecran_arretes[arrete] = a ) ) ) VAR auteur = IF ( n = 1, CALCULATE ( MAX ( v_ecran_demandes_reouverture[demande_par] ), FILTER ( ALL ( v_ecran_demandes_reouverture ), v_ecran_demandes_reouverture[entite] = c && v_ecran_demandes_reouverture[arrete] = a && v_ecran_demandes_reouverture[etat] = "EN_ATTENTE" ) ) ) RETURN SWITCH ( TRUE (), ISBLANK ( c ), BLANK (), ISBLANK ( [Superviseur connecte CLOTURE] ), "La réouverture d'un arrêté se décide par le chef de mission du dossier.", n > 1, "Plusieurs arrêtés sont cochés dans « Arrêté clos » : un arrêté se rouvre seul.", n = 1 && ISBLANK ( auteur ), "Aucune demande de réouverture n'attend sur cet arrêté.", n = 1 && auteur = USERPRINCIPALNAME (), "Vous avez demandé cette réouverture ; un autre membre habilité la décide." )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: c590e399-ceac-58de-9ade-4eecedd0a906
+
+	/// La ligne d'avis de la demande.
+	measure 'Avis demande de reouverture' = [Refus demande reouverture] & ""
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 15c93792-751a-5f15-ad58-e58b543ee07e
+
+	/// La ligne d'avis de la décision : celle de « Rouvrir l'arrêté », qui comprend celles de l'écart.
+	measure 'Avis decision de reouverture' = [Refus accord reouverture] & ""
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: a50fa492-6713-5b0f-9b15-c8ba8a6095c1
+
+	/// 1 pour un arrêté du client sur lequel l'écran agit, vide sinon.
+	measure 'Est arrete du client courant' = VAR c = [Client selectionne] RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( v_ecran_arretes, v_ecran_arretes[entite] = c ) ), 1 )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 13f23b0f-bc40-55f7-a4b4-8c8047f04056
+
+	/// Le titre du tableau des arrêtés : le nombre d'arrêtés ouverts du client et la périodicité de sa VL.
+	measure 'Titre arretes et maintiens' = VAR c = [Client selectionne] VAR n = CALCULATE ( COUNTROWS ( v_ecran_arretes ), FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = c && v_ecran_arretes[est_ouvert] = TRUE () ) ) + 0 VAR p = CALCULATE ( MAX ( v_ecran_arretes[periodicite_vl] ), FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = c ) ) RETURN IF ( ISBLANK ( c ), "Arrêtés et maintiens", "Arrêtés et maintiens · " & IF ( n = 0, "aucun ouvert", n & IF ( n = 1, " ouvert", " ouverts" ) ) & IF ( p <> "", " · VL " & LOWER ( p ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: d0f77cf0-2872-5b89-9a23-88bec5e2dac1
+
+	/// Le fond de la cellule « Maintien de la mission » : visé, en attente ou refusé.
+	measure 'Fond maintien arrete' = SWITCH ( SELECTEDVALUE ( v_ecran_arretes[Maintien de la mission] ), "Visé", "#EFF6F2", "Soumis au visa", "#FAF2E2", "À faire", "#FAF2E2", "Refusé", "#F9ECEC" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 4dc3d5e8-2274-5e3c-9d89-82739e9fd847
+
+	/// L'encre de la cellule « Maintien de la mission ».
+	measure 'Encre maintien arrete' = SWITCH ( SELECTEDVALUE ( v_ecran_arretes[Maintien de la mission] ), "Visé", "#1F6D4A", "Soumis au visa", "#8A6710", "À faire", "#8A6710", "Refusé", "#9A2A2A", "#12233C" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 85079970-a96c-5ba5-9885-d09d06de6ecd
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 4f808abd-47e6-5abb-a52e-8916359ab6f5
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isHidden
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 0e0d44e1-b01f-5810-9bb6-1e3668d5a535
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column Arrêté
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: 1ff2e69d-1bdc-5822-9430-0cd369d82051
+		summarizeBy: none
+		sourceColumn: Arrêté
+		sortByColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column Type
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: a364e33c-3e7c-59c1-b011-fc0264c045d1
+		summarizeBy: none
+		sourceColumn: Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ouvert le'
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: 55361302-765a-508a-a228-ffcd942f628b
+		summarizeBy: none
+		sourceColumn: Ouvert le
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Maintien de la mission'
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 744558ef-0e82-5872-a72a-65fa4d5a9941
+		summarizeBy: none
+		sourceColumn: Maintien de la mission
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: af6b36a9-dd36-595e-a66b-a69654655b06
+		summarizeBy: none
+		sourceColumn: statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column est_clos
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: fcd0d71d-ea79-5e92-b0ea-e34280aac8ae
+		summarizeBy: none
+		sourceColumn: est_clos
+
+		annotation SummarizationSetBy = Automatic
+
+	column est_ouvert
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: bc27df37-3645-50a1-9588-97452a9e3b1e
+		summarizeBy: none
+		sourceColumn: est_ouvert
+
+		annotation SummarizationSetBy = Automatic
+
+	column est_reouvrable
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 9abf3147-da82-59fe-9669-548d09aa467b
+		summarizeBy: none
+		sourceColumn: est_reouvrable
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_non_reouvrable
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 3b00271f-7bb6-58bc-a3fa-a33c3ef2e3ea
+		summarizeBy: none
+		sourceColumn: motif_non_reouvrable
+
+		annotation SummarizationSetBy = Automatic
+
+	column demande_en_attente
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 04016577-4b0a-548f-80fb-7520bdd4f67d
+		summarizeBy: none
+		sourceColumn: demande_en_attente
+
+		annotation SummarizationSetBy = Automatic
+
+	column maintien_code
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 828ba1c8-b943-56eb-8aba-fbed62e9cda2
+		summarizeBy: none
+		sourceColumn: maintien_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column periodicite_vl
+		dataType: string
+		sourceProviderType: varchar(13)
+		lineageTag: c52a8010-2077-5859-a9d4-dd50e5d6bad3
+		summarizeBy: none
+		sourceColumn: periodicite_vl
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(41)
+		lineageTag: 7837a149-55d6-51d7-9bdf-13556cda2d4a
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_arretes = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_arretes = Source{[Schema="dbo",Item="v_ecran_arretes"]}[Data]
+				in
+				    dbo_v_ecran_arretes
+

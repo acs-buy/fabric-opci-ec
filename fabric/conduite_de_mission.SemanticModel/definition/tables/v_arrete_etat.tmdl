@@ -1,0 +1,80 @@
+/// Les arretes de mission des vehicules, et l'arrete de leur colonne N-1.
+table v_arrete_etat
+	lineageTag: c916fb36-6f41-401d-a0e8-259494ed2994
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: c7cf2f69-82ef-4323-ba59-238573e179e6
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 346f1c42-169f-40f4-8b3f-1faf31d177b0
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: bd373692-a706-4590-9c39-30c8a25996b8
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column porte_balance
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 1bef45c3-fee1-4eb2-b115-18b160318964
+		summarizeBy: none
+		sourceColumn: porte_balance
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete_n_1
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: f2400926-2617-4fdf-a238-df1cd64944bf
+		summarizeBy: none
+		sourceColumn: arrete_n_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column porte_balance_n_1
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 0c2e0cb2-da08-4ad4-8655-18c4f3eb61f1
+		summarizeBy: none
+		sourceColumn: porte_balance_n_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column premier_exercice
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 26bb3557-e003-4004-a681-452a7b28b5a2
+		summarizeBy: none
+		sourceColumn: premier_exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_arrete_etat = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_arrete_etat = Source{[Schema="dbo",Item="v_arrete_etat"]}[Data]
+				in
+				    dbo_v_arrete_etat
+

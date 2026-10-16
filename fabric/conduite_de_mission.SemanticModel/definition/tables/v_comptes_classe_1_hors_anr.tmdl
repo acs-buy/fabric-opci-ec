@@ -1,0 +1,48 @@
+/// Comptes de classe 1 hors actif net (refus 50078).
+table v_comptes_classe_1_hors_anr
+	lineageTag: d980c8b2-b600-4318-9503-367d44e5a18f
+
+	/// condition 50078 de la proposition
+	measure 'Comptes de classe 1 hors actif net' = COUNTROWS ( v_comptes_classe_1_hors_anr ) + 0
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 9aed75a7-64d8-4be6-92a2-7331aede3426
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ad67316a-b253-484d-83fa-0d707e3145c1
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: bcd6dc1f-9b38-40c4-bd50-33762ff8d04b
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column compte_num
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 8302adb9-f970-47f2-8924-f1be3124ed70
+		summarizeBy: none
+		sourceColumn: compte_num
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_comptes_classe_1_hors_anr = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_comptes_classe_1_hors_anr = Source{[Schema="dbo",Item="v_comptes_classe_1_hors_anr"]}[Data]
+				in
+				    dbo_v_comptes_classe_1_hors_anr
+

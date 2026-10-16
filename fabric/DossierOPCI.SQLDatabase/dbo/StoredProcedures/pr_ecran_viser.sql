@@ -9,6 +9,9 @@ CREATE   PROCEDURE dbo.pr_ecran_viser
 AS
 BEGIN
     SET NOCOUNT ON;
+    -- 15/10/2026 : une personne vide ou NULL se refuse en francais, avant tout le reste
+    IF NULLIF(LTRIM(RTRIM(@decide_par)), N'') IS NULL
+        THROW 50105, N'Visa refusé : votre compte ne tient pas, sur ce dossier, le rôle habilité à viser cet objet.', 1;
     DECLARE @p1 int = CHARINDEX('|', @objet_ref);
     DECLARE @p2 int = CASE WHEN @p1 > 0 THEN CHARINDEX('|', @objet_ref, @p1 + 1) ELSE 0 END;
     IF @nature = 'CONCLUSION'

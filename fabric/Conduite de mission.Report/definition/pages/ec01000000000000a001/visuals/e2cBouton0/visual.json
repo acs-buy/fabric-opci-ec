@@ -457,7 +457,7 @@
                     {
                       "name": "client",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -476,7 +476,7 @@
                     {
                       "name": "code",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -499,7 +499,7 @@
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e2cSaisie0",
-                      "autoClear": false
+                      "autoClear": true
                     },
                     {
                       "name": "formeSociale",
@@ -508,7 +508,7 @@
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e2cSaisie1",
-                      "autoClear": false
+                      "autoClear": true
                     },
                     {
                       "name": "droitsDeVote",
@@ -517,9 +517,30 @@
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e2cSaisie2",
-                      "autoClear": false
+                      "autoClear": true
+                    },
+                    {
+                      "name": "controlee",
+                      "dataType": "string",
+                      "isOptional": true,
+                      "defaultValue": null,
+                      "type": "SlicerParameter",
+                      "slicer": "e2cSaisie3",
+                      "autoClear": true
                     }
                   ]
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ref_entite"
+                    }
+                  },
+                  "Property": "Infobulle e2cBouton0"
                 }
               }
             }

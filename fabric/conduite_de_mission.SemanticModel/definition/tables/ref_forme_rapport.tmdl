@@ -1,0 +1,154 @@
+/// Les 4 formes du rapport de l'expert-comptable, NP 2300, exemples E1 a E4.
+table ref_forme_rapport
+	lineageTag: 51c9dbbe-3ab5-4940-b82f-1292bc0390e4
+
+	measure 'Forme retenue' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_rapport_expert_comptable ), v_rapport_expert_comptable[entite] = e && v_rapport_expert_comptable[arrete] = a ) VAR fa = MAXX ( tr, v_rapport_expert_comptable[forme_arretee] ) VAR al = MAXX ( tr, v_rapport_expert_comptable[arretee_le] ) VAR sc = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), IF ( ISBLANK ( ref_entite[soumise_commissariat_comptes] ), BLANK (), IF ( ref_entite[soumise_commissariat_comptes], 1, 0 ) ) ) VAR fp0 = MAXX ( FILTER ( ALL ( v_forme_attestation_proposee ), v_forme_attestation_proposee[entite] = e && v_forme_attestation_proposee[arrete] = a ), v_forme_attestation_proposee[forme_proposee] ) VAR fp = IF ( fp0 = "REFUS_ATTESTER", "IMPOSSIBILITE", fp0 ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( NOT ISBLANK ( al ) && NOT ISBLANK ( fa ), fa, IF ( NOT ISBLANK ( sc ) && sc = 0 && NOT ISBLANK ( fp ), fp, "COMPTE_RENDU_TRAVAUX" ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: ae68a973-3f3d-45b7-bc29-4935160297a9
+
+	measure 'Forme choisie' = IF ( HASONEVALUE ( ref_forme_rapport[code] ), SELECTEDVALUE ( ref_forme_rapport[code] ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 34b1f335-1c4e-4646-99b1-2b88dcb0b896
+
+	measure 'Obstacle a l arret de la forme' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR j = TODAY () VAR f = [Forme choisie] VAR dur = COUNTROWS ( FILTER ( ALL ( v_livrables_dus ), v_livrables_dus[entite] = e && v_livrables_dus[arrete] = a && v_livrables_dus[livrable] = "ATTESTATION" ) ) > 0 VAR rnpn = SELECTCOLUMNS ( FILTER ( ALL ( role_nature_visa ), role_nature_visa[nature] = "PUBLICATION" ), "r", role_nature_visa[role_code] ) VAR rrpn = SELECTCOLUMNS ( FILTER ( ALL ( ref_role ), ref_role[vise] = TRUE () ), "r", ref_role[code] ) VAR pn = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[du] <= j && ( ISBLANK ( role_mission[au] ) || role_mission[au] > j ) && role_mission[role] IN rnpn && role_mission[role] IN rrpn ) ) + 0 VAR cl = MAXX ( FILTER ( ALL ( v_visa_cloture_courant ), v_visa_cloture_courant[entite] = e && v_visa_cloture_courant[arrete] = a ), v_visa_cloture_courant[decision] ) VAR sc1 = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), IF ( ref_entite[soumise_commissariat_comptes] = TRUE (), 1, 0 ) ) + 0 VAR vl = COUNTROWS ( FILTER ( ALL ( publication_vl ), ISBLANK ( publication_vl[perimee_le] ) && publication_vl[entite] = e && publication_vl[arrete] = a ) ) + 0 VAR tf = FILTER ( ALL ( v_forme_attestation_proposee ), v_forme_attestation_proposee[entite] = e && v_forme_attestation_proposee[arrete] = a ) VAR lim = MAXX ( tf, IF ( ISBLANK ( v_forme_attestation_proposee[limitation_des_diligences] ), BLANK (), IF ( v_forme_attestation_proposee[limitation_des_diligences], 1, 0 ) ) ) VAR der = MAXX ( tf, v_forme_attestation_proposee[forme_attestation_derivee] ) RETURN SWITCH ( TRUE (), NOT dur, "le rapport de l'expert-comptable n'est pas dû à cet arrêté.", pn = 0, "Forme refusée : le rapport de l'expert-comptable est signé par l'associé signataire, et lui seul en arrête la forme.", cl = "VISE", "Forme refusée : l'arrêté est validé pour le client ; un changement de forme suppose sa réouverture.", ISBLANK ( f ) || NOT ( f IN { "COMPTE_RENDU_TRAVAUX", "SANS_OBSERVATION", "AVEC_OBSERVATION", "IMPOSSIBILITE" } ), "Forme refusée : " & IF ( ISBLANK ( f ), "(vide)", f ) & " n'est pas une forme du rapport de l'expert-comptable ; formes : COMPTE_RENDU_TRAVAUX, SANS_OBSERVATION, AVEC_OBSERVATION, IMPOSSIBILITE.", sc1 <> 1 && f = "COMPTE_RENDU_TRAVAUX", "Forme refusée : le compte rendu de travaux est réservé à une entité soumise au commissariat aux comptes ; pour l'entité " & e & ", cet indicateur est à 0 ou à remplir.", vl = 0, "Forme refusée : la valeur liquidative de cet arrêté n'est pas publiée. Le rapport de l'expert-comptable porte sur des comptes arrêtés.", f <> "COMPTE_RENDU_TRAVAUX" && lim = 1 && NOT ( f IN { "AVEC_OBSERVATION", "IMPOSSIBILITE" } ), "Forme refusée : aucune feuille de cycle n'est conclue pour cet arrêté. La NP 2300 traite ce cas : une limitation des diligences appelle une conclusion avec observation, paragraphe 20, ou un refus d'attester, paragraphe 21, selon l'importance de ses incidences. La forme sans observation est fermée.", f <> "COMPTE_RENDU_TRAVAUX" && NOT ISBLANK ( lim ) && lim <> 1 && NOT ISBLANK ( der ) && f <> der, "Forme refusée : la forme d'attestation se dérive de la plus sévère des conclusions des feuilles de travail. La forme dérivée est « " & der & " ».", BLANK () )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: e549d298-5500-4e99-82d7-4a37a4a9d93b
+
+	measure 'Forme a arreter' = VAR f = [Forme choisie] RETURN IF ( NOT ISBLANK ( f ) && ISBLANK ( [Obstacle a l arret de la forme] ), f )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 6f30b132-e7ae-4116-928a-febf3e67566a
+
+	measure 'Texte de la forme choisie' = VAR f = [Forme choisie] VAR c = IF ( ISBLANK ( f ), [Forme retenue], f ) RETURN MAXX ( FILTER ( ALL ( ref_forme_rapport ), ref_forme_rapport[code] = c ), ref_forme_rapport[texte] )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 4cfcb10d-bd79-47b7-99e7-b52a6d8f280b
+
+	measure 'Intitule de la forme choisie' = VAR f = [Forme choisie] VAR c = IF ( ISBLANK ( f ), [Forme retenue], f ) VAR it = MAXX ( FILTER ( ALL ( ref_forme_rapport ), ref_forme_rapport[code] = c ), ref_forme_rapport[intitule] ) RETURN IF ( ISBLANK ( it ), BLANK (), SUBSTITUTE ( it, "PRESENTATION", "PRÉSENTATION" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 055e5236-a6a0-43be-b937-1fd74f8d2d12
+
+	measure 'Fond revLivArreter' = IF ( ISBLANK ( [Forme a arreter] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 85ef0210-b57c-402b-976d-69d4bc48b3be
+
+	measure 'Libelle revLivArreter' = "Arrêter la forme"
+		lineageTag: 4545dd79-b2cb-47bf-80d6-594d0cb62d0b
+
+	measure 'Fond docArreter' = IF ( ISBLANK ( [Forme a arreter] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: f90feec7-a0c3-42e6-97fe-0c5c255fb3bf
+
+	measure 'Libelle docArreter' = "Arrêter la forme"
+		lineageTag: bd426826-6b5a-4f1d-a4f5-0700def5f30c
+
+	measure 'Aff Intitule de la forme choisie' = [Intitule de la forme choisie] & ""
+		lineageTag: deda90f5-30ea-4ff5-8306-a09cdda0e51b
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: eb67b242-1440-4a52-9fa6-18868f6b7986
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column exemple
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(4)
+		lineageTag: 76115c3b-61be-4721-b858-fb9f7e470406
+		summarizeBy: none
+		sourceColumn: exemple
+
+		annotation SummarizationSetBy = Automatic
+
+	column page_np
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: a255ff05-2732-4320-8b81-4d0d738552a8
+		summarizeBy: none
+		sourceColumn: page_np
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: ee343078-5510-407c-921b-81d65240c912
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column intitule
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(100)
+		lineageTag: b3258e54-3cc9-4621-9fc9-1f4694ad81bf
+		summarizeBy: none
+		sourceColumn: intitule
+
+		annotation SummarizationSetBy = Automatic
+
+	column attestation
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 15d0270b-f97a-4fb6-8621-bc6ab357c2c7
+		summarizeBy: none
+		sourceColumn: attestation
+
+		annotation SummarizationSetBy = Automatic
+
+	column fondement
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(100)
+		lineageTag: 62e02559-04f4-4dea-8626-1983cdfe168f
+		summarizeBy: none
+		sourceColumn: fondement
+
+		annotation SummarizationSetBy = Automatic
+
+	column texte
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(max)
+		lineageTag: b3d86957-7900-4080-bce3-c4d87ccdc70a
+		summarizeBy: none
+		sourceColumn: texte
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 82437c45-6597-452c-8993-ab411984e504
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle_court
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: 79795a7a-1596-42d7-b00b-ebfcb1f5c374
+		summarizeBy: none
+		sourceColumn: libelle_court
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_forme_rapport = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_forme_rapport = Value.NativeQuery(Source, "SELECT code, exemple, page_np, libelle, intitule, attestation, fondement, texte, ordre, CAST(CASE code WHEN 'COMPTE_RENDU_TRAVAUX' THEN N'Compte rendu de travaux' WHEN 'SANS_OBSERVATION' THEN N'Attestation sans observation' WHEN 'AVEC_OBSERVATION' THEN N'Attestation avec observation(s)' WHEN 'IMPOSSIBILITE' THEN N'Refus d’attester' ELSE libelle END AS NVARCHAR (300)) AS libelle_court FROM dbo.ref_forme_rapport", null, [EnableFolding = true])
+				in
+				    dbo_ref_forme_rapport
+

@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_ratio_arrete
 	lineageTag: a37eb736-4bb8-4b2a-9c0f-b765076b3909
 
@@ -242,6 +242,61 @@ table v_ratio_arrete
 		sourceColumn: calcul_a_valider
 
 		annotation SummarizationSetBy = Automatic
+
+	column denominateur_r214_89
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7c47b1de-86be-4dd4-8505-e35c4f363720
+		summarizeBy: sum
+		sourceColumn: denominateur_r214_89
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column participations_r214_85
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 8385783b-4253-43e3-8aef-8f03131916cc
+		summarizeBy: sum
+		sourceColumn: participations_r214_85
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column organismes_5_quote_part
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 3e178a51-f2fb-4886-accf-fd7360e22d5b
+		summarizeBy: sum
+		sourceColumn: organismes_5_quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column liquidites_r214_100
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 63592e17-7179-4d34-93ae-56ca992d38c5
+		summarizeBy: sum
+		sourceColumn: liquidites_r214_100
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column credit_bail_dettes
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 811a60b8-aa4d-4ccd-8fc9-59f6efb93b5b
+		summarizeBy: sum
+		sourceColumn: credit_bail_dettes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	partition v_ratio_arrete = m
 		mode: directQuery

@@ -1,0 +1,71 @@
+/// Les 4 familles d actifs, segment de l etape 2.
+table v_famille_actif
+	lineageTag: 43687f11-4b4a-4752-ba77-0931f55fe605
+
+	/// « <famille> du véhicule, actif par actif »
+	measure 'Titre detail de la famille' = VAR f = SELECTEDVALUE ( v_famille_actif[libelle] ) RETURN IF ( NOT ISBLANK ( f ), f & " du véhicule, actif par actif" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 2030a87a-c809-4f94-8c85-527b1a016e4f
+
+	column famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: 186d9114-8000-4350-aaae-77449b29fa9d
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(41)
+		lineageTag: 5e23c6a8-f0b4-41b5-8453-c1d754973ad8
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle_court
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(16)
+		lineageTag: f1b150a1-a987-4df4-bd08-6bfc5e2d6da3
+		summarizeBy: none
+		sourceColumn: libelle_court
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(5)
+		lineageTag: 0793169d-3f86-481a-b83f-d2d76e2aa50e
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isHidden
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 2b6fdc0a-a2b6-4b37-a09e-8606f179e6af
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_famille_actif = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_famille_actif = Source{[Schema="dbo",Item="v_famille_actif"]}[Data]
+				in
+				    dbo_v_famille_actif
+

@@ -12,3 +12,25 @@ CREATE TABLE [dbo].[porteur] (
 
 GO
 
+
+CREATE   TRIGGER dbo.tr_porteur_annexe_retard ON dbo.porteur
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT id, entite FROM inserted
+        EXCEPT SELECT id, entite FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT id, entite FROM deleted EXCEPT SELECT id, entite FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'porteur', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
+
+GO
+

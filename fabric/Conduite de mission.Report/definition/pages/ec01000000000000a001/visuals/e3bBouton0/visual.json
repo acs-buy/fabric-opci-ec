@@ -331,8 +331,25 @@
             },
             "webUrl": {
               "expr": {
-                "Literal": {
-                  "Value": "'https://app.powerbi.com/groups/3d36cceb-a461-4e21-a285-9e40297fe906/lakehouses/eceb5802-f9ae-4e0d-8237-b3b1586c992a'"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_ecran_pieces_du_dossier"
+                    }
+                  },
+                  "Property": "Adresse du dépôt du client selectionne"
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_ecran_pieces_du_dossier"
+                    }
+                  },
+                  "Property": "Infobulle e3bBouton0"
                 }
               }
             }

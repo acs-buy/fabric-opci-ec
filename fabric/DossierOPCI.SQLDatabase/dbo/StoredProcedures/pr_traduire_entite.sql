@@ -1,46 +1,60 @@
 
+-- pr_traduire_entite : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_traduire_entite
     @entite  VARCHAR (20),
     @a_blanc BIT = 1
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
-
-    SELECT compte_ecrit, ISNULL(comp_aux_num, N'(vide)') AS auxiliaire,
-           est_interne, compte_cible, COUNT(*) AS ecritures,
-           SUM(debit) AS debit, SUM(credit) AS credit
-    FROM dbo.v_ecriture_a_traduire
-    WHERE entite = @entite
-    GROUP BY compte_ecrit, comp_aux_num, est_interne, compte_cible
-    ORDER BY compte_ecrit, est_interne;
-
-    IF @a_blanc = 1
-    BEGIN
-        SELECT N'A BLANC, RIEN N''EST ECRIT' AS mode,
-               (SELECT COUNT(*) FROM dbo.v_ecriture_a_traduire
-                WHERE entite = @entite)              AS ecritures_a_traduire;
-        RETURN;
-    END;
-
-    BEGIN TRANSACTION;
+    SET XACT_ABORT ON;
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = SUSER_SNAME();
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
     BEGIN TRY
-        UPDATE e
-        SET compte_num = t.compte_cible,
-            compte_lib = LEFT(ISNULL(t.libelle_cible, e.compte_lib), 200)
-        FROM dbo.ecriture e
-        JOIN dbo.v_ecriture_a_traduire t ON t.ecriture_id = e.id
-        WHERE t.entite = @entite;
-
-        DECLARE @n INT = @@ROWCOUNT;
-        UPDATE dbo.ref_entite SET plan_propre_en_service = 1
-        WHERE code = @entite;
-        COMMIT TRANSACTION;
-
-        SELECT @n AS ecritures_traduites,
-               N'l''entité lit désormais son propre plan' AS lecture;
+    BEGIN TRANSACTION;
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(1 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
+    BEGIN
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
+    END;
+    -- 2. le corps d'origine
+    EXEC dbo.pr_traduire_entite_corps @entite = @entite, @a_blanc = @a_blanc;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1 AND ISNULL(@a_blanc, 0) = 0
+    BEGIN
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT @entite AS x, CAST(1 AS BIT) AS lecteurs) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
+        BEGIN
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
+        END;
+    END;
+    COMMIT;
     END TRY
     BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
         THROW;
     END CATCH;
 END;

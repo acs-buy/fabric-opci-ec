@@ -17,6 +17,9 @@
       "name": "bkEtat2b"
     },
     {
+      "name": "bkEtat2bRev"
+    },
+    {
       "name": "bkEtat2c"
     },
     {
@@ -29,10 +32,16 @@
       "name": "bkEtat3b"
     },
     {
+      "name": "bkEtat3c"
+    },
+    {
       "name": "bkEtat4"
     },
     {
       "name": "bkEtat5"
+    },
+    {
+      "name": "bkEtat5b"
     },
     {
       "name": "bkRev1"
@@ -51,6 +60,48 @@
     },
     {
       "name": "bkRev6"
+    },
+    {
+      "name": "bkArr1"
+    },
+    {
+      "name": "bkArr2"
+    },
+    {
+      "name": "bkArr3a"
+    },
+    {
+      "name": "bkArr3b"
+    },
+    {
+      "name": "bkArr4"
+    },
+    {
+      "name": "bkVal1a"
+    },
+    {
+      "name": "bkVal1b"
+    },
+    {
+      "name": "bkVal1c"
+    },
+    {
+      "name": "bkVal2"
+    },
+    {
+      "name": "bkVal3"
+    },
+    {
+      "name": "bkVal4"
+    },
+    {
+      "name": "bkVal5a"
+    },
+    {
+      "name": "bkVal5b"
+    },
+    {
+      "name": "bkVal5c"
     }
   ]
 }

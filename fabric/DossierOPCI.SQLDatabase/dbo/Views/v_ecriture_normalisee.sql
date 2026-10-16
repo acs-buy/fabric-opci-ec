@@ -1,4 +1,12 @@
 -- =====================================================================
+-- 307 : fn_compte_du_modele SORTIE DE L'APPEL LIGNE A LIGNE (15/10/2026)
+-- Genere par 61_DEPLOIEMENT/generer_compte_du_modele_en_jointure.py : ne pas modifier a la main.
+-- Etude de performance du 14/10/2026 rectifiee le 15/10/2026 (65_JOURNAL/performance_service_20261014.md) ; decision du
+-- candidat du 15/10/2026. 4 vues ; meme resultat, prouve ligne a ligne par essai_compte_du_modele_en_jointure.sql.
+-- A executer contre la BASE SQL Fabric DossierOPCI.
+-- =====================================================================
+
+-- =====================================================================
 -- LE SOCLE DE NORMALISATION DES ECRITURES, ET LE FILET QUI PROTEGE LA
 -- REPRISE DES 26 VUES.
 --
@@ -48,11 +56,17 @@ SELECT e.id                                   AS ecriture_id,
        e.debit, e.credit, e.ecriture_let, e.date_let, e.valid_date,
        e.montant_devise, e.id_devise, e.compte_origine, e.famille,
        -- LE COMPTE SUR LEQUEL UNE VUE DOIT RAISONNER.
-       dbo.fn_compte_du_modele(l.entite, e.compte_num) AS compte_num,
-       CAST(CASE WHEN dbo.fn_compte_du_modele(l.entite, e.compte_num)
+       cm.compte_modele AS compte_num,
+       CAST(CASE WHEN cm.compte_modele
                       <> e.compte_num THEN 1 ELSE 0 END AS BIT) AS traduit
 FROM dbo.ecriture e
 JOIN dbo.lot_ecritures l ON l.id = e.lot_id
+CROSS APPLY (SELECT CAST(CASE WHEN ISNULL((SELECT TOP (1) xe.plan_propre_en_service FROM dbo.ref_entite xe WHERE xe.code = l.entite), 0) = 0
+                              AND EXISTS (SELECT 1 FROM dbo.ref_compte xc WHERE xc.compte = e.compte_num)
+                         THEN e.compte_num
+                         ELSE ISNULL((SELECT TOP (1) xr.compte_modele FROM dbo.ref_compte_entite xr
+                                      WHERE xr.entite = l.entite AND xr.compte_entite = e.compte_num AND xr.compte_modele IS NOT NULL),
+                                     e.compte_num) END AS VARCHAR (20)) AS compte_modele) cm
 
 GO
 

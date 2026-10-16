@@ -1,0 +1,190 @@
+/// Syntheses de l actif net proposees au visa.
+table synthese_proposee
+	lineageTag: f84d0e1d-6075-4759-a523-06ec289082ab
+
+	/// la synthèse non périmée est visée (v_journal_visa, nature SYNTHESE)
+	measure 'Valorisation etape 5 faite' = VAR s = CALCULATE ( MAX ( synthese_proposee[propose_le] ), ISBLANK ( synthese_proposee[perime_le] ) ) VAR v = CALCULATE ( MAX ( v_ecran_visas_valorisation[decide_le] ), v_ecran_visas_valorisation[nature] = "SYNTHESE", v_ecran_visas_valorisation[decision] = "VISE" ) VAR r = CALCULATE ( MAX ( v_ecran_visas_valorisation[decide_le] ), v_ecran_visas_valorisation[nature] = "SYNTHESE", v_ecran_visas_valorisation[decision] = "RENVOYE" ) RETURN IF ( NOT ISBLANK ( s ) && NOT ISBLANK ( v ) && v >= s && ( ISBLANK ( r ) || r < v ), 1, 0 )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 8847bc14-4301-4753-aad2-91061844e3c2
+
+	/// idem, étape 5
+	measure 'Fond valorisation etape 5' = IF ( [Valorisation etape 5 faite] = 1, "#1F6D4A", "#D5DCE4" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e91b1038-2cb3-46cb-98fe-08d58b140cde
+
+	/// l’entité quand une synthèse non périmée attend son visa, vide sinon
+	measure 'Synthese a viser' = VAR s = CALCULATE ( MAX ( synthese_proposee[propose_le] ), ISBLANK ( synthese_proposee[perime_le] ) ) VAR last = CALCULATE ( MAX ( v_ecran_visas_valorisation[decide_le] ), v_ecran_visas_valorisation[nature] = "SYNTHESE" ) RETURN IF ( NOT ISBLANK ( s ) && ( ISBLANK ( last ) || last < s ), [Client selectionne] )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: a8c51a81-59cb-43f5-900c-b1ed900309e5
+
+	/// gris quand [Synthese a viser] ou A2 [Superviseur connecte SYNTHESE] est vide
+	measure 'Fond viser la synthese' = IF ( ISBLANK ( [Synthese a viser] ) || ISBLANK ( [Superviseur connecte SYNTHESE] ), "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 740cbd60-c503-4d53-8fae-e52e90bf3d85
+
+	/// « Aucune synthèse proposée pour cet arrêté » ; vide sinon
+	measure 'Absence de synthese' = IF ( ISBLANK ( CALCULATE ( MAX ( synthese_proposee[propose_le] ), ISBLANK ( synthese_proposee[perime_le] ) ) ), "Aucune synthèse proposée pour cet arrêté" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 554bd335-d6c6-45c5-82d9-34fb67c8e414
+
+	/// « visa réservé au chef de mission » quand A2 [Superviseur connecte SYNTHESE] est vide ; « aucune synthèse proposée » ; joints par « · » ; « conditions réunies » sinon
+	measure 'Blocage visa de la synthese' = VAR p1 = IF ( ISBLANK ( [Superviseur connecte SYNTHESE] ), "visa réservé au chef de mission" ) VAR j1 = p1 VAR p2 = IF ( ISBLANK ( [Synthese a viser] ), VAR dv = CALCULATE ( MAX ( v_ecran_visas_valorisation[decide_le] ), v_ecran_visas_valorisation[nature] = "SYNTHESE", v_ecran_visas_valorisation[decision] = "VISE" ) RETURN IF ( [Valorisation etape 5 faite] = 1 && NOT ISBLANK ( dv ), "synthèse visée le " & FORMAT ( dv, "dd/MM/yyyy" ), "aucune synthèse proposée" ) ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) RETURN IF ( j2 = "", "conditions réunies", j2 )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 3763823b-2d26-499e-b371-3839f4f683f0
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 33f8bc68-c82d-4f99-83f8-62f6c9f091a0
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 78694ffc-5305-42c3-a930-79b51c6e32d7
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 36f888a7-8553-43ec-bf7d-997bab40d7b6
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column actif_net_rationalise
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: d425c53e-da97-4bf7-8a9e-a8939259345c
+		summarizeBy: sum
+		sourceColumn: actif_net_rationalise
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column actif_net_calcule
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: aaff8208-ba15-4ca5-aadf-45d89b36b2cd
+		summarizeBy: sum
+		sourceColumn: actif_net_calcule
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ecart
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7e01464d-9111-4ef1-90cb-def62376037e
+		summarizeBy: sum
+		sourceColumn: ecart
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_liquidative
+		dataType: double
+		sourceProviderType: decimal(19, 4)
+		lineageTag: 95535244-d5ab-49c6-9cbc-88be677ac5f2
+		summarizeBy: sum
+		sourceColumn: valeur_liquidative
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column propose_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: e2f78548-58df-48c0-8376-655076c07ce5
+		summarizeBy: none
+		sourceColumn: propose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column propose_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 6e2e3ad4-e0a0-4680-bb6c-7af9c630be7b
+		summarizeBy: none
+		sourceColumn: propose_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 49d8369d-bf0d-4fff-b501-50469d144360
+		summarizeBy: none
+		sourceColumn: perime_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime_motif
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 80ecf2fd-3858-4a09-8db7-bb3576a12850
+		summarizeBy: none
+		sourceColumn: perime_motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 4187f8fa-1651-453a-866d-2e0c3d11a213
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 99da834a-ed7d-44c4-86f6-fb643a258688
+		summarizeBy: none
+		sourceColumn: message_ecran_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran_pour
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 4acc6466-e239-44d1-a396-74a6647b51c9
+		summarizeBy: none
+		sourceColumn: message_ecran_pour
+
+		annotation SummarizationSetBy = Automatic
+
+	partition synthese_proposee = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_synthese_proposee = Source{[Schema="dbo",Item="synthese_proposee"]}[Data]
+				in
+				    dbo_synthese_proposee
+

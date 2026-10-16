@@ -1,3 +1,5 @@
+
+-- pr_deposer_fichier_espace : 1 refus
 -- DEPOSER UN FICHIER DANS L'ESPACE SHAREPOINT D'UN VEHICULE, classe par entite legale.
 -- Regle du 28/09/2026 : tout fichier se depose dans SharePoint, et le coffre ne le
 -- voit que par un raccourci. Decision du meme jour : UN site pour un vehicule et ses filiales, les
@@ -60,7 +62,7 @@ BEGIN
     BEGIN
         DECLARE @m NVARCHAR (2000) = LEFT(N'Dépôt refusé, retour ' + CAST(@ret AS NVARCHAR (10)) + N' : '
               + ISNULL(JSON_VALUE(@corps, '$.message'), ISNULL(@reponse, N'aucune réponse')), 2000);
-        THROW 50957, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50957, @m, 1; END
     END
     SELECT JSON_VALUE(@corps, '$.web_url') AS web_url,
            JSON_VALUE(@corps, '$.entite_legale') AS entite_legale,

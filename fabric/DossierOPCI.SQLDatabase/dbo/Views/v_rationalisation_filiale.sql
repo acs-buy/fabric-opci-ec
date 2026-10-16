@@ -1,5 +1,4 @@
 
-
 -- --- 6 : E4-2b, la rationalisation par filiale ----------------------
 CREATE   VIEW dbo.v_rationalisation_filiale AS
 SELECT d.entite_fille                      AS filiale,
@@ -18,7 +17,8 @@ SELECT d.entite_fille                      AS filiale,
        CAST(COALESCE(f.actif_net_reevalue, 0) * d.quote_part
             AS DECIMAL (19,2))                    AS variation_calculee_b,
        CAST(COALESCE(itr.interets, 0) * d.quote_part AS DECIMAL (19,2))
-                                                  AS ecart_a_moins_b
+                                                  AS ecart_a_moins_b,
+       (SELECT o.ordre FROM dbo.v_ordre_entite o WHERE o.entite = d.entite_fille) AS ordre_filiale
 FROM dbo.detention d
 LEFT JOIN dbo.v_anr_filiale f ON f.entite = d.entite_fille
                              AND f.arrete = d.arrete

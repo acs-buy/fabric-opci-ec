@@ -335,6 +335,13 @@
                   "Value": "'bkEtat1b'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ouvre le formulaire de création d''un dossier.'"
+                }
+              }
             }
           }
         }

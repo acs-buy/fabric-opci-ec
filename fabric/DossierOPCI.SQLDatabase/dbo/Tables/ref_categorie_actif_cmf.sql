@@ -11,21 +11,6 @@ CREATE TABLE [dbo].[ref_categorie_actif_cmf] (
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_categorie_actif_cmf_garde]
-ON dbo.[ref_categorie_actif_cmf]
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF dbo.fn_peut_ecrire_referentiel('ref_categorie_actif_cmf',
-                                      SUSER_SNAME()) = 1 RETURN;
-    THROW 50074,
-        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
-        1;
-END;
-
-GO
-
 CREATE   TRIGGER dbo.[tr_ref_categorie_actif_cmf_horodatage]
 ON dbo.[ref_categorie_actif_cmf]
 AFTER UPDATE
@@ -40,6 +25,21 @@ BEGIN
     UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
     FROM dbo.[ref_categorie_actif_cmf] t
     JOIN inserted i ON t.[rang] = i.[rang];
+END;
+
+GO
+
+CREATE   TRIGGER dbo.[tr_ref_categorie_actif_cmf_garde]
+ON dbo.[ref_categorie_actif_cmf]
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF dbo.fn_peut_ecrire_referentiel('ref_categorie_actif_cmf',
+                                      SUSER_SNAME()) = 1 RETURN;
+    THROW 50074,
+        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
+        1;
 END;
 
 GO

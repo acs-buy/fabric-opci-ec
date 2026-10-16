@@ -1,5 +1,5 @@
 
-
+-- pr_importer_od : 5 refus
 -- LE CLASSEUR D'OD D'UNE QUESTION, OU DES OD LIBRES : ses lignes REMPLACENT le brouillon courant du meme
 -- perimetre. @lignes : [{"ligne":12,"journal":"ODR","compte":"213","libelle":"...","debit":100,"credit":0,"piece":"...","actif":"IMM-201"}]
 -- « ligne » est le numero de la ligne dans l'onglet, que la fonction releve avant d'ecarter une ligne.
@@ -49,7 +49,7 @@ BEGIN
         IF @qid IS NULL
         BEGIN
             SET @m = N'La question ' + @reference + N' n''est pas au programme de cet arrêté.';
-            THROW 50384, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50384, @m, 1; END
         END;
     END;
 
@@ -66,7 +66,7 @@ BEGIN
                    @m = LEFT(CASE WHEN @lg IS NOT NULL THEN N'Ligne ' + CAST(@lg AS NVARCHAR (10)) + N' du classeur : '
                                   ELSE N'Ligne ' + CAST(@i AS NVARCHAR (10)) + N' reçue : ' END + dbo.fn_sans_entete_ligne(ERROR_MESSAGE()), 2000);
             IF @num < 50000 THROW;
-            THROW @num, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW @num, @m, 1; END
         END CATCH;
         FETCH NEXT FROM c INTO @i, @lg, @j, @co, @d, @cr;
     END;
@@ -84,7 +84,7 @@ BEGIN
         IF @R IS NULL
         BEGIN
             SET @m = N'Réimport refusé : le classeur « ' + @fichier + N' » n''a ni dépôt ni réimport connu pour cet arrêté ; la date de son export n''est pas établie.';
-            THROW 50406, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50406, @m, 1; END
         END;
         -- la cle d'une ligne : compte, libelle sans espaces de bord, debit, credit, piece, actif
         DECLARE @cl TABLE (cle NVARCHAR (500));
@@ -111,7 +111,7 @@ BEGIN
                                              + saisi_par + ' ' + FORMAT(CAST((saisi_le AT TIME ZONE 'UTC') AT TIME ZONE 'Romance Standard Time' AS DATETIME2 (0)), 'dd/MM HH:mm') AS NVARCHAR (MAX)), N' ; ')
                       FROM @perdues)
                    + N'. Les reporter dans le classeur, ou les retirer à l''écran, puis réimporter.', 2000);
-            THROW 50405, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50405, @m, 1; END
         END;
         -- 2b. un retrait depuis R ne revient pas
         DECLARE @revenues TABLE (compte VARCHAR (20), libelle NVARCHAR (200), debit DECIMAL (19, 2), credit DECIMAL (19, 2), retire_par NVARCHAR (400), retire_le DATETIME2 (3));
@@ -129,7 +129,7 @@ BEGIN
                                              + retire_par + ' ' + FORMAT(CAST((retire_le AT TIME ZONE 'UTC') AT TIME ZONE 'Romance Standard Time' AS DATETIME2 (0)), 'dd/MM HH:mm') AS NVARCHAR (MAX)), N' ; ')
                       FROM @revenues)
                    + N'. Les supprimer du classeur, puis réimporter.', 2000);
-            THROW 50408, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50408, @m, 1; END
         END;
     END;
 

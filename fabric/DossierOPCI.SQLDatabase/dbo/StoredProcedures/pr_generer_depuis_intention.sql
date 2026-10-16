@@ -1,4 +1,5 @@
 
+-- pr_generer_depuis_intention : 4 refus
 -- --- 3 : generer le brouillon depuis une intention ---------------------
 -- Le brouillon existant est la seule porte d'entree d'un lot decide : la
 -- procedure ecrit dedans, puis pr_valider_brouillon fait le lot.
@@ -27,7 +28,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_generer_depuis_intention', NULL, NULL, NULL, @m0, @par);
-        THROW 50041, @m0, 1;
+        BEGIN SET @m0 = REPLACE(@m0, N'%', N'%%'); THROW 50041, @m0, 1; END
     END;
 
     -- B17 : une intention deja materialisee ne se regenere pas en silence.
@@ -42,7 +43,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_generer_depuis_intention', @entite, @arrete, @cote, @m1, @par);
-        THROW 50041, @m1, 1;
+        BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50041, @m1, 1; END
     END;
 
     -- Une cible deja atteinte ne produit aucune ecriture, et le dit.
@@ -54,7 +55,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_generer_depuis_intention', @entite, @arrete, @cote, @m2, @par);
-        THROW 50041, @m2, 1;
+        BEGIN SET @m2 = REPLACE(@m2, N'%', N'%%'); THROW 50041, @m2, 1; END
     END;
 
     BEGIN TRY
@@ -91,7 +92,7 @@ BEGIN
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_generer_depuis_intention', @entite, @arrete, @cote,
                 LEFT(ERROR_MESSAGE(), 2000), @par);
-        THROW 50041, @m3, 1;
+        BEGIN SET @m3 = REPLACE(@m3, N'%', N'%%'); THROW 50041, @m3, 1; END
     END CATCH;
 END;
 

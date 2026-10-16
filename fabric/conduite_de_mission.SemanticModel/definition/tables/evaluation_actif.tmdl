@@ -1,0 +1,252 @@
+/// Valeurs retenues par actif, entite detentrice et arrete. Aucune relation a ref_entite : l entite est la detentrice, filiale comprise.
+table evaluation_actif
+	lineageTag: 75778cc8-6bc0-410e-be78-6c50558e8c41
+
+	/// l’id de la valeur choisie quand elle est PROPOSE, vide sinon ; paramètre objetRef, couche fonctionnelle du gris
+	measure 'Evaluation a viser' = VAR c = [Evaluation choisie] VAR e = IF ( c <> "", CALCULATE ( MAX ( evaluation_actif[etat] ), FILTER ( ALL ( evaluation_actif ), evaluation_actif[id] = VALUE ( c ) ) ) ) RETURN IF ( e = "PROPOSE", c )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: cbe88a41-e0f0-4420-b9ef-7e771a7d73c8
+
+	/// gris quand [Evaluation a viser] ou A1 [Superviseur connecte EVALUATION] est vide
+	measure 'Fond viser la valeur' = IF ( ISBLANK ( [Evaluation a viser] ) || ISBLANK ( [Superviseur connecte EVALUATION] ), "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 7b13c4bd-342e-49d9-9d28-d48d537d75a0
+
+	/// valeur_retenue de la ligne de evaluation_actif de l’actif choisi à l’arrêté : VAR c = [Actif choisi], puis FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) ; vide sans ligne choisie
+	measure 'Montant de la valeur retenue' = FORMAT ( VAR c = [Actif choisi] VAR t = FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( evaluation_actif[valeur_retenue] ), t ) ), "#,0.00" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 2100654d-a444-46f4-9d02-d2d08b67dc4f
+
+	/// source de la ligne de evaluation_actif de l’actif choisi à l’arrêté : VAR c = [Actif choisi], puis FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ), puis LOOKUPVALUE ( ref_source_valeur[libelle], ref_source_valeur[source], source ) ; vide sans ligne choisie
+	measure 'Source de la valeur retenue' = ( VAR c = [Actif choisi] VAR t = FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) RETURN IF ( NOT ISBLANK ( c ), LOOKUPVALUE ( ref_source_valeur[libelle], ref_source_valeur[source], CALCULATE ( MAX ( evaluation_actif[source] ), t ) ) ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 9faaf5b0-a6ed-4dc1-bc05-76df4d96fb85
+
+	/// propose_par de la ligne de evaluation_actif de l’actif choisi à l’arrêté : VAR c = [Actif choisi], puis FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) ; vide sans ligne choisie
+	measure 'Proposee par de la valeur retenue' = ( VAR c = [Actif choisi] VAR t = FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( evaluation_actif[propose_par] ), t ) ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 27b96eb5-3447-48c9-b66d-01205a43ed1b
+
+	/// propose_le de la ligne de evaluation_actif de l’actif choisi à l’arrêté : VAR c = [Actif choisi], puis FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) ; vide sans ligne choisie
+	measure 'Proposee le de la valeur retenue' = FORMAT ( VAR c = [Actif choisi] VAR t = FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( evaluation_actif[propose_le] ), t ) ), "dd/MM/yyyy" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: d41526c3-dcfc-434e-bb0e-c3deab2fcff7
+
+	/// motif_ecart de la ligne de evaluation_actif de l’actif choisi à l’arrêté : VAR c = [Actif choisi], puis FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) ; vide sans ligne choisie
+	measure 'Motif de l ecart de la valeur retenue' = ( VAR c = [Actif choisi] VAR t = FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( evaluation_actif[motif_ecart] ), t ) ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: b586c715-a349-42b6-bdd8-7fc4564c736d
+
+	/// motif_renvoi de la ligne de evaluation_actif de l’actif choisi à l’arrêté : VAR c = [Actif choisi], puis FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) ; vide sans ligne choisie
+	measure 'Motif du renvoi de la valeur retenue' = ( VAR c = [Actif choisi] VAR t = FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( evaluation_actif[motif_renvoi] ), t ) ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: bed07eba-03c4-48f7-aee1-c47e61ae9266
+
+	/// « Aucun actif choisi » ; « aucune proposition : la valeur actuelle est celle de l’expertise » ; vide quand une valeur est proposée
+	measure 'Absence de valeur retenue de l actif' = IF ( ISBLANK ( [Actif choisi] ), "Aucun actif choisi", IF ( [Montant de la valeur retenue] = "", "aucune proposition : la valeur actuelle est celle de l’expertise" ) ) & ""
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: a58213a1-e987-4a32-86e6-404466b1b1b9
+
+	/// « renvoyée par x le jj/mm/aaaa », « visée par x le jj/mm/aaaa », « proposée, en attente du visa »
+	measure 'Etat de la valeur retenue' = VAR c = [Actif choisi] VAR t = FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) VAR e = CALCULATE ( MAX ( evaluation_actif[etat] ), t ) VAR p = CALCULATE ( MAX ( evaluation_actif[vise_par] ), t ) VAR d = CALCULATE ( MAX ( evaluation_actif[vise_le] ), t ) RETURN SWITCH ( e, "RENVOYE", "renvoyée par " & p & " le " & FORMAT ( d, "dd/MM/yyyy" ), "VISE", "visée par " & p & " le " & FORMAT ( d, "dd/MM/yyyy" ), "PROPOSE", "proposée, en attente du visa" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: a3e73e1a-79ef-40f5-9f20-dc0317131fb0
+
+	/// « montant, renvoyée par x, le jj/mm/aaaa », « montant, visée … », « montant, proposée … » ; « aucune »
+	measure 'Valeur retenue et son etat' = VAR c = [Actif choisi] VAR t = FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) VAR m = CALCULATE ( SUM ( evaluation_actif[valeur_retenue] ), t ) VAR e = CALCULATE ( MAX ( evaluation_actif[etat] ), t ) VAR vp = CALCULATE ( MAX ( evaluation_actif[vise_par] ), t ) VAR vl = CALCULATE ( MAX ( evaluation_actif[vise_le] ), t ) VAR pp = CALCULATE ( MAX ( evaluation_actif[propose_par] ), t ) VAR pl = CALCULATE ( MAX ( evaluation_actif[propose_le] ), t ) RETURN IF ( ISBLANK ( m ), "aucune", FORMAT ( m, "#,0.00" ) & ", " & SWITCH ( e, "RENVOYE", "renvoyée par " & vp & ", le " & FORMAT ( vl, "dd/MM/yyyy" ), "VISE", "visée par " & vp & ", le " & FORMAT ( vl, "dd/MM/yyyy" ), "proposée par " & pp & ", le " & FORMAT ( pl, "dd/MM/yyyy" ) ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 78141f60-7b18-43c6-8773-8780bfc5b630
+
+	/// « visa réservé au chef de mission » quand A1 [Superviseur connecte EVALUATION] est vide ; « aucune valeur retenue choisie », « aucune valeur proposée sur cet actif », « valeur renvoyée le jj/mm/aaaa », « valeur visée le jj/mm/aaaa » ; joints par « · » ; « conditions réunies » sinon
+	measure 'Blocage du visa de la valeur' = VAR c = [Actif choisi] VAR t = FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) VAR e = CALCULATE ( MAX ( evaluation_actif[etat] ), t ) VAR vl = CALCULATE ( MAX ( evaluation_actif[vise_le] ), t ) VAR p1 = IF ( ISBLANK ( [Superviseur connecte EVALUATION] ), "visa réservé au chef de mission" ) VAR j1 = p1 VAR p2 = IF ( ISBLANK ( c ), "aucune valeur retenue choisie", IF ( ISBLANK ( e ), "aucune valeur proposée sur cet actif" ) ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) VAR p3 = SWITCH ( e, "RENVOYE", "valeur renvoyée le " & FORMAT ( vl, "dd/MM/yyyy" ), "VISE", "valeur visée le " & FORMAT ( vl, "dd/MM/yyyy" ) ) VAR j3 = IF ( j2 <> "" && p3 <> "", j2 & " · " & p3, j2 & p3 ) RETURN IF ( j3 = "", "conditions réunies", j3 )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: fcc9c119-44a8-4879-9114-849cde0fc8eb
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 5d49413c-e3f9-4060-bc1a-be795d315ab6
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: c1b06cbf-aabd-41ab-84cf-67402cddc7e1
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 020827eb-a284-4727-ad65-58ef1e6db5ea
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: f5d667c9-c275-4094-86d3-56b23b69a178
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_retenue
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7cd9e597-0f72-40cf-bd13-15d54e84d40e
+		summarizeBy: sum
+		sourceColumn: valeur_retenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 08c77a23-feec-4438-ae1c-7b2bdfd16074
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column expertise_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: bdddb8f5-54f1-401b-8b2e-9a8914ec4bcb
+		summarizeBy: none
+		sourceColumn: expertise_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_ecart
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 9b42bb59-b40b-430e-9e53-44b05fc85aba
+		summarizeBy: none
+		sourceColumn: motif_ecart
+
+		annotation SummarizationSetBy = Automatic
+
+	column propose_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 2b1af2bb-fa9e-48d3-80b8-7fad7cd3b64f
+		summarizeBy: none
+		sourceColumn: propose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column propose_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 5eafc9b9-6114-4a11-aa23-072b20889e85
+		summarizeBy: none
+		sourceColumn: propose_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 2c136c94-93b6-43b3-a098-75595ebe38f2
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column vise_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 6288e5c0-4064-4f05-880b-692e6268126a
+		summarizeBy: none
+		sourceColumn: vise_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column vise_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 2a7cc3ff-25e1-43d6-b631-8c1c2acc8061
+		summarizeBy: none
+		sourceColumn: vise_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_renvoi
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: b2b26b34-f698-43d0-90ae-05176933af51
+		summarizeBy: none
+		sourceColumn: motif_renvoi
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 4118a92e-3a50-451e-9462-ad59fa30473b
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: dc1c4421-8cb3-4a23-86e7-8c326cc0b2a6
+		summarizeBy: none
+		sourceColumn: message_ecran_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran_pour
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: d6476509-bb02-4c86-bd8e-456cf523e2a6
+		summarizeBy: none
+		sourceColumn: message_ecran_pour
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 7efdc625-628f-4e43-a375-a819f516565e
+		summarizeBy: none
+		sourceColumn: piece_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition evaluation_actif = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_evaluation_actif = Source{[Schema="dbo",Item="evaluation_actif"]}[Data]
+				in
+				    dbo_evaluation_actif
+

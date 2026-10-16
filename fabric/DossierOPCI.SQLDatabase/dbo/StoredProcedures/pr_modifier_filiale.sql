@@ -1,52 +1,67 @@
 
+-- pr_modifier_filiale : l'enveloppe (regle unique, lot B2, enveloppe)
 CREATE   PROCEDURE dbo.pr_modifier_filiale
     @client         VARCHAR (20),
     @code           VARCHAR (20),
     @denomination   NVARCHAR (400) = NULL,   -- vide = inchange
     @forme_sociale  VARCHAR (10)   = NULL,   -- vide = inchange
     @droits_de_vote DECIMAL (9, 6) = NULL,   -- vide = inchange
-    @par            NVARCHAR (400)
+    @par            NVARCHAR (400),
+    @controlee      BIT            = NULL    -- vide = inchange ; classement R. 214-83
+    , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    IF NOT EXISTS (SELECT 1 FROM dbo.eligibilite_participation WHERE entite_mere = @client AND entite_fille = @code)
-        THROW 50216, N'Cette entité n''est pas une filiale de ce client. Le code d''une filiale ne se modifie pas.', 1;
-    IF @droits_de_vote IS NOT NULL AND (@droits_de_vote <= 0 OR @droits_de_vote > 1)
-        THROW 50213, N'Les droits de vote se donnent entre 0 et 1, par exemple 0,80 pour 80 %.', 1;
-    SET @denomination = NULLIF(LTRIM(RTRIM(@denomination)), N'');
-    SET @forme_sociale = NULLIF(LTRIM(RTRIM(@forme_sociale)), '');
-    IF @denomination IS NULL AND @forme_sociale IS NULL AND @droits_de_vote IS NULL
-        THROW 50217, N'Rien à modifier : renseignez au moins un champ.', 1;
-
-    DECLARE @detail NVARCHAR (800) = N'';
+    DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
+            @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @par;
+    DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule
+    DECLARE @ann_j TABLE (id INT, procedure_nom VARCHAR (MAX), entite VARCHAR (MAX), arrete VARCHAR (MAX), cote VARCHAR (MAX), message NVARCHAR (MAX),
+                          refuse_pour NVARCHAR (MAX), refuse_le DATETIME2, question_reference VARCHAR (MAX), geste NVARCHAR (MAX));
     BEGIN TRY
     BEGIN TRANSACTION;
-    IF @denomination IS NOT NULL OR @forme_sociale IS NOT NULL
+    -- 1. les vehicules que l'ecriture touche, verrouilles dans l'ordre binaire avant toute garde
+    INSERT INTO @ann_v (entite)
+    SELECT DISTINCT v.entite FROM (SELECT @client AS x, CAST(0 AS BIT) AS lecteurs UNION ALL SELECT @code, CAST(1 AS BIT)) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v;
+    WHILE 1 = 1
     BEGIN
-        UPDATE e SET denomination = COALESCE(@denomination, e.denomination),
-                     forme_sociale = COALESCE(@forme_sociale, e.forme_sociale),
-                     modifie_par = @par, modifie_le = SYSUTCDATETIME()
-          FROM dbo.ref_entite e WHERE e.code = @code;
-        SET @detail += CASE WHEN @denomination IS NOT NULL THEN N'dénomination → ' + @denomination + N' ; ' ELSE N'' END
-                     + CASE WHEN @forme_sociale IS NOT NULL THEN N'forme → ' + @forme_sociale + N' ; ' ELSE N'' END;
+        SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou = 0 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+        IF @ann_e IS NULL BREAK;
+        EXEC dbo.pr_ann_verrou @entite = @ann_e;
+        UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
     END;
-    IF @droits_de_vote IS NOT NULL
+    -- 2. le corps d'origine
+    EXEC dbo.pr_modifier_filiale_corps @client = @client, @code = @code, @denomination = @denomination, @forme_sociale = @forme_sociale, @droits_de_vote = @droits_de_vote, @par = @par, @controlee = @controlee;
+    -- 3. un calcul par vehicule, par la procedure la plus externe
+    IF @calculer = 1
     BEGIN
-        UPDATE dbo.eligibilite_participation SET droits_de_vote = @droits_de_vote, qualifie_par = @par, qualifie_le = SYSUTCDATETIME()
-         WHERE entite_mere = @client AND entite_fille = @code;
-        SET @detail += N'droits de vote → ' + FORMAT(@droits_de_vote, 'P2', 'fr-FR') + N' ; ';
+        INSERT INTO @ann_v (entite)
+        SELECT DISTINCT v.entite FROM (SELECT @client AS x, CAST(0 AS BIT) AS lecteurs UNION ALL SELECT @code, CAST(1 AS BIT)) e CROSS APPLY dbo.fn_ann_vehicules(e.x, e.lecteurs, NULL) v
+        WHERE NOT EXISTS (SELECT 1 FROM @ann_v w WHERE w.entite = v.entite);
+        WHILE 1 = 1
+        BEGIN
+            SET @ann_e = (SELECT TOP (1) entite FROM @ann_v WHERE verrou < 2 ORDER BY CAST(entite AS NVARCHAR (20)) COLLATE Latin1_General_100_BIN2);
+            IF @ann_e IS NULL BREAK;
+            EXEC dbo.pr_ann_verrou @entite = @ann_e;
+            EXEC dbo.pr_calculer_annexe @entite = @ann_e, @arrete = NULL, @declencheur = 'SOURCE', @par = @ann_par, @rendre = 0;
+            UPDATE @ann_v SET verrou = 2 WHERE entite = @ann_e;
+        END;
     END;
-    INSERT INTO dbo.journal_perimetre (entite_mere, entite_fille, action, detail, fait_par)
-    VALUES (@client, @code, 'MODIFICATION', LEFT(@detail, 800), @par);
     COMMIT;
     END TRY
     BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
+        IF @ann_tc = 0 AND @@TRANCOUNT > 0
+        BEGIN
+            -- appel direct : les lignes de journal que le corps a ecrites avant son refus survivent a l'annulation
+            INSERT INTO @ann_j SELECT id, procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste
+            FROM dbo.journal_refus WHERE id > @ann_journal;
+            ROLLBACK TRANSACTION;
+            INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste)
+            SELECT procedure_nom, entite, arrete, cote, message, refuse_pour, refuse_le, question_reference, geste FROM @ann_j j
+            WHERE NOT EXISTS (SELECT 1 FROM dbo.journal_refus r WHERE r.id = j.id) ORDER BY j.id;
+        END;
         THROW;
     END CATCH;
-
-    SELECT @code AS filiale, N'Filiale ' + @code + N' mise à jour : ' + LEFT(@detail, LEN(@detail) - 2) + N'.' AS message;
 END;
 
 GO

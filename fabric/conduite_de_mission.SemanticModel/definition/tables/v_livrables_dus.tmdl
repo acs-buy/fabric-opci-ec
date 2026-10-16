@@ -204,6 +204,16 @@ table v_livrables_dus
 
 		annotation SummarizationSetBy = Automatic
 
+	column produit_a_l_etape_6
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 1dd189f7-cda4-4dae-bceb-f91aa8829e87
+		summarizeBy: none
+		sourceColumn: produit_a_l_etape_6
+
+		annotation SummarizationSetBy = Automatic
+
 	partition v_livrables_dus = m
 		mode: directQuery
 		source =

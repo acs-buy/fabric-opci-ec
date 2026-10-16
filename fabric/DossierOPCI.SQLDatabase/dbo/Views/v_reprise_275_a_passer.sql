@@ -34,10 +34,16 @@ comptabilise AS (
     SELECT l.entite, l.arrete,
            SUM(CASE WHEN e.compte_num LIKE '254%' AND l.famille <> 'DERIVABLE'
                     THEN e.debit - e.credit ELSE 0 END) AS titres_254,
-           SUM(CASE WHEN e.compte_num LIKE '275%' AND l.famille = 'DERIVABLE'
+           -- 10/10/2026 : le 275 des seuls titres de filiales (sans axe, ou axe d'un titre de filiale)
+           SUM(CASE WHEN e.compte_num LIKE '275%' AND l.famille = 'DERIVABLE' AND k.titre_filiale = 1
                     THEN e.debit - e.credit ELSE 0 END) AS ecart_275
     FROM dbo.v_ecriture_normalisee e
     JOIN dbo.lot_ecritures l ON l.id = e.lot_id
+    -- une somme n'admet pas de sous-requete : l'indicateur d'axe se calcule ligne par ligne
+    CROSS APPLY (SELECT CASE WHEN NOT EXISTS (SELECT 1 FROM dbo.ecriture_axe x WHERE x.ecriture_id = e.ecriture_id)
+                               OR EXISTS (SELECT 1 FROM dbo.ecriture_axe x JOIN dbo.actif ax ON ax.code = x.code_actif
+                                          WHERE x.ecriture_id = e.ecriture_id AND ax.nature = 'TITRES_ENTITE_IMMOBILIERE')
+                             THEN 1 ELSE 0 END AS titre_filiale) k
     WHERE l.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')
     GROUP BY l.entite, l.arrete
 )

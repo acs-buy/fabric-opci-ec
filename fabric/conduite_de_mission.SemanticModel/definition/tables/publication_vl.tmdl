@@ -1,0 +1,152 @@
+/// Les valeurs liquidatives publiees.
+table publication_vl
+	lineageTag: 8083646f-e922-4995-b90f-db9608b5faac
+
+	/// « par x, le jj/mm/aaaa » de la dernière publication
+	measure 'VL publiee par le' = VAR t = TOPN ( 1, publication_vl, publication_vl[publie_le], DESC ) RETURN MAXX ( t, "par " & publication_vl[publie_par] & ", le " & FORMAT ( publication_vl[publie_le], "dd/MM/yyyy" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 47478f2b-788f-4610-b3a1-2b409465c6e7
+
+	/// alerte quand la VL publiée diffère de [R41 Valeur liquidative] (fiche de la VL)
+	measure 'Couleur ecart publiee' = VAR p = [VL publiee de la ligne] VAR v = [R41 Valeur liquidative] RETURN IF ( NOT ISBLANK ( p ) && NOT ISBLANK ( v ) && ROUND ( p - v, 2 ) <> 0, "#9A2A2A", "#12233C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 124feecc-7e29-4f52-9ada-9cc4690d3cba
+
+	/// VL publiée moins [R41 Valeur liquidative], « + x » à la française ; vide sans publication ou sans valeur calculée (carte collée, & "")
+	measure 'Ecart publiee moins calculee' = VAR p = [VL publiee de la ligne] VAR v = [R41 Valeur liquidative] RETURN IF ( ISBLANK ( p ) || ISBLANK ( v ), "", IF ( ROUND ( ( p - v ), 2 ) < 0, "-" & FORMAT ( ABS ( ( p - v ) ), "#,0.00" ), IF ( ROUND ( ( p - v ), 2 ) > 0, "+ " & FORMAT ( ( p - v ), "#,0.00" ), "0,00" ) ) ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: c71496df-28c7-4688-ab86-26d70590508d
+
+	/// jj/mm/aaaa de la publication de l’arrêté de la ligne
+	measure 'Publiee le de la ligne' = VAR a2 = COALESCE ( SELECTEDVALUE ( v_valeur_liquidative[arrete] ), [Arrete selectionne] ) VAR e = [Client selectionne] RETURN FORMAT ( MAXX ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && publication_vl[arrete] = a2 && ISBLANK ( publication_vl[perimee_le] ) ), publication_vl[publie_le] ), "dd/MM/yyyy" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 2946092b-f490-47c8-9a92-ee509fd74ccf
+
+	/// la VL publiée de l’arrêté de la ligne (VAR a puis FILTER ALL), la grille ne joignant pas 2 tables côté plusieurs
+	measure 'VL publiee de la ligne' = VAR a2 = COALESCE ( SELECTEDVALUE ( v_valeur_liquidative[arrete] ), [Arrete selectionne] ) VAR e = [Client selectionne] RETURN MAXX ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && publication_vl[arrete] = a2 && ISBLANK ( publication_vl[perimee_le] ) ), publication_vl[valeur_liquidative] )
+		formatString: #,0.00
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 647419fd-468b-4918-8917-cfd30cb0ac19
+
+	/// vert quand [Arrete etape 2 faite] vaut 1, gris sinon
+	measure 'Fond arrete etape 2' = IF ( [Arrete etape 2 faite] = 1, "#1F6D4A", "#D5DCE4" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: bfb5bd6e-c1b9-4347-bcb4-af068c78efcd
+
+	/// 1 quand l’arrêté porte une publication non périmée (perimee_le vide) ; 0 sinon, après une réouverture comprise
+	measure 'Arrete etape 2 faite' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] RETURN IF ( COUNTROWS ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && publication_vl[arrete] = a && ISBLANK ( publication_vl[perimee_le] ) ) ) > 0, 1, 0 )
+		formatString: 0
+		displayFolder: Ecran 4 Arrete
+		lineageTag: a0546364-c7fb-4c93-a88d-7af6057cb0e2
+
+	/// alerte quand la VL publiée diffère de la calculée (carte 3)
+	measure 'Encre VL publiee' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR p = MAXX ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && publication_vl[arrete] = a && ISBLANK ( publication_vl[perimee_le] ) ), publication_vl[valeur_liquidative] ) VAR v = [R41 Valeur liquidative] RETURN IF ( NOT ISBLANK ( p ) && NOT ISBLANK ( v ) && ROUND ( p - v, 2 ) <> 0, "#9A2A2A", "#12233C" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 6be8579f-9187-4129-b16a-8eb01abc9915
+
+	/// « le jj/mm/aaaa · écart x sur la calculée » ; « le jj/mm/aaaa » sans valeur calculée ; « aucune publication à l’arrêté » (carte 3, ligne « Publication à l’arrêté » de l’étape 2)
+	measure 'Sous-ligne VL publiee' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && publication_vl[arrete] = a && ISBLANK ( publication_vl[perimee_le] ) ) VAR p = MAXX ( t, publication_vl[valeur_liquidative] ) VAR d = MAXX ( t, publication_vl[publie_le] ) VAR v = [R41 Valeur liquidative] RETURN IF ( ISBLANK ( d ), "aucune publication à l’arrêté", "le " & FORMAT ( d, "dd/MM/yyyy" ) & IF ( ISBLANK ( v ), "", " · écart " & IF ( ROUND ( ( p - v ), 2 ) < 0, "-" & FORMAT ( ABS ( ( p - v ) ), "#,0.00" ), IF ( ROUND ( ( p - v ), 2 ) > 0, "+ " & FORMAT ( ( p - v ), "#,0.00" ), "0,00" ) ) & " sur la calculée" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: da5aa2cd-bf43-46cf-8ac2-0a671438f690
+
+	/// la VL de la publication non périmée de l’arrêté (perimee_le vide) ; « aucune » (carte 3)
+	measure 'VL publiee de l arrete' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR p = MAXX ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && publication_vl[arrete] = a && ISBLANK ( publication_vl[perimee_le] ) ), publication_vl[valeur_liquidative] ) RETURN IF ( ISBLANK ( p ), "aucune", FORMAT ( p, "#,0.00" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 67e061e4-1fb9-4f8e-afde-432e97a4d376
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f6a31a81-9075-4fa9-bcfa-9283f52497f4
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ecab0b1c-dd17-48f8-b5f5-ba8700d210fb
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 175dcfed-5ddc-4fbd-a8b1-275b9e5df584
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_liquidative
+		dataType: double
+		isNullable: false
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 1e8e96d3-c1b6-49d6-aff0-caccbbfd7008
+		summarizeBy: sum
+		sourceColumn: valeur_liquidative
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column nombre_parts
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 4)
+		lineageTag: a87ad5f4-7b19-462e-8a12-ff842fb64038
+		summarizeBy: sum
+		sourceColumn: nombre_parts
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column publie_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 9f57eab1-1f28-44eb-a4c1-a0119ec03b47
+		summarizeBy: none
+		sourceColumn: publie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column publie_le
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 5e045959-d1ca-42a0-b0ea-9f43a1f80ab9
+		summarizeBy: none
+		sourceColumn: publie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column perimee_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 89c931f9-594c-48e2-b79b-3636dba5e890
+		summarizeBy: none
+		sourceColumn: perimee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition publication_vl = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_publication_vl = Value.NativeQuery(Source, "SELECT id, entite, arrete, valeur_liquidative, nombre_parts, publie_par, DATETIME2FROMPARTS(YEAR(publie_le), MONTH(publie_le), DAY(publie_le), DATEPART(HOUR, publie_le), DATEPART(MINUTE, publie_le), DATEPART(SECOND, publie_le), 0, 0) AS publie_le, DATETIME2FROMPARTS(YEAR(perimee_le), MONTH(perimee_le), DAY(perimee_le), DATEPART(HOUR, perimee_le), DATEPART(MINUTE, perimee_le), DATEPART(SECOND, perimee_le), 0, 0) AS perimee_le FROM dbo.publication_vl", null, [EnableFolding = true])
+				in
+				    dbo_publication_vl
+

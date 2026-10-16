@@ -1,8 +1,8 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_ecran_equipe_mission
 	lineageTag: bf82b2e4-a9c3-443d-b9fa-0fbb25f797e5
 
-	measure 'Est equipe du client courant' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_equipe_mission ) ) RETURN IF ( SELECTEDVALUE ( v_ecran_equipe_mission[entite] ) = c, 1 )
+	measure 'Est equipe du client courant' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_equipe_mission ) ) RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( v_ecran_equipe_mission, v_ecran_equipe_mission[entite] = c ) ), 1 )
 		formatString: 0
 
 	measure 'Role selectionne' = SELECTEDVALUE ( v_ecran_equipe_mission[role_code] )

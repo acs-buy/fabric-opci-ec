@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_perimetre_groupe
 	lineageTag: 3e548577-1760-4327-97b6-07c0ad9e8eb7
 
@@ -25,12 +25,12 @@ table v_perimetre_groupe
 		displayFolder: Ecran 1 Client
 		lineageTag: dbe72ec2-be68-42d1-8cb4-d39913981321
 
-	measure 'Quote-part détenue' = VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( c <> TRUE (), CALCULATE ( MAX ( v_perimetre_groupe[quote_part] ) ) )
+	measure 'Quote-part détenue' = IF ( ISINSCOPE ( liste_clients[Entité] ), IF ( NOT ( SELECTEDVALUE ( liste_clients[est_vehicule] ) = TRUE () ), MAX ( liste_clients[quote_part] ) ), VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( c <> TRUE (), CALCULATE ( MAX ( v_perimetre_groupe[quote_part] ) ) ) )
 		formatString: 0.00%
 		displayFolder: Ecran 1 Client
 		lineageTag: 040ee993-896c-4d61-a813-972a98ec9bfe
 
-	measure 'Filiales du client' = VAR c = [Client selectionne] RETURN CALCULATE ( COUNTROWS ( v_perimetre_groupe ), FILTER ( ALL ( v_perimetre_groupe ), v_perimetre_groupe[Client] = c && v_perimetre_groupe[est_vehicule] = FALSE () ) )
+	measure 'Filiales du client' = VAR c = [Client selectionne] RETURN CALCULATE ( COUNTROWS ( v_perimetre_groupe ), REMOVEFILTERS ( liste_clients ), FILTER ( ALL ( v_perimetre_groupe ), v_perimetre_groupe[Client] = c && v_perimetre_groupe[est_vehicule] = FALSE () ) )
 		formatString: #,0
 		displayFolder: Ecran 1 Client
 		lineageTag: 5a1cb32e-8327-4ae5-a3b2-73e33718147d

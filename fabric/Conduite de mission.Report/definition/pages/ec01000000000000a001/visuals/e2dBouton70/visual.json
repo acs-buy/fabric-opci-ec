@@ -3,7 +3,7 @@
   "name": "e2dBouton70",
   "position": {
     "x": 920,
-    "y": 724,
+    "y": 783,
     "z": 55700,
     "height": 36,
     "width": 210,
@@ -457,7 +457,7 @@
                     {
                       "name": "client",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -476,7 +476,7 @@
                     {
                       "name": "code",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -493,6 +493,18 @@
                       }
                     }
                   ]
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ref_entite"
+                    }
+                  },
+                  "Property": "Infobulle e2dBouton70"
                 }
               }
             }

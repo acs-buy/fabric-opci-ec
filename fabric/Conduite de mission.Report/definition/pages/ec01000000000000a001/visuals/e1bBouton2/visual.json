@@ -457,32 +457,20 @@
                     {
                       "name": "chemin",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "e1bSaisie15",
                       "autoClear": false
-                    },
-                    {
-                      "name": "client",
-                      "dataType": "string",
-                      "isOptional": true,
-                      "defaultValue": null,
-                      "type": "ValueParameter",
-                      "value": {
-                        "expr": {
-                          "Measure": {
-                            "Expression": {
-                              "SourceRef": {
-                                "Entity": "ref_entite"
-                              }
-                            },
-                            "Property": "Client selectionne"
-                          }
-                        }
-                      }
                     }
                   ]
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Crée le dossier depuis le classeur Client déposé dans « Dossiers de travail ».'"
                 }
               }
             }

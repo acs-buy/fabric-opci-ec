@@ -17,13 +17,14 @@ table ref_entite
 		displayFolder: Le dossier
 		lineageTag: 1e0cb6c9-bb29-4d8f-9be8-c708ecefa71e
 
-	/// Carte 1. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 1.
 	measure 'Clients du cabinet' = CALCULATE ( COUNTROWS ( ref_entite ), ref_entite[est_client] = TRUE () )
 		formatString: #,0
 		displayFolder: Ecran 1 Client
 		lineageTag: dc627918-582a-4cbf-9d06-ef66154ec660
 
-	measure 'Client selectionne' = VAR choisi = IF ( HASONEVALUE ( ref_entite[Entité] ) && SELECTEDVALUE ( ref_entite[est_client] ) = TRUE (), SELECTEDVALUE ( ref_entite[Entité] ) ) VAR dernier = MAXX ( TOPN ( 1, FILTER ( ALL ( ref_entite ), ref_entite[est_client] = TRUE () ), ref_entite[cree_le], DESC, ref_entite[Entité], ASC ), ref_entite[Entité] ) RETURN IF ( NOT ISBLANK ( choisi ), choisi, dernier )
+	/// Le client sur lequel l'écran agit : la ligne choisie dans la liste, le véhicule qui détient la filiale choisie, sinon le dernier client créé.
+	measure 'Client selectionne' = VAR une = HASONEVALUE ( ref_entite[Entité] ) VAR e = IF ( une, SELECTEDVALUE ( ref_entite[Entité] ) ) VAR estc = SELECTEDVALUE ( ref_entite[est_client] ) = TRUE () VAR meres = CALCULATETABLE ( DISTINCT ( v_perimetre_groupe[Client] ), FILTER ( ALL ( v_perimetre_groupe ), v_perimetre_groupe[entite] = e && v_perimetre_groupe[est_vehicule] = FALSE () ) ) VAR mere = IF ( COUNTROWS ( meres ) = 1, MAXX ( meres, v_perimetre_groupe[Client] ) ) VAR dernier = MAXX ( TOPN ( 1, FILTER ( ALL ( ref_entite ), ref_entite[est_client] = TRUE () ), ref_entite[cree_le], DESC, ref_entite[Entité], ASC ), ref_entite[Entité] ) RETURN IF ( une && estc, e, IF ( une, mere, dernier ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: 6b4e330e-c713-4887-9165-58ff6d88d837
 
@@ -123,11 +124,11 @@ table ref_entite
 		displayFolder: Ecran 1 Client
 		lineageTag: 76be0f9f-a956-452a-a502-636622d41ff1
 
-	measure 'Est un client' = IF ( SELECTEDVALUE ( ref_entite[est_client] ) = TRUE (), "oui", "non" )
+	measure 'Est un client' = IF ( ISINSCOPE ( liste_clients[Entité] ), IF ( SELECTEDVALUE ( liste_clients[est_vehicule] ) = TRUE (), "oui", "non" ), IF ( SELECTEDVALUE ( ref_entite[est_client] ) = TRUE (), "oui", "non" ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: 5c58674f-8cd6-47a8-80d2-ed760b1f7f6d
 
-	/// Carte fond de la ligne d'un client dans la liste. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte fond de la ligne d'un client dans la liste.
 	measure 'Fond ligne entite' = IF ( [Est un client] = "oui", "#F4F8FC", "#FFFFFF" )
 		displayFolder: Ecran 1 Client
 		lineageTag: c618702f-1ac4-47c4-b914-1ca87abc01a0
@@ -140,17 +141,17 @@ table ref_entite
 		displayFolder: Ecran 1 Client
 		lineageTag: 124b045a-50cc-4c07-b2dd-c18535fa3324
 
-	/// Carte titre du formulaire de creation. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte titre du formulaire de creation.
 	measure 'En-tête étape 1b' = "Nouveau dossier client"
 		displayFolder: Ecran 1 Client
 		lineageTag: 36578599-c8e3-4bba-87dd-a831dbc67027
 
-	/// Carte titre du formulaire de modification. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte titre du formulaire de modification.
 	measure 'En-tête étape 1c' = "Modifier " & [Client selectionne] & " · un champ laissé vide reste inchangé"
 		displayFolder: Ecran 1 Client
 		lineageTag: bcc9fa98-0112-491d-86de-8662019d25d0
 
-	/// Carte Identite, FORME. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte Identite, FORME.
 	measure 'Forme du client' = VAR c = [Client selectionne] RETURN CALCULATE ( SELECTEDVALUE ( ref_entite[forme_vehicule] ) & " · " & SELECTEDVALUE ( ref_entite[forme_sociale] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: f8c91bd0-2968-457d-805b-88743ac9c4e7
@@ -270,6 +271,312 @@ table ref_entite
 	measure 'Ref cycle' = IF ( NOT ISBLANK ( [Cycle selectionne] ), [Entite selectionnee] & "|" & [Arrete selectionne] & "|" & [Cycle selectionne] )
 
 	measure 'Ref revue' = IF ( NOT ISBLANK ( [Arrete selectionne] ), [Entite selectionnee] & "|" & [Arrete selectionne] )
+
+	/// Le client choisi dans le sélecteur Véhicule de la Révision, vide hors d'un client : aucun repli.
+	measure 'Client de la revision' = IF ( HASONEVALUE ( ref_entite[Entité] ) && SELECTEDVALUE ( ref_entite[est_client] ) = TRUE (), SELECTEDVALUE ( ref_entite[Entité] ) )
+		displayFolder: Ecran 1 Client
+		lineageTag: 2c017a59-b9f9-40f9-8c33-1d9f125f22b8
+
+	/// Le titre de l'état 2b ouvert depuis la Révision.
+	measure 'En-tête étape 2b révision' = VAR c = [Client de la revision] RETURN IF ( ISBLANK ( c ), "Ajouter une filiale : choisissez le client dans le sélecteur Véhicule de la Révision", "Ajouter une filiale à " & c )
+		displayFolder: Ecran 1 Client
+		lineageTag: d1324308-bf64-422e-97a5-f47a82e4cec4
+
+	measure 'Fond e1Bouton41' = IF ( ISBLANK ( [Cote acceptation] ), "#E4E9EF", "#FFFFFF" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 96cc80ba-1e70-4d65-b542-6315e0485bd4
+
+	measure 'Libelle e1Bouton41' = "Exporter le questionnaire"
+		displayFolder: Ecran Client boutons
+		lineageTag: 5ba18653-d281-44ea-93c7-10a3a51a0384
+
+	measure 'Fond e1Bouton70' = IF ( ISBLANK ( [Client selectionne] ) || ISBLANK ( [Role selectionne] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 9903a480-a310-437a-931d-d2cfbeed34f5
+
+	measure 'Libelle e1Bouton70' = "Désigner"
+		displayFolder: Ecran Client boutons
+		lineageTag: 642b859f-faca-4817-81f0-4159e9e842e0
+
+	measure 'Fond e1cBouton0' = IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: ffc6d707-19cc-4d41-a8da-a4019cb6d794
+
+	measure 'Libelle e1cBouton0' = "Enregistrer les modifications"
+		displayFolder: Ecran Client boutons
+		lineageTag: 73fb5c0e-3cae-468d-ab9c-df98f29f9ec5
+
+	measure 'Fond e2bBouton0' = IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: bd86f699-a490-4411-8809-f05d9d0a1187
+
+	measure 'Libelle e2bBouton0' = "Ajouter cette filiale"
+		displayFolder: Ecran Client boutons
+		lineageTag: 3df75f5f-f4b8-43d5-8397-5667e95187b7
+
+	measure 'Fond e2bBouton2' = IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 0dfbc970-598c-43f3-b5e3-46d3e756aa48
+
+	measure 'Libelle e2bBouton2' = "Réimporter"
+		displayFolder: Ecran Client boutons
+		lineageTag: 0c399ba9-ee77-4e58-9ac4-694f46dbf9bb
+
+	measure 'Fond e2cBouton0' = IF ( ISBLANK ( [Client selectionne] ) || ISBLANK ( [Filiale selectionnee] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 18cd9142-6b90-4b94-8a22-1b6b0bd98843
+
+	measure 'Libelle e2cBouton0' = "Enregistrer la filiale"
+		displayFolder: Ecran Client boutons
+		lineageTag: 935988ed-f43d-40c8-85d0-209c81a5e234
+
+	measure 'Fond e2dBouton70' = IF ( ISBLANK ( [Client selectionne] ) || ISBLANK ( [Filiale selectionnee] ) || NOT ISBLANK ( [Retrait de filiale refuse] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 43e59c3a-4138-4afc-930d-bda2e02dc1d6
+
+	measure 'Libelle e2dBouton70' = "Supprimer"
+		displayFolder: Ecran Client boutons
+		lineageTag: 41ce3056-a052-4ee6-896f-198c4ef60ecc
+
+	measure 'Fond e2rBouton0' = IF ( ISBLANK ( [Client de la revision] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 0ec02ad3-b680-41a6-8027-6938062c65a3
+
+	measure 'Libelle e2rBouton0' = "Ajouter cette filiale"
+		displayFolder: Ecran Client boutons
+		lineageTag: 5b7a60ee-f225-4700-b458-9b9133f45780
+
+	measure 'Fond e2rBouton2' = IF ( ISBLANK ( [Client de la revision] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 69bb1738-c655-411f-8e1d-4abb23371e72
+
+	measure 'Libelle e2rBouton2' = "Réimporter"
+		displayFolder: Ecran Client boutons
+		lineageTag: 51582247-ba7a-4a6b-a5c0-26feda9e51ab
+
+	measure 'Fond e3Bouton0' = IF ( ISBLANK ( [Cote questionnaire] ) || ISBLANK ( [Reference acceptation selectionnee] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 6996ca95-5ec3-402c-95db-a0d337952ad6
+
+	measure 'Libelle e3Bouton0' = "Valider la réponse"
+		displayFolder: Ecran Client boutons
+		lineageTag: 003f7bec-f23b-4830-83a3-6af4ca3a4e4e
+
+	measure 'Fond e3Bouton50' = IF ( ISBLANK ( [Cote acceptation] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: c5ca02e1-c7fb-40d8-b087-0568925488de
+
+	measure 'Libelle e3Bouton50' = "Exporter le questionnaire"
+		displayFolder: Ecran Client boutons
+		lineageTag: cb93f01d-5b45-42a4-a6c9-3382be7670cd
+
+	measure 'Fond e3Bouton51' = IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 5e95b2bd-9aaf-44b9-beb3-2d1131ebcd37
+
+	measure 'Libelle e3Bouton51' = "Réimporter"
+		displayFolder: Ecran Client boutons
+		lineageTag: 8961f040-5965-438e-b07f-553468c9da75
+
+	measure 'Fond e3bBouton1' = IF ( ISBLANK ( [Client selectionne] ) || NOT ISBLANK ( [Rattachement de piece refuse] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 96195963-1b59-4054-8fb3-8d46c42ff8c4
+
+	measure 'Libelle e3bBouton1' = "Rattacher la pièce"
+		displayFolder: Ecran Client boutons
+		lineageTag: 13429aa6-526f-4617-8a8a-916b6816c658
+
+	measure 'Fond e4Bouton0' = IF ( ISBLANK ( [Client selectionne] ) || ISBLANK ( [Superviseur connecte] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 932dc7be-a965-463d-bf25-c6b5c6ecba97
+
+	measure 'Libelle e4Bouton0' = "Approuver"
+		displayFolder: Ecran Client boutons
+		lineageTag: f9d01a5e-d121-459a-a61e-12a1223ee9b9
+
+	measure 'Fond e4Bouton1' = IF ( ISBLANK ( [Client selectionne] ) || ISBLANK ( [Superviseur connecte] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: b5c15e78-48a6-4f9e-888b-27240173ed0a
+
+	measure 'Libelle e4Bouton1' = "Refuser"
+		displayFolder: Ecran Client boutons
+		lineageTag: 92044210-c7fb-4a85-a7bb-4a6bc89cfbb1
+
+	measure 'Fond e4Bouton2' = IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: c40c7134-78a1-41e1-ab31-c93920d3c985
+
+	measure 'Libelle e4Bouton2' = "Reprendre"
+		displayFolder: Ecran Client boutons
+		lineageTag: ef274baa-4eb2-484d-9d38-82cc5b25303f
+
+	measure 'Fond e5Bouton0' = IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 75e3efab-5c14-4224-b322-373d3cb72c24
+
+	measure 'Libelle e5Bouton0' = "Ouvrir l'arrêté"
+		displayFolder: Ecran Client boutons
+		lineageTag: 4ce83fed-4b22-424e-ac6e-c6eec2ef11f6
+
+	measure 'Infobulle e1Bouton41' = SWITCH ( TRUE (), ISBLANK ( [Cote acceptation] ), "Aucun client choisi dans la liste des clients.", "Exporte le questionnaire d'acceptation en classeur Excel." )
+		displayFolder: Ecran Client boutons
+		lineageTag: d3f43cb6-c236-40e8-912c-237c6b173e62
+
+	measure 'Infobulle e1Bouton70' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", ISBLANK ( [Role selectionne] ), "Aucun rôle choisi dans le tableau de l'équipe de la mission.", "Désigne la personne saisie au rôle choisi dans l'équipe de la mission." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 170922fd-311f-481a-acc9-4c824cda272f
+
+	measure 'Infobulle e1cBouton0' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", "Enregistre les champs modifiés ; un champ vide reste inchangé." )
+		displayFolder: Ecran Client boutons
+		lineageTag: b1ce399a-875e-438c-8cd8-d313a1da5c77
+
+	measure 'Infobulle e2bBouton0' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", "Ajoute la filiale au périmètre du client." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 56f3ca3f-2abf-4a1e-b46c-03a98ce79360
+
+	measure 'Infobulle e2bBouton2' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", "Importe le classeur des filiales déposé dans le dossier du client." )
+		displayFolder: Ecran Client boutons
+		lineageTag: bc69988f-4201-4532-884b-8763f370a649
+
+	measure 'Infobulle e2cBouton0' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", ISBLANK ( [Filiale selectionnee] ), "Aucune filiale du client choisie dans la liste « Filiale ».", "Enregistre les champs modifiés de la filiale choisie." )
+		displayFolder: Ecran Client boutons
+		lineageTag: bb8c3726-94d3-4be3-9c91-5bfd0299464f
+
+	measure 'Infobulle e2dBouton70' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", ISBLANK ( [Filiale selectionnee] ), "Aucune filiale du client choisie dans la liste « Filiale ».", NOT ISBLANK ( [Retrait de filiale refuse] ), [Retrait de filiale refuse], "Retire la filiale choisie du périmètre du client." )
+		displayFolder: Ecran Client boutons
+		lineageTag: efc2af3e-eb29-4104-a13a-6b0b349835d5
+
+	measure 'Infobulle e2rBouton0' = SWITCH ( TRUE (), ISBLANK ( [Client de la revision] ), "Aucun client choisi dans le sélecteur Véhicule de la Révision.", "Ajoute la filiale au périmètre du véhicule de la révision." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 21c9349e-ca8b-4be5-80c8-7a2fae70bbbd
+
+	measure 'Infobulle e2rBouton2' = SWITCH ( TRUE (), ISBLANK ( [Client de la revision] ), "Aucun client choisi dans le sélecteur Véhicule de la Révision.", "Importe le classeur des filiales déposé dans le dossier du véhicule." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 3ff8e0ea-a3ea-4f40-a840-7085e66a3d46
+
+	measure 'Infobulle e3Bouton0' = SWITCH ( TRUE (), ISBLANK ( [Cote questionnaire] ), "Aucun client choisi dans la liste des clients.", ISBLANK ( [Reference acceptation selectionnee] ), "Aucune question choisie dans la grille.", "Enregistre la réponse à la question choisie dans la grille." )
+		displayFolder: Ecran Client boutons
+		lineageTag: eda5ebbf-3fde-443b-96c3-7ee477ffb3c6
+
+	measure 'Infobulle e3Bouton50' = SWITCH ( TRUE (), ISBLANK ( [Cote acceptation] ), "Aucun client choisi dans la liste des clients.", "Exporte le questionnaire d'acceptation en classeur Excel." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 993012fe-78c1-4a09-a4e3-869290c91b0d
+
+	measure 'Infobulle e3Bouton51' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", "Importe le questionnaire déposé dans le dossier du client." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 37a679f6-4d51-4aaf-afa6-2eabe9a00233
+
+	measure 'Infobulle e3bBouton1' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", NOT ISBLANK ( [Rattachement de piece refuse] ), [Rattachement de piece refuse], "Inscrit au dossier la pièce déposée dans le Dépôt du client." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 623102e3-f82a-449f-9ec3-9628d8f44175
+
+	measure 'Infobulle e4Bouton0' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", ISBLANK ( [Superviseur connecte] ), "Action réservée au superviseur de la mission.", "Accepte la mission ; action réservée au superviseur." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 899d094d-2547-4919-b477-6562241222e3
+
+	measure 'Infobulle e4Bouton1' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", ISBLANK ( [Superviseur connecte] ), "Action réservée au superviseur de la mission.", "Refuse la mission, avec son motif ; action réservée au superviseur." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 62f41c30-00ae-4f33-8b73-64b2846ef1b8
+
+	measure 'Infobulle e4Bouton2' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", "Reprend l'acceptation refusée, avec son motif." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 37addb69-61c4-4d95-82f3-edd9e92c2e51
+
+	measure 'Infobulle e5Bouton0' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", "Planifie les arrêtés de l'exercice et ouvre le premier." )
+		displayFolder: Ecran Client boutons
+		lineageTag: e6d7a97a-5730-4f09-a100-f7181287b2f3
+
+	/// Le véhicule choisi dans le sélecteur de la Révision, sans le filtre de la ligne choisie.
+	measure 'Dossier de la revision' = CALCULATE ( SELECTEDVALUE ( ref_entite[Entité] ), REMOVEFILTERS ( liste_clients[cle_ecran], liste_clients[Client], liste_clients[vehicule_denomination], liste_clients[entite], liste_clients[Dénomination], liste_clients[forme_sociale], liste_clients[est_vehicule], liste_clients[quote_part], liste_clients[rang], liste_clients[message_ecran], liste_clients[Entité], liste_clients[ordre_affichage] ) )
+		displayFolder: Ecran Client
+		lineageTag: d60ce69c-4615-40b7-835f-cee93198228e
+
+	/// 1 quand le sélecteur de la Révision est sur le client de l'écran ou une de ses filiales, vide sinon.
+	measure 'Revision sur le client choisi' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( ref_entite ) ) VAR v = [Dossier de la revision] VAR vc = IF ( NOT ISBLANK ( v ), CALCULATE ( [Client selectionne], REMOVEFILTERS ( liste_clients[cle_ecran], liste_clients[Client], liste_clients[vehicule_denomination], liste_clients[entite], liste_clients[Dénomination], liste_clients[forme_sociale], liste_clients[est_vehicule], liste_clients[quote_part], liste_clients[rang], liste_clients[message_ecran], liste_clients[Entité], liste_clients[ordre_affichage] ) ) ) RETURN IF ( NOT ISBLANK ( c ) && vc = c, 1 )
+		displayFolder: Ecran Client
+		lineageTag: 9910c42d-5bb4-4441-bce5-965dabac53e8
+
+	/// Gris quand la Révision est sur un autre client que celui de l'écran.
+	measure 'Fond e5Bouton1' = IF ( [Revision sur le client choisi] = 1, "#FFFFFF", "#E4E9EF" )
+		displayFolder: Ecran Client
+		lineageTag: 9cb4c1e1-f7bc-4411-bcb6-3b212c6ff726
+
+	measure 'Libelle e5Bouton1' = "Passer à la Révision"
+		displayFolder: Ecran Client
+		lineageTag: 8d237686-02d2-486c-bfa9-e2a41bede022
+
+	/// L'infobulle du bouton : la page et le véhicule qu'il ouvre, ou pourquoi il est gris.
+	measure 'Infobulle e5Bouton1' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( ref_entite ) ) VAR v = [Dossier de la revision] RETURN SWITCH ( TRUE (), ISBLANK ( c ), "Aucun client choisi dans la liste des clients.", [Revision sur le client choisi] = 1, "Ouvre la page Révision sur " & v & ".", ISBLANK ( v ), "Choisissez " & c & " dans « Véhicule » de la page Révision.", "La Révision est ouverte sur " & v & " : choisissez " & c & " dans « Véhicule » de la page Révision." )
+		displayFolder: Ecran Client
+		lineageTag: 9b7a2aa8-1f92-42be-859f-bb4d40752905
+
+	/// La page que le bouton ouvre, vide quand il est gris.
+	measure 'Destination e5Bouton1' = IF ( [Revision sur le client choisi] = 1, "Révision" )
+		displayFolder: Ecran Client
+		lineageTag: 08db3e2e-637c-4ffb-b286-664354e7346c
+
+	/// Le titre du sous-état 3c : le client, ses pièces et ses rattachements au dossier.
+	measure 'En-tête étape 3c' = VAR c = [Client selectionne] VAR np = CALCULATE ( DISTINCTCOUNT ( v_ecran_pieces_du_dossier[piece_id] ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[entite] = c ) ) + 0 VAR nr = CALCULATE ( COUNTROWS ( v_ecran_pieces_du_dossier ), FILTER ( ALL ( v_ecran_pieces_du_dossier ), v_ecran_pieces_du_dossier[entite] = c ) ) + 0 RETURN IF ( ISBLANK ( c ), "Retirer une pièce du dossier", "Retirer une pièce du dossier · " & c & " · " & IF ( np = 0, "aucune pièce", np & IF ( np = 1, " pièce", " pièces" ) ) & ", " & IF ( nr = 0, "aucun rattachement", nr & IF ( nr = 1, " rattachement", " rattachements" ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 1bfdb3a8-a6c7-52fd-abe0-5d1e7de0f519
+
+	/// Le titre du sous-état 5b.
+	measure 'En-tête étape 5b' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Rouvrir un arrêté clos", c & " · rouvrir un arrêté clos : la demande, puis la décision" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 1ab8bae1-9fac-571d-a67e-0d11a0989979
+
+	measure 'Fond e3cBouton0' = IF ( ISBLANK ( [Client selectionne] ) || NOT ISBLANK ( [Retrait de piece refuse] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 7891930c-838a-4a28-a76e-68ef99b1739f
+
+	measure 'Libelle e3cBouton0' = "Retirer la pièce"
+		displayFolder: Ecran Client boutons
+		lineageTag: a2a00caf-aae1-44a5-8e2b-cff5df05b2a9
+
+	measure 'Infobulle e3cBouton0' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", NOT ISBLANK ( [Retrait de piece refuse] ), [Retrait de piece refuse], "Retire du dossier le rattachement choisi ; le fichier reste dans SharePoint." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 52b580f9-ef4f-4cf7-bd95-2ea4c04787b4
+
+	measure 'Fond e5bBouton0' = IF ( ISBLANK ( [Client selectionne] ) || NOT ISBLANK ( [Refus demande reouverture] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 850e654b-90e4-45ca-bec7-3f1978d99464
+
+	measure 'Libelle e5bBouton0' = "Demander la réouverture"
+		displayFolder: Ecran Client boutons
+		lineageTag: 141e71e9-19eb-4064-bb7f-e1ce53507205
+
+	measure 'Infobulle e5bBouton0' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", NOT ISBLANK ( [Refus demande reouverture] ), [Refus demande reouverture], "Inscrit la demande ; le chef de mission la décide." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 3e8b0ff2-2e24-4376-9c9d-21bec94c1b0b
+
+	measure 'Fond e5bBouton1' = IF ( ISBLANK ( [Client selectionne] ) || NOT ISBLANK ( [Refus accord reouverture] ), "#E4E9EF", "#0F5C8C" )
+		displayFolder: Ecran Client boutons
+		lineageTag: 8b71d8ed-0f0f-4f58-bd81-a8da0ac0109e
+
+	measure 'Libelle e5bBouton1' = "Rouvrir l'arrêté"
+		displayFolder: Ecran Client boutons
+		lineageTag: 76a5d4b1-675e-445a-bdcd-0bb38d4e9ee9
+
+	measure 'Infobulle e5bBouton1' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", NOT ISBLANK ( [Refus accord reouverture] ), [Refus accord reouverture], "Rouvre l'arrêté de la demande ; la personne connectée décide." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 33b4635c-36fa-4127-a448-77a925dfae86
+
+	measure 'Fond e5bBouton2' = IF ( ISBLANK ( [Client selectionne] ) || NOT ISBLANK ( [Refus ecart reouverture] ), "#E4E9EF", "#FFFFFF" )
+		displayFolder: Ecran Client boutons
+		lineageTag: dd5f4774-82af-4fde-b70d-358053b4a404
+
+	measure 'Libelle e5bBouton2' = "Écarter la demande"
+		displayFolder: Ecran Client boutons
+		lineageTag: 40c1a994-6a87-49d1-b64d-cd9514c8047c
+
+	measure 'Infobulle e5bBouton2' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", NOT ISBLANK ( [Refus ecart reouverture] ), [Refus ecart reouverture], "Écarte la demande ; l'arrêté reste clos." )
+		displayFolder: Ecran Client boutons
+		lineageTag: 5f9efce6-5ee3-45c0-8446-2ecbe1fb260b
+
+	/// « CMF, art. L. 214-69, I ; art. 321-4 du règlement ANC n° 2021-09, modifié par le règlement ANC n° 2024-01 » pour une SPPICAV, art. L. 214-81, I pour un FPI (forme_vehicule) ; article 321-4, Sommes distribuables : recueil, page 91 du fichier PDF, imprimée 90
+	measure 'Fondement des sommes distribuables' = VAR e = [Client selectionne] VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) RETURN IF ( fv = "FPI", "CMF, art. L. 214-81, I", "CMF, art. L. 214-69, I" ) & " ; art. 321-4 du règlement ANC n° 2021-09, modifié par le règlement ANC n° 2024-01"
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 22d0c316-6088-4c0d-acd1-60fb6c97a34c
 
 	column Entité
 		dataType: string
@@ -448,6 +755,33 @@ table ref_entite
 		lineageTag: 4e3d788c-1d3b-4da6-a3ab-e976b6535934
 		summarizeBy: none
 		sourceColumn: cree_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column soumise_commissariat_comptes
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: f112fc13-7ef9-40c4-8c25-ca4a039a83d8
+		summarizeBy: none
+		sourceColumn: soumise_commissariat_comptes
+
+		annotation SummarizationSetBy = Automatic
+
+	column est_professionnel
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 3854dce4-eef8-49c8-9a21-f86d363a212e
+		summarizeBy: none
+		sourceColumn: est_professionnel
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle_vehicule
+		dataType: string
+		sourceProviderType: nvarchar(240)
+		lineageTag: 2cfd51ff-cca6-4e03-881d-12a2c6379e7d
+		summarizeBy: none
+		sourceColumn: libelle_vehicule
 
 		annotation SummarizationSetBy = Automatic
 

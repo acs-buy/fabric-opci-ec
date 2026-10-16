@@ -1,0 +1,122 @@
+/// Les comptes annuels et les rapports produits, et la version de l'annexe que chacun porte : produit sur la derniere version, sur une version anterieure, ou sans version de l'annexe.
+table v_annexe_document
+	lineageTag: 6fd7b976-6726-4ccb-a8f0-90b47ff27730
+
+	column document_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: a9023bdc-e3e4-44fc-920d-6e6575b609de
+		summarizeBy: none
+		sourceColumn: document_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 0c2c1d09-2e21-429b-9fc1-f148c9d09ae3
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ff5edaff-ea62-4a09-a485-6a89e5ad5f99
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column livrable
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 40a38323-8a5e-4178-a7fc-99fcc170b91a
+		summarizeBy: none
+		sourceColumn: livrable
+
+		annotation SummarizationSetBy = Automatic
+
+	column version
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4ab551f7-b565-46e0-8f33-bbc43e65b860
+		summarizeBy: none
+		sourceColumn: version
+
+		annotation SummarizationSetBy = Automatic
+
+	column annexe_version
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 2715bc2a-d6e5-43ef-b410-de9d61ed91c8
+		summarizeBy: none
+		sourceColumn: annexe_version
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_version
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0f7f67ea-f98e-45f7-b782-d917a357edb6
+		summarizeBy: none
+		sourceColumn: derniere_version
+
+		annotation SummarizationSetBy = Automatic
+
+	column sur_version_anterieure
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: d90377e5-30a2-4406-b425-e148b0097fcd
+		summarizeBy: none
+		sourceColumn: sur_version_anterieure
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 0ec16329-c4b8-43e3-88a4-f85fdc4cb609
+		summarizeBy: none
+		sourceColumn: perime_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column perime_motif
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 007bb702-c389-47f1-aff5-8dd75d801487
+		summarizeBy: none
+		sourceColumn: perime_motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column lecture
+		dataType: string
+		sourceProviderType: nvarchar(120)
+		lineageTag: 9b23a86d-1977-445f-a5cc-8c4d8c3e6dec
+		summarizeBy: none
+		sourceColumn: lecture
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_annexe_document = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_annexe_document = Source{[Schema="dbo",Item="v_annexe_document"]}[Data]
+				in
+				    dbo_v_annexe_document
+

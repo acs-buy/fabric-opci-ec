@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_questions_acceptation
 	lineageTag: b1dcde84-77bf-42f2-bd3d-54b0c5bd49ed
 
@@ -11,7 +11,7 @@ table v_questions_acceptation
 		displayFolder: Ecran 1 Client
 		lineageTag: 312a512f-4762-401e-8f14-75f044546037
 
-	measure 'Est questionnaire courant' = VAR c = CALCULATE ( [Cote questionnaire], REMOVEFILTERS ( v_questions_acceptation ) ) RETURN IF ( SELECTEDVALUE ( v_questions_acceptation[cote] ) = c, 1 )
+	measure 'Est questionnaire courant' = VAR c = CALCULATE ( [Cote questionnaire], REMOVEFILTERS ( v_questions_acceptation ) ) RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( v_questions_acceptation, v_questions_acceptation[cote] = c ) ), 1 )
 		formatString: 0
 		displayFolder: Ecran 1 Client
 		lineageTag: 4d8fae93-ac2b-44df-a94f-11d69bf5d959
@@ -40,6 +40,11 @@ table v_questions_acceptation
 
 	measure 'Questions du client' = VAR a = [Cote acceptation] VAR r = CALCULATE ( COUNTROWS ( v_questions_acceptation ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = a && v_questions_acceptation[etat_ligne] = "REPONDUE" ) ) VAR q = CALCULATE ( COUNTROWS ( v_questions_acceptation ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = a ) ) RETURN IF ( ISBLANK ( q ), "aucune question ouverte", ( r + 0 ) & " sur " & q )
 		displayFolder: Ecran 1 Client
+
+	/// 1 pour une référence du questionnaire affiché dans « Questionnaire et pièces », vide sinon : le segment « Question » ne propose qu'elles.
+	measure 'Question du questionnaire courant' = VAR c = CALCULATE ( [Cote questionnaire], REMOVEFILTERS ( v_questions_acceptation ) ) RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( v_questions_acceptation, v_questions_acceptation[cote] = c ) ), 1 )
+		displayFolder: Ecran Client
+		lineageTag: 7dfc2318-9fc2-49d0-a4b7-8ced62734b18
 
 	column entite
 		dataType: string

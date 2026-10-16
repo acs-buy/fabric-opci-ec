@@ -1,0 +1,99 @@
+/// Instruments des comptes 3 du vehicule et de ses filiales, titres 256 et 258 du vehicule, saisis ou non : listes Instrument et Titre.
+table v_ecran_actifs_a_valoriser
+	lineageTag: aa3055f4-91d6-404a-a6b0-3b08e183faa8
+
+	column vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 0e2368aa-b41e-40f2-ac1d-ffbdb9593d5e
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 1bf860a0-e8ab-4d33-9b18-9f90c6464081
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: bcba54c7-a37e-4b54-a5b8-3a81bcb9db87
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 59c641e1-d175-4444-aaee-432f404302a5
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(40)
+		lineageTag: db3f4e12-21cb-4685-80c0-f0255b3d753b
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column poste_bilan
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 9a9cbf29-eb34-4c94-a164-cf189cfd3b8e
+		summarizeBy: none
+		sourceColumn: poste_bilan
+
+		annotation SummarizationSetBy = Automatic
+
+	column liste
+		dataType: string
+		sourceProviderType: varchar(12)
+		lineageTag: 5946e968-dd41-470d-9128-6a807d11121e
+		summarizeBy: none
+		sourceColumn: liste
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_saisie
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: fb3dde13-b7a6-4d0d-bf97-34514d50c40d
+		summarizeBy: none
+		sourceColumn: valeur_saisie
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(62)
+		lineageTag: 66d15498-368f-44f4-ab6d-3c25f3c1b650
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_actifs_a_valoriser = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_actifs_a_valoriser = Source{[Schema="dbo",Item="v_ecran_actifs_a_valoriser"]}[Data]
+				in
+				    dbo_v_ecran_actifs_a_valoriser
+

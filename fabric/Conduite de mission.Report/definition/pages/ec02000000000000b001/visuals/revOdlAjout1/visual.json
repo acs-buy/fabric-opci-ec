@@ -4,10 +4,10 @@
   "position": {
     "x": 174,
     "y": 533,
-    "z": 16700,
+    "z": 17000,
     "height": 29,
     "width": 153,
-    "tabOrder": 16700
+    "tabOrder": 17000
   },
   "visual": {
     "visualType": "actionButton",
@@ -495,7 +495,7 @@
                     {
                       "name": "compte",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revOdlCompte",
@@ -504,7 +504,7 @@
                     {
                       "name": "libelle",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revOdlLibelle",

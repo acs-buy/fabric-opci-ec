@@ -14,17 +14,39 @@ table v_sommes_distribuables
 		displayFolder: Le dossier
 		lineageTag: 03f8d214-8511-4b48-a2df-7366e28eb6d2
 
-	/// Carte 4.2, Total distribuable. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 4.2, Total distribuable.
 	measure 'R42 Total distribuable' = VAR lignes = COUNTROWS ( v_sommes_distribuables ) RETURN IF ( lignes = 1, SUM ( v_sommes_distribuables[total_distribuable] ) )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: bb939af9-ba5d-41ef-a3b3-9011524ac5e3
 
-	/// Carte 4.2, Acomptes verses. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 4.2, Acomptes verses.
 	measure 'R42 Acomptes verses' = VAR lignes = COUNTROWS ( v_sommes_distribuables ) RETURN IF ( lignes = 1, SUM ( v_sommes_distribuables[acomptes_verses] ) )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 41a09873-8b3a-4548-bdd7-5cf9342a8f12
+
+	/// pr_decider_distribution_corps relu : plus_values_distribuables en PLUS_VALUES, resultat_distribuable en RESULTAT comme en EXONEREES ; ce n’est pas total_distribuable de la vue
+	measure 'Borne haute de la decision' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR sd = FILTER ( ALL ( v_sommes_distribuables ), v_sommes_distribuables[entite] = e && v_sommes_distribuables[arrete] = a ) VAR rd = MAXX ( sd, v_sommes_distribuables[resultat_distribuable] ) VAR pv = MAXX ( sd, v_sommes_distribuables[plus_values_distribuables] ) RETURN IF ( une, IF ( c = "PLUS_VALUES", pv, rd ) )
+		formatString: #,0.00
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 25d0b9e2-3eaa-43a8-8661-a3cd44d421de
+
+	/// pr_decider_distribution_corps relu : total × taux de ref_obligation_distribution, le total étant plus_values_distribuables en PLUS_VALUES, resultat_distribuable sinon, EXONEREES compris (Q6) ; 1 par ligne dans la grille, celle de la catégorie cochée dans la fiche
+	measure 'Borne basse de la decision' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR sd = FILTER ( ALL ( v_sommes_distribuables ), v_sommes_distribuables[entite] = e && v_sommes_distribuables[arrete] = a ) VAR rd = MAXX ( sd, v_sommes_distribuables[resultat_distribuable] ) VAR pv = MAXX ( sd, v_sommes_distribuables[plus_values_distribuables] ) VAR tx = CALCULATE ( MAX ( ref_obligation_distribution[taux] ), FILTER ( ALL ( ref_obligation_distribution ), ref_obligation_distribution[categorie] = c ) ) VAR tot = IF ( c = "PLUS_VALUES", pv, rd ) RETURN IF ( une && NOT ISBLANK ( tot ), ROUND ( tot * tx, 2 ) )
+		formatString: #,0.00
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 1a831ae1-718a-4256-ab35-b68dbd5b746e
+
+	/// « [Borne haute de la decision], résultat distribuable » ou « …, plus-values distribuables »
+	measure 'Fiche decision borne haute' = VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR bh = [Borne haute de la decision] RETURN IF ( NOT une || ISBLANK ( bh ), "", FORMAT ( bh, "#,0.00" ) & ", " & IF ( c = "PLUS_VALUES", "plus-values distribuables", "résultat distribuable" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 121e525b-e70c-491e-92c1-ab3a38ad00ae
+
+	/// « [Borne basse de la decision], résultat distribuable (ou plus-values distribuables) x × taux »
+	measure 'Fiche decision borne basse' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR sd = FILTER ( ALL ( v_sommes_distribuables ), v_sommes_distribuables[entite] = e && v_sommes_distribuables[arrete] = a ) VAR rd = MAXX ( sd, v_sommes_distribuables[resultat_distribuable] ) VAR pv = MAXX ( sd, v_sommes_distribuables[plus_values_distribuables] ) VAR tx = CALCULATE ( MAX ( ref_obligation_distribution[taux] ), FILTER ( ALL ( ref_obligation_distribution ), ref_obligation_distribution[categorie] = c ) ) VAR bb = [Borne basse de la decision] RETURN IF ( NOT une || ISBLANK ( bb ), "", FORMAT ( bb, "#,0.00" ) & ", " & IF ( c = "PLUS_VALUES", "plus-values distribuables ", "résultat distribuable " ) & FORMAT ( IF ( c = "PLUS_VALUES", pv, rd ), "#,0.00" ) & " × " & IF ( tx * 100 = INT ( tx * 100 ), FORMAT ( tx * 100, "0" ), FORMAT ( tx * 100, "0.0#" ) ) & " %" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 7e7d8a5c-c11e-44e4-8e8a-35b4dc1ceece
 
 	column entite
 		dataType: string

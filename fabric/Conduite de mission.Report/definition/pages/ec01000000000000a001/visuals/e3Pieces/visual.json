@@ -65,6 +65,20 @@
                       "Entity": "v_ecran_pieces_du_dossier"
                     }
                   },
+                  "Property": "Arrêté"
+                }
+              },
+              "queryRef": "v_ecran_pieces_du_dossier.Arrêté",
+              "nativeQueryRef": "Arrêté"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_ecran_pieces_du_dossier"
+                    }
+                  },
                   "Property": "Déposée par"
                 }
               },
@@ -84,6 +98,35 @@
               },
               "queryRef": "v_ecran_pieces_du_dossier.Déposée le",
               "nativeQueryRef": "Déposée le"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_ecran_pieces_du_dossier"
+                    }
+                  },
+                  "Property": "Retrait"
+                }
+              },
+              "queryRef": "v_ecran_pieces_du_dossier.Retrait",
+              "nativeQueryRef": "Retrait"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_ecran_pieces_du_dossier"
+                    }
+                  },
+                  "Property": "cle_ecran"
+                }
+              },
+              "queryRef": "v_ecran_pieces_du_dossier.cle_ecran",
+              "nativeQueryRef": "cle_ecran",
+              "displayName": " "
             }
           ]
         }
@@ -112,9 +155,23 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#D5DCE4'"
+                      "Value": "'#EAEFF4'"
                     }
                   }
+                }
+              }
+            },
+            "gridHorizontal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridHorizontalWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
                 }
               }
             }
@@ -218,6 +275,120 @@
                 }
               }
             }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "75D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_pieces_du_dossier.Question"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "176D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_pieces_du_dossier.Fichier"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "119D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_pieces_du_dossier.Nature"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "78D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_pieces_du_dossier.Arrêté"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "121D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_pieces_du_dossier.Déposée par"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "88D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_pieces_du_dossier.Déposée le"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "132D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_pieces_du_dossier.Retrait"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_pieces_du_dossier.cle_ecran"
           }
         }
       ]
@@ -353,6 +524,40 @@
           }
         },
         "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "v_ecran_pieces_du_dossier",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "t"
+                        }
+                      },
+                      "Property": "Est client courant (pieces)"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
         "howCreated": "User"
       }
     ]

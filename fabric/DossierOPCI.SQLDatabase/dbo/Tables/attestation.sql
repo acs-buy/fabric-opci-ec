@@ -23,7 +23,7 @@ CREATE TABLE [dbo].[attestation] (
 GO
 
 
-
+-- tr_attestation_bouclage : 3 refus
 -- 7. LE FILET, sur chaque ligne inseree ou mise a jour. Il juge une ligne inseree, et une ligne mise a jour dont la
 -- forme ou le motif des considerations particulieres change, ou dont arretee_le recoit une valeur ; la remise a NULL de
 -- la reouverture et l'ecriture de la production ne sont pas jugees.
@@ -57,7 +57,7 @@ BEGIN
     IF @m IS NOT NULL
     BEGIN
         SET @m = N'Rapport refusé : ' + @m + N'. Un lot proposé peut encore changer les comptes : le faire viser ou l''annuler, puis arrêter la forme du rapport de l''expert-comptable.';
-        THROW 50033, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50033, @m, 1; END
     END;
     IF EXISTS (SELECT 1 FROM @j j JOIN dbo.derogation g ON g.entite = j.entite AND g.arrete = j.arrete AND g.levee_le IS NULL
                WHERE j.forme = 'SANS_OBSERVATION')
@@ -71,7 +71,7 @@ BEGIN
     IF @entite IS NOT NULL
     BEGIN
         SET @m = N'Forme refusée : l''entité ' + @entite + N' est soumise au commissariat aux comptes ; son rapport est un compte rendu de travaux (NP 2300, A10). Une attestation n''y est admise qu''avec le motif des considérations particulières qui la justifient.';
-        THROW 50628, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50628, @m, 1; END
     END;
     IF EXISTS (SELECT 1 FROM @j WHERE (motif_cp IS NOT NULL AND (forme = 'COMPTE_RENDU_TRAVAUX' OR soumise = 0))
                                    OR (forme = 'COMPTE_RENDU_TRAVAUX' AND motif_limitation IS NOT NULL))
@@ -81,7 +81,7 @@ BEGIN
     IF @entite IS NOT NULL
     BEGIN
         SET @m = N'Forme refusée : le compte rendu de travaux est réservé à une entité soumise au commissariat aux comptes ; pour l''entité ' + @entite + N', cet indicateur est à 0 ou à remplir.';
-        THROW 50631, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50631, @m, 1; END
     END;
 END;
 

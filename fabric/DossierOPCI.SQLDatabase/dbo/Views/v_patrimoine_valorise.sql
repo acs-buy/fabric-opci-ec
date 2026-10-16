@@ -1,4 +1,9 @@
 
+-- ------------------------------------------------------------------ n° 12 : les interets courus des avances (213-4)
+-- Colonne posee en fin de chaque branche. Aucune source d'interets courus n'existe en base au 10/10/2026 (aucun compte
+-- de creances rattachees au plan de comptes, aucune table) : la colonne vaut NULL, et l'ecran l'affiche « a remplir ».
+-- La valeur actuelle de l'avance n'est pas modifiee.
+
 -- --- 3 : le niveau 2, sans aucun litteral d'article ------------------
 CREATE   VIEW dbo.v_patrimoine_valorise AS
 SELECT v.entite, v.arrete, v.exercice, v.code_actif, v.nature, v.poste_bilan,
@@ -9,7 +14,8 @@ SELECT v.entite, v.arrete, v.exercice, v.code_actif, v.nature, v.poste_bilan,
        v.valeur_comptable, v.valeur_actuelle, v.difference_estimation,
        v.source, v.article, v.norme, v.reference, v.citation_courte,
        CAST(NULL AS VARCHAR (20))  AS entite_liee,
-       CAST(NULL AS DECIMAL (12,6)) AS quote_part
+       CAST(NULL AS DECIMAL (12,6)) AS quote_part,
+       CAST(NULL AS DECIMAL (19,2)) AS interets_courus
 FROM dbo.v_valeur_actuelle_actif v
 UNION ALL
 -- Les titres : l'article vient de la nature, non d'un litteral.
@@ -23,7 +29,8 @@ SELECT t.entite_mere, t.arrete,
        'ANR_FILIALE',
        CAST(rf.reference AS VARCHAR (40)), rf.norme, rf.reference,
        rf.citation_courte,
-       t.entite_fille, CAST(t.quote_part AS DECIMAL (12,6))
+       t.entite_fille, CAST(t.quote_part AS DECIMAL (12,6)),
+       CAST(NULL AS DECIMAL (19,2))
 FROM dbo.v_titres_valeur_actuelle t
 JOIN dbo.actif a ON a.entite_detentrice = t.entite_mere
                 AND a.entite_liee = t.entite_fille
@@ -49,7 +56,8 @@ SELECT a.entite_detentrice, r.arrete, r.exercice,
             ELSE 'NOMINAL' END,
        CAST(rcc.reference AS VARCHAR (40)), rcc.norme, rcc.reference,
        rcc.citation_courte,
-       a.entite_liee, CAST(NULL AS DECIMAL (12,6))
+       a.entite_liee, CAST(NULL AS DECIMAL (12,6)),
+       CAST(NULL AS DECIMAL (19,2))
 FROM dbo.actif a
 JOIN dbo.ref_arrete r ON r.entite = a.entite_detentrice AND r.porte_balance = 1
 LEFT JOIN dbo.v_cascade_212_5 c ON c.entite_mere = a.entite_detentrice

@@ -15,21 +15,6 @@ CREATE TABLE [dbo].[ref_correspondance_plan] (
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_correspondance_plan_garde]
-ON dbo.[ref_correspondance_plan]
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF dbo.fn_peut_ecrire_referentiel('ref_correspondance_plan',
-                                      SUSER_SNAME()) = 1 RETURN;
-    THROW 50074,
-        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
-        1;
-END;
-
-GO
-
 CREATE   TRIGGER dbo.[tr_ref_correspondance_plan_horodatage]
 ON dbo.[ref_correspondance_plan]
 AFTER UPDATE
@@ -44,6 +29,21 @@ BEGIN
     UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
     FROM dbo.[ref_correspondance_plan] t
     JOIN inserted i ON t.[norme_source] = i.[norme_source] AND t.[compte_source] = i.[compte_source];
+END;
+
+GO
+
+CREATE   TRIGGER dbo.[tr_ref_correspondance_plan_garde]
+ON dbo.[ref_correspondance_plan]
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF dbo.fn_peut_ecrire_referentiel('ref_correspondance_plan',
+                                      SUSER_SNAME()) = 1 RETURN;
+    THROW 50074,
+        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
+        1;
 END;
 
 GO

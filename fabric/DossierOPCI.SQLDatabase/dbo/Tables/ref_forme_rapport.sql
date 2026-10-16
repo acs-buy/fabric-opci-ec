@@ -17,6 +17,21 @@ CREATE TABLE [dbo].[ref_forme_rapport] (
 
 GO
 
+CREATE   TRIGGER dbo.[tr_ref_forme_rapport_garde]
+ON dbo.[ref_forme_rapport]
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF dbo.fn_peut_ecrire_referentiel('ref_forme_rapport',
+                                      SUSER_SNAME()) = 1 RETURN;
+    THROW 50074,
+        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Cette table porte des valeurs livrées avec la base, recopiées depuis un texte : les modifier les fait diverger de leur source. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
+        1;
+END;
+
+GO
+
 CREATE   TRIGGER dbo.[tr_ref_forme_rapport_horodatage]
 ON dbo.[ref_forme_rapport]
 AFTER UPDATE
@@ -35,17 +50,3 @@ END;
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_forme_rapport_garde]
-ON dbo.[ref_forme_rapport]
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF dbo.fn_peut_ecrire_referentiel('ref_forme_rapport',
-                                      SUSER_SNAME()) = 1 RETURN;
-    THROW 50074,
-        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Cette table porte des valeurs livrées avec la base, recopiées depuis un texte : les modifier les fait diverger de leur source. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
-        1;
-END;
-
-GO

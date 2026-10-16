@@ -1,0 +1,169 @@
+/// Categories de l obligation de distribution : resultat, plus-values, produits exoneres.
+table ref_obligation_distribution
+	lineageTag: 8f39381a-7e4d-4a78-b539-a6c449302ce6
+
+	/// « Aucune catégorie choisie » sans case cochée ; vide avec 1 case cochée et plus (carte collée, & "") : à 2 cases cochées, seule la carte [Avis categorie cochee] énonce le nombre coché, à droite de chaque bouton que le segment désactive (décision 10) ; posée dans la fiche de la catégorie, la proposit
+	measure 'Absence de categorie choisie' = VAR sel = ISFILTERED ( ref_obligation_distribution[libelle] ) || ISFILTERED ( ref_obligation_distribution[categorie] ) VAR k = COUNTROWS ( VALUES ( ref_obligation_distribution[categorie] ) ) RETURN IF ( NOT sel || k = 0, "Aucune catégorie choisie", "" ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 1d9ba10d-60e1-4728-9f70-1189a43a45b7
+
+	/// « n catégories cochées » quand le segment porte 2 valeurs ou plus ; vide sinon (carte collée, & "") : le service désactive alors Proposer, Viser, Renvoyer et Enregistrer avec une bulle anglaise (guide, § 17.29.1), et la carte, à côté de chaque bouton, énonce le fait en français (décision du candidat
+	measure 'Avis categorie cochee' = VAR sel = ISFILTERED ( ref_obligation_distribution[libelle] ) || ISFILTERED ( ref_obligation_distribution[categorie] ) VAR k = COUNTROWS ( VALUES ( ref_obligation_distribution[categorie] ) ) RETURN IF ( sel && k >= 2, FORMAT ( k, "0" ) & " catégories cochées", "" ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 8db50c27-4ceb-49b6-a104-56d5d93165d4
+
+	/// le libellé de la catégorie cochée ; « aucune catégorie choisie » ; « n catégories cochées » (fiches 3a et 3b, proposition, inscription)
+	measure 'Sous-titre fiche de la categorie' = VAR sel = ISFILTERED ( ref_obligation_distribution[libelle] ) || ISFILTERED ( ref_obligation_distribution[categorie] ) VAR k = COUNTROWS ( VALUES ( ref_obligation_distribution[categorie] ) ) RETURN IF ( sel && k = 1, SELECTEDVALUE ( ref_obligation_distribution[libelle] ), IF ( NOT sel || k = 0, "aucune catégorie choisie", FORMAT ( k, "0" ) & " catégories cochées" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: d2ccafe2-d30b-4c4a-a098-1df21ec64651
+
+	/// taux en pourcentage à 2 décimales ; vide quand le segment ne porte pas exactement 1 catégorie, comme toutes les mesures [Fiche …] qui suivent
+	measure 'Fiche categorie taux' = VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) RETURN IF ( une, FORMAT ( CALCULATE ( MAX ( ref_obligation_distribution[taux] ), FILTER ( ALL ( ref_obligation_distribution ), ref_obligation_distribution[categorie] = c ) ), "0.00 %" ), "" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: b8b9de01-3603-4aa9-b5ed-6efa39e3289d
+
+	/// exercice_de_rattachement à la française : EXERCICE « exercice », EXERCICE_SUIVANT « exercice suivant »
+	measure 'Fiche categorie rattachement' = VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR x = CALCULATE ( MAX ( ref_obligation_distribution[exercice_de_rattachement] ), FILTER ( ALL ( ref_obligation_distribution ), ref_obligation_distribution[categorie] = c ) ) RETURN IF ( une, SWITCH ( x, "EXERCICE", "exercice", "EXERCICE_SUIVANT", "exercice suivant", x ), "" ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 0678e423-74e0-4de6-a2fd-0898ddbd094a
+
+	/// lu_le, jj/mm/aaaa
+	measure 'Fiche categorie lu le' = VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) RETURN IF ( une, FORMAT ( CALCULATE ( MAX ( ref_obligation_distribution[lu_le] ), FILTER ( ALL ( ref_obligation_distribution ), ref_obligation_distribution[categorie] = c ) ), "dd/MM/yyyy" ), "" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: f7aff767-c533-4c2d-b731-0b57d866c9aa
+
+	/// « x % du prix de revient des immeubles détenus directement » ; vide sans abattement
+	measure 'Fiche categorie abattement' = VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR ab = CALCULATE ( MAX ( ref_obligation_distribution[abattement] ), FILTER ( ALL ( ref_obligation_distribution ), ref_obligation_distribution[categorie] = c ) ) RETURN IF ( une && NOT ISBLANK ( ab ) && ab <> 0, FORMAT ( ab, "0.00 %" ) & " du prix de revient des immeubles détenus directement", "" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 7858f383-92fa-47f0-9a91-b8a6138cd5e3
+
+	/// citation
+	measure 'Fiche categorie texte' = VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) RETURN IF ( une, CALCULATE ( MAX ( ref_obligation_distribution[citation] ), FILTER ( ALL ( ref_obligation_distribution ), ref_obligation_distribution[categorie] = c ) ), "" ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: d851ba17-b532-4073-989e-31ee2f1068ca
+
+	column categorie
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: 9de6a42f-b926-4061-8181-17a87d3c8e0d
+		summarizeBy: none
+		sourceColumn: categorie
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: 591149c5-f3e0-4bb1-9b34-6060ca0df5a1
+		summarizeBy: none
+		sourceColumn: libelle
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column taux
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(9, 4)
+		lineageTag: c62052c1-f242-47d4-8166-22a6677425b9
+		summarizeBy: sum
+		sourceColumn: taux
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column abattement
+		dataType: double
+		sourceProviderType: decimal(9, 4)
+		lineageTag: cd05da8c-8781-43fb-9ec0-423e382eff82
+		summarizeBy: sum
+		sourceColumn: abattement
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(60)
+		lineageTag: 7f8dfc19-60ef-43ff-9aba-2168e5fd76c7
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column citation
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(1200)
+		lineageTag: 7720bd84-376b-498f-8cb7-24e62eac0a56
+		summarizeBy: none
+		sourceColumn: citation
+
+		annotation SummarizationSetBy = Automatic
+
+	column lu_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 25a88fb0-bfe3-4e7e-ad96-f96a56223d2b
+		summarizeBy: none
+		sourceColumn: lu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice_de_rattachement
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ae683502-9e89-4740-a8aa-a716cc0f3370
+		summarizeBy: none
+		sourceColumn: exercice_de_rattachement
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isHidden
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 6360d5a1-5c98-4da3-ba0e-14233c5fcdbb
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 8aee147f-d7ed-4d20-afeb-d3bd37aee4fa
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 6fc97f31-2ca2-472c-840a-c9103868ee1c
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_obligation_distribution = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_obligation_distribution = Source{[Schema="dbo",Item="ref_obligation_distribution"]}[Data]
+				in
+				    dbo_ref_obligation_distribution
+

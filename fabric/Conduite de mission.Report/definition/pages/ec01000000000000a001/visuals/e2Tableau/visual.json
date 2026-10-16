@@ -70,6 +70,21 @@
               },
               "queryRef": "v_filiale_dependances.Quote-part",
               "nativeQueryRef": "Quote-part"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_filiale_dependances"
+                    }
+                  },
+                  "Property": "Classement R214-83"
+                }
+              },
+              "queryRef": "v_filiale_dependances.Classement R214-83",
+              "nativeQueryRef": "Classement R214-83",
+              "displayName": "Contrôlée (R. 214-83)"
             }
           ]
         }
@@ -339,6 +354,40 @@
           }
         },
         "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "v_filiale_dependances",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "t"
+                        }
+                      },
+                      "Property": "Est filiale du client courant"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
         "howCreated": "User"
       }
     ]

@@ -1,0 +1,109 @@
+/// Ce que l'accord d'une réouverture ferait sur l'arrêté, 8 lignes comptées en base.
+table v_ecran_reouverture_effets
+	lineageTag: b5ec1b88-6c6e-5f5f-a924-5fa2adf4a263
+
+	/// 1 pour une ligne des effets de l'arrêté choisi : les 2 vues ne se filtrent pas l'une l'autre.
+	measure 'Est effet de l arrete choisi' = VAR c = CALCULATE ( [Client selectionne], REMOVEFILTERS ( v_ecran_reouverture_effets ) ) VAR a = [Arrete choisi reouverture] RETURN IF ( NOT ISBLANK ( c ) && NOT ISBLANK ( a ) && NOT ISEMPTY ( FILTER ( v_ecran_reouverture_effets, v_ecran_reouverture_effets[entite] = c && v_ecran_reouverture_effets[arrete] = a ) ), 1 )
+		formatString: 0
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 094dca4d-ec08-5db0-a331-ddde3932e73f
+
+	/// Le fond de la cellule « Aujourd'hui » quand elle dit le statut de l'arrêté.
+	measure 'Fond effet aujourd hui' = SWITCH ( SELECTEDVALUE ( v_ecran_reouverture_effets[Aujourd'hui] ), "Clos", "#EFF6F2", "Ouvert", "#EAF1F8" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: ecfd3110-0a24-552b-ad9c-e95e0bcb7aea
+
+	/// L'encre de la cellule « Aujourd'hui » quand elle dit le statut de l'arrêté.
+	measure 'Encre effet aujourd hui' = SWITCH ( SELECTEDVALUE ( v_ecran_reouverture_effets[Aujourd'hui] ), "Clos", "#1F6D4A", "Ouvert", "#0F5C8C", "#12233C" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 8276078c-f8b4-524d-93d4-61984a41d3ee
+
+	/// Le fond de la cellule « Après la réouverture » quand elle dit le statut de l'arrêté.
+	measure 'Fond effet apres reouverture' = SWITCH ( SELECTEDVALUE ( v_ecran_reouverture_effets[Après la réouverture] ), "Clos", "#EFF6F2", "Ouvert", "#EAF1F8" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: efe5493b-6dc8-5d79-bda5-f88f94eed423
+
+	/// L'encre de la cellule « Après la réouverture » quand elle dit le statut de l'arrêté.
+	measure 'Encre effet apres reouverture' = SWITCH ( SELECTEDVALUE ( v_ecran_reouverture_effets[Après la réouverture] ), "Clos", "#1F6D4A", "Ouvert", "#0F5C8C", "#12233C" )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 69806710-98af-51dc-92d7-abfdecaa1548
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 2e5e64a1-67db-5a9a-8f52-146a24e07a75
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 47c7ede6-3479-5059-b6a5-d1b7be951d84
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isHidden
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 2b13e673-1203-51b1-89fa-34391628fb69
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: varchar(44)
+		lineageTag: b030bd60-81b7-5136-9283-1d719b45766d
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ce que touche la réouverture'
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(25)
+		lineageTag: aa0ab603-1255-5df4-8d81-c451b698bc18
+		summarizeBy: none
+		sourceColumn: Ce que touche la réouverture
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Aujourd''hui'
+		dataType: string
+		sourceProviderType: nvarchar(423)
+		lineageTag: 34fa4976-cb3b-5032-978c-490b8403da44
+		summarizeBy: none
+		sourceColumn: Aujourd'hui
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Après la réouverture'
+		dataType: string
+		sourceProviderType: nvarchar(55)
+		lineageTag: a360c96e-f667-567c-8b78-b1414847ac35
+		summarizeBy: none
+		sourceColumn: Après la réouverture
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_reouverture_effets = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_reouverture_effets = Source{[Schema="dbo",Item="v_ecran_reouverture_effets"]}[Data]
+				in
+				    dbo_v_ecran_reouverture_effets
+

@@ -1,6 +1,53 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_differences_comptes_courants
 	lineageTag: b29b350e-3360-4375-b962-b0567a1223cf
+
+	/// VAR s = SELECTEDVALUE ( v_differences_comptes_courants[source] ) RETURN IF ( ISINSCOPE ( v_differences_comptes_courants[code_actif] ), LOOKUPVALUE ( ref_source_valeur[libelle], ref_source_valeur[source], s ) ) : le libellé de la source de l’avance (v_patrimoine_valorise rend NOMINAL, REVISION ou CAS
+	measure 'Libelle de la source de l avance' = VAR s = SELECTEDVALUE ( v_differences_comptes_courants[source] ) RETURN IF ( ISINSCOPE ( v_differences_comptes_courants[code_actif] ), LOOKUPVALUE ( ref_source_valeur[libelle], ref_source_valeur[source], s ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 1c4170ca-a271-4655-ba82-1f15ed09d616
+
+	/// « avance · nominal x » ; « aucune avance choisie »
+	measure 'Sous-titre revision de l avance' = VAR c = [Avance choisie] RETURN IF ( ISBLANK ( c ), "aucune avance choisie", c & " · nominal " & FORMAT ( [Nominal de l avance choisie], "#,0" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 06e60ff5-e36d-4dd6-9b15-f8d579e31ddf
+
+	/// « avance · filiale liée » ; « aucune avance choisie »
+	measure 'Sous-titre fiche de l avance' = VAR c = [Avance choisie] VAR f = CALCULATE ( MAX ( v_differences_comptes_courants[entite_liee] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) RETURN IF ( ISBLANK ( c ), "aucune avance choisie", c & " · " & f )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 54e12a68-b7ad-4e00-9baa-787cba51bd7b
+
+	/// « n avances du véhicule »
+	measure 'Sous-titre grille des avances' = VAR n = COUNTROWS ( v_differences_comptes_courants ) + 0 RETURN FORMAT ( n, "0" ) & IF ( n > 1, " avances du véhicule", " avance du véhicule" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 3f196f3f-919a-4d78-8161-308144e35ffd
+
+	/// le nominal de l’avance choisie, VAR c = [Avance choisie] puis FILTER ( ALL ( v_differences_comptes_courants ), [code_actif] = c ) ; 4e barre du graphique de la fiche, à côté des barres de v_titres_valeur_actuelle
+	measure 'Nominal de l avance choisie' = VAR c = [Avance choisie] RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( SUM ( v_differences_comptes_courants[valeur_comptable] ), FILTER ( ALL ( v_differences_comptes_courants[code_actif] ), v_differences_comptes_courants[code_actif] = c ) ) )
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 91f17f3d-d6c4-47d2-a01f-417960f895ff
+
+	/// la ligne de l’avance choisie (VAR c = [Avance choisie], puis comparaison à code_actif) ; filtre de visuel de la carte de l’avance = 1
+	measure 'Filtre avance choisie' = VAR c = [Avance choisie] RETURN IF ( NOT ISBLANK ( c ) && SELECTEDVALUE ( v_differences_comptes_courants[code_actif] ) = c, 1 )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 49f6d72d-b035-45db-813c-326e36f04f7f
+
+	/// « à passer » quand la filiale liée a un actif net réévalué négatif, « sans objet » sinon
+	measure 'Cascade 212-5 de l avance' = VAR f = SELECTEDVALUE ( v_differences_comptes_courants[entite_liee] ) VAR anr = CALCULATE ( SUM ( v_titres_valeur_actuelle[actif_net_reevalue] ), FILTER ( ALL ( v_titres_valeur_actuelle[entite_fille] ), v_titres_valeur_actuelle[entite_fille] = f ) ) RETURN IF ( NOT ISBLANK ( f ), IF ( anr < 0, "à passer", "sans objet" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: a4b7a70f-d044-4110-95df-76b240774e2b
+
+	/// le code de la ligne choisie de la grille 1b
+	measure 'Avance choisie' = IF ( HASONEVALUE ( v_differences_comptes_courants[code_actif] ), SELECTEDVALUE ( v_differences_comptes_courants[code_actif] ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 03a9809a-a8ed-4be0-b091-20161b0ff1b0
+
+	/// « n avances · n révisions » (bande 1)
+	measure 'Libelle type comptes courants' = VAR n = COUNTROWS ( v_differences_comptes_courants ) + 0 VAR r = CALCULATE ( COUNTROWS ( v_differences_comptes_courants ), v_differences_comptes_courants[source] = "REVISION" ) + 0 RETURN FORMAT ( n, "0" ) & IF ( n > 1, " avances · ", " avance · " ) & IF ( r = 0, "aucune révision", FORMAT ( r, "0" ) & IF ( r > 1, " révisions", " révision" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 540df2b8-dd5a-41a4-8718-070be13cfd66
 
 	column entite
 		dataType: string
@@ -162,6 +209,17 @@ table v_differences_comptes_courants
 		lineageTag: dc5c7eee-1968-4823-87f4-571c36792618
 		summarizeBy: sum
 		sourceColumn: quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column interets_courus
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 29fb37cb-8a6f-4a1f-bd97-e03502b2ba3b
+		summarizeBy: sum
+		sourceColumn: interets_courus
 
 		annotation SummarizationSetBy = Automatic
 

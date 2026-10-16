@@ -4,10 +4,10 @@
   "position": {
     "x": 31,
     "y": 532,
-    "z": 16400,
+    "z": 16700,
     "height": 31,
     "width": 136,
-    "tabOrder": 16400
+    "tabOrder": 16700
   },
   "visual": {
     "visualType": "actionButton",
@@ -495,7 +495,7 @@
                     {
                       "name": "compte1",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revOdlCompte",
@@ -504,7 +504,7 @@
                     {
                       "name": "libelle1",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revOdlLibelle",
@@ -513,7 +513,7 @@
                     {
                       "name": "compte2",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revOdlCompte2",
@@ -522,7 +522,7 @@
                     {
                       "name": "libelle2",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revOdlLibelle2",

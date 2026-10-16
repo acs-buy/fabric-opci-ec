@@ -1,0 +1,126 @@
+/// Controle de la rationalisation de l actif net.
+table v_controle_rationalisation
+	lineageTag: bf56741a-1a90-4251-b336-292d9a214d99
+
+	/// « écart x · synthèse proposée ou non » (bande 5)
+	measure 'Libelle bande synthese' = VAR e = SUM ( v_controle_rationalisation[ecart] ) VAR s = CALCULATE ( MAX ( synthese_proposee[propose_le] ), ISBLANK ( synthese_proposee[perime_le] ) ) RETURN IF ( NOT ISBLANK ( e ), "écart " & FORMAT ( e, "#,0" ) & " · ", "" ) & IF ( ISBLANK ( s ), "synthèse non proposée", "synthèse proposée" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: b33dc466-f406-4b74-8d1d-699a7d51b506
+
+	/// l’entité quand aucun lot du véhicule n’est proposé, aucun compte de classe 1 hors actif net, la rationalisation boucle, la VL est rendue et aucune synthèse n’attend son visa ; vide sinon
+	measure 'Synthese proposable' = VAR e = [Client selectionne] VAR lot = CALCULATE ( MIN ( v_lots_perimetre[Lot] ), FILTER ( ALL ( v_lots_perimetre[Entité] ), v_lots_perimetre[Entité] = e ), v_lots_perimetre[Statut du lot] = "PROPOSE" ) VAR hors = COUNTROWS ( v_comptes_classe_1_hors_anr ) + 0 VAR b = CALCULATE ( COUNTROWS ( v_controle_rationalisation ), v_controle_rationalisation[boucle] = TRUE () ) + 0 VAR vl = SUM ( v_valeur_liquidative[valeur_liquidative] ) RETURN IF ( NOT ISBLANK ( e ) && ISBLANK ( lot ) && hors = 0 && b > 0 && NOT ISBLANK ( vl ) && ISBLANK ( [Synthese a viser] ) && [Valorisation etape 5 faite] = 0, e )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 4f9a2892-34a7-4200-ab36-8f7c40a50b5e
+
+	/// gris quand [Synthese proposable] est vide
+	measure 'Fond proposer la synthese' = IF ( ISBLANK ( [Synthese proposable] ), "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e42ac7b2-02bd-45bd-ab78-93beafa4546a
+
+	/// les conditions de pr_proposer_synthese non remplies, puis « synthèse proposée le jj/mm/aaaa, en attente du visa » ; joints par « · » ; « conditions réunies » sinon
+	measure 'Blocage proposition de la synthese' = VAR e = [Client selectionne] VAR lot = CALCULATE ( MIN ( v_lots_perimetre[Lot] ), FILTER ( ALL ( v_lots_perimetre[Entité] ), v_lots_perimetre[Entité] = e ), v_lots_perimetre[Statut du lot] = "PROPOSE" ) VAR hors = COUNTROWS ( v_comptes_classe_1_hors_anr ) + 0 VAR n = COUNTROWS ( v_controle_rationalisation ) + 0 VAR b = CALCULATE ( COUNTROWS ( v_controle_rationalisation ), v_controle_rationalisation[boucle] = TRUE () ) + 0 VAR vl = SUM ( v_valeur_liquidative[valeur_liquidative] ) VAR s = CALCULATE ( MAX ( synthese_proposee[propose_le] ), ISBLANK ( synthese_proposee[perime_le] ) ) VAR p1 = IF ( NOT ISBLANK ( lot ), "lot " & lot & " proposé, non visé" ) VAR j1 = p1 VAR p2 = IF ( hors > 0, FORMAT ( hors, "0" ) & " comptes de classe 1 hors actif net" ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) VAR p3 = IF ( n = 0, "rationalisation non calculée", IF ( b = 0, "la rationalisation ne boucle pas" ) ) VAR j3 = IF ( j2 <> "" && p3 <> "", j2 & " · " & p3, j2 & p3 ) VAR p4 = IF ( ISBLANK ( vl ), "valeur liquidative non rendue" ) VAR j4 = IF ( j3 <> "" && p4 <> "", j3 & " · " & p4, j3 & p4 ) VAR p5 = IF ( NOT ISBLANK ( [Synthese a viser] ), "synthèse proposée le " & FORMAT ( s, "dd/MM/yyyy" ) & ", en attente du visa" ) VAR j5 = IF ( j4 <> "" && p5 <> "", j4 & " · " & p5, j4 & p5 ) VAR p6 = IF ( [Valorisation etape 5 faite] = 1, "synthèse visée" ) VAR j6 = IF ( j5 <> "" && p6 <> "", j5 & " · " & p6, j5 & p6 ) RETURN IF ( j6 = "", "conditions réunies", j6 )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 70764c8c-2e82-4353-bda3-c39e98f6eb5c
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 180d6bcb-206b-4c54-8aa3-37e179fe450f
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 6029e9c9-aa24-4c01-8559-2f6f25b91ac5
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column actif_net_precedent
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 8f3951d0-992b-4462-bd0c-b6dbc40946e2
+		summarizeBy: sum
+		sourceColumn: actif_net_precedent
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column actif_net_rationalise
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 4c8828cb-84ca-4c6c-82c4-a6fca8ebe05d
+		summarizeBy: sum
+		sourceColumn: actif_net_rationalise
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column actif_net_calcule
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 6c224f6d-201b-4055-8666-96867b3ed973
+		summarizeBy: sum
+		sourceColumn: actif_net_calcule
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ecart
+		dataType: double
+		sourceProviderType: decimal(20, 2)
+		lineageTag: 6e6ee063-e19c-4b0b-a055-49cf8ccd5bb8
+		summarizeBy: sum
+		sourceColumn: ecart
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column boucle
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: bfbdb86d-932f-4dbd-be8e-1129857c3a39
+		summarizeBy: none
+		sourceColumn: boucle
+
+		annotation SummarizationSetBy = Automatic
+
+	column lecture
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(94)
+		lineageTag: cc94e534-cc18-4f05-9d50-80e0d4107b27
+		summarizeBy: none
+		sourceColumn: lecture
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_du_seuil
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(85)
+		lineageTag: c6d194c0-0d9d-45b7-b177-b6a39ecdebc0
+		summarizeBy: none
+		sourceColumn: source_du_seuil
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_controle_rationalisation = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_controle_rationalisation = Source{[Schema="dbo",Item="v_controle_rationalisation"]}[Data]
+				in
+				    dbo_v_controle_rationalisation
+

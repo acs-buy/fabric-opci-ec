@@ -452,7 +452,7 @@
               "metadata": {
                 "dataFunction": {
                   "name": "saisir_od_double",
-                  "autoRefresh": false,
+                  "autoRefresh": true,
                   "parameters": [
                     {
                       "name": "entite",
@@ -495,7 +495,7 @@
                     {
                       "name": "compte1",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revOdCompte",
@@ -504,7 +504,7 @@
                     {
                       "name": "libelle1",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revOdLibelle",
@@ -513,7 +513,7 @@
                     {
                       "name": "compte2",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revOdCompte2",
@@ -522,7 +522,7 @@
                     {
                       "name": "libelle2",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revOdLibelle2",

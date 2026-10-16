@@ -1,30 +1,55 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_a_generer_synthese
 	lineageTag: ce572ed6-6694-400b-aa6d-0e8c22dec1ea
 
-	/// Carte 3.4, Actifs de l entite. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.4, Actifs de l entite.
 	measure 'R34 Actifs de l entite' = VAR arretes = COUNTROWS ( VALUES ( v_dim_arrete[arrete] ) ) RETURN IF ( arretes = 1, SUM ( v_a_generer_synthese[actifs] ) )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 4e04851a-d228-446d-9371-61dbb173385e
 
-	/// Carte 3.4, Calculables. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.4, Calculables.
 	measure 'R34 Calculables' = SUM ( v_a_generer_synthese[calculables] )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: e76f12a2-a674-4a69-9601-e086c7eeb2ee
 
-	/// Carte 3.4, Bloques. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.4, Bloques.
 	measure 'R34 Bloques' = SUM ( v_a_generer_synthese[bloques] )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 7e9db7a9-c310-4d01-8fc2-28ba4cb8d4f2
 
-	/// Carte 3.4, Variation calculable. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.4, Variation calculable.
 	measure 'R34 Variation calculable' = SUM ( v_a_generer_synthese[variation_calculable] )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: cb7ce846-caaf-4ab7-8276-7e243b500811
+
+	/// « n expertises sans rapport rattaché » (objet B2), « demande de réévaluation en attente », « lot n proposé, non périmé », « aucun actif calculable » ; joints par « · » ; « conditions réunies » sinon
+	measure 'Blocage generer le lot' = VAR e = [Client selectionne] VAR esr = SUM ( v_a_generer_synthese[expertises_sans_rapport] ) + 0 VAR dem = SUM ( v_a_generer_synthese[demande_en_attente] ) + 0 VAR calc = SUM ( v_a_generer_synthese[calculables] ) + 0 VAR lot = CALCULATE ( MIN ( v_lots_perimetre[Lot] ), FILTER ( ALL ( v_lots_perimetre[Entité] ), v_lots_perimetre[Entité] = e ), v_lots_perimetre[Statut du lot] = "PROPOSE", v_lots_perimetre[famille] = "DERIVABLE", v_lots_perimetre[perime] = FALSE () ) VAR p1 = IF ( esr > 0, FORMAT ( esr, "0" ) & IF ( esr = 1, " expertise sans rapport rattaché", " expertises sans rapport rattaché" ) ) VAR j1 = p1 VAR p2 = IF ( dem > 0, "demande de réévaluation en attente" ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) VAR p3 = IF ( NOT ISBLANK ( lot ), "lot " & lot & " proposé, non périmé" ) VAR j3 = IF ( j2 <> "" && p3 <> "", j2 & " · " & p3, j2 & p3 ) VAR p4 = IF ( calc = 0, "aucun actif calculable" ) VAR j4 = IF ( j3 <> "" && p4 <> "", j3 & " · " & p4, j3 & p4 ) RETURN IF ( j4 = "", "conditions réunies", j4 )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: bd41d711-f6df-4188-ba44-e92a57a330a9
+
+	/// gris quand [Entite si generable] est vide
+	measure 'Fond generer le lot' = IF ( ISBLANK ( [Entite si generable] ), "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 3ab14306-509d-44b7-941a-736b2ea40fc3
+
+	/// l’entité quand la garde B6 bis de la fonction et les 3 gardes de l’objet de base n° {garde} passent : aucune expertise sans rapport rattaché de l’entité à l’arrêté (expertises_sans_rapport = 0, objet B2), aucune demande EN_ATTENTE, aucun lot DERIVABLE PROPOSE non périmé de l’entité à l’arrêté, au mo
+	measure 'Entite si generable' = VAR e = [Client selectionne] VAR esr = SUM ( v_a_generer_synthese[expertises_sans_rapport] ) + 0 VAR dem = SUM ( v_a_generer_synthese[demande_en_attente] ) + 0 VAR calc = SUM ( v_a_generer_synthese[calculables] ) + 0 VAR lot = CALCULATE ( MIN ( v_lots_perimetre[Lot] ), FILTER ( ALL ( v_lots_perimetre[Entité] ), v_lots_perimetre[Entité] = e ), v_lots_perimetre[Statut du lot] = "PROPOSE", v_lots_perimetre[famille] = "DERIVABLE", v_lots_perimetre[perime] = FALSE () ) RETURN IF ( NOT ISBLANK ( e ) && esr = 0 && dem = 0 && ISBLANK ( lot ) && calc > 0, e )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 60678f43-1593-4c9e-9711-3bc274f99828
+
+	/// alerte quand [R34 Bloques] > 0 (carte 3)
+	measure 'Encre actifs suivis' = IF ( [R34 Bloques] > 0, "#9A2A2A", "#12233C" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 1c0ae8eb-f9b7-47c4-8cae-ee4023a5ecca
+
+	/// « véhicule : n calculables, n bloqués » (carte 3)
+	measure 'Sous-ligne actifs suivis' = VAR c = [R34 Calculables] + 0 VAR b = [R34 Bloques] + 0 RETURN "véhicule : " & FORMAT ( c, "0" ) & IF ( c > 1, " calculables, ", " calculable, " ) & FORMAT ( b, "0" ) & IF ( b > 1, " bloqués", " bloqué" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 132a026a-65eb-4f35-9956-7e0d616b1fb9
 
 	column entite
 		dataType: string
@@ -131,6 +156,16 @@ table v_a_generer_synthese
 		lineageTag: eb5783ae-fc52-41aa-9b94-970ae986ad7e
 		summarizeBy: none
 		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column expertises_sans_rapport
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8de96082-99ed-4689-83ed-5e47d45e41d2
+		summarizeBy: sum
+		sourceColumn: expertises_sans_rapport
 
 		annotation SummarizationSetBy = Automatic
 

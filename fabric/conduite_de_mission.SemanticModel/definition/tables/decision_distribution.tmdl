@@ -1,0 +1,153 @@
+/// Decisions de distribution inscrites, une par categorie et par exercice.
+table decision_distribution
+	lineageTag: 0515a684-aab4-4bd0-8aba-73a9f8447cfb
+
+	/// « n décisions inscrites » ; « aucune décision inscrite »
+	measure 'Libelle bande decision' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR n = COUNTROWS ( FILTER ( ALL ( decision_distribution ), decision_distribution[entite] = e && decision_distribution[exercice] = a ) ) + 0 RETURN IF ( n = 0, "aucune décision inscrite", FORMAT ( n, "0" ) & IF ( n > 1, " décisions inscrites", " décision inscrite" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 7a00ca1d-7769-47dc-ac73-daf632d00cb2
+
+	/// « exercice aaaa · n décisions » ; « exercice aaaa · aucune décision inscrite »
+	measure 'Sous-titre decisions inscrites' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR n = COUNTROWS ( FILTER ( ALL ( decision_distribution ), decision_distribution[entite] = e && decision_distribution[exercice] = a ) ) + 0 RETURN "exercice " & LEFT ( a, 4 ) & " · " & IF ( n = 0, "aucune décision inscrite", FORMAT ( n, "0" ) & IF ( n > 1, " décisions", " décision" ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: e152ac41-da47-456d-b999-980cd2ae9655
+
+	/// le libellé de ref_obligation_distribution de la catégorie de la ligne (VAR c = SELECTEDVALUE ( decision_distribution[categorie] ) puis FILTER ( ALL ( ref_obligation_distribution ), [categorie] = c )) ; vide quand le contexte ne porte pas exactement 1 catégorie ; colonne « Catégorie » des décisions i
+	measure 'Libelle categorie de la decision' = VAR c = IF ( HASONEVALUE ( decision_distribution[categorie] ), SELECTEDVALUE ( decision_distribution[categorie] ) ) RETURN IF ( ISBLANK ( c ), "", CALCULATE ( MAX ( ref_obligation_distribution[libelle] ), FILTER ( ALL ( ref_obligation_distribution ), ref_obligation_distribution[categorie] = c ) ) ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: fbb61fd2-df48-4d9a-9c6a-80f00c70ecd6
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 29598a8e-722c-4995-8f12-64422de71403
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: c9d97d3b-c0d4-47b3-9b94-5ebfff2cba97
+		summarizeBy: none
+		sourceColumn: exercice
+
+		annotation SummarizationSetBy = Automatic
+
+	column categorie
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: f1e0b863-aba7-40bd-acea-ddc3e9949249
+		summarizeBy: none
+		sourceColumn: categorie
+
+		annotation SummarizationSetBy = Automatic
+
+	column obligation_minimale
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: be2decf9-319b-4232-89b6-4f7d23ac33fd
+		summarizeBy: sum
+		sourceColumn: obligation_minimale
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_distribuable
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: afec334b-f36a-4f3f-ae5c-29fc2dee586d
+		summarizeBy: sum
+		sourceColumn: total_distribuable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column montant_decide
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 73d0669d-3f3b-4175-8358-f5790144aeed
+		summarizeBy: sum
+		sourceColumn: montant_decide
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column date_assemblee
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: 15c44abf-eb5f-4d20-9092-4ac2e0308e13
+		summarizeBy: none
+		sourceColumn: date_assemblee
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 44536de5-2e22-4e2a-a31b-50c51bdc0f3e
+		summarizeBy: none
+		sourceColumn: decide_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column decide_le
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: 0af7e4d8-ee05-42dd-b8a2-9e717260136d
+		summarizeBy: none
+		sourceColumn: decide_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran
+		dataType: string
+		sourceProviderType: nvarchar(2000)
+		lineageTag: 480045db-4e64-4a7c-bc15-8976a19b1f4d
+		summarizeBy: none
+		sourceColumn: message_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: e6c28c76-d82c-453f-b7c5-b6caa7541f62
+		summarizeBy: none
+		sourceColumn: message_ecran_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column message_ecran_pour
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 2bf5704e-8278-4489-b3f3-52ebbbaff03c
+		summarizeBy: none
+		sourceColumn: message_ecran_pour
+
+		annotation SummarizationSetBy = Automatic
+
+	partition decision_distribution = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_decision_distribution = Source{[Schema="dbo",Item="decision_distribution"]}[Data]
+				in
+				    dbo_decision_distribution
+

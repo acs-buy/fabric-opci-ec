@@ -1,0 +1,27 @@
+/// Les 7 colonnes d'un tableau de l'annexe, numerotees de 1 a 7.
+table colonne_annexe
+	lineageTag: e01df6dd-5015-44b6-82f4-a50492f9018c
+
+	measure 'Colonne choisie' = IF ( HASONEVALUE ( colonne_annexe[colonne] ), SELECTEDVALUE ( colonne_annexe[colonne] ), "1" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: d2618580-5c4b-4c08-87e3-df9966dcff5e
+
+	column colonne
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(1)
+		lineageTag: afc2b10d-609b-4fc1-80e8-1a420f914e0d
+		summarizeBy: none
+		sourceColumn: colonne
+
+		annotation SummarizationSetBy = Automatic
+
+	partition colonne_annexe = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_colonne_annexe = Value.NativeQuery(Source, "SELECT CAST(N'1' AS NVARCHAR(1)) AS colonne UNION ALL SELECT CAST(N'2' AS NVARCHAR(1)) AS colonne UNION ALL SELECT CAST(N'3' AS NVARCHAR(1)) AS colonne UNION ALL SELECT CAST(N'4' AS NVARCHAR(1)) AS colonne UNION ALL SELECT CAST(N'5' AS NVARCHAR(1)) AS colonne UNION ALL SELECT CAST(N'6' AS NVARCHAR(1)) AS colonne UNION ALL SELECT CAST(N'7' AS NVARCHAR(1)) AS colonne", null, [EnableFolding = true])
+				in
+				    dbo_colonne_annexe
+

@@ -1,5 +1,5 @@
 
-
+-- pr_ouvrir_feuille : 6 refus
 CREATE   PROCEDURE dbo.pr_ouvrir_feuille
     @cote         VARCHAR (30),
     @modele_code  VARCHAR (20),
@@ -22,7 +22,7 @@ BEGIN
                + N'en vigueur, ou l''ajouter au referentiel avant d''ouvrir la feuille.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
-        THROW 50051, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
     END;
 
     /* 2 : l'arrete doit etre ouvert pour cette entite. Une feuille sans arrete ouvert n'a pas
@@ -35,7 +35,7 @@ BEGIN
                + N'a la valeur actuelle, article 211-6.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
-        THROW 50051, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
     END;
 
     /* 3 : la cote identifie la feuille, elle ne se reprend pas. */
@@ -45,7 +45,7 @@ BEGIN
                + N'une feuille et une seule : en choisir une autre, ou ouvrir la feuille existante.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
-        THROW 50051, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
     END;
 
     /* 4 : une feuille appartient a un cycle OU a une phase, jamais aux 2, jamais a aucun.
@@ -57,7 +57,7 @@ BEGIN
                + N'un des 2.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
-        THROW 50051, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
     END;
 
     /* 5 : le cycle ou la phase doit exister au referentiel. */
@@ -67,7 +67,7 @@ BEGIN
                + N'cycles de revision.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
-        THROW 50051, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
     END;
     IF @phase IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.ref_phase WHERE code = @phase)
     BEGIN
@@ -75,7 +75,7 @@ BEGIN
                + N'phases de la mission.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
-        THROW 50051, @m, 1;
+        BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
     END;
 
     /* La feuille attendue : nom, chemin et empreinte du gabarit. */

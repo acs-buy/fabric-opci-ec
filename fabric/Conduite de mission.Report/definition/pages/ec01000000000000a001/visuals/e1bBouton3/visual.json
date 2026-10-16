@@ -335,6 +335,13 @@
                   "Value": "'bkEtat1'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Revient à la fiche du dossier.'"
+                }
+              }
             }
           }
         }

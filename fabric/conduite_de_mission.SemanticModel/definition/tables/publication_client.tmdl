@@ -1,0 +1,125 @@
+/// Les publications du rapport client.
+table publication_client
+	lineageTag: f04eaa69-7af5-419e-a38e-3510eec30617
+
+	measure 'Libelle publication de l arrete' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( a ), BLANK (), "Publication du " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 474e4727-9326-4592-b236-5c0e7a1343a5
+
+	measure 'Publication de l arrete' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR cl = MAXX ( FILTER ( ALL ( v_visa_cloture_courant ), v_visa_cloture_courant[entite] = e && v_visa_cloture_courant[arrete] = a ), v_visa_cloture_courant[decision] ) VAR cll = MAXX ( FILTER ( ALL ( v_visa_cloture_courant ), v_visa_cloture_courant[entite] = e && v_visa_cloture_courant[arrete] = a ), v_visa_cloture_courant[decide_le] ) VAR tp = FILTER ( ALL ( publication_client ), publication_client[entite] = e && publication_client[arrete] = a ) VAR idp = MAXX ( tp, publication_client[id] ) VAR tl = FILTER ( tp, publication_client[id] = idp ) VAR pet = MAXX ( tl, publication_client[etat] ) VAR pd = MAXX ( tl, publication_client[publiee_le] ) VAR pv = MAXX ( tl, publication_client[visa_id] ) VAR vd = MAXX ( FILTER ( ALL ( visa_cloture ), visa_cloture[id] = pv ), visa_cloture[decide_le] ) VAR apres = COUNTROWS ( FILTER ( ALL ( publication_client ), publication_client[entite] = e && publication_client[publiee_le] > cll ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( ISBLANK ( idp ), "aucune", IF ( pet <> "PUBLIEE", LOWER ( pet ) & " le " & FORMAT ( pd, "dd/MM/yyyy" ), "le " & FORMAT ( pd, "dd/MM/yyyy" ) & ", sur le visa du " & IF ( ISBLANK ( vd ), "", FORMAT ( vd, "dd/MM/yyyy" ) ) & IF ( ISBLANK ( cl ) || cl = "VISE" || apres > 0, "", " ; aucune depuis le renvoi du " & FORMAT ( cll, "dd/MM/yyyy" ) ) ) ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 9c437a3f-0781-4ebd-b863-85522bd12de0
+
+	measure 'Aff Libelle publication de l arrete' = [Libelle publication de l arrete] & ""
+		lineageTag: 6647bc2d-233e-4f5f-a194-b456c312c1c2
+
+	measure 'Aff Publication de l arrete' = [Publication de l arrete] & ""
+		lineageTag: f088d6da-684a-4d90-b464-0ac2a56ea1d6
+
+	measure 'Publication de l arrete ligne 1' = VAR t = [Publication de l arrete] & "" VAR k = SEARCH ( " ; ", t, 1, 0 ) RETURN IF ( k > 0, LEFT ( t, k - 1 ), t )
+		lineageTag: d766bc4d-5cc2-4e6e-9527-d022324a676d
+
+	measure 'Publication de l arrete ligne 2' = VAR t = [Publication de l arrete] & "" VAR k = SEARCH ( " ; ", t, 1, 0 ) RETURN IF ( k > 0, MID ( t, k + 3, 200 ), "" )
+		lineageTag: 8fbd966a-de75-42b3-abac-e3ca22e32469
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 5fd518f8-8a4d-41a0-ba4f-11997a8650c2
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 96f9472c-f247-4be5-95ac-d5da17273a91
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: acd3e6e0-92c7-4602-92f7-c6d01cc4dfb2
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column visa_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ad56f290-dfc4-4c02-8982-0ecd4d16ea0b
+		summarizeBy: none
+		sourceColumn: visa_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 37dacd9f-6324-4fce-8fda-9bad716d542c
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column publiee_le
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 9057974a-b28e-40f1-b3ef-257e8dc3ce35
+		summarizeBy: none
+		sourceColumn: publiee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column publiee_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 01e74c0c-f869-4f52-8322-13921bbd84fa
+		summarizeBy: none
+		sourceColumn: publiee_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: d0730e5b-61fb-43e0-ab3e-4c155f860456
+		summarizeBy: none
+		sourceColumn: motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column terminee_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 1079998d-65e7-4d76-8bb0-747def2e1d69
+		summarizeBy: none
+		sourceColumn: terminee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition publication_client = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_publication_client = Value.NativeQuery(Source, "SELECT id, entite, arrete, visa_id, etat, DATETIME2FROMPARTS(YEAR(publiee_le), MONTH(publiee_le), DAY(publiee_le), DATEPART(HOUR, publiee_le), DATEPART(MINUTE, publiee_le), DATEPART(SECOND, publiee_le), 0, 0) AS publiee_le, publiee_par, motif, DATETIME2FROMPARTS(YEAR(terminee_le), MONTH(terminee_le), DAY(terminee_le), DATEPART(HOUR, terminee_le), DATEPART(MINUTE, terminee_le), DATEPART(SECOND, terminee_le), 0, 0) AS terminee_le FROM dbo.publication_client", null, [EnableFolding = true])
+				in
+				    dbo_publication_client
+

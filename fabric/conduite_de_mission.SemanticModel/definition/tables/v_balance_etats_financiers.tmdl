@@ -1,0 +1,106 @@
+/// La balance de l'arrete apres OD de revision, celle que lisent les etats.
+table v_balance_etats_financiers
+	lineageTag: 5ed9fc18-efa7-4e98-9c5f-1e1b4f48f421
+
+	measure 'Titre de la balance' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR den = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), ref_entite[Dénomination] ) VAR de = IF ( CONTAINSSTRING ( "aeiouyhéèêàâîôûAEIOUYHÉÈÊÀÂÎÔÛ", LEFT ( den, 1 ) ), "de l’", "de " ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "Balance " & de & den & " au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) & ", après OD de révision" )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: bbd8514f-b03f-43af-883b-4d17ca9996a1
+
+	measure 'Aff Titre de la balance' = [Titre de la balance] & ""
+		lineageTag: 5b2d74b8-0cd3-407f-9629-29d80d4a0630
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 11ce2365-b1bd-4125-a200-512cefbf509a
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 9551f034-fb77-4284-9742-99a23f5d34f1
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column Compte
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 9aff0c40-8d06-4c93-bdc7-2e8fb5f3c9a7
+		summarizeBy: none
+		sourceColumn: compte_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column Libellé
+		dataType: string
+		sourceProviderType: nvarchar(300)
+		lineageTag: bbf68be1-bd5d-47b0-ab73-8869dca620ec
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column Débit
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: f9f3cf6c-f1b1-423d-94d8-17c689ff547b
+		summarizeBy: sum
+		sourceColumn: debit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Crédit
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 403d324f-1891-4723-bbe3-dfe084da850e
+		summarizeBy: sum
+		sourceColumn: credit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Solde N'
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: f8e7267c-e5b6-4bc0-be7a-671d3f891ab5
+		summarizeBy: sum
+		sourceColumn: solde_n
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Solde N-1'
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 7bea669d-0427-48bc-839f-1787aa9633dc
+		summarizeBy: sum
+		sourceColumn: solde_n_1
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition v_balance_etats_financiers = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_balance_etats_financiers = Source{[Schema="dbo",Item="v_balance_etats_financiers"]}[Data]
+				in
+				    dbo_v_balance_etats_financiers
+

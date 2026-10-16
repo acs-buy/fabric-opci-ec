@@ -1,3 +1,5 @@
+
+-- pr_inscrire_import : 5 refus
 -- =====================================================================
 -- LOT I du plan fusionne, deuxieme partie : l'inscription au carnet est
 -- separee du chargement, et une balance se charge par son propre chemin.
@@ -58,7 +60,7 @@ BEGIN
                    + N'referentiel des arretes. Un fichier ne s''inscrit pas '
                    + N'sur un arrete qui n''existe pas.';
             SET @motif_arret = N'Arrete inconnu au referentiel.';
-            THROW 50064, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50064, @m, 1; END
         END;
 
         -- Refus 2 : le format n'est pas connu.
@@ -68,7 +70,7 @@ BEGIN
                    + N'et rien d''autre. Recu : ' + COALESCE(@format, N'NULL')
                    + N'.';
             SET @motif_arret = N'Format inconnu.';
-            THROW 50064, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50064, @m, 1; END
         END;
 
         -- Refus 3 : l'exercice du fichier ne contient pas la date d'arrete.
@@ -82,7 +84,7 @@ BEGIN
                    + N'. Un fichier ne porte pas les ecritures d''un arrete '
                    + N'hors de son exercice.';
             SET @motif_arret = N'Exercice non conforme a l''arrete.';
-            THROW 50064, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50064, @m, 1; END
         END;
 
         -- Refus 4 : l'empreinte est deja chargee. Le meme fichier entrerait
@@ -99,7 +101,7 @@ BEGIN
                    + N', charge. Le meme fichier entrerait 2 fois et ses '
                    + N'ecritures seraient comptabilisees en double.';
             SET @motif_arret = N'Empreinte deja chargee.';
-            THROW 50064, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50064, @m, 1; END
         END;
 
         -- Refus 5 : un import est deja charge sur ce perimetre. Le
@@ -125,7 +127,7 @@ BEGIN
                    + N'et doublerait les ecritures. Annuler le lot du premier '
                    + N'import avant de reprendre.';
             SET @motif_arret = N'Un import est deja charge sur ce perimetre.';
-            THROW 50064, @m, 1;
+            BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50064, @m, 1; END
         END;
 
         INSERT INTO dbo.import_fec

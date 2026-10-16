@@ -1,0 +1,100 @@
+/// Seuils propres a un vehicule. Lue par la seule mesure [Seuil propre au vehicule].
+table ref_ratio_vehicule
+	lineageTag: 82d0fc63-d478-4940-a049-7268aa6d3591
+
+	/// le seuil de ref_ratio_vehicule pour le véhicule et la limite cochée (VAR e, c puis FILTER ALL), à la française, avec sa source : STATUTS « règlement ou statuts du véhicule », GESTIONNAIRE « fixé par le gestionnaire » ; sans ligne, « à remplir » pour une limite qui reçoit un seuil propre pour ce véhi
+	measure 'Seuil propre au vehicule' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR vide = HASONEVALUE ( ref_ratio_memoire[code] ) && ISBLANK ( SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR une = HASONEVALUE ( ref_ratio_memoire[code] ) && NOT vide VAR c = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[code] ) ) VAR lf = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[forme_vehicule] ) ) VAR lsp = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_professionnel] ) ) VAR lsg = IF ( une, SELECTEDVALUE ( ref_ratio_memoire[statut_grand_public] ) ) VAR so = une && ( ( NOT ISBLANK ( lf ) && lf <> fv ) || ( pro && lsp = "SANS_OBJET" ) ) VAR t2 = FILTER ( ALL ( ref_ratio_vehicule ), ref_ratio_vehicule[entite] = e && ref_ratio_vehicule[code] = c ) VAR s = MAXX ( t2, ref_ratio_vehicule[seuil] ) VAR src = MAXX ( t2, ref_ratio_vehicule[source] ) RETURN IF ( vide, BLANK (), ( IF ( NOT une, "", IF ( NOT ISBLANK ( s ), FORMAT ( s, "#,0.00" ) & ", " & IF ( src = "STATUTS", "règlement ou statuts du véhicule", "fixé par le gestionnaire" ), IF ( c = "LEVIER_MAX" || ( pro && c = "EMPRUNT_ESPECES_10" ), "à remplir", "aucun" ) ) ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: b098f50b-c11f-4c59-af0a-eb886cbc0a51
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 4cffeac3-27cf-4980-9b21-a668b2804cc0
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: 00a97f21-6442-4d41-8188-8529332f3750
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column seuil
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(9, 6)
+		lineageTag: 512206ec-8727-4a52-bc44-8cddc10566b7
+		summarizeBy: sum
+		sourceColumn: seuil
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 78430308-f22b-450a-9097-280bcdfd9165
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column piece_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 325462cd-a73c-4804-a5a8-67b36b53a6e2
+		summarizeBy: none
+		sourceColumn: piece_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column lu_le
+		dataType: dateTime
+		isNullable: false
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 079431de-36a9-40bc-8fc8-97768faaaa3e
+		summarizeBy: none
+		sourceColumn: lu_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 9a8b7b2b-b974-4a61-b88f-c2d975bcb9a8
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 484236f7-fae3-4083-a784-6374d9fd2535
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_ratio_vehicule = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_ratio_vehicule = Source{[Schema="dbo",Item="ref_ratio_vehicule"]}[Data]
+				in
+				    dbo_ref_ratio_vehicule
+

@@ -1,6 +1,12 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table ecriture
 	lineageTag: 0084d3a7-1b66-47ee-af72-37ecce8e4ec6
+
+	/// VAR c = [Lot choisi] RETURN IF ( c <> "", IF ( SELECTEDVALUE ( ecriture[lot_id] ) = VALUE ( c ), 1 ) ) ; filtre de visuel = 1, évalué écriture par écriture parce que ecriture[id] est dans la granularité du tableEx : sans lui, 2 écritures de même compte et de même intitulé de 2 lots de l’arrêté forme
+	measure 'Filtre lot choisi' = VAR c = [Lot choisi] RETURN IF ( c <> "", IF ( SELECTEDVALUE ( ecriture[lot_id] ) = VALUE ( c ), 1 ) )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 64592162-9517-45c2-8a87-662022eac499
 
 	column id
 		dataType: int64

@@ -1,0 +1,110 @@
+/// Par arrete de mission, la derniere version des cellules de l'annexe et son heure de calcul (UTC).
+table v_annexe_version
+	lineageTag: 75444276-0f98-4bcc-b462-3e13e4ac80b8
+
+	measure 'Calcul de l annexe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tv = FILTER ( ALL ( v_annexe_version ), v_annexe_version[entite] = e && v_annexe_version[arrete] = a ) VAR v = MAXX ( tv, v_annexe_version[derniere_version] ) VAR d = MAXX ( tv, v_annexe_version[cree_le] ) VAR f = MAXX ( FILTER ( ALL ( v_annexe_retard ), v_annexe_retard[entite] = e ), v_annexe_retard[dernier_calcul] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( COUNTROWS ( tv ) = 0, "Pas d’annexe : l’arrêté choisi n’est pas un arrêté de mission", IF ( ISBLANK ( v ), "Annexe jamais calculée", "Annexe : version " & FORMAT ( v, "0" ) & " du " & FORMAT ( d, "dd/MM/yyyy" ) & " à " & FORMAT ( d, "hh:nn" ) & " UTC" ) & IF ( ISBLANK ( f ), "", " ; dernier calcul le " & FORMAT ( f, "dd/MM/yyyy" ) & " à " & FORMAT ( f, "hh:nn" ) & " UTC" ) ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 6cbd20ea-7be7-4d2c-85f4-b4607753009f
+
+	measure 'Arrete de l annexe a recalculer' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( COUNTROWS ( FILTER ( ALL ( v_annexe_version ), v_annexe_version[entite] = e && v_annexe_version[arrete] = a ) ) > 0, a ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: e88bcc9f-a61f-4ce5-81d8-03c741ce7ad6
+
+	measure 'Validation de l annexe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tv = FILTER ( ALL ( v_annexe_version ), v_annexe_version[entite] = e && v_annexe_version[arrete] = a ) VAR vv = MAXX ( tv, v_annexe_version[version_validee] ) VAR nd = MAXX ( tv, v_annexe_version[cellules_differentes_validee] ) + 0 VAR cl = MAXX ( FILTER ( ALL ( v_visa_cloture_courant ), v_visa_cloture_courant[entite] = e && v_visa_cloture_courant[arrete] = a ), v_visa_cloture_courant[decision] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "validation pour le client : " & [Carte validation sous-titre] & IF ( cl = "VISE" && NOT ISBLANK ( vv ), ", annexe version " & FORMAT ( vv, "0" ) & IF ( nd > 0, " ; " & FORMAT ( nd, "0" ) & IF ( nd > 1, " cellules changées depuis", " cellule changée depuis" ), "" ), "" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: de48de17-14ec-453a-a660-1c2c4ac3b5a5
+
+	measure 'Fond m3Recalculer' = IF ( ISBLANK ( [Arrete de l annexe a recalculer] ), "#D9DFE6", "#FFFFFF" )
+		lineageTag: a82aa760-35bf-4114-8b78-c7810d2fe616
+
+	measure 'Libelle m3Recalculer' = "Recalculer"
+		lineageTag: 407546d6-69e8-449f-8884-d72e134758a5
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 73b7eff4-cd09-4067-96cc-81fe1ff783a2
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e102d7b5-db61-45d6-bec8-3bcc9c36109c
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_version
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 892ddb7c-e854-45dc-a21f-94abb82efb57
+		summarizeBy: none
+		sourceColumn: derniere_version
+
+		annotation SummarizationSetBy = Automatic
+
+	column cree_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 70edf234-c748-47dd-a3dc-787615214542
+		summarizeBy: none
+		sourceColumn: cree_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column version_validee
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 6ac9d660-702e-404e-af9a-f35d9617a8c4
+		summarizeBy: none
+		sourceColumn: version_validee
+
+		annotation SummarizationSetBy = Automatic
+
+	column cellules_differentes_validee
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c7d99086-06fe-410e-bbbf-5b213a17a5e9
+		summarizeBy: none
+		sourceColumn: cellules_differentes_validee
+
+		annotation SummarizationSetBy = Automatic
+
+	column n1_arrete
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: cd706ae4-0868-4844-bced-0bf8013c47d5
+		summarizeBy: none
+		sourceColumn: n1_arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column n1_cellules_differentes_validee
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 2b369a20-3949-4dae-bdd0-3d9068b05fd7
+		summarizeBy: none
+		sourceColumn: n1_cellules_differentes_validee
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_annexe_version = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_annexe_version = Source{[Schema="dbo",Item="v_annexe_version"]}[Data]
+				in
+				    dbo_v_annexe_version
+

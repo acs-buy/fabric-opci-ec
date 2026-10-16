@@ -36,6 +36,45 @@ table v_revision_indicateurs
 
 	measure 'Cycles a valider sur total' = FORMAT ( SUM ( v_revision_indicateurs[cycles] ) - SUM ( v_revision_indicateurs[cycles_vises] ) + 0, "0" ) & " / " & FORMAT ( SUM ( v_revision_indicateurs[cycles] ) + 0, "0" )
 
+	measure 'Carte revue' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR rv = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[revue_visee], 1, 0 ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( rv = 1, "Visée", "Non visée" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 601a1679-26a1-4349-bd07-ddd5e0315e7d
+
+	measure 'Carte revue sous-titre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR cv = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), v_revision_indicateurs[cycles_vises] ) + 0 VAR cy = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), v_revision_indicateurs[cycles] ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), FORMAT ( cv, "0" ) & IF ( cv > 1, " cycles visés", " cycle visé" ) & " sur " & FORMAT ( cy, "0" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: befe7d32-6bc7-4993-b29f-9c4903105bbe
+
+	measure 'Carte revue encre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR rv = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[revue_visee], 1, 0 ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "#12233C", IF ( rv = 1, "#1F6D4A", "#9A2A2A" ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: d010a4c2-6489-42c2-bf18-3fc2198fadb8
+
+	measure 'Dossier de travail etat' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR vr = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[verrouille], 1, 0 ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( vr = 1, "Dossier verrouillé", "Dossier ouvert" ) )
+		lineageTag: 34f260cf-4ee1-4fc9-bd02-6b502dc496d8
+
+	measure 'Dossier de travail verrou' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tr = FILTER ( ALL ( v_etat_revue ), v_etat_revue[entite] = e && v_etat_revue[arrete] = a ) VAR vp = MAXX ( tr, v_etat_revue[verrouille_par] ) VAR vl = MAXX ( tr, v_etat_revue[verrouille_le] ) VAR vv = MAXX ( tr, IF ( v_etat_revue[verrouille], 1, 0 ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( vv = 1, "verrouillé par " & vp & IF ( ISBLANK ( vl ), "", " le " & FORMAT ( vl, "dd/MM/yyyy" ) ), "aucun verrou : la revue n’est pas visée" ) )
+		lineageTag: f038aad3-ff6f-4c46-b750-a89dac292112
+
+	measure 'Dossier de travail depot' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "dépôt : site du cabinet, Dossiers de travail/" & e & "/" & a )
+		lineageTag: 3079b6c8-70fa-4088-b9eb-6b8469a98063
+
+	measure 'Arrete du dossier verrouille' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR vr = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[verrouille], 1, 0 ) ) + 0 RETURN IF ( vr = 1, a )
+		lineageTag: 7e3104bc-3e18-4897-b44a-58dcbacaef25
+
+	measure 'Aff Carte revue' = [Carte revue] & ""
+		lineageTag: a74a4419-bdd0-4799-bb1a-8aafc152419b
+
+	measure 'Aff Carte revue sous-titre' = [Carte revue sous-titre] & ""
+		lineageTag: 58dc0faa-a0ac-485f-9b4d-0df855fd5eea
+
+	measure 'Fond revLivDeverrouiller' = IF ( ISBLANK ( [Arrete du dossier verrouille] ), "#D9DFE6", "#0F5C8C" )
+		lineageTag: 9c553498-9733-4c13-b9d4-d5a193d31650
+
+	measure 'Libelle revLivDeverrouiller' = "Déverrouiller le dossier"
+		lineageTag: 6be5a63a-09c8-4660-bd72-cc4676be4fbd
+
+	measure 'Filet Carte revue' = VAR c = [Carte revue encre] RETURN SWITCH ( c, "#8A6710", "#C8961E", "#9A2A2A", "#9A2A2A", "#1F6D4A", "#1F6D4A", "#0F5C8C" )
+		lineageTag: 9c6addb8-e01f-441b-963e-298691b6ebd2
+
 	column entite
 		dataType: string
 		isNullable: false

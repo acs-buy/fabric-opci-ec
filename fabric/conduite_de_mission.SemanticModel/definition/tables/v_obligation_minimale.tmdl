@@ -14,11 +14,16 @@ table v_obligation_minimale
 		displayFolder: Le dossier
 		lineageTag: 21b9ff4f-415f-42eb-82b5-e482983907b0
 
-	/// Carte 4.2, Obligation minimale. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 4.2, Obligation minimale.
 	measure 'R42 Obligation minimale' = VAR lignes = COUNTROWS ( v_obligation_minimale ) RETURN IF ( lignes = 1, SUM ( v_obligation_minimale[obligation_minimale] ) )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 0bc33dd6-2607-4be7-9b1b-8180658bc48a
+
+	/// [R42 Obligation minimale] ; « sans objet » à un arrêté qui n’est pas annuel (carte 4)
+	measure 'Carte obligation minimale' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR typ = CALCULATE ( MAX ( ref_arrete[Type] ), FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ) ) VAR o = [R42 Obligation minimale] RETURN IF ( typ <> "ANNUEL", "sans objet", IF ( ISBLANK ( o ), "à remplir", FORMAT ( o, "#,0.00" ) ) )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 66a4b81a-6452-48b2-8de5-f548875c8160
 
 	column entite
 		dataType: string

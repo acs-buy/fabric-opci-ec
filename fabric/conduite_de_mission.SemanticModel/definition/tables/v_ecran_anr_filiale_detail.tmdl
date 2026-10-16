@@ -1,0 +1,158 @@
+/// Detail de l actif net reevalue des filiales, cascade de l etape 3.
+table v_ecran_anr_filiale_detail
+	lineageTag: a9a52234-9a3d-46c6-a879-f28c7c9af870
+
+	/// VAR c = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ), la filiale du segment ; CALCULATE ( SUM ( v_ecran_anr_filiale_detail[montant] ), FILTER ( ALL ( v_ecran_anr_filiale_detail[entite] ), v_ecran_anr_filiale_detail[entite] = c ) ) : seule l’entité est remplacée, la référence de la colonn
+	measure 'Montant de la filiale choisie' = VAR c = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) RETURN CALCULATE ( SUM ( v_ecran_anr_filiale_detail[montant] ), FILTER ( ALL ( v_ecran_anr_filiale_detail[entite] ), v_ecran_anr_filiale_detail[entite] = c ) )
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 08c8218b-2e54-41fe-b195-52dd248bfc7d
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(803)
+		lineageTag: c9920ce5-cd2d-4056-9495-90fa13ee6082
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: dcfdf271-872b-4c70-9f23-0f9f7778d8b3
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 0c28bd07-d0a0-4d1f-8ff4-2bc15d089ed2
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column bloc
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(19)
+		lineageTag: fb926aa2-b61a-4d62-94b0-abea45660139
+		summarizeBy: none
+		sourceColumn: bloc
+
+		annotation SummarizationSetBy = Automatic
+
+	column reference
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: ec89ca73-643c-478f-930e-9152851913fe
+		summarizeBy: none
+		sourceColumn: reference
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		sourceProviderType: nvarchar(4000)
+		lineageTag: 496df962-6e19-4256-8da5-28a8faf80729
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column classe
+		dataType: string
+		sourceProviderType: varchar(40)
+		lineageTag: c116e4ff-4105-49f2-917f-a629c3f4e223
+		summarizeBy: none
+		sourceColumn: classe
+
+		annotation SummarizationSetBy = Automatic
+
+	column montant
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 46c0d885-342a-4457-9d43-575cf9079b1b
+		summarizeBy: sum
+		sourceColumn: montant
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_comptable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: bac338f0-7d63-4ac6-9109-b3372668c108
+		summarizeBy: sum
+		sourceColumn: valeur_comptable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_actuelle
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: a11efb77-ae05-4fda-afb6-d9aabde01afc
+		summarizeBy: sum
+		sourceColumn: valeur_actuelle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lot_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e7bf1524-1a40-47ee-bddf-de627dd7b9d6
+		summarizeBy: none
+		sourceColumn: lot_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column lot_famille
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 2f1aeeb8-e7ed-431f-a6ea-f5095b6f138d
+		summarizeBy: none
+		sourceColumn: lot_famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicule
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 2e66beed-8586-46db-bcb5-e5ff337e02f6
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isHidden
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0ab20a9e-905f-4534-885e-72d727651d45
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_anr_filiale_detail = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_anr_filiale_detail = Source{[Schema="dbo",Item="v_ecran_anr_filiale_detail"]}[Data]
+				in
+				    dbo_v_ecran_anr_filiale_detail
+

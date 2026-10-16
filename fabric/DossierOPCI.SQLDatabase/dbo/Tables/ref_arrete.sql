@@ -40,3 +40,25 @@ CREATE NONCLUSTERED INDEX [ix_ref_arrete_exercice]
 
 GO
 
+
+CREATE   TRIGGER dbo.tr_ref_arrete_annexe_retard ON dbo.ref_arrete
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT entite, arrete, cree_le, date_arrete, exercice, nature_technique, porte_balance, type_arrete FROM inserted
+        EXCEPT SELECT entite, arrete, cree_le, date_arrete, exercice, nature_technique, porte_balance, type_arrete FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT entite, arrete, cree_le, date_arrete, exercice, nature_technique, porte_balance, type_arrete FROM deleted EXCEPT SELECT entite, arrete, cree_le, date_arrete, exercice, nature_technique, porte_balance, type_arrete FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'ref_arrete', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
+
+GO
+

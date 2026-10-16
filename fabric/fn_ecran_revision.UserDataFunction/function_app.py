@@ -1,33 +1,36 @@
 """fn_ecran_revision : les boutons de l'ecran Revision, une fonction par bouton.
 
-Ecrit le 16/09/2026 d'apres la maquette 73 validee et les scripts 207 et 208. Memes
-regles que fn_ecran_client : chaque fonction appelle UNE procedure, rend la phrase du bouton, prend
+Memes regles que fn_ecran_client : chaque fonction appelle UNE procedure, rend la phrase du bouton, prend
 l'utilisateur dans le contexte d'execution (PreferredUsername), et un refus remonte en francais par
 UserThrownError. Connexions : « DossierOPCI » (base) et « Coffre » (lakehouse). Bibliotheque : openpyxl.
 
-Les 6 etapes de la maquette et leurs boutons :
-  1 Collecte      reclamer_document (fn_ecran_client la porte deja ; rappelee ici pour la page)
-  2 Programme     choisir_programme, ajuster_programme, verifier_couverture, exporter_questions
-  3 Questions     repondre_question, ouvrir_feuille, exporter_feuille, importer_classeur (feuille, OD,
-                  questions), conclure_feuille, exporter_od, inscrire_piece (fn_ecran_client), valider_od_question
-  4 OD libres     saisir_od, exporter_od (sans question), importer_classeur, valider_od_libres
-  5 Conclure      conclure_cycle, viser (nature CYCLE ou REVUE, parametre superviseur obligatoire),
-                  conclure_revue
-  6 Dossier       exporter_dossier, deverrouiller_dossier, importer_classeur (dossier entier)
+Les etapes de l'ecran et leurs boutons :
+  Collecte      reclamer_document (fn_ecran_client la porte deja ; rappelee ici pour la page)
+  Programme     choisir_programme, ajuster_programme, verifier_couverture, exporter_questions
+  Questions     repondre_question, ouvrir_feuille, exporter_feuille, importer_classeur (feuille, OD,
+                questions), conclure_feuille, exporter_od, inscrire_piece (fn_ecran_client), valider_od_question
+  OD libres     saisir_od, exporter_od (sans question), importer_classeur, valider_od_libres
+  Conclure      conclure_cycle, viser (nature CYCLE ou REVUE, parametre superviseur obligatoire),
+                conclure_revue
+  Livrables     exporter_dossier, deverrouiller_dossier, importer_classeur (dossier entier), arreter_forme_rapport,
+                saisir_cellule_annexe, recalculer_annexe, valider_pour_le_client
 
-Le verrou (207) est controle par les procedures : une fonction n'a rien a en savoir, elle rend le refus.
+UN CHAMP VIDE NE DESACTIVE AUCUN BOUTON : tout parametre lie a un champ de saisie est facultatif, la fonction lui donne
+un defaut vide et refuse en francais quand il manque (_obligatoires). Le service desactive un bouton dont un parametre
+obligatoire est vide, et sa bulle est en anglais ; un bouton reste donc gris pour un droit ou un etat, jamais pour un
+champ vide.
 
-LA ZONE DE MESSAGE DE L'ECRAN, 04/10/2026, comme l'ecran 1 (fn_ecran_client : _poser_message, _journaliser_refus).
-Avant, un refus ou une reussite ne se lisait que dans la bulle du service, qui disparait. Chaque fonction pose
-desormais son message dans la boite aux lettres de l'ecran, dbo.pr_poser_message_ecran, que le modele lit par
+Le verrou du dossier est controle par les procedures : une fonction n'a rien a en savoir, elle rend le refus.
+
+LA ZONE DE MESSAGE DE L'ECRAN, comme pour fn_ecran_client (_poser_message, _journaliser_refus). Chaque fonction pose
+son message dans la boite aux lettres de l'ecran, dbo.pr_poser_message_ecran, que le modele lit par
 [Message de la revision] : la reussite avec la phrase rendue, le refus avec le texte de la base. Le refus se pose
 APRES le rollback du geste, dans une connexion neuve donc une transaction neuve, et il est journalise par
 dbo.pr_journaliser_refus : SQL Server n'a pas de transaction autonome, un message ecrit dans la transaction du geste
-partirait avec son rollback (mesure du 21/09/2026 sur l'ecran 1).
+partirait avec son rollback.
 L'ENTITE DU MESSAGE EST CELLE DU GESTE, jamais devinee dans les parametres : le parametre entite quand la fonction
 en a un ; pour viser, l'entite en tete de objetRef (« entite|arrete|cycle », « entite|arrete »), et pour un lot le
-vehicule du perimetre qui le porte ; pour une cote, le vehicule de la feuille. La regle de l'ecran 1, le 1er
-parametre court et alphanumerique, prenait la nature « CYCLE » pour viser.
+vehicule du perimetre qui le porte ; pour une cote, le vehicule de la feuille.
 L'utilisateur vient du contexte de chaque appel, porte par le geste, et non d'une variable de module : 2 appels
 simultanes ne se melangent pas.
 """
@@ -62,7 +65,7 @@ def _nom_procedure(sql) -> str:
     return m.group(1)[:128] if m else "inconnue"
 
 
-# ----------------------------------------------------------------------------- la zone de message, 04/10/2026
+# ----------------------------------------------------------------------------- la zone de message
 
 class _Geste:
     """Le geste en cours : la base, la personne connectee, l'entite du message, les procedures appelees et le texte
@@ -198,6 +201,14 @@ def _vide(s):
     return None if s is None or str(s).strip() == "" else str(s).strip()
 
 
+def _obligatoires(g: _Geste, champs) -> None:
+    """Refuse le geste, en francais et avant toute procedure, quand un champ de saisie obligatoire est vide. champs :
+    [(valeur, libelle du champ a l'ecran)] ; le refus nomme tous les champs vides, dans l'ordre de l'ecran."""
+    manquants = ["« %s »" % lib for v, lib in champs if _vide(v) is None]
+    if manquants:
+        raise _refus(g, "Champs obligatoires à remplir : %s." % ", ".join(manquants))
+
+
 def _superviseur(g: _Geste, superviseur: str) -> None:
     if not superviseur or superviseur.strip().lower() != g.qui.strip().lower():
         raise _refus(g, "Le visa est réservé au superviseur connecté ; l'action n'est pas exécutée.")
@@ -214,16 +225,26 @@ def _entite_de_cote(base, cote):
         return None
 
 
-def _entite_de_visa(base, objetRef):
+def _entite_de_visa(base, objetRef, nature=None):
     """L'entite d'un visa, pour le message : la tete de objetRef pour un cycle ou une revue (« entite|arrete|cycle »,
     « entite|arrete ») ; pour un lot, dont objetRef est le seul numero, le vehicule du perimetre qui le porte
-    (v_lots_perimetre, le sien d'abord), sinon l'entite du lot. Jamais la nature."""
+    (v_lots_perimetre, le sien d'abord), sinon l'entite du lot. Jamais la nature.
+    POUR UNE VALEUR RETENUE (nature EVALUATION, 10/10/2026, objet n° 225 de l'ecran 3), objetRef est le numero de la
+    ligne de evaluation_actif, et non celui d'un lot : l'entite est celle de cette ligne (l'entite detentrice de
+    l'actif, filiale comprise), puis le vehicule du perimetre qui la porte a son arrete (v_perimetre_vehicule, le sien
+    d'abord), sous lequel [Message ecran] lit le message."""
     ref = (objetRef or "").strip()
     if "|" in ref:
         return ref.split("|", 1)[0].strip() or None
     if not ref.isdigit():
         return None
     try:
+        if (nature or "").strip().upper() == "EVALUATION":
+            l = _lire(base, "SELECT TOP 1 x.e FROM (SELECT p.vehicule AS e, CASE WHEN p.vehicule = ev.entite THEN 0 ELSE 1 END AS o "
+                            "FROM dbo.evaluation_actif ev JOIN dbo.v_perimetre_vehicule p ON p.entite = ev.entite AND p.arrete = ev.arrete "
+                            "WHERE ev.id = ? UNION ALL SELECT entite, 2 FROM dbo.evaluation_actif WHERE id = ?) x ORDER BY x.o",
+                      (int(ref), int(ref)))
+            return l[0]["e"] if l else None
         l = _lire(base, "SELECT TOP 1 x.e FROM (SELECT vehicule AS e, CASE WHEN vehicule = entite THEN 0 ELSE 1 END AS o "
                         "FROM dbo.v_lots_perimetre WHERE lot_id = ? UNION ALL SELECT entite, 2 FROM dbo.lot_ecritures "
                         "WHERE id = ?) x ORDER BY x.o", (int(ref), int(ref)))
@@ -232,7 +253,7 @@ def _entite_de_visa(base, objetRef):
         return None
 
 
-# ----------------------------------------------------------------------------- etape 2 : le programme
+# ----------------------------------------------------------------------------- le programme
 
 @udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
@@ -258,7 +279,7 @@ def ajuster_programme(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCont
 
     actif est un ENTIER, 1 ajoute et 0 retire, porte par une mesure constante comme les reponses Oui et
     Non ; un booleen ne se lie pas surement a une mesure. Le motif est obligatoire au retrait, la base le
-    refuse sinon, regle du 28/09/2026."""
+    refuse sinon."""
     g = _geste(base, ctx, entite)
 
     def faire():
@@ -275,7 +296,7 @@ def activer_cycle(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
                   entite: str, arrete: str, cycle: str, actif: int, motif: str = "") -> str:
     """Boutons « Activer le cycle » et « Retirer le cycle » : toutes les questions eligibles du cycle.
 
-    Regle du 28/09/2026 : un cycle qui a des comptes en balance ne se retire jamais en entier, la
+    Un cycle qui a des comptes en balance ne se retire jamais en entier, la
     couverture de la balance etant non negociable, et un cycle qui porte des reponses non plus."""
     g = _geste(base, ctx, entite)
 
@@ -290,8 +311,8 @@ def activer_cycle(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def verifier_couverture(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str, arrete: str) -> str:
-    """Bouton « Vérifier la couverture de la balance » : rend la phrase, ne modifie rien. Le contexte est ajoute le
-    04/10/2026 pour savoir a qui poser le message ; les parametres du bouton restent entite et arrete."""
+    """Bouton « Vérifier la couverture de la balance » : rend la phrase, ne modifie rien. Le contexte sert a savoir a
+    qui poser le message ; les parametres du bouton restent entite et arrete."""
     g = _geste(base, ctx, entite)
 
     def faire():
@@ -300,7 +321,7 @@ def verifier_couverture(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCo
     return _rendre(g, "verifier_couverture", faire)
 
 
-# ----------------------------------------------------------------------------- etape 3 : les questions
+# ----------------------------------------------------------------------------- les questions
 
 @udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
@@ -324,8 +345,7 @@ def ouvrir_feuille(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext
                    entite: str, arrete: str, reference: str) -> str:
     """Pop-up Feuille, « Ouvrir » : la feuille de la question, son gabarit, sa cote.
 
-    LE GABARIT PREREMPLI PART AU COFFRE, depuis le 27/09/2026 : la maquette dit « ouvrir exporte le
-    gabarit ; reimporter rattache le fichier ». Sans ce classeur, le bouton Reimporter n'avait rien a
+    LE GABARIT PREREMPLI PART AU SITE DU CABINET : ouvrir exporte le gabarit, reimporter rattache le fichier. Sans ce classeur, le bouton Reimporter n'avait rien a
     relire. Une feuille deja ouverte n'est pas une erreur ici : son classeur est reecrit."""
     g = _geste(base, ctx, entite)
 
@@ -356,11 +376,13 @@ def ouvrir_feuille(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def conclure_feuille(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
-                     cote: str, forme: str, conclusion: str = "") -> str:
-    """Pop-up Feuille, « Conclure » : forme et texte ; les portes de la feuille (pieces, derogation) parlent."""
+                     cote: str, forme: str = "", conclusion: str = "") -> str:
+    """Pop-up Feuille, « Conclure » : forme et texte ; les portes de la feuille (pieces, derogation) parlent. La forme
+    est facultative au bouton : vide, la fonction refuse en nommant le champ."""
     g = _geste(base, ctx, _entite_de_cote(base, cote))
 
     def faire():
+        _obligatoires(g, [(forme, "Forme de la conclusion")])
         r = _executer(base, "EXEC dbo.pr_importer_feuille @cote=?, @conclusion=?, @forme=?, @par=?",
                       (cote, _vide(conclusion), forme.upper(), g.qui), g)
         return r.get("message", "Feuille conclue.")
@@ -387,18 +409,20 @@ def valider_od_question(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCo
     return _rendre(g, "valider_od_question", faire)
 
 
-# ----------------------------------------------------------------------------- etape 4 : les OD libres
+# ----------------------------------------------------------------------------- les OD libres
 
 @udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def saisir_od(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
-              entite: str, arrete: str, compte: str, libelle: str, debit: float = 0, credit: float = 0,
+              entite: str, arrete: str, compte: str = "", libelle: str = "", debit: float = 0, credit: float = 0,
               reference: str = "", journal: str = "ODR", piece: str = "") -> str:
-    """Une ligne d'OD, liee a une question si reference est donnee, libre sinon."""
+    """Une ligne d'OD, liee a une question si reference est donnee, libre sinon. Le compte et le libelle sont
+    facultatifs au bouton : vides, la fonction refuse en nommant les champs."""
     g = _geste(base, ctx, entite)
 
     def faire():
+        _obligatoires(g, [(compte, "Compte"), (libelle, "Libellé")])
         r = _executer(base, "EXEC dbo.pr_saisir_od @entite=?, @arrete=?, @compte=?, @libelle=?, @debit=?, @credit=?, @reference=?, @journal=?, @piece_ref=?, @par=?",
                       (entite, arrete, compte, libelle, float(debit or 0), float(credit or 0), _vide(reference), journal or "ODR", _vide(piece), g.qui), g)
         return r.get("message", "Ligne enregistrée.")
@@ -409,8 +433,8 @@ def saisir_od(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def saisir_od_double(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
-                     entite: str, arrete: str, compte1: str, libelle1: str,
-                     compte2: str, libelle2: str,
+                     entite: str, arrete: str, compte1: str = "", libelle1: str = "",
+                     compte2: str = "", libelle2: str = "",
                      debit1: float = 0, credit1: float = 0,
                      debit2: float = 0, credit2: float = 0,
                      reference: str = "", journal: str = "ODR",
@@ -419,17 +443,21 @@ def saisir_od_double(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
 
     Une ecriture porte toujours au moins 2 lignes. Les saisir une par une obligeait a vider le
     champ oppose entre les 2, et la seconde partait sans sa reference : l'execution d'une
-    fonction efface la ligne choisie dans la grille. Regle du 26/09/2026.
+    fonction efface la ligne choisie dans la grille.
     """
-    # LES 2 LIGNES S'ECRIVENT ENSEMBLE OU PAS DU TOUT, depuis le 03/10/2026 : pr_saisir_od_paire
-    # controle les 2 lignes avant toute ecriture, un refus n'en ecrit aucune. Avant, la 1re ligne restait
-    # au brouillon quand la 2e etait refusee. Une seule ligne saisie passe par pr_saisir_od.
+    # LES 2 LIGNES S'ECRIVENT ENSEMBLE OU PAS DU TOUT : pr_saisir_od_paire controle les 2 lignes avant toute
+    # ecriture, un refus n'en ecrit aucune. Une seule ligne saisie passe par pr_saisir_od.
     g = _geste(base, ctx, entite)
 
     def faire():
         un, deux = (compte1 or "").strip(), (compte2 or "").strip()
-        if not un and not deux:
+        # UNE RANGEE COMMENCEE porte un compte ou un libelle : son compte et son libelle sont alors exiges, nommes par
+        # leur rangee. Aucune rangee commencee : le refus d'une ecriture vide.
+        r1, r2 = bool(un or _vide(libelle1)), bool(deux or _vide(libelle2))
+        if not r1 and not r2:
             raise _refus(g, "Aucun compte saisi : une écriture porte au moins une ligne.")
+        _obligatoires(g, ([(un, "Compte de la ligne 1"), (libelle1, "Libellé de la ligne 1")] if r1 else [])
+                      + ([(deux, "Compte de la ligne 2"), (libelle2, "Libellé de la ligne 2")] if r2 else []))
         if un and deux:
             r = _executer(base, "EXEC dbo.pr_saisir_od_paire @entite=?, @arrete=?, @compte1=?, @libelle1=?, @debit1=?, @credit1=?, @piece_ref1=?, "
                                 "@compte2=?, @libelle2=?, @debit2=?, @credit2=?, @piece_ref2=?, @reference=?, @journal=?, @par=?",
@@ -449,11 +477,11 @@ def saisir_od_double(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
 @udf.function()
 def retirer_ligne_od(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
                      entite: str, arrete: str, ligneId: str) -> str:
-    """Etape 4, « Retirer la ligne » : la ligne choisie du brouillon libre, par son identifiant
+    """Bouton « Retirer la ligne » des OD libres : la ligne choisie du brouillon libre, par son identifiant
     (v_od_revision[brouillon_id]). La base refuse une ligne hors du brouillon libre de l'arrete (50403)
-    et un dossier verrouille (50404), et garde la trace du retrait (od_retrait). 03/10/2026.
+    et un dossier verrouille (50404), et garde la trace du retrait (od_retrait).
 
-    ligneId EST UN TEXTE, depuis le 03/10/2026 : un parametre de bouton Data function ne se lie jamais a
+    ligneId EST UN TEXTE : un parametre de bouton Data function ne se lie jamais a
     une mesure numerique (documentation desktop-buttons). La mesure [Ligne OD libre choisie] rend donc le
     N° en texte, et la conversion se fait ici."""
     g = _geste(base, ctx, entite)
@@ -481,17 +509,19 @@ def valider_od_libres(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCont
     return _rendre(g, "valider_od_libres", faire)
 
 
-# ----------------------------------------------------------------------------- etape 5 : conclure et viser
+# ----------------------------------------------------------------------------- conclure et viser
 
 @udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def conclure_cycle(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
-                   entite: str, arrete: str, cycle: str, conclusion: str, forme: str = "") -> str:
-    """Bouton « Enregistrer la conclusion du cycle » : la synthese des feuilles se regenere, le texte se pose."""
+                   entite: str, arrete: str, cycle: str, conclusion: str = "", forme: str = "") -> str:
+    """Bouton « Enregistrer la conclusion du cycle » : la synthese des feuilles se regenere, le texte se pose. La
+    conclusion est facultative au bouton : vide, la fonction refuse en nommant le champ."""
     g = _geste(base, ctx, entite)
 
     def faire():
+        _obligatoires(g, [(conclusion, "Conclusion du cycle")])
         r = _executer(base, "EXEC dbo.pr_conclure_cycle @entite=?, @arrete=?, @cycle=?, @conclusion=?, @forme=?, @par=?",
                       (entite, arrete, cycle, conclusion, _vide(forme), g.qui), g)
         return r.get("message", "Cycle conclu.")
@@ -502,11 +532,13 @@ def conclure_cycle(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def conclure_revue(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
-                   entite: str, arrete: str, conclusion: str) -> str:
-    """Bouton « Enregistrer la conclusion générale »."""
+                   entite: str, arrete: str, conclusion: str = "") -> str:
+    """Bouton « Enregistrer la conclusion générale ». La conclusion est facultative au bouton : vide, la fonction refuse
+    en nommant le champ."""
     g = _geste(base, ctx, entite)
 
     def faire():
+        _obligatoires(g, [(conclusion, "Conclusion générale de la revue")])
         r = _executer(base, "EXEC dbo.pr_conclure_revue @entite=?, @arrete=?, @conclusion=?, @par=?",
                       (entite, arrete, conclusion, g.qui), g)
         return r.get("message", "Revue conclue.")
@@ -517,32 +549,72 @@ def conclure_revue(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def viser(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
-          nature: str, objetRef: str, decision: str, superviseur: str, motif: str = "") -> str:
+          nature: str, decision: str, objetRef: str = "", superviseur: str = "", motif: str = "") -> str:
     """Boutons « Viser le cycle », « Viser la revue », « Renvoyer » : pr_ecran_viser, un seul bouton pour
     toutes les natures. objetRef : « entite|arrete|cycle » pour CYCLE, « entite|arrete » pour REVUE.
     Le parametre superviseur est lie a la mesure Superviseur connecte : vide pour un preparateur.
 
     LE MOTIF EST FACULTATIF ICI ET AU BOUTON : un renvoi sans motif part,
     la base le refuse (50057, pr_garde_visa), et le refus s'affiche dans la zone de message de l'ecran. L'entite du
-    message est celle de objetRef, jamais la nature (_entite_de_visa)."""
-    g = _geste(base, ctx, _entite_de_visa(base, objetRef))
+    message est celle de objetRef, jamais la nature (_entite_de_visa).
+
+    LE MESSAGE D'UN VISA DE VALEUR RETENUE OU D'UNE PUBLICATION (15/10/2026) : pr_ecran_viser ne rend pas de ligne, et
+    le texte par defaut « EVALUATION : vise. » portait la nature en code, sans accent ni objet (recette du lot 9 de
+    l'ecran 3). Pour les natures EVALUATION et PUBLICATION, la fonction lit apres la procedure dbo.fn_message_visa
+    (script 306), qui rend « Valeur retenue de <actif> visée. », son renvoi, ou « Valeur liquidative publiée. » ; les
+    natures LOT, CYCLE et REVUE gardent leur texte jusqu'au retour sur l'ecran 2. Aucun bouton n'appelle viser avec la
+    nature SYNTHESE : le visa de la synthese passe par viser_synthese de fn_ecran_valorisation (rapport ba40a95a relu par
+    getDefinition le 15/10/2026 : 8 boutons sur viser, natures CYCLE, LOT, REVUE et EVALUATION ; 2 sur viser_synthese).
+
+    OBJETREF ET SUPERVISEUR ONT UNE VALEUR PAR DEFAUT VIDE (15/10/2026, decision du candidat « Gris + refus en
+    français », ecran 4) : « Publier la VL » les lie, facultatifs, a [Publication a viser] et a [Associe connecte], et
+    une mesure vide n'envoie pas le parametre (GUIDE_API_RAPPORT_POWER_BI.md, § 17.43, point 8). nature et decision,
+    constantes du bouton, restent obligatoires, donc en tete ; l'invocation porte chaque parametre sous son nom. Vides,
+    ils sont refuses en francais avant toute procedure : le droit d'abord, objetRef ensuite. Le droit d'une publication
+    (nature PUBLICATION) appartient a l'associe signataire, lie par [Associe connecte] : son refus le nomme, comme la
+    carte [Blocage publication de la VL] (« visa réservé à l'associé signataire ») ; toute autre nature garde le refus de
+    _superviseur. Les boutons des ecrans 2 et 3 gardent ces 2 parametres obligatoires a leur pose (isOptional faux, meme
+    guide, § 3.4, point 1)."""
+    g = _geste(base, ctx, _entite_de_visa(base, objetRef, nature))
 
     def faire():
-        _superviseur(g, superviseur)
+        if nature.upper() == "PUBLICATION":
+            if _vide(superviseur) is None or superviseur.strip().lower() != g.qui.strip().lower():
+                raise _refus(g, "Visa refusé : la publication de la valeur liquidative est réservée à l'associé "
+                                "signataire du dossier, rôle que votre adresse de connexion ne tient pas.")
+        else:
+            _superviseur(g, superviseur)
+        if _vide(objetRef) is None:
+            raise _refus(g, "Visa refusé : l'écran ne désigne aucun objet à viser ; l'action n'est pas exécutée.")
         r = _executer(base, "EXEC dbo.pr_ecran_viser @nature=?, @objet_ref=?, @decision=?, @decide_par=?, @motif=?",
                       (nature.upper(), objetRef, decision.upper(), g.qui, _vide(motif)), g)
+        if nature.upper() in ("EVALUATION", "PUBLICATION"):
+            m = _message_visa(base, nature.upper(), objetRef, decision.upper())
+            if m:
+                return m
         return r.get("message", f"{nature} : {decision.lower()}.")
     return _rendre(g, "viser", faire)
 
 
-# ----------------------------------------------------------------------------- etape 6 : le dossier
+def _message_visa(base, nature, objetRef, decision):
+    """Le message en francais d'un visa reussi, lu dans dbo.fn_message_visa ; None si la lecture echoue : le visa est
+    fait, un message manquant ne doit pas le masquer."""
+    try:
+        l = _lire(base, "SELECT dbo.fn_message_visa(?, ?, ?) AS m", (nature, objetRef, decision))
+        m = (l[0].get("m") if l else None) or ""
+        return m.strip() or None
+    except Exception:
+        return None
+
+
+# ----------------------------------------------------------------------------- le dossier de travail
 
 @udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def deverrouiller_dossier(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str, arrete: str,
                           motif: str = "", demandePar: str = "") -> str:
-    """Bouton « Déverrouiller le dossier de travail », depuis le 03/10/2026 :
+    """Bouton « Déverrouiller le dossier de travail » :
     un motif, la personne qui demande le deverrouillage et celle qui le decide, distinctes ; la decideuse est
     la personne connectee. La trace est un visa de revue renvoye, motif « Déverrouillage : ». Sans motif ou
     sans demandeur, la base refuse avec un message lisible (50516). Pas de tiret bas dans un nom de parametre :
@@ -556,20 +628,218 @@ def deverrouiller_dossier(base: fn.FabricSqlConnection, ctx: fn.UserDataFunction
     return _rendre(g, "deverrouiller_dossier", faire)
 
 
+# ----------------------------------------------------------------------------- les livrables
+
+def _executer_tout(base: fn.FabricSqlConnection, sql: str, params: tuple, g: _Geste = None) -> list:
+    """Comme _executer, mais rend TOUTES les lignes du dernier jeu de resultats : la validation pour le client rend
+    une ligne par fichier a copier."""
+    if g is not None:
+        g.procedures.append(_nom_procedure(sql))
+        g.refus = None
+    conn = base.connect()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql, params)
+        lignes = []
+        while True:
+            if cur.description:
+                colonnes = [d[0] for d in cur.description]
+                lignes = [dict(zip(colonnes, l)) for l in cur.fetchall()]
+            if not cur.nextset():
+                break
+        conn.commit()
+        return lignes
+    except Exception as e:
+        conn.rollback()
+        message = _message_sql(e)
+        if g is not None:
+            g.refus = message
+        raise fn.UserThrownError(message, {"sql": sql.split("(")[0].strip()})
+    finally:
+        conn.close()
+
+
+_MONTANT = re.compile(r"^-?\d{1,3}(?:[   ]?\d{3})*(?:[.,]\d+)?$|^-?\d+(?:[.,]\d+)?$")
+
+
+def _montant(texte):
+    """Le montant d'une saisie, ou None quand le texte n'est pas un nombre : « 1 234,56 », « 1234.56 », « -12 »."""
+    t = (texte or "").strip()
+    if not t or not _MONTANT.match(t):
+        return None
+    t = t.replace(" ", "").replace(" ", "").replace(" ", "").replace(",", ".")
+    try:
+        return round(float(t), 2)
+    except ValueError:
+        return None
+
+
+# LE NOM COURT D'UNE FORME DU RAPPORT, celui que les tuiles des formes affichent
+_FORME_COURT = ("CASE code WHEN 'COMPTE_RENDU_TRAVAUX' THEN N'Compte rendu de travaux' "
+                "WHEN 'SANS_OBSERVATION' THEN N'Attestation sans observation' "
+                "WHEN 'AVEC_OBSERVATION' THEN N'Attestation avec observation(s)' "
+                "WHEN 'IMPOSSIBILITE' THEN N'Refus d’attester' ELSE libelle END")
+
+
+@udf.context(argName="ctx")
+@udf.connection(alias="DossierOPCI", argName="base")
+@udf.function()
+def arreter_forme_rapport(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str, arrete: str,
+                          forme: str, considerations: str = "", motif: str = "") -> str:
+    """Bouton « Arrêter la forme » du rapport de l'expert-comptable, NP 2300 : la forme choisie dans le segment des
+    formes. considerations : le motif des considerations particulieres, exige par la base pour une attestation dans une
+    entite soumise au commissariat aux comptes (A10) ; motif : la limitation des diligences, formes E2 et E3. Les 2
+    sont facultatifs au bouton : la base juge et refuse, et son refus s'affiche dans la zone de message."""
+    g = _geste(base, ctx, entite)
+
+    def faire():
+        code = (forme or "").strip().upper()
+        r = _executer(base, "EXEC dbo.pr_ecran_arreter_forme_attestation @entite=?, @arrete=?, @forme=?, @par=?, @motif=?, "
+                            "@motif_considerations=?",
+                      (entite, arrete, code, g.qui, _vide(motif), _vide(considerations)), g)
+        message = r.get("message", "Forme du rapport de l'expert-comptable arrêtée.")
+        # LA FORME SE NOMME PAR SON LIBELLE, celui de ref_forme_rapport, et non par son code : la phrase de la base porte
+        # le code (« Forme du rapport arrêtée : COMPTE_RENDU_TRAVAUX. »). La lecture ne defait pas le geste, deja
+        # valide : le code reste si elle echoue.
+        # LE LIBELLE EST CELUI DES TUILES DES FORMES (_FORME_COURT), le meme que la colonne libelle_court de
+        # ref_forme_rapport au modele : le libelle long d'une attestation avec observation compte 195 caracteres, et le
+        # message ne tiendrait pas dans les 2 lignes de la zone de message.
+        try:
+            l = _lire(base, "SELECT %s AS libelle FROM dbo.ref_forme_rapport WHERE code = ?" % _FORME_COURT, (code,))
+            if code and l and l[0].get("libelle"):
+                message = message.replace(code, l[0]["libelle"])
+        except Exception:
+            pass
+        return message
+    return _rendre(g, "arreter_forme_rapport", faire)
+
+
+@udf.context(argName="ctx")
+@udf.connection(alias="DossierOPCI", argName="base")
+@udf.function()
+def saisir_cellule_annexe(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str, arrete: str,
+                          article: str, ligne: str = "", colonne: str = "1", valeur: str = "", motif: str = "") -> str:
+    """Bouton « Enregistrer la cellule » d'une page de l'annexe : une cellule (article, ligne, colonne 1 a 7). Vide, le
+    champ « Valeur ou montant » retire la cellule saisie. Rempli, il part en texte quand la cellule est de format texte
+    dans la derniere version de l'annexe (v_annexe_cellule.format), « 2025 » compris ; sinon en montant quand il se lit
+    comme un nombre, en texte autrement, et la base refuse un texte dans une colonne de montants (50645). Le motif est
+    exige par la base quand la saisie recouvre une valeur calculee. La ligne est facultative au bouton : vide, la
+    fonction refuse en nommant le champ « Cellule »."""
+    g = _geste(base, ctx, entite)
+
+    def faire():
+        _obligatoires(g, [(ligne, "Cellule")])
+        co = (colonne or "1").strip()
+        fmt = None
+        if _vide(valeur) is not None:
+            try:
+                l = _lire(base, "SELECT TOP 1 format FROM dbo.v_annexe_cellule WHERE entite = ? AND arrete = ? AND article = ? "
+                                "AND ligne = ? AND colonne = TRY_CAST(? AS tinyint)", (entite, arrete, article, ligne, co))
+                fmt = l[0]["format"] if l else None
+            except Exception:
+                fmt = None
+        if fmt == "texte":
+            m, texte = None, _vide(valeur)
+        else:
+            m = _montant(valeur)
+            texte = None if m is not None else _vide(valeur)
+        r = _executer(base, "EXEC dbo.pr_saisir_cellule_annexe @entite=?, @arrete=?, @article=?, @ligne=?, @colonne=?, "
+                            "@valeur=?, @montant=?, @motif=?, @par=?",
+                      (entite, arrete, article, ligne, co, texte, m, _vide(motif), g.qui), g)
+        return r.get("message", "Cellule enregistrée.")
+    return _rendre(g, "saisir_cellule_annexe", faire)
+
+
+# LE MESSAGE DU RECALCUL TIENT EN 2 LIGNES de la zone de message la plus etroite des pages des comptes annuels : la
+# phrase de la base, la liste des versions creees (arrete:version, une par arrete) resumee a leur nombre, « aucune
+# version créée », « 1 version créée » ou « n versions créées » (la version de l'arrete affiche se lit dans la bande du
+# titre) ; l'espace avant « ; » et « : » rendue insecable, pour qu'une ligne ne commence jamais par un signe double.
+_NBSP = "\u00a0"
+
+
+def _message_recalcul(texte: str) -> str:
+    t = " ".join((texte or "").split())
+    m = re.search(r" ; versions créées : (.*)\.$", t)
+    if m:
+        v = m.group(1).strip()
+        n = 0 if v == "aucune" else len([x for x in v.split(",") if x.strip()])
+        t = t[:m.start()] + " ; " + ("aucune version créée." if n == 0 else
+                                     "%d version%s créée%s." % (n, "s" if n > 1 else "", "s" if n > 1 else ""))
+    return t.replace(" ;", _NBSP + ";").replace(" :", _NBSP + ":")
+
+
+@udf.context(argName="ctx")
+@udf.connection(alias="DossierOPCI", argName="base")
+@udf.function()
+def recalculer_annexe(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str, arrete: str) -> str:
+    """Bouton « Recalculer » des comptes annuels : les cellules de l'annexe de tous les arretes de mission de l'entite,
+    recalculees par la base sur ses sources (pr_ecran_recalculer_annexe), une version neuve pour chaque arrete dont une
+    cellule change. La base refuse un arrete qui n'est pas un arrete de mission, et une personne qui ne tient aucun role
+    de mission sur l'entite ; le refus s'affiche dans la zone de message. La reussite y affiche l'heure du calcul, le
+    nombre de cellules, dont les cellules a remplir et en attente, et le nombre de versions creees."""
+    g = _geste(base, ctx, entite)
+
+    def faire():
+        r = _executer(base, "EXEC dbo.pr_ecran_recalculer_annexe @entite=?, @arrete=?, @par=?",
+                      (entite, arrete, g.qui), g)
+        return _message_recalcul(r.get("message") or "Annexe recalculée.")
+    return _rendre(g, "recalculer_annexe", faire)
+
+
+@udf.context(argName="ctx")
+@udf.connection(alias="Coffre", argName="coffre")
+@udf.connection(alias="DossierOPCI", argName="base")
+@udf.function()
+def valider_pour_le_client(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient, ctx: fn.UserDataFunctionContext,
+                           entite: str, arrete: str) -> str:
+    """Bouton « Valider pour le client » : le visa de cloture du chef de mission (pr_ecran_valider_pour_client), puis la
+    copie de chaque fichier valide dans la bibliotheque « Livrables » du site du vehicule, dossier de l'arrete, et sa
+    trace (pr_enregistrer_copie_livrable). Le fichier se lit au site du cabinet par le raccourci fec et se depose par la
+    base (pr_deposer_fichier_espace) : une Data function n'a pas d'identite a elle. Une copie qui echoue ne defait pas
+    la validation : le fichier reste « copie à faire » dans v_copie_livrable, et la phrase le dit."""
+    import base64
+    g = _geste(base, ctx, entite)
+
+    def faire():
+        fichiers = _executer_tout(base, "EXEC dbo.pr_ecran_valider_pour_client @entite=?, @arrete=?, @par=?",
+                                  (entite, arrete, g.qui), g)
+        faites, a_faire = [], []
+        for f in fichiers:
+            nom = f.get("fichier")
+            try:
+                chemin = "fec/Dossiers de travail/%s/%s/Livrables/%s" % (entite, arrete, nom)
+                octets = coffre.connectToFiles().get_file_client(chemin).download_file().readall()
+                d = _executer(base, "EXEC dbo.pr_deposer_fichier_espace @entite=?, @bibliotheque=?, @dossier=?, @fichier=?, "
+                                    "@contenu_base64=?, @par=?",
+                              (entite, "Livrables", arrete, nom, base64.b64encode(octets).decode("ascii"), g.qui), g)
+                _executer(base, "EXEC dbo.pr_enregistrer_copie_livrable @document_id=?, @web_url=?, @par=?",
+                          (int(f.get("document_id")), d.get("web_url"), g.qui), g)
+                faites.append(nom)
+            except fn.UserThrownError as e:
+                a_faire.append("%s (%s)" % (nom, g.refus or _texte(e)))
+                g.refus = None
+            except Exception as e:
+                a_faire.append("%s (%s)" % (nom, str(e)[:200] or e.__class__.__name__))
+        texte = ("Arrêté du %s validé pour le client. %d fichier(s) copié(s) dans la bibliothèque Livrables du site du "
+                 "véhicule." % (arrete, len(faites)))
+        if a_faire:
+            texte += " Copie à faire : " + " ; ".join(a_faire)
+        return texte, ("REFUS" if a_faire else "SUCCES")
+    return _rendre(g, "valider_pour_le_client", faire)
+
+
 # ----------------------------------------------------------------------------- la voie du classeur
 
-# REGLE SANS DEROGATION, du 28/09/2026 : TOUT FICHIER SE DEPOSE DANS
+# TOUT FICHIER SE DEPOSE DANS
 # SHAREPOINT, et le coffre ne le voit que par un raccourci OneLake. Aucun export n'ecrit plus au
 # coffre : chaque classeur part au site du cabinet par _deposer, et le reimport le relit par le
-# raccourci fec. Le 27/09/2026, les exports ecrivaient en natif dans Files/exports/ : c'etait une
-# derogation, levee ici.
-# Meme lecture que 61_DEPLOIEMENT/gabarits_ecran_revision.py et importer_ecran_revision.py.
+# raccourci fec.
 
 _COL_Q = [("Cycle", "cycle"), ("Référence", "reference"), ("Question", "enonce"), ("Type", "type"), ("Réponse", "reponse"),
           ("Motif si non applicable", "motif"), ("Commentaire", "commentaire"), ("Feuille", "feuille_cote"), ("OD", "od"), ("Pièces", "pieces")]
 _COL_OD = [("Journal", "journal"), ("Compte", "compte"), ("Libellé", "libelle"), ("Débit", "debit"), ("Crédit", "credit"), ("Pièce", "piece"), ("Actif", "actif")]
 # L'ONGLET D'OD D'UN CYCLE porte la question de chaque ligne : sans elle, le reimport ne sait pas quel
-# brouillon remplacer, et il ignorait l'onglet. Ajoute le 27/09/2026.
+# brouillon remplacer.
 _COL_OD_CYCLE = [("Question", "reference")] + _COL_OD
 _SAISIE = {"reference", "reponse", "motif", "commentaire", "journal", "compte", "libelle", "debit", "credit", "piece", "actif", "forme", "conclusion", "objectif", "methodologie"}
 
@@ -581,9 +851,8 @@ def _entete(ws, colonnes):
         c.fill = PatternFill("solid", fgColor="1D1A10")
         c.font = Font(bold=True, color="FFFFFF") if cle in _SAISIE else Font(color="D9D2C0")
         ws.cell(row=2, column=j, value=cle).font = Font(italic=True, color="8A8578", size=9)
-        # LA LARGEUR SUIT L'EN-TETE, releve le 28/09/2026 dans Excel en ligne : « Balance in »,
-        # « OD de révi », les en-tetes etaient coupes faute de largeur posee. Question et
-        # Libellé prennent plus, leur texte etant long.
+        # LA LARGEUR SUIT L'EN-TETE, sans quoi Excel en ligne coupe les en-tetes. Question et Libellé prennent
+        # plus, leur texte etant long.
         from openpyxl.utils import get_column_letter
         large = 60 if cle in ("enonce", "libelle") else max(12, len(lib) + 4)
         ws.column_dimensions[get_column_letter(j)].width = large
@@ -689,7 +958,7 @@ def _deposer(base, g: _Geste, entite: str, arrete: str, fichier: str, wb) -> dic
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def exporter_questions(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str, arrete: str, cycle: str) -> str:
-    """Etape 2, « Ouvrir le classeur des questions du cycle » : les questions au programme, reponses comprises."""
+    """Bouton « Ouvrir le classeur des questions du cycle » : les questions au programme, reponses comprises."""
     g = _geste(base, ctx, entite)
 
     def faire():
@@ -708,7 +977,7 @@ def exporter_questions(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCon
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def exporter_od(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str, arrete: str, reference: str = "") -> str:
-    """Pop-up OD, « Exporter les OD liées » (reference donnee) ou etape 4, « Exporter le gabarit » (OD libres) : preremplies."""
+    """Pop-up OD, « Exporter les OD liées » (reference donnee), ou « Exporter le gabarit » des OD libres : preremplies."""
     g = _geste(base, ctx, entite)
 
     def faire():
@@ -747,11 +1016,11 @@ def exporter_feuille(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
 @udf.function()
 def exporter_dossier(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
                      entite: str, arrete: str) -> str:
-    """Etapes 3 et 6, « Exporter le dossier de travail » : Balance, Programme, puis par cycle Q, FT, OD ; OD libres.
+    """Bouton « Exporter le dossier de travail » : Balance, Programme, puis par cycle Q, FT, OD ; OD libres.
 
-    LE CLASSEUR PART AUSSI DANS SHAREPOINT, regle du 27/09/2026 : le reviseur doit
+    LE CLASSEUR PART AUSSI DANS SHAREPOINT : le reviseur doit
     recevoir un lien qui s'ouvre au clic, et l'adresse OneLake directe rend « Unauthorized » dans
-    le navigateur, mesure du meme jour. Le depot passe par la base, pr_deposer_classeur, qui appelle
+    le navigateur. Le depot passe par la base, pr_deposer_classeur, qui appelle
     l'Azure Function du cabinet sous identite managee : une Data function n'a pas d'identite a elle.
     Le site est celui du CABINET, jamais l'espace du client : le dossier de travail est au cabinet."""
     g = _geste(base, ctx, entite)
@@ -789,7 +1058,7 @@ def exporter_dossier(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
 
 def _lignes_de(ws):
     """Les lignes d'un onglet, cle par cle, et le numero de la ligne dans l'onglet sous « _ligne » : la
-    base le cite dans ses refus (« Ligne 9 du classeur : … »), depuis le 03/10/2026."""
+    base le cite dans ses refus (« Ligne 9 du classeur : … »)."""
     cles = [c.value for c in ws[2]]
     out = []
     for n, r in enumerate(ws.iter_rows(min_row=3, values_only=True), 3):
@@ -807,28 +1076,24 @@ def _lignes_de(ws):
 @udf.function()
 def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient, ctx: fn.UserDataFunctionContext,
                       entite: str, arrete: str, chemin: str) -> str:
-    """Bouton « Réimporter » de toutes les etapes : le classeur depose au coffre, reconnu a ses feuilles :
+    """Bouton « Réimporter » de l'ecran : le classeur depose au site du cabinet, reconnu a ses feuilles :
     Q-<cycle> (reponses), OD <reference>, OD-<cycle> ou OD libres (brouillon remplace), <cote> (feuille : forme,
-    conclusion). Balance et Programme ne s'importent pas : l'une se calcule, l'autre se choisit a l'etape 2."""
+    conclusion). Balance et Programme ne s'importent pas : l'une se calcule, l'autre se choisit au programme."""
     g = _geste(base, ctx, entite)
 
     def faire():
         # LE CHEMIN EST CELUI DE LA FONCTION ENGLOBANTE, et faire() le reecrit pour un ancien chemin exports/ :
         # sans nonlocal, Python le tient pour une variable locale de faire(), lue avant d'etre affectee.
-        # Mesure du 04/10/2026 : « An internal execution error occured » au clic sur « Réimporter le dossier »,
-        # apres la reecriture pour la zone de message ; pyflakes le signale.
         nonlocal chemin
         from openpyxl import load_workbook
         import hashlib
-        # LE DOSSIER DEPOSE DANS SHAREPOINT PRIME SUR SA COPIE DU COFFRE, depuis le 28/09/2026. Le
-        # reviseur modifie le classeur dans Excel en ligne ; relire la copie du coffre perdrait son
-        # travail. La recette l'a montre : l'ecran, non rafraichi apres l'export, envoyait encore le
-        # chemin du coffre. La resolution se fait donc ici, et non dans une mesure.
+        # LE DOSSIER DEPOSE DANS SHAREPOINT PRIME SUR SA COPIE DU COFFRE : le reviseur modifie le classeur dans
+        # Excel en ligne, et relire la copie du coffre perdrait son travail. La resolution se fait ici, et non
+        # dans une mesure : l'ecran, non rafraichi apres l'export, peut envoyer encore le chemin du coffre.
         # LA SOURCE SE LIT SUR LE CHEMIN : fec/ est le raccourci du coffre vers le site du cabinet. La
-        # mesure de l'ecran envoie deja ce chemin quand un depot existe, releve le 28/09/2026 ; le
-        # message disait pourtant « coffre », faute d'avoir regarde le chemin recu.
+        # mesure de l'ecran envoie ce chemin quand un depot existe.
         # UN ANCIEN CHEMIN exports/ SE LIT DESORMAIS AU SITE DU CABINET : plus aucun classeur n'est ecrit
-        # au coffre, regle du 28/09/2026. Le depot range chaque classeur sous Dossiers de travail/<entite>/
+        # au coffre. Le depot range chaque classeur sous Dossiers de travail/<entite>/
         # <arrete>/, et le raccourci fec le rend lisible d'ici.
         if chemin.startswith("exports/"):
             chemin = f"fec/Dossiers de travail/{entite}/{arrete}/{chemin.rsplit('/', 1)[-1]}"
@@ -875,7 +1140,7 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                     lignes = [{"ligne": d["_ligne"], "journal": d.get("journal") or "ODR", "compte": str(d.get("compte")).strip(), "libelle": d.get("libelle"),
                                "debit": float(d.get("debit") or 0), "credit": float(d.get("credit") or 0), "piece": d.get("piece"), "actif": d.get("actif")}
                               for d in _lignes_de(ws) if d.get("compte") and str(d.get("compte")).strip().lower() not in ("total", "écart")]
-                    # LES OD LIBRES PASSENT LE NOM DU CLASSEUR, sans dossier, depuis le 03/10/2026 : la base
+                    # LES OD LIBRES PASSENT LE NOM DU CLASSEUR, sans dossier : la base
                     # date son instant de reference par le dernier depot ou reimport de ce fichier, et refuse un
                     # classeur qui ferait perdre une saisie ou revenir un retrait posterieurs (50405, 50408), ou
                     # qu'elle ne connait pas (50406). Sans ce nom, elle refuse tout reimport d'OD libres (50409).
@@ -889,7 +1154,7 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                         if len(row) >= 3 and row[2] in ("cote", "forme", "conclusion", "objectif"):
                             valeurs[row[2]] = row[1]
                     cote = valeurs.get("cote") or t
-                    # L'OBJECTIF DE LA FEUILLE SE RELIT, depuis le 03/10/2026 : prerempli
+                    # L'OBJECTIF DE LA FEUILLE SE RELIT : prerempli
                     # depuis le gabarit, modifiable dans le classeur. Vide, il laisse en place celui de la base.
                     r = _executer(base, "EXEC dbo.pr_importer_feuille @cote=?, @conclusion=?, @forme=?, @nom_fichier=?, @empreinte=?, @par=?, @objectif=?",
                                   (cote, _vide(valeurs.get("conclusion")), _vide(valeurs.get("forme")), chemin.rsplit("/", 1)[-1],

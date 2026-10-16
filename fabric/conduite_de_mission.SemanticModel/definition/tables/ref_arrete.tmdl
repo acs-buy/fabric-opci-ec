@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser : la colonne d'entite est arbitree par la session de la base.
+/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table ref_arrete
 	lineageTag: 8ceccea3-e3c4-4c88-8571-79449f35e86a
 
@@ -9,6 +9,37 @@ table ref_arrete
 	measure 'Arrete ouvert' = VAR e = SELECTEDVALUE ( ref_arrete[entite] ) VAR a = SELECTEDVALUE ( ref_arrete[arrete] ) VAR o = CALCULATE ( MAX ( arrete_mission[ouvert_le] ), FILTER ( ALL ( arrete_mission ), arrete_mission[entite] = e && arrete_mission[arrete] = a ) ) RETURN IF ( ISBLANK ( o ), "à ouvrir", "ouvert le " & FORMAT ( o, "dd/mm/yyyy" ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: b619a3c5-911e-41b3-a2dd-f780f988ba86
+
+	/// [Message arrete] coupé à 788 px de chasse, 1re ligne.
+	measure 'Message arrete ligne 1' = VAR t = [Message arrete] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 788 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 788 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 788 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, t, LEFT ( t, f1 ) )
+		displayFolder: Ecran 1 message
+		lineageTag: a16fc1fd-dba6-4c4e-b5aa-cf71d9eed40e
+
+	/// [Message arrete] coupé à 788 px de chasse, 2e ligne, « … » au-delà.
+	measure 'Message arrete ligne 2' = VAR t = [Message arrete] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 788 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 788 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 788 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) VAR c0 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR w2 = 777.25 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = " " && [c] - [w] - c0 <= w2 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c0 <= w2 ), [Value] ) + 0 RETURN IF ( une, "", IF ( tot - c0 <= 788, MID ( t, s2, n ), MID ( t, s2, IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ) ) & "…" ) )
+		displayFolder: Ecran 1 message
+		lineageTag: f3eda141-41eb-46d3-9ddd-df60e89dcfb6
+
+	/// 1 pour un arrêté du client sur lequel l'écran agit, vide sinon.
+	measure 'Arrete du client courant' = VAR c = [Client selectionne] RETURN IF ( NOT ISBLANK ( c ) && NOT ISEMPTY ( FILTER ( ref_arrete, ref_arrete[entite] = c ) ), 1 )
+		displayFolder: Ecran Client
+		lineageTag: 6cdc459a-3080-4213-8710-064482c79227
+
+	/// ref_arrete[Type] de l’arrêté de la ligne, à la française : ANNUEL « Annuel », SEMESTRIEL « Semestriel » (VAR e, a puis FILTER ALL (ref_arrete)) ; v_valeur_liquidative ne porte pas le type, et la grille ne joint pas 2 tables côté plusieurs
+	measure 'Type de l arrete de la ligne' = VAR a2 = COALESCE ( SELECTEDVALUE ( v_valeur_liquidative[arrete] ), [Arrete selectionne] ) VAR e = [Client selectionne] VAR ty = CALCULATE ( MAX ( ref_arrete[Type] ), FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a2 ) ) RETURN SWITCH ( ty, "ANNUEL", "Annuel", "SEMESTRIEL", "Semestriel", "TRIMESTRIEL", "Trimestriel", "INTERMEDIAIRE", "Intermédiaire", ty ) & ""
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 9f499a90-6af8-43aa-a094-b11bc3b249bd
+
+	/// l’arrêté de la ligne porte est_arrete_client = 1 ; filtre de visuel = 1 du tableau des limites calculées (le 31/12/2021, HORS_MISSION, en sort)
+	measure 'Arrete de mission' = VAR e = [Client selectionne] VAR a2 = SELECTEDVALUE ( v_ratio_conclusion[arrete] ) RETURN IF ( COUNTROWS ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a2 && ref_arrete[est_arrete_client] = TRUE () ) ) > 0, 1, 0 )
+		formatString: 0
+		displayFolder: Ecran 4 Arrete
+		lineageTag: a28b8aa4-0318-4847-972c-0775cdedd32a
+
+	/// « 3 Distribution annuelle » ; « 3 Distribution annuelle · sans objet » à un arrêté semestriel ou intermédiaire : libellé de la case 3 de la barre, rang compris (décision du candidat du 15/10/2026, « Numéro dans le libellé »)
+	measure 'Libelle etape distribution' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR typ = CALCULATE ( MAX ( ref_arrete[Type] ), FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ) ) RETURN IF ( ISBLANK ( typ ) || typ = "ANNUEL", "3 Distribution annuelle", "3 Distribution annuelle · sans objet" )
+		displayFolder: Ecran 4 Arrete
+		lineageTag: 83b2b495-879f-489a-b189-f1bb4f810f23
 
 	column entite
 		dataType: string

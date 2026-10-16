@@ -1,0 +1,596 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "ec10000000000000f005",
+  "displayName": "Document d’information périodique",
+  "displayOption": "FitToWidth",
+  "width": 1600,
+  "height": 1300,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F4F6F9'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "docDipR1",
+      "target": "docTitre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docNav0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docNav1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docNav2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docNav3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docNav5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipCarteVal0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipCarteVal1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipCarteVal2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipCarteVal3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipCarteVal4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipR5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipR4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipR6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipLecture6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipLecture6b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipWordLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipWord",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipOuvrirLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDipOuvrir",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docFermer",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docMsg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docVersion",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docValidation",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docTitre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docNav0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docNav1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docNav2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docNav3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docNav5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipCarteVal0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipCarteVal1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipCarteVal2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipCarteVal3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipCarteVal4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipR1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipR4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipR6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipLecture6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipLecture6b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipWordLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipWord",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipOuvrirLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDipOuvrir",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docFermer",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docMsg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docVersion",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docValidation",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docTitre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docNav0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docNav1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docNav2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docNav3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docNav5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipCarteVal0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipCarteVal1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipCarteVal2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipCarteVal3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipCarteVal4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipR1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipR5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipR6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipLecture6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipLecture6b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipWordLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipWord",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipOuvrirLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDipOuvrir",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docFermer",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docMsg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docVersion",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docValidation",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docTitre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docNav0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docNav1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docNav2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docNav3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docNav5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipCarteVal0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipCarteVal1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipCarteVal2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipCarteVal3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipCarteVal4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipR1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipR5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipR4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipLecture6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipLecture6b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipWordLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipWord",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipOuvrirLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDipOuvrir",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docFermer",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docMsg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docVersion",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docValidation",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDossierVehicule",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docDossierArrete",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDossierVehicule",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docDossierArrete",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDossierVehicule",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docDossierArrete",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDossierVehicule",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docDossierArrete",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docSansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docSansArrete2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docSansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docSansArrete2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docSansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docSansArrete2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docSansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docSansArrete2",
+      "type": "NoFilter"
+    }
+  ]
+}

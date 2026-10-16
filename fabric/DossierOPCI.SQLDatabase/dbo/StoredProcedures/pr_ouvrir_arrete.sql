@@ -1,4 +1,5 @@
 
+-- pr_ouvrir_arrete : 1 refus
 -- --- 3-bis : ouvrir un arrete, avec son exercice et sa date -------------
 -- La procedure de 55_journal_refus_et_procedures est reprise ici : sans
 -- l'exercice, l'index d'unicite du bloc 3 ne sait pas a quel exercice
@@ -27,7 +28,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, message, refuse_pour)
         VALUES ('pr_ouvrir_arrete', @entite, @arrete, @me, @par);
-        THROW 50038, @me, 1;
+        BEGIN SET @me = REPLACE(@me, N'%', N'%%'); THROW 50038, @me, 1; END
     END;
     BEGIN TRY
         INSERT INTO dbo.arrete_mission

@@ -1,0 +1,145 @@
+/// Participations du vehicule, dont l engagement de couvrir les pertes (art. 212-5).
+table eligibilite_participation
+	lineageTag: 0d494598-e903-4ba7-b487-2518a2febb88
+
+	/// « oui », « non » ; « à remplir » tant que la colonne de l’objet de base n° 10 n’existe pas
+	measure 'Engagement de la filiale choisie' = VAR c = SELECTEDVALUE ( v_titres_valeur_actuelle[entite_fille] ) VAR t = FILTER ( ALL ( eligibilite_participation[entite_fille] ), eligibilite_participation[entite_fille] = c ) VAR n_oui = CALCULATE ( COUNTROWS ( eligibilite_participation ), t, eligibilite_participation[engagement_couvrir_pertes] = TRUE () ) + 0 VAR n_non = CALCULATE ( COUNTROWS ( eligibilite_participation ), t, eligibilite_participation[engagement_couvrir_pertes] = FALSE () ) + 0 RETURN IF ( NOT ISBLANK ( c ), IF ( n_oui > 0, "oui", IF ( n_non > 0, "non", "à remplir" ) ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e040e0c0-a5eb-46cd-b62a-8f0bd9286e7c
+
+	column entite_mere
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a9ffd53d-057c-4f93-bd59-83a7ae932ea0
+		summarizeBy: none
+		sourceColumn: entite_mere
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite_fille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 60de1f8e-2ac9-4594-9dd8-4f9ba5ae46db
+		summarizeBy: none
+		sourceColumn: entite_fille
+
+		annotation SummarizationSetBy = Automatic
+
+	column comptes_semestriels
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8d9a4fd1-c35e-4a91-9791-72887da584f6
+		summarizeBy: sum
+		sourceColumn: comptes_semestriels
+
+		annotation SummarizationSetBy = Automatic
+
+	column immeubles_conformes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 7c1e0ec8-7f15-491f-87d2-9d4ccf88e97d
+		summarizeBy: sum
+		sourceColumn: immeubles_conformes
+
+		annotation SummarizationSetBy = Automatic
+
+	column cas_relation
+		dataType: string
+		sourceProviderType: char(1)
+		lineageTag: 1c80d67d-6d9d-435f-ba02-6ad7fad60a89
+		summarizeBy: none
+		sourceColumn: cas_relation
+
+		annotation SummarizationSetBy = Automatic
+
+	column droits_de_vote
+		dataType: double
+		sourceProviderType: decimal(9, 6)
+		lineageTag: 112ab3b6-0c57-4f6b-819a-3d8266906977
+		summarizeBy: sum
+		sourceColumn: droits_de_vote
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column autre_associe_superieur
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 9e4b75ce-53ff-4c23-9210-c3379b31c524
+		summarizeBy: sum
+		sourceColumn: autre_associe_superieur
+
+		annotation SummarizationSetBy = Automatic
+
+	column accord_ecrit_piece_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e43a18de-e5c1-42c1-92ce-a704cd1d45d0
+		summarizeBy: sum
+		sourceColumn: accord_ecrit_piece_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column qualifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: a33ef1b7-8237-4429-aaf8-09b0efe83c66
+		summarizeBy: none
+		sourceColumn: qualifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column qualifie_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 8f187cf6-f588-42bd-8ecc-a51d5faa3731
+		summarizeBy: none
+		sourceColumn: qualifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column note
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: eba8c6f6-db51-43db-b159-a5d9b6f37d98
+		summarizeBy: none
+		sourceColumn: note
+
+		annotation SummarizationSetBy = Automatic
+
+	column controlee
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 040ce87c-43d9-4090-9be8-f6ef285e524b
+		summarizeBy: none
+		sourceColumn: controlee
+
+		annotation SummarizationSetBy = Automatic
+
+	column engagement_couvrir_pertes
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: f867b667-3c86-48f7-a4a7-2c7c41acd31f
+		summarizeBy: none
+		sourceColumn: engagement_couvrir_pertes
+
+		annotation SummarizationSetBy = Automatic
+
+	partition eligibilite_participation = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_eligibilite_participation = Source{[Schema="dbo",Item="eligibilite_participation"]}[Data]
+				in
+				    dbo_eligibilite_participation
+

@@ -1,4 +1,5 @@
 
+-- pr_ouvrir_acceptation : 1 refus
 -- 50068 : la feuille du questionnaire n'existe pas ou n'est pas de la
 --         phase attendue.
 -- 50069 : une question obligatoire de la phase est sans reponse.
@@ -29,7 +30,7 @@ BEGIN
         VALUES ('pr_ouvrir_acceptation', @entite, @cote, @m68,
                 N'Créer la feuille de la phase Acceptation pour cette entité.',
                 @par, SYSUTCDATETIME());
-        THROW 50068, @m68, 1;
+        BEGIN SET @m68 = REPLACE(@m68, N'%', N'%%'); THROW 50068, @m68, 1; END
     END;
 
     IF EXISTS (SELECT 1 FROM dbo.acceptation_mission

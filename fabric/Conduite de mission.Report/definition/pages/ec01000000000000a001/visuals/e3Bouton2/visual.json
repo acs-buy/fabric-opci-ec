@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "e3Bouton2",
   "position": {
-    "x": 1146,
+    "x": 1355,
     "y": 1244,
     "z": 58600,
     "height": 36,
@@ -333,6 +333,13 @@
               "expr": {
                 "Literal": {
                   "Value": "'bkEtat4'"
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ouvre l''étape du visa de l''acceptation.'"
                 }
               }
             }

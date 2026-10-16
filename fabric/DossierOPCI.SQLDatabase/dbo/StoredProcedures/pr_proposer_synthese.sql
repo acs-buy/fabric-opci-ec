@@ -1,5 +1,8 @@
 
-
+-- pr_proposer_synthese : 6 refus
+-- ------------------------------------------------------------------ n° 9 : le refus d'une 2e proposition de synthese
+-- Une synthese non perimee qui attend son visa refuse la proposition (50780) ; une synthese visee la refuse (50781) ; une
+-- synthese renvoyee est perimee, et la nouvelle proposition s'inscrit.
 
 -- --- 3 : O1, la proposition de la synthese --------------------------
 -- 50077 : un lot de l'arrete est propose et non vise.
@@ -34,7 +37,7 @@ BEGIN
         VALUES ('pr_proposer_synthese', @entite, @arrete, @m77,
                 N'Faire viser le lot par le chef de mission, puis proposer la synthèse.',
                 @par, SYSUTCDATETIME());
-        THROW 50077, @m77, 1;
+        BEGIN SET @m77 = REPLACE(@m77, N'%', N'%%'); THROW 50077, @m77, 1; END
     END;
 
     -- Refus 2 : un compte de classe 1 hors perimetre de l'actif net.
@@ -58,7 +61,7 @@ BEGIN
         VALUES ('pr_proposer_synthese', @entite, @arrete, @m78,
                 N'Rattacher ou écarter les comptes de classe 1 listés.',
                 @par, SYSUTCDATETIME());
-        THROW 50078, @m78, 1;
+        BEGIN SET @m78 = REPLACE(@m78, N'%', N'%%'); THROW 50078, @m78, 1; END
     END;
 
     -- Refus 3 : la rationalisation ne boucle pas ou n'est pas calculable.
@@ -83,7 +86,7 @@ BEGIN
         VALUES ('pr_proposer_synthese', @entite, @arrete, @m79,
                 N'Lever l''écart de rationalisation poste par poste.',
                 @par, SYSUTCDATETIME());
-        THROW 50079, @m79, 1;
+        BEGIN SET @m79 = REPLACE(@m79, N'%', N'%%'); THROW 50079, @m79, 1; END
     END;
 
     -- Refus 4 : la valeur liquidative n'est pas calculable.
@@ -101,17 +104,53 @@ BEGIN
         VALUES ('pr_proposer_synthese', @entite, @arrete, @m80,
                 N'Saisir le nombre de parts, ou valider les lots manquants.',
                 @par, SYSUTCDATETIME());
-        THROW 50080, @m80, 1;
+        BEGIN SET @m80 = REPLACE(@m80, N'%', N'%%'); THROW 50080, @m80, 1; END
     END;
 
     -- La proposition, portee par un visa a l'etat propose. La table des
     -- visas ne porte que des decisions : la proposition s'y inscrit donc
     -- comme une ligne dont le proposant est renseigne et la decision
     -- prise par le chef de mission plus tard, par pr_viser_synthese.
-    IF NOT EXISTS (SELECT 1 FROM dbo.synthese_proposee s
-                   WHERE s.entite = @entite AND s.arrete = @arrete
-                     AND s.perime_le IS NULL)
-        INSERT INTO dbo.synthese_proposee
+    DECLARE @s INT, @s_le DATETIME2, @decision VARCHAR (10);
+    SELECT TOP (1) @s = s.id, @s_le = s.propose_le FROM dbo.synthese_proposee s
+    WHERE s.entite = @entite AND s.arrete = @arrete AND s.perime_le IS NULL
+    ORDER BY s.propose_le DESC, s.id DESC;
+    IF @s IS NOT NULL
+    BEGIN
+        SELECT TOP (1) @decision = v.decision FROM dbo.visa v
+        WHERE v.nature = 'SYNTHESE' AND v.objet_ref = @ref AND v.decide_le >= @s_le
+        ORDER BY v.decide_le DESC, v.id DESC;
+        IF @decision IS NULL
+        BEGIN
+            DECLARE @m80b NVARCHAR (2000) =
+                N'Synthèse refusée : la synthèse proposée le ' + CONVERT(NVARCHAR (10), @s_le, 103)
+                + N' attend le visa du chef de mission. La viser ou la renvoyer avant d''en proposer une autre.';
+            INSERT INTO dbo.journal_refus
+                (procedure_nom, entite, arrete, message, geste, refuse_pour,
+                 refuse_le)
+            VALUES ('pr_proposer_synthese', @entite, @arrete, @m80b,
+                    N'Faire viser ou renvoyer la synthèse proposée.',
+                    @par, SYSUTCDATETIME());
+            BEGIN SET @m80b = REPLACE(@m80b, N'%', N'%%'); THROW 50780, @m80b, 1; END
+        END;
+        IF @decision = 'VISE'
+        BEGIN
+            DECLARE @m80c NVARCHAR (2000) =
+                N'Synthèse refusée : la synthèse de cet arrêté est visée. Elle se périme au visa d''un lot postérieur ; une nouvelle synthèse se propose ensuite.';
+            INSERT INTO dbo.journal_refus
+                (procedure_nom, entite, arrete, message, geste, refuse_pour,
+                 refuse_le)
+            VALUES ('pr_proposer_synthese', @entite, @arrete, @m80c,
+                    N'Aucune action : la synthèse visée vaut pour cet arrêté.',
+                    @par, SYSUTCDATETIME());
+            BEGIN SET @m80c = REPLACE(@m80c, N'%', N'%%'); THROW 50781, @m80c, 1; END
+        END;
+        -- renvoyee : elle est perimee, la nouvelle proposition la remplace
+        UPDATE dbo.synthese_proposee
+           SET perime_le = SYSUTCDATETIME(), perime_motif = N'Renvoyée par le chef de mission, proposée de nouveau.'
+         WHERE id = @s;
+    END;
+    INSERT INTO dbo.synthese_proposee
             (entite, arrete, actif_net_rationalise, actif_net_calcule,
              ecart, valeur_liquidative, propose_par, propose_le)
         SELECT @entite, @arrete, r.actif_net_rationalise,

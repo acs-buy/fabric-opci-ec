@@ -17,7 +17,8 @@ SELECT f.arrete,
        -- colonnes sont egales PAR CONSTRUCTION. La vue de controle
        -- confronte la table aux ECRITURES des 2 entites, qui est le
        -- seul rapprochement qui prouve quelque chose.
-       CAST(1 AS BIT)                      AS reciproque_par_construction
+       CAST(1 AS BIT)                      AS reciproque_par_construction,
+       (SELECT o.ordre FROM dbo.v_ordre_entite o WHERE o.entite = f.entite_debitrice) AS ordre_filiale
 FROM dbo.flux_intragroupe f
 GROUP BY f.arrete, f.entite_debitrice, f.entite_creditrice;
 

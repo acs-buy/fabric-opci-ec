@@ -32,7 +32,8 @@ SELECT entite, arrete, actif_net_reevalue, nombre_parts, source,
            AS valeur_liquidative_precedente,
        CAST(valeur_liquidative
           - LAG(valeur_liquidative) OVER (PARTITION BY entite ORDER BY arrete)
-            AS DECIMAL (19,2)) AS ecart
+            AS DECIMAL (19,2)) AS ecart,
+       CAST(RIGHT(arrete, 2) + '/' + SUBSTRING(arrete, 6, 2) + '/' + LEFT(arrete, 4) AS VARCHAR (10)) AS arrete_libelle
 FROM calcul;
 
 GO

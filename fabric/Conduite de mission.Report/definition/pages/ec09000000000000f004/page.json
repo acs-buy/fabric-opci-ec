@@ -1,0 +1,126 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "ec09000000000000f004",
+  "displayName": "Balance des comptes annuels",
+  "displayOption": "FitToWidth",
+  "width": 1600,
+  "height": 1300,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F4F6F9'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "docBalance",
+      "target": "docDossierVehicule",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docDossierArrete",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docTitre",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docNav0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docNav1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docNav2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docNav4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docNav5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docBalExcelLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docBalExcel",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docBalOuvrirLib",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docBalOuvrir",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docFermer",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docMsg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docVersion",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docValidation",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docSansArrete1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docSansArrete2",
+      "type": "NoFilter"
+    }
+  ]
+}

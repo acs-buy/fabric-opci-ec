@@ -56,35 +56,69 @@ table v_differences_synthese
 		displayFolder: Le dossier
 		lineageTag: 0f1a5651-79a7-412e-89d0-947a416467ab
 
-	/// Carte 3.2, Valeur comptable. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.2, Valeur comptable.
 	measure 'R32 Valeur comptable' = SUM ( v_differences_synthese[valeur_comptable] )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 63eff262-b1cc-4bdf-9364-926ae0c2ff10
 
-	/// Carte 3.2, Valeur actuelle. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.2, Valeur actuelle.
 	measure 'R32 Valeur actuelle' = SUM ( v_differences_synthese[valeur_actuelle] )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: e1b329de-affc-4c4c-8cb9-d80d136f75b2
 
-	/// Carte 3.2, Difference d estimation. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.2, Difference d estimation.
 	measure 'R32 Difference d estimation' = SUM ( v_differences_synthese[difference_estimation] )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: aa0bd572-a4f9-427c-bf98-4c8644913ae2
 
-	/// Carte 3.2, sous-titre de la carte Valeur comptable. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.2, sous-titre de la carte Valeur comptable.
 	measure 'R32 Actifs valorises' = SUM ( v_differences_synthese[nombre_actifs] )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 1993aeb7-e4ab-4619-9dc0-cf9f18a15201
 
-	/// Carte 3.2, Familles servies. Arbitree le 15/09/2026 par la session de la base.
+	/// Carte 3.2, Familles servies.
 	measure 'R32 Familles servies' = CALCULATE ( DISTINCTCOUNT ( v_differences_synthese[famille] ), v_differences_synthese[nombre_actifs] > 0 )
 		formatString: #,0
 		displayFolder: Rapports V2
 		lineageTag: 505a1e6f-b6ab-472e-ab8e-6cf6ec949fad
+
+	/// la différence de la famille INSTRUMENT ; « aucun actif »
+	measure 'Difference des instruments' = VAR d = CALCULATE ( SUM ( v_differences_synthese[difference_estimation] ), v_differences_synthese[famille] = "INSTRUMENT" ) RETURN IF ( ISBLANK ( d ), "aucun actif", FORMAT ( d, "#,0" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: b0511206-eaed-42fb-96ea-b9096ed779e2
+
+	/// la différence de la famille COMPTE_COURANT ; 0 sans ligne
+	measure 'Difference des comptes courants' = CALCULATE ( SUM ( v_differences_synthese[difference_estimation] ), v_differences_synthese[famille] = "COMPTE_COURANT" ) + 0
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 2218757d-3103-48a5-bd2e-636d265da3a5
+
+	/// la différence des actifs de la famille du compte choisi (271, 275, 276, 37)
+	measure 'Difference de la famille du compte choisi' = VAR k = [Compte choisi] VAR f = SWITCH ( TRUE (), k IN { "271", "272", "273", "274" }, "IMMEUBLE", k = "275", "TITRE", k = "276", "COMPTE_COURANT", LEFT ( k, 2 ) = "37", "INSTRUMENT" ) RETURN IF ( NOT ISBLANK ( f ), CALCULATE ( SUM ( v_differences_synthese[difference_estimation] ), FILTER ( ALL ( v_differences_synthese[famille] ), v_differences_synthese[famille] = f ) ) + 0 )
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 6c3cdac5-48f0-4430-822f-056aaf7341f4
+
+	/// différence de l’arrêté moins différence précédente
+	measure 'Variation de la difference d estimation' = SUM ( v_differences_synthese[difference_estimation] ) - [Difference d estimation precedente]
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: e0d262ea-5ee2-4783-b831-c40800690376
+
+	/// la différence à l’arrêté précédent (v_rationalisation_opci[arrete_precedent])
+	measure 'Difference d estimation precedente' = VAR p = MAX ( v_rationalisation_opci[arrete_precedent] ) RETURN IF ( NOT ISBLANK ( p ), CALCULATE ( SUM ( v_differences_synthese[difference_estimation] ), FILTER ( ALL ( v_dim_arrete ), v_dim_arrete[arrete] = p ) ) )
+		formatString: #,0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 228d33ab-e598-46a9-be93-c4a078f5190a
+
+	/// « art. x · n actifs · différence », « art. x · aucun actif » ; étiquette de mise en évidence du segment bouton
+	measure 'Libelle de la famille' = VAR art = SELECTEDVALUE ( v_famille_actif[article] ) VAR n = SUM ( v_differences_synthese[nombre_actifs] ) + 0 VAR d = SUM ( v_differences_synthese[difference_estimation] ) + 0 RETURN IF ( NOT ISBLANK ( art ), "art. " & art & IF ( n > 0, " · " & FORMAT ( n, "0" ) & " actifs · " & FORMAT ( d, "#,0" ), " · aucun actif" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 701c84a3-9dd5-429b-b3ac-fb5898c66cc5
 
 	column entite
 		dataType: string

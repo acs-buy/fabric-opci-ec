@@ -1,0 +1,117 @@
+/// Par arrete de mission portant une annexe, chaque article de l'annexe du recueil : son intitule, son rang, s'il est un article de principe, le texte de l'article de principe, un alinea par ligne, et le nombre de ses cellules, dont les cellules a remplir.
+table v_annexe_article
+	lineageTag: 89eb0392-ab1d-4dd2-a12f-bc1271407402
+
+	measure 'Alinea 1 de l article de principe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = COALESCE ( SELECTEDVALUE ( v_annexe_article[article] ), [Article choisi] ) VAR t = MAXX ( FILTER ( ALL ( v_annexe_article ), v_annexe_article[entite] = e && v_annexe_article[arrete] = a && v_annexe_article[article] = ar && v_annexe_article[principe] = TRUE () ), v_annexe_article[texte_principe] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || ISBLANK ( ar ) || ISBLANK ( t ), "", PATHITEM ( SUBSTITUTE ( t, UNICHAR ( 10 ), "|" ), 1 ) & "" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: a72366b8-87b6-4e84-bd6f-66d786c87c0b
+
+	measure 'Alinea 2 de l article de principe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = COALESCE ( SELECTEDVALUE ( v_annexe_article[article] ), [Article choisi] ) VAR t = MAXX ( FILTER ( ALL ( v_annexe_article ), v_annexe_article[entite] = e && v_annexe_article[arrete] = a && v_annexe_article[article] = ar && v_annexe_article[principe] = TRUE () ), v_annexe_article[texte_principe] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || ISBLANK ( ar ) || ISBLANK ( t ), "", PATHITEM ( SUBSTITUTE ( t, UNICHAR ( 10 ), "|" ), 2 ) & "" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 6c626725-72e4-46d7-bab3-88bb42f9204f
+
+	measure 'Mention de l article de principe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR ar = COALESCE ( SELECTEDVALUE ( v_annexe_article[article] ), [Article choisi] ) VAR t = MAXX ( FILTER ( ALL ( v_annexe_article ), v_annexe_article[entite] = e && v_annexe_article[arrete] = a && v_annexe_article[article] = ar && v_annexe_article[principe] = TRUE () ), v_annexe_article[texte_principe] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || ISBLANK ( ar ) || ISBLANK ( t ), "", "Article de principe : aucune information à remplir" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 19241617-98d0-4387-abbb-c20e065a9183
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 88fea9e1-5cc2-4a09-879e-1c50ec8dd34b
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: e6803531-bb91-4f17-aaf4-ffa01295660f
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 75b6f2fc-eede-40b3-b17c-bdda30deefd2
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column tableau
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: d3239b63-17eb-427d-b413-f0547e6193d7
+		summarizeBy: none
+		sourceColumn: tableau
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f755f02e-582f-4811-9009-492627f9e0ec
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column principe
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 11e9d090-a552-4d9b-ab0e-964cf384ed9a
+		summarizeBy: none
+		sourceColumn: principe
+
+		annotation SummarizationSetBy = Automatic
+
+	column texte_principe
+		dataType: string
+		sourceProviderType: nvarchar(1000)
+		lineageTag: ad18850a-7222-4e66-a457-547a1806c08b
+		summarizeBy: none
+		sourceColumn: texte_principe
+
+		annotation SummarizationSetBy = Automatic
+
+	column cellules
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3b124671-e22c-4295-9eab-c8617bf4feeb
+		summarizeBy: none
+		sourceColumn: cellules
+
+		annotation SummarizationSetBy = Automatic
+
+	column cellules_a_remplir
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 586a2614-03c7-4b87-ad35-d1fbd3ee9411
+		summarizeBy: none
+		sourceColumn: cellules_a_remplir
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_annexe_article = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_annexe_article = Source{[Schema="dbo",Item="v_annexe_article"]}[Data]
+				in
+				    dbo_v_annexe_article
+

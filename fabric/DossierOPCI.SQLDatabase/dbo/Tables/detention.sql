@@ -14,3 +14,25 @@ CREATE TABLE [dbo].[detention] (
 
 GO
 
+
+CREATE   TRIGGER dbo.tr_detention_annexe_retard ON dbo.detention
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT entite_mere, entite_fille, arrete, quote_part FROM inserted
+        EXCEPT SELECT entite_mere, entite_fille, arrete, quote_part FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT entite_mere, entite_fille, arrete, quote_part FROM deleted EXCEPT SELECT entite_mere, entite_fille, arrete, quote_part FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite_mere AS x, CAST(NULL AS BIT) AS vehicule FROM ch) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'detention', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
+
+GO
+

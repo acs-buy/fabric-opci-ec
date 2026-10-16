@@ -1,0 +1,419 @@
+/// Valeurs de l arrete, une ligne par actif a valeur saisie du vehicule et de ses filiales.
+table v_ecran_valeurs_arrete
+	lineageTag: ed0e20e4-efbe-489f-81b4-159a5590fc14
+
+	/// aucun actif bloqué, aucune valeur PROPOSE, chaque rapport rattaché, chaque immeuble des filiales valorisé
+	measure 'Valorisation etape 1 faite' = VAR n = COUNTROWS ( v_ecran_valeurs_arrete ) VAR bloques = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[etat_generation] <> "CALCULABLE" ) + 0 VAR proposees = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[etat_valeur] = "PROPOSE" ) + 0 VAR sans_rapport = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[rapport_rattache] = FALSE () ) + 0 VAR filiales = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[est_filiale] = TRUE (), v_ecran_valeurs_arrete[famille] = "IMMEUBLE", ISBLANK ( v_ecran_valeurs_arrete[valeur_actuelle] ) ) + 0 RETURN IF ( n > 0 && bloques + proposees + sans_rapport + filiales = 0, 1, 0 )
+		formatString: 0
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: bfed5157-dd4a-461b-bd70-64b72ee8584a
+
+	/// remplissage de la forme et de la puce de l’étape 1 : vert quand [Valorisation etape 1 faite] vaut 1, gris sinon (forme etape0 et etapePuce0 de ec01)
+	measure 'Fond valorisation etape 1' = IF ( [Valorisation etape 1 faite] = 1, "#1F6D4A", "#D5DCE4" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: c8f2acbf-6a05-47be-9bcf-7626d4440433
+
+	/// « n actifs · n / n valeurs arrêtées » (bande 1)
+	measure 'Libelle type immeubles' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE" ) + 0 VAR ok = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE", v_ecran_valeurs_arrete[etat_generation] = "CALCULABLE" ) + 0 RETURN FORMAT ( n, "0" ) & " actifs · " & FORMAT ( ok, "0" ) & " / " & FORMAT ( n, "0" ) & " valeurs arrêtées"
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 77f155f2-fd9d-4d58-91d8-09be67b9f44a
+
+	/// « n actifs » ou « aucun actif » (bande 1)
+	measure 'Libelle type instruments' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "INSTRUMENT" ) + 0 RETURN IF ( n > 0, FORMAT ( n, "0" ) & " actifs", "aucun actif" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 8557d509-38fa-4cc0-88fc-c057e58c5542
+
+	/// le code de la ligne choisie de la grille 1a ou 1c
+	measure 'Actif choisi' = IF ( HASONEVALUE ( v_ecran_valeurs_arrete[code_actif] ), SELECTEDVALUE ( v_ecran_valeurs_arrete[code_actif] ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: a959bc1c-e2b2-437d-b87e-daf41e962b6d
+
+	/// l’evaluation_id de la ligne choisie, en texte (un paramètre d’action ne prend pas de mesure numérique)
+	measure 'Evaluation choisie' = IF ( HASONEVALUE ( v_ecran_valeurs_arrete[code_actif] ), SELECTEDVALUE ( v_ecran_valeurs_arrete[evaluation_id] ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 738403bc-c4ca-4f5f-8651-143a77cb3b7c
+
+	/// « n immeubles du véhicule et de ses filiales »
+	measure 'Sous-titre grille des immeubles' = FORMAT ( CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE" ) + 0, "0" ) & " immeubles du véhicule et de ses filiales"
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 8b34d854-6454-4f22-af4a-de4fa74cf911
+
+	/// « actif · entité · prix de revient x » ; « aucun actif choisi »
+	measure 'Sous-titre fiche de l actif' = VAR c = [Actif choisi] RETURN IF ( ISBLANK ( c ), "aucun actif choisi", c & " · " & CALCULATE ( MAX ( v_ecran_valeurs_arrete[entite] ), FILTER ( ALL ( v_ecran_valeurs_arrete[code_actif] ), v_ecran_valeurs_arrete[code_actif] = c ) ) & " · prix de revient " & FORMAT ( CALCULATE ( MAX ( v_ecran_valeurs_arrete[prix_de_revient] ), FILTER ( ALL ( v_ecran_valeurs_arrete[code_actif] ), v_ecran_valeurs_arrete[code_actif] = c ) ), "#,0.00" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 459ff6c8-bab5-4787-ba70-975d27bf7ba0
+
+	/// « actif · prix de revient x » ; « aucun actif choisi »
+	measure 'Sous-titre valeur de l actif' = VAR c = [Actif choisi] RETURN IF ( ISBLANK ( c ), "aucun actif choisi", c & " · prix de revient " & FORMAT ( CALCULATE ( MAX ( v_ecran_valeurs_arrete[prix_de_revient] ), FILTER ( ALL ( v_ecran_valeurs_arrete[code_actif] ), v_ecran_valeurs_arrete[code_actif] = c ) ), "#,0.00" ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: a50e5d2c-f0e4-4569-af05-48707b154463
+
+	/// le code de l’actif choisi ; « aucun actif choisi »
+	measure 'Libelle de l actif choisi' = IF ( ISBLANK ( [Actif choisi] ), "aucun actif choisi", [Actif choisi] )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 87f77095-17c1-4a2d-ab01-4a28a6281a66
+
+	/// « classe 3, véhicule et filiales · n actifs » ; « … · aucun actif »
+	measure 'Sous-titre grille des instruments' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "INSTRUMENT" ) + 0 RETURN "classe 3, véhicule et filiales · " & IF ( n > 0, FORMAT ( n, "0" ) & " actifs", "aucun actif" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 43ad90ad-6674-4a5f-a61b-829b27a60d84
+
+	/// « instrument · entité » ; « aucun instrument choisi »
+	measure 'Sous-titre fiche de l instrument' = VAR c = [Actif choisi] RETURN IF ( ISBLANK ( c ), "aucun instrument choisi", c & " · " & CALCULATE ( MAX ( v_ecran_valeurs_arrete[entite] ), FILTER ( ALL ( v_ecran_valeurs_arrete[code_actif] ), v_ecran_valeurs_arrete[code_actif] = c ) ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 15da74eb-a82e-428b-acff-28bd294500e4
+
+	column vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: d01e69ad-dcb8-45a2-9434-e8ac8d44a99d
+		summarizeBy: none
+		sourceColumn: vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: eda2411f-6731-4024-96ac-231f0ddf8b50
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: e15bb239-38aa-4a0b-93dd-e797d5695425
+		summarizeBy: none
+		sourceColumn: entite
+		sortByColumn: ordre_entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column est_filiale
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: e14ea0fe-dc5e-4288-9321-10ba71e14193
+		summarizeBy: none
+		sourceColumn: est_filiale
+
+		annotation SummarizationSetBy = Automatic
+
+	column famille
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: 38abac0a-0b31-4ff9-8d27-78253b60032e
+		summarizeBy: none
+		sourceColumn: famille
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_actif
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 2dc26d70-02bb-42e8-93a9-f5af1638132a
+		summarizeBy: none
+		sourceColumn: code_actif
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(40)
+		lineageTag: 70f8e10f-a51b-4ebe-a5bb-ecf148daddb3
+		summarizeBy: none
+		sourceColumn: nature
+
+		annotation SummarizationSetBy = Automatic
+
+	column poste_bilan
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: a9c6e4e2-d1a6-4b22-824e-b42d97d98f76
+		summarizeBy: none
+		sourceColumn: poste_bilan
+
+		annotation SummarizationSetBy = Automatic
+
+	column ville
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 84054dcf-8930-44e8-b1cd-977a0dfe3fab
+		summarizeBy: none
+		sourceColumn: ville
+
+		annotation SummarizationSetBy = Automatic
+
+	column prix_de_revient
+		dataType: double
+		isNullable: false
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 4e6ecef7-f29b-42d3-95ab-5f67d465f646
+		summarizeBy: sum
+		sourceColumn: prix_de_revient
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valeur_comptable
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 05f92e8a-9175-439d-b3ab-e0dbeb5f679a
+		summarizeBy: sum
+		sourceColumn: valeur_comptable
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column expertise_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 5ddef489-77dc-4623-af55-833a02678cd4
+		summarizeBy: none
+		sourceColumn: expertise_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_expertise
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: eb01cac2-7910-426f-8764-a93e7c80d4d6
+		summarizeBy: sum
+		sourceColumn: valeur_expertise
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column date_expertise
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: ed81394b-ddab-4a76-a054-4afe4ad79b23
+		summarizeBy: none
+		sourceColumn: date_expertise
+
+		annotation SummarizationSetBy = Automatic
+
+	column rapport_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e524020f-787c-4df1-b5ad-67b51ddde48c
+		summarizeBy: sum
+		sourceColumn: rapport_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column rapport_nom
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 62293b9f-7d95-4ef0-94b5-5b1c92d9e160
+		summarizeBy: none
+		sourceColumn: rapport_nom
+
+		annotation SummarizationSetBy = Automatic
+
+	column rapport_web_url
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 6c44e04f-c03e-40e2-a8fc-be9105dfc4b5
+		summarizeBy: none
+		sourceColumn: rapport_web_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column rapport_rattache
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: e1ff4e27-d60b-410a-860b-5bf5232d1251
+		summarizeBy: none
+		sourceColumn: rapport_rattache
+
+		annotation SummarizationSetBy = Automatic
+
+	column evaluation_id
+		dataType: string
+		sourceProviderType: nvarchar(12)
+		lineageTag: cb3d47a3-cf24-4c4d-bad4-660348a7ae35
+		summarizeBy: none
+		sourceColumn: evaluation_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_proposee
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 5be3d6ab-af6f-419d-899a-a9f8a5199333
+		summarizeBy: sum
+		sourceColumn: valeur_proposee
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column etat_valeur
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: e6303f5c-3a31-4e08-ad51-18b4f29b7c37
+		summarizeBy: none
+		sourceColumn: etat_valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_valeur_libelle
+		dataType: string
+		sourceProviderType: nvarchar(12)
+		lineageTag: c5f8985e-3011-4286-a8f2-1723ae45cc18
+		summarizeBy: none
+		sourceColumn: etat_valeur_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column proposee_par
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 7b698407-3439-40b4-86a9-edbd2871043b
+		summarizeBy: none
+		sourceColumn: proposee_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column proposee_le
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 81fec67a-6cd5-4bbd-b24d-32aa4c28bf60
+		summarizeBy: none
+		sourceColumn: proposee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur_actuelle
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 16311484-b81a-4320-bd54-8cc183b5946e
+		summarizeBy: sum
+		sourceColumn: valeur_actuelle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column difference_estimation
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: cdb7751c-1b6f-4780-8a41-92c1b41cb044
+		summarizeBy: sum
+		sourceColumn: difference_estimation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: b4dff628-0a86-4d8b-8754-fb6616d4115d
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_libelle
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: 8423b698-1c34-4e1a-a886-8efc650677b6
+		summarizeBy: none
+		sourceColumn: source_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column quote_part
+		dataType: double
+		sourceProviderType: decimal(12, 6)
+		lineageTag: 64d5a893-391a-4b1d-8569-31374767c3ad
+		summarizeBy: sum
+		sourceColumn: quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column difference_quote_part
+		dataType: double
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 8e29df5c-71ce-4e0c-867d-63b887f6e60a
+		summarizeBy: sum
+		sourceColumn: difference_quote_part
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column etat_generation
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a93180a1-2e06-4af8-9a3d-249338f58303
+		summarizeBy: none
+		sourceColumn: etat_generation
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(30)
+		lineageTag: c6a1c70f-50d0-4560-89c0-a44e64eeb1d0
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_blocage
+		dataType: string
+		sourceProviderType: nvarchar(88)
+		lineageTag: 895eb63e-0a1d-4973-908c-c07d46646c44
+		summarizeBy: none
+		sourceColumn: motif_blocage
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre_entite
+		dataType: int64
+		isHidden
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f406fe26-7939-49c8-aa90-32d2e04ff759
+		summarizeBy: none
+		sourceColumn: ordre_entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle_ecran
+		dataType: string
+		sourceProviderType: varchar(83)
+		lineageTag: c9221841-24be-48a0-beae-ae779eaf6f52
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_valeurs_arrete = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_valeurs_arrete = Source{[Schema="dbo",Item="v_ecran_valeurs_arrete"]}[Data]
+				in
+				    dbo_v_ecran_valeurs_arrete
+

@@ -5,7 +5,7 @@
     "x": 728,
     "y": 374,
     "z": 64900,
-    "height": 64,
+    "height": 70,
     "width": 824,
     "tabOrder": 64900
   },
@@ -20,14 +20,14 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "ref_arrete"
+                      "Entity": "v_ecran_message"
                     }
                   },
-                  "Property": "Message arrete"
+                  "Property": "Message ecran vide"
                 }
               },
-              "queryRef": "ref_arrete.Message arrete",
-              "nativeQueryRef": "Message arrete"
+              "queryRef": "v_ecran_message.Message ecran vide",
+              "nativeQueryRef": "Message ecran vide"
             }
           ]
         }
@@ -145,6 +145,19 @@
             "id": "default"
           }
         }
+      ],
+      "fillCustom": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -162,8 +175,68 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Entity": "v_ecran_message"
+                                    }
+                                  },
+                                  "Property": "Fond message ecran"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#EFF6F2'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#EFF6F2'"
+                            }
+                          }
+                        },
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Entity": "v_ecran_message"
+                                    }
+                                  },
+                                  "Property": "Fond message ecran"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#F9ECEC'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#F9ECEC'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#FFFFFF'"
+                        }
+                      }
                     }
                   }
                 }

@@ -1,4 +1,5 @@
 
+-- pr_declarer_export_fec : 4 refus
 -- --- 3 : declarer l'export, apres ecriture du fichier ------------------
 CREATE   PROCEDURE dbo.pr_declarer_export_fec
     @entite       VARCHAR (20),
@@ -28,7 +29,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_declarer_export_fec', @entite, @arrete, NULL, @m1, @par);
-        THROW 50042, @m1, 1;
+        BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50042, @m1, 1; END
     END;
     IF @lignes < 1
     BEGIN
@@ -38,7 +39,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_declarer_export_fec', @entite, @arrete, NULL, @m2, @par);
-        THROW 50042, @m2, 1;
+        BEGIN SET @m2 = REPLACE(@m2, N'%', N'%%'); THROW 50042, @m2, 1; END
     END;
     -- Un compte sans traduction dans le plan de l'entite rendrait un
     -- champ CompteNum vide, que le reimport rejetterait.
@@ -55,7 +56,7 @@ BEGIN
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_declarer_export_fec', @entite, @arrete, NULL, @m3, @par);
-        THROW 50042, @m3, 1;
+        BEGIN SET @m3 = REPLACE(@m3, N'%', N'%%'); THROW 50042, @m3, 1; END
     END;
 
     BEGIN TRY
@@ -83,7 +84,7 @@ BEGIN
             (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_declarer_export_fec', @entite, @arrete, NULL,
                 LEFT(ERROR_MESSAGE(), 2000), @par);
-        THROW 50042, @m4, 1;
+        BEGIN SET @m4 = REPLACE(@m4, N'%', N'%%'); THROW 50042, @m4, 1; END
     END CATCH;
 END;
 

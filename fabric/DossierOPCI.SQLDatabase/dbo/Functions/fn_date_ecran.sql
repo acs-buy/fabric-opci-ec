@@ -1,0 +1,11 @@
+
+-- Une date aaaa-mm-jj (texte) en jj/mm/aaaa.
+CREATE   FUNCTION dbo.fn_date_ecran (@d VARCHAR (20))
+RETURNS NVARCHAR (10)
+AS
+BEGIN
+    RETURN CASE WHEN TRY_CONVERT(DATE, @d) IS NULL THEN NULL ELSE CONVERT(NVARCHAR (10), TRY_CONVERT(DATE, @d), 103) END;
+END;
+
+GO
+

@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "ref_arrete"
+                      "Entity": "v_ecran_arretes"
                     }
                   },
                   "Property": "Arrêté"
                 }
               },
-              "queryRef": "ref_arrete.Arrêté",
+              "queryRef": "v_ecran_arretes.Arrêté",
               "nativeQueryRef": "Arrêté"
             },
             {
@@ -34,13 +34,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "ref_arrete"
+                      "Entity": "v_ecran_arretes"
                     }
                   },
                   "Property": "Type"
                 }
               },
-              "queryRef": "ref_arrete.Type",
+              "queryRef": "v_ecran_arretes.Type",
               "nativeQueryRef": "Type"
             },
             {
@@ -48,17 +48,64 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "ref_arrete"
+                      "Entity": "v_ecran_arretes"
                     }
                   },
-                  "Property": "Exercice"
+                  "Property": "Ouvert le"
                 }
               },
-              "queryRef": "ref_arrete.Exercice",
-              "nativeQueryRef": "Exercice"
+              "queryRef": "v_ecran_arretes.Ouvert le",
+              "nativeQueryRef": "Ouvert le"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_ecran_arretes"
+                    }
+                  },
+                  "Property": "Maintien de la mission"
+                }
+              },
+              "queryRef": "v_ecran_arretes.Maintien de la mission",
+              "nativeQueryRef": "Maintien de la mission"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_ecran_arretes"
+                    }
+                  },
+                  "Property": "arrete"
+                }
+              },
+              "queryRef": "v_ecran_arretes.arrete",
+              "nativeQueryRef": "arrete",
+              "displayName": " "
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_ecran_arretes"
+                  }
+                },
+                "Property": "arrete"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
     "objects": {
@@ -84,9 +131,23 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#D5DCE4'"
+                      "Value": "'#EAEFF4'"
                     }
                   }
+                }
+              }
+            },
+            "gridHorizontal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridHorizontalWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
                 }
               }
             }
@@ -191,6 +252,138 @@
               }
             }
           }
+        },
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "v_ecran_arretes"
+                        }
+                      },
+                      "Property": "Fond maintien arrete"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "v_ecran_arretes.Maintien de la mission"
+          }
+        },
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "v_ecran_arretes"
+                        }
+                      },
+                      "Property": "Encre maintien arrete"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "v_ecran_arretes.Maintien de la mission"
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "162D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_arretes.Arrêté"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "162D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_arretes.Type"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "181D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_arretes.Ouvert le"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "284D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_arretes.Maintien de la mission"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_arretes.arrete"
+          }
         }
       ]
     },
@@ -262,8 +455,13 @@
             },
             "text": {
               "expr": {
-                "Literal": {
-                  "Value": "'Arrêtés planifiés'"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_ecran_arretes"
+                    }
+                  },
+                  "Property": "Titre arretes et maintiens"
                 }
               }
             },
@@ -310,5 +508,58 @@
       ]
     }
   },
-  "isHidden": true
+  "isHidden": true,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "FiltreEstarreteduclientcourant",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_ecran_arretes"
+              }
+            },
+            "Property": "Est arrete du client courant"
+          }
+        },
+        "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "v_ecran_arretes",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "t"
+                        }
+                      },
+                      "Property": "Est arrete du client courant"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ]
+  }
 }

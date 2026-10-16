@@ -1,0 +1,329 @@
+/// Les lignes du bilan et du compte de resultat, en N et en N-1, par vehicule et arrete.
+table v_ligne_etat_montant
+	lineageTag: 26e114c1-f5ea-4b53-bc8c-57f4fbea0368
+
+	measure 'Titre du bilan' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR den = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), ref_entite[Dénomination] ) VAR de = IF ( CONTAINSSTRING ( "aeiouyhéèêàâîôûAEIOUYHÉÈÊÀÂÎÔÛ", LEFT ( den, 1 ) ), "de l’", "de " ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "Bilan " & de & den & " au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 1d9927d0-c3a0-455c-a849-8d20d84e90d7
+
+	measure 'Titre du compte de resultat' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR den = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), ref_entite[Dénomination] ) VAR de = IF ( CONTAINSSTRING ( "aeiouyhéèêàâîôûAEIOUYHÉÈÊÀÂÎÔÛ", LEFT ( den, 1 ) ), "de l’", "de " ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), "Compte de résultat " & de & den & " au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) )
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 178b0df7-d771-4c1e-bb35-fa28e7a5f401
+
+	measure 'Aff Titre du bilan' = [Titre du bilan] & ""
+		lineageTag: 0aeec228-369e-4447-8183-5e7156d07a93
+
+	measure 'Aff Titre du compte de resultat' = [Titre du compte de resultat] & ""
+		lineageTag: 03a1f7be-e3ee-469a-b6eb-131da31dceab
+
+	measure 'Titre des comptes annuels' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR den = MAXX ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ), ref_entite[Dénomination] ) VAR de = IF ( CONTAINSSTRING ( "aeiouyhéèêàâîôûAEIOUYHÉÈÊÀÂÎÔÛ", LEFT ( den, 1 ) ), "de l’", "de " ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "Comptes annuels " & de & den & " au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 45fad791-572c-405f-afe4-cd23e38536bf
+
+	measure 'Titre du modele bilan actif' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR d = [Devise de l annexe] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "Bilan au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) & IF ( ISBLANK ( d ) || d = "", "", IF ( d = "à remplir", ", devise à remplir", " en " & d ) ) & " - Actif" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 21789481-00d9-45cc-8fe6-9d860472bd55
+
+	measure 'Titre du modele bilan passif' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR d = [Devise de l annexe] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "Bilan au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) & IF ( ISBLANK ( d ) || d = "", "", IF ( d = "à remplir", ", devise à remplir", " en " & d ) ) & " - Passif" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 74ecc1f7-518d-4579-8833-c5cf0557896a
+
+	measure 'Titre du modele compte de resultat' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR d = [Devise de l annexe] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", "Compte de résultat au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) & IF ( ISBLANK ( d ) || d = "", "", IF ( d = "à remplir", ", devise à remplir", " en " & d ) ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: ed40300f-6019-42d0-989d-17f6b9a07442
+
+	measure 'Faits du bilan actif' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_ligne_etat_montant ), v_ligne_etat_montant[entite] = e && v_ligne_etat_montant[arrete] = a ) VAR n = COUNTROWS ( FILTER ( t, v_ligne_etat_montant[etat] = "BILAN_ACTIF" ) ) + 0 VAR ta = MAXX ( FILTER ( t, v_ligne_etat_montant[code] = "A_TOTAL" ), v_ligne_etat_montant[Exercice N] ) VAR tp = MAXX ( FILTER ( t, v_ligne_etat_montant[code] = "P_TOTAL" ), v_ligne_etat_montant[Exercice N] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || n = 0, "", FORMAT ( n, "0" ) & " lignes du modèle de l’article 321-2 ; total de l’actif : " & IF ( ISBLANK ( ta ), "à remplir", FORMAT ( ta, "#,##0.00" ) ) & IF ( ISBLANK ( ta ) || ISBLANK ( tp ), "", IF ( ROUND ( ta - tp, 2 ) = 0, ", égal au total du passif", ", différent du total du passif" ) ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: e0a5231f-22a0-403b-91ec-459a18247f19
+
+	measure 'Faits du bilan passif' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_ligne_etat_montant ), v_ligne_etat_montant[entite] = e && v_ligne_etat_montant[arrete] = a ) VAR n = COUNTROWS ( FILTER ( t, v_ligne_etat_montant[etat] = "BILAN_PASSIF" ) ) + 0 VAR tp = MAXX ( FILTER ( t, v_ligne_etat_montant[code] = "P_TOTAL" ), v_ligne_etat_montant[Exercice N] ) VAR cp = MAXX ( FILTER ( t, v_ligne_etat_montant[code] = "P_CP" ), v_ligne_etat_montant[Exercice N] ) VAR anr = MAXX ( FILTER ( ALL ( v_anr_entite ), v_anr_entite[entite] = e && v_anr_entite[arrete] = a ), v_anr_entite[actif_net_reevalue] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || n = 0, "", FORMAT ( n, "0" ) & " lignes du modèle de l’article 321-6 ; total du passif : " & IF ( ISBLANK ( tp ), "à remplir", FORMAT ( tp, "#,##0.00" ) ) & " ; " & IF ( NOT ISBLANK ( cp ) && NOT ISBLANK ( anr ) && ROUND ( cp - anr, 2 ) = 0, "capitaux propres égaux à l’actif net réévalué : " & IF ( ISBLANK ( cp ), "à remplir", FORMAT ( cp, "#,##0.00" ) ), "capitaux propres : " & IF ( ISBLANK ( cp ), "à remplir", FORMAT ( cp, "#,##0.00" ) ) & " ; actif net réévalué : " & IF ( ISBLANK ( anr ), "absent de la base", FORMAT ( anr, "#,##0.00" ) ) ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 6087dae4-7ea9-4f87-8e0a-4587b343a2d1
+
+	measure 'Faits du compte de resultat' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_ligne_etat_montant ), v_ligne_etat_montant[entite] = e && v_ligne_etat_montant[arrete] = a ) VAR n = COUNTROWS ( FILTER ( t, v_ligne_etat_montant[etat] = "RESULTAT" ) ) + 0 VAR rc = MAXX ( FILTER ( t, v_ligne_etat_montant[code] = "R_RE" ), v_ligne_etat_montant[Exercice N] ) VAR rp = MAXX ( FILTER ( t, v_ligne_etat_montant[code] = "P_CP_4" ), v_ligne_etat_montant[Exercice N] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || n = 0, "", FORMAT ( n, "0" ) & " lignes du modèle de l’article 322-2 ; " & IF ( NOT ISBLANK ( rc ) && NOT ISBLANK ( rp ) && ROUND ( rc - rp, 2 ) = 0, "résultat de l’exercice (C) égal au résultat de l’exercice du passif : " & IF ( ISBLANK ( rc ), "à remplir", FORMAT ( rc, "#,##0.00" ) ), "résultat de l’exercice (C) : " & IF ( ISBLANK ( rc ), "à remplir", FORMAT ( rc, "#,##0.00" ) ) & " ; résultat de l’exercice du passif : " & IF ( ISBLANK ( rp ), "à remplir", FORMAT ( rp, "#,##0.00" ) ) ) & " ; classes 6 et 7 lues avant leur virement au compte 120" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: a72e0839-ea51-4e14-8b67-8f97ff36aaaa
+
+	measure 'Montant N de la ligne d etat' = VAR c = SELECTEDVALUE ( v_ligne_etat_montant[code] ) VAR ty = SELECTEDVALUE ( v_ligne_etat_montant[type_ligne] ) VAR et = SELECTEDVALUE ( v_ligne_etat_montant[etat] ) VAR v = SUM ( v_ligne_etat_montant[Exercice N] ) RETURN IF ( ISBLANK ( c ), BLANK (), IF ( ty = "RUBRIQUE" && ISBLANK ( v ) && et IN { "BILAN_ACTIF", "BILAN_PASSIF" }, CALCULATE ( SUM ( v_ligne_etat_montant[Exercice N] ), REMOVEFILTERS ( v_ligne_etat_montant[ordre] ), REMOVEFILTERS ( v_ligne_etat_montant[Ligne du modèle] ), v_ligne_etat_montant[type_ligne] = "DETAIL", LEFT ( v_ligne_etat_montant[code], LEN ( c ) + 1 ) = c & "_" ), v ) )
+		formatString: #,##0.00
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 5b07496e-d8e6-434f-9b03-2549c0190fd6
+
+	measure 'Montant N-1 de la ligne d etat' = VAR c = SELECTEDVALUE ( v_ligne_etat_montant[code] ) VAR ty = SELECTEDVALUE ( v_ligne_etat_montant[type_ligne] ) VAR et = SELECTEDVALUE ( v_ligne_etat_montant[etat] ) VAR v = SUM ( v_ligne_etat_montant[Exercice N-1] ) RETURN IF ( ISBLANK ( c ), BLANK (), IF ( ty = "RUBRIQUE" && ISBLANK ( v ) && et IN { "BILAN_ACTIF", "BILAN_PASSIF" }, CALCULATE ( SUM ( v_ligne_etat_montant[Exercice N-1] ), REMOVEFILTERS ( v_ligne_etat_montant[ordre] ), REMOVEFILTERS ( v_ligne_etat_montant[Ligne du modèle] ), v_ligne_etat_montant[type_ligne] = "DETAIL", LEFT ( v_ligne_etat_montant[code], LEN ( c ) + 1 ) = c & "_" ), v ) )
+		formatString: #,##0.00
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: f6eafd8a-7b3a-4238-a970-9bc06f749b11
+
+	measure 'Comptes du plan de la ligne' = VAR c = SELECTEDVALUE ( v_ligne_etat_montant[code] ) VAR r = SELECTEDVALUE ( v_ligne_etat_montant[racines] ) RETURN IF ( ISBLANK ( c ), BLANK (), SWITCH ( c, "A_AUTRE_1", "421 à 423, 491", "A_AUTRE_2", "412 à 416, 44, 46, 486, 496", "A_AUTRE_3", "511", "A_FIN_1", "30", "A_FIN_2", "31", "A_FIN_3", "32", "A_FIN_4", "33", "A_FIN_5", "36", "A_FIN_6", "34", "A_FIN_7", "35", "A_IMMO_1", "21, 22, 23, 271 à 273", "A_IMMO_2", "243, 274", "A_IMMO_3", "252", "A_IMMO_4", "254", "A_IMMO_5", "256", "A_IMMO_6", "258", "A_IMMO_7", "245", "A_IMMO_8", "265, 266, 276", "P_CP_1", "101 à 109", "P_CP_2", "112, 193", "P_CP_3", "111, 191", "P_CP_4", "120, 192", "P_CP_5", "129, 198", "P_DET_1", "", "P_DET_2", "", "P_DET_3", "511", "P_DET_4", "43", "P_DET_5", "402 à 405, 408, 429, 445, 447, 448, 467, 487", "P_IF_1", "39", "P_IF_2", "34", "P_IF_3", "35", "P_IMMO_1", "291", "P_IMMO_2", "294", "P_IMMO_3", "295", "P_IMMO_4", "296", "P_PROV", "497", "R_CF_1", "604", "R_CF_2", "", "R_CI_1", "621, 622, 624 à 629", "R_CI_2", "63", "R_CI_3", "681", "R_CI_4", "", "R_MV_1", "661", "R_MV_2", "662", "R_PF_1", "700 à 706", "R_PF_2", "", "R_PI_1", "721, 722, 723, 728", "R_PI_2", "73", "R_PI_3", "781", "R_PV_1", "761", "R_PV_2", "762", "R_TV", "71", "R_TVI", "611, 612, 615, 617, 619", "R_TVII", "", "R_TVIII", "772", "R_TXI", "776", SUBSTITUTE ( r, ",", ", " ) ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: afc89135-0b8d-4f12-81b9-f800d35b91da
+
+	measure 'Marque des comptes de la ligne' = VAR c = SELECTEDVALUE ( v_ligne_etat_montant[code] ) VAR r = SUBSTITUTE ( SELECTEDVALUE ( v_ligne_etat_montant[racines] ), " ", "" ) RETURN IF ( ISBLANK ( c ), BLANK (), SWITCH ( c, "A_AUTRE_1", IF ( r = "42,491", "●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_AUTRE_2", IF ( r = "41,44,45,46,47,48,496", "411, 45, 47, 488 : non établi ●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_AUTRE_3", IF ( r = "511,57,58", "57, 58 : non établi", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_FIN_1", IF ( r = "30", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_FIN_2", IF ( r = "31", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_FIN_3", IF ( r = "32", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_FIN_4", IF ( r = "33,34", "●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_FIN_5", IF ( r = "35", "●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_FIN_6", IF ( r = "36", "●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_FIN_7", IF ( r = "37,38", "37 : non établi ●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_IMMO_1", IF ( r = "21,22,23,271,272,273", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_IMMO_2", IF ( r = "243,274", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_IMMO_3", IF ( r = "252", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_IMMO_4", IF ( r = "254,275", "●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_IMMO_5", IF ( r = "256", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_IMMO_6", IF ( r = "258", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_IMMO_7", IF ( r = "245", "213-2 : non établi", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "A_IMMO_8", IF ( r = "265,266,276", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_CP_1", IF ( r = "101,102,103,104,105,106,107,108,109", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_CP_2", IF ( r = "112,193", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_CP_3", IF ( r = "111,191", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_CP_4", IF ( r = "120,192", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_CP_5", IF ( r = "129,198", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_DET_1", IF ( r = "164,512,518", "512, 518 : non établi ●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_DET_2", IF ( r = "513", "513 : non établi", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_DET_3", IF ( r = "519", "●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_DET_4", IF ( r = "43", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_DET_5", IF ( r = "402,403,404,405,408,409,44,45,46,47,48", "409, 45, 47, 488 : non établi ●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_IF_1", IF ( r = "39", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_IF_2", IF ( r = "406", "406 : non établi ●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_IF_3", IF ( r = "401,411", "401, 411 : non établi ●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_IMMO_1", IF ( r = "291", "211-5 : non établi", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_IMMO_2", IF ( r = "294", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_IMMO_3", IF ( r = "295", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_IMMO_4", IF ( r = "296", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "P_PROV", IF ( r = "497", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_CF_1", IF ( r = "604,605", "605 : non établi", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_CF_2", IF ( r = "608", "608 : non établi", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_CI_1", IF ( r = "621,622,624,625,626,627,628,629", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_CI_2", IF ( r = "63", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_CI_3", IF ( r = "681", "683 : non établi", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_CI_4", IF ( r = "623", "623 : non établi", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_MV_1", IF ( r = "661", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_MV_2", IF ( r = "662", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_PF_1", IF ( r = "700,701,702,703,704,705,706", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_PF_2", IF ( r = "708", "708 : non établi", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_PI_1", IF ( r = "721,722,723,728", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_PI_2", IF ( r = "73", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_PI_3", IF ( r = "724,78", "724, 782, 783 : non établi", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_PV_1", IF ( r = "761", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_PV_2", IF ( r = "762", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_TV", IF ( r = "71", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_TVI", IF ( r = "611,612,615,617,619", "613 : non établi ●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_TVII", IF ( r = "613,618", "non établi ●", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_TVIII", IF ( r = "772", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "R_TXI", IF ( r = "776", "", "lus en base : " & SUBSTITUTE ( r, ",", ", " ) ), "" ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 62884935-7e3e-4d94-8e45-294ab5e845b7
+
+	measure 'Fond de la ligne d etat' = IF ( SELECTEDVALUE ( v_ligne_etat_montant[code] ) IN { "A_IMMO", "A_FIN", "A_AUTRE", "A_TOTAL", "P_CP", "P_PROV", "P_IMMO", "P_IF", "P_DET", "P_TOTAL", "R_PI", "R_TI", "R_CI", "R_TII", "R_RAI", "R_PF", "R_TIII", "R_CF", "R_TIV", "R_ROF", "R_RN", "R_RNAR", "R_PV", "R_TIX", "R_MV", "R_TX", "R_RPMV", "R_PMVAR", "R_RE" }, "#EDF2F7", "#FFFFFF" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: e6f5f8b2-c621-4c5e-84c1-13e8a4207c91
+
+	measure 'Fond de la marque des comptes' = VAR m = [Marque des comptes de la ligne] RETURN IF ( CONTAINSSTRING ( m, "non établi" ) || CONTAINSSTRING ( m, "lus en base" ), "#FBF4E4", [Fond de la ligne d etat] )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 8b5dc25f-67ca-4346-a637-62579d140db4
+
+	measure 'Encre de la marque des comptes' = IF ( [Marque des comptes de la ligne] = "●", "#C7792B", "#8A6710" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 51996551-6633-45ff-a118-5fe7017b8db3
+
+	measure 'Ecart des comptes de la ligne' = VAR c = SELECTEDVALUE ( v_ligne_etat_montant[code] ) VAR r = SUBSTITUTE ( SELECTEDVALUE ( v_ligne_etat_montant[racines] ), " ", "" ) VAR l = SELECTEDVALUE ( v_ligne_etat_montant[Ligne du modèle] ) RETURN IF ( ISBLANK ( c ), BLANK (), SWITCH ( c, "A_AUTRE_1", IF ( r = "42,491", "« " & l & " » : la base lit en plus 429.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_AUTRE_2", IF ( r = "41,44,45,46,47,48,496", "« " & l & " » : la base lit en plus 487.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_AUTRE_3", IF ( r = "511,57,58", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_FIN_1", IF ( r = "30", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_FIN_2", IF ( r = "31", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_FIN_3", IF ( r = "32", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_FIN_4", IF ( r = "33,34", "« " & l & " » : la base lit en plus 34.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_FIN_5", IF ( r = "35", "« " & l & " » : la base lit 35, et non 36.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_FIN_6", IF ( r = "36", "« " & l & " » : la base lit 36, et non 34.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_FIN_7", IF ( r = "37,38", "« " & l & " » : la base lit le 38, hors du plan, et non 35.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_IMMO_1", IF ( r = "21,22,23,271,272,273", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_IMMO_2", IF ( r = "243,274", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_IMMO_3", IF ( r = "252", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_IMMO_4", IF ( r = "254,275", "« " & l & " » : la base lit en plus le 275, hors du plan.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_IMMO_5", IF ( r = "256", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_IMMO_6", IF ( r = "258", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_IMMO_7", IF ( r = "245", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "A_IMMO_8", IF ( r = "265,266,276", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_CP_1", IF ( r = "101,102,103,104,105,106,107,108,109", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_CP_2", IF ( r = "112,193", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_CP_3", IF ( r = "111,191", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_CP_4", IF ( r = "120,192", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_CP_5", IF ( r = "129,198", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_DET_1", IF ( r = "164,512,518", "« " & l & " » : la base lit en plus le 164, hors du plan.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_DET_2", IF ( r = "513", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_DET_3", IF ( r = "519", "« " & l & " » : la base lit le 519, hors du plan, et non 511.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_DET_4", IF ( r = "43", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_DET_5", IF ( r = "402,403,404,405,408,409,44,45,46,47,48", "« " & l & " » : la base lit 441, 461, 486, et non 429.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_IF_1", IF ( r = "39", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_IF_2", IF ( r = "406", "« " & l & " » : la base ne lit pas 34.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_IF_3", IF ( r = "401,411", "« " & l & " » : la base ne lit pas 35.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_IMMO_1", IF ( r = "291", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_IMMO_2", IF ( r = "294", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_IMMO_3", IF ( r = "295", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_IMMO_4", IF ( r = "296", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "P_PROV", IF ( r = "497", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_CF_1", IF ( r = "604,605", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_CF_2", IF ( r = "608", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_CI_1", IF ( r = "621,622,624,625,626,627,628,629", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_CI_2", IF ( r = "63", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_CI_3", IF ( r = "681", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_CI_4", IF ( r = "623", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_MV_1", IF ( r = "661", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_MV_2", IF ( r = "662", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_PF_1", IF ( r = "700,701,702,703,704,705,706", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_PF_2", IF ( r = "708", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_PI_1", IF ( r = "721,722,723,728", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_PI_2", IF ( r = "73", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_PI_3", IF ( r = "724,78", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_PV_1", IF ( r = "761", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_PV_2", IF ( r = "762", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_TV", IF ( r = "71", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_TVI", IF ( r = "611,612,615,617,619", "« " & l & " » : la base lit le 613 en « Autres charges (VII) ».", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_TVII", IF ( r = "613,618", "« " & l & " » : la base lit le 613, subdivision de la base absente du plan, et le 618, hors du plan.", "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_TVIII", IF ( r = "772", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), "R_TXI", IF ( r = "776", BLANK (), "« " & l & " » : comptes lus en base : " & SUBSTITUTE ( r, ",", ", " ) & "." ), BLANK () ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 448d9faa-5bae-464b-a727-ffd39c4e482e
+
+	measure 'Puce de l ecart des comptes' = IF ( ISBLANK ( [Ecart des comptes de la ligne] ), BLANK (), "●" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 07aaf377-99d1-4a1f-9d89-d2ea819449b3
+
+	measure 'Ecart des comptes 1' = VAR os = FILTER ( VALUES ( v_ligne_etat_montant[ordre] ), NOT ISBLANK ( CALCULATE ( [Ecart des comptes de la ligne] ) ) ) VAR ok = IF ( COUNTROWS ( os ) >= 1, MAXX ( TOPN ( 1, os, v_ligne_etat_montant[ordre], ASC ), v_ligne_etat_montant[ordre] ) ) RETURN IF ( ISBLANK ( ok ), BLANK (), CALCULATE ( [Ecart des comptes de la ligne], v_ligne_etat_montant[ordre] = ok ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 06a996b4-4ba9-4fbc-9134-8bf8c427c522
+
+	measure 'Puce de l ecart des comptes 1' = IF ( ISBLANK ( [Ecart des comptes 1] ), BLANK (), "●" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 5e986d54-b3af-4aa7-b741-2d01f3850a4b
+
+	measure 'Ecart des comptes 2' = VAR os = FILTER ( VALUES ( v_ligne_etat_montant[ordre] ), NOT ISBLANK ( CALCULATE ( [Ecart des comptes de la ligne] ) ) ) VAR ok = IF ( COUNTROWS ( os ) >= 2, MAXX ( TOPN ( 2, os, v_ligne_etat_montant[ordre], ASC ), v_ligne_etat_montant[ordre] ) ) RETURN IF ( ISBLANK ( ok ), BLANK (), CALCULATE ( [Ecart des comptes de la ligne], v_ligne_etat_montant[ordre] = ok ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: b54154d6-88ed-4e66-b92a-1ab730227e46
+
+	measure 'Puce de l ecart des comptes 2' = IF ( ISBLANK ( [Ecart des comptes 2] ), BLANK (), "●" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 132b596e-d51a-4311-a6b1-30bcbf4f1a01
+
+	measure 'Ecart des comptes 3' = VAR os = FILTER ( VALUES ( v_ligne_etat_montant[ordre] ), NOT ISBLANK ( CALCULATE ( [Ecart des comptes de la ligne] ) ) ) VAR ok = IF ( COUNTROWS ( os ) >= 3, MAXX ( TOPN ( 3, os, v_ligne_etat_montant[ordre], ASC ), v_ligne_etat_montant[ordre] ) ) RETURN IF ( ISBLANK ( ok ), BLANK (), CALCULATE ( [Ecart des comptes de la ligne], v_ligne_etat_montant[ordre] = ok ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 9f0391eb-46df-4768-93f6-a08b1b72ec0c
+
+	measure 'Puce de l ecart des comptes 3' = IF ( ISBLANK ( [Ecart des comptes 3] ), BLANK (), "●" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 47a68ed6-a908-4f28-9672-cc9fe47bca53
+
+	measure 'Ecart des comptes 4' = VAR os = FILTER ( VALUES ( v_ligne_etat_montant[ordre] ), NOT ISBLANK ( CALCULATE ( [Ecart des comptes de la ligne] ) ) ) VAR ok = IF ( COUNTROWS ( os ) >= 4, MAXX ( TOPN ( 4, os, v_ligne_etat_montant[ordre], ASC ), v_ligne_etat_montant[ordre] ) ) RETURN IF ( ISBLANK ( ok ), BLANK (), CALCULATE ( [Ecart des comptes de la ligne], v_ligne_etat_montant[ordre] = ok ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: fc244dd5-1136-46c9-8c99-0c142c9cd7f4
+
+	measure 'Puce de l ecart des comptes 4' = IF ( ISBLANK ( [Ecart des comptes 4] ), BLANK (), "●" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: c87ea3cd-baa3-4539-bf4f-cd64a0c46562
+
+	measure 'Ecart des comptes 5' = VAR os = FILTER ( VALUES ( v_ligne_etat_montant[ordre] ), NOT ISBLANK ( CALCULATE ( [Ecart des comptes de la ligne] ) ) ) VAR ok = IF ( COUNTROWS ( os ) >= 5, MAXX ( TOPN ( 5, os, v_ligne_etat_montant[ordre], ASC ), v_ligne_etat_montant[ordre] ) ) RETURN IF ( ISBLANK ( ok ), BLANK (), CALCULATE ( [Ecart des comptes de la ligne], v_ligne_etat_montant[ordre] = ok ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 7678d7ac-9a10-4b6e-b799-d6b33e6546d7
+
+	measure 'Puce de l ecart des comptes 5' = IF ( ISBLANK ( [Ecart des comptes 5] ), BLANK (), "●" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 3a1ce4e6-1b42-4eb8-93c4-52e417e4f5c6
+
+	measure 'Ecart des comptes 6' = VAR os = FILTER ( VALUES ( v_ligne_etat_montant[ordre] ), NOT ISBLANK ( CALCULATE ( [Ecart des comptes de la ligne] ) ) ) VAR ok = IF ( COUNTROWS ( os ) >= 6, MAXX ( TOPN ( 6, os, v_ligne_etat_montant[ordre], ASC ), v_ligne_etat_montant[ordre] ) ) RETURN IF ( ISBLANK ( ok ), BLANK (), CALCULATE ( [Ecart des comptes de la ligne], v_ligne_etat_montant[ordre] = ok ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 14c9ff3f-c16b-4acb-9f73-fc26e71b238d
+
+	measure 'Puce de l ecart des comptes 6' = IF ( ISBLANK ( [Ecart des comptes 6] ), BLANK (), "●" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: c23a205f-ae98-4f49-b9e9-5d4d465eba9a
+
+	measure 'Ecart des comptes 7' = VAR os = FILTER ( VALUES ( v_ligne_etat_montant[ordre] ), NOT ISBLANK ( CALCULATE ( [Ecart des comptes de la ligne] ) ) ) VAR ok = IF ( COUNTROWS ( os ) >= 7, MAXX ( TOPN ( 7, os, v_ligne_etat_montant[ordre], ASC ), v_ligne_etat_montant[ordre] ) ) RETURN IF ( ISBLANK ( ok ), BLANK (), CALCULATE ( [Ecart des comptes de la ligne], v_ligne_etat_montant[ordre] = ok ) )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 121451c4-5074-4987-821d-2e2489eca74b
+
+	measure 'Puce de l ecart des comptes 7' = IF ( ISBLANK ( [Ecart des comptes 7] ), BLANK (), "●" )
+		displayFolder: Ecran 2 etape 6 menu des etats
+		lineageTag: 35a0c51c-9f71-41b1-9834-8b490ad7b560
+
+	measure 'Ecart des comptes 1 ligne 1 sur 354 px' = VAR t = [Ecart des comptes 1] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 354 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 354 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 354 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, t, LEFT ( t, f1 ) )
+		lineageTag: e6aef7d2-9c2e-42b7-a242-05a95ff3e0b6
+
+	measure 'Ecart des comptes 1 ligne 2 sur 354 px' = VAR t = [Ecart des comptes 1] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 354 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 354 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 354 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) VAR c0 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR w2 = 343.25 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = " " && [c] - [w] - c0 <= w2 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c0 <= w2 ), [Value] ) + 0 RETURN IF ( une, "", IF ( tot - c0 <= 354, MID ( t, s2, n ), MID ( t, s2, IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ) ) & "…" ) )
+		lineageTag: 1473317f-0bd4-47a1-96da-f03adf4bf63d
+
+	measure 'Ecart des comptes 2 ligne 1 sur 354 px' = VAR t = [Ecart des comptes 2] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 354 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 354 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 354 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) RETURN IF ( une, t, LEFT ( t, f1 ) )
+		lineageTag: e19ddd2c-6385-4997-a4db-383189e72519
+
+	measure 'Ecart des comptes 2 ligne 2 sur 354 px' = VAR t = [Ecart des comptes 2] & "" VAR n = LEN ( t ) VAR pd = ADDCOLUMNS ( GENERATESERIES ( 1, MAX ( n, 1 ) ), "w", SWITCH ( UNICODE ( MID ( t, [Value], 1 ) ), 8239, 1.75, 46, 3.25, 44, 3.25, 59, 3.25, 58, 3.25, 183, 3.25, 105, 3.5, 106, 3.5, 108, 3.5, 39, 3.5, 8217, 3.5, 238, 3.5, 239, 3.5, 32, 3.75, 160, 3.75, 124, 3.75, 73, 4.0, 33, 4.0, 206, 4.0, 102, 4.5, 40, 4.5, 41, 4.5, 91, 4.5, 93, 4.5, 123, 4.5, 125, 4.5, 116, 4.75, 114, 5.0, 74, 5.25, 49, 5.25, 45, 5.25, 95, 5.5, 47, 5.5, 115, 5.75, 42, 5.75, 34, 5.75, 63, 6.0, 99, 6.25, 122, 6.25, 231, 6.25, 76, 6.5, 118, 6.75, 120, 6.75, 121, 6.75, 70, 6.75, 8211, 6.75, 97, 7.0, 101, 7.0, 107, 7.0, 69, 7.0, 233, 7.0, 232, 7.0, 234, 7.0, 235, 7.0, 224, 7.0, 226, 7.0, 228, 7.0, 201, 7.0, 200, 7.0, 202, 7.0, 83, 7.25, 84, 7.25, 55, 7.25, 171, 7.25, 187, 7.25, 48, 7.5, 50, 7.5, 51, 7.5, 53, 7.5, 54, 7.5, 56, 7.5, 57, 7.5, 8364, 7.5, 104, 7.75, 110, 7.75, 117, 7.75, 80, 7.75, 89, 7.75, 90, 7.75, 52, 7.75, 251, 7.75, 252, 7.75, 249, 7.75, 98, 8.0, 100, 8.0, 103, 8.0, 111, 8.0, 112, 8.0, 113, 8.0, 66, 8.0, 244, 8.0, 246, 8.0, 35, 8.0, 67, 8.25, 75, 8.25, 82, 8.25, 88, 8.25, 199, 8.25, 86, 8.5, 65, 9.0, 192, 9.0, 194, 9.0, 71, 9.25, 85, 9.25, 219, 9.25, 61, 9.25, 43, 9.25, 60, 9.25, 62, 9.25, 68, 9.5, 38, 9.5, 72, 9.75, 119, 10.0, 79, 10.0, 81, 10.0, 212, 10.0, 78, 10.25, 8230, 10.75, 37, 11.25, 109, 11.75, 77, 12.25, 339, 12.25, 338, 12.5, 64, 12.75, 87, 13.0, 10.0 ) ) VAR pc = ADDCOLUMNS ( pd, "c", VAR i = [Value] RETURN SUMX ( FILTER ( pd, [Value] <= i ), [w] ) ) VAR tot = IF ( n = 0, 0, SUMX ( pd, [w] ) ) VAR une = n = 0 || tot <= 354 VAR b1 = IF ( une, 0, MAXX ( FILTER ( pc, [Value] > 1 && MID ( t, [Value], 1 ) = " " && [c] - [w] <= 354 ), [Value] ) + 0 ) VAR h1 = IF ( une, 0, MAXX ( FILTER ( pc, [c] <= 354 ), [Value] ) + 0 ) VAR f1 = IF ( b1 > 1, b1 - 1, h1 ) VAR s2 = IF ( une, 0, IF ( b1 > 1, b1 + 1, h1 + 1 ) ) VAR c0 = MAXX ( FILTER ( pc, [Value] = s2 - 1 ), [c] ) + 0 VAR w2 = 343.25 VAR b2 = MAXX ( FILTER ( pc, [Value] > s2 && MID ( t, [Value], 1 ) = " " && [c] - [w] - c0 <= w2 ), [Value] ) + 0 VAR h2 = MAXX ( FILTER ( pc, [Value] >= s2 && [c] - c0 <= w2 ), [Value] ) + 0 RETURN IF ( une, "", IF ( tot - c0 <= 354, MID ( t, s2, n ), MID ( t, s2, IF ( b2 > 0, b2 - s2, h2 - s2 + 1 ) ) & "…" ) )
+		lineageTag: f65b2400-7826-4659-921e-6ce7959ce542
+
+	column etat
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: b0912fa7-089b-401a-90be-d4961990993a
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 54fda355-99d3-4cea-8e1e-33c0192646eb
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ligne du modèle'
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(300)
+		lineageTag: 59c8e02f-2d1e-4365-b891-2ed354279cc6
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_ligne
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: eecf31d7-5aa8-40ef-b97f-9fdcbb1b5a54
+		summarizeBy: none
+		sourceColumn: type_ligne
+
+		annotation SummarizationSetBy = Automatic
+
+	column romain
+		dataType: string
+		sourceProviderType: varchar(6)
+		lineageTag: a6612ada-0f08-41cf-a7e8-116782aab1cf
+		summarizeBy: none
+		sourceColumn: romain
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 582d795a-c107-4c5e-a869-4db8d2a0ec1d
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(40)
+		lineageTag: 2f64eb73-796d-42f6-bc2c-b4f283151168
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column renvoi
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 1668cdce-ace8-45db-b62d-f9b0376c38ec
+		summarizeBy: none
+		sourceColumn: renvoi
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 485b3b16-f75a-462e-aeb1-156639e247c1
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a17ece2f-f4d3-4bd1-bc16-b10e8677da3f
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Exercice N'
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: 95ef9b2d-5695-4a6d-9456-29723553de1d
+		summarizeBy: sum
+		sourceColumn: exercice_n
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Exercice N-1'
+		dataType: double
+		formatString: #,##0.00
+		sourceProviderType: decimal(19, 2)
+		lineageTag: dd6b14a9-c3c0-407c-b3e6-605350bf16ca
+		summarizeBy: sum
+		sourceColumn: exercice_n_1
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column supprimable
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: fb87440b-b230-44e6-9aa9-3157b1ee378f
+		summarizeBy: none
+		sourceColumn: supprimable
+
+		annotation SummarizationSetBy = Automatic
+
+	column racines
+		dataType: string
+		sourceProviderType: varchar(300)
+		lineageTag: 233b02d2-9c9c-4cdf-934b-0b1826c95b82
+		summarizeBy: none
+		sourceColumn: racines
+
+		annotation SummarizationSetBy = Automatic
+
+	column formule
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 81cce8d4-01b0-44dd-af77-093fd655dd7d
+		summarizeBy: none
+		sourceColumn: formule
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice_n_libelle
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 8af99327-1e01-4c8f-88bf-cdeaace30790
+		summarizeBy: none
+		sourceColumn: exercice_n_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column exercice_n_1_libelle
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: 9028603e-9518-4d28-8a81-6065d86a5426
+		summarizeBy: none
+		sourceColumn: exercice_n_1_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ligne_etat_montant = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ligne_etat_montant = Source{[Schema="dbo",Item="v_ligne_etat_montant"]}[Data]
+				in
+				    dbo_v_ligne_etat_montant
+

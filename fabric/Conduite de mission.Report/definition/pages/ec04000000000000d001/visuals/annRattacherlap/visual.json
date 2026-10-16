@@ -452,7 +452,7 @@
               "metadata": {
                 "dataFunction": {
                   "name": "inscrire_piece",
-                  "autoRefresh": false,
+                  "autoRefresh": true,
                   "parameters": [
                     {
                       "name": "entite",
@@ -476,7 +476,7 @@
                     {
                       "name": "chemin",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "annPieceChemin",
@@ -485,7 +485,7 @@
                     {
                       "name": "nature",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "annPieceNature",
