@@ -3,11 +3,11 @@
   "name": "arrFCatK5Val",
   "position": {
     "x": 1003,
-    "y": 608,
-    "z": 43922,
+    "y": 617,
+    "z": 43832,
     "height": 20,
-    "width": 264,
-    "tabOrder": 43922
+    "width": 582,
+    "tabOrder": 43832
   },
   "visual": {
     "visualType": "cardVisual",

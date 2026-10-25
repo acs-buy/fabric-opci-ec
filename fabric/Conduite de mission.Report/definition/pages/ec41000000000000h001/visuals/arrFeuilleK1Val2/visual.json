@@ -3,11 +3,11 @@
   "name": "arrFeuilleK1Val2",
   "position": {
     "x": 1030,
-    "y": 1171,
-    "z": 38453,
+    "y": 913,
+    "z": 41043,
     "height": 20,
     "width": 555,
-    "tabOrder": 38453
+    "tabOrder": 41043
   },
   "visual": {
     "visualType": "cardVisual",
@@ -88,7 +88,7 @@
                           },
                           "Value": {
                             "Literal": {
-                              "Value": "'#B9C6D6'"
+                              "Value": "'#5B6B7D'"
                             }
                           }
                         }
@@ -473,5 +473,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

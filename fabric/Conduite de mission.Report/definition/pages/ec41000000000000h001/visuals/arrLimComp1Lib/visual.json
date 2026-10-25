@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrLimComp1Lib",
   "position": {
-    "x": 1281,
-    "y": 682,
-    "z": 43181,
+    "x": 477,
+    "y": 723,
+    "z": 42771,
     "height": 20,
     "width": 63,
-    "tabOrder": 43181
+    "tabOrder": 42771
   },
   "visual": {
     "visualType": "textbox",
@@ -109,5 +109,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

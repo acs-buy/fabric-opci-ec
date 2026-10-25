@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrVlTuileVal1",
   "position": {
-    "x": 1184,
-    "y": 361,
-    "z": 46392,
-    "height": 33,
-    "width": 187,
-    "tabOrder": 46392
+    "x": 1180,
+    "y": 365,
+    "z": 46352,
+    "height": 40,
+    "width": 191,
+    "tabOrder": 46352
   },
   "visual": {
     "visualType": "cardVisual",

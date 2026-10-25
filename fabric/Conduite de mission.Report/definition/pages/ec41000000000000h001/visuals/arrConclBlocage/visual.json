@@ -3,11 +3,11 @@
   "name": "arrConclBlocage",
   "position": {
     "x": 1090,
-    "y": 937,
-    "z": 40632,
-    "height": 20,
+    "y": 506,
+    "z": 44942,
+    "height": 21,
     "width": 394,
-    "tabOrder": 40632
+    "tabOrder": 44942
   },
   "visual": {
     "visualType": "cardVisual",
@@ -465,5 +465,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

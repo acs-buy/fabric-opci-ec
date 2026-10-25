@@ -3,11 +3,11 @@
   "name": "arrCalcBarres",
   "position": {
     "x": 15,
-    "y": 1053,
-    "z": 39472,
-    "height": 112,
+    "y": 577,
+    "z": 44232,
+    "height": 115,
     "width": 845,
-    "tabOrder": 39472
+    "tabOrder": 44232
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -475,5 +475,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

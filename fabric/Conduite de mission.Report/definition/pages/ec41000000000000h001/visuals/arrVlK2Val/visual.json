@@ -3,11 +3,11 @@
   "name": "arrVlK2Val",
   "position": {
     "x": 1129,
-    "y": 472,
-    "z": 45282,
+    "y": 483,
+    "z": 45172,
     "height": 20,
     "width": 456,
-    "tabOrder": 45282
+    "tabOrder": 45172
   },
   "visual": {
     "visualType": "cardVisual",
@@ -87,7 +87,7 @@
                           },
                           "Value": {
                             "Literal": {
-                              "Value": "'#B9C6D6'"
+                              "Value": "'#5B6B7D'"
                             }
                           }
                         }

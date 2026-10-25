@@ -1,6 +1,6 @@
 # Étape 7, avec un agent : charger les données
 
-Le dépôt porte 83 fichiers SQL à jouer dans un ordre
+Le dépôt porte 89 fichiers SQL à jouer dans un ordre
 imposé par les clés étrangères. À la main, c'est 30 minutes de copie et de collage, et une seule
 inversion d'ordre fait échouer une dizaine de fichiers d'un coup.
 

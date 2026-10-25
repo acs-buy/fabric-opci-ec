@@ -3,11 +3,11 @@
   "name": "arrConclK1Lib",
   "position": {
     "x": 963,
-    "y": 908,
-    "z": 40921,
+    "y": 681,
+    "z": 43191,
     "height": 20,
     "width": 116,
-    "tabOrder": 40921
+    "tabOrder": 43191
   },
   "visual": {
     "visualType": "textbox",
@@ -109,5 +109,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

@@ -15,7 +15,7 @@ CREATE TABLE [dbo].[ref_article] (
     CONSTRAINT [ck_ref_article_decoupage_selon_source] CHECK ([source]='ANC' AND [titre] IS NOT NULL AND [chapitre] IS NOT NULL AND [section] IS NOT NULL OR [source]<>'ANC' AND [titre] IS NULL AND [chapitre] IS NULL AND [section] IS NULL),
     CONSTRAINT [ck_ref_article_numero_coherent] CHECK ([source]<>'ANC' OR left([article],(1))=CONVERT([varchar](1),[titre]) AND substring([article],(2),(1))=CONVERT([varchar](1),[chapitre]) AND substring([article],(3),(1))=CONVERT([varchar](1),[section])),
     CONSTRAINT [ck_ref_article_perimetre] CHECK ([dans_perimetre]=(1) OR [dans_perimetre]=(0)),
-    CONSTRAINT [ck_ref_article_prefixe_du_code] CHECK ([source]<>'CMF' OR (left([article],(1))='R' OR left([article],(1))='L')),
+    CONSTRAINT [ck_ref_article_prefixe_du_code] CHECK ([source]<>'CMF' OR (left([article],(1))='D' OR left([article],(1))='L' OR left([article],(1))='R')),
     CONSTRAINT [ck_ref_article_section] CHECK ([section]>=(1) AND [section]<=(9)),
     CONSTRAINT [ck_ref_article_source] CHECK ([source]='CMF' OR [source]='ANC'),
     CONSTRAINT [ck_ref_article_titre] CHECK ([titre]>=(1) AND [titre]<=(5)),
@@ -37,7 +37,9 @@ BEGIN
     -- propres lignes.
     IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
     IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
+    -- Objet n° 16 de l'ecran 5 (script 317) : l'auteur est celui que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
+    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
     FROM dbo.[ref_article] t
     JOIN inserted i ON t.[article] = i.[article];
 END;
@@ -50,11 +52,22 @@ AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
+    -- Objet n° 16 de l'ecran 5 (script 317) : l'identite jugee est celle que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte. Le CAST est exige : un sql_variant passe nu a
+    -- fn_peut_ecrire_referentiel rend le Msg 257.
     IF dbo.fn_peut_ecrire_referentiel('ref_article',
-                                      SUSER_SNAME()) = 1 RETURN;
-    THROW 50074,
-        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
-        1;
+                                      CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400))) = 1 RETURN;
+    -- Objet n° 17 : le refus s'inscrit dans journal_refus avant d'etre leve. Le ROLLBACK precede
+    -- l'inscription, que le THROW annulerait sinon avec l'ecriture refusee (pas de transaction autonome) ;
+    -- sous une Data function, la fonction annule aussi l'inscription, puis journalise le refus apres son
+    -- propre rollback (script 220). refuse_pour est un nvarchar(200) : l'identite y est coupee a 200
+    -- caracteres, une ecriture plus longue y serait refusee et remplacerait le 50074.
+    DECLARE @m NVARCHAR (2000) = N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.';
+    ROLLBACK TRANSACTION;
+    INSERT INTO dbo.journal_refus (procedure_nom, message, refuse_pour, refuse_le)
+    VALUES ('tr_ref_article_garde', @m, LEFT(CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), 200), SYSUTCDATETIME());
+    SET @m = REPLACE(@m, N'%', N'%%');
+    THROW 50074, @m, 1;
 END;
 
 GO

@@ -3,11 +3,11 @@
   "name": "arrPropK0Val",
   "position": {
     "x": 96,
-    "y": 898,
-    "z": 41022,
+    "y": 897,
+    "z": 41032,
     "height": 20,
     "width": 829,
-    "tabOrder": 41022
+    "tabOrder": 41032
   },
   "visual": {
     "visualType": "cardVisual",
@@ -87,7 +87,7 @@
                           },
                           "Value": {
                             "Literal": {
-                              "Value": "'#B9C6D6'"
+                              "Value": "'#5B6B7D'"
                             }
                           }
                         }

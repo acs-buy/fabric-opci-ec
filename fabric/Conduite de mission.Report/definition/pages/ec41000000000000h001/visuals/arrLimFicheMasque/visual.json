@@ -3,11 +3,11 @@
   "name": "arrLimFicheMasque",
   "position": {
     "x": 963,
-    "y": 406,
-    "z": 46000,
-    "height": 246,
+    "y": 476,
+    "z": 45300,
+    "height": 384,
     "width": 622,
-    "tabOrder": 46000
+    "tabOrder": 45300
   },
   "visual": {
     "visualType": "shape",

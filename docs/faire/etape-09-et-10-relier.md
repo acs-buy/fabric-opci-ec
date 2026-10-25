@@ -170,7 +170,14 @@ fn_ecran_revision, <n> fonction(s) appelee(s) :
 ```
 
 **Ce qu'il faut lire dans ces sorties :** la ligne « identifiants inconnus » doit valoir zéro. Si
-elle ne vaut pas zéro, le rapport a été modifié à la main, et les scripts refuseront d'écrire.
+elle ne vaut pas zéro, le rapport a été modifié à la main, ou il appelle un ensemble de fonctions
+que le dossier `fabric/` ne porte pas, et les scripts refuseront d'écrire.
+
+**Version du dépôt du 25/10/2026, intermédiaire.** Le rapport appelle aussi les ensembles de
+fonctions `fn_ecran_valorisation`, `fn_ecran_arrete`, `fn_documents` et `fn_valorisation`, que le
+dossier `fabric/` ne porte pas. Sur cette version, la ligne « identifiants inconnus » ne vaut pas
+zéro dès la copie du dépôt, et `scripts/20_relier_les_boutons.py` refuse de relier les boutons,
+ceux de `fn_ecran_client` et de `fn_ecran_revision` compris.
 
 ### Une fois relié
 
@@ -209,7 +216,8 @@ qu'ils affichaient avant la réparation, et non à un nombre écrit dans cette p
 
 Ils n'écrivent pas si un fichier porte des identifiants qu'ils ne reconnaissent pas, c'est-à-dire ni
 ceux d'origine ni les vôtres. Ce cas signale un rapport ou un modèle modifié à la main, et une
-écriture aveugle le casserait. Le script s'arrête alors en nommant le fichier en cause.
+écriture aveugle le casserait. Il se présente aussi quand un bouton appelle un ensemble de fonctions
+que le dossier `fabric/` ne porte pas. Le script s'arrête alors en nommant le fichier en cause.
 
 Ils ne reformatent rien non plus : ils remplacent le texte des identifiants et laissent le reste
 des fichiers intact, afin que vous puissiez relire exactement ce qui a changé.

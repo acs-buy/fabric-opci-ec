@@ -3,11 +3,11 @@
   "name": "arrDecBlocage",
   "position": {
     "x": 142,
-    "y": 951,
-    "z": 40492,
-    "height": 20,
+    "y": 950,
+    "z": 40502,
+    "height": 21,
     "width": 125,
-    "tabOrder": 40492
+    "tabOrder": 40502
   },
   "visual": {
     "visualType": "cardVisual",

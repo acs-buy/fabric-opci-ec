@@ -1,4 +1,3 @@
-
 -- pr_valider_pour_client : 3 refus
 -- les lecteurs qui testent qu'une VL est publiee ne comptent que la publication en vigueur
 
@@ -37,12 +36,17 @@ BEGIN
         THROW 50087, N'Validation refusée : la valeur liquidative de cet arrêté n''est pas publiée.', 1;
     IF @nature = 'ANNUEL'
     BEGIN
-        DECLARE @non_visees INT = (SELECT COUNT(*) FROM dbo.obligation_distribution o
-                                   WHERE o.entite = @entite AND YEAR(CONVERT(DATE, o.exercice)) = YEAR(CONVERT(DATE, @arrete))
-                                     AND (o.etat IS NULL OR o.etat <> 'VISEE'));
+        -- Decision du candidat du 18/10/2026 : chaque categorie du referentiel doit avoir sa ligne VISEE ; une categorie
+        -- absente compte comme non visee (auparavant, 0 ligne laissait passer la validation).
+        DECLARE @non_visees INT = (SELECT COUNT(*) FROM dbo.ref_obligation_distribution r
+                                   WHERE NOT EXISTS (SELECT 1 FROM dbo.v_obligation_par_categorie v
+                                                     WHERE v.entite = @entite AND v.arrete = @arrete
+                                                       AND v.categorie_ref = r.categorie AND v.etat_obligation = 'VISEE'));
         IF @non_visees > 0
         BEGIN
-            SET @m = N'Validation refusée : ' + CAST(@non_visees AS NVARCHAR (10)) + N' catégorie(s) de sommes distribuables ne sont pas visées pour cet exercice. À l''arrêté annuel, les 3 catégories se visent avant la validation.';
+            SET @m = N'Validation refusée : ' + CAST(@non_visees AS NVARCHAR (10))
+                 + CASE WHEN @non_visees = 1 THEN N' catégorie de sommes distribuables n''est pas visée' ELSE N' catégories de sommes distribuables ne sont pas visées' END
+                 + N' pour cet exercice. À l''arrêté annuel, les 3 catégories se visent avant la validation.';
             BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50088, @m, 1; END
         END;
     END;

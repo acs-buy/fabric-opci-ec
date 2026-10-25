@@ -94,6 +94,10 @@ ou le modèle a été modifié à la main entre-temps. Reprenez une copie propre
 Le script se comporte ainsi volontairement : écrire à l'aveugle sur un fichier déjà modifié le
 casserait sans le dire.
 
+Sur la version du dépôt du 25/10/2026, le script des boutons s'arrête aussi sur une copie propre :
+le rapport appelle les ensembles de fonctions `fn_ecran_valorisation`, `fn_ecran_arrete`,
+`fn_documents` et `fn_valorisation`, que le dossier `fabric/` ne porte pas.
+
 ## Une erreur qui ne figure pas ici
 
 Notez le message exact et l'étape où il apparaît. Le message d'erreur des fonctions porte le nom de

@@ -18,14 +18,14 @@ CREATE TABLE [dbo].[arrete_mission] (
 
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX [ux_arrete_semestriel]
-    ON [dbo].[arrete_mission]([entite] ASC, [exercice] ASC) WHERE ([type_arrete]='SEMESTRIEL');
+CREATE UNIQUE NONCLUSTERED INDEX [ux_arrete_annuel]
+    ON [dbo].[arrete_mission]([entite] ASC, [exercice] ASC) WHERE ([type_arrete]='ANNUEL');
 
 
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX [ux_arrete_annuel]
-    ON [dbo].[arrete_mission]([entite] ASC, [exercice] ASC) WHERE ([type_arrete]='ANNUEL');
+CREATE UNIQUE NONCLUSTERED INDEX [ux_arrete_semestriel]
+    ON [dbo].[arrete_mission]([entite] ASC, [exercice] ASC) WHERE ([type_arrete]='SEMESTRIEL');
 
 
 GO

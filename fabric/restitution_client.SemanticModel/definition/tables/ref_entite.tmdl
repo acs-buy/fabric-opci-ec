@@ -34,7 +34,9 @@ table ref_entite
 				let
 				    Source = #"Source OPCI",
 				    dbo_ref_entite = Source{[Schema="dbo",Item="ref_entite"]}[Data],
-				    retenues = Table.SelectColumns(dbo_ref_entite, {"code", "denomination", "forme_vehicule"})
+				    retenues = Table.SelectColumns(dbo_ref_entite, {"code", "denomination", "forme_vehicule"}),
+				    Essais = Table.SelectRows(Source{[Schema="dbo",Item="ref_entite"]}[Data], each [est_essai] = true)[code],
+				    Hors_essai = Table.SelectRows(retenues, each ([code] = null or not List.Contains(Essais, [code])))
 				in
-				    retenues
+				    Hors_essai
 

@@ -18,7 +18,7 @@ mesure AS (
              WHERE l.entite = am.entite AND l.arrete = am.arrete AND l.famille = 'IMPORTEE'
                AND l.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE') AND (e.debit <> 0 OR e.credit <> 0)) AS comptes_mouvementes,
            (SELECT COUNT(DISTINCT rc.cycle) FROM dbo.lot_ecritures l JOIN dbo.ecriture e ON e.lot_id = l.id
-             JOIN dbo.ref_cycle_compte rc ON e.compte_num LIKE rc.racine + '%'
+             JOIN dbo.ref_cycle_compte rc ON e.compte_num LIKE rc.racine + '%' AND rc.ecartee_le IS NULL
              WHERE l.entite = am.entite AND l.arrete = am.arrete AND l.famille = 'IMPORTEE'
                AND l.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')) AS cycles_presents,
            (SELECT COUNT(DISTINCT d.entite_fille) FROM dbo.detention d

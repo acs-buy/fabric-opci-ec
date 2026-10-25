@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrOblSous",
   "position": {
-    "x": 155,
-    "y": 360,
-    "z": 46402,
-    "height": 20,
-    "width": 770,
-    "tabOrder": 46402
+    "x": 199,
+    "y": 359,
+    "z": 46412,
+    "height": 24,
+    "width": 726,
+    "tabOrder": 46412
   },
   "visual": {
     "visualType": "cardVisual",

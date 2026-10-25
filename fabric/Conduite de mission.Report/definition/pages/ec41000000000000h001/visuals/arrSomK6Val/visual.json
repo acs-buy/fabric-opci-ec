@@ -3,11 +3,11 @@
   "name": "arrSomK6Val",
   "position": {
     "x": 618,
-    "y": 642,
-    "z": 43582,
+    "y": 743,
+    "z": 42572,
     "height": 20,
     "width": 307,
-    "tabOrder": 43582
+    "tabOrder": 42572
   },
   "visual": {
     "visualType": "cardVisual",
@@ -89,7 +89,7 @@
                           },
                           "Value": {
                             "Literal": {
-                              "Value": "'#B9C6D6'"
+                              "Value": "'#5B6B7D'"
                             }
                           }
                         }

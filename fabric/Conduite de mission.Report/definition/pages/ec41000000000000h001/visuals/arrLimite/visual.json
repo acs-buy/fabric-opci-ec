@@ -3,11 +3,11 @@
   "name": "arrLimite",
   "position": {
     "x": 963,
-    "y": 336,
-    "z": 46645,
-    "height": 62,
+    "y": 400,
+    "z": 46005,
+    "height": 68,
     "width": 622,
-    "tabOrder": 46645
+    "tabOrder": 46005
   },
   "visual": {
     "visualType": "slicer",

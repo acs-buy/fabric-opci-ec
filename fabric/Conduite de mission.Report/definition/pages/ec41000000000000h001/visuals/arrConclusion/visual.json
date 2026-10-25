@@ -3,11 +3,11 @@
   "name": "arrConclusion",
   "position": {
     "x": 974,
-    "y": 984,
-    "z": 40165,
-    "height": 50,
+    "y": 558,
+    "z": 44425,
+    "height": 56,
     "width": 600,
-    "tabOrder": 40165
+    "tabOrder": 44425
   },
   "visual": {
     "visualType": "textSlicer",
@@ -173,5 +173,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

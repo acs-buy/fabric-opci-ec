@@ -99,7 +99,7 @@ table v_obligation_par_categorie
 		lineageTag: 2a7c3e6b-e801-468e-a1d1-3d8dc2b1f620
 
 	/// vert « visée », attente « proposée » et « à inscrire », alerte « renvoyée » et « inscrite, non visée » (pastille de la grille, état du bloc de visa)
-	measure 'Couleur etat de la categorie' = VAR s = [Etat de la categorie] RETURN SWITCH ( TRUE (), s = "visée", "#1F6D4A", s IN { "proposée", "à inscrire" }, "#C8961E", s = "", "#12233C", "#9A2A2A" )
+	measure 'Couleur etat de la categorie' = VAR s = [Etat de la categorie] RETURN SWITCH ( TRUE (), s = "visée", "#1F6D4A", s IN { "proposée", "à inscrire" }, "#8A6710", s = "", "#12233C", "#9A2A2A" )
 		displayFolder: Ecran 4 Arrete
 		lineageTag: 3df94459-edb0-4cbc-83b1-b2ba68a296b6
 

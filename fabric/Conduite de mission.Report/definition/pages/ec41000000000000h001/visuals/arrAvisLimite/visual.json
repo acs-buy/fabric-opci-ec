@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrAvisLimite",
   "position": {
-    "x": 1093,
-    "y": 1063,
-    "z": 39372,
+    "x": 1094,
+    "y": 643,
+    "z": 43572,
     "height": 22,
-    "width": 492,
-    "tabOrder": 39372
+    "width": 491,
+    "tabOrder": 43572
   },
   "visual": {
     "visualType": "cardVisual",
@@ -432,5 +432,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

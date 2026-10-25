@@ -3,11 +3,11 @@
   "name": "arrSomK4Val",
   "position": {
     "x": 59,
-    "y": 619,
-    "z": 43812,
+    "y": 721,
+    "z": 42792,
     "height": 20,
     "width": 866,
-    "tabOrder": 43812
+    "tabOrder": 42792
   },
   "visual": {
     "visualType": "cardVisual",
@@ -89,7 +89,7 @@
                           },
                           "Value": {
                             "Literal": {
-                              "Value": "'#B9C6D6'"
+                              "Value": "'#5B6B7D'"
                             }
                           }
                         }

@@ -70,8 +70,10 @@ ici.** Il augmente à chaque écran ajouté à la solution. Ce qui compte est qu
 avant et après, et que le restant tombe à zéro.
 
 Si « identifiants inconnus » n'est pas zéro, les scripts refusent d'écrire.
-Cela veut dire qu'un fichier du dépôt a été modifié à la main quelque part. Reprenez une copie
-propre du dépôt plutôt que de forcer.
+Cela veut dire qu'un fichier du dépôt a été modifié à la main quelque part, ou que le rapport
+appelle un ensemble de fonctions que le dossier `fabric/` ne porte pas, ce qui est le cas de la
+version du dépôt du 25/10/2026. Dans le premier cas, reprenez une copie propre du dépôt plutôt que
+de forcer.
 
 ---
 

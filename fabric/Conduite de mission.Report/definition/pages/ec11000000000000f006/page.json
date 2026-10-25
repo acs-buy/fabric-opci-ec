@@ -184,7 +184,7 @@
     },
     {
       "source": "docRapTexte",
-      "target": "docFermer",
+      "target": "navRetour",
       "type": "NoFilter"
     },
     {
@@ -222,5 +222,6 @@
       "target": "docSansArrete2",
       "type": "NoFilter"
     }
-  ]
+  ],
+  "visibility": "HiddenInViewMode"
 }

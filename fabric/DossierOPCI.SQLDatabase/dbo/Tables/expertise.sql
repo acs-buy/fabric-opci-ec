@@ -20,6 +20,28 @@ CREATE TABLE [dbo].[expertise] (
 GO
 
 
+CREATE   TRIGGER dbo.tr_expertise_annexe_retard ON dbo.expertise
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT id, code_actif, date_valeur, expert, methode, valeur_actuelle FROM inserted
+        EXCEPT SELECT id, code_actif, date_valeur, expert, methode, valeur_actuelle FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT id, code_actif, date_valeur, expert, methode, valeur_actuelle FROM deleted EXCEPT SELECT id, code_actif, date_valeur, expert, methode, valeur_actuelle FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT a.entite_detentrice AS x, CAST(NULL AS BIT) AS vehicule FROM ch JOIN dbo.actif a ON a.code = ch.code_actif) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'expertise', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
+
+GO
+
+
 -- --- 7 : le verrou K2, une expertise perime le lot propose ----------
 -- Elle ne le supprime pas et ne l'annule pas : elle le marque. La
 -- decision de regenerer ou de viser quand meme revient au chef de
@@ -49,28 +71,6 @@ BEGIN
                   WHERE a.entite_detentrice = l.entite
                     AND i.enregistre_le > l.cree_le);
 END
-
-GO
-
-
-CREATE   TRIGGER dbo.tr_expertise_annexe_retard ON dbo.expertise
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
-    ;WITH ch AS (
-        SELECT id, code_actif, date_valeur, expert, methode, valeur_actuelle FROM inserted
-        EXCEPT SELECT id, code_actif, date_valeur, expert, methode, valeur_actuelle FROM deleted
-        UNION ALL
-        SELECT * FROM (SELECT id, code_actif, date_valeur, expert, methode, valeur_actuelle FROM deleted EXCEPT SELECT id, code_actif, date_valeur, expert, methode, valeur_actuelle FROM inserted) d
-    ),
-    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT a.entite_detentrice AS x, CAST(NULL AS BIT) AS vehicule FROM ch JOIN dbo.actif a ON a.code = ch.code_actif) q GROUP BY q.x, q.vehicule)
-    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
-    SELECT v.entite, SYSUTCDATETIME(), N'expertise', SUM(x.n)
-    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
-    GROUP BY v.entite;
-END;
 
 GO
 

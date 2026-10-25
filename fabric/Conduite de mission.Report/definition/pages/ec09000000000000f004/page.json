@@ -94,7 +94,7 @@
     },
     {
       "source": "docBalance",
-      "target": "docFermer",
+      "target": "navRetour",
       "type": "NoFilter"
     },
     {
@@ -122,5 +122,6 @@
       "target": "docSansArrete2",
       "type": "NoFilter"
     }
-  ]
+  ],
+  "visibility": "HiddenInViewMode"
 }

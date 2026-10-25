@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrAvisEnregistrer",
   "position": {
-    "x": 173,
-    "y": 1077,
-    "z": 39232,
+    "x": 174,
+    "y": 1087,
+    "z": 39132,
     "height": 22,
-    "width": 752,
-    "tabOrder": 39232
+    "width": 751,
+    "tabOrder": 39132
   },
   "visual": {
     "visualType": "cardVisual",

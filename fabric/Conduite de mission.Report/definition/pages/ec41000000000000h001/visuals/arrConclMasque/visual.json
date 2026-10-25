@@ -3,11 +3,11 @@
   "name": "arrConclMasque",
   "position": {
     "x": 963,
-    "y": 884,
-    "z": 41220,
-    "height": 45,
+    "y": 476,
+    "z": 45300,
+    "height": 22,
     "width": 622,
-    "tabOrder": 41220
+    "tabOrder": 45300
   },
   "visual": {
     "visualType": "shape",
@@ -188,5 +188,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

@@ -4,10 +4,10 @@
   "position": {
     "x": 0,
     "y": 287,
-    "z": 3,
+    "z": 4,
     "height": 961,
     "width": 1600,
-    "tabOrder": 3
+    "tabOrder": 4
   },
   "visual": {
     "visualType": "image",
@@ -27,7 +27,7 @@
                 "name": {
                   "expr": {
                     "Literal": {
-                      "Value": "'fond_arr_2_c2a76d7c5f.png'"
+                      "Value": "'fond_arr_2_c26ddf11c8.png'"
                     }
                   }
                 },
@@ -36,7 +36,7 @@
                     "ResourcePackageItem": {
                       "PackageName": "RegisteredResources",
                       "PackageType": 1,
-                      "ItemName": "fond_arr_2_c2a76d7c5f.png"
+                      "ItemName": "fond_arr_2_c26ddf11c8.png"
                     }
                   }
                 },

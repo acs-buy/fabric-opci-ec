@@ -13,6 +13,7 @@ SELECT v.entite + '|' + v.arrete AS cle_arrete, v.entite, v.arrete,
        -- « le seuil applicable au vehicule, seuil legal ou seuil du prospectus ».
        CASE v.source_du_seuil WHEN 'TEXTE' THEN N'Seuil légal'
                               WHEN 'CABINET' THEN N'Seuil du cabinet'
+                              WHEN 'STATUTS' THEN N'Seuil des statuts'
                               ELSE v.source_du_seuil END AS source_du_seuil,
        -- 06/09/2026 : 3 etats, non 2. Un calcul que le reviseur n'a pas valide ne
        -- conclut pas devant le client, il l'annonce ; releve le 06/09/2026, les 4

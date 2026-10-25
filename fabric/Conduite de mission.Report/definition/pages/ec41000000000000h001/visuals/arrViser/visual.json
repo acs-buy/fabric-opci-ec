@@ -3,11 +3,11 @@
   "name": "arrViser",
   "position": {
     "x": 963,
-    "y": 1070,
-    "z": 39308,
+    "y": 1080,
+    "z": 39208,
     "height": 36,
-    "width": 121,
-    "tabOrder": 39308
+    "width": 122,
+    "tabOrder": 39208
   },
   "visual": {
     "visualType": "actionButton",

@@ -3,11 +3,11 @@
   "name": "arrProposer",
   "position": {
     "x": 15,
-    "y": 1093,
-    "z": 39078,
+    "y": 1102,
+    "z": 38988,
     "height": 36,
-    "width": 117,
-    "tabOrder": 39078
+    "width": 118,
+    "tabOrder": 38988
   },
   "visual": {
     "visualType": "actionButton",

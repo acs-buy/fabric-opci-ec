@@ -3,11 +3,11 @@
   "name": "arrConclK0Val",
   "position": {
     "x": 1061,
-    "y": 884,
-    "z": 41162,
+    "y": 475,
+    "z": 45252,
     "height": 20,
     "width": 524,
-    "tabOrder": 41162
+    "tabOrder": 45252
   },
   "visual": {
     "visualType": "cardVisual",
@@ -465,5 +465,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

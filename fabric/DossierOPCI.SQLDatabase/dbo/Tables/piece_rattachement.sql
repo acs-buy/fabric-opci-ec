@@ -24,8 +24,8 @@ CREATE TABLE [dbo].[piece_rattachement] (
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_pr_actif]
-    ON [dbo].[piece_rattachement]([code_actif] ASC);
+CREATE NONCLUSTERED INDEX [ix_pr_piece]
+    ON [dbo].[piece_rattachement]([piece_id] ASC);
 
 
 GO
@@ -36,8 +36,8 @@ CREATE UNIQUE NONCLUSTERED INDEX [uq_piece_rattachement]
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_pr_piece]
-    ON [dbo].[piece_rattachement]([piece_id] ASC);
+CREATE NONCLUSTERED INDEX [ix_pr_actif]
+    ON [dbo].[piece_rattachement]([code_actif] ASC);
 
 
 GO

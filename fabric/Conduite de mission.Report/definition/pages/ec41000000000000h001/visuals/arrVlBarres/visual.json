@@ -3,11 +3,11 @@
   "name": "arrVlBarres",
   "position": {
     "x": 15,
-    "y": 503,
-    "z": 44972,
-    "height": 139,
+    "y": 483,
+    "z": 45172,
+    "height": 158,
     "width": 910,
-    "tabOrder": 44972
+    "tabOrder": 45172
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -244,7 +244,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "11D"
+                  "Value": "10D"
                 }
               }
             },

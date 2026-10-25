@@ -3,11 +3,11 @@
   "name": "arrPubK3Val",
   "position": {
     "x": 1086,
-    "y": 909,
-    "z": 40912,
+    "y": 907,
+    "z": 40932,
     "height": 20,
     "width": 499,
-    "tabOrder": 40912
+    "tabOrder": 40932
   },
   "visual": {
     "visualType": "cardVisual",

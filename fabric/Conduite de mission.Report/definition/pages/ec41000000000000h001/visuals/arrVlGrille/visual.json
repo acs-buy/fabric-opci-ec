@@ -5,7 +5,7 @@
     "x": 15,
     "y": 336,
     "z": 46642,
-    "height": 124,
+    "height": 113,
     "width": 910,
     "tabOrder": 46642
   },
@@ -281,7 +281,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#12233C'"
+                      "Value": "'#5B6B7D'"
                     }
                   }
                 }
@@ -306,7 +306,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#EEF1F5'"
+                      "Value": "'#F4F6F9'"
                     }
                   }
                 }
@@ -322,7 +322,25 @@
             "wordWrap": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "outlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D5DCE4'"
+                    }
+                  }
+                }
+              }
+            },
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
                 }
               }
             }
@@ -335,7 +353,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "86D"
+                  "Value": "81D"
                 }
               }
             }
@@ -349,7 +367,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "96D"
+                  "Value": "68D"
                 }
               }
             }
@@ -363,7 +381,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "130D"
+                  "Value": "125D"
                 }
               }
             }
@@ -377,7 +395,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "77D"
+                  "Value": "84D"
                 }
               }
             }
@@ -391,7 +409,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "87D"
+                  "Value": "85D"
                 }
               }
             }
@@ -405,7 +423,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "75D"
+                  "Value": "80D"
                 }
               }
             }
@@ -419,7 +437,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "84D"
+                  "Value": "82D"
                 }
               }
             }
@@ -433,7 +451,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "86D"
+                  "Value": "81D"
                 }
               }
             }
@@ -447,7 +465,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "150D"
+                  "Value": "190D"
                 }
               }
             }
@@ -495,7 +513,7 @@
             "wordWrap": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             }

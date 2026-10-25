@@ -3,11 +3,11 @@
   "name": "arrCalcEtiq1",
   "position": {
     "x": 866,
-    "y": 1090,
-    "z": 39102,
+    "y": 614,
+    "z": 43862,
     "height": 20,
     "width": 59,
-    "tabOrder": 39102
+    "tabOrder": 43862
   },
   "visual": {
     "visualType": "cardVisual",
@@ -440,5 +440,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

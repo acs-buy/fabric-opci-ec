@@ -110,7 +110,9 @@ table v_client_rationalisation
 		source =
 				let
 				    Source = #"Source OPCI",
-				    dbo_v = Source{[Schema="dbo",Item="v_client_rationalisation"]}[Data]
+				    dbo_v = Source{[Schema="dbo",Item="v_client_rationalisation"]}[Data],
+				    Essais = Table.SelectRows(Source{[Schema="dbo",Item="ref_entite"]}[Data], each [est_essai] = true)[code],
+				    Hors_essai = Table.SelectRows(dbo_v, each ([entite] = null or not List.Contains(Essais, [entite])))
 				in
-				    dbo_v
+				    Hors_essai
 

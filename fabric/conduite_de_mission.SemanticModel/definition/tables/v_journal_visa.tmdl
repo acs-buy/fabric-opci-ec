@@ -190,6 +190,16 @@ table v_journal_visa
 
 		annotation SummarizationSetBy = Automatic
 
+	column cle_visa
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: 2a5d0f50-2a38-409e-af0c-e84fd7f0ee82
+		summarizeBy: none
+		sourceColumn: cle_visa
+
+		annotation SummarizationSetBy = Automatic
+
 	partition v_journal_visa = m
 		mode: directQuery
 		source =

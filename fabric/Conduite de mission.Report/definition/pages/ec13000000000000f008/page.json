@@ -364,7 +364,7 @@
     },
     {
       "source": "m3Tab0",
-      "target": "docFermer",
+      "target": "navRetour",
       "type": "NoFilter"
     },
     {
@@ -739,7 +739,7 @@
     },
     {
       "source": "m3Tab1",
-      "target": "docFermer",
+      "target": "navRetour",
       "type": "NoFilter"
     },
     {
@@ -1104,7 +1104,7 @@
     },
     {
       "source": "docAnnLigne",
-      "target": "docFermer",
+      "target": "navRetour",
       "type": "NoFilter"
     },
     {
@@ -1324,17 +1324,7 @@
     },
     {
       "source": "m3LivBande",
-      "target": "docFermer",
-      "type": "NoFilter"
-    },
-    {
-      "source": "m3LivBande",
-      "target": "docFermerFond",
-      "type": "NoFilter"
-    },
-    {
-      "source": "m3LivBande",
-      "target": "docFermerLib",
+      "target": "navRetour",
       "type": "NoFilter"
     },
     {

@@ -40,7 +40,7 @@ Ce partage tient à ce que la plateforme expose.
 | 4 | Copier ce dépôt sur votre compte | **Oui** | Ce sont des commandes Git, sur votre poste |
 | 5 | Connecter l'espace au dépôt | **Non** | Il faut un jeton GitHub, qui est un secret personnel |
 | 6 | Ramener les éléments | **Non** | Le bouton « Mettre à jour tout » n'a pas d'équivalent sûr |
-| 7 | Charger les données | **Oui**, si vous lui ouvrez la base | 79 fichiers à jouer dans l'ordre |
+| 7 | Charger les données | **Oui**, si vous lui ouvrez la base | 85 fichiers à jouer dans l'ordre |
 | 8 | Connecter les fonctions à la base | **Non** | Se règle au portail, et commence par un contrôle |
 | 9 et 10 | Relier les modèles et les boutons | **Oui** | Deux scripts fournis, qu'il lance et dont il vous lit la sortie |
 | 11 | Publier les deux écrans | **Non** | L'application et ses audiences se composent au portail |
@@ -102,7 +102,8 @@ Vous lisez, vous décidez, puis :
 
 **Ce que vous vérifiez vous-même :** « restant à relier » et « identifiants inconnus » valent zéro
 sur les deux scripts. Si « identifiants inconnus » n'est pas zéro, les scripts refusent d'écrire : le
-dépôt a été modifié à la main quelque part.
+dépôt a été modifié à la main quelque part, ou le rapport appelle un ensemble de fonctions que le
+dossier `fabric/` ne porte pas, ce qui est le cas de la version du dépôt du 25/10/2026.
 
 ---
 

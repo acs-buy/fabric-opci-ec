@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrAvisRenvoyer",
   "position": {
-    "x": 1248,
-    "y": 1077,
-    "z": 39232,
+    "x": 1250,
+    "y": 1087,
+    "z": 39132,
     "height": 22,
-    "width": 337,
-    "tabOrder": 39232
+    "width": 335,
+    "tabOrder": 39132
   },
   "visual": {
     "visualType": "cardVisual",

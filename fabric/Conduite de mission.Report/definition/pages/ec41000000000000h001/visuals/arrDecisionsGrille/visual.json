@@ -61,27 +61,6 @@
                           "Entity": "decision_distribution"
                         }
                       },
-                      "Property": "total_distribuable"
-                    }
-                  },
-                  "Function": 0
-                }
-              },
-              "queryRef": "Sum(decision_distribution.total_distribuable)",
-              "nativeQueryRef": "total_distribuable",
-              "displayName": "Total",
-              "format": "#,0.00"
-            },
-            {
-              "field": {
-                "Aggregation": {
-                  "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "decision_distribution"
-                        }
-                      },
                       "Property": "montant_decide"
                     }
                   },
@@ -110,17 +89,18 @@
             },
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "decision_distribution"
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
                     }
                   },
-                  "Property": "decide_par"
+                  "Property": "Arr decide par"
                 }
               },
-              "queryRef": "decision_distribution.decide_par",
-              "nativeQueryRef": "decide_par",
+              "queryRef": "v_ecran_valeurs_arrete.Arr decide par",
+              "nativeQueryRef": "Arr decide par",
               "displayName": "Décidé par"
             },
             {
@@ -243,7 +223,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#12233C'"
+                      "Value": "'#5B6B7D'"
                     }
                   }
                 }
@@ -268,7 +248,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#EEF1F5'"
+                      "Value": "'#F4F6F9'"
                     }
                   }
                 }
@@ -287,6 +267,24 @@
                   "Value": "true"
                 }
               }
+            },
+            "outlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D5DCE4'"
+                    }
+                  }
+                }
+              }
+            },
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
             }
           }
         }
@@ -297,7 +295,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "100D"
+                  "Value": "150D"
                 }
               }
             }
@@ -311,7 +309,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "88D"
+                  "Value": "90D"
                 }
               }
             }
@@ -325,21 +323,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "88D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "Sum(decision_distribution.total_distribuable)"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "88D"
+                  "Value": "90D"
                 }
               }
             }
@@ -353,7 +337,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "80D"
+                  "Value": "81D"
                 }
               }
             }
@@ -367,13 +351,13 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "87D"
+                  "Value": "96D"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "decision_distribution.decide_par"
+            "metadata": "v_ecran_valeurs_arrete.Arr decide par"
           }
         },
         {
@@ -381,7 +365,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "80D"
+                  "Value": "81D"
                 }
               }
             }
@@ -449,20 +433,6 @@
           },
           "selector": {
             "metadata": "Sum(decision_distribution.obligation_minimale)"
-          }
-        },
-        {
-          "properties": {
-            "alignment": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Right'"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "Sum(decision_distribution.total_distribuable)"
           }
         },
         {

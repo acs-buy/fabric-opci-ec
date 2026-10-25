@@ -3,11 +3,11 @@
   "name": "arrFeuilleK0Val",
   "position": {
     "x": 1003,
-    "y": 1133,
-    "z": 38672,
+    "y": 874,
+    "z": 41262,
     "height": 20,
     "width": 582,
-    "tabOrder": 38672
+    "tabOrder": 41262
   },
   "visual": {
     "visualType": "cardVisual",
@@ -432,5 +432,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

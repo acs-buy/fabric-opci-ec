@@ -3,11 +3,11 @@
   "name": "arrConclBlocageFond",
   "position": {
     "x": 1081,
-    "y": 937,
-    "z": 40630,
-    "height": 20,
+    "y": 506,
+    "z": 44940,
+    "height": 21,
     "width": 403,
-    "tabOrder": 40630
+    "tabOrder": 44940
   },
   "visual": {
     "visualType": "shape",
@@ -235,5 +235,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

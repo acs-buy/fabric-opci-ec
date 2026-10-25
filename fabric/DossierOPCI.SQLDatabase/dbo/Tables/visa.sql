@@ -22,14 +22,14 @@ CREATE TABLE [dbo].[visa] (
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_visa_arrete]
-    ON [dbo].[visa]([entite] ASC, [arrete] ASC, [cycle] ASC);
+CREATE NONCLUSTERED INDEX [ix_visa_objet]
+    ON [dbo].[visa]([nature] ASC, [objet_ref] ASC);
 
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_visa_objet]
-    ON [dbo].[visa]([nature] ASC, [objet_ref] ASC);
+CREATE NONCLUSTERED INDEX [ix_visa_arrete]
+    ON [dbo].[visa]([entite] ASC, [arrete] ASC, [cycle] ASC);
 
 
 GO
@@ -54,6 +54,37 @@ BEGIN
     )
         THROW 50060, N'Visa refusé : ce lot est marqué périmé, son périmètre ayant changé après sa génération. Le viser exige un motif disant pourquoi la génération n''est pas reprise. Lire dbo.v_lot_perime pour le fait qui l''a périmé.', 1;
 END
+
+GO
+
+
+-- ------------------------------------------------------------------------------------------------- 2.5, point 4 : la garde de visa
+-- A toute inscription d'un visa CLOTURE RENVOYE (INSERT, ou modification qui fait d'une ligne un tel visa), la demande
+-- de reouverture EN_ATTENTE du meme arrete, de l'auteur egal au proposant, passe ACCORDEE et se lie au visa ; sans
+-- elle, l'inscription est refusee (50998). Les renvois sont traites un a un, dans l'ordre des identifiants : un 2e
+-- renvoi du meme arrete ne trouve plus de demande.
+CREATE   TRIGGER dbo.tr_visa_accord_reouverture ON dbo.visa
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @r TABLE (n INT IDENTITY, id INT, entite VARCHAR (20), arrete VARCHAR (20), propose_par NVARCHAR (400), decide_par NVARCHAR (400), decide_le DATETIME2 (3));
+    INSERT INTO @r (id, entite, arrete, propose_par, decide_par, decide_le)
+    SELECT i.id, i.entite, i.arrete, i.propose_par, i.decide_par, i.decide_le
+    FROM inserted i LEFT JOIN deleted d ON d.id = i.id
+    WHERE i.nature = 'CLOTURE' AND i.decision = 'RENVOYE' AND NOT (ISNULL(d.nature, '') = 'CLOTURE' AND ISNULL(d.decision, '') = 'RENVOYE')
+    ORDER BY i.id;
+    DECLARE @k INT = 1, @n INT = (SELECT COUNT(*) FROM @r);
+    WHILE @k <= @n
+    BEGIN
+        UPDATE q SET etat = 'ACCORDEE', decide_par = r.decide_par, decide_le = ISNULL(r.decide_le, SYSUTCDATETIME()), visa_id = r.id
+        FROM dbo.demande_reouverture q JOIN @r r ON r.n = @k
+        WHERE q.entite = r.entite AND q.arrete = r.arrete AND q.nature = 'REOUVERTURE' AND q.etat = 'EN_ATTENTE' AND q.demande_par = r.propose_par;
+        IF @@ROWCOUNT = 0
+            THROW 50998, N'Renvoi de clôture refusé : il s''inscrit par l''accord d''une demande de réouverture, et aucune demande de ce proposant n''attend sur cet arrêté.', 1;
+        SET @k += 1;
+    END;
+END;
 
 GO
 
@@ -91,37 +122,6 @@ BEGIN
     )
         THROW 50052, N'Visa refusé : le proposant porté par le visa n''est pas celui que la source de l''objet désigne. Lire dbo.fn_proposant pour la valeur attendue.', 1;
 END
-
-GO
-
-
--- ------------------------------------------------------------------------------------------------- 2.5, point 4 : la garde de visa
--- A toute inscription d'un visa CLOTURE RENVOYE (INSERT, ou modification qui fait d'une ligne un tel visa), la demande
--- de reouverture EN_ATTENTE du meme arrete, de l'auteur egal au proposant, passe ACCORDEE et se lie au visa ; sans
--- elle, l'inscription est refusee (50998). Les renvois sont traites un a un, dans l'ordre des identifiants : un 2e
--- renvoi du meme arrete ne trouve plus de demande.
-CREATE   TRIGGER dbo.tr_visa_accord_reouverture ON dbo.visa
-AFTER INSERT, UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    DECLARE @r TABLE (n INT IDENTITY, id INT, entite VARCHAR (20), arrete VARCHAR (20), propose_par NVARCHAR (400), decide_par NVARCHAR (400), decide_le DATETIME2 (3));
-    INSERT INTO @r (id, entite, arrete, propose_par, decide_par, decide_le)
-    SELECT i.id, i.entite, i.arrete, i.propose_par, i.decide_par, i.decide_le
-    FROM inserted i LEFT JOIN deleted d ON d.id = i.id
-    WHERE i.nature = 'CLOTURE' AND i.decision = 'RENVOYE' AND NOT (ISNULL(d.nature, '') = 'CLOTURE' AND ISNULL(d.decision, '') = 'RENVOYE')
-    ORDER BY i.id;
-    DECLARE @k INT = 1, @n INT = (SELECT COUNT(*) FROM @r);
-    WHILE @k <= @n
-    BEGIN
-        UPDATE q SET etat = 'ACCORDEE', decide_par = r.decide_par, decide_le = ISNULL(r.decide_le, SYSUTCDATETIME()), visa_id = r.id
-        FROM dbo.demande_reouverture q JOIN @r r ON r.n = @k
-        WHERE q.entite = r.entite AND q.arrete = r.arrete AND q.nature = 'REOUVERTURE' AND q.etat = 'EN_ATTENTE' AND q.demande_par = r.propose_par;
-        IF @@ROWCOUNT = 0
-            THROW 50998, N'Renvoi de clôture refusé : il s''inscrit par l''accord d''une demande de réouverture, et aucune demande de ce proposant n''attend sur cet arrêté.', 1;
-        SET @k += 1;
-    END;
-END;
 
 GO
 

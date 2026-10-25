@@ -3,11 +3,11 @@
   "name": "arrSomK0Lib",
   "position": {
     "x": 15,
-    "y": 576,
-    "z": 44241,
+    "y": 679,
+    "z": 43211,
     "height": 20,
     "width": 127,
-    "tabOrder": 44241
+    "tabOrder": 43211
   },
   "visual": {
     "visualType": "textbox",

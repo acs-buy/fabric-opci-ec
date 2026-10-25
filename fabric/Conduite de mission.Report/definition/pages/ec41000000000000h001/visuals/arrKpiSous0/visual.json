@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrKpiSous0",
   "position": {
-    "x": 12,
+    "x": 13,
     "y": 210,
     "z": 47902,
     "height": 25,
-    "width": 289,
+    "width": 287,
     "tabOrder": 47902
   },
   "visual": {
@@ -20,15 +20,14 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Schema": "extension",
-                      "Entity": "v_ecran_valeurs_arrete"
+                      "Entity": "ref_ratio_memoire"
                     }
                   },
-                  "Property": "Arr sous-ligne limites"
+                  "Property": "Sous-ligne limites"
                 }
               },
-              "queryRef": "v_ecran_valeurs_arrete.Arr sous-ligne limites",
-              "nativeQueryRef": "Arr sous-ligne limites"
+              "queryRef": "ref_ratio_memoire.Sous-ligne limites",
+              "nativeQueryRef": "Sous-ligne limites"
             }
           ]
         }

@@ -34,6 +34,21 @@ BEGIN
         THROW 50292, N'Le nom de la personne est obligatoire.', 1;
     SET @connexion = NULLIF(LTRIM(RTRIM(@connexion)), N'');
 
+    -- 50293 (19/10/2026) : l'equipe d'un dossier se designe par son associe ou par son chef de mission ; pour une
+    -- filiale, aussi par ceux du vehicule qui la detient. Juge sur @par, celui qui clique, par sa connexion, avant toute
+    -- ecriture : derriere une Data function, la session SQL est celle du proprietaire de la fonction. Un semis ecrit sans
+    -- cette garde. Generee par 61_DEPLOIEMENT/generer_garde_designer_role.py (script 316).
+    DECLARE @garde_le DATE = CAST(SYSUTCDATETIME() AS DATE);
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND NOT EXISTS (SELECT 1 FROM dbo.role_mission r
+                       WHERE r.connexion = NULLIF(LTRIM(RTRIM(@par)), N'')
+                         AND r.role IN ('ASSOCIE', 'CHEF_MISSION')
+                         AND r.du <= @garde_le AND (r.au IS NULL OR r.au > @garde_le)
+                         AND (r.entite = @entite
+                              OR r.entite IN (SELECT p.vehicule FROM dbo.v_perimetre_vehicule p
+                                              WHERE p.entite = @entite AND p.vehicule <> @entite)))
+        THROW 50293, N'Désignation refusée : l''équipe d''un dossier se désigne par son associé ou par son chef de mission, et votre adresse de connexion ne tient aucun de ces 2 rôles sur ce dossier.', 1;
+
     DECLARE @aujourdhui DATE = CAST(SYSUTCDATETIME() AS DATE);
     DECLARE @en_cours NVARCHAR (400) = (SELECT TOP (1) personne FROM dbo.role_mission
                                          WHERE entite = @entite AND role = @role AND au IS NULL

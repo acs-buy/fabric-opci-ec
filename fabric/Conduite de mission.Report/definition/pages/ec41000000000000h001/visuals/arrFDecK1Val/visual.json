@@ -3,11 +3,11 @@
   "name": "arrFDecK1Val",
   "position": {
     "x": 1110,
-    "y": 492,
-    "z": 45082,
+    "y": 497,
+    "z": 45032,
     "height": 20,
     "width": 475,
-    "tabOrder": 45082
+    "tabOrder": 45032
   },
   "visual": {
     "visualType": "cardVisual",
@@ -73,10 +73,11 @@
                                 "Measure": {
                                   "Expression": {
                                     "SourceRef": {
-                                      "Entity": "v_obligation_par_categorie"
+                                      "Schema": "extension",
+                                      "Entity": "v_ecran_valeurs_arrete"
                                     }
                                   },
-                                  "Property": "Couleur ecart des bornes"
+                                  "Property": "Arr couleur ecart des bornes"
                                 }
                               },
                               "Right": {
@@ -89,6 +90,34 @@
                           "Value": {
                             "Literal": {
                               "Value": "'#9A2A2A'"
+                            }
+                          }
+                        },
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Schema": "extension",
+                                      "Entity": "v_ecran_valeurs_arrete"
+                                    }
+                                  },
+                                  "Property": "Arr couleur ecart des bornes"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#5B6B7D'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#5B6B7D'"
                             }
                           }
                         }

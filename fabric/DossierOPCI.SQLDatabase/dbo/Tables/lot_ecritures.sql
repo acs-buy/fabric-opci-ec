@@ -41,31 +41,6 @@ CREATE TABLE [dbo].[lot_ecritures] (
 GO
 
 
--- LA PEREMPTION D'UNE SYNTHESE, que le point O1 exige : un lot vise
--- APRES la proposition change l'actif net, donc la synthese ne vaut
--- plus. Le declencheur la marque perimee.
-CREATE   TRIGGER dbo.tr_lot_perime_synthese
-ON dbo.lot_ecritures
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF NOT EXISTS (SELECT 1 FROM inserted i JOIN deleted d ON d.id = i.id
-                   WHERE i.statut = 'VALIDE' AND d.statut <> 'VALIDE')
-        RETURN;
-    UPDATE s
-    SET perime_le = SYSUTCDATETIME(),
-        perime_motif = N'Un lot de cet arrêté a été visé après la '
-                     + N'proposition de la synthèse : l''actif net a changé, '
-                     + N'la synthèse doit être proposée de nouveau.'
-    FROM dbo.synthese_proposee s
-    JOIN inserted i ON i.entite = s.entite AND i.arrete = s.arrete
-    WHERE s.perime_le IS NULL AND s.propose_le < SYSUTCDATETIME();
-END;
-
-GO
-
-
 -- tr_lot_ecritures_non_regenerable : 1 refus
 -- ---------------------------------------------------------------------
 -- BLOC 6 : tr_lot_ecritures_non_regenerable. Le refus de supprimer la
@@ -120,6 +95,31 @@ BEGIN
     SELECT v.entite, SYSUTCDATETIME(), N'lot_ecritures', SUM(x.n)
     FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
     GROUP BY v.entite;
+END;
+
+GO
+
+
+-- LA PEREMPTION D'UNE SYNTHESE, que le point O1 exige : un lot vise
+-- APRES la proposition change l'actif net, donc la synthese ne vaut
+-- plus. Le declencheur la marque perimee.
+CREATE   TRIGGER dbo.tr_lot_perime_synthese
+ON dbo.lot_ecritures
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted i JOIN deleted d ON d.id = i.id
+                   WHERE i.statut = 'VALIDE' AND d.statut <> 'VALIDE')
+        RETURN;
+    UPDATE s
+    SET perime_le = SYSUTCDATETIME(),
+        perime_motif = N'Un lot de cet arrêté a été visé après la '
+                     + N'proposition de la synthèse : l''actif net a changé, '
+                     + N'la synthèse doit être proposée de nouveau.'
+    FROM dbo.synthese_proposee s
+    JOIN inserted i ON i.entite = s.entite AND i.arrete = s.arrete
+    WHERE s.perime_le IS NULL AND s.propose_le < SYSUTCDATETIME();
 END;
 
 GO

@@ -3,11 +3,11 @@
   "name": "arrPropBlocageFond",
   "position": {
     "x": 133,
-    "y": 973,
-    "z": 40270,
-    "height": 20,
+    "y": 972,
+    "z": 40280,
+    "height": 21,
     "width": 410,
-    "tabOrder": 40270
+    "tabOrder": 40280
   },
   "visual": {
     "visualType": "shape",

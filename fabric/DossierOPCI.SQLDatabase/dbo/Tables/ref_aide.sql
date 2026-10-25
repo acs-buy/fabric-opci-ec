@@ -29,7 +29,9 @@ BEGIN
     -- propres lignes.
     IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
     IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
+    -- Objet n° 16 de l'ecran 5 (script 317) : l'auteur est celui que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
+    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (200)), modifie_le = SYSUTCDATETIME()
     FROM dbo.[ref_aide] t
     JOIN inserted i ON t.[code] = i.[code];
 END;

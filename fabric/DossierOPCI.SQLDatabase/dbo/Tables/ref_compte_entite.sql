@@ -19,39 +19,6 @@ CREATE TABLE [dbo].[ref_compte_entite] (
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_compte_entite_horodatage]
-ON dbo.[ref_compte_entite]
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    UPDATE t SET modifie_par = SUSER_SNAME(), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_compte_entite] t
-    JOIN inserted i ON t.[entite] = i.[entite] AND t.[compte_entite] = i.[compte_entite];
-END;
-
-GO
-
-CREATE   TRIGGER dbo.[tr_ref_compte_entite_garde]
-ON dbo.[ref_compte_entite]
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF dbo.fn_peut_ecrire_referentiel('ref_compte_entite',
-                                      SUSER_SNAME()) = 1 RETURN;
-    THROW 50074,
-        N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.',
-        1;
-END;
-
-GO
-
 CREATE   TRIGGER dbo.tr_rattachement_meme_classe
 ON dbo.ref_compte_entite
 AFTER INSERT, UPDATE
@@ -69,6 +36,52 @@ BEGIN
     )
         THROW 50048, 'Rattachement refuse : le compte de l''entite et le compte modele ne sont pas de la meme classe, et aucune correspondance n''est declaree entre les 2 plans. Une traduction qui change de classe se justifie : la declarer dans dbo.ref_correspondance_plan avec son motif, comme le passage du compte 4551 du PCG au compte 512 du plan de l''article 411-3.', 1;
 END
+
+GO
+
+CREATE   TRIGGER dbo.[tr_ref_compte_entite_horodatage]
+ON dbo.[ref_compte_entite]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    -- Objet n° 16 de l'ecran 5 (script 317) : l'auteur est celui que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
+    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_compte_entite] t
+    JOIN inserted i ON t.[entite] = i.[entite] AND t.[compte_entite] = i.[compte_entite];
+END;
+
+GO
+
+CREATE   TRIGGER dbo.[tr_ref_compte_entite_garde]
+ON dbo.[ref_compte_entite]
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Objet n° 16 de l'ecran 5 (script 317) : l'identite jugee est celle que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte. Le CAST est exige : un sql_variant passe nu a
+    -- fn_peut_ecrire_referentiel rend le Msg 257.
+    IF dbo.fn_peut_ecrire_referentiel('ref_compte_entite',
+                                      CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400))) = 1 RETURN;
+    -- Objet n° 17 : le refus s'inscrit dans journal_refus avant d'etre leve. Le ROLLBACK precede
+    -- l'inscription, que le THROW annulerait sinon avec l'ecriture refusee (pas de transaction autonome) ;
+    -- sous une Data function, la fonction annule aussi l'inscription, puis journalise le refus apres son
+    -- propre rollback (script 220). refuse_pour est un nvarchar(200) : l'identite y est coupee a 200
+    -- caracteres, une ecriture plus longue y serait refusee et remplacerait le 50074.
+    DECLARE @m NVARCHAR (2000) = N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.';
+    ROLLBACK TRANSACTION;
+    INSERT INTO dbo.journal_refus (procedure_nom, message, refuse_pour, refuse_le)
+    VALUES ('tr_ref_compte_entite_garde', @m, LEFT(CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), 200), SYSUTCDATETIME());
+    SET @m = REPLACE(@m, N'%', N'%%');
+    THROW 50074, @m, 1;
+END;
 
 GO
 

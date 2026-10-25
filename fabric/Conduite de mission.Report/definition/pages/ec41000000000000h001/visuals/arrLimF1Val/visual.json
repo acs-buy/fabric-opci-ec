@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrLimF1Val",
   "position": {
-    "x": 1321,
-    "y": 406,
-    "z": 45942,
+    "x": 1003,
+    "y": 585,
+    "z": 44152,
     "height": 20,
-    "width": 264,
-    "tabOrder": 45942
+    "width": 582,
+    "tabOrder": 44152
   },
   "visual": {
     "visualType": "cardVisual",
@@ -54,7 +54,7 @@
             "bold": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
@@ -94,6 +94,13 @@
               "expr": {
                 "Literal": {
                   "Value": "'right'"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }

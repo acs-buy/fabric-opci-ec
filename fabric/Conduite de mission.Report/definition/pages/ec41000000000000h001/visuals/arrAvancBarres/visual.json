@@ -3,11 +3,11 @@
   "name": "arrAvancBarres",
   "position": {
     "x": 15,
-    "y": 840,
-    "z": 41602,
-    "height": 187,
+    "y": 831,
+    "z": 41692,
+    "height": 190,
     "width": 910,
-    "tabOrder": 41602
+    "tabOrder": 41692
   },
   "visual": {
     "visualType": "clusteredBarChart",

@@ -3,11 +3,11 @@
   "name": "arrPropK2Lib",
   "position": {
     "x": 15,
-    "y": 945,
-    "z": 40551,
+    "y": 943,
+    "z": 40571,
     "height": 20,
     "width": 68,
-    "tabOrder": 40551
+    "tabOrder": 40571
   },
   "visual": {
     "visualType": "textbox",

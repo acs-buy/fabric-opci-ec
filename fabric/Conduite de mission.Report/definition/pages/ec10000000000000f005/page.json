@@ -134,7 +134,7 @@
     },
     {
       "source": "docDipR1",
-      "target": "docFermer",
+      "target": "navRetour",
       "type": "NoFilter"
     },
     {
@@ -254,7 +254,7 @@
     },
     {
       "source": "docDipR5",
-      "target": "docFermer",
+      "target": "navRetour",
       "type": "NoFilter"
     },
     {
@@ -374,7 +374,7 @@
     },
     {
       "source": "docDipR4",
-      "target": "docFermer",
+      "target": "navRetour",
       "type": "NoFilter"
     },
     {
@@ -494,7 +494,7 @@
     },
     {
       "source": "docDipR6",
-      "target": "docFermer",
+      "target": "navRetour",
       "type": "NoFilter"
     },
     {
@@ -592,5 +592,6 @@
       "target": "docSansArrete2",
       "type": "NoFilter"
     }
-  ]
+  ],
+  "visibility": "HiddenInViewMode"
 }

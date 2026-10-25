@@ -3,7 +3,7 @@
   "name": "arrDecAbs",
   "position": {
     "x": 15,
-    "y": 906,
+    "y": 898,
     "z": 41082,
     "height": 20,
     "width": 910,
@@ -93,7 +93,7 @@
             "horizontalAlignment": {
               "expr": {
                 "Literal": {
-                  "Value": "'center'"
+                  "Value": "'left'"
                 }
               }
             },

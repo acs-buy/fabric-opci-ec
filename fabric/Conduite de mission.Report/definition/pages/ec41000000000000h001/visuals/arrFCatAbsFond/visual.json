@@ -3,11 +3,11 @@
   "name": "arrFCatAbsFond",
   "position": {
     "x": 963,
-    "y": 470,
-    "z": 45361,
-    "height": 36,
+    "y": 476,
+    "z": 45301,
+    "height": 22,
     "width": 622,
-    "tabOrder": 45361
+    "tabOrder": 45301
   },
   "visual": {
     "visualType": "shape",
@@ -46,7 +46,7 @@
                           "Entity": "v_ecran_valeurs_arrete"
                         }
                       },
-                      "Property": "Arr fond absence categorie"
+                      "Property": "Arr masque absence categorie"
                     }
                   }
                 }
@@ -86,7 +86,7 @@
                           "Entity": "v_ecran_valeurs_arrete"
                         }
                       },
-                      "Property": "Arr fond absence categorie"
+                      "Property": "Arr masque absence categorie"
                     }
                   }
                 }

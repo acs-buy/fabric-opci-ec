@@ -3,11 +3,11 @@
   "name": "arrRenvoiRev5",
   "position": {
     "x": 963,
-    "y": 1195,
-    "z": 38058,
+    "y": 1006,
+    "z": 39948,
     "height": 36,
-    "width": 183,
-    "tabOrder": 38058
+    "width": 184,
+    "tabOrder": 39948
   },
   "visual": {
     "visualType": "actionButton",
@@ -543,5 +543,6 @@
     },
     "drillFilterOtherVisuals": true
   },
-  "howCreated": "InsertVisualButton"
+  "howCreated": "InsertVisualButton",
+  "isHidden": true
 }

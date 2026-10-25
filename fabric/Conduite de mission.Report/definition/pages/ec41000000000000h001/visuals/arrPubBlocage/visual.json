@@ -3,11 +3,11 @@
   "name": "arrPubBlocage",
   "position": {
     "x": 1090,
-    "y": 943,
-    "z": 40572,
+    "y": 942,
+    "z": 40582,
     "height": 20,
     "width": 495,
-    "tabOrder": 40572
+    "tabOrder": 40582
   },
   "visual": {
     "visualType": "cardVisual",

@@ -20,14 +20,15 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "v_journal_visa"
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
                     }
                   },
-                  "Property": "Libelle nature du visa"
+                  "Property": "Arr visa de la ligne"
                 }
               },
-              "queryRef": "v_journal_visa.Libelle nature du visa",
-              "nativeQueryRef": "Libelle nature du visa",
+              "queryRef": "v_ecran_valeurs_arrete.Arr visa de la ligne",
+              "nativeQueryRef": "Arr visa de la ligne",
               "displayName": "Visa"
             },
             {
@@ -35,44 +36,47 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "v_journal_visa"
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
                     }
                   },
-                  "Property": "Libelle issue du visa"
+                  "Property": "Arr decision du visa"
                 }
               },
-              "queryRef": "v_journal_visa.Libelle issue du visa",
-              "nativeQueryRef": "Libelle issue du visa",
+              "queryRef": "v_ecran_valeurs_arrete.Arr decision du visa",
+              "nativeQueryRef": "Arr decision du visa",
               "displayName": "Décision"
             },
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "v_journal_visa"
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
                     }
                   },
-                  "Property": "auteur"
+                  "Property": "Arr par du visa"
                 }
               },
-              "queryRef": "v_journal_visa.auteur",
-              "nativeQueryRef": "auteur",
+              "queryRef": "v_ecran_valeurs_arrete.Arr par du visa",
+              "nativeQueryRef": "Arr par du visa",
               "displayName": "Par"
             },
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "v_journal_visa"
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
                     }
                   },
-                  "Property": "propose_par"
+                  "Property": "Arr propose par du visa"
                 }
               },
-              "queryRef": "v_journal_visa.propose_par",
-              "nativeQueryRef": "propose_par",
+              "queryRef": "v_ecran_valeurs_arrete.Arr propose par du visa",
+              "nativeQueryRef": "Arr propose par du visa",
               "displayName": "Proposé par"
             },
             {
@@ -80,14 +84,15 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "v_journal_visa"
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
                     }
                   },
-                  "Property": "Date du visa de la ligne"
+                  "Property": "Arr le du visa"
                 }
               },
-              "queryRef": "v_journal_visa.Date du visa de la ligne",
-              "nativeQueryRef": "Date du visa de la ligne",
+              "queryRef": "v_ecran_valeurs_arrete.Arr le du visa",
+              "nativeQueryRef": "Arr le du visa",
               "displayName": "Le"
             },
             {
@@ -104,6 +109,36 @@
               "queryRef": "v_journal_visa.message",
               "nativeQueryRef": "message",
               "displayName": "Motif"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_journal_visa"
+                    }
+                  },
+                  "Property": "auteur"
+                }
+              },
+              "queryRef": "v_journal_visa.auteur",
+              "nativeQueryRef": "auteur",
+              "displayName": "    "
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_journal_visa"
+                    }
+                  },
+                  "Property": "propose_par"
+                }
+              },
+              "queryRef": "v_journal_visa.propose_par",
+              "nativeQueryRef": "propose_par",
+              "displayName": "     "
             },
             {
               "field": {
@@ -134,6 +169,21 @@
               "queryRef": "v_journal_visa.issue",
               "nativeQueryRef": "issue",
               "displayName": "   "
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_journal_visa"
+                    }
+                  },
+                  "Property": "cle_visa"
+                }
+              },
+              "queryRef": "v_journal_visa.cle_visa",
+              "nativeQueryRef": "cle_visa",
+              "displayName": "      "
             },
             {
               "field": {
@@ -241,7 +291,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#12233C'"
+                      "Value": "'#5B6B7D'"
                     }
                   }
                 }
@@ -266,7 +316,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#EEF1F5'"
+                      "Value": "'#F4F6F9'"
                     }
                   }
                 }
@@ -282,7 +332,25 @@
             "wordWrap": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "outlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D5DCE4'"
+                    }
+                  }
+                }
+              }
+            },
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
                 }
               }
             }
@@ -301,7 +369,7 @@
             }
           },
           "selector": {
-            "metadata": "v_journal_visa.Libelle nature du visa"
+            "metadata": "v_ecran_valeurs_arrete.Arr visa de la ligne"
           }
         },
         {
@@ -309,13 +377,13 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "65D"
+                  "Value": "72D"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "v_journal_visa.Libelle issue du visa"
+            "metadata": "v_ecran_valeurs_arrete.Arr decision du visa"
           }
         },
         {
@@ -323,7 +391,63 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "227D"
+                  "Value": "100D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_valeurs_arrete.Arr par du visa"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "100D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_valeurs_arrete.Arr propose par du visa"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "81D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_valeurs_arrete.Arr le du visa"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "379D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_journal_visa.message"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
                 }
               }
             }
@@ -337,41 +461,13 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "210D"
+                  "Value": "1D"
                 }
               }
             }
           },
           "selector": {
             "metadata": "v_journal_visa.propose_par"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "80D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "v_journal_visa.Date du visa de la ligne"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "147D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "v_journal_visa.message"
           }
         },
         {
@@ -400,6 +496,20 @@
           },
           "selector": {
             "metadata": "v_journal_visa.issue"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_journal_visa.cle_visa"
           }
         },
         {
@@ -456,10 +566,11 @@
                     "Measure": {
                       "Expression": {
                         "SourceRef": {
-                          "Entity": "v_journal_visa"
+                          "Schema": "extension",
+                          "Entity": "v_ecran_valeurs_arrete"
                         }
                       },
-                      "Property": "Couleur issue du visa"
+                      "Property": "Arr couleur de la decision"
                     }
                   }
                 }
@@ -474,11 +585,89 @@
                 }
               }
             ],
-            "metadata": "v_journal_visa.Libelle issue du visa"
+            "metadata": "v_ecran_valeurs_arrete.Arr decision du visa"
           }
         }
       ],
       "columnFormatting": [
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Left'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "styleValues": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "styleTotal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_journal_visa.auteur"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Left'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "styleValues": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "styleTotal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_journal_visa.propose_par"
+          }
+        },
         {
           "properties": {
             "alignment": {
@@ -555,6 +744,45 @@
           },
           "selector": {
             "metadata": "v_journal_visa.issue"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Left'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "styleValues": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "styleTotal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_journal_visa.cle_visa"
           }
         },
         {
@@ -768,59 +996,6 @@
                       }
                     ]
                   ]
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      },
-      {
-        "name": "arrVisasGrilleLignes",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_journal_visa"
-              }
-            },
-            "Property": "R23 Visas poses"
-          }
-        },
-        "type": "Advanced",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "m",
-              "Entity": "v_journal_visa",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Not": {
-                  "Expression": {
-                    "Comparison": {
-                      "ComparisonKind": 0,
-                      "Left": {
-                        "Measure": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Source": "m"
-                            }
-                          },
-                          "Property": "R23 Visas poses"
-                        }
-                      },
-                      "Right": {
-                        "Literal": {
-                          "Value": "null"
-                        }
-                      }
-                    }
-                  }
                 }
               }
             }

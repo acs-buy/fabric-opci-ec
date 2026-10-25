@@ -32,24 +32,19 @@
             },
             {
               "field": {
-                "Aggregation": {
+                "Measure": {
                   "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "v_obligation_par_categorie"
-                        }
-                      },
-                      "Property": "montant_propose"
+                    "SourceRef": {
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
                     }
                   },
-                  "Function": 0
+                  "Property": "Arr obligation de la ligne"
                 }
               },
-              "queryRef": "Sum(v_obligation_par_categorie.montant_propose)",
-              "nativeQueryRef": "montant_propose",
-              "displayName": "Obligation proposée",
-              "format": "#,0.00"
+              "queryRef": "v_ecran_valeurs_arrete.Arr obligation de la ligne",
+              "nativeQueryRef": "Arr obligation de la ligne",
+              "displayName": "Obligation proposée"
             },
             {
               "field": {
@@ -76,13 +71,12 @@
                       "Entity": "v_ecran_valeurs_arrete"
                     }
                   },
-                  "Property": "Arr ecart des bornes basses"
+                  "Property": "Arr ecart des bornes"
                 }
               },
-              "queryRef": "v_ecran_valeurs_arrete.Arr ecart des bornes basses",
-              "nativeQueryRef": "Arr ecart des bornes basses",
-              "displayName": "Écart",
-              "format": "+ #,0.00;-#,0.00;0.00"
+              "queryRef": "v_ecran_valeurs_arrete.Arr ecart des bornes",
+              "nativeQueryRef": "Arr ecart des bornes",
+              "displayName": "Écart"
             },
             {
               "field": {
@@ -236,7 +230,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#12233C'"
+                      "Value": "'#5B6B7D'"
                     }
                   }
                 }
@@ -261,7 +255,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#EEF1F5'"
+                      "Value": "'#F4F6F9'"
                     }
                   }
                 }
@@ -280,6 +274,24 @@
                   "Value": "true"
                 }
               }
+            },
+            "outlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D5DCE4'"
+                    }
+                  }
+                }
+              }
+            },
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
             }
           }
         }
@@ -290,7 +302,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "276D"
+                  "Value": "220D"
                 }
               }
             }
@@ -304,13 +316,13 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "142D"
+                  "Value": "119D"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "Sum(v_obligation_par_categorie.montant_propose)"
+            "metadata": "v_ecran_valeurs_arrete.Arr obligation de la ligne"
           }
         },
         {
@@ -318,7 +330,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "91D"
+                  "Value": "111D"
                 }
               }
             }
@@ -332,13 +344,13 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "104D"
+                  "Value": "103D"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "v_ecran_valeurs_arrete.Arr ecart des bornes basses"
+            "metadata": "v_ecran_valeurs_arrete.Arr ecart des bornes"
           }
         },
         {
@@ -346,7 +358,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "91D"
+                  "Value": "111D"
                 }
               }
             }
@@ -360,7 +372,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "112D"
+                  "Value": "120D"
                 }
               }
             }
@@ -374,7 +386,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "83D"
+                  "Value": "92D"
                 }
               }
             }
@@ -437,10 +449,11 @@
                     "Measure": {
                       "Expression": {
                         "SourceRef": {
-                          "Entity": "v_obligation_par_categorie"
+                          "Schema": "extension",
+                          "Entity": "v_ecran_valeurs_arrete"
                         }
                       },
-                      "Property": "Couleur ecart des bornes"
+                      "Property": "Arr couleur obligation de la ligne"
                     }
                   }
                 }
@@ -455,7 +468,38 @@
                 }
               }
             ],
-            "metadata": "v_ecran_valeurs_arrete.Arr ecart des bornes basses"
+            "metadata": "v_ecran_valeurs_arrete.Arr obligation de la ligne"
+          }
+        },
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Schema": "extension",
+                          "Entity": "v_ecran_valeurs_arrete"
+                        }
+                      },
+                      "Property": "Arr couleur ecart des bornes"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "v_ecran_valeurs_arrete.Arr ecart des bornes"
           }
         },
         {
@@ -533,7 +577,7 @@
             }
           },
           "selector": {
-            "metadata": "Sum(v_obligation_par_categorie.montant_propose)"
+            "metadata": "v_ecran_valeurs_arrete.Arr obligation de la ligne"
           }
         },
         {
@@ -561,7 +605,7 @@
             }
           },
           "selector": {
-            "metadata": "v_ecran_valeurs_arrete.Arr ecart des bornes basses"
+            "metadata": "v_ecran_valeurs_arrete.Arr ecart des bornes"
           }
         },
         {

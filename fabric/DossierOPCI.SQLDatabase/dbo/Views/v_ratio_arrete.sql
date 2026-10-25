@@ -1,4 +1,4 @@
-
+-- 2. Les 3 vues
 -- --- n° 13 a 16 : v_ratio_arrete ----------------------------------------
 CREATE   VIEW dbo.v_ratio_arrete AS
 -- L'ACTIF SE LIT DE LA BALANCE, non de dbo.v_patrimoine_valorise :
@@ -251,7 +251,16 @@ calcul AS (
     LEFT JOIN dette d ON d.entite = a.entite AND d.arrete = a.arrete
     LEFT JOIN immeubles im ON im.entite = a.entite AND im.arrete = a.arrete
 )
-SELECT rr.code, rr.libelle, rr.sens, rr.seuil, rr.article,
+SELECT rr.code,
+       ISNULL(CAST(CASE WHEN sv.source IS NOT NULL
+                        THEN REPLACE(rr.libelle, FORMAT(rr.seuil * 100, N'0.##', 'fr-FR') + N' %',
+                                     FORMAT(CAST(sv.seuil AS DECIMAL (9,4)) * 100, N'0.##', 'fr-FR') + N' %')
+                   END AS NVARCHAR (200)), rr.libelle)         AS libelle,
+       rr.sens,
+       ISNULL(CAST(sv.seuil AS DECIMAL (9,4)), rr.seuil)       AS seuil,
+       ISNULL(CAST(CASE WHEN sv.source IS NOT NULL
+                        THEN N'statuts du véhicule (CMF, art. R. 214-196 et R. 214-200)'
+                   END AS NVARCHAR (60)), rr.article)          AS article,
        c.entite, c.arrete,
        CAST(n.numerateur AS DECIMAL (19,2))     AS numerateur,
        CAST(n.denominateur AS DECIMAL (19,2))   AS denominateur,
@@ -261,10 +270,15 @@ SELECT rr.code, rr.libelle, rr.sens, rr.seuil, rr.article,
        c.emprunts_propres, c.emprunts_filiales_quote_part,
        c.immeubles_directs, c.immeubles_quote_part,
        c.actif_total, c.immobilier_1_a_5, c.non_cote_1_3_5, c.liquidites_8_9,
-       rr.citation, rr.lu_le, rr.note,
+       ISNULL(CAST(CASE WHEN sv.source IS NOT NULL THEN ISNULL(sv.motif, N'')
+                   END AS NVARCHAR (2000)), rr.citation)       AS citation,
+       CAST(COALESCE(sv.lu_le, rr.lu_le) AS DATE)              AS lu_le,
+       CAST(CASE WHEN sv.source IS NULL THEN rr.note
+                 ELSE N'Calcul selon ' + rr.article + N' : ' + rr.note
+            END AS NVARCHAR (800))                             AS note,
        -- 06/09/2026, O7 : la source du seuil, texte, prospectus ou cabinet,
        -- dit au reviseur s'il peut invoquer une derogation. Maquette E5-1.
-       rr.source_du_seuil,
+       ISNULL(CAST(sv.source AS VARCHAR (20)), rr.source_du_seuil) AS source_du_seuil,
        CAST(rr.calcul_a_valider AS BIT) AS calcul_a_valider,
        CAST(c.denominateur_r214_89 AS DECIMAL (19,2))    AS denominateur_r214_89,
        CAST(c.participations_r214_85 AS DECIMAL (19,2))  AS participations_r214_85,
@@ -292,6 +306,16 @@ CROSS APPLY (
                                       + c.organismes_5_quote_part
            END AS denominateur
 ) AS n
+OUTER APPLY (
+    -- Decision D9 du candidat du 17/10/2026 : le seuil fixe par les statuts d'un OPCI professionnel (CMF,
+    -- art. R. 214-196 et R. 214-200) remplace celui du texte pour ce vehicule seul ; la cle (entite, code) de
+    -- ref_ratio_vehicule en rend 1 ligne au plus.
+    SELECT v.seuil, v.source, v.lu_le, v.motif
+    FROM dbo.ref_ratio_vehicule v
+    JOIN dbo.ref_entite ve ON ve.code = v.entite AND ve.est_professionnel = 1
+    WHERE v.entite = c.entite AND v.code = rr.code AND v.source = 'STATUTS'
+      AND (v.en_vigueur_depuis IS NULL OR v.en_vigueur_depuis <= CAST(c.arrete AS DATE))
+) AS sv
 WHERE rr.forme_vehicule IS NULL
    OR rr.forme_vehicule = c.forme_vehicule;
 

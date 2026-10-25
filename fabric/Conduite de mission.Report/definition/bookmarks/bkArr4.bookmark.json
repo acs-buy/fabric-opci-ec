@@ -193,7 +193,63 @@
               }
             }
           },
-          "arrConclK1Val": {
+          "arrConclK1Val1": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrConclK1Val2": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrConclK1Val3": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrConclK1Val4": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrConclK1Val5": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrConclK1Val6": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrConclK1Val7": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrConclK1Val8": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrConclK1Val9": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -201,6 +257,13 @@
             }
           },
           "arrConclMasque": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrConclMasque2": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -592,7 +655,42 @@
               }
             }
           },
+          "arrFeuilleK1Val3": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrFeuilleK1Val4": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrFeuilleK1Val5": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrFeuilleK1Val6": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
           "arrFond1": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrFond1b": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -628,6 +726,13 @@
             }
           },
           "arrLimComp0Lib": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrLimComp0Val": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -683,7 +788,21 @@
               }
             }
           },
+          "arrLimComp4Val": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
           "arrLimComp5Lib": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrLimComp5Val": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -697,7 +816,21 @@
               }
             }
           },
+          "arrLimComp6Val": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
           "arrLimComp7Lib": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrLimComp7Val": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -823,7 +956,14 @@
               }
             }
           },
-          "arrLimF15Val": {
+          "arrLimF15Val1": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrLimF15Val2": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -837,7 +977,21 @@
               }
             }
           },
-          "arrLimF16Val": {
+          "arrLimF16Val1": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrLimF16Val2": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrLimF16Val3": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -893,7 +1047,21 @@
               }
             }
           },
-          "arrLimF4Val": {
+          "arrLimF4Val1": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrLimF4Val2": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrLimF4Val3": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -907,7 +1075,14 @@
               }
             }
           },
-          "arrLimF5Val": {
+          "arrLimF5Val1": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrLimF5Val2": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -935,7 +1110,14 @@
               }
             }
           },
-          "arrLimF7Val": {
+          "arrLimF7Val1": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrLimF7Val2": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1363,6 +1545,34 @@
             }
           },
           "arrSource": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrSousEtape0": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrSousEtape1": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrSousEtapeIci0": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "arrSousEtapeIci1": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"

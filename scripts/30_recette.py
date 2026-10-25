@@ -25,8 +25,8 @@ import sys
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 REQUETE = u"""SELECT 'questions d''acceptation' AS quoi, COUNT(*) AS nb, 620 AS attendu FROM dbo.ref_question
-UNION ALL SELECT 'comptes du plan',        COUNT(*), 200 FROM dbo.ref_compte
-UNION ALL SELECT 'articles du reglement',  COUNT(*), 111 FROM dbo.ref_article
+UNION ALL SELECT 'comptes du plan',        COUNT(*), 201 FROM dbo.ref_compte
+UNION ALL SELECT 'articles du reglement',  COUNT(*), 139 FROM dbo.ref_article
 UNION ALL SELECT 'roles',                  COUNT(*),   4 FROM dbo.ref_role
 UNION ALL SELECT 'natures de pieces',      COUNT(*),  10 FROM dbo.ref_nature_piece
 UNION ALL SELECT 'entites de demonstration', COUNT(*), 16 FROM dbo.ref_entite

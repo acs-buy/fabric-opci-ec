@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrCalcSous",
   "position": {
-    "x": 175,
-    "y": 844,
-    "z": 41562,
-    "height": 20,
-    "width": 750,
-    "tabOrder": 41562
+    "x": 226,
+    "y": 359,
+    "z": 46412,
+    "height": 24,
+    "width": 699,
+    "tabOrder": 46412
   },
   "visual": {
     "visualType": "cardVisual",
@@ -439,5 +439,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

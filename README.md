@@ -192,7 +192,7 @@ demandent rien de votre part.
 
 | Le dossier | Ce qu'il porte | Ce que vous en faites |
 |---|---|---|
-| `sql/10_referentiels/` | 3 589 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
+| `sql/10_referentiels/` | 4 051 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
 | `sql/80_demonstration/` | 7 176 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures, 98 fiches de pièces | Vous pourrez l'effacer |
 | `sql/90_vous_inscrire_aux_missions.sql` | Il vous inscrit, vous et un collègue, sur les missions de démonstration | **Obligatoire.** Sans lui, l'écran du réviseur est vide |
 
@@ -228,8 +228,8 @@ Deux liaisons ne se refont pas seules, et leur absence ne produit aucun message 
 
 | Ce qui ne se recolle pas | Combien | Ce qui se passe sans réparation |
 |---|---|---|
-| Les sources des deux modèles vers la base | 82 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
-| Les boutons vers les fonctions | 54 | Les boutons ne font rien, ou écrivent au mauvais endroit |
+| Les sources des deux modèles vers la base | Le nombre que `scripts/25_relier_le_modele.py --verifier` annonce | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
+| Les boutons vers les fonctions | Le nombre que `scripts/20_relier_les_boutons.py --verifier` annonce | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
 **L'ordre compte :** le modèle d'abord, les boutons ensuite. Actualiser le modèle avant de l'avoir
 relié produit une erreur.
@@ -247,6 +247,12 @@ aucun message d'erreur, et sans elles vos écrans restent vides.
 *Vérification :* zéro source restant à relier, zéro bouton restant, zéro identifiant inconnu, puis
 l'écran du client porte des valeurs. Les scripts annoncent eux-mêmes combien d'éléments ils ont
 traités.
+
+**Version du dépôt du 25/10/2026, intermédiaire :** le rapport appelle aussi les ensembles de
+fonctions `fn_ecran_valorisation`, `fn_ecran_arrete`, `fn_documents` et `fn_valorisation`, que le
+dossier `fabric/` ne porte pas. Sur cette version, `scripts/20_relier_les_boutons.py --verifier`
+annonce leurs boutons en identifiants inconnus, et le script refuse de relier les boutons, ceux de
+`fn_ecran_client` et de `fn_ecran_revision` compris.
 
 [Comprendre les trois couches](docs/comprendre/06-les-trois-couches.md) ·
 [Faire les étapes 9 et 10](docs/faire/etape-09-et-10-relier.md)

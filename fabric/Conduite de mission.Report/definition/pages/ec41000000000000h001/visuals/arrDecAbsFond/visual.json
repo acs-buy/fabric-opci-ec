@@ -5,7 +5,7 @@
     "x": 15,
     "y": 898,
     "z": 41081,
-    "height": 36,
+    "height": 44,
     "width": 910,
     "tabOrder": 41081
   },
@@ -46,7 +46,7 @@
                           "Entity": "v_ecran_valeurs_arrete"
                         }
                       },
-                      "Property": "Arr fond absence categorie"
+                      "Property": "Arr masque absence categorie"
                     }
                   }
                 }
@@ -86,7 +86,7 @@
                           "Entity": "v_ecran_valeurs_arrete"
                         }
                       },
-                      "Property": "Arr fond absence categorie"
+                      "Property": "Arr masque absence categorie"
                     }
                   }
                 }

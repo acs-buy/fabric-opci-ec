@@ -3,11 +3,11 @@
   "name": "arrLimF2Val",
   "position": {
     "x": 1045,
-    "y": 428,
-    "z": 45722,
+    "y": 497,
+    "z": 45032,
     "height": 20,
-    "width": 222,
-    "tabOrder": 45722
+    "width": 268,
+    "tabOrder": 45032
   },
   "visual": {
     "visualType": "cardVisual",

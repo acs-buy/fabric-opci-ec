@@ -3,11 +3,11 @@
   "name": "arrPropBlocage",
   "position": {
     "x": 142,
-    "y": 973,
-    "z": 40272,
-    "height": 20,
+    "y": 972,
+    "z": 40282,
+    "height": 21,
     "width": 401,
-    "tabOrder": 40272
+    "tabOrder": 40282
   },
   "visual": {
     "visualType": "cardVisual",

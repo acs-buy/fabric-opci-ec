@@ -7,7 +7,7 @@ AS
 RETURN
 SELECT DISTINCT c.compte
 FROM dbo.v_comptes_en_balance c
-JOIN dbo.ref_cycle_compte rc ON rc.cycle = @cycle AND c.compte LIKE rc.racine + '%'
+JOIN dbo.ref_cycle_compte rc ON rc.cycle = @cycle AND c.compte LIKE rc.racine + '%' AND rc.ecartee_le IS NULL
 WHERE c.entite = @entite AND c.arrete = @arrete;
 
 GO

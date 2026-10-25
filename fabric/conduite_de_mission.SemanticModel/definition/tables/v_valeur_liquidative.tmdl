@@ -105,7 +105,7 @@ table v_valeur_liquidative
 		lineageTag: ad6b7921-a8f0-4e0e-8520-5e1799f44126
 
 	/// vert « publiée », alerte « publiée, écart » et « non calculable », attente « calculée, non publiée » (pastille de la grille)
-	measure 'Couleur etat de la VL' = VAR s = [Etat de la VL] RETURN SWITCH ( TRUE (), s = "publiée", "#1F6D4A", s = "calculée, non publiée", "#C8961E", "#9A2A2A" )
+	measure 'Couleur etat de la VL' = VAR s = [Etat de la VL] RETURN SWITCH ( TRUE (), s = "publiée", "#1F6D4A", s = "calculée, non publiée", "#8A6710", "#9A2A2A" )
 		displayFolder: Ecran 4 Arrete
 		lineageTag: e40b171d-50f7-4b1d-a2b1-f2b455a415b6
 

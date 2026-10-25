@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrAvisProposer",
   "position": {
-    "x": 140,
-    "y": 1100,
-    "z": 39002,
+    "x": 141,
+    "y": 1109,
+    "z": 38912,
     "height": 22,
-    "width": 785,
-    "tabOrder": 39002
+    "width": 784,
+    "tabOrder": 38912
   },
   "visual": {
     "visualType": "cardVisual",

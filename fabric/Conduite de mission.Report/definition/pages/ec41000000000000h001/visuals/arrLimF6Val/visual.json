@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrLimF6Val",
   "position": {
-    "x": 1049,
-    "y": 496,
-    "z": 45042,
+    "x": 1413,
+    "y": 497,
+    "z": 45032,
     "height": 20,
-    "width": 218,
-    "tabOrder": 45042
+    "width": 172,
+    "tabOrder": 45032
   },
   "visual": {
     "visualType": "cardVisual",

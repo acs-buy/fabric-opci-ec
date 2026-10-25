@@ -41,8 +41,8 @@ CREATE TABLE [dbo].[feuille_travail] (
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_ft_phase]
-    ON [dbo].[feuille_travail]([phase] ASC);
+CREATE NONCLUSTERED INDEX [ix_ft_modele]
+    ON [dbo].[feuille_travail]([modele_code] ASC);
 
 
 GO
@@ -53,8 +53,8 @@ CREATE NONCLUSTERED INDEX [ix_ft_cycle]
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_ft_modele]
-    ON [dbo].[feuille_travail]([modele_code] ASC);
+CREATE NONCLUSTERED INDEX [ix_ft_phase]
+    ON [dbo].[feuille_travail]([phase] ASC);
 
 
 GO

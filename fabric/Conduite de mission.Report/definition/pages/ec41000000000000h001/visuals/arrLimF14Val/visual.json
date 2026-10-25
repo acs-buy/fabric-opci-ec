@@ -3,11 +3,11 @@
   "name": "arrLimF14Val",
   "position": {
     "x": 1001,
-    "y": 585,
-    "z": 44152,
+    "y": 741,
+    "z": 42592,
     "height": 20,
-    "width": 266,
-    "tabOrder": 44152
+    "width": 584,
+    "tabOrder": 42592
   },
   "visual": {
     "visualType": "cardVisual",
@@ -54,7 +54,7 @@
             "bold": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
@@ -94,6 +94,13 @@
               "expr": {
                 "Literal": {
                   "Value": "'right'"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }

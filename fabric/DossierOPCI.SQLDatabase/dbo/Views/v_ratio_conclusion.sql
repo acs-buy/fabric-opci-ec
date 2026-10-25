@@ -55,7 +55,12 @@ SELECT r.entite, r.arrete, r.code, r.libelle, r.article, r.sens, r.seuil,
                  + N'porter une dérogation motivée.'
             END                                  AS conclusion,
        r.citation, r.lu_le, r.note,
-       m.ordre, m.libelle AS libelle_memoire,
+       m.ordre,
+       -- Decision D9 : le libelle de la limite ecrit le seuil des statuts a la place de celui du texte.
+       CAST(CASE WHEN r.source_du_seuil = 'STATUTS'
+                 THEN REPLACE(m.libelle, FORMAT(rr.seuil * 100, N'0.##', 'fr-FR') + N' %',
+                              FORMAT(r.seuil * 100, N'0.##', 'fr-FR') + N' %')
+                 ELSE m.libelle END AS NVARCHAR (120)) AS libelle_memoire,
        CAST(CASE WHEN ISNULL(en.est_professionnel, 0) = 1 AND r.code IN ('ENDETTEMENT_40', 'LIQUIDITES_5') THEN NULL
                  WHEN r.code = 'LIQUIDITES_5' THEN 1
                  WHEN RIGHT(r.arrete, 5) IN ('06-30', '12-31') THEN 1
@@ -63,7 +68,8 @@ SELECT r.entite, r.arrete, r.code, r.libelle, r.article, r.sens, r.seuil,
        CAST(RIGHT(r.arrete, 2) + '/' + SUBSTRING(r.arrete, 6, 2) + '/' + LEFT(r.arrete, 4) AS VARCHAR (10)) AS arrete_libelle
 FROM dbo.v_ratio_arrete r
 LEFT JOIN dbo.ref_ratio_memoire m ON m.code = r.code
-LEFT JOIN dbo.ref_entite en ON en.code = r.entite;
+LEFT JOIN dbo.ref_entite en ON en.code = r.entite
+LEFT JOIN dbo.ref_ratio rr ON rr.code = r.code;
 
 GO
 

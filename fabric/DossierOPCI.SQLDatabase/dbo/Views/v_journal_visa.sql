@@ -1,4 +1,3 @@
-
 -- --- E4 : le journal du visa, refait ---------------------------
 -- Trois corrections. Il unissait TOUT dbo.journal_refus, y compris les
 -- refus d'import ou de validation de brouillon, qui ne sont pas des
@@ -14,7 +13,9 @@ SELECT v.entite, v.arrete, v.cycle,
        v.objet_ref, v.decision                        AS issue,
        v.decide_par                                   AS auteur,
        v.propose_par,
-       CAST(v.motif AS NVARCHAR (2000))               AS message
+       CAST(v.motif AS NVARCHAR (2000))               AS message,
+       -- 19/10/2026 : une cle propre a chaque ligne (P9.6 bis de l'ecran 4)
+       ISNULL(CAST('V' + CAST(v.id AS VARCHAR (11)) AS VARCHAR (12)), '') AS cle_visa
 FROM dbo.visa v
 LEFT JOIN dbo.ref_cycle c ON c.code = v.cycle
 UNION ALL
@@ -38,7 +39,8 @@ SELECT r.entite, r.arrete, f.cycle,
                 WHEN 'pr_viser_obligation_distribution' THEN 'OBLIGATION'
            END,
            COALESCE(r.cote, r.entite + '|' + r.arrete)),
-       r.message
+       r.message,
+       ISNULL(CAST('R' + CAST(r.id AS VARCHAR (11)) AS VARCHAR (12)), '')
 FROM dbo.journal_refus r
 LEFT JOIN dbo.feuille_travail f ON f.cote = r.cote
 LEFT JOIN dbo.ref_cycle fc ON fc.code = f.cycle

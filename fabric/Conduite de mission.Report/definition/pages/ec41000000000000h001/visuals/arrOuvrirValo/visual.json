@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "arrOuvrirValo",
   "position": {
-    "x": 1063,
+    "x": 1064,
     "y": 987,
     "z": 40138,
     "height": 36,
-    "width": 144,
+    "width": 145,
     "tabOrder": 40138
   },
   "visual": {

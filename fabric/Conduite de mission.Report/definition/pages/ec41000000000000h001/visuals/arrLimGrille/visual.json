@@ -3,11 +3,11 @@
   "name": "arrLimGrille",
   "position": {
     "x": 15,
-    "y": 336,
-    "z": 46642,
-    "height": 482,
+    "y": 400,
+    "z": 46002,
+    "height": 837,
     "width": 910,
-    "tabOrder": 46642
+    "tabOrder": 46002
   },
   "visual": {
     "visualType": "tableEx",
@@ -241,7 +241,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#12233C'"
+                      "Value": "'#5B6B7D'"
                     }
                   }
                 }
@@ -266,7 +266,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#EEF1F5'"
+                      "Value": "'#F4F6F9'"
                     }
                   }
                 }
@@ -283,6 +283,24 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "outlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D5DCE4'"
+                    }
+                  }
+                }
+              }
+            },
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
                 }
               }
             }
@@ -309,7 +327,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "200D"
+                  "Value": "156D"
                 }
               }
             }
@@ -323,7 +341,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "142D"
+                  "Value": "154D"
                 }
               }
             }
@@ -337,7 +355,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "82D"
+                  "Value": "87D"
                 }
               }
             }
@@ -351,7 +369,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "108D"
+                  "Value": "83D"
                 }
               }
             }
@@ -365,7 +383,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "66D"
+                  "Value": "64D"
                 }
               }
             }
@@ -379,7 +397,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "100D"
+                  "Value": "145D"
                 }
               }
             }
@@ -393,7 +411,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "84D"
+                  "Value": "83D"
                 }
               }
             }
@@ -475,6 +493,37 @@
               }
             ],
             "metadata": "ref_ratio_memoire.Statut de la limite"
+          }
+        },
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Schema": "extension",
+                          "Entity": "v_ecran_valeurs_arrete"
+                        }
+                      },
+                      "Property": "Arr couleur ratio de la limite"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "v_ratio_conclusion.Fiche ratio valeur"
           }
         },
         {

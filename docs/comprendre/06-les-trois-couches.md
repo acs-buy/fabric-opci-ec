@@ -42,12 +42,12 @@ L'éditeur l'écrit :
 **La synchronisation recrée la forme, jamais le contenu.** Votre base a ses tables, ses vues et ses
 procédures, et pas une seule ligne dedans.
 
-Le dépôt porte pour cette raison 83 fichiers SQL, dont 79 de données. C'est la seule façon de
+Le dépôt porte pour cette raison 89 fichiers SQL, dont 85 de données. C'est la seule façon de
 faire arriver le contenu dans votre base.
 
 | Ce que le dépôt charge | Lignes | Ce que vous en faites |
 |---|---|---|
-| Le socle de référentiel | 3 589 | Vous le gardez. Questions d'acceptation, plan de comptes, articles du règlement |
+| Le socle de référentiel | 4 051 | Vous le gardez. Questions d'acceptation, plan de comptes, articles du règlement |
 | Le jeu de démonstration | 7 176 | Vous pourrez l'effacer quand vous passerez à vos dossiers |
 
 Sans la couche B, vos écrans sont vides, et l'affichage n'y est pour rien.
@@ -65,8 +65,8 @@ l'espace de travail où la solution a été construite. Pas le vôtre.
 
 | Ce qui ne se recolle pas | Combien | Sans réparation |
 |---|---|---|
-| Les sources des deux modèles vers la base | 82 | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
-| Les boutons vers les ensembles de fonctions | 54 | Les boutons ne font rien, ou écrivent au mauvais endroit |
+| Les sources des deux modèles vers la base | Le nombre que `scripts/25_relier_le_modele.py --verifier` annonce | Le modèle ne s'actualise pas, aucun écran ne s'affiche |
+| Les boutons vers les ensembles de fonctions | Le nombre que `scripts/20_relier_les_boutons.py --verifier` annonce | Les boutons ne font rien, ou écrivent au mauvais endroit |
 
 Ces deux points sont documentés par l'éditeur de la plateforme.
 

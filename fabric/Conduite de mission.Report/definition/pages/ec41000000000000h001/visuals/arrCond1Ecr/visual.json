@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrCond1Ecr",
   "position": {
-    "x": 699,
-    "y": 386,
-    "z": 46142,
+    "x": 672,
+    "y": 382,
+    "z": 46182,
     "height": 20,
-    "width": 218,
-    "tabOrder": 46142
+    "width": 213,
+    "tabOrder": 46182
   },
   "visual": {
     "visualType": "cardVisual",

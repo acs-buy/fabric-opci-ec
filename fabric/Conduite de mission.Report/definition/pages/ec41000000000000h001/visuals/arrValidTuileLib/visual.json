@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "arrValidTuileLib",
   "position": {
-    "x": 974,
-    "y": 344,
-    "z": 46561,
+    "x": 970,
+    "y": 346,
+    "z": 46541,
     "height": 18,
-    "width": 607,
-    "tabOrder": 46561
+    "width": 611,
+    "tabOrder": 46541
   },
   "visual": {
     "visualType": "textbox",
