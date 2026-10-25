@@ -64,14 +64,15 @@ reste une estimation.
 | 5 | Connecter l'espace au dépôt | **3 s** | 20 min | Vous, administrateur de l'espace | [Faire](docs/faire/etape-05-connecter-le-depot.md) |
 | 6 | Ramener les éléments | **7 min** | 15 min | Vous | [Faire](docs/faire/etape-06-ramener-les-elements.md) |
 | 7 | Charger les données | **98 s** | 30 min | Analyste recommandé | [Faire](docs/faire/etape-07-charger-les-donnees.md) |
-| 8 | Connecter les fonctions à la base | | 2 à 20 min | Analyste recommandé | [Faire](docs/faire/etape-08-connecter-les-fonctions.md) |
+| 8 | Connecter les fonctions à la base | | Quelques minutes par ensemble de fonctions, plus 2 min entre deux publications | Analyste recommandé | [Faire](docs/faire/etape-08-connecter-les-fonctions.md) |
 | 9 | Relier les modèles à votre base | **61 s** | 15 min | Analyste recommandé | [Faire](docs/faire/etape-09-et-10-relier.md) |
 | 10 | Relier les boutons à vos fonctions | | 15 min | Analyste recommandé | [Faire](docs/faire/etape-09-et-10-relier.md) |
 | 11 | Publier les deux écrans | | 30 min | Vous | [Faire](docs/faire/etape-11-publier-les-applications.md) |
 | 12 | Relier SharePoint | | 2 h, plus jusqu'à 24 h d'attente | Vous, plus un administrateur Entra | [Faire](docs/faire/etape-12-relier-sharepoint.md) |
 | 13 | Passer la recette | | 60 min | Vous, plus un collègue | [Faire](docs/faire/etape-13-passer-la-recette.md) |
 
-L'étape 6 demande 7 minutes d'attente pour ramener les dix éléments.
+L'étape 6 a demandé 7 minutes d'attente le 26/09/2026, pour les dix éléments de cette date. Le
+dépôt en porte davantage depuis.
 L'actualisation du modèle du client, à l'étape 9, prend 20 secondes.
 Les 24 heures de l'étape 12 s'évitent : faites affecter les autorisations de la fonction dès
 l'étape 2, et elles seront prises en compte au moment où vous en aurez besoin.
@@ -176,10 +177,10 @@ leur contenu ni leurs branchements. L'éditeur l'écrit ainsi : « Git Integrati
 definitions only and does not restore item data ». Les étapes 7 à 10 posent le contenu et les
 branchements.
 
-*Vérification :* dix éléments sont là. Les huit du dépôt, le coffre, la base, les deux ensembles de
-fonctions, les deux modèles de données et les deux rapports, plus deux points de terminaison SQL
-que la plateforme crée d'elle-même, un pour le coffre et un pour la base. Ces deux derniers ne
-demandent rien de votre part.
+*Vérification :* chaque dossier du répertoire `fabric/` a son élément dans votre espace : le coffre,
+la base, les ensembles de fonctions, les deux modèles de données et les deux rapports. S'y ajoutent
+deux points de terminaison SQL que la plateforme crée d'elle-même, un pour le coffre et un pour la
+base. Ces deux derniers ne demandent rien de votre part.
 
 [Comprendre les trois couches](docs/comprendre/06-les-trois-couches.md) ·
 [Faire l'étape 6](docs/faire/etape-06-ramener-les-elements.md)
@@ -208,17 +209,23 @@ chargement interrompu ne crée pas de doublon.
 
 ### Étape 8. Connecter les fonctions à la base
 
-**Ce que vous faites :** vous ajoutez une connexion de données à chaque ensemble de fonctions, puis
-vous les publiez.
+**Ce que vous faites :** pour chaque ensemble de fonctions, vous vérifiez sa connexion de données
+et ses bibliothèques, puis vous le publiez.
 
-**Pourquoi :** les fonctions doivent avoir le droit de parler à la base, et ce droit ne se
-transporte pas par Git.
+**Pourquoi :** un bouton du rapport n'appelle qu'une fonction publiée, avec ses bibliothèques et
+sa connexion à la base.
+
+**Les bibliothèques :** chaque ensemble déclare les siennes dans son `definition.json`. `fn_documents`
+emploie `docxtpl` et `openpyxl`, et `fn_valorisation` une bibliothèque privée, la roue `moteur_opci`,
+rangée dans son dossier `privateLibraries/`. La procédure dit comment vérifier qu'elles sont là, et
+que faire si l'une manque.
 
 **Deux contraintes de la plateforme :** la publication impose deux minutes d'attente entre deux
 publications successives, et seule la personne propriétaire d'un ensemble de fonctions peut le
 publier.
 
-*Vérification :* dans l'écran des fonctions, `qui_suis_je` rend une réponse.
+*Vérification :* pour chaque ensemble, **Library management** montre ses bibliothèques à l'état
+« Published », et le mode **Run only** liste ses fonctions.
 
 [Faire l'étape 8](docs/faire/etape-08-connecter-les-fonctions.md)
 
@@ -248,11 +255,9 @@ aucun message d'erreur, et sans elles vos écrans restent vides.
 l'écran du client porte des valeurs. Les scripts annoncent eux-mêmes combien d'éléments ils ont
 traités.
 
-**Version du dépôt du 25/10/2026, intermédiaire :** le rapport appelle aussi les ensembles de
-fonctions `fn_ecran_valorisation`, `fn_ecran_arrete`, `fn_documents` et `fn_valorisation`, que le
-dossier `fabric/` ne porte pas. Sur cette version, `scripts/20_relier_les_boutons.py --verifier`
-annonce leurs boutons en identifiants inconnus, et le script refuse de relier les boutons, ceux de
-`fn_ecran_client` et de `fn_ecran_revision` compris.
+Le rapport appelle plusieurs ensembles de fonctions, un par écran, plus `fn_documents` pour la
+production des documents et `fn_valorisation` pour le lot de valorisation. Le script des boutons
+demande l'identifiant de chacun, et `scripts/00_mes_identifiants.py` les relève avec vous.
 
 [Comprendre les trois couches](docs/comprendre/06-les-trois-couches.md) ·
 [Faire les étapes 9 et 10](docs/faire/etape-09-et-10-relier.md)
@@ -373,7 +378,7 @@ zéro signifie que la variation est entièrement expliquée.*
 
 ### Comment les deux tiennent ensemble
 
-Une carte de la solution, avec ses huit éléments et ce qui circule entre eux, est dans
+Une carte de la solution, avec ses éléments et ce qui circule entre eux, est dans
 [Comment c'est construit](docs/comprendre/04-comment-c-est-construit.md). Chaque élément y renvoie
 au fichier correspondant du dépôt.
 

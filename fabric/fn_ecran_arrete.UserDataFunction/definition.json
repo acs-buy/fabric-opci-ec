@@ -1,0 +1,44 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/userDataFunction/definition/1.1.0/schema.json",
+  "runtime": "PYTHON",
+  "connectedDataSources": [
+    {
+      "alias": "DossierOPCI",
+      "artifactId": "fd9080bb-e3ae-4aab-bf09-edbfcc8606d1",
+      "artifactType": "SqlDbNative",
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
+    }
+  ],
+  "functions": [
+    {
+      "name": "conclure_ratio",
+      "description": "Conclure la limite : la conclusion saisie de la limite choisie, pour le v\u00E9hicule \u00E0 l\u0027arr\u00EAt\u00E9 ; refus\u00E9e en fran\u00E7ais quand un champ manque, quand l\u0027arr\u00EAt\u00E9 est valid\u00E9 pour le client ou quand la limite est sans objet pour le v\u00E9hicule.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "decider_distribution",
+      "description": "Enregistrer la d\u00E9cision : le montant d\u00E9cid\u00E9 par l\u0027assembl\u00E9e pour la cat\u00E9gorie choisie et la date de l\u0027assembl\u00E9e, \u00E0 l\u0027arr\u00EAt\u00E9 annuel ; refus\u00E9e en fran\u00E7ais \u00E0 un arr\u00EAt\u00E9 qui n\u0027est pas annuel.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "proposer_obligation",
+      "description": "Proposer la base : la base de calcul et sa source de la cat\u00E9gorie choisie des sommes distribuables, \u00E0 l\u0027arr\u00EAt\u00E9 annuel ; r\u00E9serv\u00E9 au pr\u00E9parateur du dossier ; elle attend le visa de l\u0027associ\u00E9.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "viser_obligation",
+      "description": "Viser ou renvoyer la cat\u00E9gorie : le visa de la base propos\u00E9e de la cat\u00E9gorie choisie, ou son renvoi motiv\u00E9 au pr\u00E9parateur ; r\u00E9serv\u00E9 \u00E0 l\u0027associ\u00E9 signataire du dossier.",
+      "isPublicEndpointEnabled": false
+    }
+  ],
+  "libraries": {
+    "public": [
+      {
+        "name": "fabric-user-data-functions",
+        "type": "PYPI",
+        "version": "1.0"
+      }
+    ],
+    "private": []
+  }
+}

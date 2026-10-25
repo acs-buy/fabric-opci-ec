@@ -46,7 +46,7 @@ modèle par un chemin relatif et non par un identifiant. **À une condition : ne
 
 ## Comment faire
 
-### Relever vos cinq valeurs
+### Relever vos valeurs
 
 Ouvrez un terminal dans le dossier du dépôt et lancez :
 
@@ -54,22 +54,23 @@ Ouvrez un terminal dans le dossier du dépôt et lancez :
 python scripts/00_mes_identifiants.py
 ```
 
-Le script vous demande de coller cinq choses et vérifie leur forme au passage. Il ne se connecte
-à rien et ne demande aucun mot de passe.
+Le script vous demande de coller vos valeurs une par une et vérifie leur forme au passage. Il ne
+se connecte à rien et ne demande aucun mot de passe.
 
 1. **L'adresse de votre espace de travail.** Ouvrez-le dans le navigateur, copiez l'adresse entière.
-2. **L'adresse de votre élément `fn_ecran_client`.** Ouvrez-le, copiez l'adresse. Attention, elle
-   porte deux identifiants : celui de l'espace d'abord, celui de l'élément ensuite. Le script
-   retient le second, qui est le bon.
-3. **L'adresse de votre élément `fn_ecran_revision`.** Le rapport appelle deux ensembles de
-   fonctions, un par écran. Sans celui-ci, les boutons de l'écran de révision resteraient sans effet.
-4. **Le serveur SQL de votre base.** Ouvrez la base `DossierOPCI`, bandeau **Paramètres**, puis
+2. **L'adresse de chacun de vos ensembles de fonctions** : `fn_ecran_client`, `fn_ecran_revision`,
+   `fn_ecran_valorisation`, `fn_ecran_arrete`, `fn_documents` et `fn_valorisation`. Ouvrez-les un
+   par un, copiez l'adresse. Attention, elle porte deux identifiants : celui de l'espace d'abord,
+   celui de l'élément ensuite. Le script retient le second, qui est le bon. Le rapport appelle
+   chacun de ces ensembles : un ensemble oublié laisse ses boutons sans effet.
+3. **Le serveur SQL de votre base.** Ouvrez la base `DossierOPCI`, bandeau **Paramètres**, puis
    **Chaînes de connexion**.
-5. **Le nom complet de votre base.** Sur la même page. Il porte un identifiant après `DossierOPCI`.
+4. **Le nom complet de votre base.** Sur la même page. Il porte un identifiant après `DossierOPCI`.
    Ne recopiez pas le nom affiché dans la liste des éléments : ce n'est pas
    celui-là.
 
-À la fin, le script affiche les deux commandes à lancer, et les écrit aussi dans un fichier.
+À la fin, le script affiche les deux commandes à lancer, et les écrit aussi dans un fichier. Il
+s'arrête si deux adresses donnent le même identifiant.
 
 ### Relier le modèle, puis les boutons
 
@@ -79,8 +80,14 @@ relié produit une erreur qui fait croire à une panne de la solution.
 ```
 python scripts/25_relier_le_modele.py --serveur <le vôtre> --base <la vôtre>
 
-python scripts/20_relier_les_boutons.py --espace <le vôtre> --fn-ecran-client <le vôtre> --fn-ecran-revision <le vôtre>
+python scripts/20_relier_les_boutons.py --espace <le vôtre>
+    --fn-ecran-client <le vôtre> --fn-ecran-revision <le vôtre>
+    --fn-ecran-valorisation <le vôtre> --fn-ecran-arrete <le vôtre>
+    --fn-documents <le vôtre> --fn-valorisation <le vôtre>
 ```
+
+La seconde commande s'écrit sur une seule ligne. Le script des boutons refuse d'écrire s'il manque
+un ensemble, ou si deux ensembles reçoivent le même identifiant.
 
 Le script `00_mes_identifiants.py` a déjà écrit ces deux lignes complètes, avec vos valeurs, dans le
 fichier `mes_commandes.txt`. Vous pouvez les copier de là.
@@ -133,16 +140,16 @@ l'état de la dernière actualisation, non l'état de la base à la seconde prè
 
 ### Avant de relier
 
-Ces sorties sont celles d'une installation réelle, recopiées telles quelles. **Les nombres qu'elles
-portent sont ceux du jour où elles ont été relevées** : votre version peut en compter davantage.
-Lisez la ligne « restant a relier », avant puis après.
+Voici la forme des sorties. Les nombres notés `<n>` sont ceux que les scripts annoncent pour votre
+version : ils changent quand un écran change. Lisez la ligne « restant a relier », avant puis
+après.
 
 Le modèle, qui interroge encore la base d'origine :
 
 ```
-82 source(s) de donnees dans les 2 modeles.
+<n> source(s) de donnees dans les 2 modeles.
    deja reliees a votre base : 0
-   restant a relier          : 82
+   restant a relier          : <n>
    sources inconnues         : 0
 
 Source portee par ces tables :
@@ -153,11 +160,16 @@ Source portee par ces tables :
 Les boutons, qui appellent encore les fonctions d'origine :
 
 ```
-54 bouton(s) de fonction dans le rapport.
+<n> bouton(s) de fonction dans le rapport.
    deja relies a votre espace : 0
-   restant a relier           : 54
+   restant a relier           : <n>
    identifiants inconnus      : 0
 
+fn_documents, <n> fonction(s) appelee(s) :
+   produire_livrable
+fn_ecran_arrete, <n> fonction(s) appelee(s) :
+   conclure_ratio
+   ...
 fn_ecran_client, <n> fonction(s) appelee(s) :
    ajouter_filiale
    approuver_acceptation
@@ -167,33 +179,31 @@ fn_ecran_revision, <n> fonction(s) appelee(s) :
    conclure_feuille
    ouvrir_feuille
    ...
+fn_ecran_valorisation, <n> fonction(s) appelee(s) :
+   enregistrer_expertise
+   ...
+fn_valorisation, <n> fonction(s) appelee(s) :
+   generer_lot_valorisation
 ```
 
 **Ce qu'il faut lire dans ces sorties :** la ligne « identifiants inconnus » doit valoir zéro. Si
 elle ne vaut pas zéro, le rapport a été modifié à la main, ou il appelle un ensemble de fonctions
 que le dossier `fabric/` ne porte pas, et les scripts refuseront d'écrire.
 
-**Version du dépôt du 25/10/2026, intermédiaire.** Le rapport appelle aussi les ensembles de
-fonctions `fn_ecran_valorisation`, `fn_ecran_arrete`, `fn_documents` et `fn_valorisation`, que le
-dossier `fabric/` ne porte pas. Sur cette version, la ligne « identifiants inconnus » ne vaut pas
-zéro dès la copie du dépôt, et `scripts/20_relier_les_boutons.py` refuse de relier les boutons,
-ceux de `fn_ecran_client` et de `fn_ecran_revision` compris.
-
 ### Une fois relié
 
-Les mêmes réserves qu'au paragraphe précédent : ce sont les nombres d'un jour donné.
 **Vérifiez que le total est inchangé et que les deux lignes de restant sont tombées à zéro.**
 
 ```
-82 source(s) de donnees dans les 2 modeles.
-   deja reliees a votre base : 82
+<n> source(s) de donnees dans les 2 modeles.
+   deja reliees a votre base : <n>
    restant a relier          : 0
    sources inconnues         : 0
 ```
 
 ```
-54 bouton(s) de fonction dans le rapport.
-   deja relies a votre espace : 54
+<n> bouton(s) de fonction dans le rapport.
+   deja relies a votre espace : <n>
    restant a relier           : 0
    identifiants inconnus      : 0
 ```

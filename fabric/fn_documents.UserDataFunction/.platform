@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "UserDataFunction",
+    "displayName": "fn_documents",
+    "description": "Etape 6 de l'ecran Revision : comptes annuels, rapport de l'expert-comptable et DIP, fabriques en memoire, deposes au site du cabinet par la base."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d60c1310-bd80-9106-4046-014701b1f037"
+  }
+}

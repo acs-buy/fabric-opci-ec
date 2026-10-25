@@ -21,13 +21,14 @@ Elle se reproduit en trois couches. Après la synchronisation, l'installation n'
 
 ## Couche A. Les définitions arrivent par Git
 
-La synchronisation recrée les huit éléments de la solution dans votre espace de travail : le coffre,
-la base avec ses tables, ses vues et ses procédures, les deux ensembles de fonctions, les deux
-modèles de données et les deux rapports.
+La synchronisation recrée dans votre espace de travail chaque élément du dossier `fabric/` : le
+coffre, la base avec ses tables, ses vues et ses procédures, les ensembles de fonctions avec leur
+code, la liste de leurs bibliothèques et la roue privée de `fn_valorisation`, les deux modèles de
+données et les deux rapports.
 
-**Vous en compterez dix.** La plateforme ajoute d'elle-même un point de terminaison SQL au coffre et
-un à la base. Ils ne sont pas dans le dépôt, vous n'avez rien à en faire, et leur présence est
-normale.
+**Vous en compterez deux de plus.** La plateforme ajoute d'elle-même un point de terminaison SQL au
+coffre et un à la base. Ils ne sont pas dans le dépôt, vous n'avez rien à en faire, et leur présence
+est normale.
 
 Rien ne fonctionne encore. Les deux couches suivantes expliquent pourquoi.
 
@@ -98,11 +99,14 @@ Trois choses ne voyagent pas dans les fichiers et se posent au portail.
 
 | Ce qui se pose à la main | Où | Quand |
 |---|---|---|
-| La connexion des fonctions à la base | Deux actions par ensemble de fonctions | Étape 8 |
+| La connexion des fonctions à la base, si elle ne s'est pas rétablie seule | Deux actions par ensemble de fonctions | Étape 8 |
 | Les informations d'identification des modèles | Une fois par modèle, en OAuth2 | Étapes 9 et 10 |
 | L'actualisation du modèle du client | Il garde une copie des données, contrairement à l'autre | Étapes 9 et 10 |
 
 **Aucune des trois ne produit de message d'erreur.** Elles produisent un écran vide.
+
+**Les ensembles de fonctions se vérifient aussi à l'étape 8** : leurs bibliothèques, puis leur
+publication. Un bouton n'appelle qu'une fonction publiée.
 
 ---
 

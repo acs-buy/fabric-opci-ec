@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/userDataFunction/definition/1.1.0/schema.json",
+  "runtime": "PYTHON",
+  "connectedDataSources": [
+    {
+      "alias": "Coffre",
+      "artifactId": "eceb5802-f9ae-4e0d-8237-b3b1586c992a",
+      "artifactType": "Lakehouse",
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
+    },
+    {
+      "alias": "DossierOPCI",
+      "artifactId": "fd9080bb-e3ae-4aab-bf09-edbfcc8606d1",
+      "artifactType": "SqlDbNative",
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
+    }
+  ],
+  "functions": [
+    {
+      "name": "produire_comptes_annuels",
+      "description": "Ecran Revision, etape 6 : comptes annuels, Word puis Excel dans une meme version",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "produire_dip",
+      "description": "Ecran Revision, etape 6 : document d\u0027information periodique, Word",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "produire_livrable",
+      "description": "Ecran Revision, etape 6 : le livrable et le format passent en parametre, Word ou Excel",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "produire_rapport",
+      "description": "Ecran Revision, etape 6 : rapport de l\u0027expert-comptable, Word",
+      "isPublicEndpointEnabled": false
+    }
+  ],
+  "libraries": {
+    "public": [
+      {
+        "name": "docxtpl",
+        "type": "PYPI",
+        "version": "0.20.2"
+      },
+      {
+        "name": "fabric-user-data-functions",
+        "type": "PYPI",
+        "version": "1.0"
+      },
+      {
+        "name": "openpyxl",
+        "type": "PYPI",
+        "version": "3.1.5"
+      }
+    ],
+    "private": []
+  }
+}

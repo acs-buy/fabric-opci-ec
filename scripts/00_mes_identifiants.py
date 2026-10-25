@@ -2,10 +2,11 @@
 u"""00. Relever vos identifiants, et preparer les commandes a lancer.
 
 POURQUOI CE SCRIPT EXISTE
-    Les deux scripts qui relient la solution a votre espace de travail ont besoin de quatre
-    valeurs. Aller les chercher a la main est l'endroit ou l'on se trompe le plus souvent : les
-    identifiants se ressemblent tous, et le nom affiche d'une base n'est pas le nom de la base.
-    Ce script vous les fait coller, verifie leur forme, et vous rend les deux commandes completes.
+    Les deux scripts qui relient la solution a votre espace de travail ont besoin de l'identifiant
+    de votre espace, de celui de chaque ensemble de fonctions, du serveur SQL et du nom complet de
+    votre base. Les identifiants se ressemblent tous, et le nom affiche d'une base n'est pas le nom
+    de la base. Ce script vous les fait coller, verifie leur forme, et vous rend les deux commandes
+    completes.
 
     Il ne se connecte a rien et ne demande aucun mot de passe. Il lit ce que vous collez.
 
@@ -21,6 +22,17 @@ import sys
 
 GUID = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 SERVEUR = re.compile(r"[0-9a-z\-]+\.database\.fabric\.microsoft\.com", re.I)
+
+# Les ensembles de fonctions que le rapport appelle, dans l'ordre de FONCTIONS_ORIGINE de
+# 20_relier_les_boutons.py, avec l'endroit ou se trouvent leurs boutons.
+ENSEMBLES = [
+    (u"fn_ecran_client", u"l'ecran Client et Acceptation, et la page Piece justificative"),
+    (u"fn_ecran_revision", u"l'ecran Revision et ses pages"),
+    (u"fn_ecran_valorisation", u"l'ecran Valorisation"),
+    (u"fn_ecran_arrete", u"l'ecran Arrete"),
+    (u"fn_documents", u"la production des documents, aux pages de l'ecran Revision"),
+    (u"fn_valorisation", u"la generation du lot de valorisation, a l'ecran Valorisation"),
+]
 
 try:
     saisir = raw_input  # Python 2
@@ -81,8 +93,9 @@ def nom_de_base(texte):
 
 
 def main():
+    nombre = 1 + len(ENSEMBLES) + 2
     print(u"=" * 78)
-    print(u"Relevons les cinq valeurs dont la solution a besoin pour marcher chez vous.")
+    print(u"Relevons les %d valeurs dont la solution a besoin pour marcher chez vous." % nombre)
     print(u"Tapez q a tout moment pour abandonner.")
     print(u"=" * 78)
 
@@ -93,52 +106,53 @@ def main():
          u"Elle ressemble a https://app.fabric.microsoft.com/groups/xxxx-xxxx/list"],
         premier_guid)
 
-    fonctions = demander(
-        u"2. L'adresse de VOTRE element fn_ecran_client.",
-        [u"Dans votre espace de travail, ouvrez fn_ecran_client.",
-         u"Copiez l'adresse entiere et collez-la ici.",
-         u"L'adresse porte deux identifiants : je retiens le second, qui est l'element."],
-        dernier_guid)
-
-    revision = demander(
-        u"3. L'adresse de VOTRE element fn_ecran_revision.",
-        [u"Le rapport appelle DEUX ensembles de fonctions, un par ecran.",
-         u"Sans celui-ci, 7 boutons de l'ecran de revision resteraient sans effet."],
-        dernier_guid)
+    # Le rapport appelle plusieurs ensembles de fonctions : une adresse par ensemble.
+    fonctions = []
+    for rang, (nom, boutons) in enumerate(ENSEMBLES, start=2):
+        fonctions.append((nom, demander(
+            u"%d. L'adresse de VOTRE element %s." % (rang, nom),
+            [u"Dans votre espace de travail, ouvrez %s." % nom,
+             u"Copiez l'adresse entiere et collez-la ici.",
+             u"L'adresse porte deux identifiants : je retiens le second, qui est l'element.",
+             u"Ses boutons : %s." % boutons],
+            dernier_guid)))
 
     print(u"")
     print(u"Pour les deux valeurs suivantes : dans votre espace de travail, ouvrez la base")
     print(u"DossierOPCI, puis le bandeau Parametres, puis Chaines de connexion.")
 
     serveur = demander(
-        u"4. Le serveur SQL de VOTRE base.",
+        u"%d. Le serveur SQL de VOTRE base." % (len(ENSEMBLES) + 2),
         [u"Copiez la ligne du serveur, ou la chaine de connexion entiere.",
          u"Le serveur se termine par .database.fabric.microsoft.com"],
         premier_serveur)
 
     base = demander(
-        u"5. Le nom complet de VOTRE base.",
+        u"%d. Le nom complet de VOTRE base." % (len(ENSEMBLES) + 3),
         [u"Sur la meme page. Le nom porte un identifiant apres DossierOPCI.",
          u"Ne recopiez pas le nom affiche dans la liste des elements : ce n'est pas celui-la."],
         nom_de_base)
 
-    if len({espace, fonctions, revision}) < 3:
+    identifiants = [espace] + [valeur for _, valeur in fonctions]
+    if len(set(identifiants)) < len(identifiants):
         print(u"")
-        print(u"ARRET. Deux des trois premieres valeurs sont identiques.")
-        print(u"Cela arrive quand on colle deux fois la meme adresse. Reprenez l'etape 2 :")
-        print(u"ouvrez fn_ecran_client lui-meme, et copiez l'adresse qui s'affiche alors.")
+        print(u"ARRET. Deux des adresses collees donnent le meme identifiant.")
+        print(u"Cela arrive quand on colle deux fois la meme adresse, ou celle de l'espace de travail")
+        print(u"a la place de celle d'un element. Relancez le script : ouvrez chaque ensemble de")
+        print(u"fonctions lui-meme, et copiez l'adresse qui s'affiche alors.")
         return 2
 
     python = os.path.basename(sys.executable) or "python"
     lignes = [
         u"%s scripts/25_relier_le_modele.py --serveur %s --base %s" % (python, serveur, base),
-        u"%s scripts/20_relier_les_boutons.py --espace %s --fn-ecran-client %s "
-        u"--fn-ecran-revision %s" % (python, espace, fonctions, revision),
+        u"%s scripts/20_relier_les_boutons.py --espace %s %s" % (
+            python, espace, u" ".join(u"--%s %s" % (nom.replace(u"_", u"-"), valeur)
+                                      for nom, valeur in fonctions)),
     ]
 
     print(u"")
     print(u"=" * 78)
-    print(u"Vos cinq valeurs sont relevees. Lancez ces deux commandes, DANS CET ORDRE :")
+    print(u"Vos %d valeurs sont relevees. Lancez ces deux commandes, DANS CET ORDRE :" % nombre)
     print(u"=" * 78)
     for ligne in lignes:
         print(u"")

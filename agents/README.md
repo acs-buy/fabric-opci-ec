@@ -48,7 +48,7 @@ réglages du locataire, ni la recette.
 1. **Le dépôt cloné sur votre poste.**
 2. **Le droit de lancer `python`, `git` et `sqlcmd` dans ce dossier**, et nulle part ailleurs.
    Un exemple est fourni dans [`permissions-exemple.json`](permissions-exemple.json).
-3. **Vos cinq valeurs d'installation**, que `scripts/00_mes_identifiants.py` relève avec vous.
+3. **Vos valeurs d'installation**, que `scripts/00_mes_identifiants.py` relève avec vous.
 
 **Ce qu'il ne doit jamais recevoir :** votre jeton GitHub, un mot de passe, et le droit d'écrire
 ailleurs que dans le dossier du dépôt.

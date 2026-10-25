@@ -42,6 +42,7 @@ d'installation ne se refont donc pas. Mais il copie les **définitions**, et rie
 | Les visuels et les pages des rapports | L'écran arrive complet |
 | Les métadonnées du modèle | Mesures, relations, formats |
 | Le lien entre le rapport et son modèle | L'éditeur appelle cela l'autobinding |
+| Les connexions et les bibliothèques des ensembles de fonctions | L'éditeur l'écrit : « All connections and libraries are added to new user data functions items created in other environments. » La roue `moteur_opci` de `fn_valorisation` est l'une de ces bibliothèques |
 
 ### Ce qu'il ne copie pas, et qui est à refaire dans chaque espace
 
@@ -84,8 +85,8 @@ Le script du dépôt le corrige en une commande, et le vérifie.
 Une **règle de déploiement** fait pointer le modèle de chaque espace vers la base de ce même
 espace, automatiquement, à chaque déploiement.
 
-**Une seule règle par modèle suffit.** Les deux modèles ne déclarent qu'une seule source chacun,
-malgré leurs 152 et 20 tables : le modèle du client la déclare une fois dans une expression partagée, et
+**Une seule règle par modèle suffit.** Les deux modèles ne déclarent qu'une seule source chacun :
+le modèle du client la déclare une fois dans une expression partagée, et
 le modèle de conduite répète le même serveur et la même base dans chaque partition.
 
 Cette règle remplace `scripts/25_relier_le_modele.py` pour les déploiements suivants. **Elle reste

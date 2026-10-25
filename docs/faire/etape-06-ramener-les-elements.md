@@ -18,7 +18,11 @@ les éléments à ramener.*
 | DossierOPCI | Base de données SQL | Les tables, vues, procédures et contrôles |
 | fn_ecran_client | Fonctions | Ce que les boutons de l'écran de conduite appellent |
 | fn_ecran_revision | Fonctions | Ce que les boutons de l'écran de révision appellent |
-| conduite_de_mission | Modèle sémantique | Les 152 tables et les mesures de l'écran de travail |
+| fn_ecran_valorisation | Fonctions | Ce que les boutons de l'écran de valorisation appellent |
+| fn_ecran_arrete | Fonctions | Ce que les boutons de l'écran de l'arrêté appellent |
+| fn_documents | Fonctions | La production des documents : comptes annuels, rapport de l'expert-comptable, document d'information périodique |
+| fn_valorisation | Fonctions | Le lot des différences d'estimation, calculé par la bibliothèque `moteur_opci` |
+| conduite_de_mission | Modèle sémantique | Les tables et les mesures de l'écran de travail |
 | Conduite de mission | Rapport | L'écran de travail du cabinet |
 | restitution_client | Modèle et rapport | L'écran remis au client |
 
@@ -36,8 +40,8 @@ pas. C'est réparé à l'étape 9.
 **Les boutons appellent encore les fonctions d'origine.** Si vous ouvrez le rapport et cliquez, il
 ne se passera rien. C'est réparé à l'étape 10.
 
-**Les fonctions n'ont pas encore le droit de parler à la base.** Leur connexion se pose à la main,
-à l'étape 8.
+**Les fonctions ne sont pas encore vérifiées.** Leur connexion à la base, leurs bibliothèques et
+leur publication se contrôlent à l'étape 8.
 
 ## Ce que vous pouvez vérifier utilement dès maintenant
 

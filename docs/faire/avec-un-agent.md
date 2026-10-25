@@ -74,7 +74,7 @@ réglages du locataire, ni la recette.
 
 1. **Le dépôt cloné sur votre poste**, à l'étape 4.
 2. **Le droit de lancer `python` et `git`** dans ce dossier, et rien ailleurs.
-3. **Vos cinq valeurs d'installation**, que `scripts/00_mes_identifiants.py` relève avec vous.
+3. **Vos valeurs d'installation**, que `scripts/00_mes_identifiants.py` relève avec vous.
 
 **Ce qu'il ne doit jamais recevoir :** votre jeton GitHub, votre mot de passe, et le droit d'écrire
 ailleurs que dans le dossier du dépôt.
@@ -103,7 +103,7 @@ Vous lisez, vous décidez, puis :
 **Ce que vous vérifiez vous-même :** « restant à relier » et « identifiants inconnus » valent zéro
 sur les deux scripts. Si « identifiants inconnus » n'est pas zéro, les scripts refusent d'écrire : le
 dépôt a été modifié à la main quelque part, ou le rapport appelle un ensemble de fonctions que le
-dossier `fabric/` ne porte pas, ce qui est le cas de la version du dépôt du 25/10/2026.
+dossier `fabric/` ne porte pas.
 
 ---
 

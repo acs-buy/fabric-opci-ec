@@ -3,14 +3,15 @@
 Un bouton mal relié ne fait rien et n'affiche aucun message. Un modèle mal relié interroge une base
 qui n'est pas la vôtre.
 
-Le travail consiste à reporter cinq identifiants sans en fausser un seul caractère.
+Le travail consiste à reporter vos identifiants sans en fausser un seul caractère : celui de
+l'espace de travail, celui de chaque ensemble de fonctions, le serveur et le nom de la base.
 
 ---
 
 ## Avant de le lancer
 
-Relevez vos cinq valeurs. Un script du dépôt les demande une par une et vérifie leur forme au
-passage, sans se connecter à quoi que ce soit :
+Relevez vos valeurs. Un script du dépôt les demande une par une et vérifie leur forme au passage,
+sans se connecter à quoi que ce soit :
 
 ```
 python scripts/00_mes_identifiants.py
@@ -39,8 +40,10 @@ Il écrit les deux commandes complètes, avec vos valeurs, dans `mes_commandes.t
 >
 > ```
 > python scripts/25_relier_le_modele.py --serveur <le vôtre> --base <la vôtre>
-> python scripts/20_relier_les_boutons.py --espace <le vôtre> --fn-ecran-client <le vôtre> --fn-ecran-revision <le vôtre>
+> python scripts/20_relier_les_boutons.py --espace <le vôtre> --fn-ecran-client <le vôtre> --fn-ecran-revision <le vôtre> --fn-ecran-valorisation <le vôtre> --fn-ecran-arrete <le vôtre> --fn-documents <le vôtre> --fn-valorisation <le vôtre>
 > ```
+>
+> Les deux lignes complètes, avec mes valeurs, sont dans `mes_commandes.txt` : prends-les de là.
 >
 > Relance ensuite les deux commandes `--verifier`, et montre-moi les quatre sorties.
 >
@@ -71,9 +74,8 @@ avant et après, et que le restant tombe à zéro.
 
 Si « identifiants inconnus » n'est pas zéro, les scripts refusent d'écrire.
 Cela veut dire qu'un fichier du dépôt a été modifié à la main quelque part, ou que le rapport
-appelle un ensemble de fonctions que le dossier `fabric/` ne porte pas, ce qui est le cas de la
-version du dépôt du 25/10/2026. Dans le premier cas, reprenez une copie propre du dépôt plutôt que
-de forcer.
+appelle un ensemble de fonctions que le dossier `fabric/` ne porte pas. Dans le premier cas,
+reprenez une copie propre du dépôt plutôt que de forcer.
 
 ---
 

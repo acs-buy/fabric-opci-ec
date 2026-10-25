@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "UserDataFunction",
+    "displayName": "fn_ecran_valorisation",
+    "description": "Les fonctions de l'écran Valorisation, appelées par ses boutons."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "58483fc9-e12a-b2d1-4587-d12dabf170ed"
+  }
+}

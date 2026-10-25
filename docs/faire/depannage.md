@@ -13,12 +13,49 @@ bouton appelle encore l'espace de travail d'origine.
 python scripts/20_relier_les_boutons.py --verifier
 ```
 
-Si vous lisez « restant à relier : 16 », la cause est celle-ci. Si vous lisez « 16 reliés » mais que
-le bouton ne fait toujours rien, vous avez sans doute relié les fichiers sans renvoyer la
+Si « restant a relier » ne vaut pas zéro, la cause est celle-ci. Si tous les boutons sont reliés
+mais que le bouton ne fait toujours rien, vous avez sans doute relié les fichiers sans renvoyer la
 modification à GitHub, ou sans refaire **Mettre à jour tout** dans Fabric.
 
-**Deuxième cause :** la connexion de données de l'ensemble de fonctions n'est pas posée. Ouvrez
-`fn_ecran_client`, **Gérer les connexions**, et vérifiez que votre base y figure.
+**Deuxième cause :** la connexion de données de l'ensemble de fonctions n'est pas posée. Le fichier
+`definition.json` de chaque ensemble, sous `fabric/`, liste ses fonctions : ouvrez l'ensemble de la
+fonction que le bouton appelle, **Gérer les connexions**, et vérifiez que votre base y figure.
+
+**Troisième cause :** l'ensemble de fonctions n'est pas publié, ou ses bibliothèques ne le sont pas.
+Ouvrez-le : en mode **Run only**, la liste ne montre que les fonctions publiées, et **Library
+management** doit montrer chaque bibliothèque à l'état « Published ». Sinon, publiez-le. Le détail
+est à l'étape 8.
+
+## Une bibliothèque manque dans un ensemble de fonctions
+
+Chaque ensemble déclare ses bibliothèques dans son `definition.json`, section `libraries`. Si
+**Library management** ne montre pas l'une d'elles après la synchronisation :
+
+- une bibliothèque de PyPI : **Add from PyPI**, son nom, puis la version écrite dans
+  `definition.json` ;
+- la roue `moteur_opci` de `fn_valorisation` : **Upload**, puis le fichier `.whl` du dossier
+  `fabric/fn_valorisation.UserDataFunction/privateLibraries/` de votre copie du dépôt.
+
+Publiez ensuite l'ensemble.
+
+## La publication ou l'envoi d'une roue échoue sur une erreur CORS
+
+L'éditeur l'écrit : votre réseau doit autoriser les requêtes `multipart/form-data` et l'envoi de
+fichiers vers les adresses de Fabric, faute de quoi la publication des fonctions et l'envoi d'une
+bibliothèque privée peuvent échouer sur une erreur CORS.
+
+## « Production refusée : le modèle Word du cabinet est introuvable »
+
+Les boutons de production des documents appellent `fn_documents`, dont les fonctions fabriquent
+chaque document sur le modèle Word du cabinet. Elles le lisent au site SharePoint du cabinet,
+bibliothèque Documents, dossier `Modeles`, sous le nom `modele_livrables_opci.docx`, par le
+raccourci `fec` du coffre. Ce dépôt ne fournit pas ce modèle : déposez le vôtre à cet endroit, sous
+ce nom.
+
+D'après le code de `fn_documents`, le modèle est un document Word (`.docx`). Ses champs
+`{{ entete }}` et `{{ pied }}` reçoivent l'en-tête et le pied de page du document produit, et le
+corps s'écrit à la place d'un paragraphe dont le texte est `[CORPS]`, ou à la fin du modèle s'il
+n'en porte pas.
 
 ## Aucun visuel ne s'affiche, ou le modèle refuse de s'actualiser
 
@@ -87,6 +124,10 @@ git config --global core.longpaths true
 
 Puis reprenez le clonage.
 
+Si le réglage `LongPathsEnabled` de Windows vaut 0 sur votre poste, copiez aussi le dépôt dans un
+dossier dont le chemin compte moins de 130 caractères. Au-delà, les scripts Python du dépôt ne voient
+pas tous les fichiers du rapport, et ils ne le signalent pas.
+
 ## Un script de liaison refuse de s'exécuter
 
 Il annonce un fichier portant des identifiants qu'il ne reconnaît pas. Cela veut dire que le rapport
@@ -94,9 +135,8 @@ ou le modèle a été modifié à la main entre-temps. Reprenez une copie propre
 Le script se comporte ainsi volontairement : écrire à l'aveugle sur un fichier déjà modifié le
 casserait sans le dire.
 
-Sur la version du dépôt du 25/10/2026, le script des boutons s'arrête aussi sur une copie propre :
-le rapport appelle les ensembles de fonctions `fn_ecran_valorisation`, `fn_ecran_arrete`,
-`fn_documents` et `fn_valorisation`, que le dossier `fabric/` ne porte pas.
+Le script des boutons s'arrête aussi, avant d'écrire, s'il manque l'identifiant d'un ensemble de
+fonctions, ou si deux ensembles reçoivent le même : chaque ensemble a le sien.
 
 ## Une erreur qui ne figure pas ici
 

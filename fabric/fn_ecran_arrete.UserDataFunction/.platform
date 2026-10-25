@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "UserDataFunction",
+    "displayName": "fn_ecran_arrete",
+    "description": "Les fonctions de l'écran Arrêté, appelées par ses boutons."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a11499cb-e935-9365-4b7a-77752ce1e8e3"
+  }
+}

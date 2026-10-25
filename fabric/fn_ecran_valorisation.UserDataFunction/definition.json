@@ -1,0 +1,105 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/userDataFunction/definition/1.1.0/schema.json",
+  "runtime": "PYTHON",
+  "connectedDataSources": [
+    {
+      "alias": "Coffre",
+      "artifactId": "eceb5802-f9ae-4e0d-8237-b3b1586c992a",
+      "artifactType": "Lakehouse",
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
+    },
+    {
+      "alias": "DossierOPCI",
+      "artifactId": "fd9080bb-e3ae-4aab-bf09-edbfcc8606d1",
+      "artifactType": "SqlDbNative",
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
+    }
+  ],
+  "functions": [
+    {
+      "name": "annuler_lot",
+      "description": "Annuler le lot : le lot propos\u00E9 choisi, du v\u00E9hicule ou de l\u0027une de ses filiales, passe au statut rejet\u00E9 ; motif exig\u00E9.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "creer_derogation",
+      "description": "Cr\u00E9er la d\u00E9rogation : une d\u00E9rogation motiv\u00E9e sur la feuille de valorisation choisie, qui attend le visa du chef de mission.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "enregistrer_cours",
+      "description": "Enregistrer le cours : la quantit\u00E9 et le cours d\u0027un titre du v\u00E9hicule inscrit au compte 256 ou 258, et sa source.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "enregistrer_expertise",
+      "description": "Enregistrer l\u0027expertise : la valeur d\u0027expertise de l\u0027immeuble choisi, rattach\u00E9e au rapport d\u00E9pos\u00E9 ; refus\u00E9 en fran\u00E7ais quand un champ manque.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "enregistrer_revision",
+      "description": "Enregistrer la r\u00E9vision : le montant r\u00E9vis\u00E9 de l\u0027avance en compte courant choisie, et son motif.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "enregistrer_valeur_instrument",
+      "description": "Enregistrer la valeur : la valeur actuelle de l\u0027instrument financier de classe 3 choisi, sa source et sa pi\u00E8ce.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "exporter_valeurs",
+      "description": "Exporter le classeur : le classeur des valeurs du v\u00E9hicule et de ses filiales \u00E0 l\u0027arr\u00EAt\u00E9, d\u00E9pos\u00E9 au site du cabinet.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "importer_valeurs",
+      "description": "R\u00E9importer le classeur : les valeurs d\u0027expertise et les valeurs retenues du classeur des valeurs, ligne \u00E0 ligne ; une ligne refus\u00E9e est cit\u00E9e.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "marquer_compte_revu",
+      "description": "Marquer le compte revu : le compte choisi de la balance de la valorisation, rattach\u00E9 \u00E0 la feuille de valorisation la plus r\u00E9cente ; une r\u00E9f\u00E9rence crois\u00E9e saisie doit nommer cette feuille.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "passer_ecritures_miroir",
+      "description": "Passer les \u00E9critures miroir : les flux intragroupe du v\u00E9hicule et de ses filiales qui restent \u00E0 passer, un lot propos\u00E9 par entit\u00E9.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "proposer_synthese",
+      "description": "Proposer la synth\u00E8se de l\u0027arr\u00EAt\u00E9, au visa du chef de mission ; refus\u00E9e en fran\u00E7ais quand un lot attend son visa ou qu\u0027un contr\u00F4le ne passe pas.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "proposer_valeur_retenue",
+      "description": "Proposer la valeur retenue : la valeur retenue de l\u0027actif choisi, sa source, le motif de l\u0027\u00E9cart et sa pi\u00E8ce ; elle attend le visa du chef de mission.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "reprendre_ecart_275",
+      "description": "Reprendre l\u0027\u00E9cart du 275 : le lot de reprise du compte 275 du v\u00E9hicule, propos\u00E9 au visa du chef de mission.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "viser_synthese",
+      "description": "Viser ou renvoyer la synth\u00E8se de l\u0027arr\u00EAt\u00E9 : r\u00E9serv\u00E9 au chef de mission connect\u00E9.",
+      "isPublicEndpointEnabled": false
+    }
+  ],
+  "libraries": {
+    "public": [
+      {
+        "name": "fabric-user-data-functions",
+        "type": "PYPI",
+        "version": "1.0"
+      },
+      {
+        "name": "openpyxl",
+        "type": "PYPI",
+        "version": "3.1.5"
+      }
+    ],
+    "private": []
+  }
+}

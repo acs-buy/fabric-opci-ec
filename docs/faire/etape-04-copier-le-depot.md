@@ -29,6 +29,10 @@ Deux raisons.
 git config --global core.longpaths true
 ```
 
+- Sous Windows, si le réglage `LongPathsEnabled` vaut 0, copiez le dépôt dans un dossier dont le
+  chemin compte moins de 130 caractères : au-delà, les scripts Python du dépôt ne voient pas tous les
+  fichiers du rapport, sans le signaler.
+
 ---
 
 ## Partie 1. Créer votre copie
@@ -115,8 +119,8 @@ chemin plus court, par exemple `C:\opci`.
 
 | Le dossier | Ce qu'il porte | Va-t-il dans votre espace de travail ? |
 |---|---|---|
-| `fabric/` | Les huit éléments Fabric | **Oui**, c'est le répertoire à indiquer à l'étape 5 |
-| `sql/` | Les 83 fichiers SQL, dont 79 de données | Non, vous les jouerez à l'étape 7 |
+| `fabric/` | Les éléments Fabric, un dossier par élément | **Oui**, c'est le répertoire à indiquer à l'étape 5 |
+| `sql/` | Les fichiers SQL : le chargement, le socle et la démonstration | Non, vous les jouerez à l'étape 7 |
 | `scripts/` | Les quatre scripts | Non, ils s'exécutent sur votre poste |
 | `docs/` | Ce mode opératoire | Non |
 | `azure/` | Le code de la fonction qui crée l'espace d'un client, facultative | Non, elle se déploie sur Azure |

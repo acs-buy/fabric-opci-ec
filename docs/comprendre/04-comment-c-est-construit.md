@@ -7,7 +7,7 @@ Lisez cette page avant de changer quoi que ce soit. Elle explique comment un cli
 
 ## La carte de la solution
 
-Ce schéma montre les huit éléments de la solution et ce qui circule entre eux. GitHub le dessine
+Ce schéma montre les éléments de la solution et ce qui circule entre eux. GitHub le dessine
 directement dans la page.
 
 ```mermaid
@@ -20,6 +20,10 @@ end
 subgraph groupe_actions["Ce qui écrit en base"]
   n_fn_client["Actions du dossier<br/>fn_ecran_client"]
   n_fn_revision["Actions de révision<br/>fn_ecran_revision"]
+  n_fn_valo["Actions de valorisation<br/>fn_ecran_valorisation"]
+  n_fn_arrete["Actions de l'arrêté<br/>fn_ecran_arrete"]
+  n_fn_documents["Production des documents<br/>fn_documents"]
+  n_fn_moteur["Lot de valorisation<br/>fn_valorisation et moteur_opci"]
 end
 
 subgraph groupe_donnees["La plateforme de données"]
@@ -41,8 +45,16 @@ n_reviseur -->|"conduit la mission"| n_rapport
 n_client -->|"lit sa restitution"| n_rapport
 n_rapport -->|"appelle les actions du dossier"| n_fn_client
 n_rapport -->|"appelle les actions de révision"| n_fn_revision
+n_rapport -->|"appelle les actions de valorisation"| n_fn_valo
+n_rapport -->|"appelle les actions de l'arrêté"| n_fn_arrete
+n_rapport -->|"demande un document"| n_fn_documents
+n_rapport -->|"demande le lot de valorisation"| n_fn_moteur
 n_fn_client -->|"exécute les procédures"| n_sql
 n_fn_revision -->|"exécute les procédures"| n_sql
+n_fn_valo -->|"exécute les procédures"| n_sql
+n_fn_arrete -->|"exécute les procédures"| n_sql
+n_fn_documents -->|"lit la base, enregistre le document"| n_sql
+n_fn_moteur -->|"écrit le lot, proposé au visa"| n_sql
 n_sql -->|"alimente les tables"| n_modele
 n_modele -->|"alimente les visuels"| n_rapport
 n_sql -->|"demande un dépôt"| n_azure
@@ -51,6 +63,8 @@ n_excel -.->|"modifie un classeur"| n_sharepoint
 n_sharepoint -.->|"vu sans copie"| n_coffre
 n_coffre -.->|"relit une pièce ou un classeur"| n_fn_client
 n_coffre -.->|"relit un classeur"| n_fn_revision
+n_coffre -.->|"relit un classeur"| n_fn_valo
+n_coffre -.->|"relit le modèle Word"| n_fn_documents
 
 classDef bleu fill:#dbeafe,stroke:#2563eb,stroke-width:1.5px,color:#172554
 classDef ambre fill:#fef3c7,stroke:#d97706,stroke-width:1.5px,color:#78350f
@@ -58,7 +72,7 @@ classDef vert fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px,color:#14532d
 classDef rose fill:#ffe4e6,stroke:#e11d48,stroke-width:1.5px,color:#881337
 classDef indigo fill:#e0e7ff,stroke:#4f46e5,stroke-width:1.5px,color:#312e81
 class n_rapport,n_reviseur,n_client bleu
-class n_fn_client,n_fn_revision ambre
+class n_fn_client,n_fn_revision,n_fn_valo,n_fn_arrete,n_fn_documents,n_fn_moteur ambre
 class n_sql,n_modele vert
 class n_coffre,n_sharepoint rose
 class n_excel,n_azure indigo
@@ -87,6 +101,10 @@ contrôle ne se contourne pas.
 | Écran client | [fabric/restitution_client.Report](../../fabric/restitution_client.Report) |
 | Actions du dossier | [fn_ecran_client.UserDataFunction/function_app.py](../../fabric/fn_ecran_client.UserDataFunction/function_app.py) |
 | Actions de révision | [fn_ecran_revision.UserDataFunction/function_app.py](../../fabric/fn_ecran_revision.UserDataFunction/function_app.py) |
+| Actions de valorisation | [fn_ecran_valorisation.UserDataFunction/function_app.py](../../fabric/fn_ecran_valorisation.UserDataFunction/function_app.py) |
+| Actions de l'arrêté | [fn_ecran_arrete.UserDataFunction/function_app.py](../../fabric/fn_ecran_arrete.UserDataFunction/function_app.py) |
+| Production des documents | [fn_documents.UserDataFunction/function_app.py](../../fabric/fn_documents.UserDataFunction/function_app.py) |
+| Lot de valorisation | [fn_valorisation.UserDataFunction/function_app.py](../../fabric/fn_valorisation.UserDataFunction/function_app.py), et la roue `moteur_opci` dans [privateLibraries](../../fabric/fn_valorisation.UserDataFunction/privateLibraries) |
 | Base DossierOPCI | [fabric/DossierOPCI.SQLDatabase](../../fabric/DossierOPCI.SQLDatabase) |
 | Modèle sémantique | [fabric/conduite_de_mission.SemanticModel](../../fabric/conduite_de_mission.SemanticModel) |
 | Coffre | [fabric/Coffre.Lakehouse](../../fabric/Coffre.Lakehouse) |
@@ -113,6 +131,11 @@ Cinq maillons, et chacun a un rôle distinct.
    cohérence, refuse ou écrit.
 4. **La table** conserve.
 5. **La vue** présente. C'est elle que le modèle sémantique lit.
+
+**Deux ensembles de fonctions calculent ou fabriquent avant d'écrire.** `fn_valorisation` calcule les
+lignes du lot des différences d'estimation avec la roue `moteur_opci`, et `fn_documents` fabrique
+les documents Word et Excel. La base garde la règle : elle contrôle, refuse ou enregistre ce qu'ils
+lui soumettent.
 
 **La conséquence pratique :** pour changer une règle de gestion, modifiez la procédure, jamais la
 fonction ni le bouton. Pour changer ce qui s'affiche, modifiez la vue.

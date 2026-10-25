@@ -1,6 +1,6 @@
 # Étape 7. Charger les données
 
-Deux choses à faire ici. Remplir la base, puis autoriser les fonctions à lui parler.
+Ici, vous remplissez la base. La connexion des fonctions se vérifie à l'étape suivante.
 
 ## Ce que le dépôt apporte
 
@@ -75,15 +75,10 @@ celui qui l'a soumis. Avec un seul compte, vous ne pouvez mener aucun dossier ju
 *Vérification :* le script affiche vos deux adresses avec 16 entités en face de chacune, puis
 `mandats encore au nom neutre : 0`.
 
-## Ouvrir la connexion des fonctions à la base
+## La connexion des fonctions à la base
 
-Les fonctions doivent avoir le droit d'interroger la base, et ce droit ne voyage pas par Git.
-
-1. Ouvrez `fn_ecran_client`.
-2. Dans le bandeau, **Gérer les connexions**.
-3. **Ajouter une connexion de données**, et choisissez votre base `DossierOPCI`.
-4. Faites de même pour `fn_ecran_revision`.
-5. Publiez chaque ensemble de fonctions, par **Publier**.
+Elle se vérifie à l'étape 8, ensemble de fonctions par ensemble de fonctions, avec leurs
+bibliothèques et leur publication.
 
 **Deux contraintes :**
 
@@ -94,11 +89,7 @@ Les fonctions doivent avoir le droit d'interroger la base, et ce droit ne voyage
 
 ## Vérifier
 
-Dans l'écran des fonctions, lancez `qui_suis_je`. Elle doit rendre une réponse contenant votre
-identité. Si elle échoue, la connexion de l'étape précédente n'est pas posée ou la publication n'a
-pas abouti.
-
-Côté données, cette requête vous dit où vous en êtes :
+Cette requête vous dit où en sont les données :
 
 ```sql
 SELECT 'questions' AS quoi, COUNT(*) AS nb FROM dbo.ref_question

@@ -9,21 +9,27 @@ POURQUOI CE SCRIPT EXISTE
     Autrement dit : apres la synchronisation Git, VOS boutons appellent encore NOTRE espace de
     travail. Ils ne marcheront pas. Ce script remplace ces identifiants par les votres.
 
-    LE RAPPORT APPELLE DEUX ENSEMBLES DE FONCTIONS, un par ecran. Il faut donc donner les deux
-    identifiants, faute de quoi 7 boutons de l'ecran de revision resteraient sans effet.
+    LE RAPPORT APPELLE PLUSIEURS ENSEMBLES DE FONCTIONS, listes dans FONCTIONS_ORIGINE ci-dessous.
+    Il faut donner l'identifiant de chacun : un bouton dont l'ensemble n'est pas relie reste sans
+    effet.
 
 CE QU'IL FAIT, ET RIEN D'AUTRE
-    Il remplace deux identifiants dans les fichiers du rapport. Il ne touche ni aux visuels, ni aux
-    mesures, ni a la mise en page, et il ne reformate aucun fichier : il substitue le texte des
-    identifiants, ligne par ligne, et laisse le reste intact.
+    Il remplace des identifiants dans les fichiers du rapport : celui de l'espace de travail et
+    celui de chaque ensemble de fonctions. Il ne touche ni aux visuels, ni aux mesures, ni a la mise
+    en page, et il ne reformate aucun fichier : il substitue le texte des identifiants, ligne par
+    ligne, et laisse le reste intact.
 
 COMMENT S'EN SERVIR
     1. Regardez l'etat actuel, sans rien modifier :
          python scripts/20_relier_les_boutons.py --verifier
-    2. Reliez, en donnant les trois identifiants :
+    2. Reliez, en donnant l'identifiant de votre espace et celui de chaque ensemble de fonctions :
          python scripts/20_relier_les_boutons.py --espace <votre espace>
               --fn-ecran-client <votre fn_ecran_client>
               --fn-ecran-revision <votre fn_ecran_revision>
+              --fn-ecran-valorisation <votre fn_ecran_valorisation>
+              --fn-ecran-arrete <votre fn_ecran_arrete>
+              --fn-documents <votre fn_documents>
+              --fn-valorisation <votre fn_valorisation>
     3. Relisez pour confirmer :
          python scripts/20_relier_les_boutons.py --verifier
 
@@ -31,14 +37,16 @@ OU TROUVER LES IDENTIFIANTS
     Ouvrez votre espace de travail dans le navigateur. L'adresse ressemble a
         https://app.fabric.microsoft.com/groups/AAAAAAAA-.../list
     La partie apres /groups/ est l'identifiant de l'espace de travail.
-    Ouvrez ensuite fn_ecran_client, puis fn_ecran_revision. L'adresse d'un element porte DEUX
-    identifiants : celui de l'espace d'abord, celui de l'element ensuite. C'est le second.
+    Ouvrez ensuite chaque ensemble de fonctions. L'adresse d'un element porte DEUX identifiants :
+    celui de l'espace d'abord, celui de l'element ensuite. C'est le second.
     Le script 00_mes_identifiants.py les releve pour vous et prepare la commande complete.
 
 CE QU'IL REFUSE DE FAIRE
     Il n'ecrit pas si un bouton porte des identifiants inconnus, c'est-a-dire ni ceux d'origine ni
     les votres. Ce cas signale un rapport deja modifie a la main, et une ecriture aveugle le
     casserait. Le script s'arrete alors en nommant le fichier en cause.
+    Il n'ecrit pas non plus si deux ensembles de fonctions recoivent le meme identifiant : leurs
+    boutons appelleraient le meme element, et les fonctions de l'un y seraient introuvables.
 """
 from __future__ import print_function
 import argparse
@@ -53,18 +61,33 @@ import sys
 # script, pour reconnaitre un bouton qui n'a pas encore ete relie.
 ESPACE_ORIGINE = "3d36cceb-a461-4e21-a285-9e40297fe906"
 
-# LE RAPPORT APPELLE DEUX ENSEMBLES DE FONCTIONS, ET NON UN SEUL.
-# L'ecran de conduite appelle fn_ecran_client, l'ecran de revision appelle fn_ecran_revision.
-# Un script qui n'en traiterait qu'un laisserait 7 boutons morts sans rien signaler.
+# LE RAPPORT APPELLE PLUSIEURS ENSEMBLES DE FONCTIONS, ET NON UN SEUL.
+#   fn_ecran_client        l'ecran Client et Acceptation, et la page Piece justificative
+#   fn_ecran_revision      l'ecran Revision et ses pages
+#   fn_ecran_valorisation  l'ecran Valorisation
+#   fn_ecran_arrete        l'ecran Arrete
+#   fn_documents           les boutons qui produisent un document, aux pages de l'ecran Revision
+#   fn_valorisation        la generation du lot de valorisation, a l'ecran Valorisation
+# Un script qui en oublierait un laisserait les boutons de cet ensemble sans effet. Le compte de
+# boutons par ensemble se lit par --verifier : il change quand un ecran change.
 FONCTIONS_ORIGINE = {
     "d0b84751-7930-42d2-9e45-af8459070427": "fn_ecran_client",
     "379b2bbf-3dd3-49d4-8a0c-fbde1ed3d848": "fn_ecran_revision",
+    "abf170ed-d12d-4587-b2d1-e12a58483fc9": "fn_ecran_valorisation",
+    "2ce1e8e3-7775-4b7a-9365-e935a11499cb": "fn_ecran_arrete",
+    "01b1f037-0147-4046-9106-bd80d60c1310": "fn_documents",
+    "92f02959-0474-46b0-ba45-1ae7a7c9c0e5": "fn_valorisation",
 }
 
 # Le rapport a relier, relativement a la racine du depot.
 RAPPORT = os.path.join("fabric", "Conduite de mission.Report")
 
 GUID = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+
+
+def option(nom):
+    u"""L'option de la ligne de commande d'un ensemble : fn_ecran_client donne --fn-ecran-client."""
+    return "--" + nom.replace("_", "-")
 
 
 def racine_du_depot():
@@ -217,37 +240,44 @@ def main():
     a = argparse.ArgumentParser(
         description=u"Relie les boutons du rapport aux fonctions de votre espace de travail.")
     a.add_argument("--espace", help=u"identifiant de VOTRE espace de travail")
-    a.add_argument("--fn-ecran-client", dest="client",
-                   help=u"identifiant de VOTRE element fn_ecran_client")
-    a.add_argument("--fn-ecran-revision", dest="revision",
-                   help=u"identifiant de VOTRE element fn_ecran_revision")
+    # Une option par ensemble de fonctions, dans l'ordre de FONCTIONS_ORIGINE.
+    for nom in FONCTIONS_ORIGINE.values():
+        a.add_argument(option(nom), dest=nom, help=u"identifiant de VOTRE element %s" % nom)
     a.add_argument("--verifier", action="store_true",
                    help=u"n'ecrit rien, dit seulement ou en sont les boutons")
     args = a.parse_args()
 
     racine = racine_du_depot()
-    # L'ordre suit celui de FONCTIONS_ORIGINE : fn_ecran_client, puis fn_ecran_revision.
     cibles = {}
     for origine, nom in FONCTIONS_ORIGINE.items():
-        valeur = args.client if nom == "fn_ecran_client" else args.revision
+        valeur = getattr(args, nom)
         if valeur:
             cibles[origine] = valeur.lower()
 
     if args.verifier:
-        return afficher(verifier(racine, args.espace, cibles))
+        return afficher(verifier(racine, args.espace and args.espace.lower(), cibles))
 
     if not args.espace or len(cibles) != len(FONCTIONS_ORIGINE):
-        a.error(u"il faut --espace, --fn-ecran-client et --fn-ecran-revision, ou bien --verifier")
-    valeurs = [(u"--espace", args.espace)] + [(u"--fn-...", v) for v in cibles.values()]
+        a.error(u"il faut --espace et %s, ou bien --verifier"
+                % u", ".join(option(nom) for nom in FONCTIONS_ORIGINE.values()))
+    valeurs = [(u"--espace", args.espace)] + [
+        (option(FONCTIONS_ORIGINE[origine]), valeur) for origine, valeur in cibles.items()]
     for nom, valeur in valeurs:
         if not GUID.match(valeur):
             a.error(u"%s ne ressemble pas a un identifiant Fabric : %s" % (nom, valeur))
-    if args.espace == ESPACE_ORIGINE:
+    espace = args.espace.lower()
+    if espace == ESPACE_ORIGINE:
         a.error(u"--espace est l'identifiant d'origine du depot, pas le votre.")
     if set(cibles.values()) & set(FONCTIONS_ORIGINE):
         a.error(u"un identifiant de fonctions est celui d'origine du depot, pas le votre.")
+    if espace in cibles.values():
+        a.error(u"un identifiant de fonctions est celui de votre espace de travail. Ouvrez l'ensemble "
+                u"de fonctions lui-meme, et prenez le second identifiant de son adresse.")
+    if len(set(cibles.values())) < len(cibles):
+        a.error(u"deux ensembles de fonctions ont recu le meme identifiant. Chaque ensemble a le sien : "
+                u"ouvrez-les un par un et copiez l'adresse de chacun.")
 
-    return relier(racine, args.espace.lower(), cibles)
+    return relier(racine, espace, cibles)
 
 
 if __name__ == "__main__":

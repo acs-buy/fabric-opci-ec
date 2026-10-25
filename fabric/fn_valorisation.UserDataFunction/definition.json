@@ -1,0 +1,34 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/userDataFunction/definition/1.1.0/schema.json",
+  "runtime": "PYTHON",
+  "connectedDataSources": [
+    {
+      "alias": "DossierOPCI",
+      "artifactId": "fd9080bb-e3ae-4aab-bf09-edbfcc8606d1",
+      "artifactType": "SqlDbNative",
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
+    }
+  ],
+  "functions": [
+    {
+      "name": "generer_lot_valorisation",
+      "description": "G\u00E9n\u00E9rer le lot : les diff\u00E9rences d\u0027estimation des actifs calculables d\u0027une entit\u00E9 \u00E0 un arr\u00EAt\u00E9, compte d\u00E9riv\u00E9 du poste du bilan, lot propos\u00E9 au visa du chef de mission ; refus\u00E9 en fran\u00E7ais quand une garde l\u0027interdit.",
+      "isPublicEndpointEnabled": true
+    }
+  ],
+  "libraries": {
+    "public": [
+      {
+        "name": "fabric-user-data-functions",
+        "type": "PYPI",
+        "version": "1.0"
+      }
+    ],
+    "private": [
+      {
+        "name": "moteur_opci-0.3.0-py3-none-any.whl",
+        "type": "WHEEL"
+      }
+    ]
+  }
+}
