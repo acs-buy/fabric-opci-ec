@@ -149,6 +149,9 @@ porte alors `APPROUVE`, avec les deux adresses distinctes en `cree_par` et `appr
 **Ces refus viennent de la base.** Un utilisateur qui appellerait directement une
 fonction, sans passer par le bouton, recevrait le même refus.
 
-**C'est la dernière étape.** Si les douze actions aboutissent, votre installation est bonne.
+**C'est la dernière étape de la reproduction.** Si les douze actions aboutissent, votre installation
+est bonne. Les utilisateurs de la solution passent ensuite les tests d'acceptation.
+
+Suite : [Les tests d'acceptation, après la reproduction](tests-d-acceptation.md)
 
 [Revenir au sommaire](../../README.md) · [Dépannage](depannage.md) · [Pièces et classeurs](pieces-et-classeurs.md)

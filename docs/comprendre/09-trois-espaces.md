@@ -120,7 +120,7 @@ un espace à une étape du pipeline.
 | Quand | Ce que vous faites |
 |---|---|
 | L'installation est finie en DEV, étapes 1 à 10 | Déployer DEV vers TEST |
-| Vos collaborateurs ont passé le cahier de tests | Déployer TEST vers PROD |
+| Vos utilisateurs ont accepté la phase de tests d'acceptation | Déployer TEST vers PROD |
 | Vous corrigez un défaut trouvé en TEST | Corriger dans **DEV**, puis redéployer |
 
 **Ne corrigez jamais directement dans TEST ni dans PROD.** Le déploiement arrière n'est possible

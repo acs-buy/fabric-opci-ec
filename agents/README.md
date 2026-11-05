@@ -30,6 +30,7 @@ d'une reproduction complète, le 26/09/2026.
 | 11 | Publier les deux écrans | Non | L'application et ses audiences se composent au portail |
 | 12 | Relier SharePoint | **En partie** | [Les demandes](etape-12-relier-sharepoint.md). Sept points sur quinze restent à vous : les autorisations, les clés, le site du cabinet et les raccourcis |
 | 13 | Passer la recette | Non | Douze actions à l'écran, et l'action 11 exige deux personnes |
+| Après 13 | Les tests d'acceptation | Non | Joués par les utilisateurs de la solution, qui en signent le procès-verbal |
 
 **Ce que cela vous fait gagner**, mesuré le 26/09/2026 : environ 55 minutes de saisie et de
 relecture sur les étapes 7, 9 et 10. Le temps d'attente de la machine, lui, ne change pas.

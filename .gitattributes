@@ -7,10 +7,11 @@
 # definitions d'elements Fabric, relues par le portail, et rien ne doit les reecrire.
 fabric/** -text
 
-# Les images sont binaires.
+# Les images et les classeurs sont binaires.
 *.png binary
 *.jpg binary
 *.pdf binary
+*.xlsx binary
 
 # Les fichiers SQL portent des accents et sont lus par l'editeur de requetes du portail.
 *.sql text eol=lf

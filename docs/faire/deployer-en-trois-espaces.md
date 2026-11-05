@@ -18,7 +18,7 @@ Le pourquoi est dans [Trois espaces de travail](../comprendre/09-trois-espaces.m
 | Étape 3 | Créer les **trois** espaces et le pipeline | Portail |
 | Étapes 4 à 10, puis 12 | Installer la solution, et relier SharePoint | **DEV** |
 | **Ici** | **Déployer DEV vers TEST**, puis les six actions de remise en service | **TEST** |
-| Étape 13 | Passer la recette, et faire passer le cahier de tests | **TEST** |
+| Étape 13, puis les tests d'acceptation | Passer la recette, puis faire passer le cahier des tests d'acceptation | **TEST** |
 | **Ici** | **Déployer TEST vers PROD**, puis les mêmes six actions | **PROD** |
 | Étape 11 | Publier les applications | **PROD** |
 
@@ -149,6 +149,6 @@ vide, et une correction faite directement dans TEST serait écrasée au déploie
 
 ---
 
-Suite : [Le cahier de tests, à faire passer dans l'espace TEST](cahier-de-tests.md)
+Suite : [Le cahier des tests d'acceptation](cahier-de-tests.md)
 
 [Revenir au sommaire](../../README.md) · [Comprendre les trois espaces](../comprendre/09-trois-espaces.md)

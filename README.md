@@ -77,6 +77,11 @@ L'actualisation du modèle du client, à l'étape 9, prend 20 secondes.
 Les 24 heures de l'étape 12 s'évitent : faites affecter les autorisations de la fonction dès
 l'étape 2, et elles seront prises en compte au moment où vous en aurez besoin.
 
+**Après l'étape 13, les tests d'acceptation.** Les utilisateurs de la solution, chacun avec son compte,
+jouent 180 tests sur le jeu de démonstration : 152 tests scénarisés et 28 tests manuels
+métier. [La phase](docs/faire/tests-d-acceptation.md) · [Le cahier](docs/faire/cahier-de-tests.md) ·
+[Le classeur à remplir](docs/faire/cahier-de-tests.xlsx)
+
 Cinq pages s'ajoutent, à lire quand le sujet se présente :
 
 - [Les pièces justificatives et les classeurs Excel](docs/faire/pieces-et-classeurs.md) : où va
@@ -84,7 +89,8 @@ Cinq pages s'ajoutent, à lire quand le sujet se présente :
 - [Le dépannage](docs/faire/depannage.md), qui donne la cause réelle de chaque symptôme.
 - [Déployer en trois espaces](docs/faire/deployer-en-trois-espaces.md), pour un cabinet qui
   installe dans DEV, fait tester dans TEST, et n'ouvre PROD qu'une fois les tests signés.
-- [Le cahier de tests](docs/faire/cahier-de-tests.md), 32 tests à faire passer dans TEST avant
+- [Le cahier des tests d'acceptation](docs/faire/cahier-de-tests.md), 180 tests joués par les
+  utilisateurs après l'étape 13 ; dans une installation en 3 espaces, ils se jouent dans TEST avant
   d'ouvrir la production.
 - [Reproduire avec un agent d'intelligence artificielle](docs/faire/avec-un-agent.md) : les
   3 étapes sur 13 qu'un agent sait jouer, et les 4 contrôles qui restent à vous. Les demandes
@@ -318,6 +324,21 @@ le dossier. C'est la séparation des fonctions, et la base l'impose.
 *Vérification :* les douze actions aboutissent.
 
 [Faire l'étape 13](docs/faire/etape-13-passer-la-recette.md)
+
+### Après l'étape 13. Les tests d'acceptation
+
+**Ce que vous faites :** vous confiez le cahier des tests d'acceptation aux utilisateurs de la solution,
+3 membres de l'équipe et 1 compte de l'audience client : 152 tests scénarisés, aux actions écrites, et
+28 tests manuels, où l'utilisateur conduit un dossier comme en mission et refait des calculs à la main.
+
+**Pourquoi :** l'étape 13 établit que l'installation fonctionne. Ces tests établissent que la solution
+sert les besoins du réviseur et du client, et que les contrôles de la base tiennent.
+
+*Vérification :* le procès-verbal du classeur porte la décision : acceptée, acceptée avec réserves, ou
+refusée.
+
+[La phase](docs/faire/tests-d-acceptation.md) · [Le cahier](docs/faire/cahier-de-tests.md) ·
+[Le classeur à remplir](docs/faire/cahier-de-tests.xlsx)
 
 ---
 

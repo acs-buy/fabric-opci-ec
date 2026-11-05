@@ -102,6 +102,7 @@ def main():
     print(u"")
     print(u"L'action 11 demande deux comptes : l'approbation est refusee a qui a soumis.")
     print(u"Le detail de chaque action est dans docs/faire/etape-13-passer-la-recette.md.")
+    print(u"Apres la recette, les utilisateurs passent les tests d'acceptation : docs/faire/tests-d-acceptation.md.")
 
     print(u"")
     if bon:

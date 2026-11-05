@@ -7,7 +7,7 @@ labels: installation
 
 ## À quelle étape
 
-<!-- Le numéro de l'étape, de 1 à 12. -->
+<!-- Le numéro de l'étape, de 1 à 13. -->
 
 ## Ce que vous attendiez
 

@@ -46,6 +46,7 @@ Ce partage tient à ce que la plateforme expose.
 | 11 | Publier les deux écrans | **Non** | L'application et ses audiences se composent au portail |
 | 12 | Relier SharePoint | **En partie** | Les ressources Azure, le déploiement, les paramètres et le dépôt des pièces, oui ; les autorisations, les clés, le site du cabinet et les raccourcis, non |
 | 13 | Passer la recette | **Non** | Douze actions à l'écran, et l'action 11 exige deux personnes |
+| Après 13 | Les tests d'acceptation | **Non** | Ils sont joués par les utilisateurs de la solution, qui en signent le procès-verbal |
 
 Trois étapes sur treize se délèguent entièrement. L'étape 12 se
 délègue pour moitié : les demandes sont dans
