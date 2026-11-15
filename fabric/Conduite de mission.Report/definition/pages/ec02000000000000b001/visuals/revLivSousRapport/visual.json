@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revLivSousRapport",
   "position": {
-    "x": 217,
+    "x": 262,
     "y": 748,
     "z": 31000,
     "height": 24,
@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "12px",
-                      "color": "#5B6B7D"
+                      "color": "#2B4666"
                     }
                   }
                 ],

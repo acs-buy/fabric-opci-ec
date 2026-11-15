@@ -335,6 +335,13 @@
                   "Value": "'bkRev3'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Montre l’étape des questionnaires, cycle par cycle'"
+                }
+              }
             }
           }
         }

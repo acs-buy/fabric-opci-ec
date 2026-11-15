@@ -56,7 +56,7 @@ BEGIN
           WHERE l.statut = 'PROPOSE') AS x;
     IF @m IS NOT NULL
     BEGIN
-        SET @m = N'Rapport refusé : ' + @m + N'. Un lot proposé peut encore changer les comptes : le faire viser ou l''annuler, puis arrêter la forme du rapport de l''expert-comptable.';
+        SET @m = N'Rapport refusé : ' + @m + N'. Viser ou annuler ces lots, puis arrêter la forme.';
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50033, @m, 1; END
     END;
     IF EXISTS (SELECT 1 FROM @j j JOIN dbo.derogation g ON g.entite = j.entite AND g.arrete = j.arrete AND g.levee_le IS NULL
@@ -65,7 +65,7 @@ BEGIN
     IF EXISTS (SELECT 1 FROM @j j WHERE j.forme = 'SANS_OBSERVATION'
                AND NOT EXISTS (SELECT 1 FROM dbo.feuille_travail f WHERE f.entite = j.entite AND f.arrete = j.arrete
                                AND f.cycle IS NOT NULL AND f.forme_conclusion IS NOT NULL))
-        THROW 50033, N'Forme refusée : aucune feuille de cycle n''est conclue pour cet arrêté, et la forme sans observation suppose des diligences menées. La NP 2300 traite ce cas aux paragraphes 20 et 21 : une limitation des diligences appelle une conclusion avec observation, ou un refus d''attester si les incidences sont d''une importance telle qu''un niveau d''assurance suffisant ne peut être obtenu.', 1;
+        THROW 50033, N'Forme refusée : aucune feuille de cycle n''est conclue pour cet arrêté, et l''attestation sans observation suppose des diligences menées. Conclure les feuilles, ou retenir une autre forme (NP 2300, § 19 à 21 et A10).', 1;
     -- les regles de forme selon l'entite
     SELECT TOP (1) @entite = entite FROM @j WHERE soumise = 1 AND forme <> 'COMPTE_RENDU_TRAVAUX' AND motif_cp IS NULL;
     IF @entite IS NOT NULL

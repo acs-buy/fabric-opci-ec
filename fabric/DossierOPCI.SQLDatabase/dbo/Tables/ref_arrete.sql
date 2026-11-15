@@ -28,14 +28,14 @@ CREATE TABLE [dbo].[ref_arrete] (
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_ref_arrete_date]
-    ON [dbo].[ref_arrete]([date_arrete] ASC);
+CREATE NONCLUSTERED INDEX [ix_ref_arrete_exercice]
+    ON [dbo].[ref_arrete]([entite] ASC, [exercice] ASC);
 
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_ref_arrete_exercice]
-    ON [dbo].[ref_arrete]([entite] ASC, [exercice] ASC);
+CREATE NONCLUSTERED INDEX [ix_ref_arrete_date]
+    ON [dbo].[ref_arrete]([date_arrete] ASC);
 
 
 GO

@@ -1,0 +1,123 @@
+/// Écran 5, objet n° 42 : relation referentiel → v_ecran_referentiel_choix[table_nom]
+table v_ecran_referentiel_valeurs
+	lineageTag: 2df3fa96-5307-46d4-aedd-a594b7b185ef
+
+	/// n° 114, fond des cellules de valeur quand MAX ( cle ) de la rangée = [Ligne du referentiel choisie], la rangée étant une désignation (ligne) et la désignation unique dans son référentiel ; l’en-tête de ligne « Ligne » ne se colore pas, la mise en forme conditionnelle d’une matrice ne portant que sur
+	measure 'Fond ligne choisie de la matrice' = VAR c = [Ligne du referentiel choisie] RETURN IF ( NOT ISBLANK ( c ) && MAX ( v_ecran_referentiel_valeurs[cle] ) = c, "#F4F8FC", "#FFFFFF" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 9bf52e39-d85d-4c34-8cb7-16c54efbd28f
+
+	/// n° 115, SELECTEDVALUE(valeur), valeur de la matrice
+	measure 'Valeur de la cellule' = SELECTEDVALUE ( v_ecran_referentiel_valeurs[valeur] )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: ec579669-7ba2-47eb-a4ad-1546e04f1231
+
+	/// n° 140, « le référentiel choisi ne porte pas de fichier », « aucun fichier rattaché » ou « fichier rattaché le jj/mm/aaaa »
+	measure 'Etat du fichier du gabarit' = VAR r = [Referentiel choisi] VAR k = [Ligne du referentiel choisie] VAR ch = MAXX ( FILTER ( ALL ( v_ecran_referentiel_valeurs ), v_ecran_referentiel_valeurs[referentiel] = "modele_feuille" && v_ecran_referentiel_valeurs[cle] = k && v_ecran_referentiel_valeurs[colonne] = "chemin_coffre" ), v_ecran_referentiel_valeurs[valeur] ) VAR d = MAXX ( FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = "modele_feuille" && v_ecran_referentiel_lignes[cle] = k ), v_ecran_referentiel_lignes[modifie_le] ) RETURN IF ( r <> "modele_feuille", "le référentiel choisi ne porte pas de fichier", IF ( ISBLANK ( ch ) || ch = "", "aucun fichier rattaché", "fichier rattaché" & IF ( ISBLANK ( d ), "", " le " & FORMAT ( d, "dd/MM/yyyy" ) ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: f89dc399-c1a3-4777-a560-7cb7ef727fe4
+
+	/// n° 141, gris « le référentiel choisi ne porte pas de fichier », alerte « aucun fichier rattaché », vert « fichier rattaché le … »
+	measure 'Couleur etat du fichier du gabarit' = VAR e = [Etat du fichier du gabarit] RETURN IF ( e = "le référentiel choisi ne porte pas de fichier", "#5B6B7D", IF ( e = "aucun fichier rattaché", "#9A2A2A", "#1F6D4A" ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: c4f05afa-8a1e-4f8e-a1fe-d10c8411b887
+
+	/// n° 155, la valeur de la colonne limite_texte sur la ligne choisie (VAR r, c, puis FILTER ( ALL ( … ) )) ; « sans objet » pour un référentiel qui n’a pas cette colonne
+	measure 'Limite du texte de la limite choisie' = VAR r = [Referentiel choisi] VAR c = [Ligne du referentiel choisie] VAR v = MAXX ( FILTER ( ALL ( v_ecran_referentiel_valeurs ), v_ecran_referentiel_valeurs[referentiel] = r && v_ecran_referentiel_valeurs[cle] = c && v_ecran_referentiel_valeurs[colonne] = "limite_texte" ), v_ecran_referentiel_valeurs[valeur] ) RETURN IF ( ISBLANK ( v ), "sans objet", v )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 21928386-688f-428c-834c-c027f6ac73c1
+
+	column referentiel
+		dataType: string
+		sourceProviderType: varchar(120)
+		lineageTag: 5c5302c6-e9ef-4de6-94f6-9c95b7368f86
+		summarizeBy: none
+		sourceColumn: referentiel
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: bc0af271-2e3d-4e0d-87f2-122b79a5ce44
+		summarizeBy: none
+		sourceColumn: cle
+
+		annotation SummarizationSetBy = Automatic
+
+	column ligne
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: fa3d0e9a-4cbf-4427-8eba-fb79de4f8625
+		summarizeBy: none
+		sourceColumn: ligne
+
+		annotation SummarizationSetBy = Automatic
+
+	column colonne
+		dataType: string
+		sourceProviderType: varchar(128)
+		lineageTag: 811d0a91-f3da-46fb-930c-8e7a03b18fda
+		summarizeBy: none
+		sourceColumn: colonne
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle_colonne
+		dataType: string
+		sourceProviderType: nvarchar(40)
+		lineageTag: ff0d20d2-e933-4bbf-8057-c1d8087fe2ed
+		summarizeBy: none
+		sourceColumn: libelle_colonne
+		sortByColumn: rang_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column rang_libelle
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3e72ed25-18a6-4117-999a-73e9df362169
+		summarizeBy: none
+		sourceColumn: rang_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column valeur
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 7bcf8b7c-ed0e-4ca4-bbb7-95c518ad4144
+		summarizeBy: none
+		sourceColumn: valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	column largeur_colonne
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d51ea8fd-cc51-48bb-93c1-372beddf8707
+		summarizeBy: none
+		sourceColumn: largeur_colonne
+
+		annotation SummarizationSetBy = Automatic
+
+	column largeur_ligne
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0ef0e9cd-e374-4c40-b353-9afdba62d8ff
+		summarizeBy: none
+		sourceColumn: largeur_ligne
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_referentiel_valeurs = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_referentiel_valeurs = Source{[Schema="dbo",Item="v_ecran_referentiel_valeurs"]}[Data]
+				in
+				    dbo_v_ecran_referentiel_valeurs
+

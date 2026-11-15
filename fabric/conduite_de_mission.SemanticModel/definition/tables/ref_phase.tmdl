@@ -1,0 +1,101 @@
+/// Écran 5, objet n° 46 : libellés des phases
+table ref_phase
+	lineageTag: 43ad5ead-0c77-4cd2-a417-861bf9c0e672
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: abeaa870-da67-4570-a0d7-2e1568f0c567
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 8706525e-7a2c-4b6f-a427-92ae31445154
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column niveau
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: b6a6fd64-b254-4821-8ff7-578618c218dd
+		summarizeBy: none
+		sourceColumn: niveau
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 58ddc1ca-d7a6-466d-9854-0ea782ad2abb
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 489d856d-c1d2-40f0-b3c7-fe37065495fa
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: 2d178199-4a71-4435-9be9-221472115d5b
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecartee_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: fde3bf98-114b-4ff3-9768-3909d50c1449
+		summarizeBy: none
+		sourceColumn: ecartee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecartee_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: f1518b90-5dc7-4e61-899e-df054f550ad6
+		summarizeBy: none
+		sourceColumn: ecartee_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_ecart
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: 17afe64f-fe5c-404f-8136-73a29cd8edcd
+		summarizeBy: none
+		sourceColumn: motif_ecart
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_phase = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_phase = Value.NativeQuery(Source, "SELECT code, libelle, niveau, ordre, modifie_par, DATETIME2FROMPARTS(YEAR(modifie_le), MONTH(modifie_le), DAY(modifie_le), DATEPART(HOUR, modifie_le), DATEPART(MINUTE, modifie_le), DATEPART(SECOND, modifie_le), 0, 0) AS modifie_le, ecartee_le, ecartee_par, motif_ecart FROM dbo.ref_phase", null, [EnableFolding = true])
+				in
+				    dbo_ref_phase
+

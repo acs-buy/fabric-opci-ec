@@ -92,6 +92,17 @@ table ref_nature_piece
 
 		annotation SummarizationSetBy = Automatic
 
+	column ecartee_le
+		dataType: dateTime
+		isHidden
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: 6d7e73c8-c903-481c-a545-07b4a5a706c1
+		summarizeBy: none
+		sourceColumn: ecartee_le
+
+		annotation SummarizationSetBy = Automatic
+
 	partition ref_nature_piece = m
 		mode: directQuery
 		source =

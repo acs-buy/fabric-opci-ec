@@ -31,8 +31,8 @@ navigateur, avec votre compte, et elle prend 1 minute.
 
 | Ce qu'il annonce | Ce que vous devez lire |
 |---|---|
-| Les dossiers à la racine | `fabric`, `sql`, `scripts`, `docs`, `agents`, et les fichiers de licence |
-| Le dossier `fabric/` | Un sous-dossier par élément, dont `DossierOPCI.SQLDatabase` et les deux `.Report` |
+| Les dossiers à la racine | `fabric`, `sql`, `scripts`, `docs`, `agents`, `azure`, `captures`, et les fichiers de licence |
+| Le dossier `fabric/` | 13 sous-dossiers, un par élément, dont `DossierOPCI.SQLDatabase`, les 7 `.UserDataFunction` et les 2 `.Report` |
 
 **Le nombre de fichiers `.sql` n'est pas un chiffre à comparer à une valeur écrite ici :** il change
 quand la solution s'enrichit. Ce qui compte est que les deux dossiers ne soient pas vides.

@@ -6,7 +6,7 @@
     "y": 534,
     "z": 44628,
     "height": 37,
-    "width": 100,
+    "width": 140,
     "tabOrder": 44628
   },
   "visual": {
@@ -339,7 +339,7 @@
             "tooltip": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ouvrir l’Arrêté'"
+                  "Value": "'Ouvre la page Arrêté, où se publie la valeur liquidative de l’arrêté'"
                 }
               }
             }

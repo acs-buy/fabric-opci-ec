@@ -183,13 +183,13 @@ table ref_livrable
 	measure 'Aff Nom du livrable choisi' = [Nom du livrable choisi] & ""
 		lineageTag: b9f294c8-188c-4bff-b452-a1673ea533d1
 
-	measure 'Fond revLivProduireWord' = IF ( ISBLANK ( [Arrete a produire en Word] ) || ISBLANK ( [Livrable choisi] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond revLivProduireWord' = VAR f = ( IF ( ISBLANK ( [Arrete a produire en Word] ) || ISBLANK ( [Livrable choisi] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: b9888ff9-35d3-4f74-8374-1f4e2cc5a2e2
 
 	measure 'Libelle revLivProduireWord' = "Produire en Word"
 		lineageTag: 88700b0f-1419-4006-81df-e60366afb4a4
 
-	measure 'Fond revLivProduireExcel' = IF ( ISBLANK ( [Arrete a produire en Excel] ) || ISBLANK ( [Livrable choisi] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond revLivProduireExcel' = VAR f = ( IF ( ISBLANK ( [Arrete a produire en Excel] ) || ISBLANK ( [Livrable choisi] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 32a0dda3-fd62-49cb-baaf-6dfa5bcaa461
 
 	measure 'Libelle revLivProduireExcel' = "Produire en Excel"
@@ -198,16 +198,17 @@ table ref_livrable
 	measure 'Fond revLivOuvrir' = IF ( ISBLANK ( [Adresse du livrable choisi] ), "#D9DFE6", "#0F5C8C" )
 		lineageTag: e6ac3a88-8f8d-4886-b9ea-9a8bb7417bbc
 
-	measure 'Libelle revLivOuvrir' = "Ouvrir"
+	/// libellé de « Ouvrir » de l’étape 6 selon le fichier que l’adresse du livrable choisi ouvre : document Word, classeur Excel, sinon document produit
+	measure 'Libelle revLivOuvrir' = VAR u = LOWER ( [Adresse du livrable choisi] & "" ) RETURN IF ( FIND ( ".docx", u, 1, 0 ) > 0, "Ouvrir le document Word", IF ( FIND ( ".xlsx", u, 1, 0 ) > 0, "Ouvrir le classeur Excel", "Ouvrir le document produit" ) )
 		lineageTag: f140c737-eeaf-40dd-9eda-5da92f15d8e4
 
-	measure 'Fond docBilWord' = IF ( ISBLANK ( [Arrete des comptes annuels a produire] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond docBilWord' = VAR f = ( IF ( ISBLANK ( [Arrete des comptes annuels a produire] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: b5c47c53-132e-4096-acef-97d95f865f7a
 
 	measure 'Libelle docBilWord' = "Produire en Word"
 		lineageTag: 490a947c-d914-4bb3-b883-4f27d72e7c71
 
-	measure 'Fond docBilExcel' = IF ( ISBLANK ( [Arrete du classeur a produire] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond docBilExcel' = VAR f = ( IF ( ISBLANK ( [Arrete du classeur a produire] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: b1c65253-a8b5-4d9c-87d7-da2d92ce7909
 
 	measure 'Libelle docBilExcel' = "Produire en Excel"
@@ -219,13 +220,13 @@ table ref_livrable
 	measure 'Libelle docBilOuvrir' = "Ouvrir"
 		lineageTag: 5bde0a05-2e4d-4590-9488-4458cdcd349c
 
-	measure 'Fond docResWord' = IF ( ISBLANK ( [Arrete des comptes annuels a produire] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond docResWord' = VAR f = ( IF ( ISBLANK ( [Arrete des comptes annuels a produire] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 6ddbdb90-2031-4192-9766-ed879ce1508b
 
 	measure 'Libelle docResWord' = "Produire en Word"
 		lineageTag: 31be907d-e6b3-40ad-841b-f9bf70f3a905
 
-	measure 'Fond docResExcel' = IF ( ISBLANK ( [Arrete du classeur a produire] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond docResExcel' = VAR f = ( IF ( ISBLANK ( [Arrete du classeur a produire] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 49a87d1e-959a-4a7a-a49b-61071858c607
 
 	measure 'Libelle docResExcel' = "Produire en Excel"
@@ -237,7 +238,7 @@ table ref_livrable
 	measure 'Libelle docResOuvrir' = "Ouvrir"
 		lineageTag: f0c9924c-3527-48fb-83e1-3b7cdc8741c2
 
-	measure 'Fond docAnnWord' = IF ( ISBLANK ( [Arrete des comptes annuels a produire] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond docAnnWord' = VAR f = ( IF ( ISBLANK ( [Arrete des comptes annuels a produire] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 81113b9e-2406-4012-9646-78ebd1646fa3
 
 	measure 'Libelle docAnnWord' = "Produire en Word"
@@ -249,7 +250,7 @@ table ref_livrable
 	measure 'Libelle docAnnOuvrir' = "Ouvrir"
 		lineageTag: 96baa1e3-858b-4b13-90d1-d7e720db86cd
 
-	measure 'Fond docBalExcel' = IF ( ISBLANK ( [Arrete du classeur a produire] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond docBalExcel' = VAR f = ( IF ( ISBLANK ( [Arrete du classeur a produire] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: c25db9c5-e926-4e71-aa9b-cc508e5c58c1
 
 	measure 'Libelle docBalExcel' = "Produire en Excel"
@@ -261,7 +262,7 @@ table ref_livrable
 	measure 'Libelle docBalOuvrir' = "Ouvrir"
 		lineageTag: e5d9d92f-bfbc-43c8-99cf-4fb00e65d5c6
 
-	measure 'Fond docDipWord' = IF ( ISBLANK ( [Arrete du DIP a produire] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond docDipWord' = VAR f = ( IF ( ISBLANK ( [Arrete du DIP a produire] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: cb84e8b4-498a-4982-b914-a3f8dda89679
 
 	measure 'Libelle docDipWord' = "Produire en Word"

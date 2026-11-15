@@ -18,6 +18,7 @@ publier.
 | fn_ecran_revision | L'écran Révision et ses pages | DossierOPCI, Coffre | De PyPI : fabric-user-data-functions, openpyxl |
 | fn_ecran_valorisation | L'écran Valorisation | DossierOPCI, Coffre | De PyPI : fabric-user-data-functions, openpyxl |
 | fn_ecran_arrete | L'écran Arrêté | DossierOPCI | De PyPI : fabric-user-data-functions |
+| fn_ecran_referentiels | L'écran Référentiels | DossierOPCI, Coffre | De PyPI : fabric-user-data-functions, openpyxl |
 | fn_documents | La production des documents, aux pages de l'écran Révision | DossierOPCI, Coffre | De PyPI : docxtpl, fabric-user-data-functions, openpyxl |
 | fn_valorisation | La génération du lot de valorisation, à l'écran Valorisation | DossierOPCI | De PyPI : fabric-user-data-functions. Privée : la roue `moteur_opci` |
 
@@ -38,6 +39,10 @@ sous le nom `modele_livrables_opci.docx`. Ce dépôt ne fournit pas ce modèle. 
 refusée par ce message : « Production refusée : le modèle Word du cabinet est introuvable. Il se
 dépose sur le site du cabinet, bibliothèque Documents, dossier Modeles, sous le nom
 modele_livrables_opci.docx. »
+
+**`fn_ecran_referentiels` relit des fichiers du site du cabinet**, par le raccourci du coffre : les
+classeurs exportés au dossier `Référentiels`, et le fichier d'un gabarit déposé au dossier
+`Modeles`. L'étape 12 met ce site et ce raccourci en place.
 
 ## Pourquoi
 

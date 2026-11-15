@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "valoBtCours",
   "position": {
     "x": 15,
@@ -12,7 +12,7 @@
   "visual": {
     "visualType": "actionButton",
     "objects": {
-      "fill": [
+      "text": [
         {
           "properties": {
             "show": {
@@ -21,22 +21,115 @@
                   "Value": "true"
                 }
               }
+            }
+          }
+        },
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
+                    }
+                  },
+                  "Property": "Valo bouton enregistrer le cours"
+                }
+              }
             },
-            "fillColor": {
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'', wf_segoe-ui_semibold, helvetica, arial, sans-serif'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Schema": "extension",
+                                      "Entity": "v_ecran_valeurs_arrete"
+                                    }
+                                  },
+                                  "Property": "Valo fond enregistrer le cours"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#8A96A3'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#FFFFFF'"
+                        }
+                      }
                     }
                   }
                 }
               }
             },
-            "transparency": {
+            "horizontalAlignment": {
               "expr": {
                 "Literal": {
-                  "Value": "100D"
+                  "Value": "'center'"
+                }
+              }
+            },
+            "leftMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
+            },
+            "rightMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
+            },
+            "topMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
+                }
+              }
+            },
+            "bottomMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
                 }
               }
             }
@@ -47,28 +140,110 @@
         },
         {
           "properties": {
-            "show": {
+            "text": {
               "expr": {
-                "Literal": {
-                  "Value": "true"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
+                    }
+                  },
+                  "Property": "Valo bouton enregistrer le cours"
                 }
               }
             },
-            "fillColor": {
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'', wf_segoe-ui_semibold, helvetica, arial, sans-serif'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#2B4666'"
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Schema": "extension",
+                                      "Entity": "v_ecran_valeurs_arrete"
+                                    }
+                                  },
+                                  "Property": "Valo fond enregistrer le cours"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#8A96A3'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#FFFFFF'"
+                        }
+                      }
                     }
                   }
                 }
               }
             },
-            "transparency": {
+            "horizontalAlignment": {
               "expr": {
                 "Literal": {
-                  "Value": "35D"
+                  "Value": "'center'"
+                }
+              }
+            },
+            "leftMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
+            },
+            "rightMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
+            },
+            "topMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
+                }
+              }
+            },
+            "bottomMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
                 }
               }
             }
@@ -79,28 +254,110 @@
         },
         {
           "properties": {
-            "show": {
+            "text": {
               "expr": {
-                "Literal": {
-                  "Value": "true"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
+                    }
+                  },
+                  "Property": "Valo bouton enregistrer le cours"
                 }
               }
             },
-            "fillColor": {
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'', wf_segoe-ui_semibold, helvetica, arial, sans-serif'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Schema": "extension",
+                                      "Entity": "v_ecran_valeurs_arrete"
+                                    }
+                                  },
+                                  "Property": "Valo fond enregistrer le cours"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#8A96A3'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#FFFFFF'"
+                        }
+                      }
                     }
                   }
                 }
               }
             },
-            "transparency": {
+            "horizontalAlignment": {
               "expr": {
                 "Literal": {
-                  "Value": "100D"
+                  "Value": "'center'"
+                }
+              }
+            },
+            "leftMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
+            },
+            "rightMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
+            },
+            "topMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
+                }
+              }
+            },
+            "bottomMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
                 }
               }
             }
@@ -111,28 +368,110 @@
         },
         {
           "properties": {
-            "show": {
+            "text": {
               "expr": {
-                "Literal": {
-                  "Value": "true"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Schema": "extension",
+                      "Entity": "v_ecran_valeurs_arrete"
+                    }
+                  },
+                  "Property": "Valo bouton enregistrer le cours"
                 }
               }
             },
-            "fillColor": {
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'', wf_segoe-ui_semibold, helvetica, arial, sans-serif'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#D9DFE6'"
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Schema": "extension",
+                                      "Entity": "v_ecran_valeurs_arrete"
+                                    }
+                                  },
+                                  "Property": "Valo fond enregistrer le cours"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#8A96A3'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#FFFFFF'"
+                        }
+                      }
                     }
                   }
                 }
               }
             },
-            "transparency": {
+            "horizontalAlignment": {
               "expr": {
                 "Literal": {
-                  "Value": "100D"
+                  "Value": "'center'"
+                }
+              }
+            },
+            "leftMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
+            },
+            "rightMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
+            },
+            "topMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
+                }
+              }
+            },
+            "bottomMargin": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
                 }
               }
             }
@@ -142,13 +481,41 @@
           }
         }
       ],
-      "text": [
+      "fill": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "fillColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Schema": "extension",
+                          "Entity": "v_ecran_valeurs_arrete"
+                        }
+                      },
+                      "Property": "Valo fond enregistrer le cours"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -159,10 +526,27 @@
         },
         {
           "properties": {
-            "show": {
+            "fillColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Schema": "extension",
+                          "Entity": "v_ecran_valeurs_arrete"
+                        }
+                      },
+                      "Property": "Valo fond enregistrer le cours"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "0D"
                 }
               }
             }
@@ -173,10 +557,27 @@
         },
         {
           "properties": {
-            "show": {
+            "fillColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Schema": "extension",
+                          "Entity": "v_ecran_valeurs_arrete"
+                        }
+                      },
+                      "Property": "Valo fond enregistrer le cours"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "0D"
                 }
               }
             }
@@ -187,10 +588,27 @@
         },
         {
           "properties": {
-            "show": {
+            "fillColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Schema": "extension",
+                          "Entity": "v_ecran_valeurs_arrete"
+                        }
+                      },
+                      "Property": "Valo fond enregistrer le cours"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "0D"
                 }
               }
             }
@@ -206,7 +624,70 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "lineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Schema": "extension",
+                                      "Entity": "v_ecran_valeurs_arrete"
+                                    }
+                                  },
+                                  "Property": "Valo fond enregistrer le cours"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#C9D2DC'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#0F5C8C'"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "weight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -217,10 +698,62 @@
         },
         {
           "properties": {
-            "show": {
+            "lineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Schema": "extension",
+                                      "Entity": "v_ecran_valeurs_arrete"
+                                    }
+                                  },
+                                  "Property": "Valo fond enregistrer le cours"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#C9D2DC'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#0F5C8C'"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "weight": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "1D"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -231,10 +764,62 @@
         },
         {
           "properties": {
-            "show": {
+            "lineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Schema": "extension",
+                                      "Entity": "v_ecran_valeurs_arrete"
+                                    }
+                                  },
+                                  "Property": "Valo fond enregistrer le cours"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#C9D2DC'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#0F5C8C'"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "weight": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "1D"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -245,6 +830,97 @@
         },
         {
           "properties": {
+            "lineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Schema": "extension",
+                                      "Entity": "v_ecran_valeurs_arrete"
+                                    }
+                                  },
+                                  "Property": "Valo fond enregistrer le cours"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#C9D2DC'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#0F5C8C'"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "weight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "disabled"
+          }
+        }
+      ],
+      "shape": [
+        {
+          "properties": {
+            "tileShape": {
+              "expr": {
+                "Literal": {
+                  "Value": "'rectangleRoundedByPixel'"
+                }
+              }
+            },
+            "rectangleRoundedCurve": {
+              "expr": {
+                "Literal": {
+                  "Value": "3L"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
+      ],
+      "icon": [
+        {
+          "properties": {
             "show": {
               "expr": {
                 "Literal": {
@@ -252,9 +928,27 @@
                 }
               }
             }
+          }
+        },
+        {
+          "properties": {
+            "shapeType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'blank'"
+                }
+              }
+            },
+            "placement": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            }
           },
           "selector": {
-            "id": "disabled"
+            "id": "default"
           }
         }
       ]
@@ -312,6 +1006,53 @@
           }
         }
       ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
       "visualLink": [
         {
           "properties": {
@@ -355,7 +1096,7 @@
                     {
                       "name": "entite",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -374,7 +1115,7 @@
                     {
                       "name": "arrete",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -433,48 +1174,16 @@
             "tooltip": {
               "expr": {
                 "Literal": {
-                  "Value": "'Enregistrer le cours'"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "left": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "'Écrit la quantité et le cours du titre choisi, inscrit au compte 256 ou 258, avec sa source'"
                 }
               }
             }
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
+  "howCreated": "InsertVisualButton",
   "isHidden": true
 }

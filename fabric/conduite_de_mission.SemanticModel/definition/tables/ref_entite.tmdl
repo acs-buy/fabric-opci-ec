@@ -282,7 +282,7 @@ table ref_entite
 		displayFolder: Ecran 1 Client
 		lineageTag: d1324308-bf64-422e-97a5-f47a82e4cec4
 
-	measure 'Fond e1Bouton41' = IF ( ISBLANK ( [Cote acceptation] ), "#E4E9EF", "#FFFFFF" )
+	measure 'Fond e1Bouton41' = VAR f = ( IF ( ISBLANK ( [Cote acceptation] ), "#E4E9EF", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#E4E9EF", f )
 		displayFolder: Ecran Client boutons
 		lineageTag: 96cc80ba-1e70-4d65-b542-6315e0485bd4
 
@@ -306,7 +306,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 73fb5c0e-3cae-468d-ab9c-df98f29f9ec5
 
-	measure 'Fond e2bBouton0' = IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e2bBouton0' = VAR f = ( IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#E4E9EF", f )
 		displayFolder: Ecran Client boutons
 		lineageTag: bd86f699-a490-4411-8809-f05d9d0a1187
 
@@ -314,7 +314,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 3df75f5f-f4b8-43d5-8397-5667e95187b7
 
-	measure 'Fond e2bBouton2' = IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e2bBouton2' = VAR f = ( IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#E4E9EF", f )
 		displayFolder: Ecran Client boutons
 		lineageTag: 0dfbc970-598c-43f3-b5e3-46d3e756aa48
 
@@ -338,7 +338,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 41ce3056-a052-4ee6-896f-198c4ef60ecc
 
-	measure 'Fond e2rBouton0' = IF ( ISBLANK ( [Client de la revision] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e2rBouton0' = VAR f = ( IF ( ISBLANK ( [Client de la revision] ), "#E4E9EF", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#E4E9EF", f )
 		displayFolder: Ecran Client boutons
 		lineageTag: 0ec02ad3-b680-41a6-8027-6938062c65a3
 
@@ -346,7 +346,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 5b7a60ee-f225-4700-b458-9b9133f45780
 
-	measure 'Fond e2rBouton2' = IF ( ISBLANK ( [Client de la revision] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e2rBouton2' = VAR f = ( IF ( ISBLANK ( [Client de la revision] ), "#E4E9EF", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#E4E9EF", f )
 		displayFolder: Ecran Client boutons
 		lineageTag: 69bb1738-c655-411f-8e1d-4abb23371e72
 
@@ -354,7 +354,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 51582247-ba7a-4a6b-a5c0-26feda9e51ab
 
-	measure 'Fond e3Bouton0' = IF ( ISBLANK ( [Cote questionnaire] ) || ISBLANK ( [Reference acceptation selectionnee] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e3Bouton0' = VAR f = ( IF ( ISBLANK ( [Cote questionnaire] ) || ISBLANK ( [Reference acceptation selectionnee] ), "#E4E9EF", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#E4E9EF", f )
 		displayFolder: Ecran Client boutons
 		lineageTag: 6996ca95-5ec3-402c-95db-a0d337952ad6
 
@@ -362,7 +362,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 003f7bec-f23b-4830-83a3-6af4ca3a4e4e
 
-	measure 'Fond e3Bouton50' = IF ( ISBLANK ( [Cote acceptation] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e3Bouton50' = VAR f = ( IF ( ISBLANK ( [Cote acceptation] ), "#E4E9EF", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#E4E9EF", f )
 		displayFolder: Ecran Client boutons
 		lineageTag: c5ca02e1-c7fb-40d8-b087-0568925488de
 
@@ -370,7 +370,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: cb93f01d-5b45-42a4-a6c9-3382be7670cd
 
-	measure 'Fond e3Bouton51' = IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e3Bouton51' = VAR f = ( IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#E4E9EF", f )
 		displayFolder: Ecran Client boutons
 		lineageTag: 5e95b2bd-9aaf-44b9-beb3-2d1131ebcd37
 
@@ -378,7 +378,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 8961f040-5965-438e-b07f-553468c9da75
 
-	measure 'Fond e3bBouton1' = IF ( ISBLANK ( [Client selectionne] ) || NOT ISBLANK ( [Rattachement de piece refuse] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e3bBouton1' = VAR f = ( IF ( ISBLANK ( [Client selectionne] ) || NOT ISBLANK ( [Rattachement de piece refuse] ), "#E4E9EF", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#E4E9EF", f )
 		displayFolder: Ecran Client boutons
 		lineageTag: 96195963-1b59-4054-8fb3-8d46c42ff8c4
 
@@ -402,7 +402,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 92044210-c7fb-4a85-a7bb-4a6bc89cfbb1
 
-	measure 'Fond e4Bouton2' = IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e4Bouton2' = VAR f = ( IF ( ISBLANK ( [Client selectionne] ), "#E4E9EF", "#0F5C8C" ) ) RETURN IF ( NOT ISBLANK ( [Client selectionne] ) && ISBLANK ( [Viseur acceptation connecte] ), "#E4E9EF", f )
 		displayFolder: Ecran Client boutons
 		lineageTag: c40c7134-78a1-41e1-ab31-c93920d3c985
 
@@ -577,6 +577,8 @@ table ref_entite
 	measure 'Fondement des sommes distribuables' = VAR e = [Client selectionne] VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) RETURN IF ( fv = "FPI", "CMF, art. L. 214-81, I", "CMF, art. L. 214-69, I" ) & " ; art. 321-4 du règlement ANC n° 2021-09, modifié par le règlement ANC n° 2024-01"
 		displayFolder: Ecran 4 Arrete
 		lineageTag: 22d0c316-6088-4c0d-acd1-60fb6c97a34c
+
+	measure 'Regime du client' = VAR c = [Client selectionne] VAR m = CALCULATE ( SELECTEDVALUE ( ref_entite[est_professionnel] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = c ) ) RETURN IF ( ISBLANK ( c ), BLANK (), IF ( m = TRUE (), "OPCI professionnel", "OPCI grand public" ) )
 
 	column Entité
 		dataType: string

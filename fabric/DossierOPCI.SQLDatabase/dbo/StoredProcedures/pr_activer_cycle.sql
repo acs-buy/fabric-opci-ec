@@ -1,4 +1,3 @@
-
 -- pr_activer_cycle : 2 refus
 -- ACTIVER OU RETIRER UN CYCLE ENTIER. A l'activation, toutes ses questions eligibles entrent ; au
 -- retrait, toutes sortent, avec les memes refus que pour une question : motif obligatoire, aucune
@@ -34,6 +33,11 @@ BEGIN
     DECLARE @id INT = (SELECT id FROM dbo.programme_travail WHERE entite = @entite AND arrete = @arrete);
     IF @id IS NULL
         THROW 50311, N'Aucun programme n''est choisi pour cet arrêté ; choisir un type d''abord.', 1;
+    -- 51309, D1 (15/11/2026) : action 16. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51309, N'Action refusée : seule l''équipe du dossier peut activer ou retirer un cycle du programme de ce dossier.', 1;
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé ; le déverrouiller avant de modifier le programme.', 1;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_cycle WHERE code = @cycle)

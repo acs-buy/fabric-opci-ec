@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "e5Tableau",
   "position": {
-    "x": 728,
+    "x": 519,
     "y": 552,
     "z": 63900,
     "height": 300,
-    "width": 824,
+    "width": 1033,
     "tabOrder": 63900
   },
   "visual": {
@@ -487,6 +487,17 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "background": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#CFDEE8'"
+                    }
+                  }
                 }
               }
             }

@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revLivSousChoisi",
   "position": {
-    "x": 1081,
+    "x": 1106,
     "y": 359,
     "z": 27700,
     "height": 24,
@@ -63,7 +63,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5B6B7D'"
+                      "Value": "'#2B4666'"
                     }
                   }
                 }

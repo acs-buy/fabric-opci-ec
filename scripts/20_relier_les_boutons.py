@@ -30,6 +30,7 @@ COMMENT S'EN SERVIR
               --fn-ecran-arrete <votre fn_ecran_arrete>
               --fn-documents <votre fn_documents>
               --fn-valorisation <votre fn_valorisation>
+              --fn-ecran-referentiels <votre fn_ecran_referentiels>
     3. Relisez pour confirmer :
          python scripts/20_relier_les_boutons.py --verifier
 
@@ -68,6 +69,7 @@ ESPACE_ORIGINE = "3d36cceb-a461-4e21-a285-9e40297fe906"
 #   fn_ecran_arrete        l'ecran Arrete
 #   fn_documents           les boutons qui produisent un document, aux pages de l'ecran Revision
 #   fn_valorisation        la generation du lot de valorisation, a l'ecran Valorisation
+#   fn_ecran_referentiels  l'ecran Referentiels
 # Un script qui en oublierait un laisserait les boutons de cet ensemble sans effet. Le compte de
 # boutons par ensemble se lit par --verifier : il change quand un ecran change.
 FONCTIONS_ORIGINE = {
@@ -77,6 +79,7 @@ FONCTIONS_ORIGINE = {
     "2ce1e8e3-7775-4b7a-9365-e935a11499cb": "fn_ecran_arrete",
     "01b1f037-0147-4046-9106-bd80d60c1310": "fn_documents",
     "92f02959-0474-46b0-ba45-1ae7a7c9c0e5": "fn_valorisation",
+    "ca0f77bd-9747-4f54-8907-4c5228c28dfd": "fn_ecran_referentiels",
 }
 
 # Le rapport a relier, relativement a la racine du depot.

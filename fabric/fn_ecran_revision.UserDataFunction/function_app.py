@@ -211,7 +211,10 @@ def _rendre(g: _Geste, nom: str, faire):
         raise
     except Exception as e:
         procedure = g.procedures[-1] if g.procedures else nom
-        detail = "Erreur d'exécution de %s, %s : %s" % (nom, procedure, _detail(e))
+        # LE DETAIL DU JOURNAL (R9, D6, texte n° 17) : « de la fonction » devant son nom, « procédure » devant celui de
+        # la procedure ; sans procedure appelee, la forme du texte n° 19 (fn_documents), sans procedure nommee
+        detail = ("Erreur d’exécution de la fonction %s, procédure %s : %s" % (nom, procedure, _detail(e))
+                  if g.procedures else "Erreur d’exécution de la fonction %s : %s" % (nom, _detail(e)))
         _poser(g, TEXTE_ERREUR, "REFUS", procedure, journal=True, detail=detail)
         raise fn.UserThrownError(TEXTE_ERREUR, {"fonction": nom}) from e
     texte, genre = r if isinstance(r, tuple) else (r, "SUCCES")
@@ -515,10 +518,14 @@ def ouvrir_feuille(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext
     g = _geste(base, ctx, entite)
 
     def faire():
+        deja = True
         try:
             r = _executer(base, "EXEC dbo.pr_ouvrir_feuille_question @entite=?, @arrete=?, @reference=?, @par=?",
                           (entite, arrete, reference, g.qui), g)
             message = r.get("message", "Feuille ouverte.")
+            # LA FEUILLE OUVERTE PAR CET APPEL (R9, D6, textes n° 3 et 4) : la procedure rend alors son gabarit (colonne
+            # modele) ; pour une feuille deja ouverte, sa cote et sa phrase seules (definition relue le 27/10/2026)
+            deja = "modele" not in r
         except fn.UserThrownError as e:
             message = g.refus or _texte(e)
             if "déjà ouverte" not in message:
@@ -532,8 +539,15 @@ def ouvrir_feuille(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext
         from openpyxl import Workbook
         wb = Workbook(); wb.remove(wb.active)
         _feuille_feuille(wb, f[0]["cote"], f[0])
-        r = _deposer(base, g, entite, arrete, f"feuille_{f[0]['cote']}.xlsx", wb)
-        return f"{message} Gabarit déposé au site du cabinet : {r.get('web_url')}"
+        fichier = f"feuille_{f[0]['cote']}.xlsx"
+        _deposer(base, g, entite, arrete, fichier, wb)
+        date, heure = _depot_a_paris(base, entite, arrete, fichier)
+        if deja:
+            return (f"Feuille {f[0]['cote']} déjà ouverte pour la question {f[0]['reference']} ; son classeur, "
+                    f"déposé de nouveau le {date} à {heure}, s’ouvre depuis la liste du dossier de travail (étape 6).")
+        return (f"Feuille {f[0]['cote']} ouverte pour la question {f[0]['reference']}, gabarit {f[0]['modele']}, "
+                f"déposée le {date} à {heure} : remplissez-la depuis la liste du dossier de travail (étape 6), puis "
+                f"réimportez-la.")
     return _rendre(g, "ouvrir_feuille", faire)
 
 
@@ -1152,6 +1166,63 @@ def _deposer(base, g: _Geste, entite: str, arrete: str, fichier: str, wb) -> dic
                      (entite, arrete, fichier, base64.b64encode(tampon.getvalue()).decode("ascii"), g.qui), g)
 
 
+# LA DATE ET L'HEURE D'UN DEPOT, A L'HEURE DE PARIS (R9, D6, regle des textes a raccourcir, validation du 27/10/2026) :
+# celles de la mesure [Depose le heure de Paris] du modele, que montrent la ligne de titre de D1 et D2 et les 2 listes
+# du dossier de travail. L'instant est export_dossier.depose_le, ecrit en UTC par la base (defaut SYSUTCDATETIME, relu
+# le 27/10/2026), lu dans v_export_dossier (dernier depot reussi du fichier) ; heure d'ete, UTC + 2, du dernier dimanche
+# de mars a 01:00 UTC au dernier dimanche d'octobre a 01:00 UTC, UTC + 1 sinon, puis la troncature a la minute, comme
+# l'expression de la mesure. Une lecture qui echoue prend l'heure de la fonction : le depot est fait, son message ne
+# leve pas.
+
+def _dernier_dimanche(an: int, mois: int) -> datetime.datetime:
+    d = datetime.datetime(an, mois, 31)
+    return d - datetime.timedelta(days=d.isoweekday() % 7)
+
+
+def _a_paris(utc: datetime.datetime):
+    """(« jj/mm/aaaa », « hh:mm ») d'un instant UTC sans fuseau, a l'heure de Paris, tronque a la minute."""
+    debut = _dernier_dimanche(utc.year, 3) + datetime.timedelta(hours=1)
+    fin = _dernier_dimanche(utc.year, 10) + datetime.timedelta(hours=1)
+    p = utc + datetime.timedelta(hours=2 if debut <= utc < fin else 1)
+    return p.strftime("%d/%m/%Y"), p.strftime("%H:%M")
+
+
+def _maintenant_utc() -> datetime.datetime:
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+
+
+def _depot_a_paris(base, entite: str, arrete: str, fichier: str):
+    """(date, heure) a Paris du dernier depot reussi du fichier, lu dans v_export_dossier."""
+    try:
+        l = _lire(base, "SELECT depose_le FROM dbo.v_export_dossier WHERE entite = ? AND arrete = ? AND fichier = ?",
+                  (entite, arrete, fichier))
+        d = l[0]["depose_le"] if l else None
+    except Exception:
+        d = None
+    if not isinstance(d, datetime.datetime):
+        d = _maintenant_utc()
+    return _a_paris(d.replace(tzinfo=None))
+
+
+def _compte(n: int, singulier: str, pluriel: str) -> str:
+    """Le nombre et son nom accorde, sans « (s) » : le singulier pour 0 et 1 (R9, D6, regle des textes)."""
+    return "%d %s" % (n, singulier if n <= 1 else pluriel)
+
+
+# LE NOM DU CYCLE A L'ECRAN (R9, D6, texte n° 2) : nom_usage de la vue dbo.v_ecran_cycle_ou_phase, genre CYCLE, que
+# lit le segment « Cycle ou phase » ; la vue est generee depuis la colonne calculee ref_cycle[Cycle] du modele
+# conduite_de_mission (61_DEPLOIEMENT/generer_e5_324_questions.py), et un cycle que le modele ne connait pas y prend
+# le libelle de ref_cycle (vue et lignes relues le 27/10/2026 : 11 cycles, memes noms que le modele). Une lecture en
+# echec ou sans ligne rend le code du cycle.
+def _cycle_a_l_ecran(base, cycle: str) -> str:
+    c = (cycle or "").strip()
+    try:
+        l = _lire(base, "SELECT nom_usage FROM dbo.v_ecran_cycle_ou_phase WHERE genre = 'CYCLE' AND code = ?", (c,))
+        return (l[0]["nom_usage"] or c) if l else c
+    except Exception:
+        return c
+
+
 @udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
@@ -1169,8 +1240,13 @@ def exporter_questions(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCon
         if not d:
             raise _refus(g, f"Aucune question du cycle {cycle} au programme de cet arrêté.")
         _feuille_questions(wb, "Q-" + cycle, d)
-        r = _deposer(base, g, entite, arrete, f"questions_{cycle}_{entite}_{arrete}.xlsx", wb)
-        return f"Classeur de {len(d)} questions déposé au site du cabinet : {r.get('web_url')}"
+        fichier = f"questions_{cycle}_{entite}_{arrete}.xlsx"
+        _deposer(base, g, entite, arrete, fichier, wb)
+        date, heure = _depot_a_paris(base, entite, arrete, fichier)
+        n = len(d)
+        return (f"Classeur Excel {'des %d questions' % n if n > 1 else 'de %d question' % n} du cycle "
+                f"{_cycle_a_l_ecran(base, cycle)} déposé le {date} à {heure} ; il s’ouvre depuis la liste du "
+                f"dossier de travail (étape 6).")
     return _rendre(g, "exporter_questions", faire)
 
 
@@ -1190,8 +1266,11 @@ def exporter_od(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, e
         ref = _vide(reference)
         d = _od(base, entite, arrete, reference=ref, libres=ref is None)
         _feuille_od(wb, ("OD " + ref) if ref else "OD libres", d)
-        r = _deposer(base, g, entite, arrete, f"od_{ref or 'libres'}_{entite}_{arrete}.xlsx", wb)
-        return f"Classeur de {len(d)} ligne(s) préremplie(s) déposé au site du cabinet : {r.get('web_url')}"
+        fichier = f"od_{ref or 'libres'}_{entite}_{arrete}.xlsx"
+        _deposer(base, g, entite, arrete, fichier, wb)
+        date, heure = _depot_a_paris(base, entite, arrete, fichier)
+        return (f"Grille de saisie de {_compte(len(d), 'ligne préremplie', 'lignes préremplies')} déposée le {date} à "
+                f"{heure} ; elle s’ouvre depuis la liste du dossier de travail (étape 6).")
     return _rendre(g, "exporter_od", faire)
 
 
@@ -1257,8 +1336,12 @@ def exporter_dossier(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
                 _feuille_feuille(wb, f["cote"], f)
             _feuille_od(wb, "OD-" + cy, _od(base, entite, arrete, cycle=cy), vides=6, colonnes=_COL_OD_CYCLE)
         _feuille_od(wb, "OD libres", _od(base, entite, arrete, libres=True))
-        r = _deposer(base, g, entite, arrete, f"dossier_{entite}_{arrete}.xlsx", wb)
-        return f"Dossier de travail, {len(wb.sheetnames)} onglets, déposé au site du cabinet : {r.get('web_url')}"
+        fichier = f"dossier_{entite}_{arrete}.xlsx"
+        _deposer(base, g, entite, arrete, fichier, wb)
+        date, heure = _depot_a_paris(base, entite, arrete, fichier)
+        return (f"Dossier de travail de {_compte(len(wb.sheetnames), 'onglet', 'onglets')} déposé le {date} à "
+                f"{heure} ; il s’ouvre par son lien, sur la page que montre « Voir le dossier exporté » (étape 3) ou "
+                f"dans la liste du dossier de travail (étape 6).")
     return _rendre(g, "exporter_dossier", faire)
 
 
@@ -1318,9 +1401,22 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
             if _absent(e):
                 raise _refus(g, REFUS_CLASSEUR) from None
             raise
+        lu_le = _maintenant_utc()
         wb = load_workbook(io.BytesIO(octets), data_only=True)
         par = g.qui
         faits, refus = [], []
+        # LE BILAN DU DOSSIER ENTIER (R9, D6, texte n° 6) : ce que rendent les procedures, onglet par onglet
+        # (pr_importer_reponses : importees ; pr_importer_od : lignes, debit et credit du brouillon ;
+        # pr_importer_feuille : la feuille reprise), definitions relues le 27/10/2026. pr_importer_od remplace le
+        # brouillon de la question a chaque import : une question presente dans 2 onglets (OD-<cycle> et
+        # OD <reference>) ne garde que son dernier import, seul compte (ses lignes et son equilibre) ; la cle est la
+        # reference en majuscules, la base comparant sans egard a la casse. pr_importer_feuille met a jour la feuille de
+        # sa cote sans refuser un 2e import : une feuille importee 2 fois (onglet duplique, cote ecrite en minuscules) ne
+        # compte qu'une fois ; la cle est la cote que rend la procedure, en majuscules, espaces de fin otes, la base
+        # comparant sans egard a la casse ni aux espaces de fin.
+        onglets_lus, od_par_question, feuilles_reprises = set(), {}, set()
+        n_reponses, n_cycles, n_lignes_l = 0, 0, 0
+        libres_equilibrees = True
         for ws in wb.worksheets:
             t = ws.title
             avant = len(g.procedures)
@@ -1335,6 +1431,12 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                                  "motif": d.get("motif"), "commentaire": d.get("commentaire")} for d in _lignes_de(ws) if d.get("reference")]
                     r = _executer(base, "EXEC dbo.pr_importer_reponses @cote=?, @reponses=?, @par=?", (l[0]["cote"], json.dumps(reponses, ensure_ascii=False, default=str), par), g)
                     faits.append(f"{t} : {r.get('message', 'importé')}")
+                    # un onglet de questions ne compte dans « sur N cycles » que si ses reponses importees sont plus de 0
+                    importees = int(r.get("importees") or 0)
+                    n_reponses += importees
+                    if importees > 0:
+                        n_cycles += 1
+                    onglets_lus.add(t)
                 elif t.startswith("OD-"):
                     # L'ONGLET D'OD D'UN CYCLE, dans le dossier de travail. Chaque question du cycle voit son
                     # brouillon REMPLACE par ses lignes de l'onglet ; une question dont toutes les lignes ont
@@ -1355,6 +1457,8 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                         r = _executer(base, "EXEC dbo.pr_importer_od @entite=?, @arrete=?, @reference=?, @lignes=?, @par=?",
                                       (entite, arrete, ref, json.dumps(siennes, ensure_ascii=False, default=str), par), g)
                         faits.append(f"{t} {ref} : {r.get('message', 'importé')}")
+                        od_par_question[ref.upper()] = (int(r.get("lignes") or 0), r.get("debit") == r.get("credit"))
+                        onglets_lus.add(t)
                 elif t == "OD libres" or t.startswith("OD "):
                     ref = None if t == "OD libres" else t[3:].strip()
                     lignes = [{"ligne": d["_ligne"], "journal": d.get("journal") or "ODR", "compte": str(d.get("compte")).strip(), "libelle": d.get("libelle"),
@@ -1368,6 +1472,12 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                     r = _executer(base, "EXEC dbo.pr_importer_od @entite=?, @arrete=?, @reference=?, @lignes=?, @par=?, @fichier=?",
                                   (entite, arrete, ref, json.dumps(lignes, ensure_ascii=False, default=str), par, fichier), g)
                     faits.append(f"{t} : {r.get('message', 'importé')}")
+                    if ref is None:
+                        n_lignes_l += int(r.get("lignes") or 0)
+                        libres_equilibrees = libres_equilibrees and r.get("debit") == r.get("credit")
+                    else:
+                        od_par_question[ref.upper()] = (int(r.get("lignes") or 0), r.get("debit") == r.get("credit"))
+                    onglets_lus.add(t)
                 else:
                     valeurs = {}
                     for row in ws.iter_rows(min_row=1, values_only=True):
@@ -1380,6 +1490,9 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                                   (cote, _vide(valeurs.get("conclusion")), _vide(valeurs.get("forme")), chemin.rsplit("/", 1)[-1],
                                    hashlib.sha256(octets).hexdigest().upper(), par, _vide(valeurs.get("objectif"))), g)
                     faits.append(f"{t} : {r.get('message', 'importé')}")
+                    # une feuille par cote, quel que soit le nombre de ses imports (la cle de la base)
+                    feuilles_reprises.add(str(r.get("cote") or cote).rstrip(" ").upper())
+                    onglets_lus.add(t)
             except fn.UserThrownError as e:
                 refus.append(f"{t} : {g.refus or _texte(e)}")
                 g.refus = None
@@ -1391,10 +1504,86 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                 refus.append(f"{t} : {ONGLET_INTERROMPU}")
                 g.refus = None
                 _journaliser(g, procedure, "Import de l'onglet %s interrompu, %s : %s" % (t, procedure, _detail(e)))
-        texte = f"Classeur relu au {source}. {len(faits)} onglet(s) importé(s)." + (" " + " ".join(faits) if faits else "")
+        # LE DOSSIER ENTIER, SES OD TOUTES EQUILIBREES (R9, D6, texte n° 6) : le bilan compte ce que les procedures ont
+        # rendu, nombres accordes, sans adresse, a l'heure de Paris de la relecture. Toute partie vide est omise : aucun
+        # onglet importe, aucune reponse, aucune ligne d'OD de question ou libre, aucune feuille ; un onglet de questions
+        # ne compte dans les cycles que si ses reponses importees sont plus de 0, une question que si les lignes de son
+        # dernier import sont plus de 0 (un brouillon vide par le reimport n'est pas compte), une feuille une fois par
+        # cote.
+        # Tout autre classeur, ou un brouillon desequilibre, garde le texte d'avant R9, qui cite chaque procedure.
+        n_lignes_q = sum(n for n, _ in od_par_question.values())
+        n_questions = sum(1 for n, _ in od_par_question.values() if n > 0)
+        equilibrees = libres_equilibrees and all(e for _, e in od_par_question.values())
+        if "Balance" in wb.sheetnames and "Programme" in wb.sheetnames and equilibrees:
+            date, heure = _a_paris(lu_le)
+            morceaux = []
+            if onglets_lus:
+                morceaux.append(_compte(len(onglets_lus), "onglet importé", "onglets importés"))
+            if n_reponses > 0:
+                morceaux.append("%s sur %s" % (_compte(n_reponses, "réponse", "réponses"),
+                                               _compte(n_cycles, "cycle", "cycles")))
+            od = []
+            if n_questions > 0:
+                od.append("%s d’OD de %s" % (_compte(n_lignes_q, "ligne", "lignes"),
+                                             _compte(n_questions, "question", "questions")))
+            if n_lignes_l > 0:
+                od.append("%s d’OD %s" % (_compte(n_lignes_l, "ligne", "lignes"),
+                                          "libre" if n_lignes_l <= 1 else "libres"))
+            if od:
+                morceaux.append(" et ".join(od) + (", toutes équilibrées" if n_lignes_q + n_lignes_l > 1 else ""))
+            if feuilles_reprises:
+                morceaux.append(_compte(len(feuilles_reprises), "feuille reprise", "feuilles reprises"))
+            texte = f"Dossier relu le {date} à {heure}" + ((" : " + ", ".join(morceaux)) if morceaux else "") + "."
+        else:
+            texte = (f"Classeur relu au {source}. {len(faits)} onglet(s) importé(s)."
+                     + (" " + " ".join(faits) if faits else ""))
         if refus:
             texte += " Refusés : " + " ; ".join(refus)
         # UN REFUS PARTIEL S'AFFICHE EN REFUS : la zone de message passe au rose des qu'un onglet est refuse,
         # meme si d'autres sont importes ; la phrase dit lesquels.
         return texte, ("REFUS" if refus else "SUCCES")
     return _rendre(g, "importer_classeur", faire)
+
+
+# ----------------------------------------------------------------------------- l'ajout d'une question de reference
+
+@udf.context(argName="ctx")
+@udf.connection(alias="DossierOPCI", argName="base")
+@udf.function()
+def ajouter_question(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, teneur: str = "",
+                     cycleOuPhase: str = "", enonce: str = "") -> str:
+    """Bouton « Ajouter une question » de l'etape 2, a la bande des cycles (objet n° 204 de la maquette retenue de
+    l'ecran 5, 20_LIVRABLES_V2/PARCOURS_ECRANS/83_referentiels_option_1.html ; lot 4 de
+    65_JOURNAL/roadmap_ecran_5_referentiels.md) : une question de reference neuve, au statut « à valider », dans le cycle
+    choisi a la bande des cycles (revCycles : nom d'usage ou code, une phase admise), avec l'enonce saisi au champ
+    « Énoncé de la question ».
+
+    teneur est lie a la mesure [Teneur des questions connecte]. Il a une valeur par defaut vide, comme cycleOuPhase et
+    enonce, selon la regle du 24/10/2026 ecrite en tete de ce fichier (chaque parametre d'une fonction qu'appelle un
+    bouton des ecrans 2 et 3 a une valeur par defaut vide, sauf les constantes du bouton). Le caractere obligatoire que
+    lui donnent la feuille de route (lot 4) et l'objet n° 204 de la maquette est tenu par la fonction : absent, vide, a
+    blancs ou d'une autre personne que la personne connectee, teneur est refuse en francais AVANT TOUT APPEL A LA BASE,
+    sans journal ni message, au texte du refus 50888 de la procedure (regle de fn_ecran_referentiels, critere 1 du
+    lot 4). La liaison du bouton n° 205 se decide a la pose (lot 7 de la feuille de route, contrat d'actions).
+    cycleOuPhase et enonce passent tels quels a dbo.pr_ecran_ajouter_question (@cycle_ou_phase, @enonce, @par, relus en
+    base le 28/10/2026), qui refuse en francais, dans son ordre : aucun mandat d'associe ni de reviseur en cours (50888),
+    cycle ou phase vide, commun a un cycle et a une phase, inconnu ou ecarte (50871, 50887, 50872, 50873), enonce vide
+    ou de plus de 400 caracteres (50885, 50886). Aucun parametre d'etat. Pas de tiret bas dans un nom de parametre,
+    d'ou cycleOuPhase.
+
+    L'auteur est la personne connectee (ctx.executing_user), passee en @par, jamais un parametre : la session SQL de la
+    fonction porte le compte a la fois proprietaire de la fonction et auteur de sa connexion, quel que soit le compte qui
+    clique (R5, § 6.1 de la feuille de route), et seul @par nomme la personne en base. La procedure pose le message de
+    reussite sous « - », que [Message de la revision] lit sur ec02 ; la fonction le pose de meme apres le commit, et pose
+    un refus de la procedure apres le rollback."""
+    qui = _qui(ctx)
+    if _vide(teneur) is None or teneur.strip().lower() != qui.strip().lower():
+        raise fn.UserThrownError("Ajout refusé : seuls l’associé et le réviseur ajoutent une question de référence, et "
+                                 "votre adresse de connexion ne porte aucun mandat d’associé ni de réviseur en cours.", {})
+    g = _geste(base, ctx, "-")
+
+    def faire():
+        r = _executer(base, "EXEC dbo.pr_ecran_ajouter_question @cycle_ou_phase=?, @enonce=?, @par=?",
+                      (_vide(cycleOuPhase), _vide(enonce), g.qui), g)
+        return r.get("message") or "Question ajoutée."
+    return _rendre(g, "ajouter_question", faire)

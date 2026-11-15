@@ -335,6 +335,13 @@
                   "Value": "'ec04000000000000d001'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ouvre la page Pièce justificative, pour rattacher une pièce à la question choisie'"
+                }
+              }
             }
           }
         }

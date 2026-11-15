@@ -1,0 +1,91 @@
+/// Écran 5, objet n° 44 : table du segment « Colonne » ; relation referentiel → v_ecran_referentiel_choix[table_nom]
+table v_ecran_referentiel_colonnes
+	lineageTag: 152bde4c-6642-465e-b548-63cc861f065a
+
+	/// n° 105, avec une colonne choisie au segment « Colonne » : « « libellé » : annexe à recalculer pour n véhicules » quand marque_annexe = 1, « « libellé » : aucun effet » sinon, suivi de « ; ajout, suppression, code : annexe à recalculer pour n véhicules » quand le référentiel a un déclencheur de retar
+	measure 'Effet d une modification' = VAR c = [Referentiel choisi] VAR col = [Colonne du referentiel choisie] VAR tc = FILTER ( ALL ( v_ecran_referentiel_colonnes ), v_ecran_referentiel_colonnes[referentiel] = c && v_ecran_referentiel_colonnes[colonne] = col ) VAR lib = MAXX ( tc, v_ecran_referentiel_colonnes[libelle_colonne] ) VAR mk = MAXX ( tc, v_ecran_referentiel_colonnes[marque_annexe] ) VAR n = CALCULATE ( MAX ( v_ecran_inventaire_referentiel[effet_annexe] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) RETURN IF ( ISBLANK ( col ) || col = "", [Effet sur l annexe du referentiel choisi], "«" & UNICHAR ( 8239 ) & lib & UNICHAR ( 8239 ) & "»" & " : " & IF ( mk = 1, "annexe à recalculer pour " & FORMAT ( n, "0" ) & IF ( n < 2, " véhicule", " véhicules" ), "aucun effet" ) & IF ( n > 0, " ; ajout, suppression, code : annexe à recalculer pour " & FORMAT ( n, "0" ) & IF ( n < 2, " véhicule", " véhicules" ), "" ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 009be487-9deb-4e37-b049-0438528e3a42
+
+	/// n° 112, SELECTEDVALUE(colonne) du segment « Colonne » : le nom de la colonne que lisent [Effet d une modification] et [Blocage modifier la valeur] ; l’écran ne montre que le libellé
+	measure 'Colonne du referentiel choisie' = SELECTEDVALUE ( v_ecran_referentiel_colonnes[colonne] )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 4d98495a-775b-429a-9e70-97198ba16f5a
+
+	column referentiel
+		dataType: string
+		sourceProviderType: varchar(120)
+		lineageTag: 423a408b-1262-4d01-8982-e3ddc0bf1f19
+		summarizeBy: none
+		sourceColumn: referentiel
+
+		annotation SummarizationSetBy = Automatic
+
+	column colonne
+		dataType: string
+		sourceProviderType: varchar(128)
+		lineageTag: 7e5b358a-cae0-435e-854d-15c74efb497f
+		summarizeBy: none
+		sourceColumn: colonne
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle_colonne
+		dataType: string
+		sourceProviderType: nvarchar(40)
+		lineageTag: f707ce1d-941f-4ef9-942c-cb886337284c
+		summarizeBy: none
+		sourceColumn: libelle_colonne
+		sortByColumn: rang_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column rang_libelle
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: de19fa9d-f85d-4c81-bfbe-7555cffde425
+		summarizeBy: none
+		sourceColumn: rang_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifiable
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 80d6666d-bf24-4aac-ab76-d464e00fb33f
+		summarizeBy: none
+		sourceColumn: modifiable
+
+		annotation SummarizationSetBy = Automatic
+
+	column marque_annexe
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 72ef29d4-e3ea-4c54-b0c2-feb24b0801bc
+		summarizeBy: none
+		sourceColumn: marque_annexe
+
+		annotation SummarizationSetBy = Automatic
+
+	column rang_annexe
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 76733e08-4df5-4e9f-9497-c660a185d99f
+		summarizeBy: none
+		sourceColumn: rang_annexe
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_referentiel_colonnes = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_referentiel_colonnes = Source{[Schema="dbo",Item="v_ecran_referentiel_colonnes"]}[Data]
+				in
+				    dbo_v_ecran_referentiel_colonnes
+

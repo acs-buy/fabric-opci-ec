@@ -1,4 +1,3 @@
-
 -- pr_saisir_od_paire : 1 refus
 -- LES 2 LIGNES D'UNE ECRITURE, en une seule transaction. Les 2 sont controlees avant toute
 -- ecriture : un refus de l'une n'ecrit aucune des 2, et son message dit de quelle ligne il vient.
@@ -49,6 +48,11 @@ BEGIN
     -- 327 fin
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé.', 1;
+    -- 51313, D1 (15/11/2026) : action 20. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51313, N'Action refusée : seule l''équipe du dossier peut saisir une écriture d''OD dans ce dossier.', 1;
     DECLARE @qid INT, @cote VARCHAR (30), @fqid INT, @m NVARCHAR (2000), @n INT, @k INT = 1;
     WHILE @k <= 2
     BEGIN

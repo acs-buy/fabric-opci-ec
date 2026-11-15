@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "e4Bandeau",
   "position": {
-    "x": 728,
+    "x": 519,
     "y": 450,
     "z": 60700,
     "height": 40,
-    "width": 824,
+    "width": 1033,
     "tabOrder": 60700
   },
   "visual": {

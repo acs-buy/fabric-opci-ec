@@ -1,4 +1,3 @@
-
 CREATE   PROCEDURE dbo.pr_ecran_proposer_synthese
     @entite VARCHAR (20),
     @arrete VARCHAR (20),
@@ -18,6 +17,11 @@ BEGIN
     IF ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @entite COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51222, N'Proposition refusée : la synthèse ne se propose pas en l''état pour le véhicule du sélecteur Véhicule (lot proposé non visé, comptes de classe 1 hors actif net, rationalisation non calculée ou qui ne boucle pas, valeur liquidative non rendue, synthèse en attente du visa ou visée).', 1;
     -- 327 fin
+    -- 51319, D1 (15/11/2026) : action 26, viseur compris (decision 3). Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51319, N'Action refusée : seule l''équipe du dossier peut proposer la synthèse de ce dossier.', 1;
     BEGIN TRY
         EXEC dbo.pr_proposer_synthese @entite, @arrete, @par;
         UPDATE dbo.ref_arrete

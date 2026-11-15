@@ -40,7 +40,7 @@ Il écrit les deux commandes complètes, avec vos valeurs, dans `mes_commandes.t
 >
 > ```
 > python scripts/25_relier_le_modele.py --serveur <le vôtre> --base <la vôtre>
-> python scripts/20_relier_les_boutons.py --espace <le vôtre> --fn-ecran-client <le vôtre> --fn-ecran-revision <le vôtre> --fn-ecran-valorisation <le vôtre> --fn-ecran-arrete <le vôtre> --fn-documents <le vôtre> --fn-valorisation <le vôtre>
+> python scripts/20_relier_les_boutons.py --espace <le vôtre> --fn-ecran-client <le vôtre> --fn-ecran-revision <le vôtre> --fn-ecran-valorisation <le vôtre> --fn-ecran-arrete <le vôtre> --fn-documents <le vôtre> --fn-valorisation <le vôtre> --fn-ecran-referentiels <le vôtre>
 > ```
 >
 > Les deux lignes complètes, avec mes valeurs, sont dans `mes_commandes.txt` : prends-les de là.
@@ -92,13 +92,15 @@ Le détail est aux [étapes 9 et 10 du mode opératoire](../docs/faire/etape-09-
 
 ---
 
-## La liaison qui se refait seule
+## La liaison du rapport à son modèle, que les scripts ne touchent pas
 
-Le rapport retrouve son modèle de données seul, parce qu'il le désigne par un chemin relatif.
-**La condition : ne renommez aucun élément.** Un renommage casse cette liaison, et le message
-d'erreur ne désigne pas le renommage.
+Chaque rapport désigne son modèle par une connexion qui nomme l'espace de travail d'origine, le nom
+du modèle et l'identifiant du modèle d'origine : section `byConnection` du fichier `definition.pbir`
+de chaque rapport. Aucun des 2 scripts ne modifie ce fichier. La vérification est aux
+[étapes 9 et 10 du mode opératoire](../docs/faire/etape-09-et-10-relier.md).
 
-Dites-le à l'agent si vous lui confiez autre chose.
+**Ne renommez aucun élément.** La connexion nomme le modèle, et le message d'erreur d'un renommage
+ne désigne pas le renommage. Dites-le à l'agent si vous lui confiez autre chose.
 
 ---
 

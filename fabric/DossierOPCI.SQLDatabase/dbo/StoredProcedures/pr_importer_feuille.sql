@@ -1,4 +1,3 @@
-
 -- --- 2. l'import d'une feuille remplie : conclusion, forme, fichier -----------------------------------
 CREATE   PROCEDURE dbo.pr_importer_feuille
     @cote         VARCHAR (30),
@@ -24,6 +23,11 @@ BEGIN
     SELECT @entite = entite, @arrete = arrete, @conclue = conclue_le FROM dbo.feuille_travail WHERE cote = @cote;
     IF @entite IS NULL
         THROW 50371, N'La feuille désignée n''existe pas.', 1;
+    -- 51311, D1 (15/11/2026) : action 18, dossier lu par la cote. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51311, N'Action refusée : seule l''équipe du dossier peut reprendre ou conclure une feuille de travail de ce dossier.', 1;
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé.', 1;
     IF @conclue IS NOT NULL AND EXISTS (SELECT 1 FROM dbo.visa WHERE nature = 'CONCLUSION' AND objet_ref = @cote AND decision = 'VISE')

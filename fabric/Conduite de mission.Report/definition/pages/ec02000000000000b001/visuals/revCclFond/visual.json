@@ -27,7 +27,7 @@
                 "name": {
                   "expr": {
                     "Literal": {
-                      "Value": "'fond_etape5_8df4d9d572.png'"
+                      "Value": "'fond_etape5_c4748a801b.png'"
                     }
                   }
                 },
@@ -36,7 +36,7 @@
                     "ResourcePackageItem": {
                       "PackageName": "RegisteredResources",
                       "PackageType": 1,
-                      "ItemName": "fond_etape5_8df4d9d572.png"
+                      "ItemName": "fond_etape5_c4748a801b.png"
                     }
                   }
                 },

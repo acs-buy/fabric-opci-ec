@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revProgOuvrirleclasse",
   "position": {
-    "x": 1131,
-    "y": 869,
+    "x": 1342,
+    "y": 514,
     "z": 7100,
-    "height": 26,
+    "height": 29,
     "width": 249,
     "tabOrder": 7100
   },
@@ -25,7 +25,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ouvrir le classeur des questions du cycle'"
+                  "Value": "'Exporter le classeur des questions du cycle'"
                 }
               }
             },
@@ -85,7 +85,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ouvrir le classeur des questions du cycle'"
+                  "Value": "'Exporter le classeur des questions du cycle'"
                 }
               }
             },
@@ -457,7 +457,7 @@
                     {
                       "name": "entite",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -476,7 +476,7 @@
                     {
                       "name": "arrete",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -495,7 +495,7 @@
                     {
                       "name": "cycle",
                       "dataType": "string",
-                      "isOptional": false,
+                      "isOptional": true,
                       "defaultValue": null,
                       "type": "ValueParameter",
                       "value": {
@@ -512,6 +512,13 @@
                       }
                     }
                   ]
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dépose au site du cabinet le classeur des questions du cycle choisi, réponses comprises'"
                 }
               }
             }

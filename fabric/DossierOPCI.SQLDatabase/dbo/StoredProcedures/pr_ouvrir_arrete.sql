@@ -22,9 +22,7 @@ BEGIN
     IF @ex IS NULL
     BEGIN
         DECLARE @me NVARCHAR (2000) =
-            N'Ouverture refusee : un arrete de nature ' + @type_arrete
-          + N' doit nommer l''exercice auquel il se rattache, par le code '
-          + N'de la cloture annuelle de cet exercice.';
+            N'Un arrêté de nature ' + @type_arrete + N' se rattache à un exercice : indiquer le code de la clôture annuelle de cet exercice, puis réessayer.';
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, message, refuse_pour)
         VALUES ('pr_ouvrir_arrete', @entite, @arrete, @me, @par);

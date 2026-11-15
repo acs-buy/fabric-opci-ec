@@ -335,6 +335,13 @@
                   "Value": "'bkRev6'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Montre l’étape des livrables de l’arrêté et du dossier de travail'"
+                }
+              }
             }
           }
         }

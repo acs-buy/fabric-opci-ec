@@ -210,7 +210,10 @@ def _rendre(g: _Action, nom: str, faire):
         # Erreur non prevue, du moteur SQL, du pilote ou de Python : le texte francais au bouton et a la zone de
         # message, le detail au journal seul.
         procedure = g.procedures[-1] if g.procedures else nom
-        detail = "Erreur d'exécution de %s, %s : %s" % (nom, procedure, _detail(e))
+        # LE DETAIL DU JOURNAL (R9, D6, texte n° 18) : « de la fonction » devant son nom, « procédure » devant celui de
+        # la procedure ; sans procedure appelee, la forme du texte n° 19 (fn_documents), sans procedure nommee
+        detail = ("Erreur d’exécution de la fonction %s, procédure %s : %s" % (nom, procedure, _detail(e))
+                  if g.procedures else "Erreur d’exécution de la fonction %s : %s" % (nom, _detail(e)))
         _poser(g, TEXTE_ERREUR, "REFUS", procedure, journal=True, detail=detail)
         raise fn.UserThrownError(TEXTE_ERREUR, {"fonction": nom}) from e
     texte, genre = r if isinstance(r, tuple) else (r, "SUCCES")
@@ -357,6 +360,44 @@ def _montant_ecran(x) -> str:
     return "{:,.2f}".format(Decimal(str(x))).replace(",", " ").replace(".", ",")
 
 
+# LA DATE ET L'HEURE D'UN DEPOT, A L'HEURE DE PARIS (R9, D6, regle des textes a raccourcir, validation du 27/10/2026) :
+# celles de la mesure [Depose le heure de Paris] du modele, que montre la ligne de titre de D2. L'instant est
+# export_dossier.depose_le, ecrit en UTC par la base (defaut SYSUTCDATETIME, relu le 27/10/2026), lu dans
+# v_export_dossier (dernier depot reussi du fichier) ; heure d'ete, UTC + 2, du dernier dimanche de mars a 01:00 UTC au
+# dernier dimanche d'octobre a 01:00 UTC, UTC + 1 sinon, puis la troncature a la minute, comme l'expression de la
+# mesure. Memes regles que fn_ecran_revision. Une lecture qui echoue prend l'heure de la fonction : le depot est fait,
+# son message ne leve pas.
+
+def _dernier_dimanche(an: int, mois: int) -> datetime.datetime:
+    d = datetime.datetime(an, mois, 31)
+    return d - datetime.timedelta(days=d.isoweekday() % 7)
+
+
+def _a_paris(utc: datetime.datetime):
+    """(« jj/mm/aaaa », « hh:mm ») d'un instant UTC sans fuseau, a l'heure de Paris, tronque a la minute."""
+    debut = _dernier_dimanche(utc.year, 3) + datetime.timedelta(hours=1)
+    fin = _dernier_dimanche(utc.year, 10) + datetime.timedelta(hours=1)
+    p = utc + datetime.timedelta(hours=2 if debut <= utc < fin else 1)
+    return p.strftime("%d/%m/%Y"), p.strftime("%H:%M")
+
+
+def _maintenant_utc() -> datetime.datetime:
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+
+
+def _depot_a_paris(base, entite: str, arrete: str, fichier: str):
+    """(date, heure) a Paris du dernier depot reussi du fichier, lu dans v_export_dossier."""
+    try:
+        l = _lire(base, "SELECT depose_le FROM dbo.v_export_dossier WHERE entite = ? AND arrete = ? AND fichier = ?",
+                  (entite, arrete, fichier))
+        d = l[0]["depose_le"] if l else None
+    except Exception:
+        d = None
+    if not isinstance(d, datetime.datetime):
+        d = _maintenant_utc()
+    return _a_paris(d.replace(tzinfo=None))
+
+
 # ----------------------------------------------------------------------------- 1a, les immeubles
 
 @udf.context(argName="ctx")
@@ -476,11 +517,15 @@ def exporter_valeurs(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
         wb = _classeur_valeurs(donnees)
         tampon = io.BytesIO()
         wb.save(tampon)
-        r = _executer(base, "EXEC dbo.pr_deposer_classeur @entite=?, @arrete=?, @fichier=?, @contenu_base64=?, @par=?",
-                      (entite, arrete, _fichier_valeurs(entite, arrete),
-                       base64.b64encode(tampon.getvalue()).decode("ascii"), g.qui), g)
-        return (f"Classeur des valeurs, {len(donnees)} actif(s), déposé au site du cabinet : "
-                f"{r.get('web_url') or 'adresse non rendue'}")
+        fichier = _fichier_valeurs(entite, arrete)
+        _executer(base, "EXEC dbo.pr_deposer_classeur @entite=?, @arrete=?, @fichier=?, @contenu_base64=?, @par=?",
+                  (entite, arrete, fichier, base64.b64encode(tampon.getvalue()).decode("ascii"), g.qui), g)
+        # LA PHRASE DE R9 (D6, texte n° 7) : sans adresse, « Ouvrir le classeur Excel » ouvrant le fichier sur la meme
+        # ligne ; la date et l'heure de Paris du depot ; le nombre d'actifs accorde
+        date, heure = _depot_a_paris(base, entite, arrete, fichier)
+        n = len(donnees)
+        return (f"Classeur Excel des valeurs de {n} {'actif' if n <= 1 else 'actifs'} déposé le {date} à {heure} ; il "
+                f"s’ouvre par « Ouvrir le classeur Excel ».")
     return _rendre(g, "exporter_valeurs", faire)
 
 

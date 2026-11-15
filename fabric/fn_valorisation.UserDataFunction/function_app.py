@@ -193,7 +193,7 @@ WHERE v.date_valeur = ?
 """
 
 # 1. La garde n° 25, dans la transaction de la fonction, avant toute ecriture.
-REQUETE_GARDE = "EXEC dbo.pr_garde_generer_lot_valorisation @entite = ?, @arrete = ?"
+REQUETE_GARDE = "EXEC dbo.pr_garde_generer_lot_valorisation @entite = ?, @arrete = ?, @par = ?"
 
 # 2. Les actifs CALCULABLE de l'entite a l'arrete, leur poste du bilan, leur valeur
 #    actuelle et le stock deja passe sur leur compte de difference.
@@ -460,11 +460,12 @@ def matiere_du_lot(rangs, date_arrete):
     if au_275 and not REPRISE_275_DISTINGUE_LES_TITRES:
         cites = "; ".join(f"{code} (poste {postes.get(code) or 'vide'}, {_montant_ecran(montant)})"
                           for code, montant in sorted(au_275.items()))
+        # R9, D6, texte n° 16 : « calculée pour » devant le code d'actif, apostrophes typographiques
         raise _Refus(
-            f"Génération refusée : la différence d'estimation de {cites} s'écrirait au compte 275, que « Reprendre "
-            "l'écart du 275 » rapproche de la seule valeur des titres de filiales ; visée, elle serait contre-passée "
-            "par cette reprise. Aucun lot n'est posé tant que cette reprise ne distingue pas les titres de filiales "
-            "des autres titres."
+            f"Génération refusée : la différence d’estimation calculée pour {cites} s’écrirait au compte 275, que "
+            "« Reprendre l’écart du 275 » rapproche de la seule valeur des titres de filiales ; visée, elle serait "
+            "contre-passée par cette reprise. Aucun lot n’est posé tant que cette reprise ne distingue pas les titres "
+            "de filiales des autres titres."
         )
     return lignes, examines, titres
 
@@ -480,17 +481,19 @@ def _generer(base, qui: str, arrete: str, entite: str, version: str) -> str:
         fautives = curseur.fetchall()
         if fautives:
             codes = ", ".join(sorted({r.code_actif for r in fautives}))
+            # R9, D6, texte n° 15 : « pour » devant le code d'entite, le nombre d'expertises accorde, sans « (s) »
+            n = len(fautives)
             raise _Refus(
-                f"Génération refusée : {len(fautives)} expertise(s) de {entite} au {_date_ecran(arrete)} "
-                f"n'ont pas leur rapport au coffre ({codes}). Déposez chaque rapport à la Collecte et "
-                "rattachez-le à son actif ou à son entité, puis générez de nouveau."
+                f"Génération refusée pour {entite} au {_date_ecran(arrete)} : {n} "
+                f"{'expertises' if n > 1 else 'expertise'} sans rapport au coffre ({codes}). Déposez chaque rapport "
+                "à la Collecte et rattachez-le à son actif ou à son entité, puis générez de nouveau."
             )
 
         # 1. LA GARDE N° 25, avant la lecture de la feuille et l'insertion du lot.
         #    Un refus de la base (numero d'au moins 50000) est un refus francais ; toute autre erreur est une erreur du
         #    moteur, rendue par le point 9 (point 10 de l'en-tete).
         try:
-            curseur.execute(REQUETE_GARDE, entite, arrete)
+            curseur.execute(REQUETE_GARDE, entite, arrete, qui)
             while curseur.nextset():
                 pass
         except Exception as e:

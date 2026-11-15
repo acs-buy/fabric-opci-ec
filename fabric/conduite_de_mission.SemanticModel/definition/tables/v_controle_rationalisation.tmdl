@@ -13,7 +13,7 @@ table v_controle_rationalisation
 		lineageTag: 4f9a2892-34a7-4200-ab36-8f7c40a50b5e
 
 	/// gris quand [Synthese proposable] est vide
-	measure 'Fond proposer la synthese' = IF ( ISBLANK ( [Synthese proposable] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond proposer la synthese' = VAR f = ( IF ( ISBLANK ( [Synthese proposable] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: e42ac7b2-02bd-45bd-ab78-93beafa4546a
 

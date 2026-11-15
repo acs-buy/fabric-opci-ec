@@ -17,9 +17,7 @@ BEGIN
     /* 1 : le modele doit exister au referentiel. */
     IF NOT EXISTS (SELECT 1 FROM dbo.modele_feuille WHERE code = @modele_code)
     BEGIN
-        SET @m = N'Ouverture refusee : le modele ' + ISNULL(@modele_code, N'(vide)')
-               + N' est inconnu du referentiel des modeles de feuille. Choisir un des modeles '
-               + N'en vigueur, ou l''ajouter au referentiel avant d''ouvrir la feuille.';
+        SET @m = N'Ouverture refusée : le modèle ' + ISNULL(@modele_code, N'(vide)') + N' n''existe pas. Choisir un modèle de feuille existant.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
@@ -29,10 +27,7 @@ BEGIN
            de perimetre, et les portes de l'arrete ne l'auraient pas controlee. */
     IF NOT EXISTS (SELECT 1 FROM dbo.arrete_mission WHERE entite = @entite AND arrete = @arrete)
     BEGIN
-        SET @m = N'Ouverture refusee : aucun arrete du ' + @arrete + N' n''est ouvert pour '
-               + @entite + N'. Ouvrir l''arrete par pr_ouvrir_arrete, dont les portes exigent '
-               + N'notamment une expertise a la date de l''arrete pour les actifs qui s''evaluent '
-               + N'a la valeur actuelle, article 211-6.';
+        SET @m = N'Ouverture refusée : aucun arrêté du ' + @arrete + N' n''est ouvert pour ' + @entite + N'. Ouvrir d''abord cet arrêté, puis la feuille.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
@@ -41,8 +36,7 @@ BEGIN
     /* 3 : la cote identifie la feuille, elle ne se reprend pas. */
     IF EXISTS (SELECT 1 FROM dbo.feuille_travail WHERE cote = @cote)
     BEGIN
-        SET @m = N'Ouverture refusee : la cote ' + @cote + N' est deja prise. Une cote identifie '
-               + N'une feuille et une seule : en choisir une autre, ou ouvrir la feuille existante.';
+        SET @m = N'Ouverture refusée : la cote ' + @cote + N' est déjà prise par une autre feuille. Choisir une autre cote, ou ouvrir la feuille existante.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
@@ -52,9 +46,7 @@ BEGIN
            La contrainte ck_ft_un_seul_proprietaire de la table le pose ; le refus le dit avant. */
     IF (@cycle IS NULL AND @phase IS NULL) OR (@cycle IS NOT NULL AND @phase IS NOT NULL)
     BEGIN
-        SET @m = N'Ouverture refusee : une feuille appartient a un cycle de revision OU a une '
-               + N'phase de la mission, jamais aux 2 et jamais a aucun. Renseigner exactement '
-               + N'un des 2.';
+        SET @m = N'Ouverture refusée : une feuille relève soit d''un cycle de révision, soit d''une phase de la mission. Renseigner le cycle ou la phase, pas les 2.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
@@ -63,16 +55,14 @@ BEGIN
     /* 5 : le cycle ou la phase doit exister au referentiel. */
     IF @cycle IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.ref_cycle WHERE code = @cycle)
     BEGIN
-        SET @m = N'Ouverture refusee : le cycle ' + @cycle + N' est inconnu du referentiel des '
-               + N'cycles de revision.';
+        SET @m = N'Ouverture refusée : le cycle ' + @cycle + N' n''existe pas. Choisir un cycle de révision existant.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
     END;
     IF @phase IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.ref_phase WHERE code = @phase)
     BEGIN
-        SET @m = N'Ouverture refusee : la phase ' + @phase + N' est inconnue du referentiel des '
-               + N'phases de la mission.';
+        SET @m = N'Ouverture refusée : la phase ' + @phase + N' n''existe pas. Choisir une phase existante de la mission.';
         INSERT INTO dbo.journal_refus (procedure_nom, entite, arrete, cote, message, refuse_pour)
         VALUES ('pr_ouvrir_feuille', @entite, @arrete, @cote, @m, @par);
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
@@ -95,8 +85,7 @@ BEGIN
 
     SELECT @cote AS cote, @modele_code AS modele, @nom AS nom_fichier,
            @chemin AS chemin_coffre,
-           N'Feuille ouverte. L''empreinte posee est celle du gabarit : deposer le document au '
-         + N'coffre la remplacera par celle du fichier.' AS message_ecran;
+           N'Feuille ouverte avec l''empreinte du gabarit ; le réimport du document la remplacera par celle du fichier.' AS message_ecran;
 END;
 
 GO

@@ -42,6 +42,80 @@ table role_mission
 		displayFolder: Ecran 4 Arrete
 		lineageTag: d56162a1-33de-4a15-808b-fca1935b6463
 
+	/// n° 118, la connexion du connecté (USERPRINCIPALNAME()) quand il porte un mandat ASSOCIE en cours sur une entité (du au plus tard aujourd’hui, au vide ou postérieur), vide sinon ; CALCULATE ( …, REMOVEFILTERS ( role_mission ), REMOVEFILTERS ( ref_entite ) ), le sélecteur Véhicule ne restreignant pas 
+	measure 'Associe du cabinet connecte' = VAR u = USERPRINCIPALNAME () VAR j = TODAY () VAR n = CALCULATE ( COUNTROWS ( role_mission ), REMOVEFILTERS ( role_mission ), REMOVEFILTERS ( ref_entite ), role_mission[role] = "ASSOCIE", role_mission[connexion] = u, role_mission[du] <= j, ISBLANK ( role_mission[au] ) || role_mission[au] > j ) RETURN IF ( n > 0, u, "" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 2668e748-3ec6-4d7c-a194-95c3a6183ee7
+
+	/// n° 119, [Associe du cabinet connecte], ou la connexion du connecté quand il porte un mandat REVISEUR en cours et que le référentiel choisi est tenu par le réviseur (qui_tient REVISEUR lu sur v_ecran_inventaire_referentiel par VAR c = [Referentiel choisi]) ; vide sinon ; règle de fn_peut_ecrire_refer
+	measure 'Teneur connecte' = VAR a = [Associe du cabinet connecte] VAR u = USERPRINCIPALNAME () VAR j = TODAY () VAR c = [Referentiel choisi] VAR q = CALCULATE ( MAX ( v_ecran_inventaire_referentiel[qui_tient] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) VAR nr = CALCULATE ( COUNTROWS ( role_mission ), REMOVEFILTERS ( role_mission ), REMOVEFILTERS ( ref_entite ), role_mission[role] = "REVISEUR", role_mission[connexion] = u, role_mission[du] <= j, ISBLANK ( role_mission[au] ) || role_mission[au] > j ) RETURN IF ( a <> "", a, IF ( q = "REVISEUR" && nr > 0, u, "" ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: a621ca95-fa87-4487-8374-1ee96613f46c
+
+	/// n° 120, [Associe du cabinet connecte], ou « aucun rôle d’associé » quand elle est vide (carte « Associé connecté » de l’étape 3)
+	measure 'Associe du cabinet connecte a l ecran' = VAR a = [Associe du cabinet connecte] RETURN IF ( a = "", "aucun rôle d’associé", a )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 546a66f8-5855-454c-9a11-32c2de232b43
+
+	/// n° 170, gris quand [Associe du cabinet connecte] est vide
+	measure 'Fond ecarter la question' = IF ( [Associe du cabinet connecte] = "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: aee345e1-b3bb-402b-a550-5787e9733eb4
+
+	/// n° 171, gris quand [Associe du cabinet connecte] est vide (« Ajouter la question », questions sur la tenue)
+	measure 'Fond ajouter la question' = IF ( [Associe du cabinet connecte] = "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: fa0afa5f-cb7b-479f-8932-d91301879ca6
+
+	/// n° 206, la connexion du connecté (USERPRINCIPALNAME()) quand il porte un mandat ASSOCIE ou REVISEUR en cours sur une entité (du au plus tard aujourd’hui, au vide ou postérieur), vide sinon ; CALCULATE ( …, REMOVEFILTERS ( role_mission ), REMOVEFILTERS ( ref_entite ) ) ; règle de fn_peut_ecrire_refer
+	measure 'Teneur des questions connecte' = VAR u = USERPRINCIPALNAME () VAR j = TODAY () VAR n = CALCULATE ( COUNTROWS ( role_mission ), REMOVEFILTERS ( role_mission ), REMOVEFILTERS ( ref_entite ), role_mission[role] IN { "ASSOCIE", "REVISEUR" }, role_mission[connexion] = u, role_mission[du] <= j, ISBLANK ( role_mission[au] ) || role_mission[au] > j ) RETURN IF ( n > 0, u, "" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: b8fc771f-c7cb-44a5-beb2-d6fb6b8ee9f2
+
+	/// n° 207, gris quand [Teneur des questions connecte] est vide, couleur d’action sinon ; forme, libellé et état Désactivé du bouton « Ajouter une question » (couche visuelle)
+	measure 'Fond ajouter une question' = IF ( [Teneur des questions connecte] = "", "#D9DFE6", "#FFFFFF" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 4ecf7e7e-a82e-42ac-a0d1-1ece318b0e73
+
+	measure 'Connecte hors equipe du dossier' = VAR u = USERPRINCIPALNAME () VAR j = UTCTODAY () VAR es = [Entite selectionnee] VAR e = IF ( ISBLANK ( es ), [Client selectionne], es ) VAR meres = SELECTCOLUMNS ( FILTER ( ALL ( v_perimetre_groupe ), v_perimetre_groupe[entite] = e && v_perimetre_groupe[est_vehicule] = FALSE () ), "code", v_perimetre_groupe[Client] ) VAR vehicules = SELECTCOLUMNS ( FILTER ( ALL ( ref_entite ), NOT ISBLANK ( ref_entite[forme_vehicule] ) ), "code", ref_entite[Entité] ) VAR detenteurs = INTERSECT ( meres, vehicules ) VAR n = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[connexion] = u && role_mission[role] IN { "ASSOCIE", "CHEF_MISSION", "PREPARATEUR", "REVISEUR" } && role_mission[du] <= j && ( ISBLANK ( role_mission[au] ) || role_mission[au] > j ) && ( role_mission[entite] = e || role_mission[entite] IN detenteurs ) ) ) + 0 RETURN IF ( ISBLANK ( e ), 0, IF ( u <> "" && n > 0, 0, 1 ) )
+		displayFolder: D1 droits
+
+	measure 'Viseur acceptation connecte' = VAR u = USERPRINCIPALNAME () VAR e = [Client selectionne] VAR j = UTCTODAY () VAR roles = CALCULATETABLE ( VALUES ( role_nature_visa[role_code] ), FILTER ( ALL ( role_nature_visa ), role_nature_visa[nature] = "ACCEPTATION" ) ) VAR vise = CALCULATETABLE ( VALUES ( ref_role[code] ), FILTER ( ALL ( ref_role ), ref_role[vise] = TRUE () ) ) VAR ok = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[role] IN roles && role_mission[role] IN vise && role_mission[du] <= j && ( ISBLANK ( role_mission[au] ) || role_mission[au] > j ) ) ) RETURN IF ( u <> "" && NOT ISBLANK ( e ) && ok > 0, u )
+		displayFolder: D1 droits
+
+	measure 'Associe du vehicule connecte' = VAR u = USERPRINCIPALNAME () VAR e = [Entite selectionnee] VAR j = UTCTODAY () VAR ok = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && role_mission[connexion] = u && role_mission[role] = "ASSOCIE" && role_mission[du] <= j && ( ISBLANK ( role_mission[au] ) || role_mission[au] > j ) ) ) RETURN IF ( u <> "" && NOT ISBLANK ( e ) && ok > 0, u )
+		displayFolder: D1 droits
+
+	measure 'Fond revDossier0' = IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", "#FFFFFF" )
+		displayFolder: D1 droits
+
+	measure 'Fond revLivExporter' = IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", "#0F5C8C" )
+		displayFolder: D1 droits
+
+	measure 'Fond revOdExporterlegaba' = IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", "#FFFFFF" )
+		displayFolder: D1 droits
+
+	measure 'Fond revOdlExport' = IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", "#FFFFFF" )
+		displayFolder: D1 droits
+
+	measure 'Fond revOdAjouterles2lig' = IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", "#0F5C8C" )
+		displayFolder: D1 droits
+
+	measure 'Fond annExporterlaba' = IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", "#0F5C8C" )
+		displayFolder: D1 droits
+
+	measure 'Fond annRattacherlap' = IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", "#0F5C8C" )
+		displayFolder: D1 droits
+
+	measure 'Fond valoBtExporter' = IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", "#0F5C8C" )
+		displayFolder: D1 droits
+
+	measure 'Fond refExporterClasseur' = IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", "#0F5C8C" )
+		displayFolder: D1 droits
+
+	measure 'Fond refExporterNiveaux' = IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", "#0F5C8C" )
+		displayFolder: D1 droits
+
 	column id
 		dataType: int64
 		isNullable: false

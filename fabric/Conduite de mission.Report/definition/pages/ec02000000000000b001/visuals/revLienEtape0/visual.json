@@ -335,6 +335,13 @@
                   "Value": "'bkRev1'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Montre l’étape de la collecte de l’arrêté'"
+                }
+              }
             }
           }
         }

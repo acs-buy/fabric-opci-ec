@@ -27,7 +27,7 @@
                 "name": {
                   "expr": {
                     "Literal": {
-                      "Value": "'nav_fond_ecran_arrete_9397be53c6_a95ffa9cc7.png'"
+                      "Value": "'nav_fond_ecran_arrete_9397be53c6_82ed445603.png'"
                     }
                   }
                 },
@@ -36,7 +36,7 @@
                     "ResourcePackageItem": {
                       "PackageName": "RegisteredResources",
                       "PackageType": 1,
-                      "ItemName": "nav_fond_ecran_arrete_9397be53c6_a95ffa9cc7.png"
+                      "ItemName": "nav_fond_ecran_arrete_9397be53c6_82ed445603.png"
                     }
                   }
                 },

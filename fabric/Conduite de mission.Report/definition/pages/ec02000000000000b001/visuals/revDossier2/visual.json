@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revDossier2",
   "position": {
-    "x": 369,
-    "y": 805,
+    "x": 515,
+    "y": 352,
     "z": 9200,
-    "height": 36,
-    "width": 170,
+    "height": 37,
+    "width": 124,
     "tabOrder": 9200
   },
   "visual": {
@@ -331,8 +331,25 @@
             },
             "navigationSection": {
               "expr": {
-                "Literal": {
-                  "Value": "'ec05000000000000e001'"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_export_dossier"
+                    }
+                  },
+                  "Property": "Destination revDossier2"
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_export_dossier"
+                    }
+                  },
+                  "Property": "Infobulle revDossier2"
                 }
               }
             }

@@ -32,7 +32,7 @@ table v_a_generer_synthese
 		lineageTag: bd41d711-f6df-4188-ba44-e92a57a330a9
 
 	/// gris quand [Entite si generable] est vide
-	measure 'Fond generer le lot' = IF ( ISBLANK ( [Entite si generable] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond generer le lot' = VAR f = ( IF ( ISBLANK ( [Entite si generable] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 3ab14306-509d-44b7-941a-736b2ea40fc3
 

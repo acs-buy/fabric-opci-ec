@@ -1,3 +1,4 @@
+-- 2. La vue
 CREATE   VIEW dbo.v_ecran_referentiel_valeurs AS
 WITH cellule AS (
         -- ref_compte
@@ -605,7 +606,7 @@ SELECT CAST(f.referentiel AS VARCHAR (120)) AS referentiel, f.cle, f.ligne, CAST
        CAST(f.libelle_colonne AS NVARCHAR (40)) AS libelle_colonne, CAST(f.rang_libelle AS INT) AS rang_libelle,
        CAST(f.valeur AS NVARCHAR (MAX)) AS valeur,
        CAST(GREATEST(LEAST(300, 12 + 7 * f.nb), 12 + 11 * f.mot) AS INT) AS largeur_colonne,
-       CAST(GREATEST(LEAST(300, 12 + 7 * f.nb_ligne), 12 + 11 * GREATEST(f.mot_ligne, 5)) AS INT) AS largeur_ligne
+       CAST(GREATEST(LEAST(420, 12 + 7 * f.nb_ligne), 12 + 11 * GREATEST(f.mot_ligne, 5)) AS INT) AS largeur_ligne
 FROM fenetre f;
 
 GO

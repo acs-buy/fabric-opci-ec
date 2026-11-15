@@ -3,7 +3,7 @@
   "name": "revLivDossiers",
   "position": {
     "x": 501,
-    "y": 1209,
+    "y": 1168,
     "z": 39100,
     "height": 80,
     "width": 1082,
@@ -31,17 +31,18 @@
             },
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
                       "Entity": "v_export_dossier"
                     }
                   },
-                  "Property": "Déposé le"
+                  "Property": "Depose le heure de Paris"
                 }
               },
-              "queryRef": "v_export_dossier.Déposé le",
-              "nativeQueryRef": "Déposé le"
+              "queryRef": "v_export_dossier.Depose le heure de Paris",
+              "nativeQueryRef": "Depose le heure de Paris",
+              "displayName": "Déposé le"
             },
             {
               "field": {
@@ -78,13 +79,13 @@
         "sort": [
           {
             "field": {
-              "Column": {
+              "Measure": {
                 "Expression": {
                   "SourceRef": {
                     "Entity": "v_export_dossier"
                   }
                 },
-                "Property": "Déposé le"
+                "Property": "Depose le heure de Paris"
               }
             },
             "direction": "Descending"
@@ -220,7 +221,7 @@
             }
           },
           "selector": {
-            "metadata": "v_export_dossier.Déposé le"
+            "metadata": "v_export_dossier.Depose le heure de Paris"
           }
         },
         {

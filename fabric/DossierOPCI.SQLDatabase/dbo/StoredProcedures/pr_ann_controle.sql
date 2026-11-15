@@ -8,7 +8,7 @@ BEGIN
     SET NOCOUNT ON;
     IF @ecart IS NULL RETURN;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_controle_annexe WHERE controle = @controle)
-        THROW 50659, N'Moteur de l''annexe : contrôle absent du catalogue ref_controle_annexe.', 1;
+        THROW 50659, N'Calcul de l''annexe interrompu : contrôle non défini. Le signaler à l''administrateur de la solution.', 1;
     INSERT INTO dbo.annexe_w_ctl (calcul_id, arrete, controle, cle, ecart) VALUES (@c, @a, @controle, @cle, @ecart);
 END;
 

@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revProgOuvrirleclasseLib",
   "position": {
-    "x": 1131,
-    "y": 873,
+    "x": 1342,
+    "y": 521,
     "z": 7000,
     "height": 18,
     "width": 249,
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Ouvrir le classeur des questions du cycle",
+                    "value": "Exporter le classeur des questions du cycle",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "11px",

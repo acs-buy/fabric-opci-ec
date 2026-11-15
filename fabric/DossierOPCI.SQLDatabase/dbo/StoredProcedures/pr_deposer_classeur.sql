@@ -1,4 +1,3 @@
-
 -- pr_deposer_classeur : 2 refus
 -- 4. LE DEPOT.
 CREATE   PROCEDURE dbo.pr_deposer_classeur
@@ -33,6 +32,11 @@ BEGIN
 
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite)
         THROW 50940, N'Entité inconnue.', 1;
+    -- 51304, D1 (15/11/2026) : action 11. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51304, N'Action refusée : seule l''équipe du dossier peut déposer un classeur de cet arrêté au site du cabinet.', 1;
     IF NULLIF(LTRIM(RTRIM(@fichier)), N'') IS NULL OR @fichier LIKE N'%/%' OR @fichier LIKE N'%\%'
         THROW 50941, N'Le nom du fichier est obligatoire, et il ne porte aucun séparateur de dossier.', 1;
     IF @sous_dossier LIKE N'%/%' OR @sous_dossier LIKE N'%\%' OR @sous_dossier LIKE N'%..%'

@@ -959,3 +959,35 @@ relationship 9a6ecdff-2ae6-488c-9a0c-9d4c15fd90ef
 	fromColumn: v_ecran_actifs_a_valoriser.arrete
 	toColumn: v_dim_arrete.arrete
 
+relationship 7378f6e9-9b8f-4a3d-9cf6-f286db2107c1
+	fromColumn: v_ecran_referentiel_valeurs.referentiel
+	toColumn: v_ecran_referentiel_choix.table_nom
+
+relationship 628410dc-6900-47fc-a86b-7dd44874a4f1
+	fromColumn: v_ecran_referentiel_lignes.referentiel
+	toColumn: v_ecran_referentiel_choix.table_nom
+
+relationship f29d900f-8e2e-4f0d-8e1b-5482b9c86443
+	fromColumn: v_ecran_referentiel_colonnes.referentiel
+	toColumn: v_ecran_referentiel_choix.table_nom
+
+relationship c2c8b95c-1c25-496f-b730-8a9c7306fd3e
+	fromColumn: v_ecran_articles_du_referentiel.referentiel
+	toColumn: v_ecran_referentiel_choix.table_nom
+
+relationship 30f86d08-2cf3-419a-aa9b-a03bd15361f5
+	fromColumn: v_ecran_question_referentiel.cycle_ou_phase
+	toColumn: v_ecran_cycle_ou_phase.code
+
+relationship 2434ca98-728f-421d-8c5f-ba539e875a8e
+	fromColumn: v_ecran_seuils_vehicule.referentiel
+	toColumn: v_ecran_referentiel_choix.table_nom
+
+relationship 195823eb-5dc6-43c4-bcec-0440faab2b98
+	fromColumn: v_ecran_seuils_vehicule.entite
+	toColumn: ref_entite.Entité
+
+relationship 309c83e9-cc1e-439f-a828-5ea9b5832553
+	fromColumn: v_ecran_seuils_vehicule.arrete
+	toColumn: v_dim_arrete.arrete
+

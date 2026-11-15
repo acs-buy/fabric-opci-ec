@@ -1,0 +1,162 @@
+/// Écran 5, objet n° 52 : adresse et état des 2 classeurs du cabinet ; aucune relation : les mesures la lisent par le genre et le référentiel choisi
+table classeur_cabinet
+	lineageTag: 6d580d1f-2d0c-4685-ad12-8011b28bd83c
+
+	/// n° 132, VAR c = [Referentiel choisi] : web_url de la ligne la plus récente (depose_le) de classeur_cabinet où genre = REFERENTIEL et referentiel = c ; vide sans classeur déposé : le lien web ne s’ouvre pas (GUIDE_API_RAPPORT_POWER_BI.md, § 17.26, point 4)
+	measure 'Adresse du classeur du referentiel' = VAR c = [Referentiel choisi] VAR t = FILTER ( ALL ( classeur_cabinet ), classeur_cabinet[genre] = "REFERENTIEL" && classeur_cabinet[referentiel] = c ) VAR d = MAXX ( t, classeur_cabinet[depose_le] ) RETURN MAXX ( FILTER ( t, classeur_cabinet[depose_le] = d ), classeur_cabinet[web_url] ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: b1484613-b1e2-43a5-a17f-2e7d5179014c
+
+	/// n° 133, « aucun classeur déposé » ou « déposé le jj/mm/aaaa » (même ligne)
+	measure 'Etat du classeur du referentiel' = VAR c = [Referentiel choisi] VAR t = FILTER ( ALL ( classeur_cabinet ), classeur_cabinet[genre] = "REFERENTIEL" && classeur_cabinet[referentiel] = c ) VAR d = MAXX ( t, classeur_cabinet[depose_le] ) RETURN IF ( ISBLANK ( d ), "aucun classeur déposé", "déposé le " & FORMAT ( d, "dd/MM/yyyy" ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 4fbc1aa6-0524-497a-b845-fc1fcfa6fc11
+
+	/// n° 134, alerte « aucun classeur déposé », vert « déposé le … » (pastille de la carte)
+	measure 'Couleur etat du classeur du referentiel' = IF ( [Etat du classeur du referentiel] = "aucun classeur déposé", "#9A2A2A", "#1F6D4A" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 6674b034-26b8-43ca-a486-e5d830ceafd9
+
+	/// n° 135, gris quand [Adresse du classeur du referentiel] est vide ; le nom [Fond ouvrir le classeur] est pris au modèle publié par la mesure de l’écran 3 sur v_export_dossier (INFO.VIEW.MEASURES relu le jour même)
+	measure 'Fond ouvrir le classeur du referentiel' = IF ( [Adresse du classeur du referentiel] = "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 5b7d6d15-aeca-4171-a076-adef2c21541b
+
+	/// n° 136, vide quand l’action est permise ou qu’aucun référentiel n’est choisi ; sinon « aucun classeur déposé », « fixé par un texte, non modifiable », « seuil propre au véhicule, posé par « Enregistrer le seuil du véhicule » » (action_propre posée), « aucun droit de modification » ; chaque libellé q
+	measure 'Blocage reimporter le classeur' = VAR r = [Referentiel choisi] VAR tc = FILTER ( ALL ( v_ecran_referentiel_choix ), v_ecran_referentiel_choix[table_nom] = r ) VAR a = MAXX ( tc, v_ecran_referentiel_choix[actions_de_ligne] ) VAR f = MAXX ( tc, v_ecran_referentiel_choix[forme_cle] ) VAR m = MAXX ( tc, v_ecran_referentiel_choix[mode_tenue] ) VAR ap = MAXX ( tc, v_ecran_referentiel_choix[action_propre] ) VAR te = [Teneur connecte] VAR nc = COUNTROWS ( FILTER ( ALL ( classeur_cabinet ), classeur_cabinet[genre] = "REFERENTIEL" && classeur_cabinet[referentiel] = r ) ) + 0 RETURN IF ( ISBLANK ( r ), "", IF ( m = "TEXTE", "fixé par un texte, non modifiable", IF ( NOT ISBLANK ( ap ) && ap <> "", "seuil propre au véhicule, posé par «" & UNICHAR ( 8239 ) & "Enregistrer le seuil du véhicule" & UNICHAR ( 8239 ) & "»", IF ( te = "", "aucun droit de modification", IF ( nc = 0, "aucun classeur déposé", "" ) ) ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 1a878ffa-374f-4f27-a604-747eeaba88d1
+
+	/// n° 137, gris quand [Blocage reimporter le classeur] n’est pas vide
+	measure 'Fond reimporter le classeur' = IF ( [Blocage reimporter le classeur] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 2e5e52fa-80d6-4132-9a15-0ae76e1436e5
+
+	/// n° 174, web_url de la ligne la plus récente de classeur_cabinet où genre = NIVEAUX ; vide sans classeur : le lien web ne s’ouvre pas
+	measure 'Adresse du classeur des niveaux' = VAR t = FILTER ( ALL ( classeur_cabinet ), classeur_cabinet[genre] = "NIVEAUX" ) VAR d = MAXX ( t, classeur_cabinet[depose_le] ) RETURN MAXX ( FILTER ( t, classeur_cabinet[depose_le] = d ), classeur_cabinet[web_url] ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: fe893029-fce3-49be-ae47-9539390cd79a
+
+	/// n° 175, « aucun classeur déposé » ou « déposé le jj/mm/aaaa » (même ligne)
+	measure 'Etat du classeur des niveaux' = VAR t = FILTER ( ALL ( classeur_cabinet ), classeur_cabinet[genre] = "NIVEAUX" ) VAR d = MAXX ( t, classeur_cabinet[depose_le] ) RETURN IF ( ISBLANK ( d ), "aucun classeur déposé", "déposé le " & FORMAT ( d, "dd/MM/yyyy" ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: c6b89e22-47a7-49d0-aeeb-e0c1b397bf8b
+
+	/// n° 176, alerte « aucun classeur déposé », vert « déposé le … » (pastille de la carte)
+	measure 'Couleur etat du classeur des niveaux' = IF ( [Etat du classeur des niveaux] = "aucun classeur déposé", "#9A2A2A", "#1F6D4A" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 08c49fcd-1a7c-4a27-a245-b6af177f9cfa
+
+	/// n° 177, gris quand [Adresse du classeur des niveaux] est vide
+	measure 'Fond ouvrir les niveaux' = IF ( [Adresse du classeur des niveaux] = "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 46f5ef5e-a732-4bc6-9517-7b343a15e28d
+
+	/// n° 178, vide quand l’action est permise ; sinon « aucun classeur déposé », « réservé à l’associé »
+	measure 'Blocage reimporter les niveaux' = VAR nc = COUNTROWS ( FILTER ( ALL ( classeur_cabinet ), classeur_cabinet[genre] = "NIVEAUX" ) ) + 0 VAR ac = [Associe du cabinet connecte] RETURN IF ( nc = 0, "aucun classeur déposé", IF ( ac = "", "réservé à l’associé", "" ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 634048dc-f213-4a60-89ff-7b47b7c9c705
+
+	/// n° 179, gris quand [Blocage reimporter les niveaux] n’est pas vide
+	measure 'Fond reimporter les niveaux' = IF ( [Blocage reimporter les niveaux] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 6ae93199-0eb7-4c43-a328-fdc4c1923bd9
+
+	column id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f73a290b-021e-4348-a197-338c066e11ff
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column genre
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(12)
+		lineageTag: d1f9265b-110b-481e-8af2-e15389e5117f
+		summarizeBy: none
+		sourceColumn: genre
+
+		annotation SummarizationSetBy = Automatic
+
+	column referentiel
+		dataType: string
+		sourceProviderType: varchar(120)
+		lineageTag: 48529633-145a-48f1-9529-af295fe0466d
+		summarizeBy: none
+		sourceColumn: referentiel
+
+		annotation SummarizationSetBy = Automatic
+
+	column fichier
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: eba82308-8303-4167-8ea2-434967bb22e0
+		summarizeBy: none
+		sourceColumn: fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column web_url
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 25169d24-215f-4fed-bd33-cfedf5bb1a6d
+		summarizeBy: none
+		sourceColumn: web_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column chemin_onelake
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 5f404fc8-fa73-4515-b3a4-cd8d0b6de09e
+		summarizeBy: none
+		sourceColumn: chemin_onelake
+
+		annotation SummarizationSetBy = Automatic
+
+	column empreinte_sha256
+		dataType: string
+		isNullable: false
+		sourceProviderType: char(64)
+		lineageTag: 015b9436-2020-4e39-aab4-769575c98135
+		summarizeBy: none
+		sourceColumn: empreinte_sha256
+
+		annotation SummarizationSetBy = Automatic
+
+	column depose_par
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: 3c0e1e16-5d0f-46bd-b995-3e8fb1ee9106
+		summarizeBy: none
+		sourceColumn: depose_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column depose_le
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: b43d8399-5115-4775-8213-6803481d8719
+		summarizeBy: none
+		sourceColumn: depose_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition classeur_cabinet = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_classeur_cabinet = Source{[Schema="dbo",Item="classeur_cabinet"]}[Data]
+				in
+				    dbo_classeur_cabinet
+

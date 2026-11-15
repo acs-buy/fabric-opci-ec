@@ -40,8 +40,41 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Entity": "role_mission"
+                                    }
+                                  },
+                                  "Property": "Fond annExporterlaba"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#8A96A3'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#FFFFFF'"
+                        }
+                      }
                     }
                   }
                 }
@@ -176,8 +209,13 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#0F5C8C'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "role_mission"
+                        }
+                      },
+                      "Property": "Fond annExporterlaba"
                     }
                   }
                 }
@@ -240,8 +278,13 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#2B4666'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "role_mission"
+                        }
+                      },
+                      "Property": "Fond annExporterlaba"
                     }
                   }
                 }
@@ -272,8 +315,13 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#0F5C8C'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "role_mission"
+                        }
+                      },
+                      "Property": "Fond annExporterlaba"
                     }
                   }
                 }

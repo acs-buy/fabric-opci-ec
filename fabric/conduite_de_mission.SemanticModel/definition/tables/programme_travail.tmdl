@@ -23,13 +23,13 @@ table programme_travail
 	measure 'Etat du type ETENDU' = VAR c = [Type choisi] = "ETENDU" VAR p = SELECTEDVALUE ( v_complexite_balance[type_propose] ) = "ETENDU" RETURN IF ( c && p, "choisi, proposé", IF ( c, "choisi", IF ( p, "proposé", "" ) ) )
 		lineageTag: f45fa280-d251-4073-b363-025b5fde95b6
 
-	measure 'Fond revProgType0' = IF ( ISBLANK ( [Type ALLEGE choisissable] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revProgType0' = VAR f = ( IF ( ISBLANK ( [Type ALLEGE choisissable] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 54199cbd-a55c-45d2-9982-75e4b3f97d46
 
-	measure 'Fond revProgType1' = IF ( ISBLANK ( [Type CLASSIQUE choisissable] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revProgType1' = VAR f = ( IF ( ISBLANK ( [Type CLASSIQUE choisissable] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 7b58874d-0446-44ac-be52-3dd1a1223c1e
 
-	measure 'Fond revProgType2' = IF ( ISBLANK ( [Type ETENDU choisissable] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revProgType2' = VAR f = ( IF ( ISBLANK ( [Type ETENDU choisissable] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 8b14b2af-c03c-491f-a141-6ec2dfeacb84
 
 	column id

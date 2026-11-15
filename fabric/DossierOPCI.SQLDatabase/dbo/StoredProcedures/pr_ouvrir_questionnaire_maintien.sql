@@ -18,6 +18,11 @@ BEGIN
     SET XACT_ABORT ON;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND est_client = 1)
         THROW 50281, N'Le maintien ne s''ouvre que sur un client du cabinet.', 1;
+    -- 51302, D1 (15/11/2026) : action 9. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND dbo.fn_membre_equipe(@entite, @arrete_conclu, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51302, N'Action refusée : seule l''équipe du dossier peut ouvrir le questionnaire de maintien de ce dossier.', 1;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND arrete = @arrete_conclu)
         THROW 50282, N'L''arrêté conclu désigné n''est pas au référentiel de ce client.', 1;
     IF NOT EXISTS (SELECT 1 FROM dbo.arrete_mission WHERE entite = @entite AND arrete = @arrete_conclu)

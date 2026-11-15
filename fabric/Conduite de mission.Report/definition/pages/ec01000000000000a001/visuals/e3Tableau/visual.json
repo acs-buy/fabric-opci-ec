@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "e3Tableau",
   "position": {
-    "x": 728,
+    "x": 519,
     "y": 482,
     "z": 57000,
     "height": 357,
-    "width": 824,
+    "width": 1033,
     "tabOrder": 57000
   },
   "visual": {
@@ -210,7 +210,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "176D"
+                  "Value": "194D"
                 }
               }
             }
@@ -238,7 +238,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "330D"
+                  "Value": "429D"
                 }
               }
             }
@@ -266,7 +266,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "130D"
+                  "Value": "164D"
                 }
               }
             }
@@ -417,6 +417,17 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "background": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#CFDEE8'"
+                    }
+                  }
                 }
               }
             }

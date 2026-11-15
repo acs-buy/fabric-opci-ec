@@ -3,10 +3,10 @@
   "name": "revOdBalance",
   "position": {
     "x": 174,
-    "y": 1096,
+    "y": 1095,
     "z": 13550,
-    "height": 36,
-    "width": 122,
+    "height": 37,
+    "width": 190,
     "tabOrder": 13550
   },
   "visual": {
@@ -333,6 +333,13 @@
               "expr": {
                 "Literal": {
                   "Value": "'ec03000000000000c001'"
+                }
+              }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ouvre la page Balance de révision : la balance du cycle, compte par compte, avant et après les OD de révision et de valorisation'"
                 }
               }
             }

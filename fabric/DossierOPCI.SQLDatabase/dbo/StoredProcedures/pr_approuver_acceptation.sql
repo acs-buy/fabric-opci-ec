@@ -49,12 +49,7 @@ BEGIN
                              CAST(SYSUTCDATETIME() AS DATE)) = 0
     BEGIN
         DECLARE @m71 NVARCHAR (1200) =
-            N'Approbation refusée : cette personne n''a pas, sur cette '
-            + N'entité, le rôle que la nature « acceptation » exige. '
-            + N'L''acceptation engage la structure : elle se vise par '
-            + N'l''associé, article 150 du code de déontologie. Faire '
-            + N'approuver par l''associé, ou modifier la table des natures '
-            + N'visables par rôle.';
+            N'Décision refusée : vous ne tenez pas, sur cette entité, le rôle qui décide de l''acceptation. Faire décider par l''associé.';
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, cote, message, geste, refuse_pour, refuse_le)
         VALUES ('pr_approuver_acceptation', @entite, @cote, @m71,
@@ -82,11 +77,7 @@ BEGIN
                                  OR fq.reponse_valeur IS NOT NULL))
         ORDER BY q.ordre;
         DECLARE @m69 NVARCHAR (2000) =
-            N'Approbation refusée : ' + CAST(@reste AS NVARCHAR (10))
-            + N' question(s) obligatoire(s) du questionnaire '
-            + N'd''acceptation sont sans réponse. La première est '
-            + @sans + N', « ' + @sans_enonce + N' ». Répondre à toutes les '
-            + N'questions obligatoires, puis approuver.';
+            N'Décision refusée : ' + CAST(@reste AS NVARCHAR (10)) + N' question(s) obligatoire(s) sans réponse, dont ' + @sans + N', « ' + @sans_enonce + N' ». Répondre à toutes, puis décider.';
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, cote, question_reference, message, geste,
              refuse_pour, refuse_le)
@@ -103,7 +94,7 @@ BEGIN
 
     IF @decision = 'REFUSEE' AND @motif IS NULL
         THROW 50072,
-            N'Approbation refusée : le refus d''une mission exige un motif. La NPMQ paragraphe 19 impose de documenter la manière dont les difficultés ont été traitées.',
+            N'Refus non enregistré : refuser une mission exige un motif. Saisir le motif du refus, puis refuser de nouveau.',
             1;
 
     UPDATE dbo.acceptation_mission

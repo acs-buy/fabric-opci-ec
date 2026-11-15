@@ -6,7 +6,7 @@
     "y": 1153,
     "z": 38448,
     "height": 36,
-    "width": 140,
+    "width": 233,
     "tabOrder": 38448
   },
   "visual": {
@@ -339,7 +339,7 @@
             "tooltip": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ouvrir le visa des lots'"
+                  "Value": "'Ouvre la Révision à l’étape 5, où le chef de mission vise ou renvoie les lots d’OD proposés'"
                 }
               }
             }

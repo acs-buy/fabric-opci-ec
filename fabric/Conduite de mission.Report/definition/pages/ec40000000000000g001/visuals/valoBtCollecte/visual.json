@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "valoBtCollecte",
   "position": {
-    "x": 809,
-    "y": 925,
-    "z": 40728,
-    "height": 36,
-    "width": 116,
-    "tabOrder": 40728
+    "x": 719,
+    "y": 809,
+    "z": 41878,
+    "height": 37,
+    "width": 206,
+    "tabOrder": 41878
   },
   "visual": {
     "visualType": "actionButton",
@@ -339,7 +339,7 @@
             "tooltip": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ouvrir la Collecte'"
+                  "Value": "'Ouvre la Révision à l’étape 1, Collecte.'"
                 }
               }
             }

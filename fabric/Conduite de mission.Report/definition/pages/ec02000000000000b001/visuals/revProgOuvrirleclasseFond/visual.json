@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revProgOuvrirleclasseFond",
   "position": {
-    "x": 1131,
-    "y": 869,
+    "x": 1342,
+    "y": 514,
     "z": 6900,
-    "height": 26,
+    "height": 29,
     "width": 249,
     "tabOrder": 6900
   },

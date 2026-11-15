@@ -22,6 +22,7 @@ subgraph groupe_actions["Ce qui écrit en base"]
   n_fn_revision["Actions de révision<br/>fn_ecran_revision"]
   n_fn_valo["Actions de valorisation<br/>fn_ecran_valorisation"]
   n_fn_arrete["Actions de l'arrêté<br/>fn_ecran_arrete"]
+  n_fn_ref["Actions des référentiels<br/>fn_ecran_referentiels"]
   n_fn_documents["Production des documents<br/>fn_documents"]
   n_fn_moteur["Lot de valorisation<br/>fn_valorisation et moteur_opci"]
 end
@@ -47,12 +48,14 @@ n_rapport -->|"appelle les actions du dossier"| n_fn_client
 n_rapport -->|"appelle les actions de révision"| n_fn_revision
 n_rapport -->|"appelle les actions de valorisation"| n_fn_valo
 n_rapport -->|"appelle les actions de l'arrêté"| n_fn_arrete
+n_rapport -->|"appelle les actions des référentiels"| n_fn_ref
 n_rapport -->|"demande un document"| n_fn_documents
 n_rapport -->|"demande le lot de valorisation"| n_fn_moteur
 n_fn_client -->|"exécute les procédures"| n_sql
 n_fn_revision -->|"exécute les procédures"| n_sql
 n_fn_valo -->|"exécute les procédures"| n_sql
 n_fn_arrete -->|"exécute les procédures"| n_sql
+n_fn_ref -->|"exécute les procédures"| n_sql
 n_fn_documents -->|"lit la base, enregistre le document"| n_sql
 n_fn_moteur -->|"écrit le lot, proposé au visa"| n_sql
 n_sql -->|"alimente les tables"| n_modele
@@ -64,6 +67,7 @@ n_sharepoint -.->|"vu sans copie"| n_coffre
 n_coffre -.->|"relit une pièce ou un classeur"| n_fn_client
 n_coffre -.->|"relit un classeur"| n_fn_revision
 n_coffre -.->|"relit un classeur"| n_fn_valo
+n_coffre -.->|"relit un classeur"| n_fn_ref
 n_coffre -.->|"relit le modèle Word"| n_fn_documents
 
 classDef bleu fill:#dbeafe,stroke:#2563eb,stroke-width:1.5px,color:#172554
@@ -72,7 +76,7 @@ classDef vert fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px,color:#14532d
 classDef rose fill:#ffe4e6,stroke:#e11d48,stroke-width:1.5px,color:#881337
 classDef indigo fill:#e0e7ff,stroke:#4f46e5,stroke-width:1.5px,color:#312e81
 class n_rapport,n_reviseur,n_client bleu
-class n_fn_client,n_fn_revision,n_fn_valo,n_fn_arrete,n_fn_documents,n_fn_moteur ambre
+class n_fn_client,n_fn_revision,n_fn_valo,n_fn_arrete,n_fn_ref,n_fn_documents,n_fn_moteur ambre
 class n_sql,n_modele vert
 class n_coffre,n_sharepoint rose
 class n_excel,n_azure indigo
@@ -90,8 +94,8 @@ le coffre le relit sur place par un raccourci. Un classeur réimporté passe par
 que la saisie à l'écran.
 
 **Ce que le schéma montre :** aucune flèche ne va de l'écran vers la base
-directement. Tout passe par une fonction, puis par une procédure. C'est ce qui garantit qu'un
-contrôle ne se contourne pas.
+directement. Tout passe par une fonction, puis par une procédure : un contrôle posé dans une
+procédure s'applique à chaque appel.
 
 ### Chaque élément, dans le dépôt
 
@@ -103,6 +107,7 @@ contrôle ne se contourne pas.
 | Actions de révision | [fn_ecran_revision.UserDataFunction/function_app.py](../../fabric/fn_ecran_revision.UserDataFunction/function_app.py) |
 | Actions de valorisation | [fn_ecran_valorisation.UserDataFunction/function_app.py](../../fabric/fn_ecran_valorisation.UserDataFunction/function_app.py) |
 | Actions de l'arrêté | [fn_ecran_arrete.UserDataFunction/function_app.py](../../fabric/fn_ecran_arrete.UserDataFunction/function_app.py) |
+| Actions des référentiels | [fn_ecran_referentiels.UserDataFunction/function_app.py](../../fabric/fn_ecran_referentiels.UserDataFunction/function_app.py) |
 | Production des documents | [fn_documents.UserDataFunction/function_app.py](../../fabric/fn_documents.UserDataFunction/function_app.py) |
 | Lot de valorisation | [fn_valorisation.UserDataFunction/function_app.py](../../fabric/fn_valorisation.UserDataFunction/function_app.py), et la roue `moteur_opci` dans [privateLibraries](../../fabric/fn_valorisation.UserDataFunction/privateLibraries) |
 | Base DossierOPCI | [fabric/DossierOPCI.SQLDatabase](../../fabric/DossierOPCI.SQLDatabase) |
@@ -160,13 +165,21 @@ mesure, nommez-la ainsi.
 ## Le contrôle des droits est dans la base, pas dans l'écran
 
 La séparation des fonctions est portée par des déclencheurs et des procédures. Une personne qui
-contournerait l'écran se verrait opposer le même refus. L'écran masque les boutons inopérants par
-confort, il ne protège rien.
+appellerait une fonction sans passer par l'écran recevrait le même refus. L'écran grise les boutons
+d'une action que la base refusera à la personne connectée, par exemple quand elle ne tient aucun
+rôle en cours sur le dossier ; le refus, lui, vient de la base.
 
 Trois conséquences :
 
-- Griser un bouton n'est pas une protection.
-- Un refus remonte toujours un message explicite, qui nomme la procédure en cause.
+- La base juge chaque appel, que le bouton soit grisé ou non.
+- Un refus de la base (numéro d'au moins 50000) s'affiche à l'écran par son texte en français, sans
+  nommer la procédure. Dans les fonctions de révision, de valorisation, de l'arrêté, des
+  référentiels et des documents, une erreur d'une autre nature, par exemple une contrainte de table,
+  s'affiche sous un texte générique : « Action interrompue par une erreur d'exécution. Le détail technique est
+  consigné au journal des refus ; relisez l'écran avant de recommencer. » Le nom de la fonction et
+  celui de la procédure ne vont qu'au journal des refus. C'est le cas du visa d'une synthèse par
+  celui qui l'a proposée : la contrainte `ck_visa_roles_separes` de la table `visa` le refuse, et
+  l'écran affiche ce texte générique.
 - Ajouter un écran ne crée jamais un trou de sécurité, tant que l'écriture passe par les procédures.
 
 ## Le calcul de l'annexe

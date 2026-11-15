@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "valoBtCollecteFond",
   "position": {
-    "x": 809,
-    "y": 928,
-    "z": 40720,
-    "height": 30,
-    "width": 116,
-    "tabOrder": 40720
+    "x": 719,
+    "y": 813,
+    "z": 41870,
+    "height": 29,
+    "width": 206,
+    "tabOrder": 41870
   },
   "visual": {
     "visualType": "shape",

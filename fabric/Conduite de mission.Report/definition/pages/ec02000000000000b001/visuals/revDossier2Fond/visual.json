@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revDossier2Fond",
   "position": {
-    "x": 369,
-    "y": 809,
+    "x": 515,
+    "y": 355,
     "z": 9000,
-    "height": 28,
-    "width": 170,
+    "height": 31,
+    "width": 124,
     "tabOrder": 9000
   },
   "visual": {
@@ -39,8 +39,41 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Entity": "v_export_dossier"
+                                    }
+                                  },
+                                  "Property": "Fond revDossier2"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#D9DFE6'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#FFFFFF'"
+                        }
+                      }
                     }
                   }
                 }
@@ -73,8 +106,41 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#0F5C8C'"
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Entity": "v_export_dossier"
+                                    }
+                                  },
+                                  "Property": "Fond revDossier2"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'#D9DFE6'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#C9D2DC'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#0F5C8C'"
+                        }
+                      }
                     }
                   }
                 }

@@ -1,6 +1,4 @@
-
--- pr_modifier_client : le corps d'origine, renomme
--- pr_modifier_client : le corps d'origine, renomme
+-- pr_modifier_client_corps : le corps d'origine, renomme ; @est_professionnel (objet n° 202, script 345)
 CREATE   PROCEDURE dbo.pr_modifier_client_corps
     @code               VARCHAR (20),
     @denomination       NVARCHAR (400) = NULL,
@@ -20,6 +18,7 @@ CREATE   PROCEDURE dbo.pr_modifier_client_corps
     @cloture            CHAR (5)       = NULL,
     @site_url           NVARCHAR (800) = NULL,
     @par                NVARCHAR (400)
+    , @est_professionnel NVARCHAR (400) = NULL   -- objet n° 202 : oui pose 1, non pose 0, - pose NULL, vide laisse la valeur
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -39,6 +38,9 @@ BEGIN
         THROW 50204, N'Un FPI n''a ni forme sociale ni SIREN : effacez-les avec « - » en même temps.', 1;
     IF TRY_CONVERT(DATE, @cl + '/2001', 103) IS NULL
         THROW 50205, N'La clôture s''écrit jour/mois, par exemple 31/12 ou 30/06.', 1;
+    DECLARE @ep NVARCHAR (400) = NULLIF(LTRIM(RTRIM(@est_professionnel)), N'');
+    IF @ep IS NOT NULL AND @ep NOT IN (N'oui', N'non', @eff)
+        THROW 50206, N'Le champ « OPCI professionnel » attend oui ou non ; « - » l''efface.', 1;
     SET @site_url = NULLIF(LTRIM(RTRIM(@site_url)), N'');
 
     -- le site d'abord : son refus (lien mal forme) ne laisse rien d'ecrit
@@ -61,6 +63,8 @@ BEGIN
            contact_courriel  = CASE WHEN @contact_courriel = @eff THEN NULL ELSE COALESCE(NULLIF(LTRIM(RTRIM(@contact_courriel)), N''), e.contact_courriel) END,
            contact_telephone = CASE WHEN @contact_telephone = @eff THEN NULL ELSE COALESCE(NULLIF(LTRIM(RTRIM(@contact_telephone)), ''), e.contact_telephone) END,
            cloture           = @cl,
+           est_professionnel = CASE WHEN @ep IS NULL THEN e.est_professionnel WHEN @ep = @eff THEN NULL
+                                    WHEN @ep = N'oui' THEN 1 ELSE 0 END,
            modifie_par       = @par,
            modifie_le        = SYSUTCDATETIME()
       FROM dbo.ref_entite e

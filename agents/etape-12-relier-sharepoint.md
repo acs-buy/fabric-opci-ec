@@ -91,7 +91,9 @@ cache environ 24 heures : un refus dans l'heure qui suit l'affectation ne prouve
 ## Puis vous, pour les points 9 et 11
 
 Créez le site du cabinet au portail SharePoint, puis le raccourci `fec` dans le coffre, en suivant
-[l'étape 12](../docs/faire/etape-12-relier-sharepoint.md). Notez l'adresse du site.
+[l'étape 12](../docs/faire/etape-12-relier-sharepoint.md). Notez l'adresse du site. Créez aussi le
+dossier `Modeles` de sa bibliothèque de documents par défaut : la solution y lit le modèle Word des
+livrables et les fichiers des gabarits, et n'y dépose rien.
 
 ---
 
@@ -147,6 +149,7 @@ client » du site créé au point 13.
 |---|---|
 | `Le provisionnement n'est pas installé` | Le point 8 n'a pas été fait |
 | `Le dépôt n'est pas installé` | `DEPOT_CLASSEUR_URL` manque, point 8 |
+| `Le dépôt des classeurs n'est pas installé` | `DEPOT_CLASSEUR_URL` ou `SITE_CABINET` manque, points 8 et 10 |
 | `Aucune DATABASE SCOPED CREDENTIAL ne porte le nom de cette adresse` | Le point 7 n'a pas été fait, ou l'adresse diffère d'un caractère |
 | `Aucun proprietaire` | Aucun rôle de l'entité ne porte d'adresse de connexion : jouez `sql/90_vous_inscrire_aux_missions.sql` |
 | `REFUS 50963` dans la seconde sortie du point 15 | Le fichier fabriqué ne porte pas l'empreinte de la fiche : le jeu a été modifié |

@@ -78,13 +78,29 @@ SELECT COUNT(*) FROM dbo.ref_question;
 
 Si elle rend 0, le socle n'est pas chargé.
 
-## « Écriture refusée : cette opération demande le rôle associé »
+## « Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé »
 
 La base vérifie le rôle de la personne avant toute écriture sensible.
 Faites-vous désigner sur l'écran de conduite de mission, section **Équipe de la mission**.
 
+À la création ou à la modification d'un dossier client, et à l'ajout d'une filiale nouvelle, la base
+juge le compte de la session SQL, c'est-à-dire le propriétaire des fonctions, et non la personne qui
+clique : ce compte doit tenir le rôle d'associé sur un dossier, voir
+`sql/90_vous_inscrire_aux_missions.sql`.
+
 Le même refus se produit quand vous jouez le script d'effacement de la démonstration depuis un
 compte sans rôle d'associé.
+
+## « Action refusée : seule l'équipe du dossier peut … », ou un bouton grisé
+
+La base juge l'adresse de connexion de la personne qui clique. Elle refuse l'écriture quand cette
+adresse ne porte, au jour UTC du clic, aucun rôle d'associé, de chef de mission, de préparateur ou
+de réviseur sur le dossier, ni sur le véhicule qui détient la filiale. Le rapport grise alors le
+bouton.
+
+Sur le jeu de démonstration, jouez `sql/90_vous_inscrire_aux_missions.sql`, étape 7. Sur un dossier
+réel, faites-vous désigner dans la section **Équipe de la mission**. Les rôles des actions
+réservées sont dans [Les autorisations](../comprendre/08-les-autorisations.md).
 
 ## « L'annexe de l'entité … est en cours de calcul : réessayez dans un instant. »
 
@@ -140,8 +156,10 @@ fonctions, ou si deux ensembles reçoivent le même : chaque ensemble a le sien.
 
 ## Une erreur qui ne figure pas ici
 
-Notez le message exact et l'étape où il apparaît. Le message d'erreur des fonctions porte le nom de
-la procédure en cause, ce qui désigne directement l'endroit à regarder dans la base.
+Notez le message exact et l'étape où il apparaît. Le message « Action interrompue par une erreur
+d'exécution » ne nomme pas la procédure en cause : la table `dbo.journal_refus` la porte, colonne
+`procedure_nom`, avec le détail technique (`message`), le compte (`refuse_pour`) et l'heure UTC
+(`refuse_le`).
 
 ---
 

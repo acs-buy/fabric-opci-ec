@@ -10,6 +10,11 @@ BEGIN
     SET XACT_ABORT ON;
     IF NOT EXISTS (SELECT 1 FROM dbo.feuille_travail WHERE cote = @cote)
         THROW 50251, N'Le questionnaire désigné n''existe pas.', 1;
+    -- 51306, D1 (15/11/2026) : action 13, dossier lu par la cote. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND dbo.fn_membre_equipe((SELECT entite FROM dbo.feuille_travail WHERE cote = @cote), (SELECT arrete FROM dbo.feuille_travail WHERE cote = @cote), NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51306, N'Action refusée : seule l''équipe du dossier peut réimporter les réponses de ce questionnaire.', 1;
     IF ISJSON(@reponses) <> 1
         THROW 50252, N'Le contenu reçu n''est pas un tableau de réponses lisible.', 1;
 

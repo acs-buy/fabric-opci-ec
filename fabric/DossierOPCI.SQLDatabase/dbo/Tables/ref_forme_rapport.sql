@@ -53,7 +53,7 @@ BEGIN
     -- sous une Data function, la fonction annule aussi l'inscription, puis journalise le refus apres son
     -- propre rollback (script 220). refuse_pour est un nvarchar(200) : l'identite y est coupee a 200
     -- caracteres, une ecriture plus longue y serait refusee et remplacerait le 50074.
-    DECLARE @m NVARCHAR (2000) = N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Cette table porte des valeurs livrées avec la base, recopiées depuis un texte : les modifier les fait diverger de leur source. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.';
+    DECLARE @m NVARCHAR (2000) = N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.';
     ROLLBACK TRANSACTION;
     INSERT INTO dbo.journal_refus (procedure_nom, message, refuse_pour, refuse_le)
     VALUES ('tr_ref_forme_rapport_garde', @m, LEFT(CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), 200), SYSUTCDATETIME());

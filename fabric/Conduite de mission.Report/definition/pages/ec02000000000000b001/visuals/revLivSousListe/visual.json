@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revLivSousListe",
   "position": {
-    "x": 148,
+    "x": 176,
     "y": 359,
     "z": 27100,
     "height": 24,
-    "width": 770,
+    "width": 752,
     "tabOrder": 27100
   },
   "visual": {
@@ -63,7 +63,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5B6B7D'"
+                      "Value": "'#2B4666'"
                     }
                   }
                 }

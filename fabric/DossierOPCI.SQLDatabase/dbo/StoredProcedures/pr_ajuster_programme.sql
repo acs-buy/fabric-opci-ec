@@ -1,4 +1,3 @@
-
 -- pr_ajuster_programme : 2 refus
 -- AJUSTER LE PROGRAMME QUESTION PAR QUESTION. Le motif est obligatoire au retrait, et va au journal.
 -- Trois refus au retrait : sans motif, question repondue, derniere question active d'un cycle qui a
@@ -34,6 +33,11 @@ BEGIN
     DECLARE @id INT = (SELECT id FROM dbo.programme_travail WHERE entite = @entite AND arrete = @arrete);
     IF @id IS NULL
         THROW 50311, N'Aucun programme n''est choisi pour cet arrêté ; choisir un type d''abord.', 1;
+    -- 51308, D1 (15/11/2026) : action 15. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51308, N'Action refusée : seule l''équipe du dossier peut ajouter ou retirer une question du programme de ce dossier.', 1;
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé ; le déverrouiller avant de modifier le programme.', 1;
     DECLARE @qid INT, @cycle VARCHAR (10);

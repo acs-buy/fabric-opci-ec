@@ -3,10 +3,10 @@
   "name": "valoCompteEcrTitre",
   "position": {
     "x": 961,
-    "y": 360,
+    "y": 358,
     "z": 46402,
-    "height": 20,
-    "width": 161,
+    "height": 24,
+    "width": 187,
     "tabOrder": 46402
   },
   "visual": {
@@ -47,7 +47,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "12D"
                 }
               }
             },

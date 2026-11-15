@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "e1SecTable1",
   "position": {
-    "x": 1154,
-    "y": 552,
+    "x": 519,
+    "y": 915,
     "z": 41700,
-    "height": 150,
-    "width": 398,
-    "tabOrder": 41700
+    "height": 146,
+    "width": 615,
+    "tabOrder": 43300
   },
   "visual": {
     "visualType": "tableEx",

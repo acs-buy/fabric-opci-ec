@@ -3,11 +3,11 @@
   "name": "valoValRetSous",
   "position": {
     "x": 102,
-    "y": 968,
-    "z": 40322,
+    "y": 1020,
+    "z": 39802,
     "height": 20,
     "width": 826,
-    "tabOrder": 40322
+    "tabOrder": 39802
   },
   "visual": {
     "visualType": "cardVisual",

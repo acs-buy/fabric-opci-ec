@@ -1,0 +1,191 @@
+/// Écran 5, objet n° 48 : table du tableau croisé, de la carte 4 et de l’étape 3 ; aucune relation
+table v_ecran_questions_par_cycle
+	lineageTag: 3cd7315f-bee0-4e81-a497-9dfe05dccc64
+
+	/// n° 81, somme de a_auditer (carte 4), sur tous les cycles et toutes les phases : le segment « Cycle ou phase » est posé sur v_ecran_cycle_ou_phase, sans relation à cette vue, et son interaction vers la carte est ôtée
+	measure 'Questions a auditer' = SUMX ( ALL ( v_ecran_questions_par_cycle ), v_ecran_questions_par_cycle[a_auditer] ) + 0
+		formatString: #,0
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: e8371ce2-816a-475d-94a0-031a0f65985e
+
+	/// n° 82, « sur n questions de référence », somme de questions, mêmes règles (carte 4)
+	measure 'Sous-ligne questions a auditer' = VAR q = SUMX ( ALL ( v_ecran_questions_par_cycle ), v_ecran_questions_par_cycle[questions] ) + 0 RETURN "sur " & SUBSTITUTE ( SUBSTITUTE ( FORMAT ( q, "#,0" ), UNICHAR ( 160 ), " " ), UNICHAR ( 8239 ), " " ) & " questions de référence"
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: fe3122df-1cc3-41e1-9beb-a97bf4d608f6
+
+	/// n° 83, alerte au-dessus de 0, vert à 0 (carte 4)
+	measure 'Couleur questions a auditer' = IF ( [Questions a auditer] > 0, "#9A2A2A", "#1F6D4A" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 441cc75c-6e3c-45f7-b7bb-2b22760f53e1
+
+	/// n° 160, VAR c = [Cycle ou phase choisi], puis CALCULATE ( SUM ( a_auditer ), FILTER ( ALL ( v_ecran_questions_par_cycle ), [code] = c ) ) + 0 (carte de la validation)
+	measure 'A auditer du cycle choisi' = VAR c = [Cycle ou phase choisi] RETURN CALCULATE ( SUM ( v_ecran_questions_par_cycle[a_auditer] ), FILTER ( ALL ( v_ecran_questions_par_cycle ), v_ecran_questions_par_cycle[code] = c ) ) + 0
+		formatString: #,0
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 24e320bb-8bf1-4909-8c18-bb82233fbd43
+
+	/// n° 161, même patron sur validees (carte de la validation)
+	measure 'Validees du cycle choisi' = VAR c = [Cycle ou phase choisi] RETURN CALCULATE ( SUM ( v_ecran_questions_par_cycle[validees] ), FILTER ( ALL ( v_ecran_questions_par_cycle ), v_ecran_questions_par_cycle[code] = c ) ) + 0
+		formatString: #,0
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 35b27916-0e52-444e-8b4b-730913f5617a
+
+	/// n° 162, fond de la cellule « À valider » du tableau croisé : #F9ECEC au-dessus de 0, #EFF6F2 à 0 ; encre de la table, #12233C
+	measure 'Fond a auditer' = IF ( SUM ( v_ecran_questions_par_cycle[a_auditer] ) > 0, "#F9ECEC", "#EFF6F2" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: d872ae4b-9bd9-435e-8865-19cb093b7e65
+
+	/// n° 164, « n sur n » : somme de sans_niveau et somme de questions des lignes de cycle, sous ALL ( v_ecran_questions_par_cycle ) (bloc « Niveau de programme »)
+	measure 'Questions de cycle sans niveau' = VAR t = FILTER ( ALL ( v_ecran_questions_par_cycle ), v_ecran_questions_par_cycle[genre_ordre] = 1 ) VAR s = SUMX ( t, v_ecran_questions_par_cycle[sans_niveau] ) + 0 VAR q = SUMX ( t, v_ecran_questions_par_cycle[questions] ) + 0 RETURN FORMAT ( s, "0" ) & " sur " & FORMAT ( q, "0" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: f8dd5620-54f3-4551-8a27-c2ef66002910
+
+	/// n° 166, VAR c = [Cycle ou phase choisi] : fond des cellules de valeur de la ligne du tableau croisé dont code = c, #F4F8FC, « #FFFFFF » ailleurs, comme [Fond ligne entite], la cellule « À valider » exceptée, peinte par [Fond a auditer] ; l’en-tête de ligne ne se colore pas, la mise en forme conditio
+	measure 'Fond ligne du cycle choisi' = VAR c = [Cycle ou phase choisi] RETURN IF ( NOT ISBLANK ( c ) && SELECTEDVALUE ( v_ecran_questions_par_cycle[code] ) = c, "#F4F8FC", "#FFFFFF" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 6f408fe4-14d6-42bb-ac7a-9361e0298c0c
+
+	/// n° 167, « conditions réunies » quand l’action est permise ou qu’aucun cycle ni phase n’est choisi ; « aucune question à valider » (a_auditer = 0 sur la ligne du cycle ou de la phase choisi, VAR c puis FILTER ( ALL ( … ) )) ; « réservé à l’associé » quand [Associe du cabinet connecte] est vide
+	measure 'Etat de la validation' = VAR c = [Cycle ou phase choisi] VAR aa = CALCULATE ( SUM ( v_ecran_questions_par_cycle[a_auditer] ), FILTER ( ALL ( v_ecran_questions_par_cycle ), v_ecran_questions_par_cycle[code] = c ) ) + 0 VAR ac = [Associe du cabinet connecte] RETURN IF ( ISBLANK ( c ), "conditions réunies", IF ( aa = 0, "aucune question à valider", IF ( ac = "", "réservé à l’associé", "conditions réunies" ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: e1c24368-31ea-4c76-8ce9-10b3e9335e3c
+
+	/// n° 168, vert « conditions réunies », alerte sinon (pastille de la carte)
+	measure 'Couleur etat de la validation' = IF ( [Etat de la validation] = "conditions réunies", "#1F6D4A", "#9A2A2A" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 9113bc7d-9e95-4878-bf29-26329f208f33
+
+	/// n° 169, gris quand l’état n’est pas « conditions réunies »
+	measure 'Fond valider les questions' = IF ( [Etat de la validation] = "conditions réunies", "#0F5C8C", "#D9DFE6" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 4a45b390-3072-465e-8a9c-cde8bf64e1d4
+
+	/// n° 172, 1 quand aucune question n’est à valider sur tous les cycles et toutes les phases ; le segment « Cycle ou phase » ne filtre pas cette vue (aucune relation) et son interaction vers la barre est ôtée
+	measure 'Referentiels etape 3 faite' = IF ( SUMX ( ALL ( v_ecran_questions_par_cycle ), v_ecran_questions_par_cycle[a_auditer] ) + 0 = 0, 1, 0 )
+		formatString: 0
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 29b1927d-6f71-4756-aabe-8b5c77be225b
+
+	/// n° 173, vert quand [Referentiels etape 3 faite] vaut 1, gris sinon (forme et puce de l’étape 3)
+	measure 'Fond referentiels etape 3' = IF ( [Referentiels etape 3 faite] = 1, "#1F6D4A", "#D5DCE4" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: d7cee65e-6a13-43a6-a0ea-1e926fbd5ba1
+
+	column genre
+		dataType: string
+		sourceProviderType: nvarchar(40)
+		lineageTag: 9a82ac90-df24-4fa3-8e97-2a7f0cad96e7
+		summarizeBy: none
+		sourceColumn: genre
+		sortByColumn: genre_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column genre_ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f8ae547b-a69b-4c0e-be47-daf8b5cae501
+		summarizeBy: none
+		sourceColumn: genre_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 60acb991-aa5f-48bc-beba-d7ac051cac57
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column nom_usage
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: c13e3821-bd71-4f22-884e-3f3595096657
+		summarizeBy: none
+		sourceColumn: nom_usage
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e452fa38-d24f-4f74-abda-8c31da27b8ba
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column questions
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0017f72f-4ea8-475f-a8b0-0f0a37f03ccb
+		summarizeBy: sum
+		sourceColumn: questions
+
+		annotation SummarizationSetBy = Automatic
+
+	column a_auditer
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c999f7fd-8932-44c0-bdd2-46fab3ea12d8
+		summarizeBy: sum
+		sourceColumn: a_auditer
+
+		annotation SummarizationSetBy = Automatic
+
+	column validees
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: f339fafc-54be-400f-a954-b66333741b4d
+		summarizeBy: sum
+		sourceColumn: validees
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecartees
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 28bdec64-6625-4dc4-94ac-1b96cedd904a
+		summarizeBy: sum
+		sourceColumn: ecartees
+
+		annotation SummarizationSetBy = Automatic
+
+	column repondues
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0a270dec-a523-49c5-af19-a0912e9dc679
+		summarizeBy: sum
+		sourceColumn: repondues
+
+		annotation SummarizationSetBy = Automatic
+
+	column sans_niveau
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4cc41cad-90b7-4fe2-9765-2c9c12fd4fb6
+		summarizeBy: sum
+		sourceColumn: sans_niveau
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_questions_par_cycle = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_questions_par_cycle = Source{[Schema="dbo",Item="v_ecran_questions_par_cycle"]}[Data]
+				in
+				    dbo_v_ecran_questions_par_cycle
+

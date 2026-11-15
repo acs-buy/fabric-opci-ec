@@ -31,17 +31,18 @@
             },
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
                       "Entity": "v_export_dossier"
                     }
                   },
-                  "Property": "Déposé le"
+                  "Property": "Depose le heure de Paris"
                 }
               },
-              "queryRef": "v_export_dossier.Déposé le",
-              "nativeQueryRef": "Déposé le"
+              "queryRef": "v_export_dossier.Depose le heure de Paris",
+              "nativeQueryRef": "Depose le heure de Paris",
+              "displayName": "Déposé le"
             },
             {
               "field": {
@@ -73,6 +74,24 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_export_dossier"
+                  }
+                },
+                "Property": "Depose le heure de Paris"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
       }
     },
     "objects": {

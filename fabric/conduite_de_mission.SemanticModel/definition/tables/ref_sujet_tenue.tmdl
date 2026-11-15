@@ -1,0 +1,64 @@
+/// Écran 5, objet n° 51 : table du segment « Sujet », étape 3
+table ref_sujet_tenue
+	lineageTag: 3413a306-c7b1-4fe5-a565-bd258bce85d7
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: dd714be9-de42-4923-8653-78e5d3f808f3
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(120)
+		lineageTag: db3f4e3b-e869-4b6b-9ec0-4a48e56db759
+		summarizeBy: none
+		sourceColumn: libelle
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d432c2f4-56f0-4e78-a557-e6514898f31c
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 6bffb49e-ed50-460e-9171-d57ace3a0dbc
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: ce49ce21-f4ff-478e-b702-6e93e8a304c6
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_sujet_tenue = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_ref_sujet_tenue = Value.NativeQuery(Source, "SELECT code, libelle, ordre, modifie_par, DATETIME2FROMPARTS(YEAR(modifie_le), MONTH(modifie_le), DAY(modifie_le), DATEPART(HOUR, modifie_le), DATEPART(MINUTE, modifie_le), DATEPART(SECOND, modifie_le), 0, 0) AS modifie_le FROM dbo.ref_sujet_tenue", null, [EnableFolding = true])
+				in
+				    dbo_ref_sujet_tenue
+

@@ -1,4 +1,3 @@
-
 -- pr_valider_brouillon_corps : 2 refus
 -- pr_valider_brouillon : le corps d'origine, renomme
 -- pr_valider_brouillon : le corps d'origine, renomme
@@ -13,6 +12,11 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
+    -- 51317, D1 (15/11/2026) : action 24, viseur compris (decision 3). Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@valide_par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51317, N'Action refusée : seule l''équipe du dossier peut valider les OD d''une question de ce dossier.', 1;
 
     -- Le perimetre est la QUESTION, non la feuille entiere : un lot est
     -- par question depuis le script 56, et valider une question ne doit
@@ -22,7 +26,7 @@ BEGIN
                      AND feuille_cote = @feuille_cote
                      AND question_id = @question_id)
         THROW 50031,
-            N'Aucune ligne de brouillon pour cette question : rien a valider. Le perimetre de la validation est la question, non la feuille entiere.', 1;
+            N'Validation refusée : la question choisie n''a aucune ligne de brouillon. Saisir ses lignes, ou choisir une autre question.', 1;
 
     -- Une ligne restee a zero ne se valide pas. Le brouillon l'admet, la
     -- validation la refuse : une ligne s'ouvre vide et se remplit.
@@ -34,10 +38,7 @@ BEGIN
     IF @a_completer > 0
     BEGIN
         DECLARE @m0 NVARCHAR (2000) =
-            N'Validation refusee : ' + CAST(@a_completer AS NVARCHAR (10))
-            + N' ligne(s) du brouillon n''ont ni debit ni credit. Une ligne '
-            + N'peut rester vide pendant la saisie, jamais a la validation : '
-            + N'renseigner son montant ou la retirer.';
+            N'Validation refusée : ' + CAST(@a_completer AS NVARCHAR (10)) + N' ligne(s) du brouillon sans débit ni crédit. Saisir leur montant ou les retirer.';
         BEGIN SET @m0 = REPLACE(@m0, N'%', N'%%'); THROW 50046, @m0, 1; END
     END
 
@@ -102,8 +103,7 @@ BEGIN
         IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
         DECLARE @motif NVARCHAR (400) = LEFT(ERROR_MESSAGE(), 400);
         DECLARE @m NVARCHAR (2000) =
-            N'Validation refusee, le brouillon est conserve tel quel. Motif rendu par la base : '
-            + @motif;
+            N'Validation refusée, le brouillon est conservé. Motif : ' + @motif;
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50030, @m, 1; END
     END CATCH;
 END;

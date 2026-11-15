@@ -56,8 +56,11 @@ BEGIN
             EXEC dbo.pr_e5_refuser 50836, @m;
         END;
         SET @oid = OBJECT_ID(N'dbo.' + QUOTENAME(@t));
+        -- 343 (30/10/2026) : ELSE N'' dans le MAX, repris par NULLIF : aucun NULL dans l'agregat, donc aucun avertissement 8153, que
+        -- le pilote lirait a la place du refus. Genere par 61_DEPLOIEMENT/generer_e5_343_correctif_avertissement_8153.py.
         SELECT @numerotee = CASE WHEN MAX(CAST(c.is_identity AS INT)) = 1 THEN 1 ELSE 0 END,
-               @pk1 = MAX(CASE WHEN ic.key_ordinal = 1 THEN c.name END), @pk2 = MAX(CASE WHEN ic.key_ordinal = 2 THEN c.name END)
+               @pk1 = NULLIF(MAX(CASE WHEN ic.key_ordinal = 1 THEN c.name ELSE N'' END), N''),
+               @pk2 = NULLIF(MAX(CASE WHEN ic.key_ordinal = 2 THEN c.name ELSE N'' END), N'')
         FROM sys.indexes i
         JOIN sys.index_columns ic ON ic.object_id = i.object_id AND ic.index_id = i.index_id
         JOIN sys.columns c ON c.object_id = ic.object_id AND c.column_id = ic.column_id

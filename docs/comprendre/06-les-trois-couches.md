@@ -22,7 +22,7 @@ Elle se reproduit en trois couches. Après la synchronisation, l'installation n'
 ## Couche A. Les définitions arrivent par Git
 
 La synchronisation recrée dans votre espace de travail chaque élément du dossier `fabric/` : le
-coffre, la base avec ses tables, ses vues et ses procédures, les ensembles de fonctions avec leur
+coffre, la base avec ses tables, ses vues et ses procédures, les 7 ensembles de fonctions avec leur
 code, la liste de leurs bibliothèques et la roue privée de `fn_valorisation`, les deux modèles de
 données et les deux rapports.
 
@@ -110,16 +110,16 @@ publication. Un bouton n'appelle qu'une fonction publiée.
 
 ---
 
-## Ce qui se refait seul, et à quelle condition
+## La liaison du rapport à son modèle, à vérifier
 
-Une liaison se refait seule, sous une condition.
+**Chaque rapport désigne son modèle par une connexion** qui nomme l'espace de travail d'origine, le
+nom du modèle et l'identifiant du modèle d'origine : section `byConnection` du fichier
+`definition.pbir` de chaque rapport, dans `fabric/`. Aucun script du dépôt ne modifie ce fichier.
+Les [étapes 9 et 10](../faire/etape-09-et-10-relier.md) disent comment vérifier que chaque rapport
+lit le modèle de votre espace.
 
-**Le rapport retrouve son modèle de données tout seul**, parce qu'il le désigne par un chemin
-relatif et non par un identifiant. L'éditeur donne cette liaison pour « partielle » : elle se
-résout si le modèle est déployé au même emplacement relatif.
-
-**La condition :** ne renommez aucun élément. Un renommage casse cette liaison, et le message
-d'erreur ne désigne pas le renommage.
+**Ne renommez aucun élément.** La connexion nomme le modèle, et le message d'erreur d'un renommage
+ne désigne pas le renommage.
 
 ---
 

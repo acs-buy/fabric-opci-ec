@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "valoImmSous",
   "position": {
-    "x": 82,
+    "x": 102,
     "y": 360,
     "z": 46402,
     "height": 20,
-    "width": 846,
+    "width": 234,
     "tabOrder": 46402
   },
   "visual": {
@@ -63,7 +63,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5B6B7D'"
+                      "Value": "'#2B4666'"
                     }
                   }
                 }

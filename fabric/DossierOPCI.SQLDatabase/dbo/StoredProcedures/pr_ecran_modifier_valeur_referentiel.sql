@@ -1,4 +1,3 @@
-
 -- ===================================================================== 2. LES 6 PROCEDURES
 -- ------------------------------------------------------------------ n° 11 : modifier la valeur d'une cellule
 -- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
@@ -246,6 +245,14 @@ BEGIN
         ELSE IF @type_nom IN (N'tinyint', N'smallint', N'int', N'bigint')
         BEGIN
             SET @d = dbo.fn_e5_nombre(@valeur);
+            -- 341 (25/10/2026) : un nombre d'au moins 9999999999999999999999999999,5 en valeur absolue deborderait
+            -- ROUND (erreur 8115, en anglais) : il se refuse ici, avant tout arrondi, au texte du refus qui suit (50849).
+            -- Genere par 61_DEPLOIEMENT/generer_e5_341_correctif_arrondi_n11.py.
+            IF ABS(@d) >= 9999999999999999999999999999.5
+            BEGIN
+                SET @m = N'« Nouvelle valeur » : « ' + @valeur + N' » n’est pas un nombre entier que la colonne « ' + @lib_col + N' » admet.';
+                EXEC dbo.pr_e5_refuser 50849, @m;
+            END;
             IF @d IS NULL OR @d <> ROUND(@d, 0)
                OR @d < CASE @type_nom WHEN N'tinyint' THEN 0 WHEN N'smallint' THEN -32768 WHEN N'int' THEN -2147483648 ELSE -9223372036854775808 END
                OR @d > CASE @type_nom WHEN N'tinyint' THEN 255 WHEN N'smallint' THEN 32767 WHEN N'int' THEN 2147483647 ELSE 9223372036854775807 END
@@ -261,6 +268,15 @@ BEGIN
             IF @d IS NULL
             BEGIN
                 SET @m = N'« Nouvelle valeur » : « ' + @valeur + N' » n’est pas un nombre, et la colonne « ' + @lib_col + N' » en attend un.';
+                EXEC dbo.pr_e5_refuser 50849, @m;
+            END;
+            -- 341 (25/10/2026) : un nombre d'au moins 9999999999999999999999999999,5 en valeur absolue deborderait
+            -- ROUND (erreur 8115, en anglais) : il se refuse ici, avant tout arrondi, au texte du refus qui suit (50849).
+            -- Genere par 61_DEPLOIEMENT/generer_e5_341_correctif_arrondi_n11.py.
+            IF ABS(@d) >= 9999999999999999999999999999.5
+            BEGIN
+                SET @m = N'« Nouvelle valeur » : « ' + @valeur + N' » dépasse la colonne « ' + @lib_col + N' », qui porte au plus '
+                       + CAST(@precision - @echelle AS NVARCHAR (4)) + N' chiffres avant la virgule et ' + CAST(@echelle AS NVARCHAR (4)) + N' après.';
                 EXEC dbo.pr_e5_refuser 50849, @m;
             END;
             IF @d <> ROUND(@d, @echelle) OR ABS(@d) >= POWER(CAST(10 AS DECIMAL (38, 0)), @precision - @echelle)

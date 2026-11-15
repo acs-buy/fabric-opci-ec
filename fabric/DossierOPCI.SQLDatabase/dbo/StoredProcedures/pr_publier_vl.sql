@@ -54,7 +54,7 @@ BEGIN
           AND v.valeur_liquidative IS NOT NULL;
         IF @@ROWCOUNT = 0
             THROW 50034,
-                N'Publication refusée : aucune valeur liquidative n''est rendue pour cette entité à cet arrêté. Vérifier le nombre de parts et les lots validés, ou lire le motif de refus de la vue de la valeur liquidative.',
+                N'Publication refusée : aucune valeur liquidative n''est calculée pour cette entité à cet arrêté. Vérifier le nombre de parts à l''arrêté et les lots validés, puis publier.',
                 1;
         COMMIT TRANSACTION;
     END TRY

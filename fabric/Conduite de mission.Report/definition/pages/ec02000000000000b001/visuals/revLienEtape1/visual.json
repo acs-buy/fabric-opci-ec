@@ -335,6 +335,13 @@
                   "Value": "'bkRev2'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Montre l’étape du programme de travail : type de programme, cycles et questions'"
+                }
+              }
             }
           }
         }

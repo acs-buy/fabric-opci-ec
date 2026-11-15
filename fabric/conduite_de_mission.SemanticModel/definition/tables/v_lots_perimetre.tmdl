@@ -59,7 +59,7 @@ table v_lots_perimetre
 		lineageTag: d6f958fa-66d9-48b9-b7d8-ecb04cdb004c
 
 	/// gris quand [Lot annulable] est vide
-	measure 'Fond annuler le lot' = IF ( ISBLANK ( [Lot annulable] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond annuler le lot' = VAR f = ( IF ( ISBLANK ( [Lot annulable] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 28a9d14c-8d4f-4a27-aaa2-199fb5ec3b43
 

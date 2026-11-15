@@ -22,6 +22,11 @@
       "isPublicEndpointEnabled": false
     },
     {
+      "name": "ajouter_question",
+      "description": "Ajouter une question : une question de r\u00E9f\u00E9rence neuve, au statut \u00E0 valider, dans le cycle choisi \u00E0 la bande des cycles ; r\u00E9serv\u00E9 \u00E0 l\u0027associ\u00E9 et au r\u00E9viseur.",
+      "isPublicEndpointEnabled": false
+    },
+    {
       "name": "ajuster_programme",
       "description": "Ajouter au programme ou Retirer du programme : une question du programme de travail ; motif exig\u00E9 au retrait.",
       "isPublicEndpointEnabled": false

@@ -1,5 +1,4 @@
-
--- pr_modifier_client : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_modifier_client : l'enveloppe (regle unique, lot B2) ; @est_professionnel transmis au corps (script 345)
 CREATE   PROCEDURE dbo.pr_modifier_client
     @code               VARCHAR (20),
     @denomination       NVARCHAR (400) = NULL,
@@ -20,6 +19,7 @@ CREATE   PROCEDURE dbo.pr_modifier_client
     @site_url           NVARCHAR (800) = NULL,
     @par                NVARCHAR (400)
     , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule
+    , @est_professionnel NVARCHAR (400) = NULL   -- objet n° 202 : oui pose 1, non pose 0, - pose NULL, vide laisse la valeur
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -42,7 +42,7 @@ BEGIN
         UPDATE @ann_v SET verrou = 1 WHERE entite = @ann_e;
     END;
     -- 2. le corps d'origine
-    EXEC dbo.pr_modifier_client_corps @code = @code, @denomination = @denomination, @siren = @siren, @forme_vehicule = @forme_vehicule, @forme_sociale = @forme_sociale, @adresse_1 = @adresse_1, @adresse_2 = @adresse_2, @code_postal = @code_postal, @ville = @ville, @pays = @pays, @dirigeant_nom = @dirigeant_nom, @dirigeant_qualite = @dirigeant_qualite, @contact_nom = @contact_nom, @contact_courriel = @contact_courriel, @contact_telephone = @contact_telephone, @cloture = @cloture, @site_url = @site_url, @par = @par;
+    EXEC dbo.pr_modifier_client_corps @code = @code, @denomination = @denomination, @siren = @siren, @forme_vehicule = @forme_vehicule, @forme_sociale = @forme_sociale, @adresse_1 = @adresse_1, @adresse_2 = @adresse_2, @code_postal = @code_postal, @ville = @ville, @pays = @pays, @dirigeant_nom = @dirigeant_nom, @dirigeant_qualite = @dirigeant_qualite, @contact_nom = @contact_nom, @contact_courriel = @contact_courriel, @contact_telephone = @contact_telephone, @cloture = @cloture, @site_url = @site_url, @par = @par, @est_professionnel = @est_professionnel;
     -- 3. un calcul par vehicule, par la procedure la plus externe
     IF @calculer = 1
     BEGIN

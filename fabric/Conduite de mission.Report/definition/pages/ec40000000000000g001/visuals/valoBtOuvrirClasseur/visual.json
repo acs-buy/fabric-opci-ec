@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "valoBtOuvrirClasseur",
   "position": {
-    "x": 152,
-    "y": 1198,
-    "z": 37998,
+    "x": 481,
+    "y": 352,
+    "z": 46998,
     "height": 36,
-    "width": 118,
-    "tabOrder": 37998
+    "width": 148,
+    "tabOrder": 46998
   },
   "visual": {
     "visualType": "actionButton",
@@ -343,8 +343,13 @@
             },
             "tooltip": {
               "expr": {
-                "Literal": {
-                  "Value": "'Ouvrir le classeur'"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_export_dossier"
+                    }
+                  },
+                  "Property": "Infobulle ouvrir le classeur"
                 }
               }
             }

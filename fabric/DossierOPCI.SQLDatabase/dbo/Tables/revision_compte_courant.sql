@@ -41,7 +41,7 @@ BEGIN
           AND c.difference_estimation_compte_courant <> 0
     )
     BEGIN
-        THROW 50047, 'Revision refusee : la cascade de l''article 212-5 deprecie deja totalement le compte courant de cette filiale a cet arrete, la valeur de l''entite etant negative. Deux montants ne se disputent pas la meme creance. Lire dbo.v_cascade_212_5 pour le detail de la cascade.', 1;
+        THROW 50047, N'Révision refusée : la valeur de la filiale étant négative, la cascade de l''article 212-5 déprécie déjà en totalité son compte courant à cet arrêté. Aucune révision de ce compte courant n''est à saisir.', 1;
     END
 END
 

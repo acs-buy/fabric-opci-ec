@@ -1,0 +1,378 @@
+/// Écran 5, objet n° 40 : table de la grille et des 4 filtres de l’étape 1 ; aucune relation : les 11 mesures de la fiche la lisent sur la ligne du référentiel choisi
+table v_ecran_inventaire_referentiel
+	lineageTag: 95307003-ac60-409e-84ba-1b4265a2a54b
+
+	/// n° 74, nombre de lignes sur les référentiels inscrits du cabinet : du_cabinet = 1 et etat_genre différent de « non recensé » (FILTER ( ALL ( v_ecran_inventaire_referentiel ), … )), les 3 tables non recensées n’y entrant pas (carte 1)
+	measure 'Referentiels du cabinet' = COUNTROWS ( FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[du_cabinet] = TRUE () && v_ecran_inventaire_referentiel[etat_genre] <> "non recensé" ) ) + 0
+		formatString: #,0
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 10d81b2f-7821-451e-8758-1bc2a7fd0a9a
+
+	/// n° 75, « n mis à jour par le cabinet, n fixés par un texte », sur les mêmes lignes (carte 1)
+	measure 'Sous-ligne referentiels du cabinet' = VAR t = FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[du_cabinet] = TRUE () && v_ecran_inventaire_referentiel[etat_genre] <> "non recensé" ) VAR n = COUNTROWS ( t ) + 0 VAR n1 = COUNTROWS ( FILTER ( t, v_ecran_inventaire_referentiel[mode_tenue] = "TENU" ) ) + 0 RETURN FORMAT ( n1, "0" ) & " mis à jour par le cabinet, " & FORMAT ( n - n1, "0" ) & " fixés par un texte"
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: ca04825a-4748-46fc-a4dc-0738386134a2
+
+	/// n° 76, somme des lignes sur les référentiels inscrits du cabinet : du_cabinet = 1 et etat_genre différent de « non recensé » (FILTER ( ALL ( v_ecran_inventaire_referentiel ), … )), les 3 tables non recensées n’y entrant pas (carte 2)
+	measure 'Lignes de reference du cabinet' = SUMX ( FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[du_cabinet] = TRUE () && v_ecran_inventaire_referentiel[etat_genre] <> "non recensé" ), v_ecran_inventaire_referentiel[lignes] ) + 0
+		formatString: #,0
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: fcd06ca4-5cee-4cfa-a444-dadfb6deb5c1
+
+	/// n° 77, « dans les n référentiels du cabinet », n = [Referentiels du cabinet] (carte 2)
+	measure 'Sous-ligne lignes de reference' = "dans les " & FORMAT ( [Referentiels du cabinet], "0" ) & " référentiels du cabinet"
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: f56703ed-799e-4164-b0f0-131eb0c75bc9
+
+	/// n° 78, somme des lignes modifiées sur les mêmes lignes (carte 3)
+	measure 'Lignes modifiees du cabinet' = SUMX ( FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[du_cabinet] = TRUE () && v_ecran_inventaire_referentiel[etat_genre] <> "non recensé" ), v_ecran_inventaire_referentiel[lignes_modifiees] ) + 0
+		formatString: #,0
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 7ab616af-f9b2-4b57-adc2-3de1a7d857da
+
+	/// n° 79, « depuis l’import, dernière le jj/mm/aaaa », « depuis l’import » sans modification (carte 3)
+	measure 'Sous-ligne lignes modifiees' = VAR d = MAXX ( FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[du_cabinet] = TRUE () && v_ecran_inventaire_referentiel[etat_genre] <> "non recensé" ), v_ecran_inventaire_referentiel[derniere_modification] ) RETURN IF ( ISBLANK ( d ), "depuis l’import", "depuis l’import, dernière le " & FORMAT ( d, "dd/MM/yyyy" ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 7f593ce3-2619-46e9-8b63-920731ce77be
+
+	/// n° 80, or au-dessus de 0, vert à 0 (trait et valeur de la carte 3)
+	measure 'Couleur lignes modifiees' = IF ( [Lignes modifiees du cabinet] > 0, "#8A6710", "#1F6D4A" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 11f3da58-6d78-4c26-be19-6c720712ab9b
+
+	/// n° 87, « n recensés, n lignes ; n non recensés » (sous-titre de la grille de l’étape 1, en expression)
+	measure 'Sous-titre grille de l inventaire' = VAR nh = COUNTROWS ( FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[du_cabinet] = TRUE () && v_ecran_inventaire_referentiel[etat_genre] = "non recensé" ) ) + 0 VAR nl = [Lignes de reference du cabinet] RETURN FORMAT ( [Referentiels du cabinet], "0" ) & " recensés, " & SUBSTITUTE ( SUBSTITUTE ( FORMAT ( nl, "#,0" ), UNICHAR ( 160 ), " " ), UNICHAR ( 8239 ), " " ) & " lignes ; " & FORMAT ( nh, "0" ) & IF ( nh < 2, " non recensé", " non recensés" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: d1503105-3724-40cf-a4c4-b279c6a4f632
+
+	/// n° 88, fond de la cellule « État » de la grille selon etat_genre : « modifié » #FFF3D6, « à valider » #F9ECEC, « importé », « non modifiable », « non recensé » et « aucune ligne » #EEF1F5 ; encre de la table, #12233C (couleurs : tableau « Décisions techniques »)
+	measure 'Fond etat de l inventaire' = SWITCH ( SELECTEDVALUE ( v_ecran_inventaire_referentiel[etat_genre] ), "modifié", "#FFF3D6", "à valider", "#F9ECEC", "#EEF1F5" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 14821605-cc94-4a91-8223-0ff65b1ea46f
+
+	/// n° 91, VAR c = [Referentiel choisi] : couleur d’action quand le mode_tenue de la ligne c vaut TENU, contour sinon (bouton « Modifier le référentiel »)
+	measure 'Fond modifier le referentiel' = VAR c = [Referentiel choisi] VAR m = CALCULATE ( MAX ( v_ecran_inventaire_referentiel[mode_tenue] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) RETURN IF ( m = "TENU", "#0F5C8C", "#FFFFFF" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 71cb7924-a6de-4655-b12f-90787b409e29
+
+	/// n° 92, couleur d’action quand le mode_tenue de la ligne c vaut TEXTE, contour sinon (bouton « Consulter le référentiel »)
+	measure 'Fond consulter le referentiel' = VAR c = [Referentiel choisi] VAR m = CALCULATE ( MAX ( v_ecran_inventaire_referentiel[mode_tenue] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) RETURN IF ( m = "TEXTE", "#0F5C8C", "#FFFFFF" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 23293e61-7e09-4926-afad-1ee294a84402
+
+	/// n° 94, VAR c = [Referentiel choisi], puis CALCULATE ( MAX ( domaine ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), [table_nom] = c ) ) & "" ; vide sans référentiel choisi ; une valeur de la carte de la fiche
+	measure 'Domaine du referentiel choisi' = VAR c = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_inventaire_referentiel[domaine] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: f65f89c4-adf2-4c18-9b37-c09e9ec3aaa2
+
+	/// n° 95, VAR c = [Referentiel choisi], puis CALCULATE ( MAX ( lignes ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), [table_nom] = c ) ) ; vide sans référentiel choisi ; une valeur de la carte de la fiche
+	measure 'Lignes du referentiel choisi' = VAR c = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_inventaire_referentiel[lignes] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) )
+		formatString: #,0
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: abec0164-8899-4047-a210-c4b9fbe8049a
+
+	/// n° 96, VAR c = [Referentiel choisi], puis CALCULATE ( MAX ( lignes_modifiees ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), [table_nom] = c ) ) ; vide sans référentiel choisi ; une valeur de la carte de la fiche
+	measure 'Lignes modifiees du referentiel choisi' = VAR c = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_inventaire_referentiel[lignes_modifiees] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) )
+		formatString: #,0
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 14a2fadd-306b-4b22-be24-108298d9cc99
+
+	/// n° 97, VAR c = [Referentiel choisi], puis CALCULATE ( MAX ( derniere_modification_texte ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), [table_nom] = c ) ) & "" ; vide sans référentiel choisi ; une valeur de la carte de la fiche
+	measure 'Derniere modification du referentiel choisi' = VAR c = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_inventaire_referentiel[derniere_modification_texte] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 12263754-1b03-48d0-a4ec-0bbbdb91c70b
+
+	/// n° 98, VAR c = [Referentiel choisi], puis CALCULATE ( MAX ( modifie_par ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), [table_nom] = c ) ) & "" ; vide sans référentiel choisi ou pour un référentiel sans modification ; une valeur de la carte de la fiche
+	measure 'Auteur du referentiel choisi' = VAR c = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_inventaire_referentiel[modifie_par] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: cc97cc64-a23c-4294-9aa9-5dbd0871b535
+
+	/// n° 99, VAR c = [Referentiel choisi], puis CALCULATE ( MAX ( qui_libelle ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), [table_nom] = c ) ) & "" ; vide sans référentiel choisi ; une valeur de la carte de la fiche
+	measure 'Qui modifie le referentiel choisi' = VAR c = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_inventaire_referentiel[qui_libelle] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: fa0251c3-d6d1-49bc-b0cd-e82acc42bacc
+
+	/// n° 100, VAR c = [Referentiel choisi], puis CALCULATE ( MAX ( mode_libelle ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), [table_nom] = c ) ) & "" ; vide sans référentiel choisi ; une valeur de la carte de la fiche
+	measure 'Contenu du referentiel choisi' = VAR c = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_inventaire_referentiel[mode_libelle] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 8ec257eb-2498-4478-9224-6fa12083025b
+
+	/// n° 101, VAR c = [Referentiel choisi], puis CALCULATE ( MAX ( etat ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), [table_nom] = c ) ) & "" ; vide sans référentiel choisi ; une valeur de la carte de la fiche
+	measure 'Etat du referentiel choisi' = VAR c = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_inventaire_referentiel[etat] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 451782e6-4c8c-4574-88ce-c3181550bfe4
+
+	/// n° 102, « annexe à recalculer pour n véhicules : » suivi de « ajout », « suppression », de « code » quand une colonne de la clé non numérotée par la base porte marque_annexe = 1, et des libellés des autres colonnes de v_ecran_referentiel_colonnes où marque_annexe = 1 (CONCATENATEX, VAR c = [Referent
+	measure 'Effet sur l annexe du referentiel choisi' = VAR c = [Referentiel choisi] VAR n = CALCULATE ( MAX ( v_ecran_inventaire_referentiel[effet_annexe] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) VAR num = CALCULATE ( MAX ( v_ecran_referentiel_choix[forme_cle] ), FILTER ( ALL ( v_ecran_referentiel_choix ), v_ecran_referentiel_choix[table_nom] = c ) ) = "numérotée" VAR cols = CONCATENATEX ( FILTER ( ALL ( v_ecran_referentiel_colonnes ), v_ecran_referentiel_colonnes[referentiel] = c && v_ecran_referentiel_colonnes[marque_annexe] = 1 ), ", " & "«" & UNICHAR ( 8239 ) & v_ecran_referentiel_colonnes[libelle_colonne] & UNICHAR ( 8239 ) & "»", "", v_ecran_referentiel_colonnes[rang_annexe], ASC ) RETURN IF ( ISBLANK ( c ), "", IF ( n > 0, "annexe à recalculer pour " & FORMAT ( n, "0" ) & IF ( n < 2, " véhicule", " véhicules" ) & " : ajout, suppression" & IF ( num, "", ", code" ) & cols & " ; les autres colonnes sont sans effet", "aucun effet" ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: f78db58b-5f79-46ba-8ea5-2fa9d8b0d0a3
+
+	/// n° 103, VAR c = [Referentiel choisi], puis CALCULATE ( MAX ( ecran_lu ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), [table_nom] = c ) ) & "" ; vide sans référentiel choisi ; une valeur de la carte de la fiche
+	measure 'Ecrans du referentiel choisi' = VAR c = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_inventaire_referentiel[ecran_lu] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 86dc5aaa-ba04-4f3b-b819-895d24af7802
+
+	/// n° 104, fond des cellules de la ligne de la grille de l’étape 1 quand table_nom = [Referentiel choisi], #F4F8FC, « #FFFFFF » ailleurs, comme [Fond ligne entite] ; la colonne « État » exceptée, peinte par [Fond etat de l inventaire]
+	measure 'Fond ligne choisie' = VAR c = [Referentiel choisi] RETURN IF ( NOT ISBLANK ( c ) && SELECTEDVALUE ( v_ecran_inventaire_referentiel[table_nom] ) = c, "#F4F8FC", "#FFFFFF" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 8186572a-ecb4-41c7-8363-2b7eb5252660
+
+	/// n° 106, « domaine › catégorie · n lignes · état » de la ligne du référentiel choisi, « domaine › catégorie · aucune ligne » pour un référentiel sans ligne (1re ligne de la carte de la bande)
+	measure 'Lignes et etat du referentiel choisi' = VAR c = [Referentiel choisi] VAR t = FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) VAR d = MAXX ( t, v_ecran_inventaire_referentiel[domaine] ) VAR g = MAXX ( t, v_ecran_inventaire_referentiel[categorie] ) VAR n = MAXX ( t, v_ecran_inventaire_referentiel[lignes] ) VAR e = MAXX ( t, v_ecran_inventaire_referentiel[etat] ) RETURN IF ( ISBLANK ( c ) || ISEMPTY ( t ), "", d & " › " & g & " · " & IF ( e = "aucune ligne", e, FORMAT ( n, "0" ) & IF ( n < 2, " ligne", " lignes" ) & " · " & e ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: a681286c-3da6-464f-b89e-0f384197e14b
+
+	/// n° 107, « modifiable par : … · utilisé par : … » pour un référentiel mis à jour par le cabinet, « fixé par un texte · utilisé par : … » pour un référentiel fixé par un texte, les seuls noms d’écran de ecran_lu (2e ligne de la carte de la bande)
+	measure 'Modification et emploi du referentiel choisi' = VAR c = [Referentiel choisi] VAR t = FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) VAR m = MAXX ( t, v_ecran_inventaire_referentiel[mode_tenue] ) VAR qu = MAXX ( t, v_ecran_inventaire_referentiel[qui_libelle] ) VAR e0 = MAXX ( t, v_ecran_inventaire_referentiel[ecran_lu] ) VAR p = SUBSTITUTE ( e0, " ; ", "|" ) VAR segs = ADDCOLUMNS ( GENERATESERIES ( 1, PATHLENGTH ( p ) + 0, 1 ), "s", PATHITEM ( p, [Value], TEXT ) ) VAR noms = GENERATE ( segs, VAR s0 = [s] VAR k0 = SEARCH ( " : ", s0, 1, 0 ) VAR q0 = SUBSTITUTE ( IF ( k0 > 0, LEFT ( s0, k0 - 1 ), s0 ), ", ", "|" ) RETURN SELECTCOLUMNS ( GENERATESERIES ( 1, PATHLENGTH ( q0 ) + 0, 1 ), "j", [Value], "nom", PATHITEM ( q0, [Value], TEXT ) ) ) VAR rangs = ADDCOLUMNS ( noms, "o", [Value] * 1000 + [j] ) VAR uniques = FILTER ( rangs, VAR nm = [nom] VAR o0 = [o] RETURN COUNTROWS ( FILTER ( rangs, [nom] = nm && [o] < o0 ) ) = 0 ) VAR court = IF ( SEARCH ( " : ", e0, 1, 0 ) = 0, e0, CONCATENATEX ( uniques, [nom], ", ", [o], ASC ) ) RETURN IF ( ISBLANK ( c ) || ISEMPTY ( t ), "", IF ( m = "TENU", "modifiable par : " & qu, "fixé par un texte" ) & " · utilisé par : " & court )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 497bf88f-9184-4439-a294-1eb0ffd2ef57
+
+	/// n° 108, VAR c = [Referentiel choisi], puis CALCULATE ( MAX ( categorie ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), [table_nom] = c ) ) & "" ; vide sans référentiel choisi ; une valeur de la carte de la fiche (ligne « Catégorie »)
+	measure 'Categorie du referentiel choisi' = VAR c = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_inventaire_referentiel[categorie] ), FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 7f57821a-28b1-445a-9425-ba38fb792b53
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: e69cbfee-5dbe-4c1e-a2d8-18ce77441cf9
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 04180ff5-dbc5-438c-9b37-975d15476494
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(160)
+		lineageTag: 246bab40-df5d-4bd2-811f-769b82ee2959
+		summarizeBy: none
+		sourceColumn: libelle
+		sortByColumn: rang
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecran_lu
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: 613aee42-f8ea-419c-9853-26c705cf6a8e
+		summarizeBy: none
+		sourceColumn: ecran_lu
+
+		annotation SummarizationSetBy = Automatic
+
+	column qui_tient
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 87348ed2-96d5-495c-9fe1-72b6fa82d272
+		summarizeBy: none
+		sourceColumn: qui_tient
+
+		annotation SummarizationSetBy = Automatic
+
+	column lignes
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 05222c1f-fc28-4076-af48-5b385efdb2e2
+		summarizeBy: sum
+		sourceColumn: lignes
+
+		annotation SummarizationSetBy = Automatic
+
+	column lignes_modifiees
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c64b49d1-5384-4720-88be-50983da8d92c
+		summarizeBy: sum
+		sourceColumn: lignes_modifiees
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_modification
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: 1c9b0a47-8518-486c-b8cf-b52d93c0c340
+		summarizeBy: none
+		sourceColumn: derniere_modification
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat
+		dataType: string
+		sourceProviderType: nvarchar(51)
+		lineageTag: af95e58f-d2b6-4572-a28f-d1364fab687a
+		summarizeBy: none
+		sourceColumn: etat
+
+		annotation SummarizationSetBy = Automatic
+
+	column releve_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: 2ce62d0a-a241-4f76-b0d7-6f2ebc1e30b8
+		summarizeBy: none
+		sourceColumn: releve_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column table_nom
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(120)
+		lineageTag: 7c66b2cf-5011-4f86-8254-1a4579933769
+		summarizeBy: none
+		sourceColumn: table_nom
+
+		annotation SummarizationSetBy = Automatic
+
+	column effet_annexe
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 45379afb-2001-4003-82c6-343a3bd5e8ee
+		summarizeBy: none
+		sourceColumn: effet_annexe
+
+		annotation SummarizationSetBy = Automatic
+
+	column etat_genre
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: c7b2c3dc-0253-4dcc-be23-9ec2accf69e0
+		summarizeBy: none
+		sourceColumn: etat_genre
+
+		annotation SummarizationSetBy = Automatic
+
+	column rang
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c96c8194-c118-47d8-a789-a8b7e2c094ea
+		summarizeBy: none
+		sourceColumn: rang
+
+		annotation SummarizationSetBy = Automatic
+
+	column du_cabinet
+		dataType: boolean
+		isNullable: false
+		sourceProviderType: bit
+		lineageTag: 9a442e8c-4f58-4829-80ab-b7b01e45adfe
+		summarizeBy: none
+		sourceColumn: du_cabinet
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 7565f1d0-fee9-43a9-8c4c-65d864e82c0f
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column domaine
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: 2d1dca64-0f71-47af-89db-126bd6985cd7
+		summarizeBy: none
+		sourceColumn: domaine
+		sortByColumn: domaine_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column domaine_ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: tinyint
+		lineageTag: 8d45beed-7927-45b0-8c27-c4421fb8fa68
+		summarizeBy: none
+		sourceColumn: domaine_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column categorie
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: 37b5f688-7a96-4594-9463-b31229a34cd5
+		summarizeBy: none
+		sourceColumn: categorie
+
+		annotation SummarizationSetBy = Automatic
+
+	column categorie_ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: tinyint
+		lineageTag: 82fbdd46-ec7d-404f-a696-5a8516944374
+		summarizeBy: none
+		sourceColumn: categorie_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column mode_tenue
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(5)
+		lineageTag: c099465b-2810-43ec-9cf5-09afa32f5796
+		summarizeBy: none
+		sourceColumn: mode_tenue
+
+		annotation SummarizationSetBy = Automatic
+
+	column mode_libelle
+		dataType: string
+		sourceProviderType: nvarchar(30)
+		lineageTag: 6560db04-b33b-4312-a32c-6d44a2370d45
+		summarizeBy: none
+		sourceColumn: mode_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column qui_libelle
+		dataType: string
+		sourceProviderType: nvarchar(30)
+		lineageTag: 0b47fde8-faf4-4ebd-b2a4-4203ca43f2ee
+		summarizeBy: none
+		sourceColumn: qui_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_modification_texte
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: 8d47db61-2d07-4ced-9a44-4fc10e0a131e
+		summarizeBy: none
+		sourceColumn: derniere_modification_texte
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_inventaire_referentiel = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_inventaire_referentiel = Value.NativeQuery(Source, "SELECT cle_ecran, ordre, libelle, ecran_lu, qui_tient, lignes, lignes_modifiees, DATETIME2FROMPARTS(YEAR(derniere_modification), MONTH(derniere_modification), DAY(derniere_modification), DATEPART(HOUR, derniere_modification), DATEPART(MINUTE, derniere_modification), DATEPART(SECOND, derniere_modification), 0, 0) AS derniere_modification, etat, DATETIME2FROMPARTS(YEAR(releve_le), MONTH(releve_le), DAY(releve_le), DATEPART(HOUR, releve_le), DATEPART(MINUTE, releve_le), DATEPART(SECOND, releve_le), 0, 0) AS releve_le, table_nom, effet_annexe, etat_genre, rang, du_cabinet, modifie_par, domaine, domaine_ordre, categorie, categorie_ordre, mode_tenue, mode_libelle, qui_libelle, derniere_modification_texte FROM dbo.v_ecran_inventaire_referentiel", null, [EnableFolding = true])
+				in
+				    dbo_v_ecran_inventaire_referentiel
+

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "valoExpValeur",
   "position": {
-    "x": 475,
+    "x": 652,
     "y": 902,
     "z": 40985,
     "height": 36,
-    "width": 166,
+    "width": 262,
     "tabOrder": 40985
   },
   "visual": {

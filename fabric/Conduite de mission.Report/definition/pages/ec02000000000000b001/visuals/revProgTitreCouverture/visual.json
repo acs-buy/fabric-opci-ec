@@ -3,10 +3,10 @@
   "name": "revProgTitreCouverture",
   "position": {
     "x": 13,
-    "y": 921,
+    "y": 918,
     "z": 5200,
-    "height": 22,
-    "width": 181,
+    "height": 30,
+    "width": 202,
     "tabOrder": 5200
   },
   "visual": {
@@ -22,7 +22,7 @@
                     "value": "3. Couverture de la balance",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "13px",
+                      "fontSize": "12pt",
                       "color": "#12233C"
                     }
                   }
@@ -80,7 +80,7 @@
             "top": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "2D"
                 }
               }
             },

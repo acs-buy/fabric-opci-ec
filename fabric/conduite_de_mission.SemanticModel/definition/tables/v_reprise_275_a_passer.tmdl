@@ -8,7 +8,7 @@ table v_reprise_275_a_passer
 		lineageTag: 9893bf80-b72b-43d3-a16e-1afb51ecf120
 
 	/// gris quand le reste à passer est nul
-	measure 'Fond reprendre 275' = IF ( ISBLANK ( [Entite si reprise 275] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond reprendre 275' = VAR f = ( IF ( ISBLANK ( [Entite si reprise 275] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: a0305b34-6bbd-40be-aef6-5fd1714a0138
 

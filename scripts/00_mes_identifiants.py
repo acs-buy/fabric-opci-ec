@@ -32,6 +32,7 @@ ENSEMBLES = [
     (u"fn_ecran_arrete", u"l'ecran Arrete"),
     (u"fn_documents", u"la production des documents, aux pages de l'ecran Revision"),
     (u"fn_valorisation", u"la generation du lot de valorisation, a l'ecran Valorisation"),
+    (u"fn_ecran_referentiels", u"l'ecran Referentiels"),
 ]
 
 try:

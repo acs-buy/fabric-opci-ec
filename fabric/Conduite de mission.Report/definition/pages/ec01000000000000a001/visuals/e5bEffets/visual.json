@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "e5bEffets",
   "position": {
-    "x": 728,
+    "x": 519,
     "y": 824,
     "z": 74400,
     "height": 249,
-    "width": 824,
+    "width": 1033,
     "tabOrder": 75100
   },
   "visual": {

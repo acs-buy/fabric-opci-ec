@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revLivSousDossier",
   "position": {
-    "x": 137,
-    "y": 1166,
+    "x": 161,
+    "y": 1125,
     "z": 37500,
     "height": 24,
-    "width": 221,
+    "width": 171,
     "tabOrder": 37500
   },
   "visual": {
@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "12px",
-                      "color": "#5B6B7D"
+                      "color": "#2B4666"
                     }
                   }
                 ],

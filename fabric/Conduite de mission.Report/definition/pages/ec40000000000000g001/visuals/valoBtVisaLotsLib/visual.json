@@ -6,7 +6,7 @@
     "y": 1163,
     "z": 38441,
     "height": 20,
-    "width": 136,
+    "width": 229,
     "tabOrder": 38441
   },
   "visual": {
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Ouvrir le visa des lots",
+                    "value": "Ouvrir la page Révision, visa des lots",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "10pt",

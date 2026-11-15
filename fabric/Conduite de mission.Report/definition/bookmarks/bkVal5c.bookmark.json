@@ -480,28 +480,7 @@
               }
             }
           },
-          "valoBlocageClasseurFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "valoBtAnnuler": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtAnnulerFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtAnnulerLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -536,35 +515,7 @@
               }
             }
           },
-          "valoBtCompteRevuFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtCompteRevuLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "valoBtCours": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtCoursFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtCoursLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -578,35 +529,7 @@
               }
             }
           },
-          "valoBtDerogationFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtDerogationLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "valoBtExpertise": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtExpertiseFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtExpertiseLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -620,35 +543,7 @@
               }
             }
           },
-          "valoBtExporterFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtExporterLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "valoBtGenerer": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtGenererFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtGenererLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -662,35 +557,7 @@
               }
             }
           },
-          "valoBtInstrumentFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtInstrumentLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "valoBtMiroirs": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtMiroirsFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtMiroirsLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -725,35 +592,7 @@
               }
             }
           },
-          "valoBtProposerFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtProposerLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "valoBtReimporter": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtReimporterFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtReimporterLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -767,20 +606,6 @@
               }
             }
           },
-          "valoBtRenvoyerFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtRenvoyerLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "valoBtReprise": {
             "singleVisual": {
               "display": {
@@ -788,35 +613,7 @@
               }
             }
           },
-          "valoBtRepriseFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtRepriseLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "valoBtRevision": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtRevisionFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtRevisionLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -845,20 +642,6 @@
             }
           },
           "valoBtViser": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtViserFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "valoBtViserLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1978,13 +1761,6 @@
               }
             }
           },
-          "valoValClasseurSous": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "valoValExpSous": {
             "singleVisual": {
               "display": {
@@ -2049,6 +1825,13 @@
             }
           },
           "valoVisaValeur": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "valoExportClasseurL2": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"

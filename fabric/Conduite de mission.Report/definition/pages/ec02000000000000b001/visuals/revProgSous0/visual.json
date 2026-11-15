@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revProgSous0",
   "position": {
-    "x": 153,
+    "x": 183,
     "y": 360,
     "z": 2700,
     "height": 20,
@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "11px",
-                      "color": "#12233C"
+                      "color": "#2B4666"
                     }
                   }
                 ],

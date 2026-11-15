@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "UserDataFunction",
+    "displayName": "fn_ecran_referentiels",
+    "description": "Les fonctions de l'écran Référentiels, appelées par ses boutons."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "28c28dfd-4c52-8907-4f54-9747ca0f77bd"
+  }
+}

@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revProgSousCouverture",
   "position": {
-    "x": 183,
+    "x": 216,
     "y": 922,
     "z": 5300,
     "height": 20,
@@ -63,7 +63,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5B6B7D'"
+                      "Value": "'#2B4666'"
                     }
                   }
                 }

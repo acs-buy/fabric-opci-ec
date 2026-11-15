@@ -1,0 +1,312 @@
+/// Écran 5, objet n° 50 : relation cycle_ou_phase → v_ecran_cycle_ou_phase[code]
+table v_ecran_question_referentiel
+	lineageTag: 9d441eb6-a858-40b6-ab41-f8cc06578a92
+
+	/// n° 159, « nom d’usage · n questions », n les questions du cycle ou de la phase choisi (sous-titre du bloc « Questions du cycle »)
+	measure 'Sous-titre questions du cycle' = VAR c = [Cycle ou phase choisi] VAR nm = [Nom du cycle ou phase choisi] VAR n = COUNTROWS ( FILTER ( ALL ( v_ecran_question_referentiel ), v_ecran_question_referentiel[cycle_ou_phase] = c ) ) + 0 RETURN IF ( ISBLANK ( c ), "", nm & " · " & FORMAT ( n, "0" ) & IF ( n < 2, " question", " questions" ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 86adb463-0e1d-47c3-a9ba-8be7d427088d
+
+	/// n° 163, fond de la cellule « Statut » de la table des questions : « à valider » #F9ECEC, « validée » #EFF6F2, « écartée » #EEF1F5, « réécrite » #FFF3D6 ; encre de la table, #12233C
+	measure 'Fond statut de la question' = SWITCH ( SELECTEDVALUE ( v_ecran_question_referentiel[statut_libelle] ), "à valider", "#F9ECEC", "validée", "#EFF6F2", "écartée", "#EEF1F5", "réécrite", "#FFF3D6", "#EEF1F5" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 4c82c1d0-11e6-4e84-a505-5b05379b352a
+
+	/// n° 165, « n sur n » : questions de phase dont niveau_programme est vide, sur les questions de phase, sous ALL ( v_ecran_question_referentiel ) (même bloc)
+	measure 'Questions de phase sans niveau' = VAR t = FILTER ( ALL ( v_ecran_question_referentiel ), ISBLANK ( v_ecran_question_referentiel[cycle] ) ) VAR s = COUNTROWS ( FILTER ( t, ISBLANK ( v_ecran_question_referentiel[niveau_programme] ) ) ) + 0 VAR q = COUNTROWS ( t ) + 0 RETURN FORMAT ( s, "0" ) & " sur " & FORMAT ( q, "0" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: d0dd27ac-bd6f-4530-b86e-05fecce8b5be
+
+	column cle_ecran
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: f616b4ec-5e68-4f5c-aa4d-3374ce915639
+		summarizeBy: none
+		sourceColumn: cle_ecran
+
+		annotation SummarizationSetBy = Automatic
+
+	column question_id
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8b28299d-ccf9-4251-b0bd-1d7109881954
+		summarizeBy: none
+		sourceColumn: question_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column reference
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 376ccff8-0aa9-4cef-8475-1de604c2aada
+		summarizeBy: none
+		sourceColumn: reference
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: d97e9986-8f9f-48f3-9945-00c1fb0fcc1a
+		summarizeBy: none
+		sourceColumn: cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column phase
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 85aa37e2-bf80-40a9-afea-085b4bf58ae1
+		summarizeBy: none
+		sourceColumn: phase
+
+		annotation SummarizationSetBy = Automatic
+
+	column section
+		dataType: string
+		sourceProviderType: nvarchar(120)
+		lineageTag: a72e29f1-0db8-4e16-b78e-0887f7f1dd89
+		summarizeBy: none
+		sourceColumn: section
+
+		annotation SummarizationSetBy = Automatic
+
+	column enonce
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(400)
+		lineageTag: d926760a-4378-47f6-890b-f7e7554b213c
+		summarizeBy: none
+		sourceColumn: enonce
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_reponse
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 226291c4-b5c3-4c42-a357-e2cc44aa847f
+		summarizeBy: none
+		sourceColumn: type_reponse
+
+		annotation SummarizationSetBy = Automatic
+
+	column options
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 21d389df-99a1-477e-a332-040ce8167bb6
+		summarizeBy: none
+		sourceColumn: options
+
+		annotation SummarizationSetBy = Automatic
+
+	column doc_attendu
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: f48570a6-5b47-4b4a-9c99-d3c4a83e8f37
+		summarizeBy: none
+		sourceColumn: doc_attendu
+
+		annotation SummarizationSetBy = Automatic
+
+	column obligatoire
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 92dbbbf5-8f87-4265-82d3-6d723adf7b49
+		summarizeBy: none
+		sourceColumn: obligatoire
+
+		annotation SummarizationSetBy = Automatic
+
+	column applicabilite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 5d3a755b-df1e-4350-bb93-0bf299e3ba74
+		summarizeBy: none
+		sourceColumn: applicabilite
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 17921c6d-2cf2-49eb-b132-a9adbd03fbbe
+		summarizeBy: none
+		sourceColumn: statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 660e2244-d3ce-4f80-9990-fe7b191add0d
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column en_vigueur_depuis
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: ce46ab6c-281d-4bd6-aa93-1fbdea78fae9
+		summarizeBy: none
+		sourceColumn: en_vigueur_depuis
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 67f18fcd-2caf-4b15-be9f-14f7e13930ae
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: b32affec-784f-4ed8-a616-d2871168f41a
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column fondement_articles
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 5fac06e2-2268-4932-83ec-afd22e40253b
+		summarizeBy: none
+		sourceColumn: fondement_articles
+
+		annotation SummarizationSetBy = Automatic
+
+	column fondement_paragraphes
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: f21bbc7d-fe40-4c5a-a236-02cf8980a1e9
+		summarizeBy: none
+		sourceColumn: fondement_paragraphes
+
+		annotation SummarizationSetBy = Automatic
+
+	column fondement_texte
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 8bf31045-8966-4b95-a9ad-0e64688e83a9
+		summarizeBy: none
+		sourceColumn: fondement_texte
+
+		annotation SummarizationSetBy = Automatic
+
+	column modele_ecriture
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: eecff0b2-4a21-49f4-b6c5-c89380f38012
+		summarizeBy: none
+		sourceColumn: modele_ecriture
+
+		annotation SummarizationSetBy = Automatic
+
+	column modele_feuille
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: a1858d83-0ac3-4e2c-a2b5-4192a2cd4d65
+		summarizeBy: none
+		sourceColumn: modele_feuille
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_ou_phase
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 3240e405-d1b1-496d-9579-9dc6ed342dda
+		summarizeBy: none
+		sourceColumn: cycle_ou_phase
+
+		annotation SummarizationSetBy = Automatic
+
+	column niveau_programme
+		dataType: int64
+		formatString: 0
+		sourceProviderType: tinyint
+		lineageTag: 90b11bc5-1fb7-4e28-89b6-b52a7b9b2f7f
+		summarizeBy: none
+		sourceColumn: niveau_programme
+
+		annotation SummarizationSetBy = Automatic
+
+	column repondue_dans
+		dataType: string
+		sourceProviderType: nvarchar(30)
+		lineageTag: 6677ee7d-94c4-4c89-9ba2-1d2158a1305d
+		summarizeBy: none
+		sourceColumn: repondue_dans
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut_libelle
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: 902da8dd-c1cb-4e38-86e1-c0eb3f5d9946
+		summarizeBy: none
+		sourceColumn: statut_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column applicabilite_libelle
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: b022125c-12f4-4f26-a7c0-82586b09c10c
+		summarizeBy: none
+		sourceColumn: applicabilite_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column modele_ecriture_libelle
+		dataType: string
+		sourceProviderType: nvarchar(3)
+		lineageTag: 0a1da275-501f-468c-b91a-dba3fadfe0b9
+		summarizeBy: none
+		sourceColumn: modele_ecriture_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column niveau_libelle
+		dataType: string
+		sourceProviderType: nvarchar(9)
+		lineageTag: be53d609-122e-4756-bf4e-1032735ae321
+		summarizeBy: none
+		sourceColumn: niveau_libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column derniere_modification
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: 53e283b8-eb6a-4d61-9a1c-97b1c7e51fd9
+		summarizeBy: none
+		sourceColumn: derniere_modification
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_question_referentiel = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_question_referentiel = Value.NativeQuery(Source, "SELECT cle_ecran, question_id, reference, cycle, phase, section, enonce, type_reponse, options, doc_attendu, obligatoire, applicabilite, statut, ordre, en_vigueur_depuis, modifie_par, DATETIME2FROMPARTS(YEAR(modifie_le), MONTH(modifie_le), DAY(modifie_le), DATEPART(HOUR, modifie_le), DATEPART(MINUTE, modifie_le), DATEPART(SECOND, modifie_le), 0, 0) AS modifie_le, fondement_articles, fondement_paragraphes, fondement_texte, modele_ecriture, modele_feuille, cycle_ou_phase, niveau_programme, repondue_dans, statut_libelle, applicabilite_libelle, modele_ecriture_libelle, niveau_libelle, derniere_modification FROM dbo.v_ecran_question_referentiel", null, [EnableFolding = true])
+				in
+				    dbo_v_ecran_question_referentiel
+

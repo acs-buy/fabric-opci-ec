@@ -1,0 +1,191 @@
+/// Écran 5, objet n° 41 : table des segments Domaine, Catégorie et Référentiel, sans relation à l’inventaire
+table v_ecran_referentiel_choix
+	lineageTag: 22ccdf45-ac70-4d7d-9fdd-7012d4ece6d5
+
+	/// n° 89, SELECTEDVALUE(table_nom) du segment « Référentiel » que les interactions portent au visuel, à choix unique forcé : celui de la fiche à l’étape 1, celui du choix du référentiel à l’étape 2, les 2 du groupe de synchronisation « Referentiel », qui partagent leur choix (décision D11)
+	measure 'Referentiel choisi' = SELECTEDVALUE ( v_ecran_referentiel_choix[table_nom] )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: bec907e4-9bf7-43f5-b08b-1ee2afceeaec
+
+	/// n° 90, SELECTEDVALUE(libelle) du même segment ; titre de la liste du référentiel (en expression) et sous-titre des blocs « Fiche du référentiel » et « Classeur et fichier »
+	measure 'Libelle du referentiel choisi' = SELECTEDVALUE ( v_ecran_referentiel_choix[libelle] )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 153bec0f-e778-4b69-b32f-ea197c9775f2
+
+	/// n° 116, aide des champs « Code de la nouvelle ligne » et « Nouveau code » : « comme X » pour un code d’une colonne, « cycle · racine de compte, comme X · Y » pour un code de 2 colonnes (forme_cle, puis X et Y lus sur la ligne choisie), « sans objet, ligne numérotée automatiquement », « sans objet, c
+	measure 'Forme de la cle' = VAR r = [Referentiel choisi] VAR tc = FILTER ( ALL ( v_ecran_referentiel_choix ), v_ecran_referentiel_choix[table_nom] = r ) VAR a = MAXX ( tc, v_ecran_referentiel_choix[actions_de_ligne] ) VAR f = MAXX ( tc, v_ecran_referentiel_choix[forme_cle] ) VAR k = [Ligne du referentiel choisie] VAR tl = FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r && v_ecran_referentiel_lignes[cle] = k ) VAR x = IF ( r IN { "ref_question_article", "ref_question_compte", "ref_question_modele" }, MAXX ( tl, v_ecran_referentiel_lignes[ligne] ), k ) RETURN IF ( ISBLANK ( r ), "", SWITCH ( TRUE (), a = 0, "sans objet, codes fixés par l’outil", a = 2, "sans objet, contrôles programmés dans l’outil", f = "numérotée", "sans objet, ligne numérotée automatiquement", ISBLANK ( x ) || x = "", IF ( ISBLANK ( f ) || f = "", "code de la ligne", f ), IF ( ISBLANK ( f ) || f = "", "comme " & x, f & ", comme " & x ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 97272cc6-3249-4eaa-9843-cb5008052762
+
+	/// n° 117, aide du champ « Libellé », qui ne sert que « Ajouter la ligne » : « sans objet, aucune ligne ne s’ajoute » quand actions_de_ligne vaut 0, 2 ou 3, sinon la colonne que le champ remplace, selon colonne_designation : « remplace le libellé copié » (libelle), « remplace la référence copiée » (ref
+	measure 'Designation du referentiel' = VAR r = [Referentiel choisi] VAR tc = FILTER ( ALL ( v_ecran_referentiel_choix ), v_ecran_referentiel_choix[table_nom] = r ) VAR a = MAXX ( tc, v_ecran_referentiel_choix[actions_de_ligne] ) VAR f = MAXX ( tc, v_ecran_referentiel_choix[forme_cle] ) VAR d = MAXX ( tc, v_ecran_referentiel_choix[designation] ) RETURN IF ( ISBLANK ( r ), "", IF ( a IN { 0, 2, 3 }, "sans objet, aucune ligne ne s’ajoute", SWITCH ( d, "libelle", "remplace le libellé copié", "libelle_court", "remplace le nom court copié", "reference", "remplace la référence copiée", "sans objet, pas de libellé" ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: bb77d29a-6ef1-4558-9425-e6577b760541
+
+	/// n° 122, vide quand l’action est permise ou que la sélection est vide ; sinon la raison : « seuil propre au véhicule, posé par « Enregistrer le seuil du véhicule » » (action_propre posée, ref_ratio_vehicule) ; « fixé par un texte, non modifiable » ; « seule la valeur se modifie : les codes des paramè
+	measure 'Blocage ajouter la ligne' = VAR r = [Referentiel choisi] VAR tc = FILTER ( ALL ( v_ecran_referentiel_choix ), v_ecran_referentiel_choix[table_nom] = r ) VAR a = MAXX ( tc, v_ecran_referentiel_choix[actions_de_ligne] ) VAR f = MAXX ( tc, v_ecran_referentiel_choix[forme_cle] ) VAR m = MAXX ( tc, v_ecran_referentiel_choix[mode_tenue] ) VAR ap = MAXX ( tc, v_ecran_referentiel_choix[action_propre] ) VAR te = [Teneur connecte] RETURN IF ( ISBLANK ( r ), "", IF ( m = "TEXTE", "fixé par un texte, non modifiable", IF ( NOT ISBLANK ( ap ) && ap <> "", "seuil propre au véhicule, posé par «" & UNICHAR ( 8239 ) & "Enregistrer le seuil du véhicule" & UNICHAR ( 8239 ) & "»", IF ( te = "", "aucun droit de modification", SWITCH ( a, 0, "seule la valeur se modifie : les codes des paramètres sont fixés par l’outil", 2, "un contrôle de cohérence est un calcul programmé dans l’outil, qui ne s’ajoute pas à l’écran", 3, "une question s’ajoute à la Révision, ou à l’étape 3 pour la tenue", "" ) ) ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 9be36db9-a520-406b-b59e-2fa989327366
+
+	/// n° 127, « #D9DFE6 » quand [Blocage ajouter la ligne] n’est pas vide, « #0F5C8C » sinon : le fond du bouton natif (Measure), son encre et son contour Conditional sur lui, aux états default, hover et selected ; le bouton gris reste cliquable
+	measure 'Fond ajouter la ligne' = IF ( [Blocage ajouter la ligne] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: a1293eb7-74d4-4154-b856-d58ee5a4850f
+
+	/// n° 138, adresse_fichiers du référentiel choisi ; vide quand il ne porte pas de fichier : le lien web ne s’ouvre pas
+	measure 'Adresse du dossier des modeles' = VAR r = [Referentiel choisi] RETURN CALCULATE ( MAX ( v_ecran_referentiel_choix[adresse_fichiers] ), FILTER ( ALL ( v_ecran_referentiel_choix ), v_ecran_referentiel_choix[table_nom] = r ) ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: b69c6f7c-ce45-4a88-a394-415e3748ce26
+
+	/// n° 139, gris quand [Adresse du dossier des modeles] est vide
+	measure 'Fond ouvrir le dossier des modeles' = IF ( [Adresse du dossier des modeles] = "", "#D9DFE6", "#FFFFFF" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 1d024d3e-d641-4835-8e48-3efb2089403e
+
+	/// n° 142, vide quand l’action est permise ou qu’aucun référentiel n’est choisi ; sinon « le référentiel choisi ne porte pas de fichier » (adresse_fichiers vide), « aucun droit de modification »
+	measure 'Blocage rattacher le fichier' = VAR r = [Referentiel choisi] VAR ad = [Adresse du dossier des modeles] VAR te = [Teneur connecte] RETURN IF ( ISBLANK ( r ), "", IF ( ad = "", "le référentiel choisi ne porte pas de fichier", IF ( te = "", "aucun droit de modification", "" ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: d3b6c897-e1ba-4719-b372-c51d06114076
+
+	/// n° 143, gris quand [Blocage rattacher le fichier] n’est pas vide
+	measure 'Fond rattacher le fichier' = IF ( [Blocage rattacher le fichier] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 3a53902d-2342-493f-ba1c-e19aa8276072
+
+	column table_nom
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(120)
+		lineageTag: 07819e92-af21-494f-8353-e49634b111fa
+		summarizeBy: none
+		sourceColumn: table_nom
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(160)
+		lineageTag: 288bec70-e194-4014-add0-16df449f627d
+		summarizeBy: none
+		sourceColumn: libelle
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column mode_tenue
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(5)
+		lineageTag: bbf0bbef-0f53-434d-9730-ee19454f6c41
+		summarizeBy: none
+		sourceColumn: mode_tenue
+
+		annotation SummarizationSetBy = Automatic
+
+	column domaine
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: 8b3635bf-1a96-41b4-b0f8-d366f3b94bbc
+		summarizeBy: none
+		sourceColumn: domaine
+		sortByColumn: domaine_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column domaine_ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: tinyint
+		lineageTag: 2f76cff7-99c6-47cf-b2ef-5bc49fa1a23e
+		summarizeBy: none
+		sourceColumn: domaine_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column categorie
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: aef8b185-5d47-4a48-879d-488e026f19cc
+		summarizeBy: none
+		sourceColumn: categorie
+		sortByColumn: categorie_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column categorie_ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: tinyint
+		lineageTag: cc3d8dbf-f288-4733-bfaf-4f83f8ff1aca
+		summarizeBy: none
+		sourceColumn: categorie_ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d4c52006-e32f-4837-9ac8-f8ed95183e0b
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_cle
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 96d868c4-6f72-486f-8845-fc573e161547
+		summarizeBy: none
+		sourceColumn: forme_cle
+
+		annotation SummarizationSetBy = Automatic
+
+	column designation
+		dataType: string
+		sourceProviderType: varchar(128)
+		lineageTag: f1996faa-5617-42e7-9a51-6363fa75d400
+		summarizeBy: none
+		sourceColumn: designation
+
+		annotation SummarizationSetBy = Automatic
+
+	column actions_de_ligne
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: tinyint
+		lineageTag: 8c0fbc8b-f341-4186-bc23-4c3b85e04ff9
+		summarizeBy: none
+		sourceColumn: actions_de_ligne
+
+		annotation SummarizationSetBy = Automatic
+
+	column action_propre
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: cec0b0c6-d29a-4a00-af9a-08e4c039f2be
+		summarizeBy: none
+		sourceColumn: action_propre
+
+		annotation SummarizationSetBy = Automatic
+
+	column adresse_fichiers
+		dataType: string
+		sourceProviderType: nvarchar(800)
+		lineageTag: 756131da-1786-427c-9da4-3ee116f12609
+		summarizeBy: none
+		sourceColumn: adresse_fichiers
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_referentiel_choix = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_referentiel_choix = Source{[Schema="dbo",Item="v_ecran_referentiel_choix"]}[Data]
+				in
+				    dbo_v_ecran_referentiel_choix
+

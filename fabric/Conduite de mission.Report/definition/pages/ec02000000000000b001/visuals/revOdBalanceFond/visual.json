@@ -3,10 +3,10 @@
   "name": "revOdBalanceFond",
   "position": {
     "x": 174,
-    "y": 1099,
+    "y": 1098,
     "z": 12300,
-    "height": 29,
-    "width": 122,
+    "height": 31,
+    "width": 190,
     "tabOrder": 12300
   },
   "visual": {

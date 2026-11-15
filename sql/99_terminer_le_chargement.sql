@@ -39,6 +39,10 @@ SELECT 'cles etrangeres non verifiees' AS quoi, COUNT(*) AS nb
   FROM sys.foreign_keys WHERE is_not_trusted = 1;
 
 -- Ce qui doit correspondre aux comptes annonces par le mode operatoire.
+-- La ligne « entites de demonstration » compte toutes les lignes de dbo.ref_entite : 16 juste après
+-- le chargement du jeu. Un dossier créé ou une filiale nouvelle ajoutée depuis l'écran (recette de
+-- l'étape 13, tests d'acceptation) y ajoute une ligne, et la suppression d'une filiale peut en retirer
+-- une : après ces actions, un autre nombre que 16 n'est pas une anomalie.
 SELECT 'questions d''acceptation' AS quoi, COUNT(*) AS nb, 620 AS attendu FROM dbo.ref_question
 UNION ALL SELECT 'comptes du plan',          COUNT(*), 201 FROM dbo.ref_compte
 UNION ALL SELECT 'articles du reglement',    COUNT(*), 139 FROM dbo.ref_article

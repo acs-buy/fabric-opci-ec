@@ -5,7 +5,7 @@ table v_export_dossier
 	measure 'Chemin du dossier exporte' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR n = COUNTROWS ( FILTER ( ALL ( v_export_dossier ), v_export_dossier[entite] = e && v_export_dossier[arrete] = a && v_export_dossier[Fichier] = "dossier_" & e & "_" & a & ".xlsx" ) ) + 0 RETURN IF ( n > 0, [Chemin du dossier] )
 		lineageTag: 350ffd4d-cc32-4c3f-8914-aa4a540f6716
 
-	measure 'Fond revLivReimporter' = IF ( ISBLANK ( [Chemin du dossier exporte] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond revLivReimporter' = VAR f = ( IF ( ISBLANK ( [Chemin du dossier exporte] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: b185cca4-37be-42b1-b157-b9bb943afdc5
 
 	measure 'Libelle revLivReimporter' = "Réimporter le dossier"
@@ -35,6 +35,67 @@ table v_export_dossier
 	measure 'Adresse du classeur des valeurs' = VAR f = "valeurs_" & [Client selectionne] & "_" & [Arrete selectionne] & ".xlsx" RETURN CALCULATE ( MAX ( v_export_dossier[Ouvrir le dossier] ), FILTER ( ALL ( v_export_dossier[Fichier] ), v_export_dossier[Fichier] = f ) )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: f6ced604-510b-4e14-9e43-2fd4f1d7df6b
+
+	/// instant UTC du dernier dépôt réussi, adresse web comprise, du classeur dossier_<entité>_<arrêté>.xlsx que dépose exporter_dossier ; le fichier et le filtre de [Chemin du dossier exporte], plus l'adresse web
+	measure 'Date du dossier exporte' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR f = "dossier_" & e & "_" & a & ".xlsx" RETURN IF ( NOT ISBLANK ( e ) && NOT ISBLANK ( a ), MAXX ( FILTER ( ALL ( v_export_dossier ), v_export_dossier[entite] = e && v_export_dossier[arrete] = a && v_export_dossier[Fichier] = f && NOT ISBLANK ( v_export_dossier[Ouvrir le dossier] ) ), v_export_dossier[Déposé le] ) )
+		displayFolder: Ecran 2 etape 3
+		lineageTag: 958298de-555e-40f0-9171-e56c215a1674
+
+	/// 1re ligne de la date au bout de la ligne de titre des questions de l'écran 2 : « dernier export », ou « aucun export » en rouge, comme l'écran 3
+	measure 'Dernier export du dossier ligne 1' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( ISBLANK ( [Date du dossier exporte] ), "aucun export", "dernier export" ) )
+		displayFolder: Ecran 2 etape 3
+		lineageTag: e8bf5895-d042-4ef3-842a-42bc3cab5fa6
+
+	/// 2e ligne : date et heure de Paris du dernier dépôt, « jj/mm/aaaa à hh:mm », tronquées à la minute comme la liste des dépôts (version 9.4), vide sans dépôt
+	measure 'Dernier export du dossier ligne 2' = VAR d = [Date du dossier exporte] RETURN IF ( ISBLANK ( d ), "", ( VAR an = YEAR ( d ) VAR m3 = DATE ( an, 3, 31 ) VAR m10 = DATE ( an, 10, 31 ) VAR deb = m3 - MOD ( WEEKDAY ( m3, 2 ), 7 ) + TIME ( 1, 0, 0 ) VAR fin = m10 - MOD ( WEEKDAY ( m10, 2 ), 7 ) + TIME ( 1, 0, 0 ) VAR p0 = d + IF ( d >= deb && d < fin, 2, 1 ) / 24 VAR p = DATE ( YEAR ( p0 ), MONTH ( p0 ), DAY ( p0 ) ) + TIME ( HOUR ( p0 ), MINUTE ( p0 ), 0 ) RETURN FORMAT ( p, "dd/MM/yyyy" ) & " à " & FORMAT ( p, "hh:nn" ) ) )
+		displayFolder: Ecran 2 etape 3
+		lineageTag: a62c14e9-8be8-4f54-8641-94a9c2bf7964
+
+	/// destination de « Voir le dossier exporté » : le nom affiché de la page ec05000000000000e001, relu au publié le 26/10/2026 ; vide sans dépôt, le clic est alors sans effet (GUIDE § 17.28, point 1, et § 17.41, point 4)
+	measure 'Destination revDossier2' = IF ( NOT ISBLANK ( [Date du dossier exporte] ), "Dossier de travail" )
+		displayFolder: Ecran 2 etape 3
+		lineageTag: bceb6d96-afa0-4e41-af8e-63376e03129b
+
+	/// gris #D9DFE6 sans dépôt, sinon #0F5C8C, comme [Fond ouvrir le classeur] et [Fond revLivReimporter] ; lu par la forme, le trait et le libellé de la pile
+	measure 'Fond revDossier2' = IF ( ISBLANK ( [Date du dossier exporte] ), "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 2 etape 3
+		lineageTag: fcf073cc-f2d2-4726-b785-41e3c0a95292
+
+	/// le libellé de « Voir le dossier exporté », carte collée dont l'encre suit [Fond revDossier2], comme [Libelle revLivReimporter]
+	measure 'Libelle revDossier2' = "Voir le dossier exporté"
+		displayFolder: Ecran 2 etape 3
+		lineageTag: 284319a3-cf4a-4e46-bc16-f6cc1dff623e
+
+	/// l'infobulle de « Voir le dossier exporté » : la raison du gris, sinon le texte validé avec R8
+	measure 'Infobulle revDossier2' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "Choisissez le véhicule et l’arrêté dans les sélecteurs", IF ( ISBLANK ( [Date du dossier exporte] ), "Aucun dossier exporté pour cet arrêté : exportez-le par « Exporter le dossier »", "Ouvre la page Dossier de travail de l’arrêté" ) )
+		displayFolder: Ecran 2 etape 3
+		lineageTag: bc8acfe8-fcdd-4a1f-a234-8b10ba928fcc
+
+	/// instant UTC du dernier dépôt réussi du classeur valeurs_<véhicule>_<arrêté>.xlsx que dépose exporter_valeurs, lu sous le filtre même de [Adresse du classeur des valeurs], dont le bouton ouvre l'adresse ; vide quand cette adresse l'est
+	measure 'Date du classeur des valeurs' = VAR f = "valeurs_" & [Client selectionne] & "_" & [Arrete selectionne] & ".xlsx" RETURN IF ( NOT ISBLANK ( [Adresse du classeur des valeurs] ), CALCULATE ( MAX ( v_export_dossier[Déposé le] ), FILTER ( ALL ( v_export_dossier[Fichier] ), v_export_dossier[Fichier] = f ) ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 0720497d-4b72-4c12-852f-45cdb69e9907
+
+	/// 1re ligne de la date au bout de la ligne de titre des immeubles de l'écran 3 : « dernier export », ou « aucun export » en rouge, à la place de « aucun classeur déposé », texte de [Blocage ouvrir le classeur] d'aujourd'hui
+	measure 'Dernier export du classeur ligne 1' = IF ( ISBLANK ( [Adresse du classeur des valeurs] ), "aucun export", "dernier export" )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: d756337b-8880-4415-93d5-78cd6300a6bb
+
+	/// 2e ligne : date et heure de Paris du dernier dépôt, tronquées à la minute comme la liste des dépôts (version 9.4), vide sans dépôt
+	measure 'Dernier export du classeur ligne 2' = VAR d = [Date du classeur des valeurs] RETURN IF ( ISBLANK ( d ), "", ( VAR an = YEAR ( d ) VAR m3 = DATE ( an, 3, 31 ) VAR m10 = DATE ( an, 10, 31 ) VAR deb = m3 - MOD ( WEEKDAY ( m3, 2 ), 7 ) + TIME ( 1, 0, 0 ) VAR fin = m10 - MOD ( WEEKDAY ( m10, 2 ), 7 ) + TIME ( 1, 0, 0 ) VAR p0 = d + IF ( d >= deb && d < fin, 2, 1 ) / 24 VAR p = DATE ( YEAR ( p0 ), MONTH ( p0 ), DAY ( p0 ) ) + TIME ( HOUR ( p0 ), MINUTE ( p0 ), 0 ) RETURN FORMAT ( p, "dd/MM/yyyy" ) & " à " & FORMAT ( p, "hh:nn" ) ) )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 139041e9-9bd1-4250-b06e-5256e2d37017
+
+	/// l'infobulle de « Ouvrir le classeur Excel » : avec un dépôt, ce qu'il ouvre et où le classeur est déposé ; sans dépôt, la raison du gris et où « Exporter le classeur » le dépose ; le chemin « Dossiers de travail/<véhicule>/<arrêté> » et « véhicule et filiales » de la carte valoValClasseurSous, retir
+	measure 'Infobulle ouvrir le classeur' = VAR c = [Client selectionne] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( [Adresse du classeur des valeurs] ), "Aucun classeur des valeurs déposé pour cet arrêté : « Exporter le classeur » le dépose au site du cabinet, dans Dossiers de travail/" & c & "/" & a, "Ouvre le classeur des valeurs du véhicule et de ses filiales, déposé au site du cabinet dans Dossiers de travail/" & c & "/" & a )
+		displayFolder: Ecran 3 Valorisation
+		lineageTag: 3ce35032-0226-47d1-a242-513bb5276acd
+
+	/// heure de Paris du dépôt, en date et heure tronquées à la minute, dans la colonne « Déposé le » des 2 listes du dossier de travail : la conversion de « Dernier export du dossier ligne 2 » (heure d'été du dernier dimanche de mars au dernier dimanche d'octobre, à 01:00 UTC), puis la troncature à la min
+	measure 'Depose le heure de Paris' = VAR d = MAX ( v_export_dossier[Déposé le] ) RETURN IF ( ISBLANK ( d ), BLANK (), ( VAR an = YEAR ( d ) VAR m3 = DATE ( an, 3, 31 ) VAR m10 = DATE ( an, 10, 31 ) VAR deb = m3 - MOD ( WEEKDAY ( m3, 2 ), 7 ) + TIME ( 1, 0, 0 ) VAR fin = m10 - MOD ( WEEKDAY ( m10, 2 ), 7 ) + TIME ( 1, 0, 0 ) VAR p0 = d + IF ( d >= deb && d < fin, 2, 1 ) / 24 VAR p = DATE ( YEAR ( p0 ), MONTH ( p0 ), DAY ( p0 ) ) + TIME ( HOUR ( p0 ), MINUTE ( p0 ), 0 ) RETURN p ) )
+		formatString: dd/mm/yyyy hh:nn
+		displayFolder: Ecran 2 etape 6
+		lineageTag: 97034137-140f-4eed-9111-712aaaec77b7
 
 	column entite
 		dataType: string

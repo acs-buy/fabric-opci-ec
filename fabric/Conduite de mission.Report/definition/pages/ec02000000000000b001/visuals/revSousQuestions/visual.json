@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revSousQuestions",
   "position": {
-    "x": 341,
+    "x": 297,
     "y": 360,
     "z": 7500,
     "height": 20,
-    "width": 260,
+    "width": 98,
     "tabOrder": 7500
   },
   "visual": {
@@ -63,7 +63,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5B6B7D'"
+                      "Value": "'#2B4666'"
                     }
                   }
                 }

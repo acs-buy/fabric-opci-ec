@@ -13,6 +13,25 @@ CREATE TABLE [dbo].[ref_parametre] (
 
 GO
 
+CREATE   TRIGGER dbo.[tr_ref_parametre_horodatage]
+ON dbo.[ref_parametre]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Genere par 61_DEPLOIEMENT/generer_e5_318_tables_gardees.py (script 318, ecran 5, objet n° 19). ref_parametre
+    -- porte son auteur et sa date dans pose_par et pose_le, que pr_poser_parametre ecrit sous le contexte semis :
+    -- pr_proteger_referentiel sort sans ecrire sur cette table, et cet horodatage s'ecrit ici, sous la forme des
+    -- objets n° 16 et 17. Un semis ne marque pas la ligne comme modifiee.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    UPDATE t SET pose_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), pose_le = SYSUTCDATETIME()
+    FROM dbo.[ref_parametre] t
+    JOIN inserted i ON t.[code] = i.[code];
+END;
+
+GO
+
 CREATE   TRIGGER dbo.[tr_ref_parametre_garde]
 ON dbo.[ref_parametre]
 AFTER INSERT, UPDATE, DELETE
@@ -35,25 +54,6 @@ BEGIN
     VALUES ('tr_ref_parametre_garde', @m, LEFT(CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), 200), SYSUTCDATETIME());
     SET @m = REPLACE(@m, N'%', N'%%');
     THROW 50074, @m, 1;
-END;
-
-GO
-
-CREATE   TRIGGER dbo.[tr_ref_parametre_horodatage]
-ON dbo.[ref_parametre]
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    -- Genere par 61_DEPLOIEMENT/generer_e5_318_tables_gardees.py (script 318, ecran 5, objet n° 19). ref_parametre
-    -- porte son auteur et sa date dans pose_par et pose_le, que pr_poser_parametre ecrit sous le contexte semis :
-    -- pr_proteger_referentiel sort sans ecrire sur cette table, et cet horodatage s'ecrit ici, sous la forme des
-    -- objets n° 16 et 17. Un semis ne marque pas la ligne comme modifiee.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    UPDATE t SET pose_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), pose_le = SYSUTCDATETIME()
-    FROM dbo.[ref_parametre] t
-    JOIN inserted i ON t.[code] = i.[code];
 END;
 
 GO

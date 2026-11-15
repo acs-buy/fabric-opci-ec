@@ -1,4 +1,3 @@
-
 CREATE   PROCEDURE dbo.pr_ouvrir_feuille_question
     @entite     VARCHAR (20),
     @arrete     VARCHAR (20),
@@ -26,6 +25,11 @@ BEGIN
         THROW 50361, N'La question désignée n''est pas une question de cycle du référentiel.', 1;
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé.', 1;
+    -- 51310, D1 (15/11/2026) : action 17. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51310, N'Action refusée : seule l''équipe du dossier peut ouvrir la feuille d''une question de ce dossier.', 1;
     DECLARE @cote VARCHAR (30) = (SELECT TOP 1 cote FROM dbo.feuille_travail
                                   WHERE entite = @entite AND arrete = @arrete AND question_id = @qid ORDER BY prepare_le DESC);
     IF @cote IS NOT NULL

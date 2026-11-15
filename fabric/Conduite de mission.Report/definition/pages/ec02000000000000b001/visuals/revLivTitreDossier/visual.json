@@ -3,10 +3,10 @@
   "name": "revLivTitreDossier",
   "position": {
     "x": 13,
-    "y": 1165,
+    "y": 1123,
     "z": 37400,
-    "height": 22,
-    "width": 145,
+    "height": 30,
+    "width": 147,
     "tabOrder": 37400
   },
   "visual": {
@@ -22,7 +22,7 @@
                     "value": "5. Dossier de travail",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "13px",
+                      "fontSize": "12pt",
                       "color": "#12233C"
                     }
                   }
@@ -80,7 +80,7 @@
             "top": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "2D"
                 }
               }
             },

@@ -22,14 +22,14 @@ CREATE TABLE [dbo].[visa] (
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_visa_objet]
-    ON [dbo].[visa]([nature] ASC, [objet_ref] ASC);
+CREATE NONCLUSTERED INDEX [ix_visa_arrete]
+    ON [dbo].[visa]([entite] ASC, [arrete] ASC, [cycle] ASC);
 
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_visa_arrete]
-    ON [dbo].[visa]([entite] ASC, [arrete] ASC, [cycle] ASC);
+CREATE NONCLUSTERED INDEX [ix_visa_objet]
+    ON [dbo].[visa]([nature] ASC, [objet_ref] ASC);
 
 
 GO
@@ -52,7 +52,44 @@ BEGIN
           AND l.perime_le IS NOT NULL
           AND i.motif IS NULL
     )
-        THROW 50060, N'Visa refusé : ce lot est marqué périmé, son périmètre ayant changé après sa génération. Le viser exige un motif disant pourquoi la génération n''est pas reprise. Lire dbo.v_lot_perime pour le fait qui l''a périmé.', 1;
+        THROW 50060, N'Visa refusé : ce lot est périmé, son périmètre ayant changé depuis sa génération. Le régénérer, ou saisir un motif pour le viser tel quel.', 1;
+END
+
+GO
+
+
+-- --- E8 : le verrou lit la nature ----------------------------------
+CREATE   TRIGGER dbo.tr_visa_separation_des_roles
+ON dbo.visa
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1 FROM inserted i
+        WHERE dbo.fn_proposant(i.nature, i.objet_ref) IS NOT NULL
+          AND dbo.fn_proposant(i.nature, i.objet_ref) = i.decide_par
+    )
+        THROW 50050, N'Visa refusé : le décideur est celui qui a proposé l''objet. Nul ne vise son propre travail, quelle que soit la nature de l''objet.', 1;
+
+    -- Le role doit etre habilite POUR CETTE NATURE, et non habilite en
+    -- general. Corrige le 04/09/2026, ecart E8 de la revue : le drapeau
+    -- vise de dbo.ref_role laissait l'associe signataire viser une
+    -- derogation, ce que le libelle de son role ne prevoit pas.
+    IF EXISTS (
+        SELECT 1 FROM inserted i
+        WHERE dbo.fn_peut_viser_nature(i.entite, i.decide_par, i.nature,
+                                       CAST(i.decide_le AS DATE)) = 0
+    )
+        THROW 50051, N'Visa refusé : vous ne tenez sur cette entité, à la date de la décision, aucun rôle habilité à viser ce type d''objet. Faire viser par une personne qui tient ce rôle.', 1;
+
+    IF EXISTS (
+        SELECT 1 FROM inserted i
+        WHERE dbo.fn_proposant(i.nature, i.objet_ref) IS NOT NULL
+          AND dbo.fn_proposant(i.nature, i.objet_ref) <> i.propose_par
+    )
+        THROW 50052, N'Visa refusé : le proposant inscrit au visa n''est pas celui que l''objet désigne. Signaler ce refus à l''administrateur de la solution.', 1;
 END
 
 GO
@@ -85,43 +122,6 @@ BEGIN
         SET @k += 1;
     END;
 END;
-
-GO
-
-
--- --- E8 : le verrou lit la nature ----------------------------------
-CREATE   TRIGGER dbo.tr_visa_separation_des_roles
-ON dbo.visa
-AFTER INSERT, UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    IF EXISTS (
-        SELECT 1 FROM inserted i
-        WHERE dbo.fn_proposant(i.nature, i.objet_ref) IS NOT NULL
-          AND dbo.fn_proposant(i.nature, i.objet_ref) = i.decide_par
-    )
-        THROW 50050, N'Visa refusé : le décideur est celui qui a proposé l''objet. Nul ne vise son propre travail, quelle que soit la nature de l''objet.', 1;
-
-    -- Le role doit etre habilite POUR CETTE NATURE, et non habilite en
-    -- general. Corrige le 04/09/2026, ecart E8 de la revue : le drapeau
-    -- vise de dbo.ref_role laissait l'associe signataire viser une
-    -- derogation, ce que le libelle de son role ne prevoit pas.
-    IF EXISTS (
-        SELECT 1 FROM inserted i
-        WHERE dbo.fn_peut_viser_nature(i.entite, i.decide_par, i.nature,
-                                       CAST(i.decide_le AS DATE)) = 0
-    )
-        THROW 50051, N'Visa refusé : le décideur ne tient sur cette entité, à la date de la décision, aucun rôle habilité à viser CETTE NATURE d''objet. Lire dbo.v_role_nature_visa pour la répartition.', 1;
-
-    IF EXISTS (
-        SELECT 1 FROM inserted i
-        WHERE dbo.fn_proposant(i.nature, i.objet_ref) IS NOT NULL
-          AND dbo.fn_proposant(i.nature, i.objet_ref) <> i.propose_par
-    )
-        THROW 50052, N'Visa refusé : le proposant porté par le visa n''est pas celui que la source de l''objet désigne. Lire dbo.fn_proposant pour la valeur attendue.', 1;
-END
 
 GO
 

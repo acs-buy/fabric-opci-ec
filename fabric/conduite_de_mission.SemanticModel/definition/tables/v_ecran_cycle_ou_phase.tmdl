@@ -1,0 +1,61 @@
+/// Écran 5, objet n° 49 : table du segment « Cycle ou phase »
+table v_ecran_cycle_ou_phase
+	lineageTag: 94fb1fa7-0d82-4349-b8ef-cd07b28dcd2c
+
+	/// n° 157, SELECTEDVALUE(code) du segment « Cycle ou phase » : le code, que lisent les mesures de cette étape ; l’écran ne le montre pas
+	measure 'Cycle ou phase choisi' = SELECTEDVALUE ( v_ecran_cycle_ou_phase[code] )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 9514488e-d2c6-4451-b5fe-4d25edd8e4a9
+
+	/// n° 158, SELECTEDVALUE(nom_usage) & "" : sous-titre du bloc « Validation du cycle » et ligne « Cycle ou phase » de sa carte
+	measure 'Nom du cycle ou phase choisi' = SELECTEDVALUE ( v_ecran_cycle_ou_phase[nom_usage] ) & ""
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 413086e0-c40a-4675-8490-50637aa1735c
+
+	column code
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 2f7e0b3d-798a-410a-b44b-b77c49aa5035
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column genre
+		dataType: string
+		sourceProviderType: varchar(5)
+		lineageTag: 4227a107-3325-4a13-9f63-ef3d4b860d45
+		summarizeBy: none
+		sourceColumn: genre
+
+		annotation SummarizationSetBy = Automatic
+
+	column nom_usage
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: fec2a609-5f2d-4530-9717-4fcd14caf6f8
+		summarizeBy: none
+		sourceColumn: nom_usage
+		sortByColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e49b2932-de69-4f87-8c89-cd3e35ae6462
+		summarizeBy: none
+		sourceColumn: ordre
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_cycle_ou_phase = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_cycle_ou_phase = Source{[Schema="dbo",Item="v_ecran_cycle_ou_phase"]}[Data]
+				in
+				    dbo_v_ecran_cycle_ou_phase
+

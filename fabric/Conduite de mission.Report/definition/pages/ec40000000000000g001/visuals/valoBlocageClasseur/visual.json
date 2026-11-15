@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "valoBlocageClasseur",
   "position": {
-    "x": 439,
-    "y": 1206,
-    "z": 37942,
+    "x": 789,
+    "y": 350,
+    "z": 46982,
     "height": 20,
-    "width": 149,
-    "tabOrder": 37942
+    "width": 134,
+    "tabOrder": 46982
   },
   "visual": {
     "visualType": "cardVisual",
@@ -20,15 +20,14 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Schema": "extension",
-                      "Entity": "v_ecran_valeurs_arrete"
+                      "Entity": "v_export_dossier"
                     }
                   },
-                  "Property": "Valo blocage ouvrir le classeur"
+                  "Property": "Dernier export du classeur ligne 1"
                 }
               },
-              "queryRef": "v_ecran_valeurs_arrete.Valo blocage ouvrir le classeur",
-              "nativeQueryRef": "Valo blocage ouvrir le classeur"
+              "queryRef": "v_export_dossier.Dernier export du classeur ligne 1",
+              "nativeQueryRef": "Dernier export du classeur ligne 1"
             }
           ]
         }
@@ -55,7 +54,7 @@
             "bold": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
@@ -63,8 +62,41 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#9A2A2A'"
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "Comparison": {
+                              "ComparisonKind": 0,
+                              "Left": {
+                                "Measure": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Entity": "v_export_dossier"
+                                    }
+                                  },
+                                  "Property": "Dernier export du classeur ligne 1"
+                                }
+                              },
+                              "Right": {
+                                "Literal": {
+                                  "Value": "'aucun export'"
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#9A2A2A'"
+                            }
+                          }
+                        }
+                      ],
+                      "DefaultValue": {
+                        "Literal": {
+                          "Value": "'#2B4666'"
+                        }
+                      }
                     }
                   }
                 }

@@ -32,19 +32,19 @@ table v_od_revision
 		displayFolder: Ecran 2 etape 4
 		lineageTag: 83651d48-0481-4a75-80fc-92a9facfe795
 
-	measure 'Fond revOdlAjout2' = IF ( ISBLANK ( [Arrete des OD libres] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond revOdlAjout2' = VAR f = ( IF ( ISBLANK ( [Arrete des OD libres] ), "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: f58bea65-46d7-4472-bfed-f7db1bf2e2a2
 
-	measure 'Fond revOdlAjout1' = IF ( ISBLANK ( [Arrete des OD libres] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revOdlAjout1' = VAR f = ( IF ( ISBLANK ( [Arrete des OD libres] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: f8616e0e-c47b-4a67-a2d4-f67f287fa0c1
 
-	measure 'Fond revOdlReimport' = IF ( ISBLANK ( [Arrete des OD libres] ) || ISBLANK ( [Chemin des OD libres] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revOdlReimport' = VAR f = ( IF ( ISBLANK ( [Arrete des OD libres] ) || ISBLANK ( [Chemin des OD libres] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 647bef5e-cb9a-4b22-bf71-b9232e1a3743
 
-	measure 'Fond revOdlValider' = IF ( ISBLANK ( [Arrete du brouillon libre a valider] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revOdlValider' = VAR f = ( IF ( ISBLANK ( [Arrete du brouillon libre a valider] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 25eab3bc-8cf8-4b7e-8fe3-acad444e6bcc
 
-	measure 'Fond revOdlRetirer' = IF ( ISBLANK ( [Arrete des OD libres] ) || ISBLANK ( [Ligne OD libre choisie] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revOdlRetirer' = VAR f = ( IF ( ISBLANK ( [Arrete des OD libres] ) || ISBLANK ( [Ligne OD libre choisie] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 61640c62-867b-4548-8a32-f750ce8bee45
 
 	column entite

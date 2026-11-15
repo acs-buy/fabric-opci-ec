@@ -13,7 +13,7 @@ s'en servent : le réviseur qui conduit la mission, et le client qui lit l'état
 |---|---|---|
 | Qui la joue | Celui qui a installé, plus un collègue | Les utilisateurs métier, chacun avec son compte |
 | Ce qu'elle établit | La chaîne du clic à la base fonctionne | Chaque besoin est servi, et chaque contrôle de la base tient |
-| Son contenu | 12 actions | 180 tests, en 7 étapes de jeu |
+| Son contenu | 12 actions | 186 tests, en 7 étapes de jeu |
 | Sa trace | La date et le résultat des 12 actions | Le classeur rempli et un procès-verbal |
 
 ---
@@ -22,7 +22,7 @@ s'en servent : le réviseur qui conduit la mission, et le client qui lit l'état
 
 | La sorte | Combien | Ce que l'utilisateur fait |
 |---|---|---|
-| Les tests scénarisés | 152 | Il suit des actions écrites, avec le nom exact des boutons, et compare ce qu'il obtient au résultat écrit, message compris |
+| Les tests scénarisés | 158 | Il suit des actions écrites, avec le nom exact des boutons, et compare ce qu'il obtient au résultat écrit, message compris |
 | Les tests manuels des utilisateurs métier | 28 | Il conduit un dossier comme en mission, sans action imposée, et il refait à la main des calculs qu'il lit à l'écran |
 
 Les tests manuels sont de 2 natures :
@@ -116,7 +116,7 @@ chaque test Bloquant ou Majeur applicable porte le statut Passé.
 Le procès-verbal tient en 3 lignes :
 
 > Phase passée le **<date>**, dans l'espace **<nom>**, par **<noms>**.
-> Tests passés : **<nombre>** sur 180. Tests en échec : **<lesquels>**.
+> Tests passés : **<nombre>** sur 186. Tests en échec : **<lesquels>**.
 > Décision : **<acceptée, acceptée avec réserves, ou refusée>**, prise par **<nom>**.
 
 Dans une installation en 3 espaces, TEST ne se déploie vers PROD qu'une fois la phase acceptée.

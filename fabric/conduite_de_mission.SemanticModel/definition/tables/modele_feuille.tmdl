@@ -1,0 +1,164 @@
+/// Écran 5, objet n° 53 : carte « Gabarits sans fichier »
+table modele_feuille
+	lineageTag: d7e936b8-3b82-49cf-b823-301520d11d6d
+
+	/// n° 84, modèles sans nom de fichier ni chemin (carte 5)
+	measure 'Gabarits sans fichier' = COUNTROWS ( FILTER ( ALL ( modele_feuille ), ISBLANK ( modele_feuille[nom_fichier] ) && ISBLANK ( modele_feuille[chemin_coffre] ) ) ) + 0
+		formatString: #,0
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 3385d0e5-c325-411c-bd4c-055b841165ca
+
+	/// n° 85, « sur n modèles de feuille, n sans objectif » (carte 5)
+	measure 'Sous-ligne gabarits sans fichier' = VAR n = COUNTROWS ( ALLNOBLANKROW ( modele_feuille ) ) + 0 VAR s = COUNTROWS ( FILTER ( ALL ( modele_feuille ), ISBLANK ( modele_feuille[objectif] ) ) ) + 0 RETURN "sur " & SUBSTITUTE ( SUBSTITUTE ( FORMAT ( n, "#,0" ), UNICHAR ( 160 ), " " ), UNICHAR ( 8239 ), " " ) & " modèles de feuille, " & SUBSTITUTE ( SUBSTITUTE ( FORMAT ( s, "#,0" ), UNICHAR ( 160 ), " " ), UNICHAR ( 8239 ), " " ) & " sans objectif"
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: af62ec7f-5159-4822-b6ec-3a7294a4111f
+
+	/// n° 86, alerte au-dessus de 0, vert à 0 (carte 5)
+	measure 'Couleur gabarits sans fichier' = IF ( [Gabarits sans fichier] > 0, "#9A2A2A", "#1F6D4A" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: f33960c5-2d60-4c2a-8b00-32209b5339e5
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 57a87f06-08de-4a2b-af4d-be961fc41194
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(200)
+		lineageTag: c504a951-c9c1-4600-9754-ad3f3a153c3d
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column standard
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 6d8fb090-71c4-4312-8545-2186437f6c81
+		summarizeBy: none
+		sourceColumn: standard
+
+		annotation SummarizationSetBy = Automatic
+
+	column nom_fichier
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 612d01f1-63ce-4262-94e8-bb146dbe03d5
+		summarizeBy: none
+		sourceColumn: nom_fichier
+
+		annotation SummarizationSetBy = Automatic
+
+	column chemin_coffre
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 9a8539c3-f19c-453f-949f-19542284e8b9
+		summarizeBy: none
+		sourceColumn: chemin_coffre
+
+		annotation SummarizationSetBy = Automatic
+
+	column empreinte_sha256
+		dataType: string
+		sourceProviderType: char(64)
+		lineageTag: 29ef52ce-b56d-42d8-ad07-739bbbc1bfff
+		summarizeBy: none
+		sourceColumn: empreinte_sha256
+
+		annotation SummarizationSetBy = Automatic
+
+	column version
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: a712aaa5-caab-4b3e-a786-30c6b483b60c
+		summarizeBy: none
+		sourceColumn: version
+
+		annotation SummarizationSetBy = Automatic
+
+	column en_vigueur_depuis
+		dataType: dateTime
+		isNullable: false
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: f69f1f32-6849-400f-8e54-048b782602dc
+		summarizeBy: none
+		sourceColumn: en_vigueur_depuis
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 8351db11-27ff-4c7c-93c9-ee7b43274b89
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: 938e9681-2cb8-47e1-87aa-80a8bf0ce1ca
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column objectif
+		dataType: string
+		sourceProviderType: nvarchar(1000)
+		lineageTag: 8bfaeafe-20fa-486a-abda-afb861cadc7d
+		summarizeBy: none
+		sourceColumn: objectif
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecartee_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: 7b59c0a4-455d-45f7-a872-18ff69cfbed7
+		summarizeBy: none
+		sourceColumn: ecartee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecartee_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: b8d17c44-3045-4b85-8f11-5d0cb587612f
+		summarizeBy: none
+		sourceColumn: ecartee_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_ecart
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: ac5a54ce-4973-4985-80d1-7676a5a2dac1
+		summarizeBy: none
+		sourceColumn: motif_ecart
+
+		annotation SummarizationSetBy = Automatic
+
+	partition modele_feuille = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_modele_feuille = Value.NativeQuery(Source, "SELECT code, libelle, standard, nom_fichier, chemin_coffre, empreinte_sha256, version, en_vigueur_depuis, modifie_par, DATETIME2FROMPARTS(YEAR(modifie_le), MONTH(modifie_le), DAY(modifie_le), DATEPART(HOUR, modifie_le), DATEPART(MINUTE, modifie_le), DATEPART(SECOND, modifie_le), 0, 0) AS modifie_le, objectif, ecartee_le, ecartee_par, motif_ecart FROM dbo.modele_feuille", null, [EnableFolding = true])
+				in
+				    dbo_modele_feuille
+

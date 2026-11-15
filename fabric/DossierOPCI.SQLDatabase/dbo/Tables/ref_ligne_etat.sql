@@ -23,26 +23,6 @@ CREATE TABLE [dbo].[ref_ligne_etat] (
 
 GO
 
-
-CREATE   TRIGGER dbo.tr_ref_ligne_etat_annexe_retard ON dbo.ref_ligne_etat
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
-    ;WITH ch AS (
-        SELECT etat, code, article, formule, libelle, ordre, racines, renvoi, romain, sens, type_ligne FROM inserted
-        EXCEPT SELECT etat, code, article, formule, libelle, ordre, racines, renvoi, romain, sens, type_ligne FROM deleted
-        UNION ALL
-        SELECT * FROM (SELECT etat, code, article, formule, libelle, ordre, racines, renvoi, romain, sens, type_ligne FROM deleted EXCEPT SELECT etat, code, article, formule, libelle, ordre, racines, renvoi, romain, sens, type_ligne FROM inserted) d
-    )
-    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
-    SELECT e.code, SYSUTCDATETIME(), N'ref_ligne_etat', (SELECT COUNT(*) FROM ch)
-    FROM dbo.ref_entite e WHERE e.forme_vehicule IS NOT NULL AND EXISTS (SELECT 1 FROM ch);
-END;
-
-GO
-
 CREATE   TRIGGER dbo.[tr_ref_ligne_etat_horodatage]
 ON dbo.[ref_ligne_etat]
 AFTER UPDATE
@@ -59,6 +39,26 @@ BEGIN
     UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
     FROM dbo.[ref_ligne_etat] t
     JOIN inserted i ON t.[etat] = i.[etat] AND t.[code] = i.[code];
+END;
+
+GO
+
+
+CREATE   TRIGGER dbo.tr_ref_ligne_etat_annexe_retard ON dbo.ref_ligne_etat
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT etat, code, article, formule, libelle, ordre, racines, renvoi, romain, sens, type_ligne FROM inserted
+        EXCEPT SELECT etat, code, article, formule, libelle, ordre, racines, renvoi, romain, sens, type_ligne FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT etat, code, article, formule, libelle, ordre, racines, renvoi, romain, sens, type_ligne FROM deleted EXCEPT SELECT etat, code, article, formule, libelle, ordre, racines, renvoi, romain, sens, type_ligne FROM inserted) d
+    )
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT e.code, SYSUTCDATETIME(), N'ref_ligne_etat', (SELECT COUNT(*) FROM ch)
+    FROM dbo.ref_entite e WHERE e.forme_vehicule IS NOT NULL AND EXISTS (SELECT 1 FROM ch);
 END;
 
 GO

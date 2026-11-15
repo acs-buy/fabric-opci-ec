@@ -20,11 +20,15 @@ les éléments à ramener.*
 | fn_ecran_revision | Fonctions | Ce que les boutons de l'écran de révision appellent |
 | fn_ecran_valorisation | Fonctions | Ce que les boutons de l'écran de valorisation appellent |
 | fn_ecran_arrete | Fonctions | Ce que les boutons de l'écran de l'arrêté appellent |
+| fn_ecran_referentiels | Fonctions | Ce que les boutons de l'écran des référentiels appellent |
 | fn_documents | Fonctions | La production des documents : comptes annuels, rapport de l'expert-comptable, document d'information périodique |
 | fn_valorisation | Fonctions | Le lot des différences d'estimation, calculé par la bibliothèque `moteur_opci` |
 | conduite_de_mission | Modèle sémantique | Les tables et les mesures de l'écran de travail |
 | Conduite de mission | Rapport | L'écran de travail du cabinet |
 | restitution_client | Modèle et rapport | L'écran remis au client |
+
+Soit 13 éléments, un par dossier du répertoire `fabric/` : `restitution_client` en compte 2, son
+modèle et son rapport.
 
 ## Ce qui ne fonctionne pas encore à ce stade
 

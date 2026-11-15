@@ -17,9 +17,9 @@ BEGIN
 
     BEGIN TRY
         IF @entite IS NULL
-            THROW 50054, 'Visa refuse : cette feuille de travail n''existe pas.', 1;
+            THROW 50054, N'Visa refusé : cette feuille de travail n''existe pas. Choisir une feuille existante.', 1;
         IF @forme IS NULL
-            THROW 50054, 'Visa refuse : la feuille ne porte aucune conclusion. Une feuille se conclut par dbo.pr_conclure_feuille avant de se viser.', 1;
+            THROW 50054, N'Visa refusé : la feuille n''est pas conclue. La conclure, puis la viser.', 1;
 
         DECLARE @ref VARCHAR (60) = @cote;
         EXEC dbo.pr_garde_visa 'CONCLUSION', @ref, @decision, @decide_par, @motif;

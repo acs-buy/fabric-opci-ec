@@ -55,7 +55,7 @@ qu'à la demande :
 - l'approbation d'un visa est refusée à la personne qui l'a soumis.
 
 La séparation des fonctions est portée par la base, non par l'écran. Un utilisateur qui
-contournerait l'écran, en appelant directement une fonction, recevrait le même refus. Le grisé d'un
+appellerait directement une fonction, sans passer par l'écran, recevrait le même refus. Le grisé d'un
 bouton ne protège rien : le refus est en base.
 
 ---

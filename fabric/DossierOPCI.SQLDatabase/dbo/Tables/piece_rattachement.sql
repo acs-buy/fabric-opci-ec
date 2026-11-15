@@ -69,7 +69,7 @@ BEGIN
                                      WHERE r2.entite = i.entite_couverte
                                        AND r2.porte_balance = 1))
     )
-        THROW 50067, 'Rattachement refuse : cette piece est de periodicite PERMANENT et se rattache au PREMIER arrete de l''entite, non a un arrete ulterieur. La rattacher plus tard ferait croire qu''elle a ete obtenue en cours de dossier, et la vue des documents attendus ne la compterait pas la ou elle est exigee.', 1;
+        THROW 50067, N'Rattachement refusé : une pièce du dossier permanent se rattache au premier arrêté de l''entité, où elle est exigée, et non à un arrêté ultérieur. La rattacher au premier arrêté.', 1;
 END
 
 GO

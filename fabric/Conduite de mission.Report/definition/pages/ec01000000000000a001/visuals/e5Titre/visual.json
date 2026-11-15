@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "e5Titre",
   "position": {
-    "x": 728,
+    "x": 519,
     "y": 318,
     "z": 63500,
     "height": 44,
-    "width": 824,
+    "width": 1033,
     "tabOrder": 63500
   },
   "visual": {

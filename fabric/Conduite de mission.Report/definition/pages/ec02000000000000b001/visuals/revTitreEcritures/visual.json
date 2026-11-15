@@ -3,10 +3,10 @@
   "name": "revTitreEcritures",
   "position": {
     "x": 13,
-    "y": 857,
+    "y": 854,
     "z": 7800,
-    "height": 22,
-    "width": 100,
+    "height": 30,
+    "width": 106,
     "tabOrder": 7800
   },
   "visual": {
@@ -22,7 +22,7 @@
                     "value": "Écritures liées",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "13px",
+                      "fontSize": "12pt",
                       "color": "#12233C"
                     }
                   }
@@ -80,7 +80,7 @@
             "top": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "2D"
                 }
               }
             },

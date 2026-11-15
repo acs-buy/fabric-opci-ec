@@ -133,9 +133,10 @@ coffre le lit sur place.
 ### Les outils que votre cabinet connaît déjà restent utilisables
 
 Rester dans Fabric ne veut pas dire renoncer à Excel. La solution exporte le questionnaire, les
-feuilles de travail et le dossier vers un classeur, que vous modifiez dans Excel en ligne, puis
+feuilles de travail, le dossier et, à l'écran Référentiels, les tables du cabinet et les niveaux de
+programme vers un classeur, que vous modifiez dans Excel en ligne, puis
 réimporte la version modifiée. Les lignes importées entrent **par les mêmes procédures
-que la saisie à l'écran** : un import ne contourne aucun contrôle.
+que la saisie à l'écran** : un import passe par chaque contrôle de la saisie.
 
 [Le détail des exports et des imports](../faire/pieces-et-classeurs.md)
 

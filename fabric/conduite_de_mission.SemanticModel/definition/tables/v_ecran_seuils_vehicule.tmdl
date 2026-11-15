@@ -1,0 +1,206 @@
+/// Écran 5, objet n° 47 : relations referentiel, entite, arrete
+table v_ecran_seuils_vehicule
+	lineageTag: 4b4f554b-c39e-430e-9e8b-8dd2c3639368
+
+	/// n° 144, « Aucun seuil propre au véhicule pour ce référentiel » quand la table est vide
+	measure 'Absence de seuil propre' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR r = [Referentiel choisi] VAR n = COUNTROWS ( FILTER ( ALL ( v_ecran_seuils_vehicule ), v_ecran_seuils_vehicule[referentiel] = r && v_ecran_seuils_vehicule[entite] = e && v_ecran_seuils_vehicule[arrete] = a ) ) + 0 RETURN IF ( n = 0, "Aucun seuil propre au véhicule pour ce référentiel", "" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: b0e22d51-ea97-4b4d-b104-76644dc9c018
+
+	/// n° 145, « entité, forme, régime, en vigueur au jj/mm/aaaa · n limites », l’entité et l’arrêté des sélecteurs, n les lignes de la table (0 pour un autre référentiel), sur 1 ligne dans le titre du bloc au plus long cas
+	measure 'Sous-titre seuils du vehicule' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR r = [Referentiel choisi] VAR fv = CALCULATE ( MAX ( ref_entite[forme_vehicule] ), FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e ) ) VAR pro = COUNTROWS ( FILTER ( ALL ( ref_entite ), ref_entite[Entité] = e && ref_entite[est_professionnel] = TRUE () ) ) > 0 VAR n = COUNTROWS ( FILTER ( ALL ( v_ecran_seuils_vehicule ), v_ecran_seuils_vehicule[referentiel] = r && v_ecran_seuils_vehicule[entite] = e && v_ecran_seuils_vehicule[arrete] = a ) ) + 0 VAR d = IF ( NOT ISBLANK ( a ), MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) ) RETURN e & ", " & fv & ", " & IF ( pro, "OPCI professionnel", "OPCI grand public" ) & ", en vigueur au " & d & " · " & FORMAT ( n, "0" ) & IF ( n < 2, " limite", " limites" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: a90060f0-06b1-40ef-b10d-da9e5b7f0e72
+
+	/// n° 149, VAR c = [Ligne du referentiel choisie] : fond des cellules de la ligne dont code = c (tableau des seuils propres), #F4F8FC, « #FFFFFF » ailleurs, comme [Fond ligne entite] ; le segment « Ligne » garde son interaction vers ce tableau, qu’il ne réduit pas (aucune relation)
+	measure 'Fond ligne choisie des seuils' = VAR c = [Ligne du referentiel choisie] RETURN IF ( NOT ISBLANK ( c ) && SELECTEDVALUE ( v_ecran_seuils_vehicule[code] ) = c, "#F4F8FC", "#FFFFFF" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: e4dce532-90d8-4d8d-9469-b53730268e36
+
+	/// n° 150, « conditions réunies » quand l’action est permise ou qu’aucune ligne n’est choisie, une limite retenue par le cabinet comprise (décision D9 : elle reçoit le seuil fixé par les statuts du véhicule) ; sinon l’une des 3 raisons : le référentiel choisi ne porte pas de seuil propre ; le texte fix
+	measure 'Etat du seuil du vehicule' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR r = [Referentiel choisi] VAR c = [Ligne du referentiel choisie] VAR n = COUNTROWS ( FILTER ( ALL ( v_ecran_seuils_vehicule ), v_ecran_seuils_vehicule[entite] = e && v_ecran_seuils_vehicule[arrete] = a && v_ecran_seuils_vehicule[code] = c ) ) + 0 VAR te = [Teneur connecte] RETURN IF ( ISBLANK ( c ) || c = "", "conditions réunies", IF ( r <> "ref_ratio_memoire", "le référentiel choisi ne porte pas de seuil propre", IF ( n = 0, "le texte fixe la valeur de cette limite", IF ( te = "", "aucun droit de modification", "conditions réunies" ) ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 87ec441d-23f6-4a04-9bdc-0cd60f43ab3f
+
+	/// n° 151, gris quand l’état n’est pas « conditions réunies »
+	measure 'Fond enregistrer le seuil' = IF ( [Etat du seuil du vehicule] = "conditions réunies", "#0F5C8C", "#D9DFE6" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 5867eb6f-4a23-49ba-b1a2-02ea11cc4d9f
+
+	/// n° 152, vert « conditions réunies », alerte sinon (pastille de la carte)
+	measure 'Couleur etat du seuil du vehicule' = IF ( [Etat du seuil du vehicule] = "conditions réunies", "#1F6D4A", "#9A2A2A" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: ed48325d-80fa-4202-89f2-3f11ddcf287f
+
+	/// n° 153, « entité · forme · régime » (« OPCI professionnel » ou « OPCI grand public », colonne regime), lu sur les lignes du véhicule du sélecteur (VAR e, puis FILTER ( ALL ( … ), [entite] = e )) ; « l’entité n’est pas un OPCI » sans ligne
+	measure 'Regime du vehicule' = VAR e = [Client selectionne] VAR t = FILTER ( ALL ( v_ecran_seuils_vehicule ), v_ecran_seuils_vehicule[entite] = e ) RETURN IF ( ISEMPTY ( t ), "l’entité n’est pas un OPCI", e & " · " & MAXX ( t, v_ecran_seuils_vehicule[forme_vehicule] ) & " · " & MAXX ( t, v_ecran_seuils_vehicule[regime] ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 3b221a12-6333-447f-9fe7-d6a1d674a802
+
+	/// n° 154, « gestionnaire, … » ou « statuts, … » (laissee_aux et fondement) de la limite du segment « Ligne » pour le véhicule ; « le texte » quand la limite n’a pas de ligne (le texte fixe sa valeur) ; « sans objet » quand le référentiel choisi n’est pas celui des limites
+	measure 'Valeur laissee de la limite choisie' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR r = [Referentiel choisi] VAR c = [Ligne du referentiel choisie] VAR t = FILTER ( ALL ( v_ecran_seuils_vehicule ), v_ecran_seuils_vehicule[entite] = e && v_ecran_seuils_vehicule[arrete] = a && v_ecran_seuils_vehicule[code] = c ) VAR la = MAXX ( t, v_ecran_seuils_vehicule[laissee_aux] ) RETURN IF ( r <> "ref_ratio_memoire", "sans objet", IF ( ISEMPTY ( t ), "le texte", SWITCH ( la, "le gestionnaire", "le gestionnaire, directive 2011/61/UE, art. 15, § 4", "les statuts", "les statuts, CMF, art. R. 214-196 et R. 214-200", la ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 394ef5b8-1841-4238-b475-5b2e5b9778e4
+
+	/// n° 180, VAR c = [Ligne du referentiel choisie], VAR e = SELECTEDVALUE ( v_ecran_seuils_vehicule[entite] ), VAR a = SELECTEDVALUE ( v_ecran_seuils_vehicule[arrete] ), puis CALCULATE ( MAX ( motif ), FILTER ( ALL ( v_ecran_seuils_vehicule ), [code] = c && [entite] = e && [arrete] = a ) ), m le motif d
+	measure 'Motif du seuil de la limite choisie' = VAR c = [Ligne du referentiel choisie] VAR e = SELECTEDVALUE ( v_ecran_seuils_vehicule[entite] ) VAR a = SELECTEDVALUE ( v_ecran_seuils_vehicule[arrete] ) VAR m = CALCULATE ( MAX ( v_ecran_seuils_vehicule[motif] ), FILTER ( ALL ( v_ecran_seuils_vehicule ), v_ecran_seuils_vehicule[code] = c && v_ecran_seuils_vehicule[entite] = e && v_ecran_seuils_vehicule[arrete] = a ) ) VAR n = CALCULATE ( COUNTROWS ( v_ecran_seuils_vehicule ), FILTER ( ALL ( v_ecran_seuils_vehicule ), v_ecran_seuils_vehicule[code] = c && v_ecran_seuils_vehicule[entite] = e && v_ecran_seuils_vehicule[arrete] = a ) ) VAR s = CALCULATE ( MAX ( v_ecran_seuils_vehicule[statut] ), FILTER ( ALL ( v_ecran_seuils_vehicule ), v_ecran_seuils_vehicule[code] = c && v_ecran_seuils_vehicule[entite] = e && v_ecran_seuils_vehicule[arrete] = a ) ) RETURN IF ( c = "" || [Referentiel choisi] <> "ref_ratio_memoire" || n = 0, "", IF ( s = "retenue par le cabinet", "sans objet", IF ( m = "", "à remplir", m ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 64074453-0491-435d-9f47-696cb3328eaf
+
+	column referentiel
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(120)
+		lineageTag: e11b7211-4e80-492f-b0f5-ab1e6a0c5df6
+		summarizeBy: none
+		sourceColumn: referentiel
+
+		annotation SummarizationSetBy = Automatic
+
+	column entite
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: ee467645-fefc-42cd-aa27-d37cf12bd0ed
+		summarizeBy: none
+		sourceColumn: entite
+
+		annotation SummarizationSetBy = Automatic
+
+	column arrete
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(20)
+		lineageTag: 840843e9-e1bd-47c9-bb88-16c8ebb658d2
+		summarizeBy: none
+		sourceColumn: arrete
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(30)
+		lineageTag: 97e64c1d-5322-47f6-b2ff-7b9f0eb93331
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column libelle
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(120)
+		lineageTag: cbdab37f-7009-46a5-8e8e-1a9386055d60
+		summarizeBy: none
+		sourceColumn: libelle
+
+		annotation SummarizationSetBy = Automatic
+
+	column laissee_aux
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(20)
+		lineageTag: e2735051-0df2-41ae-8700-28532a238631
+		summarizeBy: none
+		sourceColumn: laissee_aux
+
+		annotation SummarizationSetBy = Automatic
+
+	column fondement
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: a28b2466-d1ad-4491-b785-534bc080102b
+		summarizeBy: none
+		sourceColumn: fondement
+
+		annotation SummarizationSetBy = Automatic
+
+	column limite_texte
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(60)
+		lineageTag: 1eec8bb1-86c6-41c4-8ed6-8cba4bc30086
+		summarizeBy: none
+		sourceColumn: limite_texte
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(30)
+		lineageTag: 4a02c6a6-4e65-4163-bd28-7b98c9b22b28
+		summarizeBy: none
+		sourceColumn: statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column regime
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(20)
+		lineageTag: 0111a5da-cfda-4435-8e48-d76cfb86ba1b
+		summarizeBy: none
+		sourceColumn: regime
+
+		annotation SummarizationSetBy = Automatic
+
+	column forme_vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(10)
+		lineageTag: 090e8f85-8da4-4f09-8388-b3c0e65f064a
+		summarizeBy: none
+		sourceColumn: forme_vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column seuil_vehicule
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(60)
+		lineageTag: a8c4be3d-697c-4e05-8af4-24e27a784244
+		summarizeBy: none
+		sourceColumn: seuil_vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	column depuis
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(10)
+		lineageTag: 43d3eba6-ec42-4ef3-b888-02117f733268
+		summarizeBy: none
+		sourceColumn: depuis
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif
+		dataType: string
+		sourceProviderType: nvarchar(600)
+		lineageTag: f8a89a7c-81ba-402d-ab64-ab168664f8ee
+		summarizeBy: none
+		sourceColumn: motif
+
+		annotation SummarizationSetBy = Automatic
+
+	column motif_court
+		dataType: string
+		isNullable: false
+		sourceProviderType: nvarchar(10)
+		lineageTag: 97c94af1-cd1b-4c7b-8fe2-5a85ca2b9ef0
+		summarizeBy: none
+		sourceColumn: motif_court
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_seuils_vehicule = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_seuils_vehicule = Source{[Schema="dbo",Item="v_ecran_seuils_vehicule"]}[Data]
+				in
+				    dbo_v_ecran_seuils_vehicule
+

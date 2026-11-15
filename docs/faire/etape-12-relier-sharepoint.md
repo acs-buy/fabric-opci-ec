@@ -11,8 +11,10 @@ touche un fichier échoue :
 
 | Ce que vous tentez | Ce qui se passe sans l'étape 12 |
 |---|---|
-| Exporter un classeur depuis l'écran de révision | Refus : `Le dépôt des classeurs n'est pas installé : les paramètres DEPOT_CLASSEUR_URL et SITE_CABINET doivent être renseignés.` |
+| Exporter un classeur depuis l'écran de révision | Refus : `Le dépôt des classeurs n'est pas installé : les paramètres DEPOT_CLASSEUR_URL et SITE_CABINET doivent être renseignés. Voir azure/README.md du dépôt.` |
+| Exporter un classeur depuis l'écran Référentiels | Refus : `Dépôt refusé : le dépôt des classeurs n’est pas installé ; les paramètres DEPOT_CLASSEUR_URL et SITE_CABINET doivent être renseignés (azure/README.md du dépôt).` |
 | Réimporter un classeur | Le classeur est introuvable : le raccourci `fec` n'existe pas |
+| Rattacher le fichier d'un gabarit, à l'écran Référentiels | Refus : `Rattachement refusé : le raccourci du site du cabinet n’est pas installé (paramètre RACCOURCI_SITE_CABINET).` |
 | Ouvrir une pièce du dossier | La colonne « Ouvrir la pièce » est vide |
 | Déposer une pièce | Le bouton n'a pas d'adresse : le client n'a pas de site |
 | Créer l'espace d'un client | Refus : `Le provisionnement n'est pas installé : le paramètre ESPACE_CLIENT_URL est vide.` |
@@ -36,7 +38,7 @@ reprenez la suite le lendemain, au moment de cette étape-ci.
 | Ce qui est créé | Où | À quoi il sert |
 |---|---|---|
 | Une Azure Function, avec son identité managée | Votre abonnement Azure | Écrire dans SharePoint à la place de la base, qui ne sait pas obtenir de jeton Graph sans secret |
-| Le site SharePoint du cabinet | Votre locataire | Recevoir les classeurs exportés, sous `Dossiers de travail/<client>/<arrêté>/` |
+| Le site SharePoint du cabinet | Votre locataire | Recevoir les classeurs exportés, sous `Dossiers de travail/<client>/<arrêté>/` et, pour l'écran Référentiels, sous `Référentiels/` ; garder, sous `Modeles/`, le modèle Word des livrables et les fichiers des gabarits |
 | Le raccourci `fec` du coffre | Le coffre | Relire un classeur modifié dans Excel, pour le réimporter |
 | Un site SharePoint par client | Votre locataire | Recevoir les pièces du client et de ses filiales, dans quatre bibliothèques |
 | Un raccourci par bibliothèque du client | Le coffre | Que la solution voie les pièces sans les recopier |
@@ -149,8 +151,29 @@ Chaque point dépend du précédent. Les commandes de la partie A sont dans
 | 12 | Enregistrer `fec` dans le paramètre `RACCOURCI_SITE_CABINET` | Vous |
 
 **Le nom `fec` n'est pas libre.** La fonction de réimport lit les classeurs sous
-`fec/Dossiers de travail/`. À l'écran de revue du raccourci, l'icône crayon permet de le renommer
-avant de le créer.
+`fec/Dossiers de travail/`, et `fn_documents` lit le modèle Word sous `fec/Modeles/`. À l'écran de
+revue du raccourci, l'icône crayon permet de le renommer avant de le créer.
+
+**Les 3 dossiers du site du cabinet**, dans la bibliothèque de documents par défaut, celle du
+raccourci `fec` :
+
+| Le dossier | Ce qu'il porte | Qui le crée |
+|---|---|---|
+| `Dossiers de travail/<client>/<arrêté>/` | Les classeurs exportés des écrans Révision et Valorisation, et les livrables produits, sous `Livrables/` | La solution, par l'Azure Function, au dépôt |
+| `Référentiels/` | Les classeurs exportés de l'écran Référentiels, que ses boutons « Réimporter » relisent | La solution, par l'Azure Function, au premier export |
+| `Modeles/` | Le modèle Word `modele_livrables_opci.docx`, voir l'[étape 8](etape-08-connecter-les-fonctions.md), et les fichiers des gabarits que « Rattacher le fichier » relie à un modèle de feuille | **Vous.** La solution lit ce dossier et n'y dépose rien |
+
+À l'écran Référentiels, le bouton « Ouvrir le dossier Modèles » ouvre ce dossier quand le
+référentiel choisi est celui des modèles de feuille. Son adresse est
+`https://<votre-hote>.sharepoint.com/sites/<nom>/Documents%20partages/Modeles`, tirée de
+`SITE_CABINET` : la base l'écrit ainsi dans la vue `v_ecran_referentiel_choix`, quel que soit le
+nom de la bibliothèque dans votre locataire, et ne rend aucune adresse si `SITE_CABINET` n'a pas la
+forme du point 10.
+
+Déposez d'abord le fichier du gabarit dans `Modeles/`, puis saisissez son nom à l'écran et cliquez
+sur « Rattacher le fichier ». Un nom absent du dossier est refusé :
+
+`Rattachement refusé : le fichier « <nom> » n’est pas au dossier Modeles du site du cabinet ; déposez-le, puis saisissez son nom.`
 
 ### C. Le site du client de démonstration, et ses pièces
 
@@ -184,6 +207,7 @@ de conduite. Le point 15 ne concerne que la démonstration.
 | Le point 15 | `Pièces déposées : 98, refusées : 0, restant sans lien : 0` |
 | `SELECT TOP 1 web_url FROM dbo.piece`, lien ouvert dans le navigateur | Un PDF blanc, dans la bibliothèque Dossier annuel, la colonne Entité légale renseignée |
 | Un export depuis l'écran de révision | Un lien qui ouvre le classeur dans le site du cabinet |
+| « Exporter le classeur » à l'écran Référentiels | `Classeur du référentiel « <nom> » déposé au dossier Référentiels du site du cabinet (<n> lignes) : <adresse du classeur>` |
 
 Sur l'installation d'origine, le 28/09/2026 : 98 pièces sur 98 ont été relues par leur lien, par
 leur raccourci et par leur empreinte, sans écart.

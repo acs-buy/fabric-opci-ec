@@ -3,10 +3,10 @@
   "name": "revOdBalanceLib",
   "position": {
     "x": 174,
-    "y": 1104,
+    "y": 1106,
     "z": 12400,
     "height": 18,
-    "width": 122,
+    "width": 190,
     "tabOrder": 12400
   },
   "visual": {
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Ouvrir la balance",
+                    "value": "Ouvrir la page Balance de révision",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "11px",

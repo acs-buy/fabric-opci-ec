@@ -1,4 +1,3 @@
-
 -- pr_ouvrir_questionnaire_acceptation : le corps d'origine, renomme
 -- pr_ouvrir_questionnaire_acceptation : le corps d'origine, renomme
 -- --- 3. ouvrir le questionnaire d'acceptation d'un client -------------------------------------
@@ -12,6 +11,11 @@ BEGIN
     SET XACT_ABORT ON;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND est_client = 1)
         THROW 50231, N'L''acceptation ne s''ouvre que sur un client du cabinet. Une filiale n''a pas d''acceptation propre.', 1;
+    -- 51301, D1 (15/11/2026) : action 8. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51301, N'Action refusée : seule l''équipe du dossier peut ouvrir le questionnaire d''acceptation de ce dossier.', 1;
 
     DECLARE @cote VARCHAR (30) = 'ACC-' + @entite;
     DECLARE @deja INT = (SELECT COUNT(*) FROM dbo.feuille_question WHERE cote = @cote);

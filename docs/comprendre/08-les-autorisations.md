@@ -61,15 +61,22 @@ parce qu'aucun rôle de mission ne porte votre adresse. C'est ce que corrige
 La base reconnaît une personne par **son adresse de connexion**, jamais par le nom saisi dans le
 rôle. Un rôle compte du jour de son début jusqu'à la veille de sa fin.
 
-| Le geste | Qui peut le faire |
+| L'action | Qui peut le faire |
 |---|---|
 | Retirer une pièce du dossier | Un membre de l'équipe : associé, chef de mission, préparateur ou réviseur ; pour une filiale, aussi un membre de l'équipe du véhicule qui la détient |
+| Écrire dans le dossier : ajouter une filiale, déposer une pièce ou un classeur, répondre au questionnaire, tenir le programme, les feuilles et les OD, générer ou annuler un lot, proposer la synthèse | Un membre de l'équipe, au sens de la ligne précédente, dont le rôle court au jour UTC du clic. Refus 51300 à 51321 et 51325, par exemple « Action refusée : seule l'équipe du dossier peut déposer une pièce dans ce dossier. » |
+| Reprendre une acceptation refusée | Qui peut viser l'acceptation du dossier, l'associé dans le socle livré. Refus 51322 |
+| Enregistrer la décision de distribution, à l'écran Arrêté | L'associé du véhicule. Refus 51323 |
 | Demander la réouverture d'un arrêté clos | Un membre de l'équipe qui n'est pas chef de mission |
 | Accorder ou écarter cette demande | Le chef de mission, s'il n'est pas l'auteur de la demande |
 | Viser la revue, valider pour le client | Le chef de mission |
 
 Le refus vient de la base, avec le même texte qu'à l'écran : « Demande refusée : votre adresse de
 connexion n'est rattachée à aucun membre de l'équipe de ce dossier. »
+
+La base juge l'adresse de connexion de la personne qui clique, et non le compte propriétaire des
+fonctions. Au rapport, les boutons de ces actions sont grisés quand la base refusera la personne
+connectée.
 
 ---
 

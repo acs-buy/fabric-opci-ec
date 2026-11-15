@@ -3,10 +3,10 @@
   "name": "revOdlTitre",
   "position": {
     "x": 13,
-    "y": 295,
+    "y": 292,
     "z": 15300,
-    "height": 22,
-    "width": 59,
+    "height": 30,
+    "width": 71,
     "tabOrder": 15300
   },
   "visual": {
@@ -22,7 +22,7 @@
                     "value": "OD libres",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "13px",
+                      "fontSize": "12pt",
                       "color": "#12233C"
                     }
                   }
@@ -80,7 +80,7 @@
             "top": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "2D"
                 }
               }
             },

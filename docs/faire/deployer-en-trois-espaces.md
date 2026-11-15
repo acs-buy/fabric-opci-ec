@@ -18,12 +18,16 @@ Le pourquoi est dans [Trois espaces de travail](../comprendre/09-trois-espaces.m
 | Étape 3 | Créer les **trois** espaces et le pipeline | Portail |
 | Étapes 4 à 10, puis 12 | Installer la solution, et relier SharePoint | **DEV** |
 | **Ici** | **Déployer DEV vers TEST**, puis les six actions de remise en service | **TEST** |
+| Étape 11, pour les seuls comptes des tests | Publier l'application de TEST, avec ses 2 audiences | **TEST** |
 | Étape 13, puis les tests d'acceptation | Passer la recette, puis faire passer le cahier des tests d'acceptation | **TEST** |
 | **Ici** | **Déployer TEST vers PROD**, puis les mêmes six actions | **PROD** |
 | Étape 11 | Publier les applications | **PROD** |
 
-**L'étape 11 vient après le déploiement en production**, et non avant : une application se publie
-depuis l'espace où vivent les dossiers réels.
+**L'étape 11 se fait 2 fois.** Dans TEST, elle donne accès aux comptes de la phase de tests, dont le
+compte de l'audience client : ce compte entre en lecteur, par l'application et par son rôle de
+sécurité, jamais comme membre de l'espace, comme le dit
+[Les tests d'acceptation](tests-d-acceptation.md). Dans PROD, elle se fait après le déploiement en
+production : l'application de production se publie depuis l'espace où vivent les dossiers réels.
 
 ---
 
@@ -93,6 +97,7 @@ ailleurs.
 
 « Role assignment » ne se copie pas. Recréez un rôle par client dans le modèle `restitution_client`
 de cet espace, et affectez-y les comptes, comme à [l'étape 11](etape-11-publier-les-applications.md).
+Affectez de même les comptes de l'équipe au rôle `Reviseur` du modèle `conduite_de_mission`.
 
 ### 6. Renseigner le dépôt SharePoint de cet espace
 
@@ -107,8 +112,11 @@ others) keep the same targets across all stages after deployment. » Dans un mê
 lit donc les mêmes sites que DEV. En production, faites pointer chaque raccourci vers le site de
 production, au portail ou par les API de OneLake.
 
-**Contrôle :** `SELECT code, valeur FROM dbo.ref_parametre;` rend les 4 paramètres, et
-`SELECT name FROM sys.database_scoped_credentials;` les 2 adresses des routes.
+**Contrôle :**
+`SELECT code, valeur FROM dbo.ref_parametre WHERE code IN ('ESPACE_CLIENT_URL', 'DEPOT_CLASSEUR_URL', 'SITE_CABINET', 'RACCOURCI_SITE_CABINET');`
+rend les 4 paramètres de l'étape 12, et `SELECT name FROM sys.database_scoped_credentials;` les 2
+adresses des routes. Sans le filtre sur le code, la requête rend 8 lignes : la table porte aussi les
+4 seuils du programme de travail que charge `sql/10_referentiels/00_ref_parametre.sql`.
 
 ---
 

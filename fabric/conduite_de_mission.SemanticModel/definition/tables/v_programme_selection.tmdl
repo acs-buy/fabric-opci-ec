@@ -11,10 +11,10 @@ table v_programme_selection
 	measure 'Question retirable' = VAR r = [Question choisie au programme] RETURN IF ( NOT ISBLANK ( r ) && SELECTEDVALUE ( v_programme_selection[actif] ) && NOT SELECTEDVALUE ( v_programme_selection[repondue] ), r )
 		lineageTag: a2013289-9b22-4ab9-a25b-b56aa6f14a7b
 
-	measure 'Fond revProgAjouterauprogr' = IF ( ISBLANK ( [Question ajoutable] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revProgAjouterauprogr' = VAR f = ( IF ( ISBLANK ( [Question ajoutable] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: cfa811a8-b5cf-4a48-b3e5-c0bfff0302df
 
-	measure 'Fond revProgRetirerduprogr' = IF ( ISBLANK ( [Question retirable] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revProgRetirerduprogr' = VAR f = ( IF ( ISBLANK ( [Question retirable] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 8d459a12-5faa-4ff5-8b18-444a0740b65d
 
 	column entite

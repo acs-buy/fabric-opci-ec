@@ -38,11 +38,20 @@ specific Workspace, Function set, and Data function. »
 **Sans réparation :** vos boutons appellent l'espace de travail d'origine. Ou bien ils ne font
 rien, ou bien ils écrivent au mauvais endroit.
 
-## Ce qui se refait seul
+## La liaison de chaque rapport à son modèle
 
-La liaison du rapport vers son modèle sémantique se refait seule, parce que le rapport désigne son
-modèle par un chemin relatif et non par un identifiant. **À une condition : ne renommez aucun
-élément.** Un renommage casse cette liaison, et le message d'erreur ne dit pas pourquoi.
+Chaque rapport désigne son modèle par une connexion qui nomme l'espace de travail d'origine, le nom
+du modèle et l'identifiant du modèle d'origine : section `byConnection` du fichier
+`definition.pbir`, dans `fabric/Conduite de mission.Report/` et dans
+`fabric/restitution_client.Report/`. Aucun des 2 scripts de cette page ne modifie ce fichier.
+
+**Vérifiez donc que chaque rapport lit le modèle de votre espace.** Le dossier créé à l'action 1 de
+l'étape 13 n'existe que dans votre base : il doit apparaître à l'écran de conduite. Dans une
+installation en 3 espaces, le test 7-03 du [cahier des tests d'acceptation](cahier-de-tests.md)
+fait cette preuve pour les 2 rapports.
+
+**Ne renommez aucun élément.** La connexion nomme le modèle, et le message d'erreur d'un renommage
+ne désigne pas le renommage.
 
 ## Comment faire
 
@@ -58,8 +67,9 @@ Le script vous demande de coller vos valeurs une par une et vérifie leur forme 
 se connecte à rien et ne demande aucun mot de passe.
 
 1. **L'adresse de votre espace de travail.** Ouvrez-le dans le navigateur, copiez l'adresse entière.
-2. **L'adresse de chacun de vos ensembles de fonctions** : `fn_ecran_client`, `fn_ecran_revision`,
-   `fn_ecran_valorisation`, `fn_ecran_arrete`, `fn_documents` et `fn_valorisation`. Ouvrez-les un
+2. **L'adresse de chacun de vos 7 ensembles de fonctions** : `fn_ecran_client`, `fn_ecran_revision`,
+   `fn_ecran_valorisation`, `fn_ecran_arrete`, `fn_documents`, `fn_valorisation` et
+   `fn_ecran_referentiels`. Ouvrez-les un
    par un, copiez l'adresse. Attention, elle porte deux identifiants : celui de l'espace d'abord,
    celui de l'élément ensuite. Le script retient le second, qui est le bon. Le rapport appelle
    chacun de ces ensembles : un ensemble oublié laisse ses boutons sans effet.
@@ -84,6 +94,7 @@ python scripts/20_relier_les_boutons.py --espace <le vôtre>
     --fn-ecran-client <le vôtre> --fn-ecran-revision <le vôtre>
     --fn-ecran-valorisation <le vôtre> --fn-ecran-arrete <le vôtre>
     --fn-documents <le vôtre> --fn-valorisation <le vôtre>
+    --fn-ecran-referentiels <le vôtre>
 ```
 
 La seconde commande s'écrit sur une seule ligne. Le script des boutons refuse d'écrire s'il manque
@@ -171,16 +182,22 @@ fn_ecran_arrete, <n> fonction(s) appelee(s) :
    conclure_ratio
    ...
 fn_ecran_client, <n> fonction(s) appelee(s) :
+   accorder_reouverture
    ajouter_filiale
    approuver_acceptation
-   creer_client
+   ...
+fn_ecran_referentiels, <n> fonction(s) appelee(s) :
+   ajouter_ligne
+   ajouter_question_tenue
+   changer_code
    ...
 fn_ecran_revision, <n> fonction(s) appelee(s) :
-   conclure_feuille
-   ouvrir_feuille
+   activer_cycle
+   ajouter_question
    ...
 fn_ecran_valorisation, <n> fonction(s) appelee(s) :
-   enregistrer_expertise
+   annuler_lot
+   creer_derogation
    ...
 fn_valorisation, <n> fonction(s) appelee(s) :
    generer_lot_valorisation

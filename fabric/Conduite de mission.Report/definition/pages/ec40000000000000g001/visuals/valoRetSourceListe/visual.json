@@ -3,11 +3,11 @@
   "name": "valoRetSourceListe",
   "position": {
     "x": 27,
-    "y": 1018,
-    "z": 39825,
+    "y": 1069,
+    "z": 39315,
     "height": 42,
     "width": 145,
-    "tabOrder": 39825
+    "tabOrder": 39315
   },
   "visual": {
     "visualType": "slicer",

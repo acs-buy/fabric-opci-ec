@@ -1,4 +1,3 @@
-
 -- pr_importer_od : 5 refus
 -- LE CLASSEUR D'OD D'UNE QUESTION, OU DES OD LIBRES : ses lignes REMPLACENT le brouillon courant du meme
 -- perimetre. @lignes : [{"ligne":12,"journal":"ODR","compte":"213","libelle":"...","debit":100,"credit":0,"piece":"...","actif":"IMM-201"}]
@@ -33,6 +32,11 @@ BEGIN
         THROW 50385, N'Le contenu reçu n''est pas un tableau de lignes lisible.', 1;
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé.', 1;
+    -- 51315, D1 (15/11/2026) : action 22. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51315, N'Action refusée : seule l''équipe du dossier peut réimporter les OD de ce dossier.', 1;
     SET @fichier = NULLIF(LTRIM(RTRIM(@fichier)), N'');
     IF @reference IS NULL AND @fichier IS NULL
         THROW 50409, N'Réimport refusé : le nom du classeur relu manque ; il établit la date de son export.', 1;

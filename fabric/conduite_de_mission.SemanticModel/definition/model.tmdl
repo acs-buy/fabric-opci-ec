@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["v_maintien_requis", "v_prerequis_arrete", "v_pieces_manquantes", "v_balance", "v_anr_entite", "v_valeur_liquidative", "v_titres_valeur_actuelle", "feuille_travail", "lot_ecritures", "ref_entite", "ref_cycle", "v_dim_arrete", "v_livrables_dus", "v_differences_synthese", "v_dernier_releve_controle", "v_avancement_etapes", "v_etat_dossier", "v_documents_attendus", "v_perimetre_arrete", "v_supervision_cycle", "v_journal_visa", "v_a_viser", "v_mes_refus", "v_rationalisation_opci", "v_actifs_expertise_requise", "v_ratio_conclusion", "v_sommes_distribuables", "v_obligation_minimale", "v_inventaire_referentiel", "role_mission", "v_a_generer_synthese", "v_anr_filiale", "v_anr_filiale_detail", "v_cadrage_pret_intragroupe", "v_differences_comptes_courants", "v_differences_immeubles", "v_differences_instruments", "v_differences_titres", "v_ecritures_du_compte", "v_flux_intragroupe", "v_obligation_par_categorie", "v_parts_porteur_courant", "v_plafond_distribuable", "v_ratio_arrete", "v_rationalisation_filiale", "v_simulation_distribution", "ecriture", "v_differences_detail", "v_perimetre_groupe", "acceptation_mission", "maintien_mission", "arrete_mission", "ref_arrete", "piece", "piece_rattachement", "ref_nature_piece", "v_questions_acceptation", "v_ecran_pieces_du_dossier", "v_espace_client", "v_filiale_dependances", "journal_perimetre", "v_ecran_maintiens", "v_ecran_message", "v_ecran_equipe_mission", "expertise", "evaluation_actif", "valeur_instrument", "cours_titre", "revision_compte_courant", "synthese_proposee", "eligibilite_participation", "v_famille_actif", "v_a_generer", "v_reprise_275_a_passer", "v_controle_rationalisation", "v_controle_difference_vs_ecritures", "v_comptes_classe_1_hors_anr", "v_ecran_valeurs_arrete", "v_ecran_differences_par_compte", "v_ecran_visas_valorisation", "v_ecran_anr_filiale_detail", "v_ecran_pieces_valorisation", "v_ecran_feuilles_valorisation", "v_ecran_flux_groupe", "v_ecran_miroirs_groupe", "v_ecran_rationalisation_pas", "ref_source_valeur", "conclusion_ratio", "decision_distribution", "ref_obligation_distribution", "ref_ratio_memoire", "ref_ratio_vehicule", "v_ecran_actifs_a_valoriser"]
+annotation PBI_QueryOrder = ["v_maintien_requis", "v_prerequis_arrete", "v_pieces_manquantes", "v_balance", "v_anr_entite", "v_valeur_liquidative", "v_titres_valeur_actuelle", "feuille_travail", "lot_ecritures", "ref_entite", "ref_cycle", "v_dim_arrete", "v_livrables_dus", "v_differences_synthese", "v_dernier_releve_controle", "v_avancement_etapes", "v_etat_dossier", "v_documents_attendus", "v_perimetre_arrete", "v_supervision_cycle", "v_journal_visa", "v_a_viser", "v_mes_refus", "v_rationalisation_opci", "v_actifs_expertise_requise", "v_ratio_conclusion", "v_sommes_distribuables", "v_obligation_minimale", "v_inventaire_referentiel", "role_mission", "v_a_generer_synthese", "v_anr_filiale", "v_anr_filiale_detail", "v_cadrage_pret_intragroupe", "v_differences_comptes_courants", "v_differences_immeubles", "v_differences_instruments", "v_differences_titres", "v_ecritures_du_compte", "v_flux_intragroupe", "v_obligation_par_categorie", "v_parts_porteur_courant", "v_plafond_distribuable", "v_ratio_arrete", "v_rationalisation_filiale", "v_simulation_distribution", "ecriture", "v_differences_detail", "v_perimetre_groupe", "acceptation_mission", "maintien_mission", "arrete_mission", "ref_arrete", "piece", "piece_rattachement", "ref_nature_piece", "v_questions_acceptation", "v_ecran_pieces_du_dossier", "v_espace_client", "v_filiale_dependances", "journal_perimetre", "v_ecran_maintiens", "v_ecran_message", "v_ecran_equipe_mission", "expertise", "evaluation_actif", "valeur_instrument", "cours_titre", "revision_compte_courant", "synthese_proposee", "eligibilite_participation", "v_famille_actif", "v_a_generer", "v_reprise_275_a_passer", "v_controle_rationalisation", "v_controle_difference_vs_ecritures", "v_comptes_classe_1_hors_anr", "v_ecran_valeurs_arrete", "v_ecran_differences_par_compte", "v_ecran_visas_valorisation", "v_ecran_anr_filiale_detail", "v_ecran_pieces_valorisation", "v_ecran_feuilles_valorisation", "v_ecran_flux_groupe", "v_ecran_miroirs_groupe", "v_ecran_rationalisation_pas", "ref_source_valeur", "conclusion_ratio", "decision_distribution", "ref_obligation_distribution", "ref_ratio_memoire", "ref_ratio_vehicule", "v_ecran_actifs_a_valoriser", "v_ecran_inventaire_referentiel", "v_ecran_referentiel_choix", "v_ecran_referentiel_valeurs", "v_ecran_referentiel_lignes", "v_ecran_referentiel_colonnes", "v_ecran_articles_du_referentiel", "ref_phase", "v_ecran_seuils_vehicule", "v_ecran_questions_par_cycle", "v_ecran_cycle_ou_phase", "v_ecran_question_referentiel", "ref_sujet_tenue", "classeur_cabinet", "modele_feuille"]
 
 annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
 
@@ -165,6 +165,20 @@ ref table ref_obligation_distribution
 ref table ref_ratio_memoire
 ref table ref_ratio_vehicule
 ref table v_ecran_actifs_a_valoriser
+ref table v_ecran_inventaire_referentiel
+ref table v_ecran_referentiel_choix
+ref table v_ecran_referentiel_valeurs
+ref table v_ecran_referentiel_lignes
+ref table v_ecran_referentiel_colonnes
+ref table v_ecran_articles_du_referentiel
+ref table ref_phase
+ref table v_ecran_seuils_vehicule
+ref table v_ecran_questions_par_cycle
+ref table v_ecran_cycle_ou_phase
+ref table v_ecran_question_referentiel
+ref table ref_sujet_tenue
+ref table classeur_cabinet
+ref table modele_feuille
 
 ref role Reviseur
 

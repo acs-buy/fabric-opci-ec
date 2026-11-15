@@ -3889,7 +3889,7 @@ def _rendre(base, par: str, entite: str, nom: str, faire):
                        texte_journal=getattr(e, "detail_journal", None))
         raise
     except Exception as e:
-        detail = "Erreur d’exécution de %s : %s" % (nom, _detail(e))
+        detail = "Erreur d’exécution de la fonction %s : %s" % (nom, _detail(e))  # R9, D6, texte n° 19
         _poser_message(base, par, TEXTE_ERREUR, "REFUS", entite, nom, journal=True, texte_journal=detail)
         raise fn.UserThrownError(TEXTE_ERREUR, {"fonction": nom}) from e
     _poser_message(base, par, texte, "SUCCES", entite, nom)

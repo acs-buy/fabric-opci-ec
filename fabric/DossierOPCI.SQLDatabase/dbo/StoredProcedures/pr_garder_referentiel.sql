@@ -32,7 +32,7 @@ BEGIN
     DECLARE @role NVARCHAR (300) =
         CASE @qui_tient
              WHEN 'REVISEUR' THEN N'associé ou réviseur'
-             WHEN 'BASE'     THEN N'associé. Cette table porte des valeurs livrées avec la base, recopiées depuis un texte : les modifier les fait diverger de leur source'
+             WHEN 'BASE'     THEN N'associé'
              ELSE N'associé' END;
 
     DECLARE @sql NVARCHAR (MAX) = N'CREATE OR ALTER TRIGGER dbo.'

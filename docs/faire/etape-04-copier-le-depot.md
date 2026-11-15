@@ -119,11 +119,11 @@ chemin plus court, par exemple `C:\opci`.
 
 | Le dossier | Ce qu'il porte | Va-t-il dans votre espace de travail ? |
 |---|---|---|
-| `fabric/` | Les éléments Fabric, un dossier par élément | **Oui**, c'est le répertoire à indiquer à l'étape 5 |
+| `fabric/` | Les 13 éléments Fabric, un dossier par élément | **Oui**, c'est le répertoire à indiquer à l'étape 5 |
 | `sql/` | Les fichiers SQL : le chargement, le socle et la démonstration | Non, vous les jouerez à l'étape 7 |
 | `scripts/` | Les quatre scripts | Non, ils s'exécutent sur votre poste |
 | `docs/` | Ce mode opératoire | Non |
-| `azure/` | Le code de la fonction qui crée l'espace d'un client, facultative | Non, elle se déploie sur Azure |
+| `azure/` | Le code de l'Azure Function de l'étape 12, qui crée l'espace d'un client et dépose les classeurs dans SharePoint | Non, elle se déploie sur Azure |
 
 **Retenez `fabric`.** C'est la valeur à saisir à l'étape suivante, et l'oublier fait échouer la
 synchronisation.

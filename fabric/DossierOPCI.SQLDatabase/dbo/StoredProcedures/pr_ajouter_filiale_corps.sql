@@ -1,4 +1,3 @@
-
 -- pr_ajouter_filiale : le corps d'origine, renomme
 -- pr_ajouter_filiale : le corps d'origine, renomme
 CREATE   PROCEDURE dbo.pr_ajouter_filiale_corps
@@ -15,6 +14,11 @@ BEGIN
     SET XACT_ABORT ON;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @client AND est_client = 1)
         THROW 50211, N'Le client n''existe pas, ou l''entité désignée n''est pas un client du cabinet.', 1;
+    -- 51300, D1 (15/11/2026) : action 3, equipe du vehicule client. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND dbo.fn_membre_equipe(@client, NULL, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51300, N'Action refusée : seule l''équipe du dossier peut ajouter une filiale au périmètre de ce client.', 1;
     IF @code IS NULL OR LTRIM(RTRIM(@code)) = ''
         THROW 50210, N'Le code de la filiale est obligatoire.', 1;
     IF @code = @client

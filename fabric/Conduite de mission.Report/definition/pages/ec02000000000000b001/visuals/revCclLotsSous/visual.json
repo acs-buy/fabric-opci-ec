@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revCclLotsSous",
   "position": {
-    "x": 126,
-    "y": 857,
+    "x": 145,
+    "y": 819,
     "z": 22100,
     "height": 24,
     "width": 700,
@@ -63,7 +63,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5B6B7D'"
+                      "Value": "'#2B4666'"
                     }
                   }
                 }

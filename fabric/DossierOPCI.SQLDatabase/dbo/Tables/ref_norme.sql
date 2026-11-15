@@ -24,26 +24,6 @@ CREATE TABLE [dbo].[ref_norme] (
 
 GO
 
-
-CREATE   TRIGGER dbo.tr_ref_norme_annexe_retard ON dbo.ref_norme
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
-    ;WITH ch AS (
-        SELECT code, abroge_par, acte_agrement, applicable_presentation, autorite, date_application, edition, en_vigueur, libelle_complet, libelle_court, piece_au_dossier FROM inserted
-        EXCEPT SELECT code, abroge_par, acte_agrement, applicable_presentation, autorite, date_application, edition, en_vigueur, libelle_complet, libelle_court, piece_au_dossier FROM deleted
-        UNION ALL
-        SELECT * FROM (SELECT code, abroge_par, acte_agrement, applicable_presentation, autorite, date_application, edition, en_vigueur, libelle_complet, libelle_court, piece_au_dossier FROM deleted EXCEPT SELECT code, abroge_par, acte_agrement, applicable_presentation, autorite, date_application, edition, en_vigueur, libelle_complet, libelle_court, piece_au_dossier FROM inserted) d
-    )
-    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
-    SELECT e.code, SYSUTCDATETIME(), N'ref_norme', (SELECT COUNT(*) FROM ch)
-    FROM dbo.ref_entite e WHERE e.forme_vehicule IS NOT NULL AND EXISTS (SELECT 1 FROM ch);
-END;
-
-GO
-
 CREATE   TRIGGER dbo.[tr_ref_norme_garde]
 ON dbo.[ref_norme]
 AFTER INSERT, UPDATE, DELETE
@@ -86,6 +66,26 @@ BEGIN
     UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
     FROM dbo.[ref_norme] t
     JOIN inserted i ON t.[code] = i.[code];
+END;
+
+GO
+
+
+CREATE   TRIGGER dbo.tr_ref_norme_annexe_retard ON dbo.ref_norme
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT code, abroge_par, acte_agrement, applicable_presentation, autorite, date_application, edition, en_vigueur, libelle_complet, libelle_court, piece_au_dossier FROM inserted
+        EXCEPT SELECT code, abroge_par, acte_agrement, applicable_presentation, autorite, date_application, edition, en_vigueur, libelle_complet, libelle_court, piece_au_dossier FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT code, abroge_par, acte_agrement, applicable_presentation, autorite, date_application, edition, en_vigueur, libelle_complet, libelle_court, piece_au_dossier FROM deleted EXCEPT SELECT code, abroge_par, acte_agrement, applicable_presentation, autorite, date_application, edition, en_vigueur, libelle_complet, libelle_court, piece_au_dossier FROM inserted) d
+    )
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT e.code, SYSUTCDATETIME(), N'ref_norme', (SELECT COUNT(*) FROM ch)
+    FROM dbo.ref_entite e WHERE e.forme_vehicule IS NOT NULL AND EXISTS (SELECT 1 FROM ch);
 END;
 
 GO

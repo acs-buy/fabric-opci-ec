@@ -1,0 +1,78 @@
+/// Écran 5, objet n° 45 : relation referentiel → v_ecran_referentiel_choix[table_nom]
+table v_ecran_articles_du_referentiel
+	lineageTag: 4415729d-abb5-4224-8d70-c45811cf94a0
+
+	/// n° 146, « n articles », n le nombre d’articles distincts du référentiel choisi
+	measure 'Sous-titre articles cites' = VAR r = [Referentiel choisi] VAR n = CALCULATE ( DISTINCTCOUNT ( v_ecran_articles_du_referentiel[article] ), FILTER ( ALL ( v_ecran_articles_du_referentiel ), v_ecran_articles_du_referentiel[referentiel] = r ) ) + 0 RETURN FORMAT ( n, "0" ) & IF ( n < 2, " article", " articles" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: f19bec00-4b6c-481d-b069-be8eb5d6867b
+
+	/// n° 156, « Aucun article cité par une clé » quand la table est vide
+	measure 'Absence d article cite' = VAR r = [Referentiel choisi] RETURN IF ( NOT ISBLANK ( r ) && ISEMPTY ( FILTER ( ALL ( v_ecran_articles_du_referentiel ), v_ecran_articles_du_referentiel[referentiel] = r ) ), "Aucun article cité par une clé", "" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: e4a4f15e-783d-4321-a579-13e995836de2
+
+	column referentiel
+		dataType: string
+		sourceProviderType: varchar(120)
+		lineageTag: 0de66ef0-d319-4582-a25b-e1c17364a6a0
+		summarizeBy: none
+		sourceColumn: referentiel
+
+		annotation SummarizationSetBy = Automatic
+
+	column article
+		dataType: string
+		sourceProviderType: nvarchar(120)
+		lineageTag: 6778a89f-d67f-405b-bb8d-83a9e2333492
+		summarizeBy: none
+		sourceColumn: article
+
+		annotation SummarizationSetBy = Automatic
+
+	column intitule
+		dataType: string
+		sourceProviderType: nvarchar(200)
+		lineageTag: 1756980e-ab1d-491d-bb7d-797ca2d1f7b6
+		summarizeBy: none
+		sourceColumn: intitule
+
+		annotation SummarizationSetBy = Automatic
+
+	column source
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: b102eb38-c618-43bd-ad42-f3004c8b6ec2
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column lignes
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 62124348-70a0-4bbb-82a5-7765ff8d1130
+		summarizeBy: none
+		sourceColumn: lignes
+
+		annotation SummarizationSetBy = Automatic
+
+	column dans_perimetre
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8515414c-7c59-4fda-8af3-a5db689b083b
+		summarizeBy: none
+		sourceColumn: dans_perimetre
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_articles_du_referentiel = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_articles_du_referentiel = Source{[Schema="dbo",Item="v_ecran_articles_du_referentiel"]}[Data]
+				in
+				    dbo_v_ecran_articles_du_referentiel
+

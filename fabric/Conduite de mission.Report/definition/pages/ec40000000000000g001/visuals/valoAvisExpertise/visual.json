@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "valoAvisExpertise",
   "position": {
-    "x": 660,
-    "y": 960,
-    "z": 40402,
+    "x": 15,
+    "y": 995,
+    "z": 40052,
     "height": 20,
-    "width": 268,
-    "tabOrder": 40402
+    "width": 910,
+    "tabOrder": 40052
   },
   "visual": {
     "visualType": "cardVisual",
@@ -93,7 +93,7 @@
             "horizontalAlignment": {
               "expr": {
                 "Literal": {
-                  "Value": "'left'"
+                  "Value": "'right'"
                 }
               }
             }

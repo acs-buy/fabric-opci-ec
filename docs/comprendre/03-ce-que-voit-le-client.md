@@ -1,16 +1,21 @@
 # 3. Ce que voit le client
 
-L'écran de restitution. Huit pages, toutes filtrées sur l'arrêté que le client choisit. Cette page
-les décrit une par une.
+L'écran de restitution. Huit pages, qui portent chacune le choix de l'arrêté ; la page 8, « La
+distribution », ne lit que le dernier exercice annuel visé du véhicule. Cette page les décrit une
+par une.
 
 ---
 
 ## Le principe qui vaut pour les huit pages
 
-Le client choisit un arrêté, et tout l'écran s'aligne dessus : il lit celui qui l'intéresse, et
-non le dernier publié. Chaque page porte en tête la date de clôture visée et la date de publication.
+Le client choisit un arrêté, et l'écran s'aligne dessus, sauf la page 8 : il lit celui qui
+l'intéresse, et non le dernier publié. Chaque page porte en tête la date de clôture visée et la date de publication.
 
-Rien n'apparaît sans être passé par le visa du cabinet, et un arrêté non visé n'est pas publié. Le
+Rien n'apparaît sans être passé par le visa du cabinet, et un arrêté non visé n'est pas publié.
+Une exception est connue : le tableau des valeurs liquidatives et les graphiques d'évolution, du
+pilotage et des distributions lisent des vues reliées à l'entité seule, et non à l'arrêté visé
+(`fabric/restitution_client.SemanticModel/definition/relationships.tmdl`) : ils portent aussi un
+arrêté non visé. C'est l'anomalie connue 1-06 du [cahier des tests](../faire/cahier-de-tests.md). Le
 délai est plus long qu'avec un branchement direct sur la base ; en échange, le client sait que ce
 qu'il lit a été revu.
 
@@ -34,7 +39,9 @@ Ce que la page porte :
 - l'écart de valeur liquidative par rapport à l'arrêté précédent ;
 - la série des valeurs liquidatives, arrêté par arrêté.
 
-C'est la page d'entrée.
+Elle est la première dans l'ordre des pages du rapport. Le rapport livré est enregistré avec la
+page 2, « La rationalisation de la VL », pour page active
+([pages.json](../../fabric/restitution_client.Report/definition/pages/pages.json)).
 
 ---
 
@@ -113,7 +120,8 @@ Ce que la page porte, pour chaque ratio :
 - **ce que le calcul retient**, c'est-à-dire la règle appliquée ;
 - la conclusion : respecté, ou non.
 
-Plus deux compteurs : les ratios calculés, et ceux qui restent à valider.
+Plus 4 compteurs : les ratios calculés, les ratios respectés, les ratios non respectés, et ceux qui
+restent à valider.
 
 Un ratio réglementaire se calcule sur un périmètre, et le périmètre se discute. La colonne « ce que
 le calcul retient » affiche la règle retenue, que le client peut contester ou confirmer.
@@ -173,6 +181,10 @@ Ce que la page porte :
 - le montant simulé ;
 - le report indirect de l'exercice précédent ;
 - la part revenant au porteur.
+
+La page ne lit que le dernier exercice annuel visé du véhicule : un filtre de la page ne retient,
+dans la vue `v_simulation_distribution`, que la ligne marquée comme dernier exercice
+([page.json](../../fabric/restitution_client.Report/definition/pages/069c78a61073dd85b968/page.json)).
 
 ---
 

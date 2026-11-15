@@ -1,7 +1,12 @@
+-- Objet n° 6 de l'ecran 5 (script 321), corrige par le script 340 (24/10/2026) : rang_annexe, la position de la
+-- colonne dans le « SELECT … FROM inserted » du declencheur tr_<table>_annexe_retard, NULL pour une colonne
+-- qu'il ne compare pas ; constantes relues a la generation (61_DEPLOIEMENT/generer_e5_340_ordre_effet_annexe.py) ;
+-- l'ordre des libelles de [Effet sur l annexe du referentiel choisi]. Ne pas modifier a la main.
 CREATE   VIEW dbo.v_ecran_referentiel_colonnes AS
 SELECT CAST(t.referentiel AS VARCHAR (120)) AS referentiel, CAST(t.colonne AS VARCHAR (128)) AS colonne,
        CAST(t.libelle_colonne AS NVARCHAR (40)) AS libelle_colonne, CAST(t.rang_libelle AS INT) AS rang_libelle,
-       CAST(t.modifiable AS INT) AS modifiable, CAST(t.marque_annexe AS INT) AS marque_annexe
+       CAST(t.modifiable AS INT) AS modifiable, CAST(t.marque_annexe AS INT) AS marque_annexe,
+       CAST(o.rang AS INT) AS rang_annexe
 FROM (
     -- ref_compte
     SELECT 'ref_compte' AS referentiel, v.colonne, v.libelle_colonne, v.rang_libelle, v.modifiable, v.marque_annexe
@@ -552,7 +557,61 @@ FROM (
         ('modifie_le', N'Dernière modification', 124, 0, 0),
         ('modifie_par', N'Modifiée par', 125, 0, 0)
     ) v (colonne, libelle_colonne, rang_libelle, modifiable, marque_annexe)
-) t;
+) t
+LEFT JOIN (VALUES
+        ('ref_compte', 'compte', 1),
+        ('ref_compte', 'libelle', 2),
+        ('ref_ligne_annexe', 'article', 1),
+        ('ref_ligne_annexe', 'code', 2),
+        ('ref_ligne_annexe', 'formule', 3),
+        ('ref_ligne_annexe', 'formule_calcul', 4),
+        ('ref_ligne_annexe', 'libelle', 5),
+        ('ref_ligne_annexe', 'niveau', 6),
+        ('ref_ligne_annexe', 'ordre', 7),
+        ('ref_ligne_annexe', 'racines', 8),
+        ('ref_ligne_annexe', 'racines_exclues', 9),
+        ('ref_ligne_annexe', 'sens', 10),
+        ('ref_ligne_annexe', 'signe', 11),
+        ('ref_ligne_annexe', 'type_ligne', 12),
+        ('ref_ligne_etat', 'etat', 1),
+        ('ref_ligne_etat', 'code', 2),
+        ('ref_ligne_etat', 'article', 3),
+        ('ref_ligne_etat', 'formule', 4),
+        ('ref_ligne_etat', 'libelle', 5),
+        ('ref_ligne_etat', 'ordre', 6),
+        ('ref_ligne_etat', 'racines', 7),
+        ('ref_ligne_etat', 'renvoi', 8),
+        ('ref_ligne_etat', 'romain', 9),
+        ('ref_ligne_etat', 'sens', 10),
+        ('ref_ligne_etat', 'type_ligne', 11),
+        ('ref_nature_actif', 'nature', 1),
+        ('ref_nature_actif', 'expertise_requise', 2),
+        ('ref_nature_actif', 'reference_id', 3),
+        ('ref_norme', 'code', 1),
+        ('ref_norme', 'abroge_par', 2),
+        ('ref_norme', 'acte_agrement', 3),
+        ('ref_norme', 'applicable_presentation', 4),
+        ('ref_norme', 'autorite', 5),
+        ('ref_norme', 'date_application', 6),
+        ('ref_norme', 'edition', 7),
+        ('ref_norme', 'en_vigueur', 8),
+        ('ref_norme', 'libelle_complet', 9),
+        ('ref_norme', 'libelle_court', 10),
+        ('ref_norme', 'piece_au_dossier', 11),
+        ('ref_reference', 'id', 1),
+        ('ref_reference', 'citation', 2),
+        ('ref_reference', 'genre', 3),
+        ('ref_reference', 'intitule', 4),
+        ('ref_reference', 'lu_le', 5),
+        ('ref_reference', 'lu_sur_piece', 6),
+        ('ref_reference', 'norme', 7),
+        ('ref_reference', 'page_piece', 8),
+        ('ref_reference', 'reference', 9),
+        ('ref_tableau_annexe', 'article', 1),
+        ('ref_tableau_annexe', 'libelle', 2),
+        ('ref_tableau_annexe', 'indicatif', 3)
+    ) o (referentiel, colonne, rang)
+  ON o.referentiel = t.referentiel AND o.colonne = t.colonne;
 
 GO
 

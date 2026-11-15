@@ -47,7 +47,7 @@ BEGIN
         WHERE a.id IN (SELECT id FROM inserted)
     )
     BEGIN
-        THROW 50045, 'Role refuse : une autre personne tient deja ce role sur cette entite pendant tout ou partie de la periode. Un role ne se partage pas dans le temps : fermer le mandat en cours par sa date de fin avant d''en ouvrir un autre. L''intervalle est ferme a gauche et ouvert a droite, si bien que 2 mandats consecutifs peuvent se toucher.', 1;
+        THROW 50045, N'Rôle refusé : une autre personne tient déjà ce rôle sur cette entité pendant tout ou partie de la période. Fermer d''abord son mandat par une date de fin ; le nouveau mandat peut commencer ce même jour.', 1;
     END
 END
 

@@ -335,6 +335,13 @@
                   "Value": "'bkRev4'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Montre l’étape des OD libres, hors des questions du programme'"
+                }
+              }
             }
           }
         }

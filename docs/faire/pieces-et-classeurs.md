@@ -13,6 +13,8 @@ chemin, et quelles autorisations cela demande. La mise en place est à
 |---|---|---|
 | Une pièce du client ou d'une filiale | Le site SharePoint du véhicule, bibliothèque « Dépôt du client », « Dossier permanent » ou « Dossier annuel » | Un raccourci par bibliothèque, `sp_<véhicule>_<bibliothèque>` |
 | Un classeur exporté de l'écran de révision | Le site SharePoint du cabinet, sous `Dossiers de travail/<client>/<arrêté>/` | Le raccourci `fec` |
+| Un classeur exporté de l'écran Référentiels | Le site SharePoint du cabinet, sous `Référentiels/`, dossier que la solution crée au premier export | Le raccourci `fec` |
+| Le modèle Word des livrables, le fichier d'un gabarit | Le site SharePoint du cabinet, sous `Modeles/`, dossier que vous créez et où vous déposez ces fichiers | Le raccourci `fec` |
 | Un livrable remis au client | Le site du véhicule, bibliothèque « Livrables » | Un raccourci `sp_<véhicule>_livrables`, si vous le créez |
 
 **Un site par véhicule, filiales comprises.** Les pièces d'une filiale se rangent dans le site du
@@ -50,7 +52,7 @@ ensuite à relire.
    du véhicule.
 2. Vous y déposez le fichier, comme dans n'importe quelle bibliothèque SharePoint, dans un
    sous-dossier si vous le souhaitez.
-3. De retour sur l'écran, vous tapez son nom dans **Nom du fichier déposé, sous-dossier
+3. Sur l'écran, vous tapez son nom dans **Nom du fichier déposé, sous-dossier
    facultatif**, par exemple `2026-06-30/releve.pdf`.
 4. **Rattacher la pièce** l'inscrit au dossier : la solution relit le fichier, calcule son
    empreinte, et l'enregistre avec sa nature, sa date, son déposant et son lien.
@@ -119,10 +121,20 @@ cabinet**, et l'écran rend un lien qui l'ouvre.
 
 **Un classeur exporté se modifie dans Excel, puis se réimporte.** Le réimport relit la version
 présente dans SharePoint, par le raccourci `fec`, et ses lignes entrent en base **par les mêmes
-procédures que la saisie à l'écran**. Un import ne contourne aucun contrôle.
+procédures que la saisie à l'écran**. Un import passe donc par chaque contrôle de la saisie.
 
 **Un dossier verrouillé s'exporte, et ne se réimporte pas.** L'export n'écrit rien dans le dossier ;
 le réimport, si.
+
+### Ce que l'écran Référentiels exporte
+
+| Le bouton | Le classeur déposé sous `Référentiels/` | Son réimport |
+|---|---|---|
+| « Exporter le classeur » | `referentiel_<table>.xlsx` : les lignes du référentiel choisi. Un nouvel export du même référentiel remplace le fichier | « Réimporter le classeur », avec un droit de modification sur ce référentiel. Seules les lignes qui changent s'écrivent ; le premier refus annule tout le réimport et nomme la ligne du classeur |
+| « Exporter les niveaux » | `niveaux_de_programme.xlsx` : les questions de cycle et les croix de leur niveau de programme | « Réimporter les niveaux », réservé à l'associé. Il pose le niveau de programme des questions cochées |
+
+Chaque réimport relit, par le raccourci `fec`, le dernier classeur déposé. Un classeur retiré du
+dossier est refusé, et le message dit de l'exporter de nouveau.
 
 ### Faut-il une licence Microsoft 365 ?
 

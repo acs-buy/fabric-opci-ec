@@ -33,8 +33,8 @@ table v_ecran_valeurs_arrete
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 738403bc-c4ca-4f5f-8651-143a77cb3b7c
 
-	/// « n immeubles du véhicule et de ses filiales »
-	measure 'Sous-titre grille des immeubles' = FORMAT ( CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE" ) + 0, "0" ) & " immeubles du véhicule et de ses filiales"
+	/// « n immeubles, véhicule et filiales », « immeuble » au singulier pour 0 et 1 (R9c, décision 92-1 du 26/10/2026 ; accord du nombre, R9d)
+	measure 'Sous-titre grille des immeubles' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE" ) + 0 RETURN FORMAT ( n, "0" ) & IF ( n <= 1, " immeuble", " immeubles" ) & ", véhicule et filiales"
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 8b34d854-6454-4f22-af4a-de4fa74cf911
 

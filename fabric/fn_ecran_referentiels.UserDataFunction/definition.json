@@ -1,0 +1,105 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/userDataFunction/definition/1.1.0/schema.json",
+  "runtime": "PYTHON",
+  "connectedDataSources": [
+    {
+      "alias": "Coffre",
+      "artifactId": "eceb5802-f9ae-4e0d-8237-b3b1586c992a",
+      "artifactType": "Lakehouse",
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
+    },
+    {
+      "alias": "DossierOPCI",
+      "artifactId": "fd9080bb-e3ae-4aab-bf09-edbfcc8606d1",
+      "artifactType": "SqlDbNative",
+      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
+    }
+  ],
+  "functions": [
+    {
+      "name": "ajouter_ligne",
+      "description": "Ajouter la ligne : une ligne neuve, copie de la ligne choisie, au code et au libell\u00E9 saisis ; refus en fran\u00E7ais sans droit de modification ou quand le code est d\u00E9j\u00E0 pris.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "ajouter_question_tenue",
+      "description": "Ajouter la question : une question sur la tenue de la comptabilit\u00E9, de niveau 2 ou 3, dans le cycle ou la phase choisi, au statut \u00E0 valider ; r\u00E9serv\u00E9 \u00E0 l\u0027associ\u00E9.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "changer_code",
+      "description": "Changer le code : le code de la ligne choisie devient le code saisi ; refus en fran\u00E7ais sans droit de modification ou quand une autre ligne emploie la ligne.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "ecarter_ligne",
+      "description": "\u00C9carter la ligne : la ligne choisie est mise hors d\u0027usage sans \u00EAtre supprim\u00E9e, avec son motif ; refus en fran\u00E7ais sans droit de modification ou quand la ligne est d\u00E9j\u00E0 \u00E9cart\u00E9e.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "ecarter_question",
+      "description": "\u00C9carter la question : la question choisie passe \u00E0 \u00E9cart\u00E9e, avec son motif ; r\u00E9serv\u00E9 \u00E0 l\u0027associ\u00E9.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "exporter_niveaux",
+      "description": "Exporter les niveaux : les questions de cycle et les croix de leur niveau de programme dans un classeur Excel, d\u00E9pos\u00E9 au dossier R\u00E9f\u00E9rentiels du site du cabinet ; l\u0027adresse du classeur dans le message.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "exporter_referentiel",
+      "description": "Exporter le classeur : les lignes du r\u00E9f\u00E9rentiel choisi dans un classeur Excel, d\u00E9pos\u00E9 au dossier R\u00E9f\u00E9rentiels du site du cabinet ; l\u0027adresse du classeur dans le message ; ni droit ni \u00E9tat.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "importer_niveaux",
+      "description": "R\u00E9importer les niveaux : le dernier classeur des niveaux d\u00E9pos\u00E9, relu par le raccourci du coffre, pose le niveau de programme des questions coch\u00E9es ; r\u00E9serv\u00E9 \u00E0 l\u0027associ\u00E9.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "importer_referentiel",
+      "description": "R\u00E9importer le classeur : le dernier classeur d\u00E9pos\u00E9 du r\u00E9f\u00E9rentiel choisi, relu par le raccourci du coffre ; seules les lignes qui changent s\u0027\u00E9crivent ; refus en fran\u00E7ais sans droit de modification ou ligne par ligne.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "modifier_valeur",
+      "description": "Modifier la valeur : la valeur saisie dans la colonne choisie de la ligne choisie du r\u00E9f\u00E9rentiel ; refus en fran\u00E7ais sans droit de modification ou quand la colonne ne se modifie pas.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "poser_seuil_vehicule",
+      "description": "Enregistrer le seuil du v\u00E9hicule : le seuil propre du v\u00E9hicule pour la limite choisie, sa date d\u0027effet et son motif ; refus en fran\u00E7ais sans droit de modification ou quand le texte fixe la valeur.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "rattacher_gabarit",
+      "description": "Rattacher le fichier : le fichier d\u00E9pos\u00E9 au dossier Modeles du site du cabinet, relu par le raccourci du coffre, rattach\u00E9 au mod\u00E8le de feuille choisi avec son empreinte ; refus en fran\u00E7ais d\u0027un fichier absent ou sans droit de modification.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "supprimer_ligne",
+      "description": "Supprimer la ligne : la ligne choisie est supprim\u00E9e quand aucune ligne ne l\u0027emploie ; refus en fran\u00E7ais sans droit de modification ou quand une autre ligne l\u0027emploie.",
+      "isPublicEndpointEnabled": false
+    },
+    {
+      "name": "valider_questions",
+      "description": "Valider les questions du cycle : les questions \u00E0 valider du cycle ou de la phase choisi passent \u00E0 valid\u00E9e ; r\u00E9serv\u00E9 \u00E0 l\u0027associ\u00E9.",
+      "isPublicEndpointEnabled": false
+    }
+  ],
+  "libraries": {
+    "public": [
+      {
+        "name": "fabric-user-data-functions",
+        "type": "PYPI",
+        "version": "1.0"
+      },
+      {
+        "name": "openpyxl",
+        "type": "PYPI",
+        "version": "3.1.5"
+      }
+    ],
+    "private": []
+  }
+}

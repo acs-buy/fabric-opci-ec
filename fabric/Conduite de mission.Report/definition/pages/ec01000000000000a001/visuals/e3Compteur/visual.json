@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "e3Compteur",
   "position": {
-    "x": 728,
+    "x": 519,
     "y": 841,
     "z": 57100,
     "height": 28,
-    "width": 824,
+    "width": 1033,
     "tabOrder": 57100
   },
   "visual": {

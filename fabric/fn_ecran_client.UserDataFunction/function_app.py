@@ -353,19 +353,22 @@ def modifier_client(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContex
                     denomination: str = "", siren: str = "", formeVehicule: str = "", formeSociale: str = "",
                     adresse1: str = "", adresse2: str = "", codePostal: str = "", ville: str = "", pays: str = "",
                     dirigeantNom: str = "", dirigeantQualite: str = "", contactNom: str = "", contactCourriel: str = "",
-                    contactTelephone: str = "", cloture: str = "", siteUrl: str = "") -> str:
+                    contactTelephone: str = "", cloture: str = "", siteUrl: str = "",
+                    opciProfessionnel: str = "") -> str:
     """Bouton « Enregistrer les modifications » de la fiche du dossier : pr_modifier_client.
     Le code ne change pas ; un champ vide reste inchange ; « - » efface un champ facultatif ; un lien SharePoint
-    fourni remplace le precedent."""
+    fourni remplace le precedent. opciProfessionnel (lot 12 de l'ecran 5, objet n° 202) : « oui », « non » ou « - »,
+    transmis tel quel, la base posant 1, 0 ou NULL et refusant toute autre valeur."""
     sql = ("EXEC dbo.pr_modifier_client @code=?, @denomination=?, @siren=?, @forme_vehicule=?, @forme_sociale=?, "
            "@adresse_1=?, @adresse_2=?, @code_postal=?, @ville=?, @pays=?, @dirigeant_nom=?, @dirigeant_qualite=?, "
-           "@contact_nom=?, @contact_courriel=?, @contact_telephone=?, @cloture=?, @site_url=?, @par=?")
+           "@contact_nom=?, @contact_courriel=?, @contact_telephone=?, @cloture=?, @site_url=?, @est_professionnel=?, @par=?")
     _qui(ctx)
     code = _choix(base, sql, code, _CLIENT_A_CHOISIR)
     r = _executer(base, sql,
                   (code, _vide(denomination), _vide(siren), _vide(formeVehicule), _vide(formeSociale), _vide(adresse1),
                    _vide(adresse2), _vide(codePostal), _vide(ville), _vide(pays), _vide(dirigeantNom), _vide(dirigeantQualite),
-                   _vide(contactNom), _vide(contactCourriel), _vide(contactTelephone), _vide(cloture), _vide(siteUrl), _qui(ctx)))
+                   _vide(contactNom), _vide(contactCourriel), _vide(contactTelephone), _vide(cloture), _vide(siteUrl),
+                   _vide(opciProfessionnel), _qui(ctx)))
     return r.get("message", "Informations mises à jour.")
 
 
@@ -584,7 +587,7 @@ def inscrire_piece(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClien
         _refuser(base, sql, "Champs obligatoires à remplir : %s." % ", ".join(manquants), (entite,), entite=entite)
     q = _vide(question)
     if q is not None and not _question_du_client(base, entite, q):
-        _refuser(base, sql, f"La question {q} n'appartient à aucun questionnaire de {entite}.", (entite,),
+        _refuser(base, sql, f"Pour {entite}, la question {q} n’appartient à aucun questionnaire.", (entite,),
                  entite=entite)
     nature = _code_nature(base, nature)
     d = _executer(base, "EXEC dbo.pr_resoudre_fichier_depot @entite=?, @fichier=?", (entite, fichier), entite=entite)
@@ -592,8 +595,8 @@ def inscrire_piece(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClien
         octets = coffre.connectToFiles().get_file_client(d["chemin_lecture"]).download_file().readall()
     except Exception:
         _refuser(base, sql,
-                 f"Le fichier « {fichier} » n'est pas dans la bibliothèque Dépôt du client de "
-                 f"{d.get('vehicule') or entite}. Vérifiez son nom et son sous-dossier.", (entite,), entite=entite)
+                 f"Pour {d.get('vehicule') or entite}, le fichier « {fichier} » n’est pas dans la bibliothèque Dépôt "
+                 f"du client. Vérifiez son nom et son sous-dossier.", (entite,), entite=entite)
     empreinte = hashlib.sha256(octets).hexdigest().upper()
     r = _executer(base, sql,
                   (entite, d["nom_fichier"], d["chemin_coffre"], empreinte, _vide(nature), _vide(arrete),
@@ -655,6 +658,13 @@ def _superviseur(base: fn.FabricSqlConnection, ctx, sql: str, superviseur: str, 
                  entite=entite)
 
 
+# LA DECISION VISEE, DITE ACCORDEE ET ACCENTUEE (R9, D6, textes n° 8, 9, 13 et 14, validation du 27/10/2026) : le
+# code de la decision part tel quel a la procedure ; la phrase de reussite dit « mission acceptée », « refusée »,
+# « maintenue » ou « rompue ». Un code hors de ces listes garde son ecriture en minuscules, comme avant R9.
+_MISSION_ACCEPTATION = {"ACCEPTEE": "acceptée", "REFUSEE": "refusée"}
+_MISSION_MAINTIEN = {"MAINTENU": "maintenue", "ROMPU": "rompue"}
+
+
 @udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
@@ -672,7 +682,8 @@ def approuver_acceptation(base: fn.FabricSqlConnection, ctx: fn.UserDataFunction
                            (entite, decision, _vide(motif), par),
                            "SELECT TOP 1 message_ecran FROM dbo.acceptation_mission WHERE entite=? ORDER BY cree_le DESC",
                            (entite,),
-                           f"Acceptation de {entite} : décision {decision.lower()} visée.")
+                           f"Décision d’acceptation visée pour {entite} : mission "
+                           f"{_MISSION_ACCEPTATION.get(decision.upper(), decision.lower())}.")
 
 
 @udf.context(argName="ctx")
@@ -690,7 +701,7 @@ def reprendre_acceptation(base: fn.FabricSqlConnection, ctx: fn.UserDataFunction
                            (entite, _vide(motif), par),
                            "SELECT TOP 1 message_ecran FROM dbo.acceptation_mission WHERE entite=? ORDER BY cree_le DESC",
                            (entite,),
-                           f"Acceptation de {entite} reprise ; le questionnaire se complète à nouveau.")
+                           f"Acceptation reprise pour {entite} ; le questionnaire se complète à nouveau.")
 
 
 # ----------------------------------------------------------------------------- l'arrete
@@ -841,7 +852,8 @@ def approuver_maintien(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCon
                            (entite, arreteConclu, decision, _vide(motif), par),
                            "SELECT TOP 1 message_ecran FROM dbo.maintien_mission WHERE entite=? AND arrete_conclu=? ORDER BY cree_le DESC",
                            (entite, arreteConclu),
-                           f"Maintien {arreteConclu[:4]} de {entite} : décision {decision.lower()} visée.")
+                           f"Décision de maintien {arreteConclu[:4]} visée pour {entite} : mission "
+                           f"{_MISSION_MAINTIEN.get(decision.upper(), decision.lower())}.")
 
 
 # ----------------------------------------------------------------------------- la voie du classeur

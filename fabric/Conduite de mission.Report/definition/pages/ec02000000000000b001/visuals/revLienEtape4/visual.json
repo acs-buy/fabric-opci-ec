@@ -335,6 +335,13 @@
                   "Value": "'bkRev5'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Montre l’étape de la conclusion et du visa des cycles, du visa des lots d’OD, de la conclusion et du visa de la revue'"
+                }
+              }
             }
           }
         }

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "e2dVoile",
   "position": {
-    "x": 704,
+    "x": 495,
     "y": 308,
     "z": 55200,
     "height": 244,
-    "width": 872,
+    "width": 1081,
     "tabOrder": 55200
   },
   "visual": {

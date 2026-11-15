@@ -19,6 +19,28 @@ CREATE TABLE [dbo].[ref_compte_entite] (
 
 GO
 
+
+CREATE   TRIGGER dbo.tr_ref_compte_entite_annexe_retard ON dbo.ref_compte_entite
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT entite, compte_entite, compte_modele FROM inserted
+        EXCEPT SELECT entite, compte_entite, compte_modele FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT entite, compte_entite, compte_modele FROM deleted EXCEPT SELECT entite, compte_entite, compte_modele FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'ref_compte_entite', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
+
+GO
+
 CREATE   TRIGGER dbo.tr_rattachement_meme_classe
 ON dbo.ref_compte_entite
 AFTER INSERT, UPDATE
@@ -81,28 +103,6 @@ BEGIN
     VALUES ('tr_ref_compte_entite_garde', @m, LEFT(CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), 200), SYSUTCDATETIME());
     SET @m = REPLACE(@m, N'%', N'%%');
     THROW 50074, @m, 1;
-END;
-
-GO
-
-
-CREATE   TRIGGER dbo.tr_ref_compte_entite_annexe_retard ON dbo.ref_compte_entite
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
-    ;WITH ch AS (
-        SELECT entite, compte_entite, compte_modele FROM inserted
-        EXCEPT SELECT entite, compte_entite, compte_modele FROM deleted
-        UNION ALL
-        SELECT * FROM (SELECT entite, compte_entite, compte_modele FROM deleted EXCEPT SELECT entite, compte_entite, compte_modele FROM inserted) d
-    ),
-    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch) q GROUP BY q.x, q.vehicule)
-    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
-    SELECT v.entite, SYSUTCDATETIME(), N'ref_compte_entite', SUM(x.n)
-    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
-    GROUP BY v.entite;
 END;
 
 GO

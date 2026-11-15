@@ -6,7 +6,7 @@
     "y": 110,
     "z": 50105,
     "height": 36,
-    "width": 620,
+    "width": 776,
     "tabOrder": 50105
   },
   "visual": {
@@ -52,7 +52,7 @@
             "columnCount": {
               "expr": {
                 "Literal": {
-                  "Value": "4L"
+                  "Value": "5L"
                 }
               }
             },

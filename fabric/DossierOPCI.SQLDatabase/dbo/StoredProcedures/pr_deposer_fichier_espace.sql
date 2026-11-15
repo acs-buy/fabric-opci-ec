@@ -1,4 +1,3 @@
-
 -- pr_deposer_fichier_espace : 1 refus
 -- DEPOSER UN FICHIER DANS L'ESPACE SHAREPOINT D'UN VEHICULE, classe par entite legale.
 -- Regle du 28/09/2026 : tout fichier se depose dans SharePoint, et le coffre ne le
@@ -33,6 +32,16 @@ BEGIN
         THROW 50950, N'Entité inconnue.', 1;
     IF @bibliotheque NOT IN (N'Dépôt du client', N'Dossier permanent', N'Dossier annuel', N'Livrables')
         THROW 50951, N'La bibliothèque est l''une des 4 de l''espace : Dépôt du client, Dossier permanent, Dossier annuel, Livrables.', 1;
+    -- 50616, D1 (15/11/2026) : action 33, Livrables : chef de mission du dossier ou du vehicule, garde 50616 reprise. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND @bibliotheque = N'Livrables' AND NOT EXISTS (SELECT 1 FROM dbo.role_mission r WHERE (r.connexion = @par OR r.personne = @par) AND r.role = 'CHEF_MISSION' AND r.du <= CAST(SYSUTCDATETIME() AS DATE) AND (r.au IS NULL OR r.au > CAST(SYSUTCDATETIME() AS DATE)) AND (r.entite = @entite OR r.entite IN (SELECT p.vehicule FROM dbo.v_perimetre_vehicule p WHERE p.entite = @entite AND p.vehicule <> @entite)))
+        THROW 50616, N'Validation refusée : cette personne n''a pas, sur cette entité, le rôle de chef de mission.', 1;
+    -- 51325, D1 (15/11/2026) : action 33, Depot du client et dossiers : equipe du dossier ou du vehicule. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND @bibliotheque <> N'Livrables' AND dbo.fn_membre_equipe(@entite, NULL, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51325, N'Action refusée : seule l''équipe du dossier peut déposer un fichier dans l''espace de ce dossier.', 1;
     IF NULLIF(LTRIM(RTRIM(@fichier)), N'') IS NULL OR @fichier LIKE N'%/%' OR @fichier LIKE N'%\%'
         THROW 50952, N'Le nom du fichier est obligatoire, et il ne porte aucun séparateur de dossier.', 1;
     IF NULLIF(@contenu_base64, N'') IS NULL

@@ -78,28 +78,6 @@ END
 GO
 
 
-CREATE   TRIGGER dbo.tr_lot_ecritures_annexe_retard ON dbo.lot_ecritures
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
-    ;WITH ch AS (
-        SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM inserted
-        EXCEPT SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM deleted
-        UNION ALL
-        SELECT * FROM (SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM deleted EXCEPT SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM inserted) d
-    ),
-    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch WHERE ch.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')) q GROUP BY q.x, q.vehicule)
-    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
-    SELECT v.entite, SYSUTCDATETIME(), N'lot_ecritures', SUM(x.n)
-    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
-    GROUP BY v.entite;
-END;
-
-GO
-
-
 -- LA PEREMPTION D'UNE SYNTHESE, que le point O1 exige : un lot vise
 -- APRES la proposition change l'actif net, donc la synthese ne vaut
 -- plus. Le declencheur la marque perimee.
@@ -120,6 +98,28 @@ BEGIN
     FROM dbo.synthese_proposee s
     JOIN inserted i ON i.entite = s.entite AND i.arrete = s.arrete
     WHERE s.perime_le IS NULL AND s.propose_le < SYSUTCDATETIME();
+END;
+
+GO
+
+
+CREATE   TRIGGER dbo.tr_lot_ecritures_annexe_retard ON dbo.lot_ecritures
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM inserted
+        EXCEPT SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM deleted EXCEPT SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch WHERE ch.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'lot_ecritures', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
 END;
 
 GO

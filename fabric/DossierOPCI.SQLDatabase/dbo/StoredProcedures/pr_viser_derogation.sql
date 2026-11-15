@@ -19,9 +19,9 @@ BEGIN
 
     BEGIN TRY
         IF @entite IS NULL
-            THROW 50055, 'Visa refuse : cette derogation n''existe pas.', 1;
+            THROW 50055, N'Visa refusé : cette dérogation n''existe pas. Choisir une dérogation existante.', 1;
         IF @levee IS NOT NULL
-            THROW 50055, 'Visa refuse : cette derogation est deja levee. Une derogation levee ne se vise plus.', 1;
+            THROW 50055, N'Visa refusé : cette dérogation est déjà levée et ne se vise plus. Choisir une dérogation active.', 1;
 
         DECLARE @ref VARCHAR (30) = CAST(@derogation_id AS VARCHAR (30));
         EXEC dbo.pr_garde_visa 'DEROGATION', @ref, @decision, @decide_par, @motif;

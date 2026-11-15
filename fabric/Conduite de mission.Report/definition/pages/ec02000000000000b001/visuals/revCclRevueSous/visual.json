@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revCclRevueSous",
   "position": {
-    "x": 210,
-    "y": 1071,
+    "x": 249,
+    "y": 1011,
     "z": 23200,
     "height": 24,
     "width": 400,
@@ -63,7 +63,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5B6B7D'"
+                      "Value": "'#2B4666'"
                     }
                   }
                 }

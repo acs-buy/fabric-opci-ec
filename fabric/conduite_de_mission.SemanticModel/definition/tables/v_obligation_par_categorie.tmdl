@@ -3,7 +3,7 @@ table v_obligation_par_categorie
 	lineageTag: 7c311389-3181-41bf-98bd-8333524c078e
 
 	/// gris quand [Blocage decision] n’est pas « conditions réunies » ou quand [Avis categorie cochee] n’est pas vide
-	measure 'Fond enregistrer la decision' = IF ( [Blocage decision] <> "conditions réunies" || [Avis categorie cochee] <> "", "#D9DFE6", "#0F5C8C" )
+	measure 'Fond enregistrer la decision' = VAR f = ( IF ( [Blocage decision] <> "conditions réunies" || [Avis categorie cochee] <> "", "#D9DFE6", "#0F5C8C" ) ) RETURN IF ( NOT ISBLANK ( [Entite selectionnee] ) && ISBLANK ( [Associe du vehicule connecte] ), "#D9DFE6", f )
 		displayFolder: Ecran 4 Arrete
 		lineageTag: b771c94e-fbbd-4d8e-bb48-f4bf32391807
 

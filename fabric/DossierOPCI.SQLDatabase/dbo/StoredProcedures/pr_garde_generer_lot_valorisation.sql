@@ -1,4 +1,3 @@
-
 -- pr_garde_generer_lot_valorisation : 1 refus
 -- ------------------------------------------------------------------ n° 25 : la garde de la generation du lot
 -- Appelee par fn_valorisation.generer_lot_valorisation dans sa transaction, avant d'ecrire la feuille et le lot : les
@@ -7,7 +6,8 @@
 -- est refuse par la 2e garde.
 CREATE   PROCEDURE dbo.pr_garde_generer_lot_valorisation
     @entite VARCHAR (20),
-    @arrete VARCHAR (20)
+    @arrete VARCHAR (20),
+    @par    NVARCHAR (400) = NULL   -- 51318, D1 (15/11/2026) : celui qui clique
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -27,6 +27,11 @@ BEGIN
         THROW 50795, N'La garde de la génération se prend dans la transaction de la génération : aucune transaction n''est ouverte.', 1;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND arrete = @arrete)
         THROW 50061, N'Génération refusée : cet arrêté n''existe pas au référentiel pour cette entité.', 1;
+    -- 51318, D1 (15/11/2026) : action 25, viseur compris (decision 3). Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51318, N'Action refusée : seule l''équipe du dossier peut générer le lot de valorisation de ce dossier.', 1;
     EXEC dbo.pr_e3_verrouiller @entite = @entite;
     DECLARE @res NVARCHAR (255) = N'valorisation:' + CAST(@entite AS NVARCHAR (20)) + N'|' + CAST(@arrete AS NVARCHAR (20)), @rc INT;
     EXEC @rc = sp_getapplock @Resource = @res, @LockMode = 'Exclusive', @LockOwner = 'Transaction', @LockTimeout = 120000;

@@ -3,11 +3,11 @@
   "name": "valoRetPieceListe",
   "position": {
     "x": 204,
-    "y": 1018,
-    "z": 39825,
+    "y": 1069,
+    "z": 39315,
     "height": 42,
     "width": 417,
-    "tabOrder": 39825
+    "tabOrder": 39315
   },
   "visual": {
     "visualType": "slicer",

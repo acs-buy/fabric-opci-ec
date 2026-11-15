@@ -3,11 +3,11 @@
   "name": "valoRetValeur",
   "position": {
     "x": 652,
-    "y": 1013,
-    "z": 39875,
+    "y": 1064,
+    "z": 39365,
     "height": 36,
     "width": 262,
-    "tabOrder": 39875
+    "tabOrder": 39365
   },
   "visual": {
     "visualType": "textSlicer",

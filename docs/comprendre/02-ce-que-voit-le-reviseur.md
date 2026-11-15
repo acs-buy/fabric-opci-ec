@@ -27,9 +27,9 @@ Toujours la même, quel que soit le dossier ouvert.
 | La zone | Ce qu'elle porte |
 |---|---|
 | **L'en-tête** | Le cabinet, le client sélectionné, l'exercice |
-| **Les onglets** | Les deux écrans : conduite de mission, et révision |
+| **Les onglets** | Les 5 écrans : Client et Acceptation, Révision, Valorisation, Arrêté, Référentiels |
 | **La bande d'indicateurs** | Cinq compteurs, qui donnent l'état du cabinet en un coup d'œil |
-| **La barre des étapes** | Les cinq temps du dossier, de la création à l'arrêté |
+| **La barre des étapes** | Les étapes de l'écran ouvert ; à l'écran Client et Acceptation, les 5 temps du dossier, de la création à l'arrêté |
 | **La zone de travail** | Le détail de l'étape ouverte |
 
 ![L'en-tête, les cinq indicateurs et la barre des étapes](../../captures/conduite-indicateurs.png)
@@ -38,7 +38,7 @@ Toujours la même, quel que soit le dossier ouvert.
 
 ### Les cinq indicateurs de la bande
 
-Chacun compte ce qui reste ouvert.
+Ce sont les 5 cartes de l'écran Client et Acceptation.
 
 | L'indicateur | Ce qu'il compte |
 |---|---|
@@ -46,7 +46,7 @@ Chacun compte ce qui reste ouvert.
 | Acceptations à faire | Les dossiers dont l'acceptation n'est pas achevée |
 | Maintiens à faire | Les maintiens de mission attendus à la fin d'un arrêté |
 | Arrêtés ouverts | Les arrêtés en cours, tous dossiers confondus |
-| Cycles à valider | Les cycles de révision qui attendent une conclusion |
+| Pièces attendues | Les pièces attendues des clients : les pièces fournies, et les pièces obligatoires qui manquent ; une pièce facultative non fournie n'y entre pas |
 
 Sous les indicateurs, la liste des clients porte chaque véhicule et ses filiales, avec l'état de
 l'acceptation et du maintien pour chacun.
@@ -86,7 +86,8 @@ de rôles, l'acceptation, les maintiens par exercice et les arrêtés.*
 Le périmètre du véhicule. Ajouter une filiale, la modifier, la supprimer.
 
 **La suppression est refusée si la filiale porte des données de mission.** Le refus est motivé, et
-il vient de la base. Chaque changement de périmètre est tracé dans un journal.
+il vient de la base. Chaque ajout, modification ou suppression d'une filiale s'inscrit en base dans
+la table `journal_perimetre` ; aucune page du rapport n'affiche ce journal.
 
 ![Le périmètre du véhicule](../../captures/maquettes/filiales-liste.png)
 
@@ -101,7 +102,8 @@ il vient de la base. Chaque changement de périmètre est tracé dans un journal
 La grille des questions d'acceptation, avec pour chacune sa section, sa référence, son énoncé et sa
 réponse.
 
-**La réponse est enregistrée au clic**, sans bouton de validation.
+**La réponse s'enregistre au bouton « Valider la réponse »**, pour la question choisie dans la
+grille : la réponse, le motif quand elle est NA, et un commentaire. Une réponse vide est refusée.
 
 En dessous, les pièces justificatives déposées, avec leur nature, leur date de dépôt et leur
 déposant.
@@ -116,7 +118,7 @@ et la base le refuse dans 3 cas :
 |---|---|
 | Le dossier de l'arrêté est verrouillé | « Le dossier de l'arrêté du 31/12/2025 est visé et verrouillé : la pièce ne s'en retire plus. » |
 | La pièce fonde une donnée : des écritures, une expertise, un mouvement d'actif, un rapport annuel, un accord écrit, une feuille de travail | « La pièce fonde une expertise : elle ne se retire pas du dossier. » |
-| La pièce satisfait une pièce obligatoire d'une feuille de travail déjà conclue | « La pièce fonde la conclusion de la feuille de travail VAL275-2025-12-31 : elle ne se retire pas du dossier. » |
+| La pièce satisfait une pièce obligatoire d'une feuille de travail déjà conclue | « La pièce fonde la conclusion de la feuille de travail DEM-VALO-OMEGA-OPCI-20251231 : elle ne se retire pas du dossier. » |
 
 La liste des pièces dit, pour chaque rattachement, si le retrait est possible ou la raison qui
 l'empêche : c'est le texte du refus. Le fichier reste dans SharePoint ; le retrait est tracé, et la
@@ -157,18 +159,18 @@ distinctes :
 
 La réouverture commence par le dernier arrêté clos du client : un arrêté antérieur ne se rouvre
 qu'une fois les arrêtés postérieurs rouverts. Avant de décider, le chef de mission lit, ligne par
-ligne, ce que l'accord fera :
+ligne, l'état d'aujourd'hui et ce que l'accord fera :
 
-| Ce que touche la réouverture | Après l'accord |
+| Ce que touche la réouverture | Après la réouverture |
 |---|---|
 | Visa de clôture | renvoyé ; le visa d'origine demeure |
 | Statut de l'arrêté | Ouvert |
-| Documents produits | tous périmés, avec le motif de la demande |
-| Forme du rapport de l'expert-comptable | à arrêter de nouveau |
-| Rapport client | la dernière publication reste en ligne jusqu'à la suivante |
-| Verrou du dossier et revue | le verrou est levé s'il est posé ; la revue est renvoyée si elle est visée |
+| Documents produits | les documents en vigueur passent périmés, avec le motif ; « aucun à périmer » quand aucun n'est en vigueur |
+| Forme de l'attestation | « à arrêter de nouveau » si elle est arrêtée ; « inchangée » sinon |
+| Rapport client | la dernière publication est maintenue jusqu'à la suivante ; « inchangé » sans publication |
+| Verrou et revue | le verrou est levé s'il est posé ; la revue est renvoyée si elle est visée ; « inchangés » sinon |
 | Maintien, écritures, lots | inchangés |
-| Copies déposées chez le client | marquées périmées, et listées à l'étape des livrables |
+| Copies chez le client | marquées périmées ; « aucune copie chez le client » sans copie |
 
 La base tient la règle quel que soit le chemin : un renvoi du visa de clôture qui ne correspond à
 aucune demande en attente de son proposant est refusé, même inscrit directement dans la table des
@@ -245,6 +247,95 @@ porteurs, souscriptions du 31/12/2024 exclu au 31/12/2025 inclus », « annexe d
 
 ---
 
+## L'écran Valorisation
+
+**Quelle valeur retenir pour chaque actif à l'arrêté, et quelles écritures en découlent ?**
+
+L'écran travaille sur le véhicule et l'arrêté des sélecteurs. Il compte 5 étapes : 1 Arrêter les
+valeurs (immeubles, comptes courants, instruments financiers), 2 Lire les différences, 3 Valoriser
+les titres, 4 Générer les écritures, 5 Contrôler la balance et le groupe (balance des comptes,
+contrôles du groupe, rationalisation et synthèse). L'étape 2 n'a aucun bouton qui écrit.
+
+| Étape | Le bouton | Ce qu'il écrit | Qui |
+|---|---|---|---|
+| 1, immeubles | Enregistrer l'expertise | La valeur d'expertise de l'immeuble choisi, et le rapport choisi parmi les rapports déposés | Équipe du dossier |
+| 1, immeubles | Proposer la valeur retenue | La valeur retenue de l'actif, sa source, sa pièce et le motif de l'écart, soumise au visa | Équipe du dossier |
+| 1, immeubles | Viser la valeur, Renvoyer la valeur | Le visa de la valeur retenue ; le renvoi exige un motif | Chef de mission, autre que le proposant |
+| 1, immeubles | Exporter le classeur | Le classeur des valeurs du véhicule et de ses filiales, déposé au site du cabinet | Équipe du dossier (51304) |
+| 1, immeubles | Réimporter le classeur | Les valeurs du classeur déposé, ligne à ligne ; une ligne refusée est citée | Équipe du dossier |
+| 1, comptes courants | Enregistrer la révision | Le montant révisé de l'avance en compte courant choisie, avec son motif | Équipe du dossier |
+| 1, instruments | Enregistrer la valeur | La valeur actuelle de l'instrument financier de classe 3 choisi, sa source et sa pièce | Équipe du dossier |
+| 3 | Enregistrer le cours | La quantité et le cours du titre inscrit au compte 256 ou 258, avec sa source | Équipe du dossier |
+| 4 | Générer le lot | Les différences d'estimation des actifs de l'entité, en lot proposé au visa du chef de mission | Équipe du dossier (51318) |
+| 4 | Reprendre l'écart du 275 | Le lot de reprise du compte 275 du véhicule, proposé au visa du chef de mission | Équipe du dossier (51320) |
+| 4 | Annuler le lot | Le rejet du lot proposé choisi, avec son motif | Équipe du dossier du lot (51321) |
+| 4 | Créer la dérogation | Une dérogation motivée sur la feuille de valorisation ou des participations, qui attend le visa du chef de mission | Équipe du dossier |
+| 5, balance | Marquer le compte revu | L'état revu du compte choisi, rattaché à une feuille de travail | Équipe du dossier |
+| 5, groupe | Passer les écritures miroir | Un lot d'écritures miroir par entité, pour les flux intragroupe qui restent à passer ; chaque lot attend le visa du chef de mission | Équipe du dossier |
+| 5, synthèse | Proposer la synthèse | La synthèse de l'arrêté, soumise au visa ; refusée tant qu'un lot attend son visa ou qu'un contrôle ne passe pas | Équipe du dossier (51319) |
+| 5, synthèse | Viser la synthèse, Renvoyer la synthèse | Le visa de la synthèse ; le renvoi exige un motif | Chef de mission |
+
+« Équipe du dossier » : la personne qui clique tient un rôle en cours sur le dossier, ou sur le
+véhicule qui détient la filiale. Hors de l'équipe, la base refuse sous le numéro indiqué, à défaut
+sous le numéro 50700. Voir plus bas, la séparation des fonctions.
+
+---
+
+## L'écran Arrêté
+
+**Les limites réglementaires sont-elles conclues, la valeur liquidative publiée et la distribution
+décidée, avant la validation pour le client ?**
+
+L'écran compte 4 étapes : 1 Ratios réglementaires (la grille des 18 limites de l'arrêté, puis le
+calcul et la conclusion de la limite choisie), 2 Valeur liquidative, 3 Distribution annuelle (la
+base et le visa par catégorie, puis la décision de l'assemblée), 4 Passer à la validation.
+L'étape 3 porte la mention « sans objet » hors de l'arrêté annuel. L'étape 4 n'écrit rien : son
+bouton « Ouvrir les Livrables » ouvre l'étape 6 de la Révision, où la validation pour le client se
+pose.
+
+| Étape | Le bouton | Ce qu'il écrit | Qui |
+|---|---|---|---|
+| 1 | Conclure la limite | La conclusion de la limite choisie à l'arrêté | Équipe du dossier (50700) |
+| 2 | Publier la VL | La publication de la valeur liquidative calculée de l'arrêté ; elle se vise, elle ne se renvoie pas (50101) | Associé signataire |
+| 3 | Proposer la base | La base proposée de la catégorie choisie, et sa source | Préparateur du véhicule (50814) |
+| 3 | Viser la catégorie, Renvoyer la catégorie | Le visa de la base proposée ; le renvoi exige un motif | Associé signataire (50051) |
+| 3 | Enregistrer la décision | La décision de l'assemblée pour la catégorie choisie : son montant et sa date | Associé du véhicule (51323) |
+
+---
+
+## L'écran Référentiels
+
+**Quels référentiels le cabinet tient-il, et quelles questions de référence restent à valider ?**
+
+L'écran porte sur les référentiels du cabinet, et non sur un dossier ; seul le seuil propre à un
+véhicule vise un véhicule. Il compte 3 étapes : 1 Voir l'inventaire (les référentiels du cabinet
+par domaine, et la fiche du référentiel choisi), 2 Mettre à jour un référentiel, en 2 volets, « Mis
+à jour par le cabinet » et « Fixés par un texte », 3 Valider les questions de référence. L'étape 1
+n'écrit rien : « Modifier le référentiel » et « Consulter le référentiel » ouvrent l'un ou l'autre
+volet de l'étape 2.
+
+| Étape | Le bouton | Ce qu'il écrit | Qui |
+|---|---|---|---|
+| 2, cabinet | Modifier la valeur | La nouvelle valeur dans la colonne choisie de la ligne choisie | Teneur du référentiel (50859) |
+| 2, cabinet | Ajouter la ligne | Une ligne copiée de la ligne choisie, sous le code et le libellé saisis | Teneur (50859) |
+| 2, cabinet | Changer le code | Le nouveau code de la ligne choisie | Teneur (50859) |
+| 2, cabinet | Écarter la ligne | La mise hors d'usage de la ligne choisie, sans la supprimer, avec un motif | Teneur (50859) |
+| 2, cabinet | Supprimer la ligne | La suppression de la ligne choisie, si aucune autre donnée de la base ne l'emploie (50844) | Teneur (50859) |
+| 2, cabinet | Exporter le classeur | Le classeur du référentiel choisi, déposé au site du cabinet | Teneur (51324) |
+| 2, cabinet | Réimporter le classeur | Les lignes du référentiel, relues dans le dernier classeur déposé | Teneur (50908) |
+| 2, cabinet | Rattacher le fichier | Le fichier nommé, déposé au dossier Modèles, rattaché à la ligne choisie | Associé (50908) |
+| 2, texte | Enregistrer le seuil du véhicule | Le seuil de la limite choisie pour le véhicule choisi, sa date d'effet et son motif | Associé (50859) |
+| 3 | Valider les questions du cycle | La validation des questions à auditer du cycle ou de la phase choisi | Associé (50875) |
+| 3 | Écarter la question | L'écart de la question choisie, avec un motif | Associé (50875) |
+| 3 | Ajouter la question | Une question sur la tenue de la comptabilité, au cycle ou à la phase choisi, avec son sujet et son niveau | Associé (50875) |
+| 3 | Exporter les niveaux | Le classeur des niveaux de programme, déposé au site du cabinet | Associé ou réviseur (51324) |
+| 3 | Réimporter les niveaux | Les niveaux de programme, relus dans le dernier classeur déposé | Associé (50908) |
+
+Le teneur d'un référentiel est l'associé ; pour les questions de révision et de mission, l'associé
+ou le réviseur. Sur cet écran, un mandat en cours sur un dossier quelconque suffit.
+
+---
+
 ## Les quatre natures d'action, et où l'écran les montre
 
 Un retard n'appelle pas la même décision selon sa cause. L'écran distingue les quatre.
@@ -296,6 +387,37 @@ Ce que vous décidez : revoir un travail avant de le viser.
 
 Ce refus n'est pas posé par l'écran. Il est posé par la base de données. Un utilisateur qui
 appellerait directement la fonction, sans passer par l'écran, se verrait opposer le même refus.
+
+### Le rôle de la personne qui clique
+
+Chaque bouton qui écrit transmet à la base l'adresse de connexion de la personne qui clique. La
+base juge cette adresse avant toute écriture. Deux fonctions de la base portent la règle :
+
+| La fonction | Ce qu'elle vérifie |
+|---|---|
+| `fn_membre_equipe` | L'adresse tient l'un des 4 rôles ASSOCIE, CHEF_MISSION, PREPARATEUR ou REVISEUR, par un mandat en cours au jour de l'action (date UTC), sur l'entité du dossier ou sur le véhicule qui la détient |
+| `fn_peut_viser_nature` | La personne tient, sur l'entité et à la date, un rôle habilité à viser la nature en cause, selon la table `role_nature_visa` |
+
+Les refus de ce contrôle portent les numéros 51300 à 51325. Ils refusent l'action à qui n'est pas
+de l'équipe du dossier, sauf 3 :
+
+| Le refus | L'action | Réservée à |
+|---|---|---|
+| 51322 | « Reprendre » une acceptation refusée (écran Client et Acceptation, temps 4) | Qui peut viser l'acceptation : l'associé |
+| 51323 | « Enregistrer la décision » de distribution (écran Arrêté, étape 3) | L'associé du véhicule |
+| 51324 | Le dépôt du classeur d'un référentiel ou des niveaux de programme (écran Référentiels) | Le teneur du référentiel |
+
+Au rapport, les boutons des actions de ce contrôle passent au gris selon 3 mesures du modèle
+`conduite_de_mission`, table `role_mission`, calculées sur la personne connectée :
+
+| La mesure | Ce qu'elle rend | Le bouton grisé |
+|---|---|---|
+| `Connecte hors equipe du dossier` | 1 quand la personne connectée ne tient aucun des 4 rôles sur l'entité choisie, ni sur le véhicule qui la détient | Les boutons des actions réservées à l'équipe, et les 2 boutons d'export de l'écran Référentiels, par leur mesure de fond |
+| `Viseur acceptation connecte` | L'adresse de la personne connectée si elle peut viser l'acceptation du client choisi ; vide sinon | « Reprendre » |
+| `Associe du vehicule connecte` | L'adresse de la personne connectée si elle est associée du véhicule choisi ; vide sinon | « Enregistrer la décision » |
+
+Le gris est une couleur de fond, posée par une mesure : le bouton gris reste cliquable, et le refus
+vient alors en français.
 
 **La conséquence pratique :** griser un bouton évite un clic inutile, et ne protège rien. La
 protection est en base.

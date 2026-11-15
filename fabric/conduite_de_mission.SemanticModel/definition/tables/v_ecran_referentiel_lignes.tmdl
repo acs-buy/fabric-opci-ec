@@ -1,0 +1,180 @@
+/// Écran 5, objet n° 43 : table du segment « Ligne » et des lignes modifiées de l’étape 1 ; relation referentiel → v_ecran_referentiel_choix[table_nom]
+table v_ecran_referentiel_lignes
+	lineageTag: 76b92a89-9e7f-4e82-bbec-bda4f8a7be42
+
+	/// n° 93, « n lignes » des lignes du référentiel choisi dont modifie_le n’est pas vide, « aucune ligne » sinon (titre de rangée « Lignes modifiées depuis l’import »)
+	measure 'Sous-titre lignes modifiees' = VAR r = [Referentiel choisi] VAR k = COUNTROWS ( FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r && NOT ISBLANK ( v_ecran_referentiel_lignes[modifie_le] ) ) ) + 0 RETURN IF ( k > 0, FORMAT ( k, "0" ) & IF ( k < 2, " ligne", " lignes" ), "aucune ligne" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: b0b20f98-fb62-45b3-957f-32c391a686d2
+
+	/// n° 109, VAR r = [Referentiel choisi], VAR s = SELECTEDVALUE ( v_ecran_referentiel_lignes[ligne] ), VAR k = MAXX ( FILTER ( ALL ( v_ecran_referentiel_lignes ), [referentiel] = r && [ligne] = s ), [cle] ) : k, la clé de la ligne que le segment désigne, quand une ligne du référentiel r porte la désigna
+	measure 'Ligne du referentiel choisie' = VAR r = [Referentiel choisi] VAR lignes = FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r ) VAR s = SELECTEDVALUE ( v_ecran_referentiel_lignes[ligne] ) VAR k = MAXX ( FILTER ( lignes, v_ecran_referentiel_lignes[ligne] = s ), v_ecran_referentiel_lignes[cle] ) VAR p = MINX ( lignes, v_ecran_referentiel_lignes[ligne] ) RETURN IF ( ISBLANK ( k ), MAXX ( FILTER ( lignes, v_ecran_referentiel_lignes[ligne] = p ), v_ecran_referentiel_lignes[cle] ), k )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: a98d157d-aa44-4e70-abba-927747dc147a
+
+	/// n° 110, « libellé, ligne désignation » : [Libelle du referentiel choisi] et la désignation (ligne) de la ligne de clé [Ligne du referentiel choisie] ; « libellé, aucune ligne » sans ligne ; carte pleine largeur sous le titre du bloc « Actions sur le référentiel », à la hauteur de son plus long cas
+	measure 'Sous-titre des actions' = VAR r = [Referentiel choisi] VAR k = [Ligne du referentiel choisie] VAR tl = FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r && v_ecran_referentiel_lignes[cle] = k ) VAR lb = [Libelle du referentiel choisi] VAR d = MAXX ( tl, v_ecran_referentiel_lignes[ligne] ) RETURN IF ( ISBLANK ( r ), "", IF ( ISBLANK ( d ) || d = "", lb & ", aucune ligne", lb & ", ligne " & d ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: f57a016d-11bd-4212-97e2-31ecea976d5d
+
+	/// n° 111, VAR r = [Referentiel choisi], VAR c = [Ligne du referentiel choisie] : « employée par » suivi de employee_par quand emploi > 0, « aucun emploi relevé » sinon, « aucune ligne choisie » sans ligne (titre de rangée « Écarter ou supprimer la ligne »)
+	measure 'Emploi de la ligne choisie' = VAR r = [Referentiel choisi] VAR k = [Ligne du referentiel choisie] VAR tl = FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r && v_ecran_referentiel_lignes[cle] = k ) VAR n = MAXX ( tl, v_ecran_referentiel_lignes[emploi] ) VAR e = MAXX ( tl, v_ecran_referentiel_lignes[employee_par] ) VAR g = LEN ( e ) - LEN ( SUBSTITUTE ( e, "·", "" ) ) + 1 RETURN IF ( ISBLANK ( k ) || ISEMPTY ( tl ), "aucune ligne choisie", IF ( n > 0, IF ( LEN ( "employée par " & e ) <= 66, "employée par " & e, "employée " & FORMAT ( n, "0" ) & " fois (" & FORMAT ( g, "0" ) & IF ( g > 1, " genres d’emploi)", " genre d’emploi)" ) ), "aucun emploi relevé" ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 83adac51-ad46-4267-87de-8fb749d696dc
+
+	/// n° 113, « Aucune ligne dans ce référentiel » quand le référentiel choisi n’a pas de ligne (carte posée dans la liste du référentiel, à la place de ses rangées)
+	measure 'Absence de ligne du referentiel' = VAR r = [Referentiel choisi] VAR n = COUNTROWS ( FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r ) ) + 0 RETURN IF ( NOT ISBLANK ( r ) && n = 0, "Aucune ligne dans ce référentiel", "" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: c5111353-6075-4b77-8047-dddcd2936719
+
+	/// n° 121, vide quand l’action est permise ou que la sélection est vide ; sinon la raison : « seuil propre au véhicule, posé par « Enregistrer le seuil du véhicule » » (action_propre posée, ref_ratio_vehicule) ; « fixé par un texte, non modifiable » (mode_tenue TEXTE du référentiel choisi) ; « adresse 
+	measure 'Blocage modifier la valeur' = VAR r = [Referentiel choisi] VAR tc = FILTER ( ALL ( v_ecran_referentiel_choix ), v_ecran_referentiel_choix[table_nom] = r ) VAR a = MAXX ( tc, v_ecran_referentiel_choix[actions_de_ligne] ) VAR f = MAXX ( tc, v_ecran_referentiel_choix[forme_cle] ) VAR m = MAXX ( tc, v_ecran_referentiel_choix[mode_tenue] ) VAR ap = MAXX ( tc, v_ecran_referentiel_choix[action_propre] ) VAR te = [Teneur connecte] VAR k = [Ligne du referentiel choisie] VAR tl = FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r && v_ecran_referentiel_lignes[cle] = k ) VAR une = NOT ISBLANK ( k ) && NOT ISEMPTY ( tl ) VAR n = MAXX ( tl, v_ecran_referentiel_lignes[emploi] ) VAR ep = MAXX ( tl, v_ecran_referentiel_lignes[employee_par] ) VAR ls = MAXX ( tl, v_ecran_referentiel_lignes[lecture_seule] ) VAR dt = MAXX ( tl, v_ecran_referentiel_lignes[ecartee_le] ) VAR col = [Colonne du referentiel choisie] VAR mo = CALCULATE ( MAX ( v_ecran_referentiel_colonnes[modifiable] ), FILTER ( ALL ( v_ecran_referentiel_colonnes ), v_ecran_referentiel_colonnes[referentiel] = r && v_ecran_referentiel_colonnes[colonne] = col ) ) RETURN IF ( ISBLANK ( r ), "", IF ( m = "TEXTE", "fixé par un texte, non modifiable", IF ( NOT ISBLANK ( ap ) && ap <> "", "seuil propre au véhicule, posé par «" & UNICHAR ( 8239 ) & "Enregistrer le seuil du véhicule" & UNICHAR ( 8239 ) & "»", IF ( te = "", "aucun droit de modification", SWITCH ( TRUE (), r = "ref_parametre" && col IN { "libelle", "description" }, "seule la valeur se modifie : les codes des paramètres sont fixés par l’outil", NOT ISBLANK ( col ) && col <> "" && mo = 0, "colonne calculée ou citation d’un texte", une && ls = 1, "adresse d’installation, non modifiable", "" ) ) ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 69be2de0-6ac9-4514-93bb-f523a2fd3b5c
+
+	/// n° 123, vide quand l’action est permise ou que la sélection est vide ; sinon la raison : « seuil propre au véhicule, posé par « Enregistrer le seuil du véhicule » » (action_propre posée, ref_ratio_vehicule) ; « fixé par un texte, non modifiable » ; « seule la valeur se modifie : les codes des paramè
+	measure 'Blocage changer le code' = VAR r = [Referentiel choisi] VAR tc = FILTER ( ALL ( v_ecran_referentiel_choix ), v_ecran_referentiel_choix[table_nom] = r ) VAR a = MAXX ( tc, v_ecran_referentiel_choix[actions_de_ligne] ) VAR f = MAXX ( tc, v_ecran_referentiel_choix[forme_cle] ) VAR m = MAXX ( tc, v_ecran_referentiel_choix[mode_tenue] ) VAR ap = MAXX ( tc, v_ecran_referentiel_choix[action_propre] ) VAR te = [Teneur connecte] VAR k = [Ligne du referentiel choisie] VAR tl = FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r && v_ecran_referentiel_lignes[cle] = k ) VAR une = NOT ISBLANK ( k ) && NOT ISEMPTY ( tl ) VAR n = MAXX ( tl, v_ecran_referentiel_lignes[emploi] ) VAR ep = MAXX ( tl, v_ecran_referentiel_lignes[employee_par] ) VAR ls = MAXX ( tl, v_ecran_referentiel_lignes[lecture_seule] ) VAR dt = MAXX ( tl, v_ecran_referentiel_lignes[ecartee_le] ) RETURN IF ( ISBLANK ( r ), "", IF ( m = "TEXTE", "fixé par un texte, non modifiable", IF ( NOT ISBLANK ( ap ) && ap <> "", "seuil propre au véhicule, posé par «" & UNICHAR ( 8239 ) & "Enregistrer le seuil du véhicule" & UNICHAR ( 8239 ) & "»", IF ( te = "", "aucun droit de modification", SWITCH ( TRUE (), a = 0, "seule la valeur se modifie : les codes des paramètres sont fixés par l’outil", a = 2, "le code d’un contrôle est la colonne «" & UNICHAR ( 8239 ) & "Code" & UNICHAR ( 8239 ) & "», modifiée par «" & UNICHAR ( 8239 ) & "Modifier la valeur" & UNICHAR ( 8239 ) & "»", f = "numérotée", "ligne numérotée automatiquement, sans code", une && n > 0, "ligne employée " & FORMAT ( n, "0" ) & " fois, elle garde son code", "" ) ) ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 34a016cb-0210-4efc-a04e-79a95d7cb5f7
+
+	/// n° 124, vide quand l’action est permise ou que la sélection est vide ; sinon la raison : « seuil propre au véhicule, posé par « Enregistrer le seuil du véhicule » » (action_propre posée, ref_ratio_vehicule) ; « fixé par un texte, non modifiable » ; « seule la valeur se modifie : les codes des paramè
+	measure 'Blocage ecarter la ligne' = VAR r = [Referentiel choisi] VAR tc = FILTER ( ALL ( v_ecran_referentiel_choix ), v_ecran_referentiel_choix[table_nom] = r ) VAR a = MAXX ( tc, v_ecran_referentiel_choix[actions_de_ligne] ) VAR f = MAXX ( tc, v_ecran_referentiel_choix[forme_cle] ) VAR m = MAXX ( tc, v_ecran_referentiel_choix[mode_tenue] ) VAR ap = MAXX ( tc, v_ecran_referentiel_choix[action_propre] ) VAR te = [Teneur connecte] VAR k = [Ligne du referentiel choisie] VAR tl = FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r && v_ecran_referentiel_lignes[cle] = k ) VAR une = NOT ISBLANK ( k ) && NOT ISEMPTY ( tl ) VAR n = MAXX ( tl, v_ecran_referentiel_lignes[emploi] ) VAR ep = MAXX ( tl, v_ecran_referentiel_lignes[employee_par] ) VAR ls = MAXX ( tl, v_ecran_referentiel_lignes[lecture_seule] ) VAR dt = MAXX ( tl, v_ecran_referentiel_lignes[ecartee_le] ) RETURN IF ( ISBLANK ( r ), "", IF ( m = "TEXTE", "fixé par un texte, non modifiable", IF ( NOT ISBLANK ( ap ) && ap <> "", "seuil propre au véhicule, posé par «" & UNICHAR ( 8239 ) & "Enregistrer le seuil du véhicule" & UNICHAR ( 8239 ) & "»", IF ( te = "", "aucun droit de modification", IF ( a = 0, "seule la valeur se modifie : les codes des paramètres sont fixés par l’outil", SWITCH ( r, "ref_norme", "une norme hors d’usage se marque par «" & UNICHAR ( 8239 ) & "Modifier la valeur" & UNICHAR ( 8239 ) & "» : «" & UNICHAR ( 8239 ) & "Abrogée par" & UNICHAR ( 8239 ) & "» renseignée et «" & UNICHAR ( 8239 ) & "Applicable à la mission de présentation" & UNICHAR ( 8239 ) & "» à «" & UNICHAR ( 8239 ) & "non" & UNICHAR ( 8239 ) & "» avant «" & UNICHAR ( 8239 ) & "En vigueur" & UNICHAR ( 8239 ) & "» à «" & UNICHAR ( 8239 ) & "non" & UNICHAR ( 8239 ) & "»", "ref_question", "une question de référence s’écarte par «" & UNICHAR ( 8239 ) & "Écarter la question" & UNICHAR ( 8239 ) & "», à l’étape 3", "ref_reference", "une référence hors d’usage se marque par «" & UNICHAR ( 8239 ) & "Modifier la valeur" & UNICHAR ( 8239 ) & "» : «" & UNICHAR ( 8239 ) & "Abrogé par" & UNICHAR ( 8239 ) & "» renseigné avant «" & UNICHAR ( 8239 ) & "Abrogé le" & UNICHAR ( 8239 ) & "»", "ref_sujet_tenue", "un sujet des questions sur la tenue ne garde ni date ni motif d’écart", IF ( une && NOT ISBLANK ( dt ), "ligne écartée depuis le " & FORMAT ( dt, "dd/MM/yyyy" ), "" ) ) ) ) ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 990e83c0-fe02-4670-a40f-053502ffe2a4
+
+	/// n° 125, vide quand l’action est permise ou que la sélection est vide ; sinon la raison : « seuil propre au véhicule, posé par « Enregistrer le seuil du véhicule » » (action_propre posée, ref_ratio_vehicule) ; « fixé par un texte, non modifiable » ; « seule la valeur se modifie : les codes des paramè
+	measure 'Blocage supprimer la ligne' = VAR r = [Referentiel choisi] VAR tc = FILTER ( ALL ( v_ecran_referentiel_choix ), v_ecran_referentiel_choix[table_nom] = r ) VAR a = MAXX ( tc, v_ecran_referentiel_choix[actions_de_ligne] ) VAR f = MAXX ( tc, v_ecran_referentiel_choix[forme_cle] ) VAR m = MAXX ( tc, v_ecran_referentiel_choix[mode_tenue] ) VAR ap = MAXX ( tc, v_ecran_referentiel_choix[action_propre] ) VAR te = [Teneur connecte] VAR k = [Ligne du referentiel choisie] VAR tl = FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r && v_ecran_referentiel_lignes[cle] = k ) VAR une = NOT ISBLANK ( k ) && NOT ISEMPTY ( tl ) VAR n = MAXX ( tl, v_ecran_referentiel_lignes[emploi] ) VAR ep = MAXX ( tl, v_ecran_referentiel_lignes[employee_par] ) VAR ls = MAXX ( tl, v_ecran_referentiel_lignes[lecture_seule] ) VAR dt = MAXX ( tl, v_ecran_referentiel_lignes[ecartee_le] ) RETURN IF ( ISBLANK ( r ), "", IF ( m = "TEXTE", "fixé par un texte, non modifiable", IF ( NOT ISBLANK ( ap ) && ap <> "", "seuil propre au véhicule, posé par «" & UNICHAR ( 8239 ) & "Enregistrer le seuil du véhicule" & UNICHAR ( 8239 ) & "»", IF ( te = "", "aucun droit de modification", IF ( a = 0, "seule la valeur se modifie : les codes des paramètres sont fixés par l’outil", IF ( une && n > 0, "ligne employée " & FORMAT ( n, "0" ) & " fois" & IF ( r IN { "ref_norme", "ref_question", "ref_reference", "ref_sujet_tenue" } || NOT ISBLANK ( dt ), "", " ; " & "«" & UNICHAR ( 8239 ) & "Écarter la ligne" & UNICHAR ( 8239 ) & "» la met hors d’usage sans la supprimer" ), "" ) ) ) ) ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: dbdc71aa-a421-4481-9f42-a85b3aef7f7b
+
+	/// n° 126, « #D9DFE6 » quand [Blocage modifier la valeur] n’est pas vide, « #0F5C8C » sinon : le fond du bouton natif (Measure), son encre et son contour Conditional sur lui, aux états default, hover et selected ; le bouton gris reste cliquable
+	measure 'Fond modifier la valeur' = IF ( [Blocage modifier la valeur] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 86c5422e-854a-4548-a64d-ede7d59c3b60
+
+	/// n° 128, « #D9DFE6 » quand [Blocage changer le code] n’est pas vide, « #0F5C8C » sinon : le fond du bouton natif (Measure), son encre et son contour Conditional sur lui, aux états default, hover et selected ; le bouton gris reste cliquable
+	measure 'Fond changer le code' = IF ( [Blocage changer le code] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 70c52a1d-fa98-47d8-8868-99c73c49c976
+
+	/// n° 129, « #D9DFE6 » quand [Blocage ecarter la ligne] n’est pas vide, « #0F5C8C » sinon : le fond du bouton natif (Measure), son encre et son contour Conditional sur lui, aux états default, hover et selected ; le bouton gris reste cliquable
+	measure 'Fond ecarter la ligne' = IF ( [Blocage ecarter la ligne] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 4cc5d5c1-935c-45d9-86a7-0eaef302f82e
+
+	/// n° 130, « #D9DFE6 » quand [Blocage supprimer la ligne] n’est pas vide, « #0F5C8C » sinon : le fond du bouton natif (Measure), son encre et son contour Conditional sur lui, aux états default, hover et selected ; le bouton gris reste cliquable
+	measure 'Fond supprimer la ligne' = IF ( [Blocage supprimer la ligne] <> "", "#D9DFE6", "#0F5C8C" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 8c489571-6ffe-4220-9f9e-1d1b8d9a6944
+
+	/// n° 131, « conditions réunies » quand les 5 blocages sont vides ; sinon chaque action bloquée avec sa raison, puis « autres actions : conditions réunies » (« Changer le code : ligne employée par » suivi de employee_par, « , elle garde son code ; Supprimer la ligne : … ») ; carte « État des actions » 
+	measure 'Etat des actions de la ligne' = VAR t = UNION ( ROW ( "i", 1, "a", "Modifier la valeur", "r", [Blocage modifier la valeur] ) , ROW ( "i", 2, "a", "Ajouter la ligne", "r", [Blocage ajouter la ligne] ) , ROW ( "i", 3, "a", "Changer le code", "r", [Blocage changer le code] ) , ROW ( "i", 4, "a", "Écarter la ligne", "r", [Blocage ecarter la ligne] ) , ROW ( "i", 5, "a", "Supprimer la ligne", "r", [Blocage supprimer la ligne] ) ) VAR g = FILTER ( ADDCOLUMNS ( t, "premier", VAR ri = [r] VAR ii = [i] RETURN COUNTROWS ( FILTER ( t, [r] = ri && [i] < ii ) ) = 0, "noms", VAR ri = [r] RETURN CONCATENATEX ( FILTER ( t, [r] = ri ), [a], ", ", [i], ASC ) ), [r] <> "" && [premier] ) RETURN IF ( ISEMPTY ( g ), "conditions réunies", CONCATENATEX ( g, [noms] & " : " & [r], " ; ", [i], ASC ) )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 1ad994a1-3bd5-4027-b6a7-c7c10efa1d21
+
+	/// n° 147, la désignation (ligne) de la ligne de clé [Ligne du referentiel choisie], le libellé de la limite, quand [Referentiel choisi] vaut ref_ratio_memoire, « aucune dans ce référentiel » sinon (ligne « Limite » de la carte du seuil)
+	measure 'Limite du seuil choisie' = VAR r = [Referentiel choisi] VAR k = [Ligne du referentiel choisie] VAR tl = FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r && v_ecran_referentiel_lignes[cle] = k ) VAR d = MAXX ( tl, v_ecran_referentiel_lignes[ligne] ) RETURN IF ( r = "ref_ratio_memoire", d & "", "aucune dans ce référentiel" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: dce31716-c238-456f-8f3c-4c2bbc1c8506
+
+	/// n° 148, « entité, limite » suivi de [Limite du seuil choisie] pour le référentiel des limites, « entité : ce référentiel ne porte aucune limite » sinon (sous-titre du bloc « Seuil du véhicule », sur 1 ligne au plus long cas)
+	measure 'Sous-titre seuil du vehicule' = VAR e = [Client selectionne] VAR r = [Referentiel choisi] VAR l = [Limite du seuil choisie] RETURN IF ( r = "ref_ratio_memoire", e & ", limite " & l, e & " : " & "ce référentiel ne porte aucune limite" )
+		displayFolder: Ecran 5 Referentiels
+		lineageTag: 8a792e66-90ec-4c84-b6b6-85156b1cf27a
+
+	measure 'Absence de ligne modifiee' = VAR r = [Referentiel choisi] VAR k = COUNTROWS ( FILTER ( ALL ( v_ecran_referentiel_lignes ), v_ecran_referentiel_lignes[referentiel] = r && NOT ISBLANK ( v_ecran_referentiel_lignes[modifie_le] ) ) ) + 0 RETURN IF ( k = 0, "Aucune ligne modifiée depuis l’import", "" )
+
+	column referentiel
+		dataType: string
+		sourceProviderType: varchar(120)
+		lineageTag: 6bcc94fc-41dd-4dc1-984b-d4eb9523958c
+		summarizeBy: none
+		sourceColumn: referentiel
+
+		annotation SummarizationSetBy = Automatic
+
+	column cle
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 4328d2ed-e168-4bb5-940a-10d11544d62b
+		summarizeBy: none
+		sourceColumn: cle
+
+		annotation SummarizationSetBy = Automatic
+
+	column ligne
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: ac88c593-dfc8-4174-9c3c-f849d30a22ee
+		summarizeBy: none
+		sourceColumn: ligne
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: datetime2
+		lineageTag: 3b7fa62f-4cd9-4cf1-8346-2fb6c382bf60
+		summarizeBy: none
+		sourceColumn: modifie_le
+
+		annotation SummarizationSetBy = Automatic
+
+	column modifie_par
+		dataType: string
+		sourceProviderType: nvarchar(400)
+		lineageTag: 5509281c-5d78-40e6-873d-1ad6ff8c4d4e
+		summarizeBy: none
+		sourceColumn: modifie_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column emploi
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 56015c3e-8c3b-442f-8fe6-4a5d8efe15f6
+		summarizeBy: sum
+		sourceColumn: emploi
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_par
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: fba2eefa-fc7b-4e9d-badd-9cbbe824ddec
+		summarizeBy: none
+		sourceColumn: employee_par
+
+		annotation SummarizationSetBy = Automatic
+
+	column lecture_seule
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 9ef6285b-8e54-4ab8-9f57-93969a6d6935
+		summarizeBy: none
+		sourceColumn: lecture_seule
+
+		annotation SummarizationSetBy = Automatic
+
+	column ecartee_le
+		dataType: dateTime
+		formatString: dd/MM/yyyy
+		sourceProviderType: date
+		lineageTag: 816df91f-39fa-47a0-8dbb-1add025cf917
+		summarizeBy: none
+		sourceColumn: ecartee_le
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_ecran_referentiel_lignes = m
+		mode: directQuery
+		source =
+				let
+				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
+				    dbo_v_ecran_referentiel_lignes = Source{[Schema="dbo",Item="v_ecran_referentiel_lignes"]}[Data]
+				in
+				    dbo_v_ecran_referentiel_lignes
+

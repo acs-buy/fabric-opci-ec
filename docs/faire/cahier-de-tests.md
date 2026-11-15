@@ -16,9 +16,9 @@ gardez la trace de qui a testé quoi.
 
 | La sorte de test | Tests |
 |---|---|
-| Les tests scénarisés | 152 |
+| Les tests scénarisés | 158 |
 | Les tests manuels des utilisateurs métier | 28 |
-| **En tout** | **180** |
+| **En tout** | **186** |
 
 Les noms de profil désignent les comptes de la phase :
 
@@ -73,7 +73,7 @@ Le numéro d'un test commence par son étape de jeu : le test 3-07 est le 7e de 
 |---|---|---|---|
 | 1. La lecture, avant toute écriture | 10 | 9 | Compte 1, Compte 3, Compte client |
 | 2. Le dossier du client et son acceptation | 56 | 3 | Compte 1, Compte 2, Compte 3 |
-| 3. La révision de l'arrêté | 44 | 7 | Compte 1, Compte 2 |
+| 3. La révision de l'arrêté | 50 | 7 | Compte 1, Compte 2, Compte 3 |
 | 4. La valorisation de l'arrêté | 16 | 6 | Compte 1, Compte 2 |
 | 5. La validation et la publication | 10 | 2 | Compte 1, Compte 2, Compte 3 |
 | 6. La réouverture d'un arrêté clos | 11 | 1 | Compte 1, Compte 2 |
@@ -92,7 +92,6 @@ alors une acceptation avec réserves.
 | 1-06. Aucun montant d'un arrêté non visé dans les historiques | Les historiques du rapport client portent aussi le 2025-12-31, arrêté non visé du jeu : le tableau des valeurs liquidatives, les graphiques d'évolution, du pilotage et des distributions lisent des tables reliées à l'entité seule, et non à l'arrêté visé. |
 | 2-33. Réimport du questionnaire refusé en entier pour une seule réponse invalide | Le réimport est bien refusé en entier, mais son message est posé sous la cote du questionnaire, `ACC-<client>`, et non sous le client : la zone « Message de l'écran » ne l'affiche pas. |
 | 2-34. Réimporter le questionnaire complété | Les réponses sont importées, mais le message de l'import est posé sous la cote du questionnaire, `ACC-<client>`, et non sous le client : la zone « Message de l'écran » ne l'affiche pas. |
-| 3-11. Répondre en nombre aux questions d'un cycle par le classeur du dossier de travail | Le réimport réussit pour les onglets valides. La zone de message tient sur 2 lignes et la phrase nomme d'abord les onglets importés : la liste des onglets refusés ne se lit pas. |
 | 3-21. Rattacher une pièce à la question de révision qu'elle justifie | La page « Pièce justificative » propose les questions du programme de révision, mais la fonction n'accepte que les questions des questionnaires d'acceptation et de maintien : le rattachement est refusé. |
 | 3-34. Le visa d'un cycle attend toutes ses réponses et revient à un autre que son auteur | Les boutons de visa sont bien inactifs, mais la carte qui en donne la raison tient sur 1 ligne : la fin de la phrase, qui nomme la séparation des fonctions, ne se lit pas. |
 
@@ -1003,7 +1002,7 @@ Passé ☐ · Échec ☐ · Remarque :
 **Vous devez obtenir :** La zone « Message de l'écran » affiche le refus ci-contre : 92 questions obligatoires sans réponse, la première étant ACCEPT-01, son énoncé coupé à 120 caractères (au-delà de 2 lignes, la zone coupe la fin par « … »). Le « Statut » reste « En cours ».
 
 ```
-Approbation refusée : 92 question(s) obligatoire(s) du questionnaire d'acceptation sont sans réponse. La première est ACCEPT-01, « L’entité pour laquelle la mission est envisagée est-elle un organisme de placement collectif immobilier régi par le code ». Répondre à toutes les questions obligatoires, puis approuver.
+Décision refusée : 92 question(s) obligatoire(s) sans réponse, dont ACCEPT-01, « L’entité pour laquelle la mission est envisagée est-elle un organisme de placement collectif immobilier régi par le code ». Répondre à toutes, puis décider.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -1167,7 +1166,7 @@ Passé ☐ · Échec ☐ · Remarque :
 **Vous devez obtenir :** La zone « Message de l'écran » affiche le refus ci-contre. Le « Statut » reste « En cours ».
 
 ```
-Approbation refusée : le refus d'une mission exige un motif. La NPMQ paragraphe 19 impose de documenter la manière dont les difficultés ont été traitées.
+Refus non enregistré : refuser une mission exige un motif. Saisir le motif du refus, puis refuser de nouveau.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -1187,7 +1186,7 @@ Passé ☐ · Échec ☐ · Remarque :
 **Vous devez obtenir :** La zone « Message de l'écran » porte le message ci-contre. Le bandeau porte « Acceptation refusée <adresse de connexion du Compte 2> · <date du jour, jj/mm/aaaa> : reprendre le questionnaire, puis soumettre à nouveau. » ; la 3e case porte « Renvoyé avec un motif ». La section porte « Statut » : Refusée et « Décision » : Refusée.
 
 ```
-Acceptation de UAT-OPCI : décision refusee visée.
+Décision d’acceptation visée pour UAT-OPCI : mission refusée.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -1211,18 +1210,18 @@ Approbation refusée : l'acceptation de cette entité est au statut refusé. L'a
 
 Passé ☐ · Échec ☐ · Remarque :
 
-#### 2-39. Reprise d'une acceptation refusée sans motif refusée
+#### 2-39. La reprise d'une acceptation refusée revient à qui décide de l'acceptation et exige un motif
 
-**Besoin :** La reprise d'un dossier refusé dit ce qui a changé depuis le refus.  
-**Profil :** Compte 1 · **Criticité d'un échec :** Majeure  
-**Avant de commencer :** Acceptation de UAT-OPCI au statut Refusée.
+**Besoin :** Une acceptation refusée ne se reprend que par celui qui décide de l'acceptation, et avec un motif.  
+**Profil :** Compte 2 · **Criticité d'un échec :** Majeure  
+**Avant de commencer :** Acceptation de UAT-OPCI au statut Refusée. Le Compte 1 est chef de mission de UAT-OPCI ; le Compte 2 en est associé signataire. Seul le rôle ASSOCIE vise la nature ACCEPTATION (sql/10_referentiels/59_role_nature_visa.sql:8).
 
-1. Ouvrez la page « Client et Acceptation » de l'application de conduite de mission.
-2. Cliquez UAT-OPCI dans la liste des clients, étape « Visa ».
-3. Laissez « Motif » vide et cliquez « Reprendre ».
-4. Lisez la zone « Message de l'écran ».
+1. Avec le Compte 1 : ouvrez la page « Client et Acceptation », cliquez UAT-OPCI dans la liste des clients, étape « Visa ».
+2. Observez la couleur de « Reprendre ». Saisissez « Motif » : Circonstances nouvelles. Cliquez « Reprendre » et lisez la zone « Message de l'écran ».
+3. Avec le Compte 2 : même page, UAT-OPCI, étape « Visa ». Laissez « Motif » vide et cliquez « Reprendre ».
+4. Lisez la zone « Message de l'écran » et le « Statut » de l'étape « Visa ».
 
-**Vous devez obtenir :** La zone « Message de l'écran » affiche le refus ci-contre. Le « Statut » reste « Refusée ».
+**Vous devez obtenir :** Compte 1 : « Reprendre » est grisé ; le clic affiche « Reprise refusée : une acceptation refusée se reprend par celui qui décide de l'acceptation, rôle que votre adresse de connexion ne tient pas. ». Compte 2 : la zone « Message de l'écran » affiche le refus ci-contre. Le « Statut » reste « Refusée ».
 
 ```
 Reprise refusée : la reprise d'une acceptation refusée exige un motif, qui dit ce qui a changé depuis le refus.
@@ -1233,18 +1232,19 @@ Passé ☐ · Échec ☐ · Remarque :
 #### 2-40. Reprendre une acceptation refusée
 
 **Besoin :** Un dossier refusé se reprend avec un motif ; ses réponses sont conservées.  
-**Profil :** Compte 1 · **Criticité d'un échec :** Majeure  
-**Avant de commencer :** Acceptation de UAT-OPCI au statut Refusée.
+**Profil :** Compte 2 · **Criticité d'un échec :** Majeure  
+**Avant de commencer :** Acceptation de UAT-OPCI au statut Refusée. Le Compte 2 est associé signataire de UAT-OPCI.
 
-1. Ouvrez la page « Client et Acceptation » de l'application de conduite de mission.
-2. Cliquez UAT-OPCI dans la liste des clients, étape « Visa ».
-3. Saisissez « Motif » : Circonstances nouvelles. Cliquez « Reprendre ».
-4. Lisez la zone « Message de l'écran », la section « Acceptation de la mission » à l'étape « Dossier », puis le compteur de l'étape « Questionnaire et pièces ».
+1. Connectez-vous avec le Compte 2.
+2. Ouvrez la page « Client et Acceptation » de l'application de conduite de mission.
+3. Cliquez UAT-OPCI dans la liste des clients, étape « Visa ».
+4. Saisissez « Motif » : Circonstances nouvelles. Cliquez « Reprendre ».
+5. Lisez la zone « Message de l'écran », la section « Acceptation de la mission » à l'étape « Dossier », puis le compteur de l'étape « Questionnaire et pièces ».
 
 **Vous devez obtenir :** La zone « Message de l'écran » porte le message ci-contre. La section porte « Statut » : En cours, « Décision » : En attente, « Visa » : en attente de visa. Le compteur porte toujours « 110 sur 110 répondues · 10 affichées, la grille défile ».
 
 ```
-Acceptation de UAT-OPCI reprise ; le questionnaire se complète à nouveau.
+Acceptation reprise pour UAT-OPCI ; le questionnaire se complète à nouveau.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -1264,7 +1264,7 @@ Passé ☐ · Échec ☐ · Remarque :
 **Vous devez obtenir :** La zone « Message de l'écran » porte le message ci-contre. Le bandeau porte « Acceptation approuvée <adresse de connexion du Compte 2> · <date du jour, jj/mm/aaaa>. » ; la 3e case porte « Visé ». La section porte « Statut » : Approuvée, « Décision » : Acceptée, « Visa » : l'adresse de connexion du Compte 2 · la date du jour. La liste des clients porte « Approuvée » pour UAT-OPCI.
 
 ```
-Acceptation de UAT-OPCI : décision acceptee visée.
+Décision d’acceptation visée pour UAT-OPCI : mission acceptée.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -1291,13 +1291,14 @@ Passé ☐ · Échec ☐ · Remarque :
 #### 2-43. Reprise refusée pour une acceptation approuvée
 
 **Besoin :** Seule une acceptation refusée se reprend.  
-**Profil :** Compte 1 · **Criticité d'un échec :** Majeure  
-**Avant de commencer :** Acceptation de UAT-OPCI approuvée (test « Approuver l'acceptation de la mission »).
+**Profil :** Compte 2 · **Criticité d'un échec :** Majeure  
+**Avant de commencer :** Acceptation de UAT-OPCI approuvée (test « Approuver l'acceptation de la mission »). Le Compte 2 est associé signataire de UAT-OPCI.
 
-1. Ouvrez la page « Client et Acceptation » de l'application de conduite de mission.
-2. Cliquez UAT-OPCI dans la liste des clients, étape « Visa ».
-3. Vérifiez que « Motif » porte Circonstances nouvelles, laissé par le test « Reprendre une acceptation refusée » ; sinon, saisissez-y Circonstances nouvelles : la reprise exige un motif non vide avant de juger le statut. Cliquez « Reprendre ».
-4. Lisez la zone « Message de l'écran » et la case « Statut » de l'étape « Visa ».
+1. Connectez-vous avec le Compte 2.
+2. Ouvrez la page « Client et Acceptation » de l'application de conduite de mission.
+3. Cliquez UAT-OPCI dans la liste des clients, étape « Visa ».
+4. Vérifiez que « Motif » porte Circonstances nouvelles, laissé par le test « Reprendre une acceptation refusée » ; sinon, saisissez-y Circonstances nouvelles : la reprise exige un motif non vide avant de juger le statut. Cliquez « Reprendre ».
+5. Lisez la zone « Message de l'écran » et la case « Statut » de l'étape « Visa ».
 
 **Vous devez obtenir :** La zone « Message de l'écran » affiche le refus ci-contre. La case « Statut » porte toujours « Approuvée ».
 
@@ -1517,7 +1518,7 @@ Passé ☐ · Échec ☐ · Remarque :
 **Vous devez obtenir :** La zone « Message de l'écran » affiche le refus ci-contre. Aucune pièce absent_essai.pdf n'est inscrite : la liste « PIÈCE À RETIRER » ne la porte pas.
 
 ```
-Le fichier « absent_essai.pdf » n'est pas dans la bibliothèque Dépôt du client de OMEGA-OPCI. Vérifiez son nom et son sous-dossier.
+Pour OMEGA-OPCI, le fichier « absent_essai.pdf » n’est pas dans la bibliothèque Dépôt du client. Vérifiez son nom et son sous-dossier.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -1657,9 +1658,9 @@ Passé ☐ · Échec ☐ · Constats :
 3. Cliquer l'étape 2 de la barre, « Programme de travail ».
 4. Cliquer le bouton « Choisir » du type Classique, le 2e des 3 types (Allégé, Classique, Étendu).
 5. Lire la carte d'état du type Classique et la carte « PROGRAMME DE TRAVAIL » de la bande d'indicateurs.
-6. Cliquer l'étape 3 de la barre, « Questionnaires », et lire la zone de message en bas à droite.
+6. Lire la zone « MESSAGE », en bas de la page.
 
-**Vous devez obtenir :** La carte d'état du type Classique affiche « choisi » ou « choisi, proposé ». La carte « PROGRAMME DE TRAVAIL » affiche « CLASSIQUE », sous-titre « 11 cycles, 375 questions ». L'étape 2 n'a pas de zone de message : à l'étape 3, la zone, sur fond vert pâle, porte la phrase ci-dessous, 375 questions de cycle entrant au programme sur les 11 cycles du référentiel, aucune ne sortant ; la 2e phrase s'ajoute parce qu'aucune question du référentiel ne porte de niveau de programme. La zone tient sur 2 lignes : la 1re se lit « Programme classique : 375 questions sur 11 cycles, 375 entrée(s), 0 sortie(s). Les 3 types », la 2e « sélectionnent encore les mêmes questions : la profondeur des questions se renseigne aux… ».
+**Vous devez obtenir :** La carte d'état du type Classique affiche « choisi » ou « choisi, proposé ». La carte « PROGRAMME DE TRAVAIL » affiche « CLASSIQUE », sous-titre « 11 cycles, 375 questions ». La zone « MESSAGE », en bas de la page, montrée à chaque étape, porte sur fond vert pâle la phrase ci-dessous, 375 questions de cycle entrant au programme sur les 11 cycles du référentiel, aucune ne sortant ; la 2e phrase s'ajoute parce qu'aucune question du référentiel ne porte de niveau de programme. La zone montre 2 lignes au plus ; au-delà, la 2e finit par « … ».
 
 ```
 Programme classique : 375 questions sur 11 cycles, 375 entrée(s), 0 sortie(s). Les 3 types sélectionnent encore les mêmes questions : la profondeur des questions se renseigne aux Référentiels.
@@ -1678,7 +1679,7 @@ Passé ☐ · Échec ☐ · Remarque :
 3. Lire le tableau « 3. Couverture de la balance ».
 4. Cliquer l'étape 3 « Questionnaires », puis cliquer « Actualiser » dans la barre d'actions du service Power BI : le bouton « Vérifier la couverture de la balance » n'actualise pas la page de lui-même. Lire la zone de message.
 
-**Vous devez obtenir :** Après l'actualisation, la zone de message de l'étape 3 affiche la phrase ci-dessous, sur une ligne : chaque racine de compte de la balance d'OMEGA-OPCI au 31/12/2025 (10, 11, 12, 21, 25, 26, 27, 51, 61, 62, 72, 73) relève d'un cycle du référentiel, et chaque cycle est au programme. Avant l'actualisation, la zone peut encore porter la phrase du test « Choisir le programme de travail Classique ». Le bouton n'écrit rien. Le tableau « 3. Couverture de la balance » liste les 20 comptes avec leur libellé, leur solde et leurs cycles ; aucun n'est hors du programme.
+**Vous devez obtenir :** Après l'actualisation, la zone « MESSAGE » affiche la phrase ci-dessous, sur une ligne : chaque racine de compte de la balance d'OMEGA-OPCI au 31/12/2025 (10, 11, 12, 21, 25, 26, 27, 51, 61, 62, 72, 73) relève d'un cycle du référentiel, et chaque cycle est au programme. Avant l'actualisation, la zone peut encore porter la phrase du test « Choisir le programme de travail Classique ». Le bouton n'écrit rien. Le tableau « 3. Couverture de la balance » liste les 20 comptes avec leur libellé, leur solde et leurs cycles ; aucun n'est hors du programme.
 
 ```
 La balance est couverte : 20 comptes, tous revus par une question du programme.
@@ -1717,7 +1718,7 @@ Passé ☐ · Échec ☐ · Remarque :
 7. Vérifier que « Hors bilan » est choisi dans la bande des cycles, sinon le choisir ; cliquer « Activer le cycle ».
 8. Cliquer l'étape 3 et lire la zone de message.
 
-**Vous devez obtenir :** 1er clic : refus ci-dessous dans la bulle du service ; le cycle reste au programme. 2e clic : la zone de message de l'étape 3 affiche « Cycle HB retiré : 11 question(s) sortie(s) du programme. » ; la colonne « Statut » de « Hors bilan » passe à « Inactif ». 3e clic : « Cycle HB activé : 11 question(s) entrée(s) au programme. » ; « Statut » revient à « Actif ».
+**Vous devez obtenir :** 1er clic : refus ci-dessous dans la bulle du service ; le cycle reste au programme. 2e clic : la zone « MESSAGE » affiche « Cycle HB retiré : 11 question(s) sortie(s) du programme. » ; la colonne « Statut » de « Hors bilan » passe à « Inactif ». 3e clic : « Cycle HB activé : 11 question(s) entrée(s) au programme. » ; « Statut » revient à « Actif ».
 
 ```
 Le motif du retrait est obligatoire : il reste au journal du programme.
@@ -1740,7 +1741,7 @@ Passé ☐ · Échec ☐ · Remarque :
 7. Vérifier que « Trésorerie » est choisi dans la bande des cycles, sinon le choisir ; choisir TRESO-23 dans la grille si elle n'est plus choisie ; cliquer « Ajouter au programme ».
 8. Cliquer l'étape 3 et lire la zone de message.
 
-**Vous devez obtenir :** 1er clic : refus ci-dessous dans la bulle du service. 2e clic : la zone de message de l'étape 3 affiche « Question TRESO-23 retirée du programme. » ; la colonne « Questions » de « Trésorerie » passe à « 22 / 23 ». 3e clic : « Question TRESO-23 ajoutée au programme. » ; « Questions » revient à « 23 / 23 ».
+**Vous devez obtenir :** 1er clic : refus ci-dessous dans la bulle du service. 2e clic : la zone « MESSAGE » affiche « Question TRESO-23 retirée du programme. » ; la colonne « Questions » de « Trésorerie » passe à « 22 / 23 ». 3e clic : « Question TRESO-23 ajoutée au programme. » ; « Questions » revient à « 23 / 23 ».
 
 ```
 Le motif du retrait est obligatoire : il reste au journal du programme.
@@ -1748,21 +1749,21 @@ Le motif du retrait est obligatoire : il reste au journal du programme.
 
 Passé ☐ · Échec ☐ · Remarque :
 
-#### 3-06. Ouvrir le classeur des questions d'un cycle
+#### 3-06. Exporter le classeur des questions d'un cycle
 
 **Besoin :** Le réviseur dispose des questions d'un cycle dans un classeur déposé au site du cabinet, pour les préparer hors de l'écran.  
 **Profil :** Compte 1 · **Criticité d'un échec :** Majeure  
 **Avant de commencer :** Test « Retirer une question du programme avec son motif, puis la réintégrer » passé : « Trésorerie » choisi dans la bande des cycles, TRESO-23 de nouveau au programme. Étape 12 faite : dépôt des classeurs installé, paramètres DEPOT_CLASSEUR_URL et SITE_CABINET renseignés (docs/faire/etape-12-relier-sharepoint.md:14).
 
 1. Étape 2 : vérifier que « Trésorerie » est choisi dans la bande des cycles (la grille de droite s'intitule « Questions du cycle TRESO »), sinon le choisir.
-2. Cliquer « Ouvrir le classeur des questions du cycle ».
+2. Cliquer « Exporter le classeur des questions du cycle ».
 3. Cliquer l'étape 3 « Questionnaires », puis cliquer « Actualiser » dans la barre d'actions du service Power BI : ce bouton n'actualise pas la page de lui-même. Lire la zone de message.
 4. Cliquer « Voir le dossier exporté » ; page « Dossier de travail », ouvrir la ligne questions_TRESO_OMEGA-OPCI_2025-12-31.xlsx par son lien « Ouvrir le dossier » ; si la ligne n'y figure pas, cliquer « Actualiser ».
 
-**Vous devez obtenir :** Après l'actualisation, la zone de message de l'étape 3 porte la phrase ci-dessous : sa 1re ligne se lit « Classeur de 23 questions déposé au site du cabinet : », l'adresse occupe la 2e ligne, coupée par « … » quand elle la dépasse. La page « Dossier de travail » porte questions_TRESO_OMEGA-OPCI_2025-12-31.xlsx ; le classeur a un onglet « Q-TRESO » dont la 1re ligne porte Cycle, Référence, Question, Type, Réponse, Motif si non applicable, Commentaire, Feuille, OD, Pièces, et les 23 questions de TRESO à partir de la 3e ligne.
+**Vous devez obtenir :** Après l'actualisation, la zone « MESSAGE » porte la phrase ci-dessous, où <jj/mm/aaaa> et <hh:mm> sont la date et l'heure de Paris du dépôt. La page « Dossier de travail » porte questions_TRESO_OMEGA-OPCI_2025-12-31.xlsx ; le classeur a un onglet « Q-TRESO » dont la 1re ligne porte Cycle, Référence, Question, Type, Réponse, Motif si non applicable, Commentaire, Feuille, OD, Pièces, et les 23 questions de TRESO à partir de la 3e ligne.
 
 ```
-Classeur de 23 questions déposé au site du cabinet : <adresse>
+Classeur Excel des 23 questions du cycle Trésorerie déposé le <jj/mm/aaaa> à <hh:mm> ; il s’ouvre depuis la liste du dossier de travail (étape 6).
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -1773,7 +1774,7 @@ Passé ☐ · Échec ☐ · Remarque :
 
 **Besoin :** Le réviseur consigne sa réponse à chaque question du programme, enregistrée au dossier de l'arrêté.  
 **Profil :** Compte 1 · **Criticité d'un échec :** Bloquante  
-**Avant de commencer :** Test « Ouvrir le classeur des questions d'un cycle » passé : il finit sur la page « Dossier de travail », et « Trésorerie » reste choisi dans la bande des cycles de la page « Révision ». Aucune réponse au programme.
+**Avant de commencer :** Test « Exporter le classeur des questions d'un cycle » passé : il finit sur la page « Dossier de travail », et « Trésorerie » reste choisi dans la bande des cycles de la page « Révision ». Aucune réponse au programme.
 
 1. Sur la page « Dossier de travail », cliquer le bouton en haut à gauche, d'infobulle « Revenir à la Révision » : la page « Révision » s'ouvre.
 2. Cliquer l'étape 3 de la barre, « Questionnaires », si elle n'est pas affichée.
@@ -1853,13 +1854,11 @@ Passé ☐ · Échec ☐ · Remarque :
 4. Revenir à la page « Révision », étape 3, cliquer « Réimporter le dossier » ; lire la zone de message.
 5. Choisir « Trésorerie » dans la bande des cycles ; lire la colonne « Réponse » de la grille et la carte « QUESTIONS RÉPONDUES ».
 
-**Vous devez obtenir :** Export : après l'actualisation, la 1re ligne de la zone se lit « Dossier de travail, 29 onglets, déposé au site du cabinet : ». Réimport : la zone passe au fond rose et sa phrase commence par « Classeur relu au site du cabinet. 15 onglet(s) importé(s). » ; les 11 onglets Q-, les feuilles AFF-OMEGA-OPCI-20251231, VAL275-2025-12-31 et VALO-20251231 et l'onglet OD libres sont repris ; l'onglet DEM-VALO-OMEGA-OPCI-20251231 est refusé par la base sans arrêter les autres, et la zone de message le dit par la partie ci-dessous, qui finit la phrase. Les 23 questions de Trésorerie portent une réponse ; la carte « QUESTIONS RÉPONDUES » affiche « 23 / 375 ».
+**Vous devez obtenir :** Export : après l'actualisation, la zone « MESSAGE » porte « Dossier de travail de 29 onglets déposé le <jj/mm/aaaa> à <hh:mm> ; il s’ouvre par son lien, sur la page que montre « Voir le dossier exporté » (étape 3) ou dans la liste du dossier de travail (étape 6). ». Réimport : la zone passe au fond rose et sa phrase commence par « Dossier relu le <jj/mm/aaaa> à <hh:mm> : 15 onglets importés, 23 réponses sur 1 cycle, 3 feuilles reprises. » ; les 11 onglets Q-, les feuilles AFF-OMEGA-OPCI-20251231, VAL275-2025-12-31 et VALO-20251231 et l'onglet OD libres sont repris ; l'onglet DEM-VALO-OMEGA-OPCI-20251231 est refusé par la base sans arrêter les autres, et la zone « MESSAGE » le dit par la partie ci-dessous, qui finit la phrase. Les 23 questions de Trésorerie portent une réponse ; la carte « QUESTIONS RÉPONDUES » affiche « 23 / 375 ».
 
 ```
 Refusés : DEM-VALO-OMEGA-OPCI-20251231 : Cette feuille est conclue et visée ; elle ne se modifie plus.
 ```
-
-**Anomalie connue :** Le réimport réussit pour les onglets valides. La zone de message tient sur 2 lignes et la phrase nomme d'abord les onglets importés : la liste des onglets refusés ne se lit pas.
 
 Passé ☐ · Échec ☐ · Remarque :
 
@@ -1877,10 +1876,10 @@ Passé ☐ · Échec ☐ · Remarque :
 4. Choisir de nouveau TRESO-21 et cliquer une 2e fois « Ouvrir la feuille » ; lire la zone de message.
 5. Cliquer « Voir le dossier exporté » et repérer la ligne feuille_FT-TRESO-21-P<p>.xlsx.
 
-**Vous devez obtenir :** 1er clic : phrase ci-dessous, <p> étant le numéro du programme ; la zone en montre 2 lignes, la 2e finissant par « … » avant la fin de l'adresse. La colonne « Feuille » de TRESO-21 porte FT-TRESO-21-P<p>. 2e clic : aucune 2e feuille ; la phrase devient « La feuille FT-TRESO-21-P<p> est déjà ouverte pour la question TRESO-21. Gabarit déposé au site du cabinet : <adresse> ». La page « Dossier de travail » porte feuille_FT-TRESO-21-P<p>.xlsx.
+**Vous devez obtenir :** 1er clic : phrase ci-dessous, <p> étant le numéro du programme, <jj/mm/aaaa> et <hh:mm> la date et l'heure de Paris du dépôt du classeur de la feuille. La colonne « Feuille » de TRESO-21 porte FT-TRESO-21-P<p>. 2e clic : aucune 2e feuille ; la phrase devient « Feuille FT-TRESO-21-P<p> déjà ouverte pour la question TRESO-21 ; son classeur, déposé de nouveau le <jj/mm/aaaa> à <hh:mm>, s’ouvre depuis la liste du dossier de travail (étape 6). ». La page « Dossier de travail » porte feuille_FT-TRESO-21-P<p>.xlsx.
 
 ```
-Feuille FT-TRESO-21-P<p> ouverte pour la question TRESO-21, gabarit TRESO-RAPPRO. Exportez-la, remplissez-la, redéposez-la. Gabarit déposé au site du cabinet : <adresse>
+Feuille FT-TRESO-21-P<p> ouverte pour la question TRESO-21, gabarit TRESO-RAPPRO, déposée le <jj/mm/aaaa> à <hh:mm> : remplissez-la depuis la liste du dossier de travail (étape 6), puis réimportez-la.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -1915,7 +1914,7 @@ Passé ☐ · Échec ☐ · Remarque :
 2. Dans « Forme de la conclusion », remplacer FAVORABLE par SANS_OBSERVATION ; cliquer « Conclure » ; lire la bulle du service.
 3. Cliquer « Actualiser » dans la barre d'actions du service Power BI et lire la zone de message.
 
-**Vous devez obtenir :** La bulle du service porte le refus ci-dessous. Après « Actualiser », la zone de message, sur fond rose, en montre 2 lignes, la 2e finissant par « … ». La feuille reste ouverte.
+**Vous devez obtenir :** La bulle du service porte le refus ci-dessous. Après « Actualiser », la zone « MESSAGE », sur fond rose, le porte. La feuille reste ouverte.
 
 ```
 Conclusion refusée : une dérogation active existe pour cette entité et cet arrêté, la forme sans observation est indisponible. Conclure sous une autre forme, ou faire lever la dérogation par son auteur.
@@ -1951,7 +1950,7 @@ Passé ☐ · Échec ☐ · Remarque :
 2. Cliquer « Ouvrir la feuille ».
 3. Choisir de nouveau IMMO-01, saisir AVEC_OBSERVATION dans « Forme de la conclusion », cliquer « Conclure ».
 
-**Vous devez obtenir :** L'ouverture rend la phrase « Feuille FT-IMMO-01-P<p> ouverte pour la question IMMO-01, gabarit STD. Exportez-la, remplissez-la, redéposez-la. Gabarit déposé au site du cabinet : <adresse> ». La conclusion est refusée par la phrase ci-dessous, qui nomme la pièce manquante, lue en entier dans la bulle du service ; la feuille reste ouverte.
+**Vous devez obtenir :** L'ouverture rend la phrase « Feuille FT-IMMO-01-P<p> ouverte pour la question IMMO-01, gabarit STD, déposée le <jj/mm/aaaa> à <hh:mm> : remplissez-la depuis la liste du dossier de travail (étape 6), puis réimportez-la. ». La conclusion est refusée par la phrase ci-dessous, qui nomme la pièce manquante, lue en entier dans la bulle du service ; la feuille reste ouverte.
 
 ```
 Conclusion refusée : des pièces obligatoires de ce cycle ne sont rattachées à aucun document, pour cette entité et cet arrêté. Manquent : Titre de propriété. Déposer les pièces au coffre, les rattacher à la question, puis conclure.
@@ -1994,7 +1993,7 @@ Passé ☐ · Échec ☐ · Remarque :
 **Vous devez obtenir :** Refus ci-dessous ; rien n'est inscrit.
 
 ```
-Le fichier « absent_uat.pdf » n'est pas dans la bibliothèque Dépôt du client de OMEGA-OPCI. Vérifiez son nom et son sous-dossier.
+Pour OMEGA-OPCI, le fichier « absent_uat.pdf » n’est pas dans la bibliothèque Dépôt du client. Vérifiez son nom et son sous-dossier.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -2166,10 +2165,10 @@ Passé ☐ · Échec ☐ · Remarque :
 1. Étape 3, bande des cycles « Trésorerie » : choisir TRESO-22.
 2. Cliquer « Valider les écritures ».
 
-**Vous devez obtenir :** Refus ci-dessous, dans la bulle du service et dans la zone de message ; la phrase est écrite sans accents dans la source.
+**Vous devez obtenir :** Refus ci-dessous, dans la bulle du service et dans la zone « MESSAGE ».
 
 ```
-Aucune ligne de brouillon pour cette question : rien a valider. Le perimetre de la validation est la question, non la feuille entiere.
+Validation refusée : la question choisie n'a aucune ligne de brouillon. Saisir ses lignes, ou choisir une autre question.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -2217,13 +2216,13 @@ Passé ☐ · Échec ☐ · Remarque :
 **Profil :** Compte 1 · **Criticité d'un échec :** Majeure  
 **Avant de commencer :** Étape 12 faite. Brouillon d'OD libres vide (test « Un brouillon d'OD libres déséquilibré ne se valide pas, une ligne se retire »). Comptes 627 et 408 au plan OPCI.
 
-1. Étape 4 « OD libres » : cliquer « Exporter le gabarit » ; lire la zone de message.
+1. Étape 4 « OD libres » : cliquer « Exporter grille de saisie » ; lire la zone de message.
 2. Cliquer l'étape 3 « Questionnaires », puis « Voir le dossier exporté » ; page « Dossier de travail », ouvrir od_libres_OMEGA-OPCI_2025-12-31.xlsx par son lien « Ouvrir le dossier ».
 3. Dans l'onglet « OD libres », à partir de la 3e ligne, saisir 2 lignes : Journal ODR, Compte 627, Libellé Charge UAT, Débit 500 ; Journal ODR, Compte 408, Libellé Charge UAT, Crédit 500. Enregistrer et fermer.
 4. Revenir à la page « Révision », étape 4 « OD libres », cliquer « Réimporter ».
 5. Lire la zone de message, la liste « OD libres » et son pied.
 
-**Vous devez obtenir :** Export : la zone affiche le début de « Classeur de 0 ligne(s) préremplie(s) déposé au site du cabinet : <adresse> », coupée au bord droit. Réimport : la zone affiche le début de la phrase ci-dessous, coupée au bord droit ; la liste « OD libres » porte les 2 lignes, 500,00 au débit du 627 et 500,00 au crédit du 408 ; le pied affiche « Équilibre du brouillon libre 500,00, équilibré ».
+**Vous devez obtenir :** Export : la zone « MESSAGE » affiche « Grille de saisie de 0 ligne préremplie déposée le <jj/mm/aaaa> à <hh:mm> ; elle s’ouvre depuis la liste du dossier de travail (étape 6). ». Réimport : la zone affiche la phrase ci-dessous ; la liste « OD libres » porte les 2 lignes, 500,00 au débit du 627 et 500,00 au crédit du 408 ; le pied affiche « Équilibre du brouillon libre 500,00, équilibré ».
 
 ```
 Classeur relu au site du cabinet. 1 onglet(s) importé(s). OD libres : 2 ligne(s) d'OD au brouillon libres, équilibrées.
@@ -2240,7 +2239,7 @@ Passé ☐ · Échec ☐ · Remarque :
 1. Étape 4 « OD libres » : cliquer « Valider le brouillon ».
 2. Cliquer l'étape 5 « Conclure » et lire la liste « En attente de visa ».
 
-**Vous devez obtenir :** La zone de message de l'étape 4 affiche la phrase ci-dessous, dont la fin peut être coupée au bord droit. La liste « En attente de visa » de l'étape 5 porte « Lot <n> · OMEGA-OPCI · ENTITE », proposé par le Compte 1. Le pied de la liste « OD libres » affiche « Équilibre du brouillon libre 0,00, vide ».
+**Vous devez obtenir :** La zone « MESSAGE » affiche la phrase ci-dessous. La liste « En attente de visa » de l'étape 5 porte « Lot <n> · OMEGA-OPCI · ENTITE », proposé par le Compte 1. Le pied de la liste « OD libres » affiche « Équilibre du brouillon libre 0,00, vide ».
 
 ```
 Lot <n> proposé : les OD libres attendent le visa du chef de mission.
@@ -2280,7 +2279,7 @@ Passé ☐ · Échec ☐ · Remarque :
 3. Saisir « Trésorerie rapprochée, une observation sur une opération en suspens » dans « Conclusion du cycle », cliquer « Enregistrer la conclusion de TRESO ».
 4. Lire la zone de message, la carte d'état du cycle et le tableau « Conclusion du cycle enregistrée ».
 
-**Vous devez obtenir :** 1er clic : le refus nomme le champ vide, « Champs obligatoires à remplir : « Conclusion du cycle ». », dans la bulle du service. 2e clic : phrase ci-dessous, dont la fin peut être coupée au bord droit de la zone ; le tableau porte le texte saisi ; la carte d'état du cycle affiche « Conclusion du cycle : enregistrée par <identifiant>, le <jj/mm/aaaa> · Visa du cycle : aucune décision », <identifiant> étant l'adresse de connexion du Compte 1 avant « @ ».
+**Vous devez obtenir :** 1er clic : le refus nomme le champ vide, « Champs obligatoires à remplir : « Conclusion du cycle ». », dans la bulle du service. 2e clic : la zone « MESSAGE » porte la phrase ci-dessous ; le tableau porte le texte saisi ; la carte d'état du cycle affiche « Conclusion du cycle : enregistrée par <identifiant>, le <jj/mm/aaaa> · Visa du cycle : aucune décision », <identifiant> étant l'adresse de connexion du Compte 1 avant « @ ».
 
 ```
 Cycle TRESO conclu, synthèse de 1 feuille(s) régénérée. Le visa du chef de mission peut être demandé.
@@ -2298,7 +2297,7 @@ Passé ☐ · Échec ☐ · Remarque :
 2. Avec le Compte 1 : lire la carte de blocage du visa du cycle et observer « Viser le cycle ».
 3. Avec le Compte 2 : page « Révision », OMEGA-OPCI et 31/12/2025 choisis, étape 5 : vérifier que « Capital » est choisi dans la bande des cycles, sinon le choisir ; lire la carte de blocage et observer « Viser le cycle ».
 
-**Vous devez obtenir :** Conclusion : la zone de message porte « Cycle CAPITAL conclu, synthèse de 0 feuille(s) régénérée. Le visa du chef de mission peut être demandé. », dont la fin peut être coupée au bord droit de la zone. Compte 1 : la carte porte la phrase ci-dessous, puis « le connecté a conclu ce cycle » et « visa réservé au chef de mission », séparés par « ; » ; « Viser le cycle » est inactif. Compte 2 : la carte porte la phrase ci-dessous seule ; « Viser le cycle » est inactif.
+**Vous devez obtenir :** Conclusion : la zone de message porte « Cycle CAPITAL conclu, synthèse de 0 feuille(s) régénérée. Le visa du chef de mission peut être demandé. ». Compte 1 : la carte porte la phrase ci-dessous, puis « le connecté a conclu ce cycle » et « visa réservé au chef de mission », séparés par « ; » ; « Viser le cycle » est inactif. Compte 2 : la carte porte la phrase ci-dessous seule ; « Viser le cycle » est inactif.
 
 ```
 Visa refusé : 31 question(s) du cycle sont sans réponse, dont CAPITAL-01, CAPITAL-02, CAPITAL-03, CAPITAL-04, CAPITAL-05.
@@ -2493,9 +2492,128 @@ Forme refusée : l'entité OMEGA-OPCI est soumise au commissariat aux comptes ; 
 
 Passé ☐ · Échec ☐ · Remarque :
 
+### Les référentiels du cabinet
+
+#### 3-45. Lire l'état des questions de référence à valider
+
+**Besoin :** L'associé voit, cycle par cycle, les questions de référence qui restent à auditer avant de les valider.  
+**Profil :** Compte 1 · **Criticité d'un échec :** Majeure  
+**Avant de commencer :** Compte 1 inscrit ASSOCIE par sql/90_vous_inscrire_aux_missions.sql. Le référentiel livré porte 620 questions de référence, toutes au statut « à auditer », dont 11 dans le cycle Hors bilan (sql/10_referentiels/55_ref_question.sql) ; aucun test précédent ne valide ni n'écarte de question.
+
+1. Ouvrez la page « Référentiels » du rapport « Conduite de mission ».
+2. Lisez la 4e carte de la bande d'indicateurs, « QUESTIONS À VALIDER », et la ligne placée sous son nombre.
+3. Cliquez l'étape « 3 Valider les questions de référence ».
+4. Dans la liste « Cycle ou phase », choisissez « Hors bilan ».
+5. Lisez les cartes de l'étape et la couleur de « Valider les questions du cycle ». Ne cliquez pas ce bouton : le clic validerait les 11 questions de Hors bilan dans le référentiel du cabinet.
+
+**Vous devez obtenir :** La carte « QUESTIONS À VALIDER » porte le même nombre que la ligne placée sous son nombre, « sur <n> questions de référence » : aucune question n'est validée ni écartée. Pour Hors bilan, les cartes de l'étape portent 11 questions à auditer, 0 validée, l'adresse de connexion du Compte 1 comme associé connecté, et l'état ci-dessous ; « Valider les questions du cycle » est bleu (#0F5C8C).
+
+```
+conditions réunies
+```
+
+Passé ☐ · Échec ☐ · Remarque :
+
+#### 3-46. La validation des questions de référence est refusée à qui n'est pas associé
+
+**Besoin :** Seul l'associé valide une question de référence ; un autre membre de l'équipe ne le peut pas.  
+**Profil :** Compte 3 · **Criticité d'un échec :** Bloquante  
+**Avant de commencer :** Compte 3 désigné « Collaborateur » (PREPARATEUR) de UAT-OPCI au test « Désigner le collaborateur du dossier », sans mandat d'associé ni de réviseur. Le Compte 2 ne convient pas : le test « Désigner l'associé signataire du dossier » lui a donné un mandat d'associé, qui suffit pour valider une question de référence ou tenir un référentiel. Test « Lire l'état des questions de référence à valider » passé.
+
+1. Connectez-vous avec le Compte 3 et ouvrez la page « Référentiels ».
+2. Cliquez l'étape « 3 Valider les questions de référence » ; dans la liste « Cycle ou phase », choisissez « Hors bilan ».
+3. Lisez les cartes de l'étape et la couleur de « Valider les questions du cycle ».
+4. Cliquez « Valider les questions du cycle » et lisez la bulle du service.
+5. Cliquez « Actualiser » dans la barre d'actions du service Power BI ; lisez la zone « MESSAGE » et les cartes de l'étape.
+
+**Vous devez obtenir :** Avant le clic, la carte de l'associé connecté porte « aucun rôle d’associé », la carte d'état porte « réservé à l’associé » et le bouton est gris (#D9DFE6). Le clic est refusé dans la bulle du service par la phrase ci-dessous, avant tout appel à la base : la zone « MESSAGE » ne reçoit aucun message nouveau, et Hors bilan garde 11 questions à auditer.
+
+```
+Validation refusée : réservé à l’associé. Seul l’associé valide une question de référence, et votre adresse de connexion ne porte aucun mandat d’associé en cours.
+```
+
+Passé ☐ · Échec ☐ · Remarque :
+
+#### 3-47. La mise à jour d'un référentiel est refusée à qui n'en a pas le droit
+
+**Besoin :** Un référentiel du cabinet tenu par l'associé ne se modifie ni ne se dépose par un autre membre de l'équipe.  
+**Profil :** Compte 3 · **Criticité d'un échec :** Bloquante  
+**Avant de commencer :** Compte 3 désigné « Collaborateur » (PREPARATEUR) de UAT-OPCI au test « Désigner le collaborateur du dossier », sans mandat d'associé ni de réviseur. Le Compte 2 ne convient pas : le test « Désigner l'associé signataire du dossier » lui a donné un mandat d'associé, qui suffit pour valider une question de référence ou tenir un référentiel. Le référentiel « Natures de pièce justificative » est tenu par l'associé (sql/10_referentiels/36_ref_referentiel.sql:30) et porte la ligne RELEVE_BANCAIRE (sql/10_referentiels/78_ref_nature_piece.sql:17).
+
+1. Compte 3 : page « Référentiels », cliquez l'étape « 2 Mettre à jour un référentiel », puis « Mis à jour par le cabinet ».
+2. Dans la liste des référentiels, choisissez « Natures de pièce justificative » ; dans la liste « Ligne », choisissez RELEVE_BANCAIRE.
+3. Lisez la carte d'état des actions de la ligne et la couleur de « Modifier la valeur ».
+4. Cliquez « Modifier la valeur » et lisez la bulle du service.
+5. Cliquez « Exporter le classeur », puis « Actualiser » dans la barre d'actions du service Power BI ; lisez la zone « MESSAGE ».
+
+**Vous devez obtenir :** La carte d'état contient « aucun droit de modification » et « Modifier la valeur » est gris (#D9DFE6). Le 1er clic est refusé dans la bulle du service par « Modification refusée : aucun droit de modification. », avant tout appel à la base. Le 2e clic est refusé par la base, qui juge le droit de qui clique : la zone « MESSAGE », sur fond rose, porte la phrase ci-dessous, l'espace après « et avant » étant l'espace fine insécable. Aucun classeur n'est déposé.
+
+```
+Dépôt refusé sur « Natures de pièce justificative » : aucun droit de modification.
+```
+
+Passé ☐ · Échec ☐ · Remarque :
+
+#### 3-48. Ajout refusé pour un code déjà employé dans un référentiel
+
+**Besoin :** Un code identifie une ligne et une seule d'un référentiel du cabinet.  
+**Profil :** Compte 1 · **Criticité d'un échec :** Majeure  
+**Avant de commencer :** Compte 1 inscrit ASSOCIE. Le référentiel « Natures de pièce justificative » porte 10 lignes, dont RELEVE_BANCAIRE (sql/10_referentiels/78_ref_nature_piece.sql:1 et 17).
+
+1. Page « Référentiels », étape « 2 Mettre à jour un référentiel », « Mis à jour par le cabinet » : choisissez « Natures de pièce justificative » ; dans la liste « Ligne », choisissez RELEVE_BANCAIRE.
+2. Saisissez « Code de la nouvelle ligne » : RELEVE_BANCAIRE ; laissez « Libellé » vide.
+3. Cliquez « Ajouter la ligne », puis « Actualiser » dans la barre d'actions du service Power BI.
+4. Lisez la zone « MESSAGE » et la liste des lignes du référentiel.
+
+**Vous devez obtenir :** La zone « MESSAGE », sur fond rose, porte le refus ci-dessous. La liste porte toujours 10 lignes, et RELEVE_BANCAIRE une seule fois.
+
+```
+Ajout refusé : le code « RELEVE_BANCAIRE » est déjà celui d’une ligne du référentiel « Natures de pièce justificative ».
+```
+
+Passé ☐ · Échec ☐ · Remarque :
+
+#### 3-49. Ajout d'une question sur la tenue refusé pour un niveau autre que 2 ou 3
+
+**Besoin :** Une question sur la tenue de la comptabilité porte un niveau de programme que le référentiel admet.  
+**Profil :** Compte 1 · **Criticité d'un échec :** Majeure  
+**Avant de commencer :** Compte 1 inscrit ASSOCIE. Sujet « concordance entre systèmes » au référentiel (sql/10_referentiels/40_ref_sujet_tenue.sql:8) ; cycle Hors bilan non écarté (sql/10_referentiels/26_ref_cycle.sql:13).
+
+1. Page « Référentiels », étape « 3 Valider les questions de référence ».
+2. Dans « Cycle ou phase », choisissez « Hors bilan » ; dans « Sujet », choisissez « concordance entre systèmes ».
+3. Saisissez « Niveau » : 4 et « Énoncé » : Question d'essai sur la concordance des systèmes.
+4. Cliquez « Ajouter la question », puis « Actualiser » dans la barre d'actions du service Power BI.
+5. Lisez la zone « MESSAGE » et les cartes de l'étape.
+
+**Vous devez obtenir :** La zone « MESSAGE », sur fond rose, porte le refus ci-dessous. Aucune question n'est ajoutée : Hors bilan garde 11 questions à auditer.
+
+```
+Ajout refusé : le niveau « 4 » n’est pas admis dans le champ « Niveau » : une question sur la tenue de la comptabilité est de niveau 2 (programmes classique et étendu) ou 3 (programme étendu seul).
+```
+
+Passé ☐ · Échec ☐ · Remarque :
+
+#### 3-50. Exporter le classeur d'un référentiel au site du cabinet
+
+**Besoin :** L'associé relit un référentiel du cabinet dans un classeur Excel, déposé au site du cabinet.  
+**Profil :** Compte 1 · **Criticité d'un échec :** Majeure  
+**Avant de commencer :** Compte 1 inscrit ASSOCIE. Étape 12 faite : dépôt des classeurs installé. Le référentiel « Natures de pièce justificative » porte 10 lignes (sql/10_referentiels/78_ref_nature_piece.sql:1).
+
+1. Page « Référentiels », étape « 2 Mettre à jour un référentiel », « Mis à jour par le cabinet » : choisissez « Natures de pièce justificative ».
+2. Cliquez « Exporter le classeur », puis « Actualiser » dans la barre d'actions du service Power BI ; lisez la zone « MESSAGE ».
+3. Cliquez « Ouvrir le classeur ».
+
+**Vous devez obtenir :** La zone « MESSAGE », sur fond vert pâle, porte la phrase ci-dessous, où <adresse> est l'adresse du classeur referentiel_ref_nature_piece.xlsx au dossier « Référentiels » du site du cabinet. « Ouvrir le classeur » ouvre ce classeur, qui porte les 10 lignes du référentiel.
+
+```
+Classeur du référentiel « Natures de pièce justificative » déposé au dossier Référentiels du site du cabinet (10 lignes) : <adresse>
+```
+
+Passé ☐ · Échec ☐ · Remarque :
+
 ### Contrôler les comptes annuels par recalcul, tests manuels
 
-#### 3-45. Recalculer la balance après les OD de révision
+#### 3-51. Recalculer la balance après les OD de révision
 
 **Nature :** Contrôle par recalcul  
 **Besoin :** La balance après révision égale la balance avant, augmentée des OD de révision et de valorisation validées.  
@@ -2511,7 +2629,7 @@ Passé ☐ · Échec ☐ · Remarque :
 
 Passé ☐ · Échec ☐ · Constats :
 
-#### 3-46. Recalculer les rubriques et le total du bilan actif
+#### 3-52. Recalculer les rubriques et le total du bilan actif
 
 **Nature :** Contrôle par recalcul  
 **Besoin :** Le bilan actif est l'addition exacte de ses lignes de détail, au modèle de l'article 321-2.  
@@ -2528,7 +2646,7 @@ Passé ☐ · Échec ☐ · Constats :
 
 Passé ☐ · Échec ☐ · Constats :
 
-#### 3-47. Recalculer les capitaux propres et le total du bilan passif, puis l'équilibre du bilan
+#### 3-53. Recalculer les capitaux propres et le total du bilan passif, puis l'équilibre du bilan
 
 **Nature :** Contrôle par recalcul  
 **Besoin :** Les capitaux propres et le total du passif sont l'addition exacte de leurs lignes, au modèle de l'article 321-6.  
@@ -2544,7 +2662,7 @@ Passé ☐ · Échec ☐ · Constats :
 
 Passé ☐ · Échec ☐ · Constats :
 
-#### 3-48. Recalculer les totaux et les résultats du compte de résultat
+#### 3-54. Recalculer les totaux et les résultats du compte de résultat
 
 **Nature :** Contrôle par recalcul  
 **Besoin :** Chaque total et chaque résultat du compte de résultat suit la formule du modèle de l'article 322-2.  
@@ -2560,7 +2678,7 @@ Passé ☐ · Échec ☐ · Constats :
 
 Passé ☐ · Échec ☐ · Constats :
 
-#### 3-49. Rapprocher le tableau 333-3 du bilan et du compte de résultat
+#### 3-55. Rapprocher le tableau 333-3 du bilan et du compte de résultat
 
 **Nature :** Contrôle par recalcul  
 **Besoin :** Le tableau d'évolution de l'actif net se rapproche des capitaux propres du bilan et des résultats du compte de résultat.  
@@ -2585,7 +2703,7 @@ Passé ☐ · Échec ☐ · Constats :
 
 ### Conduire la révision d'un arrêté, tests manuels
 
-#### 3-50. Réviser l'arrêté et conduire des cycles jusqu'à leur visa
+#### 3-56. Réviser l'arrêté et conduire des cycles jusqu'à leur visa
 
 **Nature :** Parcours métier  
 **Besoin :** L'équipe conduit la révision de l'arrêté comme en mission : réponses, feuilles, pièces, écritures, conclusions et visas.  
@@ -2607,7 +2725,7 @@ Passé ☐ · Échec ☐ · Constats :
 
 ### Préparer les comptes annuels et l'annexe, tests manuels
 
-#### 3-51. Compléter l'annexe et relire les comptes annuels de l'arrêté
+#### 3-57. Compléter l'annexe et relire les comptes annuels de l'arrêté
 
 **Nature :** Parcours métier  
 **Besoin :** Le réviseur complète l'annexe et relit bilan, compte de résultat et annexe avant leur production.  
@@ -2802,15 +2920,15 @@ Passé ☐ · Échec ☐ · Remarque :
 **Avant de commencer :** Étape 12 faite : dépôt des classeurs installé (paramètres DEPOT_CLASSEUR_URL et SITE_CABINET) et raccourci « fec » du coffre vers le site du cabinet. Joué après les tests d'expertise et de valeur retenue du 31/12/2025.
 
 1. Page « Valorisation », OMEGA-OPCI, 31/12/2025, étape « Arrêter les valeurs », bande « Immeubles » : cliquez « Exporter le classeur ».
-2. Cliquez « Ouvrir le classeur ».
+2. Cliquez « Ouvrir le classeur Excel ».
 3. Dans l'onglet « Valeurs », à la ligne de l'actif IMM-202, remplacez la « Valeur d'expertise » par 9 450 000 ; ne touchez à aucune autre cellule ; enregistrez le classeur.
 4. De nouveau sur la page, cliquez « Réimporter le classeur ».
 5. Cliquez la ligne IMM-202 et lisez la grille « Expertises de l’actif, par date de valeur ».
 
-**Vous devez obtenir :** L'export affiche « Classeur des valeurs, <n> actif(s), déposé au site du cabinet : <adresse> », <n> étant le nombre de lignes d'actifs du classeur. « Ouvrir le classeur » ouvre valeurs_OMEGA-OPCI_2025-12-31.xlsx sous « Dossiers de travail/OMEGA-OPCI/2025-12-31/ » : onglet « Valeurs », ligne 1 les libellés (Entité, Actif, Nature, Prix de revient, Valeur d'expertise, Rapport, Valeur retenue en place, État de la valeur, Valeur retenue, Source, Motif de l'écart, Pièce, État de l'actif), ligne 2 les clés, les actifs à partir de la ligne 3. Le réimport affiche « Classeur relu au site du cabinet. Classeur réimporté : 0 expertise(s) insérée(s), 1 remplacée(s), <m> inchangée(s) ; 0 valeur(s) retenue(s) proposée(s) ; 0 ligne(s) refusée(s). », <m> valant <n> moins 1 : chaque immeuble du classeur porte une expertise au 31/12/2025 avec son rapport, et seule celle d'IMM-202 change. La grille porte 9 450 000,00 au 31/12/2025 pour IMM-202.
+**Vous devez obtenir :** L'export affiche « Classeur Excel des valeurs de <n> actifs déposé le <jj/mm/aaaa> à <hh:mm> ; il s’ouvre par « Ouvrir le classeur Excel ». », <n> étant le nombre de lignes d'actifs du classeur, <jj/mm/aaaa> et <hh:mm> la date et l'heure de Paris du dépôt. « Ouvrir le classeur Excel » ouvre valeurs_OMEGA-OPCI_2025-12-31.xlsx sous « Dossiers de travail/OMEGA-OPCI/2025-12-31/ » : onglet « Valeurs », ligne 1 les libellés (Entité, Actif, Nature, Prix de revient, Valeur d'expertise, Rapport, Valeur retenue en place, État de la valeur, Valeur retenue, Source, Motif de l'écart, Pièce, État de l'actif), ligne 2 les clés, les actifs à partir de la ligne 3. Le réimport affiche « Classeur relu au site du cabinet. Classeur réimporté : 0 expertise(s) insérée(s), 1 remplacée(s), <m> inchangée(s) ; 0 valeur(s) retenue(s) proposée(s) ; 0 ligne(s) refusée(s). », <m> valant <n> moins 1 : chaque immeuble du classeur porte une expertise au 31/12/2025 avec son rapport, et seule celle d'IMM-202 change. La grille porte 9 450 000,00 au 31/12/2025 pour IMM-202.
 
 ```
-Classeur des valeurs, <n> actif(s), déposé au site du cabinet : <adresse> | Classeur relu au site du cabinet. Classeur réimporté : 0 expertise(s) insérée(s), 1 remplacée(s), <m> inchangée(s) ; 0 valeur(s) retenue(s) proposée(s) ; 0 ligne(s) refusée(s).
+Classeur Excel des valeurs de <n> actifs déposé le <jj/mm/aaaa> à <hh:mm> ; il s’ouvre par « Ouvrir le classeur Excel ». | Classeur relu au site du cabinet. Classeur réimporté : 0 expertise(s) insérée(s), 1 remplacée(s), <m> inchangée(s) ; 0 valeur(s) retenue(s) proposée(s) ; 0 ligne(s) refusée(s).
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -2847,7 +2965,7 @@ Passé ☐ · Échec ☐ · Remarque :
 1. Compte 2 : page « Valorisation », OMEGA-OPCI, 31/12/2025, étape « Générer les écritures ».
 2. Cliquez « Générer le lot » et lisez la zone « MESSAGE ».
 3. Lisez la grille « Lots de valorisation de l’arrêté » et la carte d'état de « Générer le lot ».
-4. Cliquez « Ouvrir le visa des lots » : l'étape 5 « Conclure » de la page « Révision » s'ouvre. Dans la liste « En attente de visa », choisissez « Lot <n> · OMEGA-OPCI · VALO », <n> étant le numéro rendu par le message.
+4. Cliquez « Ouvrir la page Révision, visa des lots » : l'étape 5 « Conclure » de la page « Révision » s'ouvre. Dans la liste « En attente de visa », choisissez « Lot <n> · OMEGA-OPCI · VALO », <n> étant le numéro rendu par le message.
 5. Cliquez « Viser le lot ».
 
 **Vous devez obtenir :** La zone « MESSAGE » affiche « Lot <n> des différences d'estimation proposé sur la feuille VALO-2025-12-31-OMEGA-OPCI : <l> ligne(s) sur <m> actif(s), <montant> au débit et autant au crédit, règles <version>. Il attend le visa du chef de mission. », suivi, quand des titres de filiales sont valorisés à l'actif net réévalué, de « Les titres de filiales valorisés à l'actif net réévalué (<codes>) passent par la reprise du compte 275. ». La grille porte le lot <n>, entité OMEGA-OPCI, état « proposé ». « Générer le lot » passe gris et sa carte porte « lot <n> proposé, non périmé ». Sur la page « Révision », « Viser le lot » est gris (#D9DFE6) pour Compte 2, auteur du lot : le clic n'exécute aucune action et le lot reste « proposé ».
@@ -2884,7 +3002,7 @@ Passé ☐ · Échec ☐ · Remarque :
 **Avant de commencer :** Joué après « Annuler un lot proposé, motif obligatoire ». La synthèse proposée par Compte 2 dans « Celui qui propose la synthèse ne la vise pas » attend toujours son visa.
 
 1. Compte 1 : page « Valorisation », OMEGA-OPCI, 31/12/2025, étape « Générer les écritures » ; cliquez « Générer le lot ».
-2. Compte 2 : même page ; cliquez « Ouvrir le visa des lots » ; dans la liste « En attente de visa » de l'étape 5 « Conclure » de la page « Révision », choisissez « Lot <n2> · OMEGA-OPCI · VALO », <n2> étant le numéro rendu par le message de génération ; cliquez « Viser le lot ».
+2. Compte 2 : même page ; cliquez « Ouvrir la page Révision, visa des lots » ; dans la liste « En attente de visa » de l'étape 5 « Conclure » de la page « Révision », choisissez « Lot <n2> · OMEGA-OPCI · VALO », <n2> étant le numéro rendu par le message de génération ; cliquez « Viser le lot ».
 3. Compte 2 : sur la page « Valorisation », lisez la grille « Lots de valorisation de l’arrêté », puis, bande « Rationalisation et synthèse », la carte d'état de « Proposer la synthèse ».
 
 **Vous devez obtenir :** La génération affiche « Lot <n2> des différences d'estimation proposé sur la feuille VALO-2025-12-31-OMEGA-OPCI : <l> ligne(s) sur <m> actif(s), <montant> au débit et autant au crédit, règles <version>. Il attend le visa du chef de mission. », suivi, quand des titres de filiales sont valorisés à l'actif net réévalué, de « Les titres de filiales valorisés à l'actif net réévalué (<codes>) passent par la reprise du compte 275. ». Pour Compte 2, « Viser le lot » est bleu (#0F5C8C) ; le visa affiche « LOT : vise. ». La grille porte le lot <n2> à l'état « visé », visé par Compte 2. La synthèse en attente est périmée par ce visa : la carte de « Proposer la synthèse » ne porte plus « synthèse proposée le <date>, en attente du visa ».
@@ -3203,15 +3321,16 @@ Passé ☐ · Échec ☐ · Remarque :
 
 **Besoin :** Inscrire le montant de distribution décidé par l'assemblée, refusé hors des bornes de l'article L. 214-69, II.  
 **Profil :** Compte 1 · **Criticité d'un échec :** Bloquante  
-**Avant de commencer :** OMEGA-OPCI, 31/12/2025, arrêté annuel. La « Fiche de la décision » de la catégorie résultat porte une borne basse et une borne haute. Le bouton vide ses champs de saisie et la liste « CATÉGORIE » après un appel réussi ; après un refus, ils peuvent garder leur saisie : avant chaque clic, vérifiez ce qu'ils portent, catégorie comprise.
+**Avant de commencer :** OMEGA-OPCI, 31/12/2025, arrêté annuel. La « Fiche de la décision » de la catégorie résultat porte une borne basse et une borne haute. Le bouton vide ses champs de saisie et la liste « CATÉGORIE » après un appel réussi ; après un refus, ils peuvent garder leur saisie : avant chaque clic, vérifiez ce qu'ils portent, catégorie comprise. Compte 1 associé d'OMEGA-OPCI ; Compte 2 chef de mission, sans le rôle d'associé (sql/90_vous_inscrire_aux_missions.sql).
 
-1. Page « Arrêté », OMEGA-OPCI, 31/12/2025, étape « 3 Distribution annuelle », sous-onglet « Décision de l’assemblée » ; dans « CATÉGORIE », choisissez « Résultat distribuable afférent aux produits, 85 % au moins ».
-2. Dans « Fiche de la décision », relevez le montant de « Borne basse de la décision » et celui de « Borne haute de la décision ».
-3. Dans « MONTANT DÉCIDÉ », saisissez la borne haute augmentée de 1 000,00 ; dans « DATE DE L’ASSEMBLÉE », saisissez 30/06/2026 ; cliquez « Enregistrer la décision ».
-4. Choisissez de nouveau la même catégorie ; dans « MONTANT DÉCIDÉ », saisissez la borne basse ; dans « DATE DE L’ASSEMBLÉE », saisissez 30/06/2026 ; cliquez « Enregistrer la décision ».
-5. Lisez la grille « Décisions inscrites ».
+1. Compte 2 : page « Arrêté », OMEGA-OPCI, 31/12/2025, étape « 3 Distribution annuelle », sous-onglet « Décision de l’assemblée » ; dans « CATÉGORIE », choisissez « Résultat distribuable afférent aux produits, 85 % au moins » ; dans « MONTANT DÉCIDÉ », saisissez 100 ; dans « DATE DE L’ASSEMBLÉE », saisissez 30/06/2026. Observez la couleur de « Enregistrer la décision », cliquez-le et lisez la zone « MESSAGE ».
+2. Compte 1 : page « Arrêté », OMEGA-OPCI, 31/12/2025, étape « 3 Distribution annuelle », sous-onglet « Décision de l’assemblée » ; dans « CATÉGORIE », choisissez « Résultat distribuable afférent aux produits, 85 % au moins ».
+3. Dans « Fiche de la décision », relevez le montant de « Borne basse de la décision » et celui de « Borne haute de la décision ».
+4. Dans « MONTANT DÉCIDÉ », saisissez la borne haute augmentée de 1 000,00 ; dans « DATE DE L’ASSEMBLÉE », saisissez 30/06/2026 ; cliquez « Enregistrer la décision ».
+5. Choisissez de nouveau la même catégorie ; dans « MONTANT DÉCIDÉ », saisissez la borne basse ; dans « DATE DE L’ASSEMBLÉE », saisissez 30/06/2026 ; cliquez « Enregistrer la décision ».
+6. Lisez la grille « Décisions inscrites ».
 
-**Vous devez obtenir :** Au 1er clic : « Décision refusée : le montant de <montant> sort des bornes. L'obligation minimale est de <minimum>, soit <taux> des sommes distribuables, et le total distribuable est de <total>. Article L. 214-69, II. », <minimum> et <total> égalant la borne basse et la borne haute relevées, <taux> valant 85,00 %. Au 2e clic : « Décision enregistrée pour l'exercice clos le 31/12/2025 : « Résultat distribuable afférent aux produits, 85 % au moins », montant décidé <montant>, assemblée du 30/06/2026. », le libellé de la catégorie portant l'espace fine insécable entre 85 et % ; la grille « Décisions inscrites » porte la ligne de la catégorie avec l'obligation, le montant décidé et l'assemblée du 30/06/2026.
+**Vous devez obtenir :** Compte 2 : « Enregistrer la décision » est gris (#D9DFE6) ; le clic affiche « Décision refusée : la distribution se décide par l'associé du véhicule, rôle que votre adresse de connexion ne tient pas. » ; rien n'est inscrit. Compte 1 : au 1er clic : « Décision refusée : le montant de <montant> sort des bornes. L'obligation minimale est de <minimum>, soit <taux> des sommes distribuables, et le total distribuable est de <total>. Article L. 214-69, II. », <minimum> et <total> égalant la borne basse et la borne haute relevées, <taux> valant 85,00 %. Au 2e clic : « Décision enregistrée pour l'exercice clos le 31/12/2025 : « Résultat distribuable afférent aux produits, 85 % au moins », montant décidé <montant>, assemblée du 30/06/2026. », le libellé de la catégorie portant l'espace fine insécable entre 85 et % ; la grille « Décisions inscrites » porte la ligne de la catégorie avec l'obligation, le montant décidé et l'assemblée du 30/06/2026.
 
 ```
 Décision refusée : le montant de <montant> sort des bornes. L'obligation minimale est de <minimum>, soit <taux> des sommes distribuables, et le total distribuable est de <total>. Article L. 214-69, II. | Décision enregistrée pour l'exercice clos le 31/12/2025 : « Résultat distribuable afférent aux produits, 85 % au moins », montant décidé <montant>, assemblée du 30/06/2026.
@@ -3608,7 +3727,7 @@ Passé ☐ · Échec ☐ · Remarque :
 ## Ce qu'on écrit à la fin
 
 > Phase passée le **<date>**, dans l'espace **<nom>**, par **<noms>**.
-> Tests passés : **<nombre>** sur 180. Tests en échec : **<lesquels>**.
+> Tests passés : **<nombre>** sur 186. Tests en échec : **<lesquels>**.
 > Décision : **<acceptée, acceptée avec réserves, ou refusée>**, prise par **<nom>**.
 
 **Ne déployez pas en production tant qu'un test Bloquant ou Majeur applicable n'est pas passé.**

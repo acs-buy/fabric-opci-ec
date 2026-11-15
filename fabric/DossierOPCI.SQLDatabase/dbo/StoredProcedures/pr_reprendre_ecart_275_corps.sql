@@ -1,4 +1,3 @@
-
 -- pr_reprendre_ecart_275_corps : 1 refus
 -- ------------------------------------------------------------------ B1 : un seul lot de reprise du 275 propose a la fois
 
@@ -45,6 +44,11 @@ BEGIN
         RETURN;
     END;
 
+    -- 51320, D1 (15/11/2026) : action 27, a l'ecriture seulement : apres les retours a blanc et sans montant ; viseur compris (decision 3). Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51320, N'Action refusée : seule l''équipe du dossier peut reprendre l''écart du compte 275 de ce dossier.', 1;
     -- B1 (10/10/2026) : un 2e appel, tant que le 1er lot n'est pas vise, poserait un 2e lot portant les memes ecritures
     DECLARE @deja INT = (SELECT TOP (1) id FROM dbo.lot_ecritures
                          WHERE entite = @entite AND arrete = @arrete AND famille = 'DERIVABLE' AND portee = 'ENTITE'

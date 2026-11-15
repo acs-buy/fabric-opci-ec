@@ -32,13 +32,13 @@ table v_programme_cycles
 	measure 'Activer zero' = 0
 		lineageTag: bd0c50ad-4a81-4ffb-86ca-544f5254f97e
 
-	measure 'Fond revProgActiverlecyc' = IF ( ISBLANK ( [Cycle activable] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revProgActiverlecyc' = VAR f = ( IF ( ISBLANK ( [Cycle activable] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 6c07aa72-f8eb-48d8-9ee2-bdfb04412f65
 
-	measure 'Fond revProgRetirerlecyc' = IF ( ISBLANK ( [Cycle retirable] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revProgRetirerlecyc' = VAR f = ( IF ( ISBLANK ( [Cycle retirable] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: d59afb83-3995-4dd4-bb01-d86c6c1eab7a
 
-	measure 'Fond revProgOuvrirleclasse' = IF ( ISBLANK ( [Cycle choisi] ), "#D9DFE6", "#FFFFFF" )
+	measure 'Fond revProgOuvrirleclasse' = VAR f = ( IF ( ISBLANK ( [Cycle choisi] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: cac8c777-cc64-4311-84b2-3ae96bf2a2b8
 
 	measure 'Cycle au programme possible' = IF ( SUM ( v_programme_cycles[questions_eligibles] ) > 0, 1 )

@@ -6,7 +6,7 @@
     "y": 308,
     "z": 4300,
     "height": 984,
-    "width": 656,
+    "width": 447,
     "tabOrder": 4300
   },
   "visual": {
@@ -48,48 +48,6 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "v_etat_dossier"
-                    }
-                  },
-                  "Property": "Acceptation"
-                }
-              },
-              "queryRef": "v_etat_dossier.Acceptation",
-              "nativeQueryRef": "Acceptation"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "v_etat_dossier"
-                    }
-                  },
-                  "Property": "Maintien"
-                }
-              },
-              "queryRef": "v_etat_dossier.Maintien",
-              "nativeQueryRef": "Maintien"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "v_etat_dossier"
-                    }
-                  },
-                  "Property": "Arrêtés ouverts du client"
-                }
-              },
-              "queryRef": "v_etat_dossier.Arrêtés ouverts du client",
-              "nativeQueryRef": "Arrêtés"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
                       "Entity": "v_perimetre_groupe"
                     }
                   },
@@ -99,7 +57,8 @@
               "queryRef": "v_perimetre_groupe.Quote-part détenue",
               "nativeQueryRef": "Quote-part"
             }
-          ]
+          ],
+          "showAll": true
         }
       }
     },
@@ -217,7 +176,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "120D"
+                  "Value": "115D"
                 }
               }
             }
@@ -231,7 +190,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "120D"
+                  "Value": "157D"
                 }
               }
             }
@@ -245,49 +204,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "96D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "v_etat_dossier.Acceptation"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "78D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "v_etat_dossier.Maintien"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "104D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "v_etat_dossier.Arrêtés ouverts du client"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "114D"
+                  "Value": "149D"
                 }
               }
             }
@@ -336,126 +253,6 @@
                     "Measure": {
                       "Expression": {
                         "SourceRef": {
-                          "Entity": "v_etat_dossier"
-                        }
-                      },
-                      "Property": "Fond acceptation"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "data": [
-              {
-                "dataViewWildcard": {
-                  "matchingOption": 1
-                }
-              }
-            ],
-            "metadata": "v_etat_dossier.Acceptation"
-          }
-        },
-        {
-          "properties": {
-            "backColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "v_etat_dossier"
-                        }
-                      },
-                      "Property": "Fond maintien"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "data": [
-              {
-                "dataViewWildcard": {
-                  "matchingOption": 1
-                }
-              }
-            ],
-            "metadata": "v_etat_dossier.Maintien"
-          }
-        },
-        {
-          "properties": {
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "v_etat_dossier"
-                        }
-                      },
-                      "Property": "Texte acceptation"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "data": [
-              {
-                "dataViewWildcard": {
-                  "matchingOption": 1
-                }
-              }
-            ],
-            "metadata": "v_etat_dossier.Acceptation"
-          }
-        },
-        {
-          "properties": {
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "v_etat_dossier"
-                        }
-                      },
-                      "Property": "Texte maintien"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "data": [
-              {
-                "dataViewWildcard": {
-                  "matchingOption": 1
-                }
-              }
-            ],
-            "metadata": "v_etat_dossier.Maintien"
-          }
-        },
-        {
-          "properties": {
-            "backColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
                           "Entity": "ref_entite"
                         }
                       },
@@ -505,36 +302,6 @@
               }
             ],
             "metadata": "liste_clients.Dénomination"
-          }
-        },
-        {
-          "properties": {
-            "backColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "ref_entite"
-                        }
-                      },
-                      "Property": "Fond ligne entite"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "data": [
-              {
-                "dataViewWildcard": {
-                  "matchingOption": 1
-                }
-              }
-            ],
-            "metadata": "v_etat_dossier.Arrêtés ouverts du client"
           }
         },
         {
@@ -666,6 +433,17 @@
                   "Value": "true"
                 }
               }
+            },
+            "background": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#CFDEE8'"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -714,48 +492,6 @@
           }
         },
         "type": "Categorical"
-      },
-      {
-        "name": "1ff0b0860a759de26897",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_etat_dossier"
-              }
-            },
-            "Property": "Acceptation"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "48f5271085308b450454",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_etat_dossier"
-              }
-            },
-            "Property": "Maintien"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "da7ff4d7c26b203cdc90",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_etat_dossier"
-              }
-            },
-            "Property": "Arrêtés ouverts du client"
-          }
-        },
-        "type": "Advanced"
       },
       {
         "name": "56ab7ac1d551244eb448",

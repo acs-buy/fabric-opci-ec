@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "e3cRetraits",
   "position": {
-    "x": 728,
+    "x": 519,
     "y": 1048,
     "z": 70000,
     "height": 190,
-    "width": 824,
+    "width": 1033,
     "tabOrder": 71400
   },
   "visual": {
@@ -303,7 +303,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "177D"
+                  "Value": "288D"
                 }
               }
             }
@@ -507,6 +507,17 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "background": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#CFDEE8'"
+                    }
+                  }
                 }
               }
             }

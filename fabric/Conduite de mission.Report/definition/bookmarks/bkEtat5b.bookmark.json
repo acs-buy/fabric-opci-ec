@@ -172,41 +172,6 @@
               }
             }
           },
-          "e1Fond40": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1Fond41": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1Fond50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1Fond51": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1Fond70": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e1Pied": {
             "singleVisual": {
               "display": {
@@ -291,41 +256,6 @@
               }
             }
           },
-          "e1Texte40": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1Texte41": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1Texte50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1Texte51": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1Texte70": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e1Titre": {
             "singleVisual": {
               "display": {
@@ -362,41 +292,6 @@
             }
           },
           "e1bBouton50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1bFond0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1bFond1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1bFond2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1bFond3": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1bFond50": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -529,41 +424,6 @@
               }
             }
           },
-          "e1bTexte0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1bTexte1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1bTexte2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1bTexte3": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1bTexte50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e1bTitre": {
             "singleVisual": {
               "display": {
@@ -579,20 +439,6 @@
             }
           },
           "e1cBouton1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1cFond0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1cFond1": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -711,20 +557,6 @@
               }
             }
           },
-          "e1cTexte0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e1cTexte1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e1cTitre": {
             "singleVisual": {
               "display": {
@@ -753,27 +585,6 @@
               }
             }
           },
-          "e2Fond50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2Fond51": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2Fond52": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e2Pied": {
             "singleVisual": {
               "display": {
@@ -789,27 +600,6 @@
             }
           },
           "e2Tableau": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2Texte50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2Texte51": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2Texte52": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -858,41 +648,6 @@
               }
             }
           },
-          "e2bFond0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2bFond1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2bFond2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2bFond50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2bFond51": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e2bPied": {
             "singleVisual": {
               "display": {
@@ -935,41 +690,6 @@
               }
             }
           },
-          "e2bTexte0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2bTexte1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2bTexte2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2bTexte50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2bTexte51": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e2bTitre": {
             "singleVisual": {
               "display": {
@@ -992,20 +712,6 @@
             }
           },
           "e2cCode": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2cFond0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2cFond50": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1040,20 +746,6 @@
               }
             }
           },
-          "e2cTexte0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2cTexte50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e2cTitre": {
             "singleVisual": {
               "display": {
@@ -1075,20 +767,6 @@
               }
             }
           },
-          "e2dFond70": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2dFond71": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e2dPied": {
             "singleVisual": {
               "display": {
@@ -1104,20 +782,6 @@
             }
           },
           "e2dPopTexte": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2dTexte70": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2dTexte71": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1180,41 +844,6 @@
               }
             }
           },
-          "e3Fond0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3Fond1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3Fond2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3Fond50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3Fond51": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e3Pieces": {
             "singleVisual": {
               "display": {
@@ -1271,41 +900,6 @@
               }
             }
           },
-          "e3Texte0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3Texte1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3Texte2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3Texte50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3Texte51": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e3Titre": {
             "singleVisual": {
               "display": {
@@ -1348,34 +942,6 @@
               }
             }
           },
-          "e3bFond0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3bFond1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3bFond2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3bFond50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e3bPied": {
             "singleVisual": {
               "display": {
@@ -1398,34 +964,6 @@
             }
           },
           "e3bSaisie3": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3bTexte0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3bTexte1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3bTexte2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3bTexte50": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1565,34 +1103,6 @@
               }
             }
           },
-          "e4Fond0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e4Fond1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e4Fond2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e4Fond3": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e4Pied": {
             "singleVisual": {
               "display": {
@@ -1601,34 +1111,6 @@
             }
           },
           "e4Saisie0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e4Texte0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e4Texte1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e4Texte2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e4Texte3": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1698,20 +1180,6 @@
               }
             }
           },
-          "e2rFond0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2rTexte0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e2rBouton0": {
             "singleVisual": {
               "display": {
@@ -1719,35 +1187,7 @@
               }
             }
           },
-          "e2rFond2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2rTexte2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e2rBouton2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2rFond3": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e2rTexte3": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1957,20 +1397,6 @@
               }
             }
           },
-          "e3cFond50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3cTexte50": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e3cBouton50": {
             "singleVisual": {
               "display": {
@@ -2048,35 +1474,7 @@
               }
             }
           },
-          "e3cFond0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3cTexte0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e3cBouton0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3cFond1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3cTexte1": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -2111,20 +1509,6 @@
               }
             }
           },
-          "e3Fond3": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e3Texte3": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e3Bouton3": {
             "singleVisual": {
               "display": {
@@ -2147,27 +1531,6 @@
             }
           },
           "e5Bouton2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e5Fond0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e5Fond1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e5Fond2": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -2223,28 +1586,28 @@
               }
             }
           },
-          "e5Texte0": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e5Texte1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "e5Texte2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "e5Titre": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "e1Bouton60": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "e1Fiche0_4_0": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "e1cSaisie16": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"

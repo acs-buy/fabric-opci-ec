@@ -20,7 +20,7 @@ Deux personnes s'en servent, et leurs besoins ont dicté ce qu'elle fait.
 
 Le dépôt est écrit en deux parties, et chaque étape figure dans les deux.
 
-La partie **Comprendre** dit pourquoi une étape existe et ce qui peut mal tourner. Neuf pages,
+La partie **Comprendre** dit pourquoi une étape existe et ce qui peut échouer. Neuf pages,
 environ une heure de lecture.
 
 La partie **Faire** donne la procédure, avec le nom exact de chaque bouton. À lire l'écran sous
@@ -72,7 +72,7 @@ reste une estimation.
 | 13 | Passer la recette | | 60 min | Vous, plus un collègue | [Faire](docs/faire/etape-13-passer-la-recette.md) |
 
 L'étape 6 a demandé 7 minutes d'attente le 26/09/2026, pour les dix éléments de cette date. Le
-dépôt en porte davantage depuis.
+dépôt en porte 13 aujourd'hui.
 L'actualisation du modèle du client, à l'étape 9, prend 20 secondes.
 Les 24 heures de l'étape 12 s'évitent : faites affecter les autorisations de la fonction dès
 l'étape 2, et elles seront prises en compte au moment où vous en aurez besoin.
@@ -183,10 +183,10 @@ leur contenu ni leurs branchements. L'éditeur l'écrit ainsi : « Git Integrati
 definitions only and does not restore item data ». Les étapes 7 à 10 posent le contenu et les
 branchements.
 
-*Vérification :* chaque dossier du répertoire `fabric/` a son élément dans votre espace : le coffre,
-la base, les ensembles de fonctions, les deux modèles de données et les deux rapports. S'y ajoutent
-deux points de terminaison SQL que la plateforme crée d'elle-même, un pour le coffre et un pour la
-base. Ces deux derniers ne demandent rien de votre part.
+*Vérification :* chacun des 13 dossiers du répertoire `fabric/` a son élément dans votre espace : le
+coffre, la base, les 7 ensembles de fonctions, les 2 modèles de données et les 2 rapports.
+S'y ajoutent 2 points de terminaison SQL que la plateforme crée d'elle-même, un pour le coffre et un pour la
+base. Ces 2 derniers ne demandent rien de votre part.
 
 [Comprendre les trois couches](docs/comprendre/06-les-trois-couches.md) ·
 [Faire l'étape 6](docs/faire/etape-06-ramener-les-elements.md)
@@ -261,7 +261,7 @@ aucun message d'erreur, et sans elles vos écrans restent vides.
 l'écran du client porte des valeurs. Les scripts annoncent eux-mêmes combien d'éléments ils ont
 traités.
 
-Le rapport appelle plusieurs ensembles de fonctions, un par écran, plus `fn_documents` pour la
+Le rapport appelle 7 ensembles de fonctions : un par écran, soit 5, plus `fn_documents` pour la
 production des documents et `fn_valorisation` pour le lot de valorisation. Le script des boutons
 demande l'identifiant de chacun, et `scripts/00_mes_identifiants.py` les relève avec vous.
 
@@ -350,6 +350,12 @@ Il porte le dossier d'un client OPCI de bout en bout : créer le dossier, lister
 répondre au questionnaire d'acceptation, déposer et retirer les pièces, soumettre au visa, ouvrir
 les arrêtés, désigner l'équipe, réviser les comptes annuels, demander puis décider la réouverture
 d'un arrêté clos.
+
+Trois autres onglets complètent les onglets Client et Acceptation et Révision :
+
+- **Valorisation** : la valeur des actifs à l'arrêté, le lot des différences d'estimation, la synthèse et son visa.
+- **Arrêté** : les ratios réglementaires et l'obligation de distribution, de la base proposée à la décision de l'assemblée.
+- **Référentiels** : les tables du cabinet, le seuil propre d'un véhicule, les questions à valider et leur niveau de programme.
 
 Chaque bouton écrit en base de données.
 

@@ -3,11 +3,11 @@
   "name": "valoRetSourceListeInvite",
   "position": {
     "x": 33,
-    "y": 1018,
-    "z": 39822,
+    "y": 1069,
+    "z": 39312,
     "height": 17,
     "width": 131,
-    "tabOrder": 39822
+    "tabOrder": 39312
   },
   "visual": {
     "visualType": "cardVisual",

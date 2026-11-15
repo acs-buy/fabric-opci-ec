@@ -81,20 +81,6 @@
               }
             }
           },
-          "revCclEnregistrerFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclEnregistrerLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revCclEtat": {
             "singleVisual": {
               "display": {
@@ -130,35 +116,7 @@
               }
             }
           },
-          "revCclLotRenvoyerFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclLotRenvoyerLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revCclLotViser": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclLotViserFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclLotViserLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -173,20 +131,6 @@
             }
           },
           "revCclLotsSous": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclMsg": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclMsgFond": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -221,20 +165,6 @@
               }
             }
           },
-          "revCclRenvoyerFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclRenvoyerLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revCclRevueBlocage": {
             "singleVisual": {
               "display": {
@@ -243,20 +173,6 @@
             }
           },
           "revCclRevueEnregistrer": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclRevueEnregistrerFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclRevueEnregistrerLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -277,20 +193,6 @@
               }
             }
           },
-          "revCclRevueRenvoyerFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclRevueRenvoyerLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revCclRevueSous": {
             "singleVisual": {
               "display": {
@@ -299,20 +201,6 @@
             }
           },
           "revCclRevueViser": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclRevueViserFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclRevueViserLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -382,20 +270,6 @@
               }
             }
           },
-          "revCclViserFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclViserLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revCclVoirBalance": {
             "singleVisual": {
               "display": {
@@ -403,35 +277,7 @@
               }
             }
           },
-          "revCclVoirBalanceFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclVoirBalanceLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revCclVoirPieces": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclVoirPiecesFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revCclVoirPiecesLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -494,35 +340,7 @@
               }
             }
           },
-          "revDossier0Fond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revDossier0Lib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revDossier1": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revDossier1Fond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revDossier1Lib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -550,27 +368,6 @@
               }
             }
           },
-          "revE3Msg": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revE3Msg2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revE3MsgFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revEquilibre": {
             "singleVisual": {
               "display": {
@@ -579,20 +376,6 @@
             }
           },
           "revFeuilleConclure": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revFeuilleConclureFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revFeuilleConclureLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -613,35 +396,7 @@
               }
             }
           },
-          "revFeuilleOuvrirlafeuiFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revFeuilleOuvrirlafeuiLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revFeuilleRéimporter": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revFeuilleRéimporterFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revFeuilleRéimporterLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -663,20 +418,6 @@
             }
           },
           "revLivArreter": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivArreterFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivArreterLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1026,20 +767,6 @@
               }
             }
           },
-          "revLivDeverrouillerFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivDeverrouillerLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revLivDossiers": {
             "singleVisual": {
               "display": {
@@ -1048,20 +775,6 @@
             }
           },
           "revLivExporter": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivExporterFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivExporterLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1152,42 +865,7 @@
               }
             }
           },
-          "revLivMsg": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivMsg2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivMsgFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revLivOuvrir": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivOuvrirFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivOuvrirLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1215,20 +893,6 @@
               }
             }
           },
-          "revLivProduireExcelFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivProduireExcelLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revLivProduireRapport": {
             "singleVisual": {
               "display": {
@@ -1236,35 +900,7 @@
               }
             }
           },
-          "revLivProduireRapportFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivProduireRapportLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revLivProduireWord": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivProduireWordFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivProduireWordLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1405,20 +1041,6 @@
             }
           },
           "revLivReimporter": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivReimporterFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivReimporterLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1600,20 +1222,6 @@
               }
             }
           },
-          "revLivValiderFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivValiderLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revLivVerrouCadre": {
             "singleVisual": {
               "display": {
@@ -1649,20 +1257,6 @@
               }
             }
           },
-          "revLivVoirFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revLivVoirLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revLotMotif": {
             "singleVisual": {
               "display": {
@@ -1678,20 +1272,6 @@
             }
           },
           "revOdAjouterles2lig": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revOdAjouterles2ligFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revOdAjouterles2ligLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1768,20 +1348,6 @@
               }
             }
           },
-          "revOdExporterlegabaFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revOdExporterlegabaLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revOdLibelle": {
             "singleVisual": {
               "display": {
@@ -1824,35 +1390,7 @@
               }
             }
           },
-          "revOdRéimporterFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revOdRéimporterLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revOdValiderlesécri": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revOdValiderlesécriFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revOdValiderlesécriLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -1894,20 +1432,6 @@
               }
             }
           },
-          "revProgActiverlecycFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgActiverlecycLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revProgAjouterauprogr": {
             "singleVisual": {
               "display": {
@@ -1915,35 +1439,7 @@
               }
             }
           },
-          "revProgAjouterauprogrFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgAjouterauprogrLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revProgCouv": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgCouvFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgCouvLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -2069,35 +1565,7 @@
               }
             }
           },
-          "revProgRetirerduprogrFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgRetirerduprogrLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revProgRetirerlecyc": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgRetirerlecycFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgRetirerlecycLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -2160,20 +1628,6 @@
               }
             }
           },
-          "revProgType0Fond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgType0Lib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revProgType1": {
             "singleVisual": {
               "display": {
@@ -2181,35 +1635,7 @@
               }
             }
           },
-          "revProgType1Fond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgType1Lib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revProgType2": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgType2Fond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revProgType2Lib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -2244,20 +1670,6 @@
               }
             }
           },
-          "revRepNAFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revRepNALib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revRepNon": {
             "singleVisual": {
               "display": {
@@ -2265,35 +1677,7 @@
               }
             }
           },
-          "revRepNonFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revRepNonLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revRepOui": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revRepOuiFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "revRepOuiLib": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"
@@ -2363,20 +1747,6 @@
               }
             }
           },
-          "arrRenvoiVlFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "arrRenvoiVlLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "arrRenvoiVl": {
             "singleVisual": {
               "display": {
@@ -2384,21 +1754,35 @@
               }
             }
           },
-          "arrRenvoiDistributionFond": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
-          "arrRenvoiDistributionLib": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "arrRenvoiDistribution": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "revDossierExportL1": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "revDossierExportL2": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "revAjoutQuestion": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "revAjoutEnonce": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"

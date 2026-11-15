@@ -26,15 +26,35 @@ CREATE TABLE [dbo].[ref_piece_attendue] (
 
 GO
 
+CREATE NONCLUSTERED INDEX [ix_rpa_phase]
+    ON [dbo].[ref_piece_attendue]([phase] ASC);
+
+
+GO
+
 CREATE NONCLUSTERED INDEX [ix_rpa_cycle]
     ON [dbo].[ref_piece_attendue]([cycle] ASC);
 
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_rpa_phase]
-    ON [dbo].[ref_piece_attendue]([phase] ASC);
-
+CREATE   TRIGGER dbo.[tr_ref_piece_attendue_horodatage]
+ON dbo.[ref_piece_attendue]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    -- Objet n° 16 de l'ecran 5 (script 317) : l'auteur est celui que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
+    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_piece_attendue] t
+    JOIN inserted i ON t.[id] = i.[id];
+END;
 
 GO
 
@@ -60,26 +80,6 @@ BEGIN
     VALUES ('tr_ref_piece_attendue_garde', @m, LEFT(CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), 200), SYSUTCDATETIME());
     SET @m = REPLACE(@m, N'%', N'%%');
     THROW 50074, @m, 1;
-END;
-
-GO
-
-CREATE   TRIGGER dbo.[tr_ref_piece_attendue_horodatage]
-ON dbo.[ref_piece_attendue]
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    -- Objet n° 16 de l'ecran 5 (script 317) : l'auteur est celui que la procedure d'ecran pose dans le
-    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
-    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_piece_attendue] t
-    JOIN inserted i ON t.[id] = i.[id];
 END;
 
 GO

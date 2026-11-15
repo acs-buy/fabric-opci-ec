@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "e2Titre",
   "position": {
-    "x": 728,
+    "x": 519,
     "y": 318,
     "z": 50400,
     "height": 44,
-    "width": 188,
+    "width": 397,
     "tabOrder": 50400
   },
   "visual": {

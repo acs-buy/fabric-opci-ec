@@ -35,9 +35,10 @@ l'application a besoin d'une licence Power BI Pro, qu'elle passe par l'applicati
 de travail.
 
 Elle ne remplace pas non plus les autorisations sur la base. Les boutons qui écrivent passent par
-les fonctions, et les fonctions vérifient le rôle de la personne dans la table des rôles de
-mission. Une personne sans rôle sur un dossier verra l'écran et se verra refuser l'écriture, avec un
-message qui le dit.
+les fonctions, puis par les procédures de la base, qui vérifient le rôle de la personne connectée
+dans la table des rôles de mission. Une personne sans rôle en cours sur un dossier, ni sur le
+véhicule qui le détient, voit grisés les boutons des actions de l'équipe, et la base lui refuse ces
+actions avec un message qui le dit.
 
 ## Vérifier
 
@@ -96,6 +97,23 @@ ouvre le rapport tel que ce rôle le voit.
 authentification unique. Dans ce cas, connectez-vous réellement avec un compte de test placé dans
 le rôle de lecteur.
 
+## Placer l'équipe dans le rôle Reviseur du modèle de conduite
+
+Le modèle `conduite_de_mission` porte un rôle de sécurité, `Reviseur`. Son filtre ne laisse voir à
+chaque personne que les entités sur lesquelles son adresse de connexion tient un mandat en cours
+dans la table des rôles de mission ([roles/Reviseur.tmdl](../../fabric/conduite_de_mission.SemanticModel/definition/roles/Reviseur.tmdl)).
+
+Le chemin est celui décrit plus haut, appliqué au modèle `conduite_de_mission` :
+
+1. Dans votre espace de travail, survolez le modèle sémantique `conduite_de_mission`.
+2. **More options**, puis **Security**.
+3. Sur le rôle `Reviseur`, cliquez sur **Assign** et ajoutez les comptes de l'équipe, ou leur groupe.
+
+La même limite vaut ici : un membre ou un contributeur de l'espace voit tous les dossiers. Pour que
+chaque collaborateur ne voie que ses dossiers, donnez-lui accès par l'application, avec le rôle de
+lecteur. Le rôle ne règle que l'affichage : les écritures restent jugées par la base, sur la table
+des rôles de mission.
+
 ---
 
 
@@ -109,8 +127,9 @@ mission pour votre équipe, la restitution client pour vos clients.*
 *Une personne de l'audience client ne voit que la seconde, et les huit pages qu'elle contient.*
 
 
-Préparez aussi la recette : une des douze actions demande deux comptes
-distincts, l'approbation d'un visa étant refusée à la personne qui l'a soumis.
+Préparez aussi la recette : une des 12 actions demande 2 comptes
+distincts, l'approbation de l'acceptation étant refusée à la personne qui a créé le dossier et
+réservée à l'associé du dossier ([étape 13](etape-13-passer-la-recette.md)).
 
 ---
 

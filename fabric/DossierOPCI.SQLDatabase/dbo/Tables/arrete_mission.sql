@@ -67,11 +67,7 @@ BEGIN
     IF @sans_expertise IS NOT NULL
     BEGIN
         DECLARE @m1 NVARCHAR (2000) =
-            N'Ouverture refusee, porte 1 : expertise absente a la date de '
-            + N'l''arrete pour les actifs du perimetre suivants : '
-            + @sans_expertise
-            + N'. Ces actifs se valorisent a la valeur actuelle par la valeur '
-            + N'de marche, article 211-6. Deposer les rapports puis rouvrir.';
+            N'Expertises à enregistrer à l''arrêté : ' + @sans_expertise + N'.';
         BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50025, @m1, 1; END
     END;
 
@@ -93,9 +89,7 @@ BEGIN
     IF @sans_balance IS NOT NULL
     BEGIN
         DECLARE @m2 NVARCHAR (2000) =
-            N'Ouverture refusee, porte 1 : aucune balance validee a l''arrete '
-            + N'pour les filiales detenues suivantes : ' + @sans_balance
-            + N'. Importer et valider leurs balances puis rouvrir.';
+            N'Balances à valider : ' + @sans_balance + N'.';
         BEGIN SET @m2 = REPLACE(@m2, N'%', N'%%'); THROW 50026, @m2, 1; END
     END;
 
@@ -121,10 +115,7 @@ BEGIN
     IF @dernier_annuel IS NOT NULL
     BEGIN
         DECLARE @m3 NVARCHAR (2000) =
-            N'Ouverture refusee, porte 3 : le dernier arrete annuel anterieur ('
-            + @dernier_annuel + N') de l''entite ' + @entite
-            + N' ne porte pas de maintien de mission approuve. Le blocage se '
-            + N'leve par l''approbation nominative du signataire, jamais par derogation.';
+            N'Le dernier arrêté annuel (' + @dernier_annuel + N') de l''entité ' + @entite + N' n''a pas de maintien de mission approuvé. Le faire approuver par l''associé signataire, puis réessayer ; une dérogation ne lève pas ce blocage.';
         BEGIN SET @m3 = REPLACE(@m3, N'%', N'%%'); THROW 50027, @m3, 1; END
     END;
 END;

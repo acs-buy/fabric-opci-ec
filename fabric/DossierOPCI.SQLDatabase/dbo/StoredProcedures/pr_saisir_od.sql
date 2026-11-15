@@ -1,4 +1,3 @@
-
 CREATE   PROCEDURE dbo.pr_saisir_od
     @entite     VARCHAR (20),
     @arrete     VARCHAR (20),
@@ -35,6 +34,11 @@ BEGIN
     -- 327 fin
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé.', 1;
+    -- 51312, D1 (15/11/2026) : action 19. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
+       AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
+        THROW 51312, N'Action refusée : seule l''équipe du dossier peut saisir une OD dans ce dossier.', 1;
     DECLARE @qid INT, @cote VARCHAR (30), @fqid INT;
     EXEC dbo.pr_controler_ligne_od @entite, @arrete, @compte, @debit, @credit, @reference, @journal, @qid OUTPUT, @cote OUTPUT, @fqid OUTPUT;
     IF @reference IS NULL
