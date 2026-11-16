@@ -21,7 +21,7 @@ BEGIN
         (N'OPCI-1',N'OPCI SIGMA',N'500000001',N'SPPICAV',N'SAS',N'4 rue de l''Exemple',N'2e étage',N'59000',N'Lille',N'FR',N'Société de gestion SIGMA',N'societe de gestion',N'Service comptable',N'installation (contact_courriel)',N'03 53 01 00 01',N'31-12',N'installation (modifie_par)',N'2026-09-21 09:38:57.998',N'0',N'1',NULL,N'2026-09-16 07:08:00',N'1'),
         (N'SCI-NORD',N'SCI SIGMA NORD',N'500000002',NULL,N'SCI',N'4 rue de l''Exemple',NULL,N'59000',N'Lille',N'FR',N'OPCI SIGMA',N'gerant',N'Service comptable',N'installation (contact_courriel)',N'03 53 01 00 02',N'31-12',N'installation (modifie_par)',N'2026-09-21 09:38:57.998',N'0',N'0',NULL,N'2026-09-19 16:21:02',NULL),
         (N'SIGMA-SCI-2',N'SCI SIGMA 2',N'500000003',NULL,N'SCI',N'4 rue de l''Exemple',NULL,N'59000',N'Lille',N'FR',N'OPCI SIGMA',N'gerant',N'Service comptable',N'installation (contact_courriel)',N'03 53 01 00 03',N'31-12',N'installation (modifie_par)',N'2026-09-21 09:38:57.998',N'0',N'0',NULL,N'2026-09-19 16:21:02',NULL);
-    PRINT 'ref_entite : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_entite : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_entite]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_entite : deja chargee, rien a faire.';
 GO

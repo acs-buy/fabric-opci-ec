@@ -8,7 +8,7 @@ BEGIN
         (N'ANNUEL',N'Arrêté annuel',N'Clôture de l''exercice. Porte les comptes annuels, l''affectation du résultat et l''attestation.',N'1',NULL,NULL,NULL,NULL,NULL),
         (N'INTERMEDIAIRE',N'Arrêté intermédiaire',N'Arrêté de valeur liquidative hors clôture et hors semestre.',N'3',NULL,NULL,NULL,NULL,NULL),
         (N'SEMESTRIEL',N'Arrêté semestriel',N'Porte le document d''information périodique. L''affectation du résultat n''y a pas lieu : le cycle AFFECT a pour applicabilité ARRETE_CLOTURE.',N'2',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_nature_arrete : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_nature_arrete : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_nature_arrete]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_nature_arrete : deja chargee, rien a faire.';
 GO

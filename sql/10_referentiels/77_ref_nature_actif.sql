@@ -22,7 +22,7 @@ BEGIN
         (N'TERRAIN',N'Terrain',N'Valeur actuelle, meme regle que l''immeuble',N'211-6',N'1',NULL,NULL,N'56',NULL,NULL,NULL),
         (N'TITRE_CREANCE',N'Titres de creances',N'Methode actuarielle en l''absence de transactions significatives, aux taux des emissions equivalentes affectes de la marge de risque de l''emetteur, article 212-5 du reglement ANC 2020-07. Les autres titres de creances suivent les modalites de la societe de gestion.',N'2020-07 art. 212-5',N'0',NULL,NULL,N'12',NULL,NULL,NULL),
         (N'TITRES_ENTITE_IMMOBILIERE',N'Parts et actions d''entites a actif principalement immobilier',N'Valeur actuelle du titre. Aucun rapport d''evaluateur sur le titre : les immeubles de l''entite detenue sont eux-memes evalues',N'212-4',N'0',NULL,NULL,N'63',NULL,NULL,NULL);
-    PRINT 'ref_nature_actif : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_nature_actif : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_nature_actif]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_nature_actif : deja chargee, rien a faire.';
 GO

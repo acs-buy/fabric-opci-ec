@@ -47,7 +47,7 @@ BEGIN
         (N'39',N'252',N'1',N'1291',N'DEBIT',N'Acompte verse au titre de l''exercice sur le resultat net, porte en capitaux propres',N'Reglement ANC 2021-09, art. 321-5 : les acomptes verses au titre de l''exercice sont comptabilises dans un compte de capitaux propres. Compte 1291 du plan de l''article 411-3, acomptes sur resultat net de l''exercice.',NULL,NULL,NULL,NULL,NULL),
         (N'40',N'252',N'2',N'511',N'CREDIT',N'Reglement de l''acompte par le compte a vue',N'Reglement ANC 2021-09, art. 411-3 : compte 511 Comptes a vue.',NULL,NULL,NULL,NULL,NULL);
     SET IDENTITY_INSERT dbo.[modele_ecriture] OFF;
-    PRINT 'modele_ecriture : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'modele_ecriture : ' + CAST((SELECT COUNT(*) FROM dbo.[modele_ecriture]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'modele_ecriture : deja chargee, rien a faire.';
 GO

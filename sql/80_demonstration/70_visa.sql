@@ -134,7 +134,7 @@ BEGIN
         (N'128',N'MAINTIEN',N'OMEGA-OPCI|2024-12-31',N'OMEGA-OPCI',N'2024-12-31',NULL,N'VISE',N'Visa de mise en etat de l''historique 2022-2024, script 148.',N'installation (propose_par)',N'installation (decide_par)',N'2026-09-06 16:18:48.304'),
         (N'131',N'CLOTURE',N'OMEGA-OPCI|2025-12-31',N'OMEGA-OPCI',N'2025-12-31',NULL,N'RENVOYE',N'Réouverture : Le dossier porte le jeu de demonstration du memoire et doit montrer un arrete en cours de revision. Demande du 13/09/2026.',N'installation (propose_par)',N'installation (decide_par)',N'2026-09-13 11:46:42.814');
     SET IDENTITY_INSERT dbo.[visa] OFF;
-    PRINT 'visa : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'visa : ' + CAST((SELECT COUNT(*) FROM dbo.[visa]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'visa : deja chargee, rien a faire.';
 GO

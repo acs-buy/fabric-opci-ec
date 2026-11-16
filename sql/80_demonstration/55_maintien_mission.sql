@@ -11,7 +11,7 @@ BEGIN
         (N'3',N'OMEGA-OPCI',N'2023-12-31',N'APPROUVE',N'MAINTENU',N'SIMULE : mise en etat de l''historique 2022-2024, script 148. Exercice clos, mission maintenue.',N'installation (approuve_par)',N'2026-09-06 16:18:48.304',N'installation (cree_par)',N'2026-09-06 16:18:48.3039491',N'MTN-OMEGA-OPCI-2023',NULL,NULL,NULL,NULL),
         (N'4',N'OMEGA-OPCI',N'2024-12-31',N'APPROUVE',N'MAINTENU',N'SIMULE : mise en etat de l''historique 2022-2024, script 148. Exercice clos, mission maintenue.',N'installation (approuve_par)',N'2026-09-06 16:18:48.304',N'installation (cree_par)',N'2026-09-06 16:18:48.3039491',N'MTN-OMEGA-OPCI-2024',NULL,NULL,NULL,NULL);
     SET IDENTITY_INSERT dbo.[maintien_mission] OFF;
-    PRINT 'maintien_mission : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'maintien_mission : ' + CAST((SELECT COUNT(*) FROM dbo.[maintien_mission]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'maintien_mission : deja chargee, rien a faire.';
 GO

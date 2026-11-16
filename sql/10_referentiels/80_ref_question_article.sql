@@ -516,7 +516,7 @@ BEGIN
         (N'479',N'411-2',N'DILIGENCE',NULL,NULL,NULL,NULL,NULL),
         (N'480',N'311-1',N'DILIGENCE',NULL,NULL,NULL,NULL,NULL),
         (N'481',N'111-1',N'DILIGENCE',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_question_article : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_question_article : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_question_article]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_question_article : deja chargee, rien a faire.';
 GO

@@ -17,7 +17,7 @@ BEGIN
         (N'CHEF_MISSION',N'LOT',N'Le lot d''ecritures releve de la conduite de la mission, NPMQ paragraphe 30.',NULL,NULL,NULL,NULL,NULL),
         (N'CHEF_MISSION',N'REVUE',N'La conclusion generale de la revue ferme le dossier de travail de l''arrete : elle releve de celui qui conduit la mission, NPMQ paragraphe 30 ; l''associe signe l''attestation, pas la revue. Choix d''organisation du cabinet, inversable ici.',NULL,NULL,NULL,NULL,NULL),
         (N'CHEF_MISSION',N'SYNTHESE',N'La synthese atteste que la rationalisation de l''actif net boucle et que la valeur liquidative est calculable : c''est un jugement technique sur le dossier, NPMQ paragraphe 30, comme le visa d''un lot ou d''une conclusion.',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'role_nature_visa : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'role_nature_visa : ' + CAST((SELECT COUNT(*) FROM dbo.[role_nature_visa]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'role_nature_visa : deja chargee, rien a faire.';
 GO

@@ -55,7 +55,7 @@ BEGIN
         (N'47',N'SCI-NORD',N'PREPARATEUR',N'installation (personne)',N'2023-01-01',NULL,N'installation (pose_par)',N'2026-09-06 01:06:05.776',NULL),
         (N'48',N'OPCI-1',N'PREPARATEUR',N'installation (personne)',N'2023-01-01',NULL,N'installation (pose_par)',N'2026-09-06 01:06:05.776',NULL);
     SET IDENTITY_INSERT dbo.[role_mission] OFF;
-    PRINT 'role_mission : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'role_mission : ' + CAST((SELECT COUNT(*) FROM dbo.[role_mission]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'role_mission : deja chargee, rien a faire.';
 GO

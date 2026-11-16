@@ -3473,7 +3473,7 @@ BEGIN
         (N'3462',N'2026-09-09 11:13:23.885',N'installation',N'v_controle_cle_ecran',N'0',N'0',NULL),
         (N'3463',N'2026-09-09 11:13:23.885',N'installation',N'v_controle_difference_vs_ecritures',N'4',N'2',NULL);
     SET IDENTITY_INSERT dbo.[releve_controle] OFF;
-    PRINT 'releve_controle : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'releve_controle : ' + CAST((SELECT COUNT(*) FROM dbo.[releve_controle]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'releve_controle : deja chargee, rien a faire.';
 GO

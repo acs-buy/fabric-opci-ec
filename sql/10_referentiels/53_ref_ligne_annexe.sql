@@ -233,7 +233,7 @@ BEGIN
         (N'336-3',N'PCT',N'% de l''actif net',N'1',N'CALCUL',NULL,NULL,NULL,NULL,N'valeur actuelle divisée par l''actif net',NULL,N'5',NULL,NULL,N'0',NULL),
         (N'336-3',N'QUANTITE',N'Quantité / nominal',N'1',N'CALCUL',NULL,NULL,NULL,NULL,N'quantité ou nominal',NULL,N'2',NULL,NULL,N'0',NULL),
         (N'336-3',N'VALEUR',N'Valeur actuelle',N'1',N'CALCUL',NULL,N'30,31,32,33,34,35,36',NULL,N'DEBIT',NULL,NULL,N'3',NULL,NULL,N'0',NULL);
-    PRINT 'ref_ligne_annexe : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_ligne_annexe : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_ligne_annexe]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_ligne_annexe : deja chargee, rien a faire.';
 GO

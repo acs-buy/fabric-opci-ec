@@ -11,7 +11,7 @@ BEGIN
         (N'DISTRIBUTION',N'Décision de distribution et mouvements par porteur',N'DECISION',N'ARRETE_CLOTURE',N'CMF, art. L. 214-69',N'5',NULL,NULL,NULL,N'0',NULL,NULL,NULL),
         (N'INVENTAIRE',N'Inventaire du portefeuille',N'DOCUMENT',N'LES_DEUX',N'Reglement ANC 2021-09, art. 336-1 a 336-3',N'6',NULL,NULL,NULL,N'0',NULL,NULL,NULL),
         (N'RAPPORT_ANNUEL',N'Rapport annuel',N'DOCUMENT',N'ARRETE_CLOTURE',N'CMF, art. L. 214-50 ; art. R. 214-125 pour le delai de 75 jours',N'4',NULL,NULL,NULL,N'0',NULL,NULL,NULL);
-    PRINT 'ref_livrable : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_livrable : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_livrable]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_livrable : deja chargee, rien a faire.';
 GO

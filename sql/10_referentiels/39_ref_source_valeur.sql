@@ -14,7 +14,7 @@ BEGIN
         (N'PRIX_CONVENU',N'Prix convenu',N'1',N'6',NULL,NULL),
         (N'PRIX_REVIENT',N'Prix de revient',N'1',N'5',NULL,NULL),
         (N'REVISION',N'Révision',N'0',N'8',NULL,NULL);
-    PRINT 'ref_source_valeur : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_source_valeur : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_source_valeur]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_source_valeur : deja chargee, rien a faire.';
 GO

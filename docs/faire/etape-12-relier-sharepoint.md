@@ -47,11 +47,13 @@ reprenez la suite le lendemain, au moment de cette étape-ci.
 site du véhicule qui la détient, et se classent par la colonne **Entité légale**, que la fonction
 crée dans chaque bibliothèque. La base refuse de créer un site pour une filiale.
 
-**Un site par code client et par locataire.** La fonction nomme le groupe `opci-<code>` et reprend
-un groupe qui existe déjà (`azure/function_app.py`). Deux installations dans un même locataire, par
-exemple DEV, TEST et PROD, partagent donc le site d'un même code client : la seconde écrit dans le
-site créé par la première. Donnez des codes différents aux dossiers d'essai, ou installez TEST dans
-un autre locataire.
+**Un préfixe par installation.** La fonction nomme le groupe d'un client par un préfixe suivi de
+son code, `opci-` puis le code par défaut, et reprend un groupe qui existe déjà
+(`azure/function_app.py`, `prefixe_groupe` et `slug`). Si vous installez plusieurs fois dans un même
+locataire, par exemple DEV, TEST et PROD, donnez à chaque Function App son préfixe, dans le réglage
+d'application `PREFIXE_GROUPE` (par exemple `opci-test-`) : sans cela, la seconde installation écrit
+dans le site d'un client de même code créé par la première. Les commandes sont dans
+[`azure/README.md`](../../azure/README.md).
 
 ---
 

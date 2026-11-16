@@ -56,7 +56,7 @@ BEGIN
         (N'v_ecran_supervision_cycle',N'etat_cycle',N'État du cycle, calculé sur ses objets',N'État',N'GAUCHE',NULL,N'10',N'1',NULL,NULL,NULL,NULL),
         (N'v_ecran_supervision_cycle',N'renvoyes',N'Objets renvoyés par le décideur',N'Renvoyés',N'DROITE',N'N0',N'6',N'1',NULL,NULL,NULL,NULL),
         (N'v_ecran_supervision_cycle',N'vises',N'Objets visés sur le cycle',N'Visés',N'DROITE',N'N0',N'5',N'1',N'1',N'DESC',NULL,NULL);
-    PRINT 'ref_colonne_libelle : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_colonne_libelle : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_colonne_libelle]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_colonne_libelle : deja chargee, rien a faire.';
 GO

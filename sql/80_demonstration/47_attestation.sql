@@ -8,7 +8,7 @@ BEGIN
     INSERT INTO dbo.[attestation] ([id], [entite], [arrete], [forme], [produit_par], [produit_le], [forme_proposee], [arretee_par], [arretee_le], [motif_limitation], [motif_considerations_particulieres]) VALUES
         (N'1',N'OMEGA-OPCI',N'2025-12-31',N'AVEC_OBSERVATION',NULL,NULL,N'AVEC_OBSERVATION',NULL,NULL,NULL,NULL);
     SET IDENTITY_INSERT dbo.[attestation] OFF;
-    PRINT 'attestation : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'attestation : ' + CAST((SELECT COUNT(*) FROM dbo.[attestation]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'attestation : deja chargee, rien a faire.';
 GO

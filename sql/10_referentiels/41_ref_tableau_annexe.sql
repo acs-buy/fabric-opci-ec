@@ -36,7 +36,7 @@ BEGIN
         (N'336-1',N'Principe de présentation',N'SAISIE',NULL,NULL,N'27',NULL,NULL,N'0',N'1',N'L’inventaire du portefeuille d’un OPCI est établi par poste du bilan.'),
         (N'336-2',N'Inventaire détaillé des actifs à caractère immobilier',N'MIXTE',NULL,N'Actifs à caractère immobilier, actif par actif, par poste du bilan, avec le tableau des filiales et participations.',N'11',NULL,NULL,N'0',N'0',NULL),
         (N'336-3',N'Inventaire détaillé des dépôts et des instruments financiers non immobiliers',N'MIXTE',NULL,N'Dépôts et instruments financiers non immobiliers : libellé, quantité ou nominal, valeur actuelle, devise de cotation, pourcentage de l''actif net.',N'12',NULL,NULL,N'0',N'0',NULL);
-    PRINT 'ref_tableau_annexe : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_tableau_annexe : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_tableau_annexe]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_tableau_annexe : deja chargee, rien a faire.';
 GO

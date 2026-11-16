@@ -16,7 +16,7 @@ BEGIN
         (N'PROD_IMMO',N'I',N'Produits de l''activité immobilière',N'IMMOBILIER',N'Article 322-2, Total I',N'1',NULL,NULL),
         (N'REGUL_PMV',N'XI',N'Régularisations sur plus et moins-values réalisées nettes',N'REGULARISATION',N'Article 322-2, Régularisations (XI)',N'11',NULL,NULL),
         (N'REGUL_RES',N'VIII',N'Régularisations sur résultat net',N'REGULARISATION',N'Article 322-2, Régularisations sur résultat net (VIII). Article 113-3 pour le mécanisme correcteur.',N'8',NULL,NULL);
-    PRINT 'ref_rubrique_resultat : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_rubrique_resultat : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_rubrique_resultat]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_rubrique_resultat : deja chargee, rien a faire.';
 GO

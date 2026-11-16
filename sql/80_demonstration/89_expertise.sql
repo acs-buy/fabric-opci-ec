@@ -71,7 +71,7 @@ BEGIN
         (N'65',N'IMM-202',N'2026-06-30',N'9310000.00',N'Expert B',N'Comparaison directe',NULL,N'installation',N'2026-09-09 12:06:27.493',N'1'),
         (N'66',N'IMM-203',N'2026-06-30',N'16537500.00',N'Expert B',N'Comparaison directe',NULL,N'installation',N'2026-09-09 12:06:27.493',N'1');
     SET IDENTITY_INSERT dbo.[expertise] OFF;
-    PRINT 'expertise : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'expertise : ' + CAST((SELECT COUNT(*) FROM dbo.[expertise]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'expertise : deja chargee, rien a faire.';
 GO

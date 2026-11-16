@@ -54,7 +54,7 @@ BEGIN
         (N'NON_COTE_51',N'R214-200',N'fondement_professionnel'),
         (N'NON_COTE_51',N'R214-89',N'article_calcul'),
         (N'NON_COTE_51',N'R214-90',N'dates_respect');
-    PRINT 'ref_ratio_memoire_article : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_ratio_memoire_article : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_ratio_memoire_article]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_ratio_memoire_article : deja chargee, rien a faire.';
 GO

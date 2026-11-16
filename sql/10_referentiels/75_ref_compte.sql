@@ -206,7 +206,7 @@ BEGIN
         (N'962',N'Promesses d''achat, d''apport et de vente',N'96 - Autres engagements / 962 - Promesses d''achat, d''apport et de vente',N'9',N'2',N'96',N'1',NULL,NULL,N'subdivision art. 411-1',N'128',NULL,NULL,NULL,NULL),
         (N'963',N'Garanties et cautions données',N'96 - Autres engagements / 963 - Garanties et cautions données',N'9',N'2',N'96',N'1',NULL,NULL,N'subdivision art. 411-1',N'128',NULL,NULL,NULL,NULL),
         (N'964',N'Garanties et cautions reçues',N'96 - Autres engagements / 964 - Garanties et cautions reçues',N'9',N'2',N'96',N'1',NULL,NULL,N'subdivision art. 411-1',N'128',NULL,NULL,NULL,NULL);
-    PRINT 'ref_compte : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_compte : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_compte]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_compte : deja chargee, rien a faire.';
 GO

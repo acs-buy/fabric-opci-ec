@@ -84,7 +84,7 @@ BEGIN
         (N'76',NULL,N'PLANIF',N'Fichier des écritures comptables de la période',N'1',N'ARRETE',NULL,N'1',NULL,NULL,N'2023-12-31',NULL,NULL,NULL),
         (N'77',NULL,N'PLANIF',N'Balance générale à la date d''arrêté',N'1',N'ARRETE',NULL,N'2',NULL,NULL,N'2023-12-31',NULL,NULL,NULL);
     SET IDENTITY_INSERT dbo.[ref_piece_attendue] OFF;
-    PRINT 'ref_piece_attendue : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_piece_attendue : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_piece_attendue]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_piece_attendue : deja chargee, rien a faire.';
 GO

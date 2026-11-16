@@ -45,7 +45,7 @@ BEGIN
         (N'223',N'661',N'modele_ecriture, derive le 16/09/2026',NULL,NULL,NULL,NULL,NULL),
         (N'252',N'129',N'modele_ecriture, derive le 16/09/2026',NULL,NULL,NULL,NULL,NULL),
         (N'252',N'511',N'modele_ecriture, derive le 16/09/2026',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_question_compte : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_question_compte : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_question_compte]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_question_compte : deja chargee, rien a faire.';
 GO

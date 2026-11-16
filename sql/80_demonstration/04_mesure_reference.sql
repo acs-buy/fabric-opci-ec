@@ -747,7 +747,7 @@ BEGIN
         (N'SOLDE_COMPTE',N'Solde par entité, arrêté et compte du modèle',N'OPCI-1|2025-12-31|101',N'-1000000.00',N'2026-09-06 17:13:56.760',N'installation',N'Refigeage du 06/09/2026 apres le 149 : base de l''obligation 2025 sur le texte, resultat distribuable moins abattement de 1,5 %.'),
         (N'SOLDE_COMPTE',N'Solde par entité, arrêté et compte du modèle',N'OPCI-1|2025-12-31|120',N'-20000.00',N'2026-09-06 17:13:56.760',N'installation',N'Refigeage du 06/09/2026 apres le 149 : base de l''obligation 2025 sur le texte, resultat distribuable moins abattement de 1,5 %.'),
         (N'SOLDE_COMPTE',N'Solde par entité, arrêté et compte du modèle',N'OPCI-1|2025-12-31|512',N'1020000.00',N'2026-09-06 17:13:56.760',N'installation',N'Refigeage du 06/09/2026 apres le 149 : base de l''obligation 2025 sur le texte, resultat distribuable moins abattement de 1,5 %.');
-    PRINT 'mesure_reference : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'mesure_reference : ' + CAST((SELECT COUNT(*) FROM dbo.[mesure_reference]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'mesure_reference : deja chargee, rien a faire.';
 GO

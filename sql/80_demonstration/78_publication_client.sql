@@ -11,7 +11,7 @@ BEGIN
         (N'5',N'OMEGA-OPCI',N'2023-12-31',N'124',N'PUBLIEE',N'2026-09-06 16:27:46.649',N'installation',NULL,N'2026-09-06 16:28:34.153'),
         (N'6',N'OMEGA-OPCI',N'2024-12-31',N'125',N'PUBLIEE',N'2026-09-06 16:27:46.649',N'installation',NULL,N'2026-09-06 16:28:34.153');
     SET IDENTITY_INSERT dbo.[publication_client] OFF;
-    PRINT 'publication_client : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'publication_client : ' + CAST((SELECT COUNT(*) FROM dbo.[publication_client]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'publication_client : deja chargee, rien a faire.';
 GO

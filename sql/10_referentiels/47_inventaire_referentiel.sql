@@ -28,7 +28,7 @@ BEGIN
         (N'ref_reference',N'178',N'0',NULL,N'2026-09-06 01:07:05.145'),
         (N'ref_role',N'4',N'0',NULL,N'2026-09-06 01:07:05.145'),
         (N'role_nature_visa',N'8',N'0',NULL,N'2026-09-06 01:07:05.145');
-    PRINT 'inventaire_referentiel : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'inventaire_referentiel : ' + CAST((SELECT COUNT(*) FROM dbo.[inventaire_referentiel]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'inventaire_referentiel : deja chargee, rien a faire.';
 GO

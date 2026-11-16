@@ -662,7 +662,7 @@ BEGIN
         (N'v_ecran_titres_valeur_actuelle',N'valeur_comptable_titres',N'Valeur comptable'),
         (N'v_ecran_titres_valeur_actuelle',N'valeur_de_detention',N'Détention'),
         (N'v_ecran_titres_valeur_actuelle',N'valeur_titres_a_la_quote_part',N'Quote-part');
-    PRINT 'ref_libelle_colonne : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_libelle_colonne : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_libelle_colonne]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_libelle_colonne : deja chargee, rien a faire.';
 GO

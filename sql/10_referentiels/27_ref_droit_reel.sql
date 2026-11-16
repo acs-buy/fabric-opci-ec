@@ -12,7 +12,7 @@ BEGIN
         (N'R82-5',N'Droit réel sur une dépendance du domaine public',N'5° Tout droit reel confere par un titre ou par un bail emphyteotique a raison de l''occupation d''une dependance du domaine public de l''Etat, d''une collectivite territoriale, ou d''un etablissement public sur les ouvrages, constructions et installations de caractere immobilier realises sur cette dependance.',NULL,N'5',NULL,NULL),
         (N'R82-6',N'Autres droits de superficie',N'6° Les autres droits de superficie.',NULL,N'6',NULL,NULL),
         (N'R82-7',N'Droit étranger comparable à l''un des droits des 1° à 6°',N'7° Tout droit relevant d''un droit etranger et comparable a l''un des droits mentionnes aux 1° a 6°.',N'Ce cas exige une analyse du droit local : la comparabilite se justifie au dossier.',N'7',NULL,NULL);
-    PRINT 'ref_droit_reel : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_droit_reel : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_droit_reel]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_droit_reel : deja chargee, rien a faire.';
 GO

@@ -292,7 +292,7 @@ BEGIN
         (N'SIGMA-SCI-2',N'408',N'Fournisseurs, factures non parvenues',N'408',N'installation (rattache_par)',N'2026-09-06 01:05:16.646',NULL,NULL,NULL,N'0'),
         (N'SIGMA-SCI-2',N'512',N'Emprunts liés à des actifs immobiliers',N'512',N'installation (rattache_par)',N'2026-09-06 01:05:16.646',NULL,NULL,NULL,N'0'),
         (N'SIGMA-SCI-2',N'615',N'Autres charges de gestion courante',N'615',N'installation (rattache_par)',N'2026-09-06 01:05:16.646',NULL,NULL,NULL,N'0');
-    PRINT 'ref_compte_entite : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_compte_entite : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_compte_entite]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_compte_entite : deja chargee, rien a faire.';
 GO

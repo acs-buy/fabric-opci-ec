@@ -8,7 +8,7 @@ BEGIN
         (N'CONCORDANCE_SYSTEMES',N'concordance entre systèmes',N'3',NULL,NULL),
         (N'PISTE_AUDIT_TIERS',N'piste d’audit d’un système tiers',N'1',NULL,NULL),
         (N'REPRISE_A_NOUVEAUX',N'reprise d’à-nouveaux non passés par le cabinet',N'2',NULL,NULL);
-    PRINT 'ref_sujet_tenue : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_sujet_tenue : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_sujet_tenue]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_sujet_tenue : deja chargee, rien a faire.';
 GO

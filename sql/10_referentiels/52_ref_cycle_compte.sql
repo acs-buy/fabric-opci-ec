@@ -62,7 +62,7 @@ BEGIN
         (N'VALO',N'27',N'ref_compte art. 411-3, affectation du 16/09/2026',NULL,NULL,NULL,NULL,NULL),
         (N'VALO',N'37',N'ref_compte art. 411-3, affectation du 16/09/2026',NULL,NULL,NULL,NULL,NULL),
         (N'VALO',N'57',N'ref_compte art. 411-3, affectation du 16/09/2026',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_cycle_compte : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_cycle_compte : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_cycle_compte]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_cycle_compte : deja chargee, rien a faire.';
 GO

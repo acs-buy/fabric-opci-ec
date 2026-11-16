@@ -19,6 +19,7 @@ du groupe, reessai), sites/root du groupe, invitations.
 """
 import json
 import logging
+import os
 import re
 import time
 import unicodedata
@@ -64,11 +65,26 @@ def jeton_graph() -> str:
     return ManagedIdentityCredential().get_token("https://graph.microsoft.com/.default").token
 
 
+def prefixe_groupe() -> str:
+    """Le prefixe des groupes, lu dans le reglage d'application PREFIXE_GROUPE, « opci- » par defaut.
+
+    Deux installations dans un meme locataire (DEV, TEST et PROD, ou une reproduction) doivent avoir
+    des prefixes differents : sans cela, la seconde reprend le groupe, donc le site, d'un client de
+    meme code cree par la premiere (groupe_par_nickname ci-dessous). Lettres, chiffres et tirets,
+    20 caracteres au plus, termine par un tiret."""
+    p = (os.environ.get("PREFIXE_GROUPE") or "opci-").strip().lower()
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,18}-", p):
+        raise ValueError("PREFIXE_GROUPE invalide : lettres minuscules, chiffres et tirets, 20 caracteres au plus, "
+                         "termine par un tiret, par exemple « opci-test- ».")
+    return p
+
+
 def slug(texte: str) -> str:
-    """mailNickname : lettres, chiffres et tirets, sans accent, 64 caracteres au plus."""
+    """mailNickname : le prefixe de l'installation, puis lettres, chiffres et tirets, sans accent, 64 caracteres
+    au plus."""
     t = unicodedata.normalize("NFKD", texte).encode("ascii", "ignore").decode("ascii")
     t = re.sub(r"[^A-Za-z0-9-]+", "-", t).strip("-").lower()
-    return ("opci-" + t)[:64]
+    return (prefixe_groupe() + t)[:64]
 
 
 class Graph:

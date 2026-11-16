@@ -15,7 +15,7 @@ BEGIN
         (N'8',N'Des dépôts et des instruments financiers liquides',N'36',N'Le 265, dépôts et cautionnements versés (classe 2, article 411-3 du règlement ANC 2021-09), n''est pas un dépôt de R. 214-92 : il sort de cette catégorie le 11/10/2026.',NULL,NULL),
         (N'9',N'Des liquidités définies par décret en Conseil d''Etat',N'511,41,42,44,46',N'R. 214-94 : dépôts à vue auprès du dépositaire (1°) et créances d''exploitation (2°). Décisions du candidat du 11/10/2026 : tout le 511 est réputé déposé chez le dépositaire, sauf le sous-compte 5118, autres disponibilités, compté ici et hors du 5 % ; les créances d''exploitation sont les soldes débiteurs des comptes 41, 42, 44 et 46, hors du 5 %.',NULL,NULL),
         (N'10',N'Des avances en compte courant consenties en application de l''article L. 214-42',N'266',NULL,NULL,NULL);
-    PRINT 'ref_categorie_actif_cmf : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_categorie_actif_cmf : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_categorie_actif_cmf]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_categorie_actif_cmf : deja chargee, rien a faire.';
 GO

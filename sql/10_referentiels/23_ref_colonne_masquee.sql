@@ -314,7 +314,7 @@ BEGIN
         (N'v_ecran_valeur_liquidative',N'cle_ecran',N'cle'),
         (N'v_ecran_valeur_liquidative',N'entite',N'contexte'),
         (N'v_ecran_valeur_liquidative',N'version_regles',N'detail');
-    PRINT 'ref_colonne_masquee : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_colonne_masquee : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_colonne_masquee]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_colonne_masquee : deja chargee, rien a faire.';
 GO

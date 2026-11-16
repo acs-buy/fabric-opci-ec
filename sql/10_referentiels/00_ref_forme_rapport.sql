@@ -36,7 +36,7 @@ BEGIN
         Nos diligences ont été réalisées conformément à la norme professionnelle de l’Ordre des experts-comptables applicable à la mission de présentation des comptes qui ne constitue ni un audit ni un examen limité.,
         Sur la base de nos travaux, nous n’avons pas relevé d’éléments remettant en cause la cohérence et la vraisemblance des comptes annuels (ou « intermédiaires ») pris dans leur ensemble tels qu’ils sont joints à la présente attestation.,
         Lieu, date et signature',N'2',NULL,NULL);
-    PRINT 'ref_forme_rapport : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_forme_rapport : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_forme_rapport]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_forme_rapport : deja chargee, rien a faire.';
 GO

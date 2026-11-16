@@ -19,7 +19,7 @@ BEGIN
         (N'11',N'OMEGA-OPCI',N'OMEGA-SCI-8',N'EI-08',N'ACQUISITION',N'IMM-108',N'6760000.00',N'6760000.00',N'6.0000',N'2019-01-02',N'2034-01-02',N'0',N'SIMULE : jeu a 12 filiales, 65 pc du prix de revient a 6 pc'),
         (N'12',N'OMEGA-OPCI',N'OMEGA-SCI-9',N'EI-09',N'ACQUISITION',N'IMM-109',N'5135000.00',N'5135000.00',N'6.0000',N'2019-01-02',N'2034-01-02',N'0',N'SIMULE : jeu a 12 filiales, 65 pc du prix de revient a 6 pc');
     SET IDENTITY_INSERT dbo.[emprunt_intragroupe] OFF;
-    PRINT 'emprunt_intragroupe : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'emprunt_intragroupe : ' + CAST((SELECT COUNT(*) FROM dbo.[emprunt_intragroupe]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'emprunt_intragroupe : deja chargee, rien a faire.';
 GO

@@ -53,6 +53,16 @@ az functionapp create --name <votre-function-app> --resource-group <votre-groupe
 
 **Relevez le `principalId` rendu** : c'est la valeur `MI` du script des rôles.
 
+**Si vous installez plusieurs fois dans le même locataire**, donnez à chaque Function App un préfixe
+de groupe distinct, par exemple pour TEST :
+
+```bash
+az functionapp config appsettings set --name <votre-function-app> --resource-group <votre-groupe>   --settings PREFIXE_GROUPE=opci-test-
+```
+
+Sans ce réglage, le préfixe est `opci-`. Lettres minuscules, chiffres et tirets, 20 caractères au
+plus, terminé par un tiret ; un préfixe invalide fait refuser la création de l'espace.
+
 ### 3. Les huit rôles Graph
 
 Relevez d'abord l'identifiant du principal de service Graph **dans votre locataire** :

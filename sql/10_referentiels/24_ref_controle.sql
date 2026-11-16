@@ -116,7 +116,7 @@ BEGIN
         (N'v_controle_visa_lot_perime',NULL,N'controle visa lot perime',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'88',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_visa_proposant',NULL,N'controle visa proposant',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'89',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_visa_sans_role',NULL,N'controle visa sans role',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'90',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_controle : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_controle : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_controle]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_controle : deja chargee, rien a faire.';
 GO

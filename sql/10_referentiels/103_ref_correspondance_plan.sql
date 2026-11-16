@@ -18,7 +18,7 @@ BEGIN
         (N'PCG',N'6611',N'623',N'Les interets de l''emprunt bancaire affecte a l''immeuble relevent de la meme regle, article 322-5.',N'95',NULL,NULL,NULL,NULL,NULL),
         (N'PCG',N'6615',N'623',N'Les interets du compte courant d''associe remunerent un financement affecte a un actif immobilier : l''article 322-5 du reglement ANC 2021-09 les range dans les charges de l''activite immobiliere, au compte 623.',N'95',NULL,NULL,NULL,NULL,NULL),
         (N'PCG',N'706',N'721',N'Les loyers percus par la filiale se lisent au compte 721 « Loyers » du plan de l''article 411-3.',N'130',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_correspondance_plan : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_correspondance_plan : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_correspondance_plan]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_correspondance_plan : deja chargee, rien a faire.';
 GO

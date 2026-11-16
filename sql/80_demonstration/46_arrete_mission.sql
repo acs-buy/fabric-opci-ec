@@ -12,7 +12,7 @@ BEGIN
         (N'4',N'OMEGA-OPCI',N'2024-12-31',N'ANNUEL',N'installation',N'2026-09-06 16:18:48.475',N'2024-12-31',N'2024-12-31'),
         (N'6',N'OMEGA-OPCI',N'2026-06-30',N'SEMESTRIEL',N'installation',N'2026-09-09 12:06:56.784',N'2026-12-31',N'2026-06-30');
     SET IDENTITY_INSERT dbo.[arrete_mission] OFF;
-    PRINT 'arrete_mission : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'arrete_mission : ' + CAST((SELECT COUNT(*) FROM dbo.[arrete_mission]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'arrete_mission : deja chargee, rien a faire.';
 GO

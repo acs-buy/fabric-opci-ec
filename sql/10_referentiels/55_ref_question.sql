@@ -627,7 +627,7 @@ BEGIN
         (N'619',N'MTN-MR03',NULL,N'MAINTIEN',N'Les moyens technologiques et méthodologiques sont-ils toujours adaptés ?',N'OUI_NON_NA',N'1',N'ARRETE_CLOTURE',N'A_AUDITER',N'124',NULL,NULL,N'Compétence et ressources (réévaluation)',N'Oui / Non / NA',NULL,N'NPMQ Par. 24-25',N'2023-12-31',NULL,NULL),
         (N'620',N'MTN-MR04',NULL,N'MAINTIEN',N'Les évolutions réglementaires (ANC, AMF, BOFiP) ont-elles été intégrées dans les compétences de l''équipe ?',N'OUI_NON_NA',N'1',N'ARRETE_CLOTURE',N'A_AUDITER',N'125',NULL,NULL,N'Compétence et ressources (réévaluation)',N'Oui / Non / NA',NULL,N'NPMQ Par. 22',N'2023-12-31',NULL,NULL);
     SET IDENTITY_INSERT dbo.[ref_question] OFF;
-    PRINT 'ref_question : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'ref_question : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_question]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_question : deja chargee, rien a faire.';
 GO

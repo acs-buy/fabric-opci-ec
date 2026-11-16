@@ -33,7 +33,7 @@ BEGIN
         (N'123',N'2025-12-31',N'INTERET',N'OMEGA-SCI-8',N'OMEGA-OPCI',N'623',N'724',N'IMM-108',N'405600.00',N'DERIVE : interets de la periode sur le pret EI-08, taux 6,00 %. Classement IMMOBILIER par Article 322-5 : les charges d''emprunt liees a des actifs immobiliers entrent dans les char'),
         (N'124',N'2025-12-31',N'INTERET',N'OMEGA-SCI-9',N'OMEGA-OPCI',N'623',N'724',N'IMM-109',N'308100.00',N'DERIVE : interets de la periode sur le pret EI-09, taux 6,00 %. Classement IMMOBILIER par Article 322-5 : les charges d''emprunt liees a des actifs immobiliers entrent dans les char');
     SET IDENTITY_INSERT dbo.[flux_intragroupe] OFF;
-    PRINT 'flux_intragroupe : ' + CAST(@@ROWCOUNT AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    PRINT 'flux_intragroupe : ' + CAST((SELECT COUNT(*) FROM dbo.[flux_intragroupe]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'flux_intragroupe : deja chargee, rien a faire.';
 GO
