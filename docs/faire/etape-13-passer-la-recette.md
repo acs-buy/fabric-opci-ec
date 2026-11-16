@@ -8,6 +8,15 @@ sans ce site, le bouton de dépôt n'a pas d'adresse.
 
 Faites-les dans l'ordre : chacune prépare la suivante.
 
+**Avant l'action 8, créez le site du client de l'action 1.** Aucun bouton de l'écran ne le crée.
+Dans une nouvelle requête de la base :
+`EXEC dbo.pr_ecran_provisionner_espace @entite = '<code du client>', @par = N'<votre adresse>';`.
+`SELECT * FROM dbo.v_espace_client WHERE entite = '<code du client>'` doit rendre le statut `FAIT`.
+Puis, dans le coffre, créez le raccourci **SharePoint Folder** vers la bibliothèque « Dépôt du
+client » de ce site, nommé `sp_<code en minuscules, tirets en soulignés>_depot` : la base y relit la
+pièce rattachée. C'est le point 13 et le point 14 de l'[étape 12](etape-12-relier-sharepoint.md),
+appliqués à ce client.
+
 | # | L'action à faire | Où | Ce que vous devez obtenir |
 |---|---|---|---|
 | 1 | Créer un dossier client | Section Dossier, sous-état Nouveau dossier | Le dossier apparaît, et son questionnaire d'acceptation s'ouvre seul |
@@ -17,17 +26,16 @@ Faites-les dans l'ordre : chacune prépare la suivante.
 | 5 | Modifier une filiale | Section Filiales | Le message nomme le champ modifié et sa nouvelle valeur. La base inscrit le changement dans la table `journal_perimetre`, qu'aucune page du rapport n'affiche |
 | 6 | Supprimer une filiale | Section Filiales | Refus motivé si la filiale porte des données de mission |
 | 7 | Répondre à une question | Section Questionnaire | La réponse est enregistrée par le bouton « Valider la réponse » |
-| 8 | Déposer une pièce | Page Pièce justificative | Le bouton ouvre la bibliothèque « Dépôt du client » ; une fois le fichier déposé et son nom tapé, « Rattacher la pièce » l'inscrit avec sa nature, sa date, son déposant et son lien |
+| 8 | Déposer une pièce | Section Questionnaire, boutons « Ouvrir le dépôt du client » puis « Rattacher la pièce » | Le site du client doit exister, voir ci-dessous. Le bouton ouvre la bibliothèque « Dépôt du client » ; une fois le fichier déposé et son nom tapé, « Rattacher la pièce » l'inscrit avec sa nature, sa date, son déposant et son lien |
 | 9 | Retirer une pièce | Section Questionnaire | Motif obligatoire, refus si la pièce fonde une donnée |
 | 10 | Soumettre au visa | Section Questionnaire, bouton « Soumettre au visa » | L'étape du visa s'affiche. Rien ne s'écrit en base : l'acceptation est au statut ouvert depuis la création du dossier |
-| 11 | Approuver le visa | Section Visa, **avec un second compte, associé du dossier** | Refusé au compte qui a créé le dossier et à un compte qui n'en est pas l'associé, accepté à l'associé |
+| 11 | Approuver le visa | Section Visa, **avec un second compte, associé du dossier** | Refusé au compte qui a créé le dossier et à un compte qui n'en est pas l'associé. Sous l'associé : refusé tant qu'une question obligatoire reste sans réponse (91 après la seule action 7), accepté une fois les 92 questions obligatoires répondues |
 | 12 | Ouvrir un arrêté | Section Arrêtés | Les arrêtés de l'exercice sont planifiés et le premier devient ouvert |
 
 ## Où se font ces actions
 
-> Les images qui suivent sont des **maquettes de conception**, et non des captures d'écran :
-> l'écran de conduite est en cours de pose. Elles montrent la structure retenue, qui ne bougera
-> plus. L'écran publié peut différer dans le détail.
+> Les images qui suivent sont des **maquettes de conception**, et non des captures d'écran.
+> L'écran publié en diffère dans le détail.
 
 **Actions 1 à 3, le dossier.**
 
@@ -116,7 +124,7 @@ notez le texte exact et le numéro de l'action : ils servent au diagnostic.**
 | 4 | Ajouter une filiale | `Filiale <code> ajoutée au périmètre de <client>. Sa balance sera réclamée à la révision.` |
 | 5 | Modifier une filiale | `Filiale <code> mise à jour : droits de vote → 60,00 %.` |
 | 6 | Supprimer une filiale | `Filiale <code> (<dénomination>) retirée du périmètre de <client>.` |
-| 7 | Répondre à une question | `Réponse à <référence> enregistrée.` |
+| 7 | Répondre à une question | Aucun message dans la zone : la réponse s'affiche dans la colonne « Réponse » de la grille, et le compteur « Questionnaire » de la fiche avance d'une unité |
 | 8 | Déposer une pièce | `Pièce « <nom> » inscrite au dossier de <code>, rattachée à la question <référence>. <n> Ko.` Sans question choisie, la mention de la question n'y est pas |
 | 9 | Retirer une pièce | `Pièce « <nom> » retirée du dossier de <code> (question <référence>), arrêté du <jj/mm/aaaa>. Le fichier reste dans SharePoint ; le retrait est tracé.` Devant un code qui commence par une voyelle, « du dossier d' » remplace « du dossier de ». La question et l'arrêté n'apparaissent que si le rattachement en porte. Si la pièce garde d'autres rattachements, une phrase finale le dit |
 | 11 | Approuver le visa | `Décision d’acceptation visée pour <code> : mission acceptée.` |

@@ -96,11 +96,15 @@ Puis, dans votre base SQL Fabric, une seule fois :
 
 ```sql
 IF NOT EXISTS (SELECT 1 FROM sys.symmetric_keys WHERE name = '##MS_DatabaseMasterKey##')
-    CREATE MASTER KEY ENCRYPTION BY PASSWORD = '<un mot de passe fort, gardé hors du dépôt>';
+    CREATE MASTER KEY;
 
 CREATE DATABASE SCOPED CREDENTIAL [https://<votre-function-app>.azurewebsites.net/api/provisionner_espace]
     WITH IDENTITY = 'HTTPEndpointHeaders', SECRET = '{"x-functions-key":"<votre clé>"}';
 ```
+
+**La clé principale se crée sans mot de passe.** Dans une base SQL Azure, le mot de passe est
+facultatif : la plateforme protège la clé (Microsoft Learn, « CREATE MASTER KEY »). Vous n'avez donc
+aucun mot de passe à choisir ni à garder.
 
 **Le nom de la credential est l'adresse elle-même** :
 `sp_invoke_external_rest_endpoint` apparie la credential à l'adresse appelée par son nom. Une

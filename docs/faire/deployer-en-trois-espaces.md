@@ -104,7 +104,8 @@ Affectez de même les comptes de l'équipe au rôle `Reviseur` du modèle `condu
 Les paramètres de `dbo.ref_parametre` sont des données : le pipeline ne les copie pas. Dans la base
 de l'espace d'arrivée, refaites les points 7, 8, 10 et 12 de [l'étape 12](etape-12-relier-sharepoint.md) :
 les credentials des 2 routes, leurs adresses, le site du cabinet et le nom du raccourci. La fonction
-Azure, elle, sert les trois espaces.
+Azure, elle, sert les trois espaces, et nomme le site d'un client par son seul code : voir
+l'[étape 12](etape-12-relier-sharepoint.md), « Un site par code client et par locataire ».
 
 **Les raccourcis du coffre, eux, sont copiés, avec la même cible.** La documentation de l'éditeur
 l'écrit pour les raccourcis SharePoint : « Shortcuts with external targets (ADLS Gen2, S3, and

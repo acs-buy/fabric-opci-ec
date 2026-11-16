@@ -47,6 +47,12 @@ reprenez la suite le lendemain, au moment de cette étape-ci.
 site du véhicule qui la détient, et se classent par la colonne **Entité légale**, que la fonction
 crée dans chaque bibliothèque. La base refuse de créer un site pour une filiale.
 
+**Un site par code client et par locataire.** La fonction nomme le groupe `opci-<code>` et reprend
+un groupe qui existe déjà (`azure/function_app.py`). Deux installations dans un même locataire, par
+exemple DEV, TEST et PROD, partagent donc le site d'un même code client : la seconde écrit dans le
+site créé par la première. Donnez des codes différents aux dossiers d'essai, ou installez TEST dans
+un autre locataire.
+
 ---
 
 ## Pourquoi une Azure Function, et pas seulement la base
@@ -194,8 +200,8 @@ l'identique de celui qui a servi à calculer l'empreinte du jeu, et refuse de d�
 l'empreinte différerait. Elle est rejouable : relancée après une interruption, elle reprend les
 pièces restées sans lien.
 
-Pour un client réel, les points 13 et 14 se font une fois par véhicule, le point 13 depuis l'écran
-de conduite. Le point 15 ne concerne que la démonstration.
+Pour un client réel, les points 13 et 14 se font une fois par véhicule, par la même requête : aucun
+bouton de l'écran de conduite ne crée le site d'un client. Le point 15 ne concerne que la démonstration.
 
 ---
 
