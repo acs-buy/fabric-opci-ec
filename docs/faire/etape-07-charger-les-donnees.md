@@ -26,9 +26,17 @@ et les requêtes enregistrées.
 
 ![L'éditeur de la base, avec le bouton New Query](../../captures/base-nouvelle-requete.png)
 
-Jouez les fichiers **dans l'ordre de leur numéro**, d'abord tout le dossier `10_referentiels`, puis
-tout le dossier `80_demonstration`. Les clés étrangères imposent
-qu'une table soit remplie après celles dont elle dépend.
+Jouez les fichiers **dans l'ordre de leur numéro**, et dans cet ordre-ci :
+
+1. `sql/00_preparer_le_chargement.sql`, qui suspend les déclencheurs et les clés étrangères le temps
+   du chargement. Sans lui, la plupart des fichiers de données sont refusés.
+2. Tout le dossier `10_referentiels`, par numéro croissant : `9_` avant `10_`, et `100_` après `99_`.
+3. Tout le dossier `80_demonstration`, de même.
+4. `sql/99_terminer_le_chargement.sql`, qui rétablit les clés étrangères en contrôlant les données
+   chargées, réactive les déclencheurs et compte ce qui est en place. Ses 2 premiers comptes
+   doivent valoir 0.
+
+Les clés étrangères imposent qu'une table soit remplie après celles dont elle dépend.
 
 Chaque fichier annonce ce qu'il a fait, par exemple :
 
@@ -69,7 +77,7 @@ celui qui l'a soumis. Avec un seul compte, vous ne pouvez mener aucun dossier ju
 
 | Le compte | Le rôle | Pourquoi celui-là |
 |---|---|---|
-| Vous | `ASSOCIE` | Créer un dossier client écrit dans le référentiel des entités, qui se tient au rôle associé |
+| Vous | `ASSOCIE`, et `PREPARATEUR` | Créer un dossier client écrit dans le référentiel des entités, qui se tient au rôle associé |
 | Votre collègue | `CHEF_MISSION` | Ce rôle vise lui aussi, il peut donc approuver ce que vous soumettez |
 
 *Vérification :* le script affiche vos deux adresses avec 16 entités en face de chacune, puis

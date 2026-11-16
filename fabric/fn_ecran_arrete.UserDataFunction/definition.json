@@ -4,9 +4,9 @@
   "connectedDataSources": [
     {
       "alias": "DossierOPCI",
-      "artifactId": "fd9080bb-e3ae-4aab-bf09-edbfcc8606d1",
+      "artifactId": "e75236e3-ceab-b437-4253-1d4f3ade2222",
       "artifactType": "SqlDbNative",
-      "workspaceId": "3d36cceb-a461-4e21-a285-9e40297fe906"
+      "workspaceId": "00000000-0000-0000-0000-000000000000"
     }
   ],
   "functions": [

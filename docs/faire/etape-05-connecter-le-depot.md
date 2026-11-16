@@ -2,16 +2,10 @@
 
 Cette étape établit le lien qui apportera les éléments de la solution dans votre espace de travail.
 
-## D'abord, faire votre propre copie du dépôt
+## Avant de commencer
 
-Sur la page GitHub de ce dépôt, cliquez sur **Fork**, en haut à droite. Vous obtenez une copie sous
-votre propre compte, que vous pourrez modifier librement.
-
-**Pourquoi une copie et non le dépôt d'origine :** l'installation vous fera modifier deux fichiers
-de configuration, et vous ne pouvez écrire que dans un dépôt qui vous appartient.
-
-Téléchargez ensuite cette copie sur votre poste, par **Code** puis **Download ZIP**, ou bien par
-`git clone` si vous connaissez.
+Votre copie du dépôt existe sur GitHub et sur votre poste : c'est l'[étape 4](etape-04-copier-le-depot.md).
+Vous connectez l'espace à cette copie, jamais au dépôt d'origine.
 
 ## Créer un jeton d'accès GitHub
 
@@ -59,7 +53,7 @@ contrôle de source apparaît dans le bandeau de l'espace de travail.
 
 C'est le quatrième réglage de locataire qui manque, celui qui autorise la synchronisation avec des
 dépôts **GitHub** en particulier. Il est distinct de celui qui autorise Git en général. Reportez-vous
-à la page [5. Les licences, expliquées](../comprendre/05-les-licences.md).
+à l'[étape 2](etape-02-activer-les-reglages.md), réglage 4.
 
 ## Une remarque sur le partage
 

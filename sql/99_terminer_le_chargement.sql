@@ -10,6 +10,9 @@
 --     1. Il rétablit la vérification des clés étrangères, EN CONTRÔLANT les données déjà chargées.
 --        Si une référence est invalide, il vous le dit ici plutôt que de la laisser passer.
 --     2. Il réactive les déclencheurs.
+--     2 bis. Il place le déclencheur de garde des questions de référence en premier, pour les
+--        insertions et les mises à jour. Cet ordre ne peut pas voyager dans le dossier fabric/ :
+--        la synchronisation Git refuse un fichier de table qui le pose.
 --     3. Il compte ce qui est en place, pour que vous compariez.
 
 SET NOCOUNT ON;
@@ -31,6 +34,10 @@ SELECT @sql = @sql + N'ALTER TABLE [' + s.name + N'].[' + t.name + N'] ENABLE TR
  WHERE t.is_ms_shipped = 0
    AND EXISTS (SELECT 1 FROM sys.triggers g WHERE g.parent_id = t.object_id);
 EXEC sp_executesql @sql;
+
+PRINT 'Ordre du declencheur de garde des questions de reference.';
+EXEC sp_settriggerorder @triggername = N'[dbo].[tr_ref_question_garde]', @order = N'First', @stmttype = N'INSERT';
+EXEC sp_settriggerorder @triggername = N'[dbo].[tr_ref_question_garde]', @order = N'First', @stmttype = N'UPDATE';
 
 -- Ce qui doit rester a zero.
 SELECT 'declencheurs encore suspendus' AS quoi, COUNT(*) AS nb

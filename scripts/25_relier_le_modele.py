@@ -157,9 +157,9 @@ def relier(racine, serveur_cible, base_cible):
         print(u"ATTENTION : %d source(s) n'ont pas ete reliees. Relancez avec --verifier."
               % (len(apres["a_relier"]) + len(apres["inconnu"])))
         return 1
-    print(u"\nProchaine etape : republiez les 2 modeles, ouvrez-les dans votre espace de travail")
-    print(u"et verifiez qu'il s'actualise sans erreur. Ensuite seulement, reliez les boutons")
-    print(u"(scripts/20_relier_les_boutons.py).")
+    print(u"\nProchaine etape : reliez les boutons (scripts/20_relier_les_boutons.py), puis envoyez")
+    print(u"vos modifications a votre depot GitHub et faites Mettre a jour tout dans Fabric")
+    print(u"(etapes 9 et 10).")
     return 0
 
 

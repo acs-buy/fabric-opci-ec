@@ -213,8 +213,8 @@ def relier(racine, espace_cible, cibles):
         print(u"ATTENTION : %d bouton(s) n'ont pas ete relies. Relancez avec --verifier."
               % (len(apres["a_relier"]) + len(apres["inconnu"])))
         return 1
-    print(u"\nProchaine etape : republiez le rapport dans votre espace de travail, puis passez")
-    print(u"la recette (scripts/30_recette.py).")
+    print(u"\nProchaine etape : envoyez vos modifications a votre depot GitHub, faites Mettre a")
+    print(u"jour tout dans Fabric, puis posez les identifiants des 2 modeles (etapes 9 et 10).")
     return 0
 
 

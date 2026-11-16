@@ -78,7 +78,7 @@ Les 24 heures de l'étape 12 s'évitent : faites affecter les autorisations de l
 l'étape 2, et elles seront prises en compte au moment où vous en aurez besoin.
 
 **Après l'étape 13, les tests d'acceptation.** Les utilisateurs de la solution, chacun avec son compte,
-jouent 180 tests sur le jeu de démonstration : 152 tests scénarisés et 28 tests manuels
+jouent 186 tests sur le jeu de démonstration : 158 tests scénarisés et 28 tests manuels
 métier. [La phase](docs/faire/tests-d-acceptation.md) · [Le cahier](docs/faire/cahier-de-tests.md) ·
 [Le classeur à remplir](docs/faire/cahier-de-tests.xlsx)
 
@@ -89,7 +89,7 @@ Cinq pages s'ajoutent, à lire quand le sujet se présente :
 - [Le dépannage](docs/faire/depannage.md), qui donne la cause réelle de chaque symptôme.
 - [Déployer en trois espaces](docs/faire/deployer-en-trois-espaces.md), pour un cabinet qui
   installe dans DEV, fait tester dans TEST, et n'ouvre PROD qu'une fois les tests signés.
-- [Le cahier des tests d'acceptation](docs/faire/cahier-de-tests.md), 180 tests joués par les
+- [Le cahier des tests d'acceptation](docs/faire/cahier-de-tests.md), 186 tests joués par les
   utilisateurs après l'étape 13 ; dans une installation en 3 espaces, ils se jouent dans TEST avant
   d'ouvrir la production.
 - [Reproduire avec un agent d'intelligence artificielle](docs/faire/avec-un-agent.md) : les
@@ -199,8 +199,10 @@ base. Ces 2 derniers ne demandent rien de votre part.
 
 | Le dossier | Ce qu'il porte | Ce que vous en faites |
 |---|---|---|
+| `sql/00_preparer_le_chargement.sql` | Il suspend les déclencheurs et les clés étrangères le temps du chargement | **À jouer en premier** |
 | `sql/10_referentiels/` | 4 051 lignes : questions d'acceptation, plan de comptes, articles du règlement, natures de pièces, rôles | Vous le gardez |
 | `sql/80_demonstration/` | 7 176 lignes : deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures, 98 fiches de pièces | Vous pourrez l'effacer |
+| `sql/99_terminer_le_chargement.sql` | Il rétablit les clés étrangères en contrôlant les données, réactive les déclencheurs et compte ce qui est en place | **À jouer après les données** ; ses 2 premiers comptes valent 0 |
 | `sql/90_vous_inscrire_aux_missions.sql` | Il vous inscrit, vous et un collègue, sur les missions de démonstration | **Obligatoire.** Sans lui, l'écran du réviseur est vide |
 
 Le jeu de démonstration sert à voir l'écran du client rempli. Sans lui, les huit pages de
@@ -328,7 +330,7 @@ le dossier. C'est la séparation des fonctions, et la base l'impose.
 ### Après l'étape 13. Les tests d'acceptation
 
 **Ce que vous faites :** vous confiez le cahier des tests d'acceptation aux utilisateurs de la solution,
-3 membres de l'équipe et 1 compte de l'audience client : 152 tests scénarisés, aux actions écrites, et
+3 membres de l'équipe et 1 compte de l'audience client : 158 tests scénarisés, aux actions écrites, et
 28 tests manuels, où l'utilisateur conduit un dossier comme en mission et refait des calculs à la main.
 
 **Pourquoi :** l'étape 13 établit que l'installation fonctionne. Ces tests établissent que la solution

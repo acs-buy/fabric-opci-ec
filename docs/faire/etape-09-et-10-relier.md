@@ -40,17 +40,17 @@ rien, ou bien ils écrivent au mauvais endroit.
 
 ## La liaison de chaque rapport à son modèle
 
-Chaque rapport désigne son modèle par une connexion qui nomme l'espace de travail d'origine, le nom
-du modèle et l'identifiant du modèle d'origine : section `byConnection` du fichier
+Chaque rapport désigne son modèle par un chemin relatif : section `byPath` du fichier
 `definition.pbir`, dans `fabric/Conduite de mission.Report/` et dans
-`fabric/restitution_client.Report/`. Aucun des 2 scripts de cette page ne modifie ce fichier.
+`fabric/restitution_client.Report/`. La synchronisation Git relie ainsi chaque rapport au modèle du
+même nom dans votre espace ; aucun script n'a à le faire.
 
-**Vérifiez donc que chaque rapport lit le modèle de votre espace.** Le dossier créé à l'action 1 de
+**Vérifiez que chaque rapport lit le modèle de votre espace.** Le dossier créé à l'action 1 de
 l'étape 13 n'existe que dans votre base : il doit apparaître à l'écran de conduite. Dans une
 installation en 3 espaces, le test 7-03 du [cahier des tests d'acceptation](cahier-de-tests.md)
 fait cette preuve pour les 2 rapports.
 
-**Ne renommez aucun élément.** La connexion nomme le modèle, et le message d'erreur d'un renommage
+**Ne renommez aucun élément.** Le chemin nomme le modèle, et le message d'erreur d'un renommage
 ne désigne pas le renommage.
 
 ## Comment faire

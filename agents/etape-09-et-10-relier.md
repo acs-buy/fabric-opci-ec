@@ -94,12 +94,12 @@ Le détail est aux [étapes 9 et 10 du mode opératoire](../docs/faire/etape-09-
 
 ## La liaison du rapport à son modèle, que les scripts ne touchent pas
 
-Chaque rapport désigne son modèle par une connexion qui nomme l'espace de travail d'origine, le nom
-du modèle et l'identifiant du modèle d'origine : section `byConnection` du fichier `definition.pbir`
-de chaque rapport. Aucun des 2 scripts ne modifie ce fichier. La vérification est aux
+Chaque rapport désigne son modèle par un chemin relatif : section `byPath` du fichier
+`definition.pbir` de chaque rapport. La synchronisation Git relie chaque rapport au modèle du même
+nom dans l'espace ; aucun des 2 scripts n'a à le faire. La vérification est aux
 [étapes 9 et 10 du mode opératoire](../docs/faire/etape-09-et-10-relier.md).
 
-**Ne renommez aucun élément.** La connexion nomme le modèle, et le message d'erreur d'un renommage
+**Ne renommez aucun élément.** Le chemin nomme le modèle, et le message d'erreur d'un renommage
 ne désigne pas le renommage. Dites-le à l'agent si vous lui confiez autre chose.
 
 ---

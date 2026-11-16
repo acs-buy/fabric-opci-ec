@@ -34,13 +34,6 @@ CREATE TABLE [dbo].[ref_question] (
 
 GO
 
-CREATE NONCLUSTERED INDEX [nci_msft_1_ref_question_6314EAE03475826D3D4908A65EEFDFF6]
-    ON [dbo].[ref_question]([statut] ASC)
-    INCLUDE([applicabilite], [cycle], [enonce], [niveau_programme], [reference]);
-
-
-GO
-
 CREATE NONCLUSTERED INDEX [ix_ref_question_phase]
     ON [dbo].[ref_question]([phase] ASC);
 
@@ -118,14 +111,6 @@ BEGIN
     SET @m = REPLACE(@m, N'%', N'%%');
     THROW 50074, @m, 1;
 END;
-GO
-EXECUTE sp_settriggerorder @triggername = N'[dbo].[tr_ref_question_garde]', @order = N'first', @stmttype = N'insert';
-
-
-GO
-EXECUTE sp_settriggerorder @triggername = N'[dbo].[tr_ref_question_garde]', @order = N'first', @stmttype = N'update';
-
-
 GO
 
 CREATE   TRIGGER dbo.[tr_ref_question_horodatage]

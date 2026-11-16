@@ -112,13 +112,13 @@ publication. Un bouton n'appelle qu'une fonction publiée.
 
 ## La liaison du rapport à son modèle, à vérifier
 
-**Chaque rapport désigne son modèle par une connexion** qui nomme l'espace de travail d'origine, le
-nom du modèle et l'identifiant du modèle d'origine : section `byConnection` du fichier
-`definition.pbir` de chaque rapport, dans `fabric/`. Aucun script du dépôt ne modifie ce fichier.
-Les [étapes 9 et 10](../faire/etape-09-et-10-relier.md) disent comment vérifier que chaque rapport
-lit le modèle de votre espace.
+**Chaque rapport désigne son modèle par un chemin relatif** : section `byPath` du fichier
+`definition.pbir` de chaque rapport, dans `fabric/`, qui vaut `../conduite_de_mission.SemanticModel`
+ou `../restitution_client.SemanticModel`. La synchronisation Git relie ainsi chaque rapport au modèle
+du même nom dans votre espace. Les [étapes 9 et 10](../faire/etape-09-et-10-relier.md) disent
+comment le vérifier.
 
-**Ne renommez aucun élément.** La connexion nomme le modèle, et le message d'erreur d'un renommage
+**Ne renommez aucun élément.** Le chemin nomme le modèle, et le message d'erreur d'un renommage
 ne désigne pas le renommage.
 
 ---
