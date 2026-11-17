@@ -775,7 +775,7 @@ Passé ☐ · Échec ☐ · Remarque :
 **Vous devez obtenir :** La zone « Message de l'écran » affiche le bilan ci-contre, sur le fond des refus puisqu'une ligne est refusée. Le tableau « Filiales du groupe » porte UAT-SCI-3 (quote-part 80 % à 2 décimales, classement « oui ») et ne porte pas UAT-SCI-4.
 
 ```
-1 filiale ajoutée à UAT-OPCI, 1 ligne refusée : UAT-SCI-4, droits de vote hors de 0 à 100 %.
+1 filiale ajoutée à UAT-OPCI ; 1 ligne refusée, UAT-SCI-4, au motif « droits de vote hors de 0 à 100 % ».
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -1518,7 +1518,7 @@ Passé ☐ · Échec ☐ · Remarque :
 **Vous devez obtenir :** La zone « Message de l'écran » affiche le refus ci-contre. Aucune pièce absent_essai.pdf n'est inscrite : la liste « PIÈCE À RETIRER » ne la porte pas.
 
 ```
-Pour OMEGA-OPCI, le fichier « absent_essai.pdf » n’est pas dans la bibliothèque Dépôt du client. Vérifiez son nom et son sous-dossier.
+Fichier « absent_essai.pdf » absent de la bibliothèque « Dépôt du client » du site OMEGA-OPCI : vérifiez son nom et son sous-dossier.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
@@ -1993,7 +1993,7 @@ Passé ☐ · Échec ☐ · Remarque :
 **Vous devez obtenir :** Refus ci-dessous ; rien n'est inscrit.
 
 ```
-Pour OMEGA-OPCI, le fichier « absent_uat.pdf » n’est pas dans la bibliothèque Dépôt du client. Vérifiez son nom et son sous-dossier.
+Fichier « absent_uat.pdf » absent de la bibliothèque « Dépôt du client » du site OMEGA-OPCI : vérifiez son nom et son sous-dossier.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :
