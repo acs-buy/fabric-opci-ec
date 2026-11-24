@@ -55,7 +55,7 @@ BEGIN
         (N'v_controle_filiale_plan_opci',NULL,N'controle filiale plan opci',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'39',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_filiale_reevaluee',NULL,N'controle filiale reevaluee',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'95',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_flux_vs_ecritures',NULL,N'Flux intragroupe déclarés rapprochés des écritures du débiteur',N'RAPPROCHEMENT',N'ecart_debiteur <> 0',N'Rapprochement : un flux déclaré doit se lire dans les écritures de l''entité qui le doit, au compte du modèle ; l''anomalie est l''écart non nul.',N'40',NULL,NULL,NULL,NULL,NULL),
-        (N'v_controle_geste_sans_ecran',NULL,N'controle geste sans ecran',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'102',NULL,NULL,NULL,NULL,NULL),
+        (N'v_controle_geste_sans_ecran',NULL,N'controle action sans ecran',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'102',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_immeuble_non_qualifie',NULL,N'controle immeuble non qualifie',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'41',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_import_concurrent',NULL,N'controle import concurrent',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'42',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_import_exercice_faux',NULL,N'controle import exercice faux',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'43',NULL,NULL,NULL,NULL,NULL),

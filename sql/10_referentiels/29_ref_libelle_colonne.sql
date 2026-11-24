@@ -179,7 +179,7 @@ BEGIN
         (N'*',N'forme_proposee',N'Forme proposee'),
         (N'*',N'forme_vehicule',N'Forme du véhicule'),
         (N'*',N'genre',N'Genre'),
-        (N'*',N'geste',N'Geste'),
+        (N'*',N'geste',N'Action'),
         (N'*',N'horodatage',N'Horodatage'),
         (N'*',N'id',N'Identifiant'),
         (N'*',N'id_devise',N'Devise'),
