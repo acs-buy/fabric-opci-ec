@@ -1,12 +1,10 @@
--- Objet n° 26 de l'ecran 5 (lot 1) : une ligne par article qu'un referentiel cite par une cle (article_cite de
+-- Objet n° 26 de l'ecran 5 : une ligne par article qu'un referentiel cite par une cle (article_cite de
 -- ref_ratio, ref_ratio_memoire et ref_obligation_distribution, ref_ratio_memoire_article, ref_question_article,
 -- article de ref_tableau_annexe et de ref_ligne_annexe) ; lignes : les designations des lignes qui le citent
 -- (colonne ligne de v_ecran_referentiel_lignes, jamais leur code), suivies entre parentheses du role de la colonne
 -- d'ou vient la citation, celui que la page dessine : article_calcul « calcul », dates_respect « dates de respect », dates_respect_professionnel « dates de respect, OPCI professionnel », fondement_grand_public « fondement, OPCI grand public », fondement_professionnel « fondement » ;
 -- rien pour l'article principal ; jointes par « ; », une citation identique une fois ; un intitule absent se montre
 -- « a remplir » et ne se saisit pas ; un texte europeen se montre tel quel, intitule « hors du CMF ».
--- Pose par 63_SQL/322_e5_vues_choix_inventaire_seuils_articles.sql, genere par 61_DEPLOIEMENT/generer_e5_322_vues_choix_inventaire_seuils_articles.py ;
--- ne pas modifier a la main : regenerer le script quand une table s'inscrit ou qu'une colonne change.
 CREATE   VIEW dbo.v_ecran_articles_du_referentiel AS
 WITH cit AS (
     SELECT CAST('ref_ratio' AS VARCHAR (120)) AS referentiel, CAST(x.article_cite AS NVARCHAR (120)) AS article,

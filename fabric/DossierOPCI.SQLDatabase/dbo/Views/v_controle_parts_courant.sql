@@ -1,6 +1,6 @@
 
 -- --- 4 : l'invariant, les parts a l'arrete egalent les parts emises ----
--- ATTENDU : zero ligne. Le meme invariant que le bloc 5 du script 51,
+-- ATTENDU : zero ligne. Le meme invariant que v_controle_parts_porteurs,
 -- porte cette fois sur la vue que le modele semantique client consomme.
 CREATE   VIEW dbo.v_controle_parts_courant AS
 SELECT c.entite, c.arrete,

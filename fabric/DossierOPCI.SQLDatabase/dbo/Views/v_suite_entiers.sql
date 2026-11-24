@@ -1,7 +1,7 @@
 -- =====================================================================
 -- Le montant simulable : les valeurs que le curseur de la restitution
 -- client propose, exprimees en euros et non en positions.
--- Arbitrage du candidat du 03/09/2026 : le curseur va de l'obligation
+-- Arbitrage du 03/09/2026 : le curseur va de l'obligation
 -- minimale au plafond des sommes distribuables. Les 2 bornes etant
 -- calculees par dossier et par exercice, la liste des valeurs vient de la
 -- base et non d'une table de parametre en dur.

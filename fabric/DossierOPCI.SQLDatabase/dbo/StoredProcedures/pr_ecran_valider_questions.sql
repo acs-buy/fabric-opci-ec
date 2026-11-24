@@ -1,10 +1,10 @@
 -- 4. Les procedures de l'etape 3 et de la Revision
--- ecran 5, lot 1, script 324 (61_DEPLOIEMENT/generer_e5_324_questions.py) : genere, ne pas modifier a la main.
+-- ecran 5
 -- Objet n° 32 : « Valider les questions du cycle ». Passe a VALIDEE les questions A_AUDITER (« à valider ») du cycle ou
 -- de la phase, recu par son code ou par son nom d'usage (segment « Cycle ou phase »). Refus en francais, avant toute
 -- ecriture : @par vide, cycle ou phase vide, inconnu ou de code commun a un cycle et a une phase, puis les 2 etats de
 -- blocage de [Etat de la validation] dans l'ordre ou la mesure les nomme, « aucune question a valider » (50874) et
--- « reserve a l'associe » (50875, aucun mandat ASSOCIE en cours sur @par ; decision D-d de la session base, B2).
+-- « reserve a l'associe » (50875, aucun mandat ASSOCIE en cours sur @par).
 -- Les declencheurs le jugent encore a l'ecriture : tr_ref_question_garde, en tete (50074), et tr_question_statut (50076).
 -- Message de reussite sous « - », sans action jointe, au caractere pres sur la maquette (fn_e5_message_validation).
 CREATE   PROCEDURE dbo.pr_ecran_valider_questions
@@ -50,7 +50,7 @@ BEGIN
             EXEC dbo.pr_e5_refuser 50874, @m;
         END;
         -- etat « reserve a l'associe » de [Etat de la validation] ([Associe du cabinet connecte] vide), juge ici avant
-        -- toute ecriture (decision D-d de la session base, B2), apres « aucune question a valider », dans l'ordre ou la
+        -- toute ecriture, apres « aucune question a valider », dans l'ordre ou la
         -- mesure nomme ses etats : mandat ASSOCIE en cours sur une entite, regle de date de fn_peut_ecrire_referentiel ;
         -- tr_ref_question_garde (50074) et tr_question_statut (50076) le jugent encore a l'ecriture
         IF NOT EXISTS (SELECT 1 FROM dbo.role_mission r

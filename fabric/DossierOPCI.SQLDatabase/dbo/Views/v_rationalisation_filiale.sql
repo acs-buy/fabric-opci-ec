@@ -1,5 +1,5 @@
 
--- --- 6 : E4-2b, la rationalisation par filiale ----------------------
+-- --- 6 : la rationalisation par filiale ----------------------
 CREATE   VIEW dbo.v_rationalisation_filiale AS
 SELECT d.entite_fille                      AS filiale,
        d.entite_mere, d.arrete, d.quote_part,

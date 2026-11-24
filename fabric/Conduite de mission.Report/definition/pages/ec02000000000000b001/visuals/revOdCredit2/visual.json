@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revOdCredit2",
   "position": {
-    "x": 666,
-    "y": 1001,
+    "x": 677,
+    "y": 1025,
     "z": 11800,
-    "height": 83,
-    "width": 118,
+    "height": 48,
+    "width": 96,
     "tabOrder": 11800
   },
   "visual": {

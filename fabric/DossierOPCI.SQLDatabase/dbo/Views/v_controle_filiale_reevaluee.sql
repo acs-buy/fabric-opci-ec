@@ -1,5 +1,5 @@
 
--- --- depuis 63_SQL/127_valeur_historique_des_filiales.sql : v_controle_filiale_reevaluee ---
+-- --- v_controle_filiale_reevaluee ---
 -- C80 : une filiale qui porterait malgre tout un ecart de valorisation.
 -- La regle du dossier l'interdit, et le controle la nomme.
 CREATE   VIEW dbo.v_controle_filiale_reevaluee AS

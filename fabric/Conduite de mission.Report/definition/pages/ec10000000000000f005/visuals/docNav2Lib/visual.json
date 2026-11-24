@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "docNav2Lib",
   "position": {
-    "x": 600,
+    "x": 599,
     "y": 161,
     "z": 1700,
     "height": 24,
-    "width": 183,
+    "width": 184,
     "tabOrder": 1700
   },
   "visual": {

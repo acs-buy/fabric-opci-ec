@@ -24,7 +24,7 @@ GO
 
 
 -- tr_publication_exige_synthese : 1 refus
--- --- 4 : O2, la porte de l'etape 5 ----------------------------------
+-- --- 4 : la porte de l'etape 5 ----------------------------------
 -- pr_publier_vl teste desormais la synthese visee, en plus des lots
 -- proposes. La procedure n'est pas reecrite : un declencheur sur la
 -- table des publications porte le test, ce qui evite de dupliquer les

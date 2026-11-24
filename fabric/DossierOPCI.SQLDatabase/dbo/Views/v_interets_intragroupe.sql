@@ -1,11 +1,11 @@
 -- =====================================================================
 -- LES 4 VUES DES INTERETS INTRAGROUPE ET DES CHARGES DE FONCTIONNEMENT,
--- extraites du script 91 le 04/09/2026.
+-- extraites le 04/09/2026 de la creation de dbo.emprunt_intragroupe.
 --
--- POURQUOI CETTE EXTRACTION. Le script 91 est joue AVANT le 66 et le 67,
--- qui ont besoin de ses 3 subdivisions de comptes et de sa table
--- d'emprunts pour batir les balances. Or ces 4 vues lisent dbo.ref_arrete
--- et les ecritures, que les scripts 72 et 67 creent apres lui : le rejeu
+-- POURQUOI CETTE EXTRACTION. La creation de dbo.emprunt_intragroupe et de
+-- 3 subdivisions de comptes est jouee AVANT les semis du jeu, qui en ont
+-- besoin pour batir les balances. Or ces 4 vues lisent dbo.ref_arrete
+-- et les ecritures, creees apres elle : le rejeu
 -- a rendu « Invalid object name 'dbo.ref_arrete' » au 1er script de la
 -- reprise. C'est le quatrieme defaut d'ordre de la serie, et la cause est
 -- toujours la meme : un script qui apprend a lire une table doit etre

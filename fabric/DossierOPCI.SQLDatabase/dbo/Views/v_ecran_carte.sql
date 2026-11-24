@@ -1,4 +1,4 @@
--- 169 -- La cinquieme carte de l'arrete, du decompte de lignes au reste a faire
+-- La cinquieme carte de l'arrete, du decompte de lignes au reste a faire
 -- 12/09/2026. La carte « Lignes de bilan actif » affichait 1 166, soit le modele de bilan
 -- multiplie par 53 bilans, et 22 une fois filtree, soit ce modele lui-meme. Elle n'informait
 -- personne, et le bilan de l'arrete courant est COMPLET, ses 22 lignes portant toutes une valeur.
@@ -6,16 +6,16 @@
 -- reparties sur 22 tableaux des articles 332 a 336. La carte change donc de sujet, du bilan a
 -- l'annexe, et ce changement se porte aussi dans la maquette 42.
 -- L'invariant des 5 cartes par parcours est respecte : la carte est REMPLACEE, non ajoutee.
--- 167 -- Ce que reference_num veut dire, carte par carte
+-- Ce que reference_num veut dire, carte par carte
 -- 12/09/2026. L'audit des 11 cartes a rapport a montre que reference_num porte 3 sens differents
--- sans que rien ne le dise, et l'agent Fabric IQ s'appretait a brancher des cartes a comparaison
+-- sans que rien ne le dise, et des cartes a comparaison allaient etre branchees
 -- dessus. La colonne reference_nature les separe : DENOMINATEUR, ANTERIEUR, SOUS_ENSEMBLE.
 -- Le cas qui a motive l'ajout : ACTIFS porte 160 et 159, LOTS_PROPOSES porte 2 et 1, et dans les
 -- 2 cas la reference est une PARTIE de la valeur, les actifs calculables et les lots perimes.
 -- Une carte a comparaison y aurait affiche un ecart flatteur disant l'inverse de la realite.
 -- A_DECLARER est un defaut voulu et bruyant, pour qu'une carte ajoutee plus tard sans nature se
 -- signale a l'ecran plutot que de tomber sans bruit dans la mauvaise categorie.
--- 166 -- La carte des acceptations, denominateur ramene aux vehicules
+-- La carte des acceptations, denominateur ramene aux vehicules
 -- 12/09/2026. Deuxieme occurrence du meme defaut dans la meme journee, trouvee en cherchant si les
 -- 15 valeurs nulles des questions d'acceptation etaient un trou du jeu ou un fait de structure.
 -- C'est un fait de structure : la base porte 2 vehicules et 14 filiales, et AUCUNE filiale ne

@@ -1,13 +1,13 @@
 -- ------------------------------------------------------------------ n° 14 : ecarter une ligne, colonnes d'ecart de l'objet n° 10
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 -- Raisons de [Blocage ecarter la ligne], dans l'ordre de blocages() de la maquette : mode TEXTE, action_propre, droit,
--- actions_de_ligne 0, puis referentiel sans colonnes d'ecart (decision D-c de la session base des 19 et 20/10/2026) :
+-- actions_de_ligne 0, puis referentiel sans colonnes d'ecart (arrete les 19 et 20/10/2026) :
 -- ref_norme, ref_question, ref_reference et ref_sujet_tenue refusent en 50855, avant toute ecriture, avec la raison que
 -- la mesure nomme (RAISONS_SANS_ECART), le bouton etant gris ; un autre referentiel sans colonnes d'ecart (COL_LENGTH
 -- lu a l'execution ; aucun au 20/10/2026, controle C9) refuse en 50855 en nommant les 3 colonnes absentes. Une ligne
 -- deja ecartee refuse en 50857 en nommant la ligne et la date de son ecart, la raison que [Blocage ecarter la ligne]
--- nomme (« ligne écartée depuis le jj/mm/aaaa », ecartee_le de v_ecran_referentiel_lignes, script 321), le bouton gris.
--- Motif facultatif, 600 caracteres au plus (contrat n° 14, B21).
+-- nomme (« ligne écartée depuis le jj/mm/aaaa », ecartee_le de v_ecran_referentiel_lignes), le bouton gris.
+-- Motif facultatif, 600 caracteres au plus (contrat n° 14).
 CREATE   PROCEDURE dbo.pr_ecran_ecarter_ligne_referentiel
     @referentiel NVARCHAR (200) = NULL,
     @cle         NVARCHAR (400) = NULL,
@@ -52,7 +52,7 @@ BEGIN
             SET @m = N'Écart refusé sur « ' + @lib + N' » : seule la valeur se modifie : les codes des paramètres sont fixés par l’outil.';
             EXEC dbo.pr_e5_refuser 50834, @m;
         END;
-        -- decision D-c : les 4 referentiels sans colonnes d'ecart, la raison de [Blocage ecarter la ligne] (SWITCH sur
+        -- les 4 referentiels sans colonnes d'ecart, la raison de [Blocage ecarter la ligne] (SWITCH sur
         -- [Referentiel choisi]), qui ne depend pas de la ligne choisie
         IF @t IN ('ref_norme', 'ref_question', 'ref_reference', 'ref_sujet_tenue')
         BEGIN

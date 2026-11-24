@@ -1,5 +1,5 @@
 
--- pr_ajouter_filiale : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_ajouter_filiale : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_ajouter_filiale
     @client         VARCHAR (20),
     @code           VARCHAR (20),

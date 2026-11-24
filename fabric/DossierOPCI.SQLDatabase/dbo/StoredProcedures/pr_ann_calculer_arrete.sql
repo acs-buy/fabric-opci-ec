@@ -1,6 +1,6 @@
 
 -- Les articles, dans l'ordre de l'oracle (Table.calculer). Un article dont la procedure n'existe pas encore est
--- ignore : B1 se pose article par article, chacun prouve a l'oracle.
+-- ignore : se pose article par article, chacun prouve a l'oracle.
 CREATE   PROCEDURE dbo.pr_ann_calculer_arrete @c INT, @a VARCHAR (20)
 AS
 BEGIN

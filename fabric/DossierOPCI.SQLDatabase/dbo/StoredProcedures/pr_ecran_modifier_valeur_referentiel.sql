@@ -1,13 +1,13 @@
 -- ===================================================================== 2. LES 6 PROCEDURES
 -- ------------------------------------------------------------------ n° 11 : modifier la valeur d'une cellule
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 -- Contrat de la maquette (objet n° 11) ; raisons de [Blocage modifier la valeur], dans l'ordre de la maquette : mode
 -- TEXTE, action_propre, droit, colonne non modifiable de la liste (une colonne de la liste que la table ne porte pas
 -- comprise), lecture_seule (adresse d'installation) ; puis le contrat seul : colonne d'un parametre autre que la valeur ;
 -- une colonne de la cle se change par « Changer le code » ; libelle d'enumeration traduit en code par ref_libelle_valeur ;
 -- « Reference » recue en « norme reference » ; ref_reference : une norme ou une reference neuve recopie l'intitule de
 -- ref_article et vide citation et lecture sur piece ; ref_parametre : la valeur d'un SEUIL seul, entier positif ou nul.
--- Une valeur inchangee ne s'ecrit pas. La designation de la ligne, relue apres l'ecriture, reste unique (B13).
+-- Une valeur inchangee ne s'ecrit pas. La designation de la ligne, relue apres l'ecriture, reste unique.
 CREATE   PROCEDURE dbo.pr_ecran_modifier_valeur_referentiel
     @referentiel NVARCHAR (200) = NULL,
     @cle         NVARCHAR (400) = NULL,
@@ -152,7 +152,7 @@ BEGIN
         SET @type = dbo.fn_e5_type_colonne(@t, @col);
         SET @affiche = @valeur;
         -- la cle etrangere d'une colonne : une reference normative se saisit « norme reference » (contrat n° 11), une
-        -- question de reference par sa reference (B13), un sujet des questions sur la tenue par son libelle (B14), comme
+        -- question de reference par sa reference, un sujet des questions sur la tenue par son libelle, comme
         -- la liste les montre
         SELECT TOP (1) @fk_cible = OBJECT_NAME(fk.referenced_object_id), @fk_col = rc.name
         FROM sys.foreign_keys fk
@@ -225,7 +225,7 @@ BEGIN
         END
         ELSE IF @fk_cible IN (N'ref_sujet_tenue') AND @fk_col = N'code'
         BEGIN
-            -- B14 : un sujet des questions sur la tenue se designe par son libelle, unique (objet n° 34), que la liste
+            -- un sujet des questions sur la tenue se designe par son libelle, unique (objet n° 34), que la liste
             -- rend a la place du code ; la colonne le recoit, ou le code, et enregistre le code
             SET @sql = N'SELECT TOP (1) @v = CAST(x.[code] AS NVARCHAR (MAX)), @affiche = CAST(x.[libelle] AS NVARCHAR (MAX)) FROM dbo.'
                      + QUOTENAME(@fk_cible) + N' AS x WHERE x.[libelle] = @valeur OR CAST(x.[code] AS NVARCHAR (MAX)) = @valeur'
@@ -245,9 +245,8 @@ BEGIN
         ELSE IF @type_nom IN (N'tinyint', N'smallint', N'int', N'bigint')
         BEGIN
             SET @d = dbo.fn_e5_nombre(@valeur);
-            -- 341 (25/10/2026) : un nombre d'au moins 9999999999999999999999999999,5 en valeur absolue deborderait
+            -- 25/10/2026 : un nombre d'au moins 9999999999999999999999999999,5 en valeur absolue deborderait
             -- ROUND (erreur 8115, en anglais) : il se refuse ici, avant tout arrondi, au texte du refus qui suit (50849).
-            -- Genere par 61_DEPLOIEMENT/generer_e5_341_correctif_arrondi_n11.py.
             IF ABS(@d) >= 9999999999999999999999999999.5
             BEGIN
                 SET @m = N'« Nouvelle valeur » : « ' + @valeur + N' » n’est pas un nombre entier que la colonne « ' + @lib_col + N' » admet.';
@@ -270,9 +269,8 @@ BEGIN
                 SET @m = N'« Nouvelle valeur » : « ' + @valeur + N' » n’est pas un nombre, et la colonne « ' + @lib_col + N' » en attend un.';
                 EXEC dbo.pr_e5_refuser 50849, @m;
             END;
-            -- 341 (25/10/2026) : un nombre d'au moins 9999999999999999999999999999,5 en valeur absolue deborderait
+            -- 25/10/2026 : un nombre d'au moins 9999999999999999999999999999,5 en valeur absolue deborderait
             -- ROUND (erreur 8115, en anglais) : il se refuse ici, avant tout arrondi, au texte du refus qui suit (50849).
-            -- Genere par 61_DEPLOIEMENT/generer_e5_341_correctif_arrondi_n11.py.
             IF ABS(@d) >= 9999999999999999999999999999.5
             BEGIN
                 SET @m = N'« Nouvelle valeur » : « ' + @valeur + N' » dépasse la colonne « ' + @lib_col + N' », qui porte au plus '
@@ -326,7 +324,7 @@ BEGIN
         IF NOT (ISNULL(@fk_cible, N'') IN (N'ref_reference', N'ref_question') AND ISNULL(@fk_col, N'') = N'id')
            AND NOT (ISNULL(@fk_cible, N'') IN (N'ref_sujet_tenue') AND ISNULL(@fk_col, N'') = N'code')
             EXEC dbo.pr_e5_controler_reference @t, @col, @v, N'Nouvelle valeur';
-        -- ref_reference : une norme ou une reference neuve recopie l'intitule de l'article (D29 de l'existant)
+        -- ref_reference : une norme ou une reference neuve recopie l'intitule de l'article
         IF @t = 'ref_reference' AND @col IN ('norme', 'reference')
         BEGIN
             SELECT @n_norme = CASE WHEN @col = 'norme' THEN CAST(@v AS VARCHAR (14)) ELSE r.norme END,
@@ -360,7 +358,7 @@ BEGIN
                  + @clause + N'; SET @n = @@ROWCOUNT;';
         EXEC sp_executesql @sql, N'@k1 NVARCHAR (400), @k2 NVARCHAR (400), @v NVARCHAR (MAX), @intitule NVARCHAR (400), @n INT OUTPUT',
              @k1, @k2, @v, @intitule, @n = @n OUTPUT;
-        -- la designation de la ligne reste unique dans son referentiel (B13) : relue apres l'ecriture ; une designation
+        -- la designation de la ligne reste unique dans son referentiel : relue apres l'ecriture ; une designation
         -- inchangee ne se refuse pas (un doublon anterieur, que le controle C8 releve, ne vient pas de cette ecriture)
         EXEC dbo.pr_e5_designation @t, @canon, @cle, @ligne_n OUTPUT, @nb_d OUTPUT;
         IF @nb_d > 1 AND @ligne_n <> @ligne

@@ -1,11 +1,11 @@
 
--- --- depuis 63_SQL/127_valeur_historique_des_filiales.sql : v_reprise_275_a_passer ---
+-- --- v_reprise_275_a_passer ---
 -- --- 3 : la reprise du compte 275 de la mere ------------------------
 -- CE QUE LA PROCEDURE FAIT, ET CE QU'ELLE NE FAIT PAS. Elle rapproche le
 -- compte 275 de la mere de la valeur que les actifs nets de ses filiales
 -- justifient, a la quote-part, et passe l'ecart. Elle ne touche a aucune
--- filiale. Le mode a blanc est le defaut, pour la meme raison qu'au
--- script 126 : cette ecriture deplace l'actif net de l'OPCI, donc la
+-- filiale. Le mode a blanc est le defaut, pour la meme raison que pour
+-- pr_passer_ecritures_miroir : cette ecriture deplace l'actif net de l'OPCI, donc la
 -- valeur liquidative.
 CREATE   VIEW dbo.v_reprise_275_a_passer AS
 WITH theorique AS (

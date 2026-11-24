@@ -3,11 +3,11 @@
   "name": "revLivDevMotif",
   "position": {
     "x": 336,
-    "y": 1112,
-    "z": 37600,
-    "height": 48,
+    "y": 1098,
+    "z": 39150,
+    "height": 62,
     "width": 376,
-    "tabOrder": 37600
+    "tabOrder": 39150
   },
   "visual": {
     "visualType": "textSlicer",
@@ -121,7 +121,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },

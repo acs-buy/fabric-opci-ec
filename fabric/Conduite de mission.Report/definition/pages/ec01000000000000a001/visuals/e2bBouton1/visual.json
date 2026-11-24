@@ -3,7 +3,7 @@
   "name": "e2bBouton1",
   "position": {
     "x": 937,
-    "y": 887,
+    "y": 735,
     "z": 53400,
     "height": 36,
     "width": 197,
@@ -43,7 +43,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },
@@ -117,7 +117,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },
@@ -191,7 +191,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },

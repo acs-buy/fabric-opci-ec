@@ -1,5 +1,5 @@
--- 176 -- Les grilles de travail filtrees par le contexte du reviseur
--- 13/09/2026. Suite du script 175, qui avait branche les 5 grilles de l'ecran 1.1. Celui-ci
+-- Les grilles de travail filtrees par le contexte du reviseur
+-- 13/09/2026. Suite du branchement des 5 grilles de l'ecran 1.1 (v_ecran_c11_*). Cette suite
 -- traite tous les objets des 4 parcours de travail qui portent l'entite, l'arrete ou les 2.
 -- La regle est la meme partout : un EXISTS sur v_mon_perimetre, jamais une jointure, pour que
 -- la vue reste SAISISSABLE. Une vue qui joint 2 tables n'accepte plus l'insertion.

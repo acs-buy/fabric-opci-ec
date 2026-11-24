@@ -1,4 +1,4 @@
--- Objet n° 2 de l'ecran 5 (lot 1) : l'inventaire des referentiels, calcule en direct sur chaque table inscrite, sans
+-- Objet n° 2 de l'ecran 5 : l'inventaire des referentiels, calcule en direct sur chaque table inscrite, sans
 -- la table inventaire_referentiel ni sa procedure de releve, qui restent en base sans lecteur. Les 10 colonnes
 -- d'avant gardent nom, type et nullabilite (table du modele publie, en directQuery) ; derniere_modification reste
 -- un datetime2(3), son texte va dans derniere_modification_texte ; releve_le est l'heure de la lecture.
@@ -9,8 +9,6 @@
 -- effet_annexe : le nombre de vehicules que marque le declencheur tr_<table>_annexe_retard, 0 sans lui ; ceux de
 -- ref_entite, ref_compte_entite et saisie_annexe (fn_ann_vehicules) ne marquent que les vehicules de l'entite
 -- modifiee : pour eux, ce nombre est un plafond.
--- Pose par 63_SQL/322_e5_vues_choix_inventaire_seuils_articles.sql, genere par 61_DEPLOIEMENT/generer_e5_322_vues_choix_inventaire_seuils_articles.py ;
--- ne pas modifier a la main : regenerer le script quand une table s'inscrit ou qu'une colonne change.
 CREATE   VIEW dbo.v_inventaire_referentiel AS
 WITH t AS (
     SELECT CAST('ref_compte' AS VARCHAR (120)) AS table_nom, COUNT(*) AS lignes, COUNT(x.modifie_le) AS lignes_modifiees,

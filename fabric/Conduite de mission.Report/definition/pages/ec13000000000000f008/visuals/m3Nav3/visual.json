@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "m3Nav3",
   "position": {
-    "x": 1230,
+    "x": 1229,
     "y": 397,
     "z": 14000,
     "height": 36,
-    "width": 321,
+    "width": 322,
     "tabOrder": 5200
   },
   "visual": {

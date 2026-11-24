@@ -1,5 +1,5 @@
 
--- --- 2 : la synthese par entite et arrete, ecran E1-B ---------------
+-- --- 2 : la synthese par entite et arrete, ecran des documents attendus ---
 CREATE   VIEW dbo.v_documents_attendus_synthese AS
 SELECT entite, arrete, date_arrete,
        COUNT(*)                                              AS exigences,

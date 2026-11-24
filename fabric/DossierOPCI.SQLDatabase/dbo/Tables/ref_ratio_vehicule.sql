@@ -19,14 +19,33 @@ CREATE TABLE [dbo].[ref_ratio_vehicule] (
 
 GO
 
+CREATE   TRIGGER dbo.[tr_ref_ratio_vehicule_horodatage]
+ON dbo.[ref_ratio_vehicule]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    -- Objet n° 16 de l'ecran 5 : l'auteur est celui que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
+    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_ratio_vehicule] t
+    JOIN inserted i ON t.[entite] = i.[entite] AND t.[code] = i.[code];
+END;
+
+GO
+
 CREATE   TRIGGER dbo.[tr_ref_ratio_vehicule_garde]
 ON dbo.[ref_ratio_vehicule]
 AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- Generee par 61_DEPLOIEMENT/generer_e5_318_tables_gardees.py (script 318, ecran 5, objet n° 21) : ne pas
-    -- modifier a la main. pr_garder_referentiel sort sans ecrire sur cette table, dont action_propre est posee
+    -- Ecran 5, objet n° 21. pr_garder_referentiel sort sans ecrire sur cette table, dont action_propre est posee
     -- (objet n° 1) : sa garde s'ecrit ici, en 2 temps.
     -- 1. Le role, comme les autres gardes (objets n° 16 et 17) : l'identite jugee est celle que la procedure d'ecran
     --    transmet (contexte par), a defaut le compte de la session. Le refus 50074 s'inscrit dans journal_refus apres
@@ -37,10 +56,9 @@ BEGIN
     --    une limite d'une autre forme de vehicule ; une limite sans unite_seuil ; un seuil negatif ; un seuil
     --    au-dela de 1 pour une limite TAUX (100 pour cent). Puis le refus propre a la garde : une source autre que
     --    valeur_laissee, que la procedure n'ecrit jamais. ENDETTEMENT_40, retenue par le cabinet, admet le seuil des
-    --    statuts d'un OPCI professionnel (decision D9 du 17/10/2026). Les textes citent les memes valeurs que la
+    --    statuts d'un OPCI professionnel (decision du 17/10/2026). Les textes citent les memes valeurs que la
     --    procedure : la limite du texte avec U+202F avant « % » (l.limite, sa mise en forme), le libelle, l'article et
-    --    les formes tels que la base les porte. La garde porte ses propres numeros ; leur correspondance avec ceux de
-    --    la procedure est dans l'en-tete du script 318, hors de ce corps.
+    --    les formes tels que la base les porte. La garde porte ses propres numeros, distincts de ceux de la procedure.
     DECLARE @qui NVARCHAR (400) = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400));
     IF dbo.fn_peut_ecrire_referentiel('ref_ratio_vehicule', @qui) = 0
     BEGIN
@@ -85,30 +103,10 @@ BEGIN
     ORDER BY i.entite, i.code;
     IF @n IS NOT NULL
     BEGIN
-        -- THROW lit « % » comme un format : il se double (scripts 297 a 299), comme dans pr_e5_refuser (script 323).
+        -- THROW lit « % » comme un format : il se double, comme dans pr_e5_refuser.
         DECLARE @t NVARCHAR (4000) = REPLACE(@m, N'%', N'%%');
         THROW @n, @t, 1;
     END;
-END;
-
-GO
-
-CREATE   TRIGGER dbo.[tr_ref_ratio_vehicule_horodatage]
-ON dbo.[ref_ratio_vehicule]
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    -- Objet n° 16 de l'ecran 5 (script 317) : l'auteur est celui que la procedure d'ecran pose dans le
-    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
-    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_ratio_vehicule] t
-    JOIN inserted i ON t.[entite] = i.[entite] AND t.[code] = i.[code];
 END;
 
 GO

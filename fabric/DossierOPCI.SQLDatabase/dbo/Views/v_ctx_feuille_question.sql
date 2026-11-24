@@ -1,5 +1,5 @@
--- 182 -- Les 3 vues que la cle primaire ne sauve pas recoivent une cle_ecran
--- 13/09/2026. Suite du script 181. Sur 73 vues lisibles par une grille, 52 portaient deja
+-- Les 3 vues que la cle primaire ne sauve pas recoivent une cle_ecran
+-- 13/09/2026. Suite de v_cle_de_grille. Sur 73 vues lisibles par une grille, 52 portaient deja
 -- cle_ecran, 17 recoivent la cle primaire de leur table, 1 sa colonne de regroupement, et 3
 -- restaient sans cle parce que leur table a une cle primaire de 2 colonnes :
 --   feuille_question    (cote varchar, question_id int)   lue par v_ctx_feuille_question
@@ -11,7 +11,7 @@
 -- Une cle COMPOSITE n'a pas ete eprouvee : ces 3 vues recoivent donc la solution deja employee
 -- 52 fois dans ce projet, une colonne cle_ecran qui concatene les composantes.
 --
--- FORME DE LA CLE, reprise du script 144 sans y rien changer : les composantes converties en
+-- FORME DE LA CLE, reprise des vues v_ecran_* sans y rien changer : les composantes converties en
 -- nvarchar(200), le NULL rendu par une chaine vide, et le separateur barre verticale.
 -- CONSEQUENCE A CONNAITRE, ET ELLE A DEJA COUTE : la barre verticale interdit d'employer le pipe
 -- comme separateur de sqlcmd sur ces vues. Le projet emploie le tilde partout pour cette raison.

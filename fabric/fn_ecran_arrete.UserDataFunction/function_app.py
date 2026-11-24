@@ -1,10 +1,8 @@
 """fn_ecran_arrete : les boutons de l'ecran Arrete (ecran 4), une fonction par bouton.
 
-Lot 4 de la feuille de route 65_JOURNAL/roadmap_ecran_4_arrete.md ; maquette retenue
-20_LIVRABLES_V2/PARCOURS_ECRANS/82_arrete_option_2.html (objets de fonction n° 163 a 169). Memes regles que
-fn_ecran_valorisation : chaque fonction appelle UNE procedure d'ecran de la base (lot 1 de la feuille de route), rend
-la phrase du bouton, prend l'utilisateur dans le contexte d'execution (PreferredUsername) et jamais dans un parametre,
-et un refus remonte en francais par UserThrownError. Connexion : « DossierOPCI » (base). Aucune autre bibliotheque que
+Memes regles que fn_ecran_valorisation : chaque fonction appelle UNE procedure d'ecran de la base, rend la phrase du
+bouton, prend l'utilisateur dans le contexte d'execution (PreferredUsername) et jamais dans un parametre, et un refus
+remonte en francais par UserThrownError. Connexion : « DossierOPCI » (base). Aucune autre bibliotheque que
 fabric-user-data-functions.
 
 Les etapes de l'ecran et leurs boutons :
@@ -14,13 +12,12 @@ Les etapes de l'ecran et leurs boutons :
                              viser_obligation      -> pr_ecran_viser_obligation_distribution
   3b Decision de l'assemblee decider_distribution  -> pr_ecran_decider_distribution
 
-LES PARAMETRES (reprise du 15/10/2026, decision du candidat « Gris + refus en français »). Seule la decision du bouton
-(VISE ou RENVOYE), constante qui n'est jamais vide, reste obligatoire (sans valeur par defaut). Tout autre parametre a
-une valeur par defaut vide : entite et arrete des selecteurs, le droit (reviseur = [Reviseur connecte] pour la
-proposition, associe = [Associe connecte] pour le visa), le segment « Limite » ou « Categorie » et chaque champ de
-saisie. Motif : un parametre facultatif dont la mesure est vide n'est pas envoye par le bouton
-(GUIDE_API_RAPPORT_POWER_BI.md, § 17.43, point 8) ; sans valeur par defaut, la fonction ne pourrait pas le refuser en
-francais, et un parametre obligatoire vide desactive le bouton avec une bulle anglaise (meme guide, § 3.2, point 2).
+LES PARAMETRES. Seule la decision du bouton (VISE ou RENVOYE), constante qui n'est jamais vide, reste obligatoire (sans
+valeur par defaut). Tout autre parametre a une valeur par defaut vide : entite et arrete des selecteurs, le droit
+(reviseur = [Reviseur connecte] pour la proposition, associe = [Associe connecte] pour le visa), le segment « Limite »
+ou « Categorie » et chaque champ de saisie. Motif : un parametre facultatif dont la mesure est vide n'est pas envoye
+par le bouton ; sans valeur par defaut, la fonction ne pourrait pas le refuser en francais, et un parametre
+obligatoire vide desactive le bouton avec une bulle anglaise.
 Learn, « Fabric user data function programming model overview », « Default values » : un parametre qui a une valeur
 par defaut est facultatif a l'appel. Une valeur vide est refusee en francais avant toute lecture ou procedure de la
 base : le vehicule et l'arrete (_selecteurs : le texte de 50701 de fn_e3_refus_commun pour le vehicule, et pour
@@ -29,13 +26,13 @@ pas un arrete inconnu), puis le droit (_droit) ;
 le refus est ensuite pose et journalise comme tout refus (_rendre). Le champ de saisie vide reste refuse par la base,
 ou par la fonction quand la base ne nomme pas le champ.
 
-LE GRIS PAR DROIT OU PAR ETAT (decision du candidat du 15/10/2026). Sur les ecrans 4 et 5, un bouton de fonction sans
-droit ou hors d'etat prend la couleur grise par une mesure et reste cliquable : la fonction refuse alors en francais.
+LE GRIS PAR DROIT OU PAR ETAT. Sur les ecrans 4 et 5, un bouton de fonction sans droit ou hors d'etat prend la
+couleur grise par une mesure et reste cliquable : la fonction refuse alors en francais.
 Couche de la fonction, dans cet ordre, avant tout appel de procedure : les selecteurs (vehicule, puis arrete, non
 vides), le droit (le parametre de droit egal a la personne connectee), puis, pour la decision, l'etat que la procedure
 ne lit pas (arrete annuel, lu sur ref_arrete).
 Les autres etats (arrete annuel ouvert, valeur liquidative publiee, base proposee, categorie visee, arrete valide pour
-le client, limite sans objet) sont refuses par la base elle-meme, dans l'ordre de ses procedures (lot 1).
+le client, limite sans objet) sont refuses par la base elle-meme, dans l'ordre de ses procedures.
 
 LE LIBELLE D'UN SEGMENT EST TRADUIT EN CODE PAR LA FONCTION : la limite par ref_ratio_memoire (code ou libelle), la
 categorie d'obligation par dbo.fn_e4_categorie, la categorie de la decision par ref_obligation_distribution (RESULTAT,
@@ -56,7 +53,7 @@ un nombre est refuse en nommant le champ. UNE DATE SAISIE se lit jj/mm/aaaa (ou 
 
 UNE ERREUR NON PREVUE REMONTE EN FRANCAIS : seul un refus de la base (numero d'au moins 50000, THROW) devient le texte du
 bouton ; toute autre erreur (moteur SQL, pilote, Python) rend le texte francais de l'erreur d'execution, le detail
-technique allant au seul journal des refus (guide de l'element Plan, point 47).
+technique allant au seul journal des refus.
 
 LE NOM DE LA CONNEXION. L'argument de la connexion s'appelle « connexion », et non « base » comme dans les autres
 elements : « base » est le parametre de saisie de proposer_obligation (maquette retenue), et un nom d'argument ne sert
@@ -82,9 +79,21 @@ def _qui(ctx) -> str:
 
 
 def _texte_pilote(exc) -> str:
-    """Le texte de l'erreur du pilote ODBC : le 2e argument de l'exception pyodbc, (etat SQL, texte), sinon str(exc)."""
+    """Le texte de l'erreur ODBC, brut et non par le repr du tuple. Une erreur du pilote porte (etat SQL, texte), le
+    texte commencant par « [ » ; une erreur levee par pyodbc lui-meme porte (texte, etat SQL), et le 2e argument seul
+    rendait l'etat (HY000) au lieu du texte. Une erreur sans diagnostic du pilote (unixODBC, hote Linux de la
+    fonction) porte (HY000, « The driver did not supply an error! ») : etat en 1er, texte sans « [ », lu en 2e.
+    Toute autre forme se lit par str(exc), comme avant. Meme lecture que fn_ecran_revision et fn_ecran_client
+    (24/11/2026)."""
     a = getattr(exc, "args", ())
-    return a[1] if len(a) > 1 and isinstance(a[1], str) else str(exc)
+    if len(a) > 1 and isinstance(a[0], str) and isinstance(a[1], str):
+        if a[1].startswith("["):
+            return a[1]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[1]):
+            return a[0]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[0]):
+            return a[1]
+    return str(exc)
 
 
 def _message_sql(exc) -> str:
@@ -190,8 +199,10 @@ def _poser(g: _Action, message, genre: str, procedure: str, journal: bool = Fals
             pass
 
 
-TEXTE_ERREUR = ("Action interrompue par une erreur d'exécution. Le détail technique est consigné au journal des refus ; "
-                "relisez l'écran avant de recommencer.")
+# LE TEXTE D'UNE ERREUR NON PREVUE : celui de fn_ecran_client et fn_ecran_revision ; 982,5 px a la chasse publiee :
+# 1 ligne a ec40 et ec41 (coupe 1 487 px), dans la carte de 1 503 px d'ec42, a ec01 et ec02 (coupe 1 487 px).
+TEXTE_ERREUR = ("L'action n'a pas abouti à cause d'un problème technique. Vérifiez à l'écran ce qui a été enregistré, "
+                "puis réessayez. Si le problème revient, prévenez l'administrateur.")
 
 
 def _rendre(g: _Action, nom: str, faire):
@@ -435,8 +446,8 @@ def proposer_obligation(connexion: fn.FabricSqlConnection, ctx: fn.UserDataFunct
                         source: str = "") -> str:
     """Bouton « Proposer la base » : la base de calcul et sa source de la categorie choisie au segment « Catégorie ».
     La fonction refuse d'abord un vehicule ou un arrete vide (_selecteurs). Le parametre reviseur est lie a la mesure
-    [Reviseur connecte] : il doit egaler la personne connectee, vide refuse (droit, decision du 09/10/2026, le
-    reviseur propose la base). pr_ecran_proposer_obligation refuse ensuite, dans cet ordre :
+    [Reviseur connecte] : il doit egaler la personne connectee, vide refuse (droit : le reviseur
+    propose la base). pr_ecran_proposer_obligation refuse ensuite, dans cet ordre :
     categorie, base ou source vide (50810 a 50812), categorie inconnue (50813), role PREPARATEUR absent (50814),
     arrete qui n'est pas un arrete annuel ouvert (50815), categorie deja visee (50816) ; a l'ecriture, 50086 garde le
     publiant de la valeur liquidative."""
@@ -462,9 +473,9 @@ def viser_obligation(connexion: fn.FabricSqlConnection, ctx: fn.UserDataFunction
                      motif: str = "") -> str:
     """Boutons « Viser la catégorie » (decision VISE) et « Renvoyer la catégorie » (decision RENVOYE). decision,
     constante du bouton, est le seul parametre obligatoire, donc le 1er de la signature ; l'invocation porte chaque
-    parametre sous son nom (corps releve au lot 5, R8). La fonction refuse d'abord un vehicule ou un arrete vide
-    (_selecteurs). Le parametre associe est lie a la mesure [Associe connecte] : il doit egaler la personne connectee,
-    vide refuse (droit, decision du 09/10/2026, l'associe signataire vise chaque categorie).
+    parametre sous son nom. La fonction refuse d'abord un vehicule ou un arrete vide (_selecteurs). Le parametre
+    associe est lie a la mesure [Associe connecte] : il doit egaler la personne connectee, vide refuse (droit :
+    l'associe signataire vise chaque categorie).
     pr_ecran_viser_obligation_distribution refuse ensuite, dans cet ordre : categorie vide (50820), decision hors VISE
     et RENVOYE (50821), renvoi sans motif (50822), categorie inconnue (50823), puis les 5 refus 50036 de
     pr_viser_obligation_distribution (aucun arrete annuel, valeur liquidative non publiee, base non proposee, categorie

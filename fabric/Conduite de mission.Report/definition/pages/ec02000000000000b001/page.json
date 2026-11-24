@@ -873,11 +873,6 @@
       "type": "NoFilter"
     },
     {
-      "source": "revLivDevPar",
-      "target": "revCycles",
-      "type": "NoFilter"
-    },
-    {
       "source": "revLivVerrouEtat",
       "target": "revCycles",
       "type": "NoFilter"
@@ -1775,11 +1770,6 @@
     {
       "source": "revProgCycles",
       "target": "revLivDevMotif",
-      "type": "NoFilter"
-    },
-    {
-      "source": "revProgCycles",
-      "target": "revLivDevPar",
       "type": "NoFilter"
     },
     {
@@ -5170,6 +5160,76 @@
     {
       "source": "revProgCycles",
       "target": "revAjoutEnonce",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclBlocage2",
+      "target": "revCycles",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclBlocage3",
+      "target": "revCycles",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revProgCycles",
+      "target": "revCclBlocage2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revProgCycles",
+      "target": "revCclBlocage3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclQuestions",
+      "target": "revCclBlocage2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclQuestions",
+      "target": "revCclBlocage3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclSynthese",
+      "target": "revCclBlocage2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclSynthese",
+      "target": "revCclBlocage3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclLots",
+      "target": "revCclBlocage2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclLots",
+      "target": "revCclBlocage3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclConclusionLue",
+      "target": "revCclBlocage2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclConclusionLue",
+      "target": "revCclBlocage3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclRevueLue",
+      "target": "revCclBlocage2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "revCclRevueLue",
+      "target": "revCclBlocage3",
       "type": "NoFilter"
     }
   ]

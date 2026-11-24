@@ -2946,10 +2946,10 @@ Passé ☐ · Échec ☐ · Remarque :
 3. Cliquez « Viser la synthèse ».
 4. Lisez la carte d'état de « Proposer la synthèse ».
 
-**Vous devez obtenir :** La proposition affiche « Synthèse de l'arrêté du 31/12/2025 proposée (n° <id>) : elle attend le visa du chef de mission. ». Le visa est refusé par la base : la zone « MESSAGE » affiche « Action interrompue par une erreur d'exécution. Le détail technique est consigné au journal des refus ; relisez l'écran avant de recommencer. ». La synthèse n'est pas visée : la carte de « Proposer la synthèse » porte « synthèse proposée le <date du jour>, en attente du visa » et l'étape « Contrôler la balance et le groupe » reste grise.
+**Vous devez obtenir :** La proposition affiche « Synthèse de l'arrêté du 31/12/2025 proposée (n° <id>) : elle attend le visa du chef de mission. ». Le visa est refusé par la base : la zone « MESSAGE » affiche « L'action n'a pas abouti à cause d'un problème technique. Vérifiez à l'écran ce qui a été enregistré, puis réessayez. Si le problème revient, prévenez l'administrateur. ». La synthèse n'est pas visée : la carte de « Proposer la synthèse » porte « synthèse proposée le <date du jour>, en attente du visa » et l'étape « Contrôler la balance et le groupe » reste grise.
 
 ```
-Synthèse de l'arrêté du 31/12/2025 proposée (n° <id>) : elle attend le visa du chef de mission. | Action interrompue par une erreur d'exécution. Le détail technique est consigné au journal des refus ; relisez l'écran avant de recommencer.
+Synthèse de l'arrêté du 31/12/2025 proposée (n° <id>) : elle attend le visa du chef de mission. | L'action n'a pas abouti à cause d'un problème technique. Vérifiez à l'écran ce qui a été enregistré, puis réessayez. Si le problème revient, prévenez l'administrateur.
 ```
 
 Passé ☐ · Échec ☐ · Remarque :

@@ -1,5 +1,5 @@
 -- pr_repondre_question : 7 refus
--- --- 9. pr_repondre_question, meme corps qu'au 205, plus la garde du verrou ----------------------
+-- --- 9. pr_repondre_question, meme corps, plus la garde du verrou ----------------------
 CREATE   PROCEDURE dbo.pr_repondre_question
     @cote                  VARCHAR (30),
     @reference             VARCHAR (20),
@@ -10,8 +10,7 @@ CREATE   PROCEDURE dbo.pr_repondre_question
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : fn_ecran_client.repondre_question refuse ces champs avant l'appel.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -21,7 +20,6 @@ BEGIN
         THROW 51203, N'Choisissez la question dans la grille « Questions du cycle ».', 1;
     IF ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @cote COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51213, N'Réponse refusée : la question choisie n''est rattachée à aucune feuille de questions de cet arrêté.', 1;
-    -- 327 fin
     DECLARE @qid INT, @type VARCHAR (20), @options NVARCHAR (200), @entite VARCHAR (20), @arrete VARCHAR (20);
     SELECT @qid = q.id, @type = q.type_reponse, @options = q.options FROM dbo.ref_question q WHERE q.reference = @reference;
     IF @qid IS NULL
@@ -32,8 +30,8 @@ BEGIN
         BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50242, @m1, 1; END
     END;
     SELECT @entite = entite, @arrete = arrete FROM dbo.feuille_travail WHERE cote = @cote;
-    -- 51305, D1 (15/11/2026) : action 12, dossier lu par la cote. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 51305 (15/11/2026) : action 12, dossier lu par la cote. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 51305, N'Action refusée : seule l''équipe du dossier peut répondre à ce questionnaire.', 1;

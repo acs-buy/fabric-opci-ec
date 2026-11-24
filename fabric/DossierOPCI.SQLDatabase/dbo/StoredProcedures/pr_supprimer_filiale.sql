@@ -1,5 +1,5 @@
 
--- pr_supprimer_filiale : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_supprimer_filiale : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_supprimer_filiale
     @client   VARCHAR (20),
     @code     VARCHAR (20),

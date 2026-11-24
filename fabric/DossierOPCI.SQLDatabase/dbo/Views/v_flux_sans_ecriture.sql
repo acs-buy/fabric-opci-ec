@@ -1,8 +1,8 @@
 
--- --- depuis 63_SQL/111_jeu_dividende_siic_et_vente_interne.sql : v_flux_sans_ecriture ---
+-- --- v_flux_sans_ecriture ---
 -- C57 : un flux declare dont aucune ecriture ne porte le montant. Il
 -- n'est PAS attendu a zero : le semis declare 2 flux sans ecriture, a
--- dessein, pour que l'ecran E4-2 montre une rationalisation qui ne
+-- dessein, pour que l'ecran de la rationalisation de la VL montre une rationalisation qui ne
 -- boucle pas. La vue les nomme, pour que personne ne les prenne pour
 -- des ecritures manquantes par oubli.
 CREATE   VIEW dbo.v_flux_sans_ecriture AS

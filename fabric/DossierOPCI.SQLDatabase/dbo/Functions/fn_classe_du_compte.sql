@@ -1,29 +1,29 @@
 -- =====================================================================
--- O9 ET O11 : LES ECRITURES D'UN COMPTE, LA CLASSE DANS LA BALANCE,
+-- LES ECRITURES D'UN COMPTE, LA CLASSE DANS LA BALANCE,
 -- L'ENTITE LIEE D'UN RATTACHEMENT ET LES PARTS A L'ARRETE.
 --
--- O9, CE QUE L'ECRAN E4-0b DEMANDE. Un clic sur une ligne de balance
+-- CE QUE L'ECRAN DES ECRITURES DU COMPTE DEMANDE. Un clic sur une ligne de balance
 -- doit ouvrir les ecritures du compte pour l'arrete, avec le lot, sa
 -- famille, son etat, et l'origine de l'ecriture, question de feuille ou
 -- actif. dbo.v_balance rend les soldes par compte mais aucune vue ne
 -- rend le detail. Elle ne rend pas non plus la classe du compte, que
 -- l'ecran groupe.
 --
--- O11, CE QUE L'ECRAN E1-A2 DEMANDE. Le rattachement d'un compte de
+-- CE QUE L'ECRAN DES COMPTES A RATTACHER DEMANDE. Le rattachement d'un compte de
 -- filiale au plan de l'OPCI ne dit pas a quelle ENTITE le compte se
 -- rapporte quand il porte une operation entre entites : le compte 4551
 -- d'une filiale est la dette envers la mere, et son symetrique chez la
--- mere est une creance. Sans l'entite liee, le controle de symetrie du
--- script 94 doit deviner le couple. Et les parts a l'arrete, que l'etape
+-- mere est une creance. Sans l'entite liee, le controle de symetrie
+-- (v_controle_symetrie_intragroupe) doit deviner le couple. Et les parts a l'arrete, que l'etape
 -- 1 saisit, ne sont portees par aucune table : dbo.mouvement_porteur
 -- porte les mouvements, non le nombre de parts arrete a une date.
 -- A executer contre la BASE SQL Fabric DossierOPCI.
 -- =====================================================================
 
--- --- 1 : O9, la classe du compte dans la balance --------------------
+-- --- 1 : la classe du compte dans la balance --------------------
 -- Elle se lit du premier chiffre du numero de compte. Le plan de
 -- l'article 411-3 a 8 classes, de 1 a 8, et la classe 9 porte le hors
--- bilan, posee par le script 08.
+-- bilan.
 CREATE   FUNCTION dbo.fn_classe_du_compte (@compte VARCHAR (20))
 RETURNS VARCHAR (30)
 AS

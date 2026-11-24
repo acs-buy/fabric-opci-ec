@@ -1,5 +1,5 @@
 -- ------------------------------------------------------------------ le libelle d'une colonne : celui de sa table, sinon celui de « * », sinon son nom
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 CREATE   FUNCTION dbo.fn_e5_libelle_colonne (@table VARCHAR (120), @colonne SYSNAME)
 RETURNS NVARCHAR (128)
 AS

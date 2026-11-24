@@ -1,4 +1,4 @@
--- ecran 5, lot 1, script 324 (61_DEPLOIEMENT/generer_e5_324_questions.py) : genere, ne pas modifier a la main.
+-- ecran 5
 -- Objet n° 33 : « Ecarter la question ». Passe une question a ECARTEE (« écartée ») ; une question repondue s'ecarte
 -- et ne se supprime pas. Associe seul, exige ici, la garde tr_ref_question_garde admettant aussi le reviseur. La
 -- question se recoit par sa reference (segment « Question ») ou par son identifiant. Refus en francais : @par vide,
@@ -47,7 +47,7 @@ BEGIN
             SET @m = N'Écart refusé : la question ' + @ref + N' est déjà écartée.';
             EXEC dbo.pr_e5_refuser 50878, @m;
         END;
-        -- le motif est facultatif, comme au n° 14 (script 323) ; un motif trop long est refuse
+        -- le motif est facultatif, comme au n° 14 (pr_ecran_ecarter_ligne_referentiel) ; un motif trop long est refuse
         IF LEN(@motif) > 600
         BEGIN
             SET @m = N'Écart refusé : le champ « Motif » compte ' + CAST(LEN(@motif) AS NVARCHAR (12))

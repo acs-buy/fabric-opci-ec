@@ -132,7 +132,7 @@ BEGIN
         (N'497',N'Provisions pour risques et charges',N'Provisions pour risques et charges',N'4',N'3',N'49',N'0',NULL,NULL,N'ANC 2021-09 art. 411-3',N'130',NULL,NULL,NULL,NULL),
         (N'51',N'Banques, organismes et établissements financiers',N'Banques, organismes et établissements financiers',N'5',N'2',NULL,N'0',NULL,NULL,N'ANC 2021-09 art. 411-3',N'130',NULL,NULL,NULL,NULL),
         (N'511',N'Comptes à vue (liquidités et concours bancaires courants)',N'Comptes à vue (liquidités et concours bancaires courants)',N'5',N'3',N'51',N'0',NULL,NULL,N'ANC 2021-09 art. 411-3',N'130',NULL,NULL,NULL,NULL),
-        (N'5118',N'Autres disponibilités',N'Autres disponibilités',N'5',N'4',N'511',N'0',NULL,NULL,N'Décision du candidat du 11/10/2026',NULL,NULL,NULL,NULL,NULL),
+        (N'5118',N'Autres disponibilités',N'Autres disponibilités',N'5',N'4',N'511',N'0',NULL,NULL,N'Décision du 11/10/2026',NULL,NULL,NULL,NULL,NULL),
         (N'512',N'Emprunts liés à des actifs immobiliers',N'Emprunts liés à des actifs immobiliers',N'5',N'3',N'51',N'0',NULL,NULL,N'ANC 2021-09 art. 411-3',N'130',NULL,NULL,NULL,NULL),
         (N'513',N'Autres Emprunts',N'Autres Emprunts',N'5',N'3',N'51',N'0',NULL,NULL,N'ANC 2021-09 art. 411-3',N'130',NULL,NULL,NULL,NULL),
         (N'518',N'Intérêts courus',N'Intérêts courus',N'5',N'3',N'51',N'0',NULL,NULL,N'ANC 2021-09 art. 411-3',N'130',NULL,NULL,NULL,NULL),

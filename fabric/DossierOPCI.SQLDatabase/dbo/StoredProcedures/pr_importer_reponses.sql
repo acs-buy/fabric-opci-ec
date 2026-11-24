@@ -10,8 +10,8 @@ BEGIN
     SET XACT_ABORT ON;
     IF NOT EXISTS (SELECT 1 FROM dbo.feuille_travail WHERE cote = @cote)
         THROW 50251, N'Le questionnaire désigné n''existe pas.', 1;
-    -- 51306, D1 (15/11/2026) : action 13, dossier lu par la cote. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 51306 (15/11/2026) : action 13, dossier lu par la cote. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe((SELECT entite FROM dbo.feuille_travail WHERE cote = @cote), (SELECT arrete FROM dbo.feuille_travail WHERE cote = @cote), NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 51306, N'Action refusée : seule l''équipe du dossier peut réimporter les réponses de ce questionnaire.', 1;
@@ -34,9 +34,8 @@ BEGIN
     WHILE @i <= @n
     BEGIN
         SELECT @ref = reference, @rep = reponse, @mo = motif, @co = commentaire FROM @t WHERE rang = @i;
-        -- 329 (24/10/2026) : une reference blanche ou absente garde le refus 50241 d'avant le 327 (demande de la
-        -- session du rapport) ; vide = str.isspace() de Python, comme au 327. Genere par
-        -- 61_DEPLOIEMENT/generer_329_reimport_reference_blanche.py.
+        -- 24/10/2026 : une reference blanche ou absente garde son refus 50241 ; vide = str.isspace() de Python,
+        -- comme pour les champs vides (24/10/2026).
         IF ISNULL(DATALENGTH(TRIM(@r329_blancs COLLATE Latin1_General_100_BIN2 FROM @ref COLLATE Latin1_General_100_BIN2)), 0) = 0
             THROW 50241, N'La question désignée n''existe pas au référentiel.', 1;
         EXEC dbo.pr_repondre_question @cote, @ref, @rep, @mo, @co, @par;   -- un refus annule tout

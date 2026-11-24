@@ -1,5 +1,5 @@
 
--- pr_viser_lot : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_viser_lot : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_viser_lot
     @lot_id     INT,
     @decision   VARCHAR (8),

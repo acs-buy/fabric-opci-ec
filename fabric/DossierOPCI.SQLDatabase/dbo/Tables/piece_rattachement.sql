@@ -24,8 +24,8 @@ CREATE TABLE [dbo].[piece_rattachement] (
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_pr_piece]
-    ON [dbo].[piece_rattachement]([piece_id] ASC);
+CREATE NONCLUSTERED INDEX [ix_pr_actif]
+    ON [dbo].[piece_rattachement]([code_actif] ASC);
 
 
 GO
@@ -36,14 +36,14 @@ CREATE UNIQUE NONCLUSTERED INDEX [uq_piece_rattachement]
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_pr_actif]
-    ON [dbo].[piece_rattachement]([code_actif] ASC);
+CREATE NONCLUSTERED INDEX [ix_pr_piece]
+    ON [dbo].[piece_rattachement]([piece_id] ASC);
 
 
 GO
 
 
--- --- 5 : le verrou K6, le rattachement au premier arrete -----------
+-- --- 5 : le verrou, le rattachement au premier arrete -----------
 -- Une piece de periodicite PERMANENT se rattache au PREMIER arrete de
 -- l'entite. La rattacher a un arrete ulterieur ferait croire que la
 -- lettre de mission a ete signee en cours de dossier, et la vue des

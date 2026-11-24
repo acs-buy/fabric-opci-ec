@@ -1,7 +1,7 @@
 
--- --- 4 : E4-2c, le cadrage des prets --------------------------------
+-- --- 4 : le cadrage des prets --------------------------------
 -- Un seul poste « pret intragroupe », sans decomposition par nature de
--- pret : decision du candidat du 04/09/2026. L'encours vu de la filiale
+-- pret : decision du 04/09/2026. L'encours vu de la filiale
 -- contre la creance vue de l'OPCI, et les interets des 2 cotes.
 CREATE   VIEW dbo.v_cadrage_pret_intragroupe AS
 SELECT f.arrete,

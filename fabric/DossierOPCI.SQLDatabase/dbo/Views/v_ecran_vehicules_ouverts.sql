@@ -1,5 +1,5 @@
--- 180 -- Deux defauts du contexte de travail, releves a l'essai du 13/09/2026
--- Ils viennent de la demonstration menee par l'agent Fabric IQ sur l'ecran d'essai, et non d'une
+-- Deux defauts du contexte de travail, releves a l'essai du 13/09/2026
+-- Ils viennent d'une demonstration sur l'ecran d'essai, et non d'une
 -- relecture de code : la grille « Mon contexte » a accepte SCI-NORD comme vehicule, et les grilles
 -- du dessous se sont videes sans rien dire.
 --

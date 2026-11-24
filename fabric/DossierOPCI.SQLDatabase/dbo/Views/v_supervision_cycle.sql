@@ -22,7 +22,7 @@ perimetre AS (
     SELECT entite, arrete, cycle FROM a_viser
     UNION SELECT entite, arrete, cycle FROM decides
     UNION SELECT entite, arrete, cycle FROM renvois_en_cours
-    -- 06/09/2026, releve par la session des ecrans : un cycle sur lequel une feuille
+    -- 06/09/2026 : un cycle sur lequel une feuille
     -- de travail existe mais qu'aucun visa ne touche encore n'entrait pas au perimetre,
     -- et le reviseur ne pouvait pas y entrer depuis la supervision. Le perimetre suit
     -- le travail reellement ouvert : les feuilles de cycle en font partie.

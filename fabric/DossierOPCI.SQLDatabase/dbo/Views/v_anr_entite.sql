@@ -1,7 +1,7 @@
 
--- --- depuis 63_SQL/46_anr_vl.sql : v_anr_entite ----------------------------------
+-- --- v_anr_entite ---
 -- =====================================================================
--- Tranche T3, critere B7 : l'actif net reevalue de toute entite et la
+-- l'actif net reevalue de toute entite et la
 -- valeur liquidative par part. Article 333-3 : actif net (= capitaux
 -- propres) ; article 321-6 : la classe 19 appartient aux capitaux
 -- propres ; article L. 214-51 du CMF : la valeur liquidative.

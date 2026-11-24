@@ -11,8 +11,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : avant la transaction : aucune demande ne s'ecrit pour un champ vide.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -28,7 +27,6 @@ BEGIN
             THROW 51233, N'Production refusée : le rapport de l’expert-comptable ne se produit pas à cet arrêté en l''état ; il exige notamment la forme arrêtée, l''associé signataire, la revue visée et les comptes annuels produits.', 1;
         THROW 51234, N'Production refusée : aucun arrêté n''est désigné pour le livrable choisi ; l''action n''est pas exécutée.', 1;
     END;
-    -- 327 fin
     DECLARE @qui NVARCHAR (400) = ISNULL(@par, SUSER_SNAME()), @tc INT = @@TRANCOUNT, @version INT, @motif NVARCHAR (2000), @id INT;
     BEGIN TRY
     BEGIN TRANSACTION;

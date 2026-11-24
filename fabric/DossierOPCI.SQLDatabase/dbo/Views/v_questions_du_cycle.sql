@@ -1,8 +1,8 @@
 
 
--- --- 4 : V5, les questions du cycle par dossier ----------------------
+-- --- 4 : les questions du cycle par dossier ----------------------
 -- dbo.feuille_question ne porte pas le cycle : il est sur la feuille. La
--- relation « cycle vers questions » de l'ecran A0 a besoin d'une cle
+-- relation « cycle vers questions » de l'ecran a besoin d'une cle
 -- simple et d'une colonne d'affichage concatenee pour son en-tete.
 CREATE   VIEW dbo.v_questions_du_cycle AS
 SELECT fq.id                              AS feuille_question_id,

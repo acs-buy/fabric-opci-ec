@@ -1,10 +1,11 @@
-
-
+-- --- 3 ---------------------------------------------------------------------------------------------
 -- LA VUE DES OD, avec l'identifiant de ligne du brouillon, NULL sur une ligne de lot. Les
 -- colonnes existantes ne changent pas ; brouillon_id vient en dernier.
+-- : le a l'heure de Paris, heure d'ete comprise (fn_ecran_revision trie sur elle : l'ordre ne change
+-- qu'a l'heure rejouee du dernier dimanche d'octobre).
 CREATE   VIEW dbo.v_od_revision AS
 SELECT b.entite, b.arrete, f.cycle, b.feuille_cote AS cote, q.reference, 'BROUILLON' AS etat, NULL AS lot_id,
-       b.journal_code, b.compte_num, b.libelle, b.debit, b.credit, b.reference AS piece_ref, b.code_actif, b.saisi_par AS par, b.saisi_le AS le,
+       b.journal_code, b.compte_num, b.libelle, b.debit, b.credit, b.reference AS piece_ref, b.code_actif, b.saisi_par AS par, ISNULL(CAST(b.saisi_le AT TIME ZONE 'UTC' AT TIME ZONE 'Romance Standard Time' AS DATETIME2 (7)), b.saisi_le) AS le,
        b.id AS brouillon_id
 FROM dbo.ecriture_brouillon b
 JOIN dbo.feuille_travail f ON f.cote = b.feuille_cote
@@ -12,7 +13,7 @@ LEFT JOIN dbo.ref_question q ON q.id = b.question_id
 UNION ALL
 SELECT l.entite, l.arrete, f.cycle, l.feuille_cote, q.reference, l.statut, l.id,
        e.journal_code, e.compte_num, e.ecriture_lib, e.debit, e.credit, e.piece_ref,
-       (SELECT TOP 1 a.code_actif FROM dbo.ecriture_axe a WHERE a.ecriture_id = e.id), l.cree_par, l.cree_le,
+       (SELECT TOP 1 a.code_actif FROM dbo.ecriture_axe a WHERE a.ecriture_id = e.id), l.cree_par, ISNULL(CAST(l.cree_le AT TIME ZONE 'UTC' AT TIME ZONE 'Romance Standard Time' AS DATETIME2 (7)), l.cree_le),
        CAST(NULL AS INT)
 FROM dbo.lot_ecritures l
 JOIN dbo.ecriture e ON e.lot_id = l.id

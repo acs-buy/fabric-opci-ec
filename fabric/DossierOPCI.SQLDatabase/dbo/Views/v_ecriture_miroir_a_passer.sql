@@ -1,12 +1,12 @@
 
--- --- depuis 63_SQL/126_ecritures_miroir_intragroupe.sql : v_ecriture_miroir_a_passer ---
+-- --- v_ecriture_miroir_a_passer ---
 -- =====================================================================
 -- LES ECRITURES MIROIR DES FLUX INTRAGROUPE, DERIVEES ET NON SAISIES.
 --
--- LA DECISION. Le candidat a arrete le 05/09/2026 de passer les 2 cotes
--- de chaque flux intragroupe, apres que le lot 2 a montre que 61 flux
--- sur 74 n'ont aucune ecriture en face. Le script 125 nomme le fait sans
--- le corriger ; celui-ci le corrige.
+-- LA DECISION. Il est arrete le 05/09/2026 de passer les 2 cotes
+-- de chaque flux intragroupe, apres le constat que 61 flux
+-- sur 74 n'ont aucune ecriture en face. v_flux_sans_contrepartie_comptable nomme le fait sans
+-- le corriger ; cette vue et pr_passer_ecritures_miroir le corrigent.
 --
 -- CE QUI N'EST PAS SAISI, ET C'EST L'ESSENTIEL. Aucun montant n'est
 -- ecrit en dur. Chaque ecriture derive de ce que la base porte deja :
@@ -18,13 +18,13 @@
 -- LE MODE A BLANC EST LE DEFAUT. pr_passer_ecritures_miroir s'execute
 -- avec @a_blanc = 1 : elle calcule tout, montre l'effet sur l'actif net
 -- de chaque entite, et N'ECRIT RIEN. Il faut @a_blanc = 0 pour que les
--- lots soient poses. Le motif est le jeu de chiffres unique du memoire :
+-- lots soient poses. Le motif est le jeu de chiffres unique de la demonstration :
 -- ces ecritures deplacent l'actif net des filiales, donc la valeur
 -- liquidative, et une execution involontaire obligerait a rejouer toutes
 -- les preuves.
 --
--- LE PRET EST ECARTE, ET CE CONSTAT CORRIGE LE LOT 2. Le script 125
--- concluait que « les flux sont comptabilises d'un seul cote ». C'est
+-- LE PRET EST ECARTE, ET CE CONSTAT EN CORRIGE UN AUTRE. Le rapprochement
+-- intragroupe concluait que « les flux sont comptabilises d'un seul cote ». C'est
 -- FAUX pour les prets, et la cle etrangere sur dbo.ref_compte l'a montre
 -- le 05/09/2026 en refusant le compte 4551.
 -- Verifie filiale par filiale : le compte 512 n'est PAS un compte
@@ -38,7 +38,7 @@
 -- filiales. Le reclassement, lui, exigerait un compte de compte courant
 -- d'associe, et LE PLAN DU RECUEIL N'EN PORTE AUCUN : la classe 4 ne
 -- connait que le 45 « Actionnaires ou porteurs de parts » et la classe 5
--- le 513 « Autres emprunts ». Le compte 4551 que le script 108 a inscrit
+-- le 513 « Autres emprunts ». Le compte 4551 inscrit
 -- dans dbo.flux_intragroupe n'existe pas au plan de l'article 411-3, et
 -- c'est ce compte, non l'absence d'ecriture, qui faisait echouer le
 -- rapprochement. La ventilation demande un arbitrage sur le plan de

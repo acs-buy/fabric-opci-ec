@@ -1,4 +1,4 @@
-/// Qui tient quel role sur quelle entite, et de quand a quand : ASSOCIE, CHEF_MISSION ou PREPARATEUR, 16 entites chacun. La colonne connexion porte le compte nomme du reviseur, renseigne sur 32 lignes sur 48. Table de reference de la securite au niveau des lignes de la V2 du front office ; AUCUNE REGLE N'EST POSEE ICI, la regle DAX est ecrite par la session de la base. Ajoutee le 15/09/2026.
+/// Qui tient quel role sur quelle entite, et de quand a quand : ASSOCIE, CHEF_MISSION ou PREPARATEUR, 16 entites chacun. La colonne connexion porte le compte nomme du reviseur, renseigne sur 32 lignes sur 48. Table de reference de la securite au niveau des lignes du front office ; AUCUNE REGLE N'EST POSEE ICI, la regle DAX s'ecrit ailleurs. Ajoutee le 15/09/2026.
 table role_mission
 	lineageTag: 5cd6859a-939f-4a60-96be-80eee32293bc
 

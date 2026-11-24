@@ -1,9 +1,14 @@
-
--- ------------------------------------------------------------------------------------------------- 2.6 : les 3 vues
+-- --- 3. le libelle d'un arrete INTERMEDIAIRE lit la periodicite de l'arrete ------------------------------
+-- --- 8-bis. : un arrete INTERMEDIAIRE se lit « Intermédiaire », « Trimestriel » sous une VL trimestrielle seule ---
+-- seule la colonne [Type] change ; aucun arrete INTERMEDIAIRE au referentiel le 19/11/2026 (controle 12).
+-- : la periodicite lue est celle de l'arrete, figee par la planification qui a fixe son type
+-- (dbo.arrete_periodicite) ; a defaut, celle de l'entite. La colonne periodicite_vl reste celle de
+-- l'entite (titre du tableau).
 CREATE   VIEW dbo.v_ecran_arretes AS
 SELECT r.entite, r.arrete,
        dbo.fn_date_ecran(r.arrete) AS [Arrêté],
-       CAST(CASE r.type_arrete WHEN 'ANNUEL' THEN N'Annuel' WHEN 'SEMESTRIEL' THEN N'Semestriel' ELSE N'Trimestriel' END AS NVARCHAR (20)) AS [Type],
+       CAST(CASE r.type_arrete WHEN 'ANNUEL' THEN N'Annuel' WHEN 'SEMESTRIEL' THEN N'Semestriel'
+                 ELSE CASE WHEN COALESCE(ap.periodicite_vl, e.periodicite_vl) = 'TRIMESTRIELLE' THEN N'Trimestriel' ELSE N'Intermédiaire' END END AS NVARCHAR (20)) AS [Type],
        CONVERT(NVARCHAR (10), am.ouvert_le, 103) AS [Ouvert le],
        CAST(CASE mt.code WHEN 'APPROUVE' THEN N'Visé' WHEN 'OUVERT' THEN N'Soumis au visa' WHEN 'REFUSE' THEN N'Refusé' WHEN 'A_FAIRE' THEN N'À faire' END AS NVARCHAR (20))
            AS [Maintien de la mission],
@@ -19,10 +24,11 @@ SELECT r.entite, r.arrete,
        r.entite + '|' + r.arrete AS cle_ecran
 FROM dbo.ref_arrete r
 JOIN dbo.ref_entite e ON e.code = r.entite
+LEFT JOIN dbo.arrete_periodicite ap ON ap.entite = r.entite AND ap.arrete = r.arrete
 LEFT JOIN dbo.arrete_mission am ON am.entite = r.entite AND am.arrete = r.arrete
 OUTER APPLY (SELECT TOP (1) CASE WHEN m.a_faire = 1 THEN 'A_FAIRE' ELSE m.statut_code END AS code
              FROM dbo.v_ecran_maintiens m WHERE m.entite = r.entite AND m.exercice = r.exercice) mt
-OUTER APPLY (SELECT dbo.fn_motif_non_reouvrable(r.entite, r.arrete) AS motif) nr
+OUTER APPLY (SELECT dbo.fn_motif_non_reouvrable(r.entite, r.arrete) AS motif)nr
 WHERE r.est_arrete_client = 1;
 
 GO

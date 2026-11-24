@@ -3,7 +3,7 @@
   "name": "e5Dossier",
   "position": {
     "x": 1355,
-    "y": 840,
+    "y": 764,
     "z": 64550,
     "height": 60,
     "width": 197,
@@ -268,7 +268,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

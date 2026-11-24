@@ -6,7 +6,7 @@
 -- ref_categorie_actif_cmf, ref_ligne_annexe, ref_ligne_etat,
 -- ref_livrable, ref_obligation_distribution, ref_ratio,
 -- ref_rubrique_resultat, ref_tableau_annexe, saisie_annexe et les 2
--- referentiels poses la veille. Tous sont nes des scripts 106 a 121, qui
+-- referentiels poses la veille. Tous sont nes de scripts de semis qui
 -- appelaient pr_proteger_referentiel, la protection de SEMIS, sans
 -- appeler pr_garder_referentiel, la garde de ROLE. Les 2 mecanismes sont
 -- distincts et se cumulent : le premier refuse une ecriture hors semis,

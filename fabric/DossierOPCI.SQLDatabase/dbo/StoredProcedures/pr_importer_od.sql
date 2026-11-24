@@ -1,3 +1,4 @@
+-- --- 4. pr_importer_od ---------------------------------------------------------------------
 -- pr_importer_od : 5 refus
 -- LE CLASSEUR D'OD D'UNE QUESTION, OU DES OD LIBRES : ses lignes REMPLACENT le brouillon courant du meme
 -- perimetre. @lignes : [{"ligne":12,"journal":"ODR","compte":"213","libelle":"...","debit":100,"credit":0,"piece":"...","actif":"IMM-201"}]
@@ -6,7 +7,9 @@
 -- POUR LES OD LIBRES, @fichier est obligatoire, et le classeur ne peut ni faire perdre une ligne
 -- saisie depuis son instant de reference R, ni faire revenir une ligne retiree depuis R. R est le plus
 -- tardif du dernier depot FAIT du classeur et de son dernier reimport accepte.
-CREATE   PROCEDURE dbo.pr_importer_od
+-- L'instant de reference sans MAX interne ; un MAX interne sans ligne rendait NULL au MAX externe,
+-- qui levait 8153 avant le refus 50406 (1er reimport). depose_le et le sont NOT NULL : meme maximum, NULL sans ligne.
+CREATE PROCEDURE dbo.pr_importer_od
     @entite     VARCHAR (20),
     @arrete     VARCHAR (20),
     @reference  VARCHAR (20)   = NULL,
@@ -17,8 +20,8 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- debut : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
+    -- plan de l'etude des fonctions.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
         + NCHAR(133) + NCHAR(160) + NCHAR(5760) + NCHAR(8192) + NCHAR(8193) + NCHAR(8194) + NCHAR(8195) + NCHAR(8196) + NCHAR(8197) + NCHAR(8198)
@@ -27,13 +30,13 @@ BEGIN
         THROW 51201, N'Choisissez le véhicule dans le sélecteur Véhicule.', 1;
     IF ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @arrete COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51216, N'Choisissez l''arrêté dans le sélecteur Arrêté ; les OD libres ne se réimportent que sur un arrêté ouvert dont le dossier de travail n''est pas verrouillé.', 1;
-    -- 327 fin
+    -- fin
     IF ISJSON(@lignes) <> 1
         THROW 50385, N'Le contenu reçu n''est pas un tableau de lignes lisible.', 1;
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé.', 1;
-    -- 51315, D1 (15/11/2026) : action 22. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 51315 : juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la connexion SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 51315, N'Action refusée : seule l''équipe du dossier peut réimporter les OD de ce dossier.', 1;
@@ -93,9 +96,9 @@ BEGIN
     IF @reference IS NULL
     BEGIN
         DECLARE @R DATETIME2 (3) = (SELECT MAX(x) FROM (
-            SELECT MAX(depose_le) AS x FROM dbo.export_dossier WHERE entite = @entite AND arrete = @arrete AND fichier = @fichier AND statut = 'FAIT'
+            SELECT depose_le AS x FROM dbo.export_dossier WHERE entite = @entite AND arrete = @arrete AND fichier = @fichier AND statut = 'FAIT'
             UNION ALL
-            SELECT MAX(le) FROM dbo.od_reimport WHERE entite = @entite AND arrete = @arrete AND fichier = @fichier) r);
+            SELECT le FROM dbo.od_reimport WHERE entite = @entite AND arrete = @arrete AND fichier = @fichier) r);
         IF @R IS NULL
         BEGIN
             SET @m = N'Réimport refusé : le classeur « ' + @fichier + N' » n''a ni dépôt ni réimport connu pour cet arrêté ; la date de son export n''est pas établie.';

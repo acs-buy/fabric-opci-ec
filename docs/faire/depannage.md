@@ -154,12 +154,37 @@ casserait sans le dire.
 Le script des boutons s'arrête aussi, avant d'écrire, s'il manque l'identifiant d'un ensemble de
 fonctions, ou si deux ensembles reçoivent le même : chaque ensemble a le sien.
 
+## « La base de données ne répond pas : l'action s'est arrêtée. »
+
+Le message complet est : « La base de données ne répond pas : l'action s'est arrêtée. Vérifiez à
+l'écran ce qui a été enregistré, puis réessayez dans une minute. »
+
+La fonction appelée par le bouton n'a pas obtenu de connexion à la base. Ce message est celui de
+l'ensemble `fn_ecran_client`, qui sert l'écran Client et Acceptation et la page Pièce
+justificative ; les autres ensembles de fonctions ne le portent pas.
+
+Rien n'est écrit au journal des refus dans ce cas, puisque la base ne répond pas.
+
+Une action qui enchaîne plusieurs appels a pu enregistrer les premiers avant l'arrêt. L'import d'un
+classeur de filiales enregistre une filiale par appel, et il s'arrête au premier appel sans
+réponse : les filiales lues avant cet appel restent enregistrées. Relisez donc l'écran avant de
+recommencer.
+
+Si le message revient après une minute, ouvrez la base dans le portail Fabric et lancez la requête
+de la section « Les écrans sont vides, mais tout semble en place ». Si elle ne répond pas non plus,
+la panne vient de la base, et non de l'écran.
+
 ## Une erreur qui ne figure pas ici
 
-Notez le message exact et l'étape où il apparaît. Le message « Action interrompue par une erreur
-d'exécution » ne nomme pas la procédure en cause : la table `dbo.journal_refus` la porte, colonne
-`procedure_nom`, avec le détail technique (`message`), le compte (`refuse_pour`) et l'heure UTC
-(`refuse_le`).
+Notez le message exact et l'étape où il apparaît. Le message « L'action n'a pas abouti à cause d'un
+problème technique. Vérifiez à l'écran ce qui a été enregistré, puis réessayez. Si le problème
+revient, prévenez l'administrateur. » ne nomme pas la procédure en cause : la table
+`dbo.journal_refus` la porte, colonne `procedure_nom`, avec le détail technique (`message`), le
+compte (`refuse_pour`) et l'heure UTC (`refuse_le`).
+
+Le bouton « Générer le lot » de l'écran Valorisation garde son propre texte : « Génération
+interrompue par une erreur d'exécution : aucun lot n'est posé. Le détail technique est consigné au
+journal des refus. »
 
 ---
 

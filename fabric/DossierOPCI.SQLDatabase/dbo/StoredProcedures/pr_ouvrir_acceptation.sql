@@ -4,7 +4,7 @@
 --         phase attendue.
 -- 50069 : une question obligatoire de la phase est sans reponse.
 -- 50070 : l'approbateur est le proposant. Separation des roles, comme le
---         declencheur du script 80 l'impose aux 6 autres natures.
+--         declencheur tr_visa_separation_des_roles l'impose aux 6 autres natures.
 -- 50071 : l'approbateur n'a pas le role que la nature exige.
 -- 50072 : l'acceptation est deja approuvee, ou elle est refusee et doit
 --         d'abord etre reprise.

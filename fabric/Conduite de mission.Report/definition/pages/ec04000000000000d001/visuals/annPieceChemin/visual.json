@@ -115,7 +115,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Nom du fichier déposé, sous-dossier facultatif'"
+                  "Value": "'Nom du fichier déposé'"
                 }
               }
             },

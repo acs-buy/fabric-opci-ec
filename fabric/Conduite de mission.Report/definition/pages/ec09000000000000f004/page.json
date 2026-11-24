@@ -121,6 +121,11 @@
       "source": "docBalance",
       "target": "docSansArrete2",
       "type": "NoFilter"
+    },
+    {
+      "source": "docBalance",
+      "target": "docMsg2",
+      "type": "NoFilter"
     }
   ],
   "visibility": "HiddenInViewMode"

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "docMsg",
   "position": {
-    "x": 373,
-    "y": 1223,
+    "x": 423,
+    "y": 1216,
     "z": 7500,
-    "height": 24,
-    "width": 494,
+    "height": 22,
+    "width": 460,
     "tabOrder": 7500
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "v_ecran_message"
                     }
                   },
-                  "Property": "Message de la revision"
+                  "Property": "Message de la revision ligne 1 sur 452 px"
                 }
               },
-              "queryRef": "v_ecran_message.Message de la revision",
-              "nativeQueryRef": "Message de la revision"
+              "queryRef": "v_ecran_message.Message de la revision ligne 1 sur 452 px",
+              "nativeQueryRef": "Message de la revision ligne 1 sur 452 px"
             }
           ]
         }

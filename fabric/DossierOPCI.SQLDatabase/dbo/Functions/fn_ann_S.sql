@@ -1,7 +1,7 @@
 
 -- ------------------------------------------------------------------------------------------------- lectures
 -- Debit moins credit des comptes de la racine (oracle, Dossier.S) ; NULL sans balance a l'arrete. Les lots
--- d'affectation sont ecartes pour les classes 6 et 7, et pour toute racine quand @hors_aff vaut 1 (regle K1).
+-- d'affectation sont ecartes pour les classes 6 et 7, et pour toute racine quand @hors_aff vaut 1.
 -- @exclues : racines exclues separees par des virgules. @aux : '*' pour tout auxiliaire, sinon l'auxiliaire exact.
 CREATE   FUNCTION dbo.fn_ann_S (@calcul_id INT, @arrete VARCHAR (20), @racine VARCHAR (40), @exclues VARCHAR (400) = '',
                                      @aux NVARCHAR (40) = N'*', @hors_aff BIT = 0)

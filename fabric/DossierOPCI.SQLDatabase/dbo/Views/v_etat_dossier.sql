@@ -1,4 +1,4 @@
--- 172 -- Les arretes ouverts, 2 colonnes qui comptaient tout
+-- Les arretes ouverts, 2 colonnes qui comptaient tout
 -- 13/09/2026. Trouve en preparant la maquette de l'ecran 1.1, en rapprochant 2 sources qui
 -- devaient dire la meme chose : v_etat_dossier annonce 5 arretes ouverts pour OMEGA-OPCI quand
 -- v_arrete_statut n'en donne qu'UN seul, celui du 30/06/2026, les 4 autres etant CLOS.
@@ -6,21 +6,21 @@
 -- d'ecran, « Nombre d'arretes ouverts pour l'entite », annoncaient autre chose.
 -- C'est le 4e defaut du meme genre en 2 jours : un terme dont le nom promet une population et
 -- dont le calcul en prend une autre. Celui-ci s'affichait sur le tableau de bord de Client.
--- 165 -- Les questions d'acceptation, numerateur et denominateur remis sur la meme population
--- 12/09/2026. Defaut trouve avant qu'il n'atteigne un ecran, l'agent Fabric IQ s'appretant a
+-- Les questions d'acceptation, numerateur et denominateur remis sur la meme population
+-- 12/09/2026. Defaut trouve avant qu'il n'atteigne un ecran, qui allait
 -- afficher « 110 / 92 » sur la ligne OMEGA-OPCI du tableau de bord de Client.
 -- MESURE QUI L'ETABLIT : ref_question porte 92 questions obligatoires et 18 facultatives en phase
 -- ACCEPT, soit 110 ; v_questions_du_cycle porte 110 lignes en phase ACCEPT, toutes REPONDUE et
 -- toutes sur la seule entite OMEGA-OPCI. Le taux reel de cette entite est donc 100 %, non 120 %.
 -- C'est la faute que notre propre controle C84 denonce, un numerateur et un denominateur pris sur
 -- 2 populations differentes, et que j'ai commise le 09/09 sur un ecart de 28 291 330,67.
--- CE QUI NE CHANGE PAS, l'agent posant sur cette vue en lecture directe : les 2 colonnes gardent
+-- CE QUI NE CHANGE PAS, pour le modele qui lit cette vue en lecture directe : les 2 colonnes gardent
 -- leur nom, leur type entier et leur rang. Aucune resynchronisation du modele n'est requise.
--- --- 6 : V4, l'etat du dossier et le prochain arrete -----------------
+-- --- 6 : l'etat du dossier et le prochain arrete -----------------
 -- dbo.v_prerequis_arrete ne couvre que la porte 1, et seulement les
 -- arretes deja presents dans les lots ou les detentions : elle ne dit
 -- rien de l'acceptation, du maintien, ni d'un arrete jamais ouvert.
--- L'ecran C0 a besoin de l'etat du dossier ET du motif du refus a venir.
+-- L'ecran a besoin de l'etat du dossier ET du motif du refus a venir.
 CREATE VIEW dbo.v_etat_dossier AS
 SELECT e.code                             AS entite,
        e.denomination                     AS entite_libelle,

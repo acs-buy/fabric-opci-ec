@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
+/// Ajoutee le 15/09/2026 pour le front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_rationalisation_filiale
 	lineageTag: ccbdc7dd-f36e-4fbf-8cde-93d324ba935b
 

@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
+/// Ajoutee le 15/09/2026 pour le front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_cadrage_pret_intragroupe
 	lineageTag: 7bb21803-f341-4cf6-ba74-31dfadb85922
 

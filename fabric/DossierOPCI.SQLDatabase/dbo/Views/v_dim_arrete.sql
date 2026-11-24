@@ -2,7 +2,7 @@ CREATE   VIEW dbo.v_dim_arrete AS
 -- Le filtre sur NULL est indispensable : au moins une table porte une ligne sans
 -- arrete, et un membre NULL dans une dimension ouvre une ligne vide dans le segment,
 -- que le reviseur ne saurait pas interpreter. Releve a la premiere execution.
--- 13/10/2026, decision du candidat : arrete_affiche, l'arrete ecrit jj/mm/aaaa, que le selecteur Arrete affiche ; trie
+-- Decision du 13/10/2026 : arrete_affiche, l'arrete ecrit jj/mm/aaaa, que le selecteur Arrete affiche ; trie
 -- par arrete au modele. 1 valeur par arrete.
 SELECT u.arrete, CAST(CONVERT(VARCHAR (10), TRY_CAST(u.arrete AS DATE), 103) AS VARCHAR (10)) AS arrete_affiche
 FROM (

@@ -3,7 +3,7 @@ CREATE   VIEW dbo.v_ecran_mon_contexte AS
 SELECT c.utilisateur,
        c.vehicule,
        c.arrete,
-       -- modifie_le RETIRE de la grille le 13/09/2026, choix (a) de l'agent Fabric IQ.
+       -- modifie_le RETIRE de la grille le 13/09/2026.
        -- Motif : la colonne porte un DEFAULT, qui ne joue qu'a l'INSERTION. Apres une
        -- modification par la grille, elle affichait encore l'heure de la creation de la
        -- ligne. Aucun declencheur AFTER UPDATE n'a ete pose, et je n'ai PAS verifie que la

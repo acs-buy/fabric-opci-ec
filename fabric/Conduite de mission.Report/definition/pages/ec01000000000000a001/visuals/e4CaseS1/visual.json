@@ -3,7 +3,7 @@
   "name": "e4CaseS1",
   "position": {
     "x": 1014,
-    "y": 534,
+    "y": 458,
     "z": 61300,
     "height": 24,
     "width": 250,
@@ -22,7 +22,7 @@
                     "value": "chez l'associé signataire",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "10px",
+                      "fontSize": "10pt",
                       "color": "#5B6B7D"
                     }
                   }

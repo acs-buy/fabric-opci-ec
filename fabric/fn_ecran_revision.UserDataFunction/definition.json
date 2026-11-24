@@ -57,8 +57,8 @@
       "isPublicEndpointEnabled": false
     },
     {
-      "name": "deverrouiller_dossier",
-      "description": "D\u00E9verrouiller le dossier de travail, avec le motif et la personne qui le demande.",
+      "name": "demander_deverrouillage",
+      "description": "D\u00E9verrouiller le dossier : inscrit la demande, avec son motif ; le chef de mission la d\u00E9cide.",
       "isPublicEndpointEnabled": false
     },
     {

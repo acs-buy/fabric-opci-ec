@@ -3,7 +3,7 @@
   "name": "e4Bouton3",
   "position": {
     "x": 1355,
-    "y": 769,
+    "y": 693,
     "z": 63300,
     "height": 36,
     "width": 197,
@@ -43,7 +43,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },
@@ -117,7 +117,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },
@@ -191,7 +191,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },

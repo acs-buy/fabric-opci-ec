@@ -1,5 +1,5 @@
 
--- pr_viser_evaluation : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_viser_evaluation : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_viser_evaluation
     @evaluation_id INT,
     @decision      VARCHAR (8),

@@ -2,12 +2,12 @@
 table ref_obligation_distribution
 	lineageTag: 8f39381a-7e4d-4a78-b539-a6c449302ce6
 
-	/// « Aucune catégorie choisie » sans case cochée ; vide avec 1 case cochée et plus (carte collée, & "") : à 2 cases cochées, seule la carte [Avis categorie cochee] énonce le nombre coché, à droite de chaque bouton que le segment désactive (décision 10) ; posée dans la fiche de la catégorie, la proposit
+	/// « Aucune catégorie choisie » sans case cochée ; vide avec 1 case cochée et plus (carte collée, & "") : à 2 cases cochées, seule la carte [Avis categorie cochee] énonce le nombre coché, à droite de chaque bouton que le segment désactive ; posée dans la fiche de la catégorie, la proposit
 	measure 'Absence de categorie choisie' = VAR sel = ISFILTERED ( ref_obligation_distribution[libelle] ) || ISFILTERED ( ref_obligation_distribution[categorie] ) VAR k = COUNTROWS ( VALUES ( ref_obligation_distribution[categorie] ) ) RETURN IF ( NOT sel || k = 0, "Aucune catégorie choisie", "" ) & ""
 		displayFolder: Ecran 4 Arrete
 		lineageTag: 1d9ba10d-60e1-4728-9f70-1189a43a45b7
 
-	/// « n catégories cochées » quand le segment porte 2 valeurs ou plus ; vide sinon (carte collée, & "") : le service désactive alors Proposer, Viser, Renvoyer et Enregistrer avec une bulle anglaise (guide, § 17.29.1), et la carte, à côté de chaque bouton, énonce le fait en français (décision du candidat
+	/// « n catégories cochées » quand le segment porte 2 valeurs ou plus ; vide sinon (carte collée, & "") : le service désactive alors Proposer, Viser, Renvoyer et Enregistrer avec une bulle anglaise, et la carte, à côté de chaque bouton, énonce le fait en français.
 	measure 'Avis categorie cochee' = VAR sel = ISFILTERED ( ref_obligation_distribution[libelle] ) || ISFILTERED ( ref_obligation_distribution[categorie] ) VAR k = COUNTROWS ( VALUES ( ref_obligation_distribution[categorie] ) ) RETURN IF ( sel && k >= 2, FORMAT ( k, "0" ) & " catégories cochées", "" ) & ""
 		displayFolder: Ecran 4 Arrete
 		lineageTag: 8db50c27-4ceb-49b6-a104-56d5d93165d4

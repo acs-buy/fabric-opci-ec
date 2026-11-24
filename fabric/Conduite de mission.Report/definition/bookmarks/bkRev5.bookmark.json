@@ -487,13 +487,6 @@
               }
             }
           },
-          "revLivDevPar": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revLivDeverrouiller": {
             "singleVisual": {
               "display": {

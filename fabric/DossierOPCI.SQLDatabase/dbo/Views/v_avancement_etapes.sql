@@ -1,7 +1,7 @@
 
--- 171 -- Les libelles d'ecran des 5 etapes, avant la pose de la barre d'avancement
--- 12/09/2026. Le candidat a arrete que le panneau des 15 ecrans de travail devient la barre
--- d'avancement de la mission, alimentee par cette vue. L'agent Fabric IQ a releve en la lisant
+-- Les libelles d'ecran des 5 etapes, avant la pose de la barre d'avancement
+-- 12/09/2026. Il est arrete que le panneau des 15 ecrans de travail devient la barre
+-- d'avancement de la mission, alimentee par cette vue. Une lecture de la vue a releve
 -- que les libelles y sont des CODES : COLLECTE, REVISION, ARRETE, en capitales et sans accent.
 -- Un ecran d'expert-comptable ne montre pas ses codes, et « ARRETE » sans accent est ambigu.
 -- Deux colonnes de libelle sont donc ajoutees, etape_libelle et unite_libelle. Elles sont portees

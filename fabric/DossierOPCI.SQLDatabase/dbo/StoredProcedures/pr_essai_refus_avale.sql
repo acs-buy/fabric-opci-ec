@@ -1,5 +1,5 @@
--- 185 -- Un refus metier se voit-il a l'ecran, ou passe-t-il pour un succes ?
--- 13/09/2026. Question ouverte par la mesure de l'agent Fabric IQ : une automatisation de bouton
+-- Un refus metier se voit-il a l'ecran, ou passe-t-il pour un succes ?
+-- 13/09/2026. Question ouverte par une mesure : une automatisation de bouton
 -- ecrit en base et n'invalide PAS le cache de sa propre source. Le seul retour visuel est un toast
 -- de 3 secondes, « Automation job completed successfully ».
 --
@@ -16,7 +16,7 @@
 -- dispositif de message d'ecran ne sert a rien tant qu'aucun rafraichissement n'intervient.
 --
 -- DEUX PROCEDURES D'ESSAI, a cliquer l'une puis l'autre sur la meme feuille, pour comparer les
--- toasts. Elles n'ecrivent que dans la table d'essai du script 163.
+-- toasts. Elles n'ecrivent que dans la table d'essai essai_saisie_grille.
 
 -- CELLE QUI AVALE L'ERREUR, comme nos 22 enveloppes le font aujourd'hui.
 CREATE   PROCEDURE dbo.pr_essai_refus_avale

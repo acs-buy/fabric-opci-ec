@@ -1,4 +1,4 @@
--- pr_modifier_client : l'enveloppe (regle unique, lot B2) ; @est_professionnel transmis au corps (script 345)
+-- pr_modifier_client : l'enveloppe (regle unique) ; @est_professionnel transmis au corps (pr_modifier_client_corps)
 CREATE   PROCEDURE dbo.pr_modifier_client
     @code               VARCHAR (20),
     @denomination       NVARCHAR (400) = NULL,

@@ -1,5 +1,5 @@
 -- ------------------------------------------------------------------ une cle a la forme de la vue, en clause parametree
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 -- @cle : les parties jointes par « · », dans l'ordre de la cle primaire ; une partie question_id (ou la cle numerotee de
 -- ref_question) recue par l'identifiant ou par la reference de la question (IMMO-11) ; une partie reference_id (ou la
 -- cle numerotee de ref_reference) par l'identifiant ou par « norme reference » (CMF L214-81). Rend la clause

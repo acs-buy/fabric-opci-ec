@@ -1,5 +1,5 @@
 -- Le referentiel du cabinet sans domaine ou sans categorie, la categorie rangee sous 2 domaines, 2 referentiels de
--- meme rang dans une categorie ; et, pour les tris des segments (B9, tris n° 66 et 67), un domaine ou une categorie
+-- meme rang dans une categorie ; et, pour les tris des segments (tris n° 66 et 67), un domaine ou une categorie
 -- sous 2 rangs. ATTENDU zero.
 CREATE   VIEW dbo.v_controle_referentiel_sans_classement AS
 SELECT CAST(N'sans domaine ou sans catégorie' AS NVARCHAR (60)) AS anomalie, r.table_nom,

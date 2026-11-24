@@ -11,8 +11,7 @@ CREATE   PROCEDURE dbo.pr_deposer_classeur
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : avant le depot au site du cabinet.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -22,7 +21,6 @@ BEGIN
         THROW 51201, N'Choisissez le véhicule dans le sélecteur Véhicule.', 1;
     IF ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @arrete COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51202, N'Choisissez l''arrêté dans le sélecteur Arrêté.', 1;
-    -- 327 fin
     DECLARE @url NVARCHAR (800)  = (SELECT valeur FROM dbo.ref_parametre WHERE code = 'DEPOT_CLASSEUR_URL');
     DECLARE @site NVARCHAR (800) = (SELECT valeur FROM dbo.ref_parametre WHERE code = 'SITE_CABINET');
     DECLARE @raccourci NVARCHAR (200) = (SELECT valeur FROM dbo.ref_parametre WHERE code = 'RACCOURCI_SITE_CABINET');
@@ -32,8 +30,8 @@ BEGIN
 
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite)
         THROW 50940, N'Entité inconnue.', 1;
-    -- 51304, D1 (15/11/2026) : action 11. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 51304 (15/11/2026) : action 11. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 51304, N'Action refusée : seule l''équipe du dossier peut déposer un classeur de cet arrêté au site du cabinet.', 1;

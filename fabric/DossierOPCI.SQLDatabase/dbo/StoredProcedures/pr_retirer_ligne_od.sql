@@ -8,8 +8,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
         + NCHAR(133) + NCHAR(160) + NCHAR(5760) + NCHAR(8192) + NCHAR(8193) + NCHAR(8194) + NCHAR(8195) + NCHAR(8196) + NCHAR(8197) + NCHAR(8198)
@@ -20,11 +19,10 @@ BEGIN
         THROW 51215, N'Choisissez l''arrêté dans le sélecteur Arrêté ; les OD libres ne se modifient que sur un arrêté ouvert dont le dossier de travail n''est pas verrouillé.', 1;
     IF @ligne_id IS NULL
         THROW 51217, N'Aucune ligne du brouillon libre n''est choisie dans la liste ; l''action n''est pas exécutée.', 1;
-    -- 327 fin
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50404, N'Retrait refusé : le dossier de cet arrêté est visé et verrouillé.', 1;
-    -- 51314, D1 (15/11/2026) : action 21. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 51314 (15/11/2026) : action 21. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 51314, N'Action refusée : seule l''équipe du dossier peut retirer une ligne d''OD de ce dossier.', 1;

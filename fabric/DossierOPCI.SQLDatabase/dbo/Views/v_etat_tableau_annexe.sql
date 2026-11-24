@@ -1,7 +1,7 @@
 
 CREATE   VIEW dbo.v_etat_tableau_annexe AS
 SELECT t.ordre, t.article, t.libelle, t.source_valeur, t.cellules AS attendues,
-       -- 06/09/2026, O14 : le caractere du modele, article 335-1 du reglement ANC
+       -- 06/09/2026 : le caractere du modele, article 335-1 du reglement ANC
        -- 2021-09, sections 3, 4 et 6 imposees, section 5 indicative. C'est ce que
        -- pr_demander_document lit pour refuser ou accepter avec mention.
        CAST(ISNULL(t.indicatif, 0) AS BIT)              AS indicatif,

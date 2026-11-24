@@ -32,7 +32,7 @@ table v_sommes_distribuables
 		displayFolder: Ecran 4 Arrete
 		lineageTag: 25d0b9e2-3eaa-43a8-8661-a3cd44d421de
 
-	/// pr_decider_distribution_corps relu : total × taux de ref_obligation_distribution, le total étant plus_values_distribuables en PLUS_VALUES, resultat_distribuable sinon, EXONEREES compris (Q6) ; 1 par ligne dans la grille, celle de la catégorie cochée dans la fiche
+	/// pr_decider_distribution_corps relu : total × taux de ref_obligation_distribution, le total étant plus_values_distribuables en PLUS_VALUES, resultat_distribuable sinon, EXONEREES compris ; 1 par ligne dans la grille, celle de la catégorie cochée dans la fiche
 	measure 'Borne basse de la decision' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR c = IF ( HASONEVALUE ( v_obligation_par_categorie[categorie_ref] ), SELECTEDVALUE ( v_obligation_par_categorie[categorie_ref] ), IF ( HASONEVALUE ( ref_obligation_distribution[categorie] ), SELECTEDVALUE ( ref_obligation_distribution[categorie] ) ) ) VAR une = NOT ISBLANK ( c ) VAR sd = FILTER ( ALL ( v_sommes_distribuables ), v_sommes_distribuables[entite] = e && v_sommes_distribuables[arrete] = a ) VAR rd = MAXX ( sd, v_sommes_distribuables[resultat_distribuable] ) VAR pv = MAXX ( sd, v_sommes_distribuables[plus_values_distribuables] ) VAR tx = CALCULATE ( MAX ( ref_obligation_distribution[taux] ), FILTER ( ALL ( ref_obligation_distribution ), ref_obligation_distribution[categorie] = c ) ) VAR tot = IF ( c = "PLUS_VALUES", pv, rd ) RETURN IF ( une && NOT ISBLANK ( tot ), ROUND ( tot * tx, 2 ) )
 		formatString: #,0.00
 		displayFolder: Ecran 4 Arrete

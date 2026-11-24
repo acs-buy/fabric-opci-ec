@@ -39,6 +39,7 @@ levent le refus : la fonction rend le dernier jeu de resultats.
 import datetime
 import hashlib
 import logging
+import math
 import re
 import threading
 
@@ -62,17 +63,97 @@ def _qui(ctx) -> str:
     return u
 
 
+def _texte_pilote(exc) -> str:
+    """Le texte de l'erreur ODBC, brut et non par le repr du tuple. Une erreur du pilote porte (etat SQL, texte), le
+    texte commencant par « [ » ; une erreur levee par pyodbc lui-meme porte (texte, etat SQL). Toute autre forme
+    se lit par str(exc), comme avant."""
+    a = getattr(exc, "args", ())
+    if len(a) > 1 and isinstance(a[0], str) and isinstance(a[1], str):
+        if a[1].startswith("["):
+            return a[1]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[1]):
+            return a[0]
+        # ERREUR SANS DIAGNOSTIC DU PILOTE (unixODBC, hote Linux) : (HY000, « The driver did not supply an error! »),
+        # etat en 1er, texte sans « [ » ; meme lecture que fn_ecran_revision (24/11/2026)
+        if re.fullmatch(r"[0-9A-Z]{5}", a[0]):
+            return a[1]
+    return str(exc)
+
+
+# LA QUEUE DU PILOTE NOMME LA FONCTION ODBC QUI A ECHOUE, ET ELLE VARIE : (SQLExecDirectW) pour un appel court,
+# (SQLParamData) quand un parametre long part en flux (le JSON des reponses de pr_importer_reponses, lu le 21/11/2026
+# a l'ecran et au journal sous la forme « ... (50244) (SQLParamData)') », numero perdu). Le texte se lit comme
+# dans fn_ecran_revision ; le numero, ancre de meme sur « [SQL Server] », ne retient que 5 ou 6 chiffres, ceux d'un
+# THROW (une erreur du moteur ou du pilote, 547 ou 10054, rend None).
 def _message_sql(exc) -> str:
-    """Le texte francais d'un THROW, sans le prefixe du pilote ODBC."""
-    s = str(exc)
-    m = re.search(r"\[SQL Server\](.*?)(\s\(\d+\)\s\(SQLExecDirectW\)|$)", s, re.S)
+    """Le texte francais d'un THROW, sans le prefixe ni la queue du pilote ODBC."""
+    s = _texte_pilote(exc)
+    m = re.search(r"\[SQL Server\](.*?)(\s\(\d+\)\s\(SQL\w+\)|$)", s, re.S)
     return (m.group(1) if m else s).strip()
 
 
 def _numero_sql(exc):
     """Le numero d'un THROW de la base (50220 par exemple), ou None."""
-    m = re.search(r"\((\d{5,6})\)\s*\(SQLExecDirectW\)", str(exc))
+    m = re.search(r"\[SQL Server\].*?\s\((\d{5,6})\)\s\(SQL\w+\)", _texte_pilote(exc), re.S)
     return int(m.group(1)) if m else None
+
+
+# UNE ERREUR QUI N'EST PAS UN REFUS DE LA BASE NE S'AFFICHE PAS EN ANGLAIS. Seul un THROW de
+# la base (numero d'au moins 50000) porte un texte francais destine a l'ecran. Un delai du pilote (HYT00, « Query
+# timeout expired »), une coupure (08S01), une erreur du moteur (547, 8134…) ou une faute de pyodbc affichaient leur
+# texte anglais au bouton et dans la zone de message. Leves pendant un appel de _executer ou de _executer_ecran, ils
+# rendent TEXTE_ERREUR, et leur detail technique va au seul journal des refus, par une connexion neuve si celle de
+# l'appel est coupee. Une base qui ne repond pas a la connexion (toute connexion de la fonction passe par _connecter)
+# rend TEXTE_BASE_INJOIGNABLE : rien ne peut alors etre journalise. NON COUVERT : une erreur levee par
+# un SELECT de lecture dont la connexion a reussi (_code_nature, _entite_de_cote, exporter_questionnaire…) remonte
+# telle quelle ; une pr_ecran_* qui attrape une erreur du moteur dans son CATCH ecrit ERROR_MESSAGE() en anglais dans
+# message_ecran, que _executer_ecran relit et rend. Les 2 textes, mesures a la zone de message d'ec01 (coupe
+# 1 487 px), tiennent sur 1 ligne chacun. fn_ecran_revision garde son propre texte, a aligner a la coupe de
+# l'ecran 2. « Verifiez a l'ecran ce qui a ete enregistre » : une action qui enchaine plusieurs appels a pu
+# enregistrer les premiers avant l'erreur. Le texte de la base injoignable le dit aussi : l'import d'un classeur
+# Filiales enregistre une filiale par appel, et une base qui cesse de repondre en cours de route laisse les
+# premieres enregistrees.
+PREMIER_NUMERO_DE_REFUS = 50000
+TEXTE_ERREUR = ("L'action n'a pas abouti à cause d'un problème technique. Vérifiez à l'écran ce qui a été enregistré, "
+                "puis réessayez. Si le problème revient, prévenez l'administrateur.")
+TEXTE_BASE_INJOIGNABLE = ("La base de données ne répond pas : l'action s'est arrêtée. Vérifiez à l'écran ce qui a été "
+                          "enregistré, puis réessayez dans une minute.")
+
+
+def _refus_de_la_base(exc):
+    """Le texte francais d'un refus de la base (numero d'au moins 50000), ou None pour toute autre erreur."""
+    n = _numero_sql(exc)
+    return _message_sql(exc) if n is not None and n >= PREMIER_NUMERO_DE_REFUS else None
+
+
+def _detail(exc, sql) -> str:
+    """Le detail technique d'une erreur non prevue, pour le seul journal des refus : procedure, classe, texte."""
+    t = _texte_pilote(exc)
+    m = re.search(r"\[SQL Server\].*?\s\((\d+)\)\s\(SQL\w+\)", t, re.S)
+    return "Erreur d’exécution, procédure %s : %s%s : %s" % (
+        _nom_procedure(sql), exc.__class__.__name__, " n° %s" % m.group(1) if m else "", _message_sql(exc) or t)
+
+
+def _connecter(base):
+    """La connexion a la base ; une base qui ne repond pas (delai de connexion, base en pause) rend un refus en
+    francais au lieu du texte anglais du pilote."""
+    try:
+        return base.connect()
+    except Exception as e:
+        x = fn.UserThrownError(TEXTE_BASE_INJOIGNABLE, {})
+        try:
+            x.injoignable = True                 # lu par la boucle des filiales d'importer_classeur, qui s'arrete
+        except Exception:
+            pass
+        raise x from e
+
+
+def _annuler(conn):
+    """Le rollback, sans lever : sur une connexion coupee il echoue, et son erreur anglaise masquerait la vraie."""
+    try:
+        conn.rollback()
+    except Exception:
+        pass
 
 
 def _entite_probable(params):
@@ -110,12 +191,12 @@ def _poser_message_dans(cur, sql, message, params, genre, entite=_DEDUITE):
 
 
 def _poser_message(conn, sql, message, params, genre, entite=_DEDUITE):
-    """Ecrit le dernier geste dans la boite aux lettres de l'ecran, reussite comme refus.
+    """Ecrit la derniere action dans la boite aux lettres de l'ecran, reussite comme refus.
 
     POURQUOI UNE BOITE AUX LETTRES ET NON LE JOURNAL : un refus lu dans journal_refus survivait a la
     reussite suivante, et le reviseur lisait « deja au perimetre » alors que son ajout venait de reussir.
     journal_refus est une TRACE, elle s'ajoute et ne s'efface pas ; la zone de message est un ETAT, une
-    seule ligne vivante par personne et par dossier, remplacee a chaque geste.
+    seule ligne vivante par personne et par dossier, remplacee a chaque action.
 
     Ne leve jamais."""
     try:
@@ -131,7 +212,7 @@ def _poser_message(conn, sql, message, params, genre, entite=_DEDUITE):
             pass
 
 
-def _journaliser_refus(conn, sql, message, params, entite=_DEDUITE):
+def _journaliser_refus(conn, sql, message, params, entite=_DEDUITE, detail=None):
     """Ecrit le refus dans journal_refus APRES le rollback, dans une transaction neuve.
 
     POURQUOI ICI ET NON DANS LA PROCEDURE : une procedure qui leve un THROW voit son propre INSERT de
@@ -142,7 +223,10 @@ def _journaliser_refus(conn, sql, message, params, entite=_DEDUITE):
     SANS CE JOURNAL, LE REVISEUR NE LIT RIEN : ajouter une filiale deja au perimetre laissait l'ecran
     muet, la base refusant sans qu'aucune table lue par l'ecran ne porte le message.
 
-    Ne leve jamais : un journal qui echoue ne doit pas masquer le refus qu'il rapporte."""
+    Ne leve jamais : un journal qui echoue ne doit pas masquer le refus qu'il rapporte.
+
+    detail, quand il est donne, va au journal a la place du message ; la zone de message garde le message (erreur non
+    prevue : TEXTE_ERREUR a l'ecran, le detail technique au journal seul)."""
     try:
         nom = "inconnue"
         m = re.search(r"EXEC dbo\.(\w+)", sql or "")
@@ -151,13 +235,33 @@ def _journaliser_refus(conn, sql, message, params, entite=_DEDUITE):
         entite = _entite(params, entite)
         cur = conn.cursor()
         cur.execute("EXEC dbo.pr_journaliser_refus @procedure_nom=?, @message=?, @par=?, @entite=?",
-                    (nom[:128], (message or "")[:2000], _qui_sans_lever(), entite))
+                    (nom[:128], (detail or message or "")[:2000], _qui_sans_lever(), entite))
         cur.execute("EXEC dbo.pr_poser_message_ecran @pour=?, @message=?, @genre=?, @entite=?, @procedure_nom=?",
                     (_qui_sans_lever(), (message or "")[:2000], "REFUS", entite, nom[:128]))
         conn.commit()
+        return True
     except Exception:                            # le journal ne doit jamais masquer le refus
         try:
             conn.rollback()
+        except Exception:
+            pass
+        return False
+
+
+def _journaliser_erreur(base, conn, sql, message, params, entite=_DEDUITE, detail=None):
+    """Le journal d'une erreur levee pendant l'appel : sur la connexion de l'appel, puis, si elle est coupee (08S01),
+    sur une connexion neuve, comme fn_ecran_revision. Ne leve jamais."""
+    if _journaliser_refus(conn, sql, message, params, entite, detail):
+        return
+    try:
+        neuve = base.connect()
+    except Exception:
+        return
+    try:
+        _journaliser_refus(neuve, sql, message, params, entite, detail)
+    finally:
+        try:
+            neuve.close()
         except Exception:
             pass
 
@@ -182,9 +286,14 @@ def _refus(message, sql, numero=None):
     return e
 
 
-def _executer(base: fn.FabricSqlConnection, sql: str, params: tuple, entite=_DEDUITE) -> dict:
-    """Execute une procedure qui rend (…, message) et leve ses refus. Rend la derniere ligne."""
-    conn = base.connect()
+def _executer(base: fn.FabricSqlConnection, sql: str, params: tuple, entite=_DEDUITE, refus_rendu=None) -> dict:
+    """Execute une procedure qui rend (…, message) et leve ses refus. Rend la derniere ligne.
+
+    UN REFUS RENDU ET NON LEVE (refus_rendu, nom d'une colonne BIT de la derniere ligne) : la colonne a 0 dit que la
+    procedure a ecrit ce qui devait tenir (planification d'ouvrir_arrete) et journalise elle-meme
+    son refus. La fonction committe d'abord, pose le message en REFUS sans le rejournaliser, puis leve le refus. Une
+    ligne sans la colonne (procedure d'avant le correctif) se lit comme une reussite, comme avant."""
+    conn = _connecter(base)
     try:
         cur = conn.cursor()
         cur.execute(sql, params)
@@ -196,24 +305,32 @@ def _executer(base: fn.FabricSqlConnection, sql: str, params: tuple, entite=_DED
                     derniere = dict(zip(colonnes, ligne))
             if not cur.nextset():
                 break
-        # LE SUCCES S'AFFICHE AUSSI : sans cela le reviseur ne voit rien quand son geste marche, et
-        # la zone de message garde le message du geste precedent.
-        _poser_message_dans(cur, sql, (derniere or {}).get("message"), params, "SUCCES", entite)
+        derniere = derniere or {}
+        refuse = refus_rendu is not None and derniere.get(refus_rendu) is not None \
+            and not bool(derniere.get(refus_rendu))
+        # LE SUCCES S'AFFICHE AUSSI : sans cela le reviseur ne voit rien quand son action reussit, et
+        # la zone de message garde le message de l'action precedente.
+        _poser_message_dans(cur, sql, derniere.get("message"), params, "REFUS" if refuse else "SUCCES", entite)
         conn.commit()
-        return derniere or {}
     except Exception as e:                      # pyodbc.Error, sans dependre de son import
-        conn.rollback()
-        message = _message_sql(e)
-        _journaliser_refus(conn, sql, message, params, entite)
+        _annuler(conn)
+        message = _refus_de_la_base(e)
+        if message is None:                     # erreur non prevue : TEXTE_ERREUR, le detail au journal seul
+            _journaliser_erreur(base, conn, sql, TEXTE_ERREUR, params, entite, detail=_detail(e, sql))
+            raise _refus(TEXTE_ERREUR, sql) from e
+        _journaliser_erreur(base, conn, sql, message, params, entite)
         raise _refus(message, sql, _numero_sql(e))
     finally:
         conn.close()
+    if refuse:
+        raise _refus(derniere.get("message") or "Refusé par la base.", sql, derniere.get("refus"))
+    return derniere
 
 
 def _executer_ecran(base: fn.FabricSqlConnection, sql: str, params: tuple, relire: str,
                     relire_params: tuple, succes: str) -> str:
     """Execute une pr_ecran_* qui ecrit son refus dans message_ecran, puis relit cette colonne."""
-    conn = base.connect()
+    conn = _connecter(base)
     try:
         cur = conn.cursor()
         cur.execute(sql, params)
@@ -224,9 +341,12 @@ def _executer_ecran(base: fn.FabricSqlConnection, sql: str, params: tuple, relir
         cur.execute(relire, relire_params)
         ligne = cur.fetchone()
     except Exception as e:
-        conn.rollback()
-        message = _message_sql(e)
-        _journaliser_refus(conn, sql, message, params)
+        _annuler(conn)
+        message = _refus_de_la_base(e)
+        if message is None:                     # erreur non prevue : TEXTE_ERREUR, le detail au journal seul
+            _journaliser_erreur(base, conn, sql, TEXTE_ERREUR, params, detail=_detail(e, sql))
+            raise fn.UserThrownError(TEXTE_ERREUR, {"sql": sql.split("(")[0].strip()}) from e
+        _journaliser_erreur(base, conn, sql, message, params)
         raise fn.UserThrownError(message, {"sql": sql.split("(")[0].strip()})
     finally:
         conn.close()
@@ -240,6 +360,24 @@ def _vide(s) -> str:
     return None if s is None or str(s).strip() == "" else str(s).strip()
 
 
+# UNE SAISIE LIBRE RECOPIEE DANS UN MESSAGE EST BORNEE : la zone de message de l'ecran 1 tient 2 lignes coupees a
+# 788 px par [Message ecran ligne 1] et [Message ecran ligne 2] ; 40 caracteres de la saisie au plus, le 40e
+# remplace par « … » au-dela. Plus long cas mesure : 40 « W » tiennent dans chaque message qui recopie une saisie.
+_SAISIE_AFFICHEE = 40
+
+
+def _extrait(s, n=_SAISIE_AFFICHEE) -> str:
+    s = str(s)
+    return s if len(s) <= n else s[:n - 1] + "…"
+
+
+def _extrait_fin(s, n=_SAISIE_AFFICHEE) -> str:
+    """Un nom de fichier saisi, coupe par le debut : un sous-dossier facultatif le precede, et le nom du fichier se
+    garde. Meme largeur au plus long cas que _extrait."""
+    s = str(s)
+    return s if len(s) <= n else "…" + s[-(n - 1):]
+
+
 def _texte(e) -> str:
     """Le message d'un refus, sans les proprietes que la plateforme lui attache."""
     v = getattr(e, "message", None)
@@ -248,8 +386,8 @@ def _texte(e) -> str:
     return str(e) or e.__class__.__name__
 
 
-_CLASSEMENT_ILLISIBLE = ("Classement « %s » non reconnu. Le classement de la filiale au sens de l'article R. 214-83 "
-                         "du code monétaire et financier se saisit oui si elle est contrôlée, non sinon.")
+_CLASSEMENT_ILLISIBLE = ("Classement « %s » non reconnu : saisissez oui si la filiale est contrôlée au sens de "
+                         "l'article R. 214-83 du code monétaire et financier, non sinon.")
 
 
 def _classement(valeur):
@@ -269,9 +407,56 @@ def _classement(valeur):
     raise ValueError(s)
 
 
+# LES DROITS DE VOTE SAISIS : depuis le 18/11/2026, ajouter_filiale et modifier_filiale les recoivent en texte et
+# les lisent ici. Le rapport les portait en nombre (dataType number) : « 0,80 » tape a la virgule francaise sur
+# « Ajouter cette filiale » n'atteignait pas la fonction (0 invocation, aucun message, rien en base, sous 2 comptes
+# differents) ; « 0.80 » s'ajoutait a 0.8.
+_DROITS_ILLISIBLES = "Droits de vote illisibles : « %s ». Ils s'écrivent 80 ou 0,80 pour 80 %%."
+_POURCENT_FINAL = re.compile(r"\s*%$")
+_NOMBRE_SAISI = re.compile(r"[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)")
+
+
+def _droits_de_vote(valeur):
+    """Les droits de vote d'une saisie, en fraction arrondie a 6 decimales, ou None quand le champ est vide : la base
+    refuse alors en francais (50213). Le texte se lit blancs et espaces insecables otes aux 2 bouts seulement, puis
+    un « % » final (blancs avant lui compris), virgule ou point decimal : « 0,80 », « 0.80 », «  0,80 », « 80 % »
+    rendent 0.8, « 1 » rend 1.0. Un blanc entre 2 chiffres (« 0 8 », « 1 234,5 ») rend le texte illisible, comme le
+    lisait modifier_filiale avant le 18/11/2026, au lieu d'un autre nombre lu en silence. Sans « % », l'echelle est
+    celle d'avant le 18/11/2026 : au-dessus de 1, la valeur se lit en pourcentage et se divise par 100 (80 ou 0,80
+    pour 80 %). Avec un « % » final, la valeur se lit toujours en pourcentage (depuis le 18/11/2026) :
+    « 0,5 % » rend 0.005 et « 1 % » 0.01, au lieu de 50 % et 100 %. Un
+    nombre deja converti (int ou float) est admis, un booleen non. Tout autre texte, ou une valeur non finie, leve
+    ValueError, refuse par l'appelant en francais (_DROITS_ILLISIBLES) avant tout appel de procedure."""
+    if valeur is None:
+        return None
+    if isinstance(valeur, bool):
+        raise ValueError(valeur)
+    if isinstance(valeur, (int, float)):
+        dv = float(valeur)
+    else:
+        if _vide(valeur) is None:
+            return None
+        brut = str(valeur).strip()
+        pourcent = _POURCENT_FINAL.search(brut) is not None
+        t = _POURCENT_FINAL.sub("", brut).replace(",", ".")
+        if not _NOMBRE_SAISI.fullmatch(t):
+            raise ValueError(valeur)
+        dv = float(t)
+        if pourcent:
+            dv = dv / 100.0
+            if not math.isfinite(dv):
+                raise ValueError(valeur)
+            return round(dv, 6)
+    if not math.isfinite(dv):
+        raise ValueError(valeur)
+    if dv > 1:
+        dv = dv / 100.0
+    return round(dv, 6)
+
+
 def _refuser(base: fn.FabricSqlConnection, sql: str, message: str, params: tuple, entite=_DEDUITE):
     """Un refus constate avant l'appel de la procedure : journalise et affiche comme un refus de la base."""
-    conn = base.connect()
+    conn = _connecter(base)
     try:
         _journaliser_refus(conn, sql, message, params, entite)
     finally:
@@ -295,7 +480,7 @@ def _entite_de_cote(base: fn.FabricSqlConnection, cote):
     """Le client d'une feuille, lu par sa cote : un message s'affiche sous le client, pas sous la cote."""
     if not _vide(cote):
         return None
-    conn = base.connect()
+    conn = _connecter(base)
     try:
         cur = conn.cursor()
         cur.execute("SELECT TOP 1 entite FROM dbo.feuille_travail WHERE cote = ?", (_vide(cote),))
@@ -325,7 +510,7 @@ def creer_client(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
                  cloture: str = "31/12", periodiciteVl: str = "", siteUrl: str = "") -> str:
     """Bouton « Créer le dossier » : les 15 champs de l'ecran, plus le lien du site SharePoint cree par le
     reviseur via Teams, vers pr_creer_client : le client, son questionnaire d'acceptation et son site dans le
-    meme geste. Le message s'adresse a tous les clients de la personne : le client n'existe pas encore."""
+    meme action. Le message s'adresse a tous les clients de la personne : le client n'existe pas encore."""
     sql = ("EXEC dbo.pr_creer_client @code=?, @denomination=?, @siren=?, @forme_vehicule=?, @forme_sociale=?, "
            "@adresse_1=?, @adresse_2=?, @code_postal=?, @ville=?, @pays=?, @dirigeant_nom=?, @dirigeant_qualite=?, "
            "@contact_nom=?, @contact_courriel=?, @contact_telephone=?, @cloture=?, @periodicite_vl=?, @site_url=?, @par=?")
@@ -357,7 +542,7 @@ def modifier_client(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContex
                     opciProfessionnel: str = "") -> str:
     """Bouton « Enregistrer les modifications » de la fiche du dossier : pr_modifier_client.
     Le code ne change pas ; un champ vide reste inchange ; « - » efface un champ facultatif ; un lien SharePoint
-    fourni remplace le precedent. opciProfessionnel (lot 12 de l'ecran 5, objet n° 202) : « oui », « non » ou « - »,
+    fourni remplace le precedent. opciProfessionnel : « oui », « non » ou « - »,
     transmis tel quel, la base posant 1, 0 ou NULL et refusant toute autre valeur."""
     sql = ("EXEC dbo.pr_modifier_client @code=?, @denomination=?, @siren=?, @forme_vehicule=?, @forme_sociale=?, "
            "@adresse_1=?, @adresse_2=?, @code_postal=?, @ville=?, @pays=?, @dirigeant_nom=?, @dirigeant_qualite=?, "
@@ -395,10 +580,10 @@ def designer_role(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
 def ajouter_filiale(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
-                    client: str = "", code: str = "", droitsDeVote: float = 0.0, denomination: str = "",
+                    client: str = "", code: str = "", droitsDeVote: str = "", denomination: str = "",
                     formeSociale: str = "SCI", controlee: str = "") -> str:
-    """Bouton « Ajouter cette filiale » : 80 ou 0,80 sont admis pour 80 %. Le classement au sens de l'article
-    R. 214-83 du CMF est obligatoire, oui ou non.
+    """Bouton « Ajouter cette filiale » : 80 ou 0,80 sont admis pour 80 %, lus par _droits_de_vote (texte depuis le
+    18/11/2026). Le classement au sens de l'article R. 214-83 du CMF est obligatoire, oui ou non.
 
     TOUS LES PARAMETRES SONT FACULTATIFS A LA FONCTION, LES REGLES RESTENT A LA BASE. Un champ vide part a NULL
     et pr_ajouter_filiale le refuse en francais : code (50210), droits de vote (50213), classement (50220). Un
@@ -412,13 +597,11 @@ def ajouter_filiale(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContex
     try:
         classement = _classement(controlee)
     except ValueError as e:
-        _refuser(base, sql, _CLASSEMENT_ILLISIBLE % e, (client, code), entite=client)
-    dv = None
-    if droitsDeVote:
-        dv = float(droitsDeVote)
-        if dv > 1:
-            dv = dv / 100.0
-        dv = round(dv, 6)
+        _refuser(base, sql, _CLASSEMENT_ILLISIBLE % _extrait(e), (client, code), entite=client)
+    try:
+        dv = _droits_de_vote(droitsDeVote)
+    except ValueError:
+        _refuser(base, sql, _DROITS_ILLISIBLES % _extrait(droitsDeVote), (client, code), entite=client)
     r = _executer(base, sql,
                   (client, code, _vide(denomination), formeSociale or "SCI", dv, par, classement), entite=client)
     return r.get("message", "Filiale ajoutée.")
@@ -441,17 +624,11 @@ def modifier_filiale(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
     try:
         classement = _classement(controlee)
     except ValueError as e:
-        _refuser(base, sql, _CLASSEMENT_ILLISIBLE % e, (client, code), entite=client)
-    dv = None
-    if _vide(droitsDeVote) is not None:
-        try:
-            dv = float(str(droitsDeVote).replace(",", ".").replace("%", "").strip())
-        except ValueError:
-            _refuser(base, sql, "Droits de vote illisibles : « %s ». Ils s'écrivent 80 ou 0,80 pour 80 %%."
-                     % droitsDeVote, (client, code), entite=client)
-        if dv > 1:
-            dv = dv / 100.0
-        dv = round(dv, 6)
+        _refuser(base, sql, _CLASSEMENT_ILLISIBLE % _extrait(e), (client, code), entite=client)
+    try:
+        dv = _droits_de_vote(droitsDeVote)
+    except ValueError:
+        _refuser(base, sql, _DROITS_ILLISIBLES % _extrait(droitsDeVote), (client, code), entite=client)
     r = _executer(base, sql,
                   (client, code, _vide(denomination), _vide(formeSociale), dv, par, classement), entite=client)
     return r.get("message", "Filiale mise à jour.")
@@ -493,8 +670,8 @@ def repondre_question(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCont
                       commentaire: str = "") -> str:
     """Une reponse, a l'ecran : OUI, NON, NA avec motif, ou la valeur d'un choix.
 
-    UNE REPONSE VIDE EST REFUSEE ICI : pr_repondre_question la lit comme l'effacement de la reponse, geste que ce
-    bouton n'a jamais permis."""
+    UNE REPONSE VIDE EST REFUSEE ICI : pr_repondre_question la lit comme l'effacement de la reponse, action que ce
+    bouton n'a jamais permise."""
     sql = ("EXEC dbo.pr_repondre_question @cote=?, @reference=?, @reponse=?, @motif_non_applicable=?, @commentaire=?, "
            "@par=?")
     par = _qui(ctx)
@@ -516,7 +693,7 @@ def importer_reponses(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCont
     """Bouton « Réimporter » : la liste des reponses lues du classeur, tout ou rien."""
     import json
     r = _executer(base, "EXEC dbo.pr_importer_reponses @cote=?, @reponses=?, @par=?",
-                  (cote, json.dumps(reponses, ensure_ascii=False), _qui(ctx)))
+                  (cote, json.dumps(reponses, ensure_ascii=False), _qui(ctx)), entite=_entite_de_cote(base, cote))
     return r.get("message", "Réponses importées.")
 
 
@@ -526,7 +703,7 @@ def _code_nature(base: fn.FabricSqlConnection, nature) -> str:
     """Le code de la nature d'une piece, lu par son code ou par son libelle dans ref_nature_piece ; la valeur recue
     telle quelle si elle n'y est pas, pour que la base la refuse en francais."""
     v = _vide(nature)
-    conn = base.connect()
+    conn = _connecter(base)
     try:
         cur = conn.cursor()
         cur.execute("SELECT TOP 1 code FROM dbo.ref_nature_piece WHERE code = ? OR libelle = ? "
@@ -537,15 +714,22 @@ def _code_nature(base: fn.FabricSqlConnection, nature) -> str:
     return ligne[0] if ligne and ligne[0] else v
 
 
-def _question_du_client(base: fn.FabricSqlConnection, entite, question) -> bool:
-    """Vrai si la reference est une question d'un questionnaire du client (v_questions_acceptation). pr_deposer_piece
-    ne controle que l'existence de la reference dans ref_question : une piece d'un client se rattachait a une question
-    du questionnaire d'un autre client."""
-    conn = base.connect()
+def _question_du_client(base: fn.FabricSqlConnection, entite, question, arrete=None) -> bool:
+    """Vrai si la reference est une question d'un questionnaire du client (v_questions_acceptation) ou de son
+    programme de revision (v_questions_programme), a l'arrete donne quand il l'est. pr_deposer_piece ne controle
+    que l'existence de la reference dans ref_question : une piece d'un client se rattachait a une question du
+    questionnaire d'un autre client.
+
+    Les questions du programme de revision sont admises depuis le 19/11/2026 : la page
+    « Pièce justificative » propose les questions du programme (v_questions_programme) ; elles etaient refusees ici,
+    seules celles des questionnaires d'acceptation et de maintien passant."""
+    conn = _connecter(base)
     try:
         cur = conn.cursor()
-        cur.execute("SELECT TOP 1 1 FROM dbo.v_questions_acceptation WHERE entite = ? AND reference = ?",
-                    (entite, question))
+        cur.execute("SELECT TOP 1 1 FROM dbo.v_questions_acceptation WHERE entite = ? AND reference = ? "
+                    "UNION ALL SELECT TOP 1 1 FROM dbo.v_questions_programme WHERE entite = ? AND reference = ?"
+                    + (" AND arrete = ?" if arrete else ""),
+                    (entite, question, entite, question) + ((arrete,) if arrete else ()))
         return cur.fetchone() is not None
     finally:
         conn.close()
@@ -575,8 +759,8 @@ def inscrire_piece(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClien
     fonction le traduit par ref_nature_piece (code ou libelle admis) ; une nature inconnue part telle quelle et la
     base la refuse en francais (50272).
 
-    LA QUESTION, quand elle est donnee, est une question d'un questionnaire du client ; sinon le geste est refuse
-    avant toute lecture du fichier."""
+    LA QUESTION, quand elle est donnee, est une question d'un questionnaire du client ou de son programme de revision
+    a l'arrete donne ; sinon l'action est refusee avant toute lecture du fichier."""
     sql = ("EXEC dbo.pr_deposer_piece @entite=?, @nom_fichier=?, @chemin_coffre=?, @empreinte=?, @nature=?, "
            "@arrete=?, @question=?, @par=?, @web_url=?")
     par = _qui(ctx)
@@ -586,17 +770,17 @@ def inscrire_piece(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClien
     if manquants:
         _refuser(base, sql, "Champs obligatoires à remplir : %s." % ", ".join(manquants), (entite,), entite=entite)
     q = _vide(question)
-    if q is not None and not _question_du_client(base, entite, q):
-        _refuser(base, sql, f"Pour {entite}, la question {q} n’appartient à aucun questionnaire.", (entite,),
-                 entite=entite)
+    if q is not None and not _question_du_client(base, entite, q, _vide(arrete)):
+        _refuser(base, sql, f"Pour {entite}, la question {q} n’appartient ni à un questionnaire ni au programme de "
+                 f"révision de l’arrêté.", (entite,), entite=entite)
     nature = _code_nature(base, nature)
     d = _executer(base, "EXEC dbo.pr_resoudre_fichier_depot @entite=?, @fichier=?", (entite, fichier), entite=entite)
     try:
         octets = coffre.connectToFiles().get_file_client(d["chemin_lecture"]).download_file().readall()
     except Exception:
         _refuser(base, sql,
-                 f"Pour {d.get('vehicule') or entite}, le fichier « {fichier} » n’est pas dans la bibliothèque Dépôt "
-                 f"du client. Vérifiez son nom et son sous-dossier.", (entite,), entite=entite)
+                 f"Fichier « {_extrait_fin(fichier)} » absent de la bibliothèque « Dépôt du client » du site "
+                 f"{d.get('vehicule') or entite} : vérifiez son nom et son sous-dossier.", (entite,), entite=entite)
     empreinte = hashlib.sha256(octets).hexdigest().upper()
     r = _executer(base, sql,
                   (entite, d["nom_fichier"], d["chemin_coffre"], empreinte, _vide(nature), _vide(arrete),
@@ -650,7 +834,7 @@ def reclamer_document(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCont
 def _superviseur(base: fn.FabricSqlConnection, ctx, sql: str, superviseur: str, entite) -> None:
     """Le parametre « superviseur » est lie a la mesure Superviseur connecte : vide pour un preparateur, et le
     bouton est alors grise par sa mesure de fond. La valeur fournie doit etre l'utilisateur authentifie lui-meme,
-    sinon le geste est refuse, en francais, dans la zone de message ; la procedure refuse a son tour le
+    sinon l'action est refusee, en francais, dans la zone de message ; la procedure refuse ensuite le
     proposant et le role insuffisant."""
     qui = _qui(ctx)
     if _vide(superviseur) is None or superviseur.strip().lower() != qui.strip().lower():
@@ -658,9 +842,9 @@ def _superviseur(base: fn.FabricSqlConnection, ctx, sql: str, superviseur: str, 
                  entite=entite)
 
 
-# LA DECISION VISEE, DITE ACCORDEE ET ACCENTUEE (R9, D6, textes n° 8, 9, 13 et 14, validation du 27/10/2026) : le
-# code de la decision part tel quel a la procedure ; la phrase de reussite dit « mission acceptée », « refusée »,
-# « maintenue » ou « rompue ». Un code hors de ces listes garde son ecriture en minuscules, comme avant R9.
+# LA DECISION VISEE, DITE ACCORDEE ET ACCENTUEE : le code de la decision part tel quel a la procedure ; la phrase de
+# reussite dit « mission acceptée », « refusée », « maintenue » ou « rompue ». Un code hors de ces listes s'ecrit en
+# minuscules.
 _MISSION_ACCEPTATION = {"ACCEPTEE": "acceptée", "REFUSEE": "refusée"}
 _MISSION_MAINTIEN = {"MAINTENU": "maintenue", "ROMPU": "rompue"}
 
@@ -715,9 +899,11 @@ def ouvrir_arrete(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
     premier. Dates au format jj/mm/aaaa ou aaaa-mm-jj.
 
     DES DATES ABSENTES SONT REFUSEES ICI : la procedure ne refuse pas un exercice sans bornes. Une periodicite
-    absente part vide, et la procedure la refuse (50262). Quand le premier arrete ne s'ouvre pas, la procedure
-    leve 50264 et annule tout, planification comprise : le refus s'affiche en rouge, l'utilisateur leve
-    l'obstacle et reclique."""
+    absente part vide, et la procedure la refuse (50262). Quand le premier arrete ne s'ouvre pas sur une porte
+    (50025, 50026, 50027), la planification TIENT : la procedure rend ouvert = 0, ecrit le refus
+    dans message_ecran de l'arrete et dans journal_refus ; la fonction committe, affiche le refus en rouge, et
+    l'utilisateur leve l'obstacle a l'ecran 3, l'arrete etant planifie, puis reclique. Toute autre erreur
+    d'ouverture leve encore 50264 et annule tout."""
     sql = "EXEC dbo.pr_ecran_ouvrir_arrete @entite=?, @exercice_debut=?, @exercice_fin=?, @periodicite_vl=?, @par=?"
     par = _qui(ctx)
     entite = _choix(base, sql, entite, _CLIENT_A_CHOISIR)
@@ -732,16 +918,16 @@ def ouvrir_arrete(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
                 return datetime.datetime.strptime(s, f).date()
             except ValueError:
                 pass
-        _refuser(base, sql, f"Date illisible : « {s} ». Attendu jj/mm/aaaa.", (entite,), entite=entite)
+        _refuser(base, sql, f"Date illisible : « {_extrait(s)} ». Attendu jj/mm/aaaa.", (entite,), entite=entite)
     r = _executer(base, sql, (entite, d(exerciceDebut), d(exerciceFin), (periodiciteVl or "").strip().upper(), par),
-                  entite=entite)
+                  entite=entite, refus_rendu="ouvert")
     return r.get("message", "Arrêté planifié.")
 
 
 # ----------------------------------------------------------------------------- rouvrir un arrete clos
 
-# LA REOUVERTURE SE FAIT EN 2 GESTES ET PAR 2 PERSONNES AUTHENTIFIEES : un membre de l'equipe demande, avec son motif ;
-# le chef de mission accorde, ou ecarte avec le sien. Une fonction par geste : un parametre de bouton se lie a un segment
+# LA REOUVERTURE SE FAIT EN 2 ACTIONS ET PAR 2 PERSONNES AUTHENTIFIEES : un membre de l'equipe demande, avec son motif ;
+# le chef de mission accorde, ou ecarte avec le sien. Une fonction par action : un parametre de bouton se lie a un segment
 # ou a une mesure, jamais a un litteral. Celui qui demande et celui qui decide sont l'utilisateur connecte (_qui), jamais
 # un champ. L'arrete arrive par le segment « Arrêté clos », colonne [Arrêté] de v_ecran_arretes, en jj/mm/aaaa ; la base
 # l'attend en aaaa-mm-jj. Chaque refus de la base remonte tel quel, dans l'ordre ou elle les juge : le droit, puis
@@ -764,7 +950,7 @@ def _arrete_iso(valeur):
 
 
 def _arrete_choisi(base: fn.FabricSqlConnection, sql: str, valeur, prefixe: str, entite):
-    """L'arrete choisi en aaaa-mm-jj, ou le refus en francais, sous le prefixe du geste."""
+    """L'arrete choisi en aaaa-mm-jj, ou le refus en francais, sous le prefixe de l'action."""
     a = _arrete_iso(valeur)
     if a is None:
         v = _vide(valeur)
@@ -896,7 +1082,7 @@ def _lire_classeur(octets: bytes):
 
 def _cote_maintien(base: fn.FabricSqlConnection, client: str) -> str:
     """La cote de maintien porte l'annee : on prend la feuille MAINTIEN la plus recente du client."""
-    conn = base.connect()
+    conn = _connecter(base)
     try:
         cur = conn.cursor()
         cur.execute("SELECT TOP 1 cote FROM dbo.feuille_travail WHERE entite=? AND phase='MAINTIEN' ORDER BY arrete DESC",
@@ -912,7 +1098,7 @@ def _cote_maintien(base: fn.FabricSqlConnection, client: str) -> str:
 
 def _raccourci_du_cabinet(base: fn.FabricSqlConnection):
     """Le nom du raccourci du coffre qui lit le site du cabinet, tel que la base le declare, ou None."""
-    conn = base.connect()
+    conn = _connecter(base)
     try:
         cur = conn.cursor()
         cur.execute("SELECT valeur FROM dbo.ref_parametre WHERE code = 'RACCOURCI_SITE_CABINET'")
@@ -949,8 +1135,14 @@ _MOTIFS_COURTS = {
     50213: "droits de vote hors de 0 à 100 %",
     50214: "déjà au périmètre",
     50215: "dénomination absente pour une filiale nouvelle",
-    50220: "classement R. 214-83 absent (oui ou non)",
+    50220: "classement R. 214-83 absent (oui ou non)",
+    51300: "action réservée à l'équipe du dossier",
 }
+_COURT_CLASSEMENT = "classement R. 214-83 non reconnu (oui ou non)"
+_COURT_DROITS = "droits de vote illisibles"
+# UN MOTIF SANS TEXTE COURT (texte de la base d'un numero absent de _MOTIFS_COURTS) se coupe a 27 caracteres dans la
+# zone : 27 « W » tiennent a chaque forme du bilan ; les motifs courts tiennent entiers.
+_MOTIF_INCONNU_AFFICHE = 27
 
 
 def _pluriel(n, singulier, pluriel):
@@ -960,6 +1152,29 @@ def _pluriel(n, singulier, pluriel):
 def _liste(codes):
     """« A », « A et B », « A, B et C »."""
     return codes[0] if len(codes) == 1 else "%s et %s" % (", ".join(codes[:-1]), codes[-1])
+
+
+def _bilan_ecran(faites, refus, client):
+    """Le bilan d'un import des filiales dans la zone de message : 2 lignes de 788 px a son plus long cas (9 999
+    lignes, codes de 20 « W », motif court entier ou motif de la base coupe a 27 caracteres). Les filiales ajoutees, les lignes refusees, la 1re refusee
+    et celles du meme motif ; le bilan entier reste la valeur rendue par la fonction."""
+    t = "%s à %s" % (_pluriel(len(faites), "filiale ajoutée", "filiales ajoutées"), client)
+    if not refus:
+        return t + "."
+    motif = refus[0][1]
+    codes = [c for c, m in refus if m == motif]
+    tete = _extrait(codes[0], 20)
+    if len(codes) > 1:
+        tete += " et %s" % _pluriel(len(codes) - 1, "autre", "autres")
+    if motif not in set(_MOTIFS_COURTS.values()) | {_COURT_CLASSEMENT, _COURT_DROITS}:
+        motif = _extrait(motif, _MOTIF_INCONNU_AFFICHE)
+    if len(refus) == 1:
+        return t + " ; 1 ligne refusée, %s, au motif « %s »." % (tete, motif)
+    if len(codes) == len(refus):
+        return t + " ; %s au motif « %s » : %s." % (_pluriel(len(refus), "ligne refusée", "lignes refusées"),
+                                                  motif, tete)
+    return t + " ; %s, dont %s au motif « %s »." % (_pluriel(len(refus), "ligne refusée", "lignes refusées"),
+                                                   tete, motif)
 
 
 def _refus_regroupes(refus):
@@ -1007,17 +1222,17 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
             "%s/%s/%s" % (raccourci, dossier, fichier)).download_file().readall()
     except Exception:
         _refuser(base, sql_import,
-                 "Le classeur « %s » n'est pas dans le dossier « %s » du site du cabinet : déposez-le, puis "
-                 "saisissez son nom." % (fichier, dossier), (client,), entite=client)
+                 "Classeur « %s » absent de « %s » sur le site du cabinet : déposez-le, puis saisissez son nom."
+                 % (_extrait_fin(fichier), dossier), (client,), entite=client)
     try:
         feuille, lignes = _lire_classeur(octets)
     except Exception:
-        _refuser(base, sql_import, "Le fichier « %s » n'est pas un classeur Excel lisible." % fichier,
+        _refuser(base, sql_import, "Le fichier « %s » n'est pas un classeur Excel lisible." % _extrait_fin(fichier),
                  (client,), entite=client)
     if feuille == "Client":
         if len(lignes) != 1:
-            _refuser(base, sql_import, "Le classeur Client porte %d ligne(s) ; il en porte une et une seule."
-                     % len(lignes), (client,), entite=client)
+            _refuser(base, sql_import, "Le classeur Client porte %s ; il doit en porter une et une seule."
+                     % _pluriel(len(lignes), "ligne", "lignes"), (client,), entite=client)
         d = lignes[0]
         r = _executer(base,
                       "EXEC dbo.pr_creer_client " + ", ".join("@%s=?" % k for k in _ORDRE_CLIENT) + ", @par=?",
@@ -1039,17 +1254,20 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
             try:
                 classement = _classement(d.get("controlee"))
             except ValueError as e:
-                motif = _CLASSEMENT_ILLISIBLE % e
-                court = "classement « %s » non reconnu (oui ou non)" % e
+                motif = _CLASSEMENT_ILLISIBLE % _extrait(e)
+                court = _COURT_CLASSEMENT
             if motif is None:
+                # 18/11/2026 : meme lecture que les boutons (_droits_de_vote), un « % » final toujours en pourcentage
+                # (« 0,5 % » rend 0.005 et non 0.5) ; cellule vide ou illisible refusee comme avant
                 try:
-                    dv = float(str(d.get("droits_de_vote")).replace(",", ".").replace("%", "").strip())
-                    dv = dv / 100.0 if dv > 1 else dv
+                    dv = _droits_de_vote(d.get("droits_de_vote"))
+                    if dv is None:
+                        raise ValueError(d.get("droits_de_vote"))
                 except (TypeError, ValueError):
-                    motif = court = "droits de vote illisibles"
+                    motif = court = _COURT_DROITS
             if motif is not None:
                 # UN REFUS DE LA FONCTION SE JOURNALISE COMME UN REFUS DE LA BASE, avant tout appel
-                conn = base.connect()
+                conn = _connecter(base)
                 try:
                     _journaliser_refus(conn, sql, motif, (client, code), entite=client)
                 finally:
@@ -1061,6 +1279,10 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                           entite=client)
                 faites.append(code)
             except fn.UserThrownError as e:
+                # UNE BASE QUI NE REPOND PLUS ARRETE L'IMPORT : sans cela, chaque
+                # ligne restante attendait le delai de connexion et se comptait « refusee » sans avoir ete jugee
+                if getattr(e, "injoignable", False):
+                    raise
                 refus.append((code, _MOTIFS_COURTS.get(getattr(e, "numero", None)) or _texte(e)))
         texte = "%s à %s" % (_pluriel(len(faites), "filiale ajoutée", "filiales ajoutées"), client)
         if refus:
@@ -1069,10 +1291,11 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
         else:
             texte += "."
         # LE BILAN REMPLACE LE MESSAGE DE LA DERNIERE LIGNE : sans lui, la zone de message montrait le seul
-        # geste de la derniere ligne traitee.
-        conn = base.connect()
+        # resultat de la derniere ligne traitee.
+        conn = _connecter(base)
         try:
-            _poser_message(conn, sql, texte, (client,), "REFUS" if refus else "SUCCES", entite=client)
+            _poser_message(conn, sql, _bilan_ecran(faites, refus, client), (client,), "REFUS" if refus else "SUCCES",
+                           entite=client)
         finally:
             conn.close()
         return texte
@@ -1080,8 +1303,10 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                  "motif": d.get("motif"), "commentaire": d.get("commentaire")} for d in lignes if d.get("reference")]
     maintien = any(str(x["reference"]).startswith("MTN") or str(x["reference"]).startswith("MAINTIEN") for x in reponses)
     cote = _cote_maintien(base, client) if maintien else "ACC-" + client
+    # LE MESSAGE, reussite comme refus, se pose sous le client ;
+    # deduit des parametres, il partait sous la cote ACC-<client> et la zone de l'ecran ne le montrait pas.
     r = _executer(base, "EXEC dbo.pr_importer_reponses @cote=?, @reponses=?, @par=?",
-                  (cote, json.dumps(reponses, ensure_ascii=False, default=str), par))
+                  (cote, json.dumps(reponses, ensure_ascii=False, default=str), par), entite=client)
     return r.get("message", "Réponses importées.")
 
 
@@ -1103,7 +1328,7 @@ def exporter_questionnaire(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctio
     par = _qui(ctx)
     client = _entite_de_cote(base, cote)
     cote = _choix(base, sql, cote, "Aucun questionnaire d'acceptation n'est ouvert pour ce client.", client)
-    conn = base.connect()
+    conn = _connecter(base)
     try:
         cur = conn.cursor()
         cur.execute("SELECT TOP 1 entite, arrete FROM dbo.feuille_travail WHERE cote = ?", (cote,))
@@ -1114,7 +1339,7 @@ def exporter_questionnaire(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctio
         _refuser(base, sql, "Le questionnaire %s n'est adossé à aucun arrêté : il ne se dépose pas." % cote, (client,),
                  entite=client)
     client, arrete = feuille[0], str(feuille[1])
-    conn = base.connect()
+    conn = _connecter(base)
     try:
         cur = conn.cursor()
         cur.execute("SELECT q.section, q.reference, q.enonce, q.type_reponse, q.obligatoire, "
@@ -1148,7 +1373,7 @@ def exporter_questionnaire(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctio
                   entite=client)
     texte = ("Questionnaire %s exporté, %d questions, dans « %s/%s/%s » du site du cabinet. Pour le réimporter, "
              "saisissez %s/%s." % (cote, len(lignes), _DOSSIERS, client, arrete, arrete, fichier))
-    conn = base.connect()
+    conn = _connecter(base)
     try:
         _poser_message(conn, sql, texte, (client,), "SUCCES", entite=client)
     finally:

@@ -3,7 +3,7 @@
   "name": "e3cRetraits",
   "position": {
     "x": 519,
-    "y": 1048,
+    "y": 972,
     "z": 70000,
     "height": 190,
     "width": 1033,
@@ -452,7 +452,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

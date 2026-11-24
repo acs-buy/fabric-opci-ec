@@ -24,7 +24,7 @@ CROSS APPLY (VALUES
     ( 7, 'CAUSE',     N'Résultat financier',                     resultat_financier),
     ( 8, 'CAUSE',     N'Plus-values de cession',                 plus_values_cession),
     ( 9, 'CAUSE',     N'Gain sur valorisations',                 gain_valorisations),
-    -- 06/09/2026, decision du candidat : produit chez la mere et charge chez les
+    -- Decision du 06/09/2026 : produit chez la mere et charge chez les
     -- filiales sur une meme ligne, zero quand la symetrie tient ; les ventes internes
     -- ne sont plus une cause.
     (10, 'CAUSE',     N'Intérêts internes éliminés (produit mère, charge filiales)', interets_internes_elimines),

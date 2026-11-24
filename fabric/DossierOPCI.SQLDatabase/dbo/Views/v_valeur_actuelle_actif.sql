@@ -17,7 +17,7 @@ WITH candidate AS (
                          AND r.porte_balance = 1
     -- LA VALEUR RETENUE N'ENTRE DANS LA VALORISATION QUE VISEE. Releve
     -- le 04/09/2026 : la vue lisait toute valeur retenue, quel que soit
-    -- son etat, et le semis du script 83 porte precisement une valeur
+    -- son etat, et le semis des visas de demonstration porte precisement une valeur
     -- RENVOYEE par le chef de mission sur IMM-201. La difference
     -- d'estimation des immeubles de l'OPCI en a ete faussee de
     -- 230 000,00, la valeur renvoyee se substituant a l'expertise. Le

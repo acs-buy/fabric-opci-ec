@@ -1,7 +1,7 @@
--- ecran 5, lot 1, script 324 (61_DEPLOIEMENT/generer_e5_324_questions.py) : genere, ne pas modifier a la main.
+-- ecran 5
 -- Objet n° 29 : le tableau croise « Questions de reference », une ligne par cycle et par phase, sans relation a la table
 -- du segment ; genre en libelle et sa cle de tri genre_ordre ; ordre : celui de v_ecran_cycle_ou_phase (ordre de passage
--- des cycles, D19 de l'existant) ; repondues : questions dont au moins une feuille porte une reponse ; sans_niveau :
+-- des cycles) ; repondues : questions dont au moins une feuille porte une reponse ; sans_niveau :
 -- questions de cycle sans niveau de programme, vide pour une phase.
 CREATE   VIEW dbo.v_ecran_questions_par_cycle AS
 WITH q AS (

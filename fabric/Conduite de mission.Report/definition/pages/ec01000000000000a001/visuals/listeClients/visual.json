@@ -5,7 +5,7 @@
     "x": 24,
     "y": 308,
     "z": 4300,
-    "height": 984,
+    "height": 932,
     "width": 447,
     "tabOrder": 4300
   },
@@ -376,7 +376,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

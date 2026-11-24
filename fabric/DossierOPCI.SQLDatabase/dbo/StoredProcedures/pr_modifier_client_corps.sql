@@ -1,4 +1,4 @@
--- pr_modifier_client_corps : le corps d'origine, renomme ; @est_professionnel (objet n° 202, script 345)
+-- pr_modifier_client_corps : le corps d'origine, renomme ; @est_professionnel (objet n° 202)
 CREATE   PROCEDURE dbo.pr_modifier_client_corps
     @code               VARCHAR (20),
     @denomination       NVARCHAR (400) = NULL,

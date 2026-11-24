@@ -173,13 +173,17 @@ Trois conséquences :
 
 - La base juge chaque appel, que le bouton soit grisé ou non.
 - Un refus de la base (numéro d'au moins 50000) s'affiche à l'écran par son texte en français, sans
-  nommer la procédure. Dans les fonctions de révision, de valorisation, de l'arrêté, des
-  référentiels et des documents, une erreur d'une autre nature, par exemple une contrainte de table,
-  s'affiche sous un texte générique : « Action interrompue par une erreur d'exécution. Le détail technique est
-  consigné au journal des refus ; relisez l'écran avant de recommencer. » Le nom de la fonction et
-  celui de la procédure ne vont qu'au journal des refus. C'est le cas du visa d'une synthèse par
-  celui qui l'a proposée : la contrainte `ck_visa_roles_separes` de la table `visa` le refuse, et
-  l'écran affiche ce texte générique.
+  nommer la procédure. Dans les ensembles Actions du dossier, Actions de révision, Actions de
+  valorisation, Actions de l'arrêté, Actions des référentiels et Production des documents, une
+  erreur d'une autre nature, par exemple une contrainte de table, s'affiche sous un texte
+  générique : « L'action n'a pas abouti à cause d'un
+  problème technique. Vérifiez à l'écran ce qui a été enregistré, puis réessayez. Si le problème
+  revient, prévenez l'administrateur. » Le nom de la fonction et celui de la procédure ne vont qu'au
+  journal des refus. C'est le cas du visa d'une synthèse par celui qui l'a proposée : la contrainte
+  `ck_visa_roles_separes` de la table `visa` le refuse, et l'écran affiche ce texte générique. Quand
+  la base ne répond pas à la connexion, l'ensemble Actions du dossier affiche : « La base de
+  données ne répond pas : l'action s'est arrêtée. Vérifiez à l'écran ce qui a été enregistré, puis
+  réessayez dans une minute. »
 - Ajouter un écran ne crée jamais un trou de sécurité, tant que l'écriture passe par les procédures.
 
 ## Le calcul de l'annexe

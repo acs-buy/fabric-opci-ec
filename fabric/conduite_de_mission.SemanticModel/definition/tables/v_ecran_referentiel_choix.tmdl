@@ -2,7 +2,7 @@
 table v_ecran_referentiel_choix
 	lineageTag: 22ccdf45-ac70-4d7d-9fdd-7012d4ece6d5
 
-	/// n° 89, SELECTEDVALUE(table_nom) du segment « Référentiel » que les interactions portent au visuel, à choix unique forcé : celui de la fiche à l’étape 1, celui du choix du référentiel à l’étape 2, les 2 du groupe de synchronisation « Referentiel », qui partagent leur choix (décision D11)
+	/// n° 89, SELECTEDVALUE(table_nom) du segment « Référentiel » que les interactions portent au visuel, à choix unique forcé : celui de la fiche à l’étape 1, celui du choix du référentiel à l’étape 2, les 2 du groupe de synchronisation « Referentiel », qui partagent leur choix
 	measure 'Referentiel choisi' = SELECTEDVALUE ( v_ecran_referentiel_choix[table_nom] )
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: bec907e4-9bf7-43f5-b08b-1ee2afceeaec

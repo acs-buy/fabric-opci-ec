@@ -4,9 +4,8 @@
 -- LOT I du plan fusionne, deuxieme partie : l'inscription au carnet est
 -- separee du chargement, et une balance se charge par son propre chemin.
 --
--- CE QUE LA SPECIFICATION DEMANDAIT, point P6 : « scission du script 11 :
--- inscription a l'arrivee du transit, chargement au bouton, blocs 2 a 8,
--- refus journalises ».
+-- CE QUE LA SPECIFICATION DEMANDAIT : scinder le chargement en inscription a l'arrivee
+-- du transit et chargement au bouton, blocs 2 a 8, refus journalises.
 --
 -- CE QUE JE FAIS, ET CE QUE JE NE FAIS PAS. Je pose
 -- dbo.pr_inscrire_import, qui inscrit l'entete et porte les 5 refus du
@@ -14,9 +13,8 @@
 -- vers un lot. dbo.pr_charger_import aiguille selon le format.
 --
 -- JE NE DECOUPE PAS dbo.pr_charger_import_fec, et voici le motif. Elle
--- porte 200 lignes, 5 gardes et 4 blocs transactionnels, et 2 pieces
--- l'appellent : le script 62 qui la cree et 61_DEPLOIEMENT/rejeu_fec.ps1
--- qui rejoue le fichier des ecritures d'un exercice reel. La decouper
+-- porte 200 lignes, 5 gardes et 4 blocs transactionnels, et un outil de
+-- rejeu l'appelle pour rejouer le fichier des ecritures d'un exercice reel. La decouper
 -- sans pouvoir rejouer ce fichier, qui n'est pas au dossier, serait
 -- refaire a l'aveugle le seul chemin que le rejeu a eprouve. Le chemin
 -- FEC garde donc sa procedure, et dbo.pr_charger_import l'appelle. La
@@ -26,7 +24,7 @@
 -- LES REFUS SONT DESORMAIS PERENNES. Chaque refus du carnet ecrit 2 fois :
 -- dans dbo.journal_refus, qui porte tous les refus de la base, et dans
 -- dbo.rejet_import, qui porte ceux d'un import et survit au vidage du
--- transit. L'ecran E1-A lit la seconde.
+-- transit. L'ecran d'import lit la seconde.
 -- A executer contre la BASE SQL Fabric DossierOPCI.
 -- =====================================================================
 

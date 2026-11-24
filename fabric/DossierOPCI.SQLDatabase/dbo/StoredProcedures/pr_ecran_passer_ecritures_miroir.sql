@@ -7,8 +7,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : avant fn_e3_refus_commun, dans l'ordre du plan : arrete, puis entite avant 50701.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -18,7 +17,6 @@ BEGIN
         THROW 51202, N'Choisissez l''arrêté dans le sélecteur Arrêté.', 1;
     IF ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @entite COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51238, N'Passage refusé : aucune écriture miroir à passer pour le véhicule du sélecteur Véhicule à cet arrêté.', 1;
-    -- 327 fin
     DECLARE @r NVARCHAR (1000) = dbo.fn_e3_refus_commun(@entite, @arrete, @par);
     IF @r IS NOT NULL EXEC dbo.pr_e3_refuser @r;
     DECLARE @lots INT, @lignes INT;

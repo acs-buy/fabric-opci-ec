@@ -1,5 +1,5 @@
 
--- --- 1 : la derniere decision par objet, socle de E1 et E2 ---------
+-- --- 1 : la derniere decision par objet, socle ---------
 -- Une seule definition de « la derniere decision », lue par les vues qui
 -- en dependent.
 CREATE   VIEW dbo.v_derniere_decision AS

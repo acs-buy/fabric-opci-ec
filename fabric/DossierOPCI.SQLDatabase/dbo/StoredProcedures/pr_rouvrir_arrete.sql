@@ -4,7 +4,7 @@
 
 -- ------------------------------------------------------------------------------------------------- 2.5 : pr_rouvrir_arrete
 -- Elle decide sur la demande : refus 50096, 50996, 50997, 50099, 50095, 50991, dans cet ordre (0.6) ; le renvoi, dont
--- l'inscription accorde la demande (garde de visa), la peremption O19, la forme du rapport a arreter de nouveau, la levee
+-- l'inscription accorde la demande (garde de visa), la peremption des documents, la forme du rapport a arreter de nouveau, la levee
 -- du verrou s'il est pose et le renvoi de la revue si elle est visee (4 A), la marque des copies des documents perimes
 -- (7 B), dans une seule transaction. Ni calcul de l'annexe, ni verrou d'entite.
 CREATE   PROCEDURE dbo.pr_rouvrir_arrete
@@ -47,7 +47,7 @@ BEGIN
     -- le renvoi ; la garde de visa accorde la demande dans cette transaction
     INSERT INTO dbo.visa (nature, objet_ref, entite, arrete, cycle, decision, motif, propose_par, decide_par, decide_le)
     VALUES ('CLOTURE', @entite + '|' + @arrete, @entite, @arrete, NULL, 'RENVOYE', N'Réouverture : ' + @motif, @auteur, @par, @maintenant);
-    -- la peremption O19 de tous les documents en vigueur de l'arrete
+    -- la peremption de tous les documents en vigueur de l'arrete
     UPDATE dbo.document_produit
     SET perime_le = @maintenant,
         perime_motif = LEFT(N'Arrêté rouvert le ' + CONVERT(NVARCHAR (10), @maintenant, 103) + N' : ' + @motif

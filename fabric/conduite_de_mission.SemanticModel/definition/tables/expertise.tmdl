@@ -14,7 +14,7 @@ table expertise
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: e73f356c-99eb-4243-bd99-5a37b9febcff
 
-	/// expert de l’expertise de l’actif choisi à la date de l’arrêté : VAR c = [Actif choisi], VAR d = la date de l’arrêté choisi, puis FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ; vide quand la base ne le porte pas (D7) ; vide sans ligne choisie
+	/// expert de l’expertise de l’actif choisi à la date de l’arrêté : VAR c = [Actif choisi], VAR d = la date de l’arrêté choisi, puis FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ; vide quand la base ne le porte pas ; vide sans ligne choisie
 	measure 'Expert du rapport de l actif' = ( VAR c = [Actif choisi] VAR a = [Arrete selectionne] VAR d = IF ( NOT ISBLANK ( a ), DATE ( VALUE ( LEFT ( a, 4 ) ), VALUE ( MID ( a, 6, 2 ) ), VALUE ( RIGHT ( a, 2 ) ) ) ) RETURN IF ( NOT ISBLANK ( c ), CALCULATE ( MAX ( expertise[expert] ), FILTER ( ALL ( expertise ), expertise[code_actif] = c && expertise[date_valeur] = d ) ) ) ) & ""
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 0f3dd4b7-f1ca-495d-b688-2bec505ddd74

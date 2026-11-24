@@ -31,7 +31,7 @@ BEGIN
         BEGIN SET @m0 = REPLACE(@m0, N'%', N'%%'); THROW 50041, @m0, 1; END
     END;
 
-    -- B17 : une intention deja materialisee ne se regenere pas en silence.
+    -- une intention deja materialisee ne se regenere pas en silence.
     IF @lot IS NOT NULL
     BEGIN
         DECLARE @m1 NVARCHAR (2000) =

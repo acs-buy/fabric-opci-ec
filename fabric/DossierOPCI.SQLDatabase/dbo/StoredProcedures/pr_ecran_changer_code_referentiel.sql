@@ -1,8 +1,8 @@
 -- ------------------------------------------------------------------ n° 13 : changer le code d'une ligne non employee
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
--- D9 de l'existant, forme 2 ; raisons de [Blocage changer le code], dans l'ordre de la maquette : mode TEXTE,
+-- ecran 5
+-- Raisons de [Blocage changer le code], dans l'ordre de la maquette : mode TEXTE,
 -- action_propre, droit, actions_de_ligne 0 et 2, cle numerotee, ligne employee (emploi relu en base, texte employee_par
--- de l'objet n° 6) ; @nouvelle_cle a la forme de @cle de l'objet n° 12 ; la designation relue apres l'ecriture (B13).
+-- de l'objet n° 6) ; @nouvelle_cle a la forme de @cle de l'objet n° 12 ; la designation relue apres l'ecriture.
 CREATE   PROCEDURE dbo.pr_ecran_changer_code_referentiel
     @referentiel  NVARCHAR (200) = NULL,
     @cle          NVARCHAR (400) = NULL,
@@ -56,8 +56,8 @@ BEGIN
             EXEC dbo.pr_e5_refuser 50836, @m;
         END;
         SET @oid = OBJECT_ID(N'dbo.' + QUOTENAME(@t));
-        -- 343 (30/10/2026) : ELSE N'' dans le MAX, repris par NULLIF : aucun NULL dans l'agregat, donc aucun avertissement 8153, que
-        -- le pilote lirait a la place du refus. Genere par 61_DEPLOIEMENT/generer_e5_343_correctif_avertissement_8153.py.
+        -- 30/10/2026 : ELSE N'' dans le MAX, repris par NULLIF : aucun NULL dans l'agregat, donc aucun avertissement 8153, que
+        -- le pilote lirait a la place du refus.
         SELECT @numerotee = CASE WHEN MAX(CAST(c.is_identity AS INT)) = 1 THEN 1 ELSE 0 END,
                @pk1 = NULLIF(MAX(CASE WHEN ic.key_ordinal = 1 THEN c.name ELSE N'' END), N''),
                @pk2 = NULLIF(MAX(CASE WHEN ic.key_ordinal = 2 THEN c.name ELSE N'' END), N'')
@@ -109,7 +109,7 @@ BEGIN
         SET @sql = N'UPDATE t SET ' + @aff_n + N' FROM dbo.' + QUOTENAME(@t) + N' AS t WHERE ' + @clause + N'; SET @nb = @@ROWCOUNT;';
         EXEC sp_executesql @sql, N'@k1 NVARCHAR (400), @k2 NVARCHAR (400), @n1 NVARCHAR (400), @n2 NVARCHAR (400), @nb INT OUTPUT',
              @k1, @k2, @n1, @n2, @nb = @nb OUTPUT;
-        -- la designation de la ligne reste unique dans son referentiel (B13) : relue apres l'ecriture ; une designation
+        -- la designation de la ligne reste unique dans son referentiel : relue apres l'ecriture ; une designation
         -- inchangee ne se refuse pas (un doublon anterieur ne vient pas de cette ecriture)
         EXEC dbo.pr_e5_designation @t, @canon_n, @nouvelle_cle, @ligne_d OUTPUT, @nb_d OUTPUT;
         IF @nb_d > 1 AND @ligne_d <> @ligne

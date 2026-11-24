@@ -9,7 +9,7 @@ table v_ecran_demandes_reouverture
 		lineageTag: e5a8580e-5fb1-5e13-8bb8-8087b10ff810
 
 	/// La demande en attente sur l'arrêté choisi, ou son absence.
-	measure 'Demande en attente' = VAR c = [Client selectionne] VAR a = [Arrete choisi reouverture] VAR d = FILTER ( ALL ( v_ecran_demandes_reouverture ), v_ecran_demandes_reouverture[entite] = c && v_ecran_demandes_reouverture[arrete] = a && v_ecran_demandes_reouverture[etat] = "EN_ATTENTE" ) VAR jour = CALCULATE ( MAX ( v_ecran_arretes[Arrêté] ), FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = c && v_ecran_arretes[arrete] = a ) ) VAR p = MAXX ( d, v_ecran_demandes_reouverture[Demandée par] ) VAR de = IF ( CONTAINSSTRING ( "AEIOUYÉÈÊÀÂÎÔÛ", LEFT ( p, 1 ) ), "d'", "de " ) RETURN IF ( ISBLANK ( a ), "", IF ( ISEMPTY ( d ), "Aucune demande n'attend sur l'arrêté du " & jour & ".", "Demande " & de & p & " du " & MAXX ( d, v_ecran_demandes_reouverture[Demandée le] ) & " pour l'arrêté du " & jour & ", en attente de décision." ) )
+	measure 'Demande en attente' = VAR c = [Client selectionne] VAR a = [Arrete choisi reouverture] VAR d = FILTER ( ALL ( v_ecran_demandes_reouverture ), v_ecran_demandes_reouverture[entite] = c && v_ecran_demandes_reouverture[arrete] = a && v_ecran_demandes_reouverture[etat] = "EN_ATTENTE" ) VAR jour = CALCULATE ( MAX ( v_ecran_arretes[Arrêté] ), FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = c && v_ecran_arretes[arrete] = a ) ) VAR p = MAXX ( d, v_ecran_demandes_reouverture[Demandée par] ) VAR de = IF ( FIND ( UPPER ( LEFT ( p, 1 ) ), "AEIOUYÉÈÊÀÂÎÔÛ", 1, 0 ) > 0, "d'", "de " ) RETURN IF ( ISBLANK ( a ), "", IF ( ISEMPTY ( d ), "Aucune demande n'attend sur l'arrêté du " & jour & ".", "Demande " & de & p & " du " & MAXX ( d, v_ecran_demandes_reouverture[Demandée le] ) & " pour l'arrêté du " & jour & ", en attente de décision." ) )
 		displayFolder: Ecran Client retirer et rouvrir
 		lineageTag: 5cc8ae6b-39d8-5902-a11d-f4e40ef15efb
 
@@ -22,6 +22,11 @@ table v_ecran_demandes_reouverture
 	measure 'Encre etat demande' = IF ( SELECTEDVALUE ( v_ecran_demandes_reouverture[État] ) = "En attente", "#8A6710", "#12233C" )
 		displayFolder: Ecran Client retirer et rouvrir
 		lineageTag: e7d2d77b-5eb4-5af7-ad1f-00181edcae12
+
+	/// nature (REOUVERTURE ou DEVERROUILLAGE) de la demande en attente de l'arrêté coché au 5b ; vide sans demande
+	measure 'Nature demande choisie' = VAR c = [Client selectionne] VAR a = [Arrete choisi reouverture] RETURN IF ( NOT ISBLANK ( c ) && NOT ISBLANK ( a ), CALCULATE ( MAX ( v_ecran_demandes_reouverture[nature_code] ), FILTER ( ALL ( v_ecran_demandes_reouverture ), v_ecran_demandes_reouverture[entite] = c && v_ecran_demandes_reouverture[arrete] = a && v_ecran_demandes_reouverture[etat] = "EN_ATTENTE" ) ) )
+		displayFolder: Ecran Client retirer et rouvrir
+		lineageTag: 3e4b3b34-1f78-5a7a-8482-b6be8cb5583c
 
 	column id
 		dataType: int64
@@ -183,6 +188,25 @@ table v_ecran_demandes_reouverture
 		lineageTag: 9d197e79-e96f-504a-a168-d7de8e2797f6
 		summarizeBy: none
 		sourceColumn: Motif de l'écart
+
+		annotation SummarizationSetBy = Automatic
+
+	column nature_code
+		dataType: string
+		isNullable: false
+		sourceProviderType: varchar(14)
+		lineageTag: c2d4a562-2cbb-5adf-bcad-14156e1b530e
+		summarizeBy: none
+		sourceColumn: nature_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nature
+		dataType: string
+		sourceProviderType: nvarchar(20)
+		lineageTag: c17554ae-0040-5cdd-ada3-ccb67e6c8b98
+		summarizeBy: none
+		sourceColumn: Nature
 
 		annotation SummarizationSetBy = Automatic
 

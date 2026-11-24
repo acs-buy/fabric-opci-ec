@@ -3,8 +3,8 @@
 -- bornes, les 31 rapports sont rattaches a leur exigence, et le releve du
 -- coffre a son premier passage.
 --
--- LE DEFAUT QUE CE SCRIPT CORRIGE. dbo.v_documents_attendus, posee par le
--- script 98, croisait les 77 pieces attendues avec les 29 arretes qui
+-- LE DEFAUT CORRIGE. La 1re version de dbo.v_documents_attendus
+-- croisait les 77 pieces attendues avec les 29 arretes qui
 -- portent balance : 2 233 lignes, dont la plupart n'ont aucun sens. Trois
 -- bornes manquaient.
 --

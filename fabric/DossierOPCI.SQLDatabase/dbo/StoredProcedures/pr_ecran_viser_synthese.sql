@@ -8,8 +8,7 @@ CREATE   PROCEDURE dbo.pr_ecran_viser_synthese
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : avant le TRY de l'enveloppe.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -21,7 +20,6 @@ BEGIN
         THROW 51224, N'Visa refusé : aucune synthèse proposée n''attend de visa pour le véhicule du sélecteur Véhicule à cet arrêté ; une synthèse visée ne se vise plus.', 1;
     IF @decision = 'RENVOYE' AND ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @motif COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51225, N'Renvoi refusé : un renvoi porte son motif. Sans lui, le préparateur ne sait pas ce qu''il doit corriger.', 1;
-    -- 327 fin
     BEGIN TRY
         EXEC dbo.pr_viser_synthese @entite, @arrete, @decision, @motif, @par;
         UPDATE dbo.synthese_proposee

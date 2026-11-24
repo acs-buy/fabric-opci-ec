@@ -1,7 +1,7 @@
--- Objet n° 6 de l'ecran 5 (script 321), corrige par le script 340 (24/10/2026) : rang_annexe, la position de la
+-- Objet n° 6 de l'ecran 5, corrige le 24/10/2026 : rang_annexe, la position de la
 -- colonne dans le « SELECT … FROM inserted » du declencheur tr_<table>_annexe_retard, NULL pour une colonne
--- qu'il ne compare pas ; constantes relues a la generation (61_DEPLOIEMENT/generer_e5_340_ordre_effet_annexe.py) ;
--- l'ordre des libelles de [Effet sur l annexe du referentiel choisi]. Ne pas modifier a la main.
+-- qu'il ne compare pas ; constantes relues a la generation ;
+-- l'ordre des libelles de [Effet sur l annexe du referentiel choisi].
 CREATE   VIEW dbo.v_ecran_referentiel_colonnes AS
 SELECT CAST(t.referentiel AS VARCHAR (120)) AS referentiel, CAST(t.colonne AS VARCHAR (128)) AS colonne,
        CAST(t.libelle_colonne AS NVARCHAR (40)) AS libelle_colonne, CAST(t.rang_libelle AS INT) AS rang_libelle,

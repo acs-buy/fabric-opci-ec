@@ -3,7 +3,7 @@
   "name": "e3cBouton1",
   "position": {
     "x": 1355,
-    "y": 738,
+    "y": 662,
     "z": 70302,
     "height": 36,
     "width": 197,
@@ -43,7 +43,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },
@@ -150,7 +150,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },
@@ -257,7 +257,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },

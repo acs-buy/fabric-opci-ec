@@ -1,5 +1,5 @@
 
--- pr_annuler_lot : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_annuler_lot : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_annuler_lot
     @lot_id INT,
     @par    NVARCHAR (200),

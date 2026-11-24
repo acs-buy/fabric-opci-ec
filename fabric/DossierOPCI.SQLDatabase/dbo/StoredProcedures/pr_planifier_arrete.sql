@@ -1,5 +1,5 @@
 
--- pr_planifier_arrete : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_planifier_arrete : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_planifier_arrete
     @entite        VARCHAR (20),
     @date_arrete   DATE,

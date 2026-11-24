@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "e2dPied",
   "position": {
-    "x": 519,
-    "y": 851,
+    "x": 0,
+    "y": 1256,
     "z": 56100,
-    "height": 70,
-    "width": 1033,
+    "height": 36,
+    "width": 1600,
     "tabOrder": 56100
   },
   "visual": {
@@ -302,7 +302,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },

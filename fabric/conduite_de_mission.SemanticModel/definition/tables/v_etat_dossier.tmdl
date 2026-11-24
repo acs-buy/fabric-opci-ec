@@ -180,7 +180,7 @@ table v_etat_dossier
 		displayFolder: Ecran 1 Client
 		lineageTag: 4f71bdd4-0823-4597-9b6e-633b619daff3
 
-	measure 'Sous-ligne arretes' = VAR a = [Arrêtés ouverts] RETURN IF ( ISBLANK ( a ) || a = 0, "aucun arrêté ouvert", FORMAT ( a, "#,0" ) & " ouvert(s), tous clients" )
+	measure 'Sous-ligne arretes' = VAR a = [Arrêtés ouverts] RETURN IF ( ISBLANK ( a ) || a = 0, "aucun arrêté ouvert", FORMAT ( a, "#,0" ) & IF ( a = 1, " ouvert", " ouverts" ) & ", tous clients" )
 		displayFolder: Ecran 1 Client
 		lineageTag: 75acdbfd-ab91-4965-bd9f-2fd5ef17caa7
 
@@ -249,12 +249,12 @@ table v_etat_dossier
 		lineageTag: 608deec9-5def-4129-8adc-0e09628ea5e3
 
 	/// Carte temps 4.
-	measure '4 Visa' = [Etat etape 5]
+	measure '4 Visa' = [Etat etape 4]
 		displayFolder: Ecran 1 Client
 		lineageTag: c8d62106-dcc6-437f-a152-15d1bba2e945
 
 	/// Carte temps 5.
-	measure '5 Arrêtés' = [Etat etape 6]
+	measure '5 Arrêtés' = [Etat etape 5]
 		displayFolder: Ecran 1 Client
 		lineageTag: c7688ea6-36dc-4100-97f4-a8ff3b43f3e8
 
@@ -295,7 +295,7 @@ table v_etat_dossier
 		displayFolder: Ecran 1 Client
 		lineageTag: 17763249-c7d2-4635-a0ac-5ff8885dd77a
 
-	measure 'Bandeau visa' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR q = [Questions du client] VAR p = [Pieces du client] VAR a = [Cote acceptation] VAR n = CALCULATE ( COUNTROWS ( v_questions_acceptation ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = a ) ) RETURN SWITCH ( s, "APPROUVE", "Acceptation approuvée " & [Acceptation visee par et le] & ".", "REFUSE", "Acceptation refusée " & [Acceptation visee par et le] & " : reprendre le questionnaire, puis soumettre à nouveau.", IF ( ISBLANK ( n ), "Aucun questionnaire d'acceptation ouvert : le visa attend.", IF ( [Questionnaire complet] = "OUI", q & " questions répondues, " & ( p + 0 ) & " pièce(s) au coffre : le dossier peut partir au visa.", q & " questions répondues : le questionnaire n'est pas complet, le visa attend." ) ) )
+	measure 'Bandeau visa' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) VAR q = [Questions du client] VAR p = [Pieces du client] VAR a = [Cote acceptation] VAR n = CALCULATE ( COUNTROWS ( v_questions_acceptation ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = a ) ) RETURN SWITCH ( s, "APPROUVE", "Acceptation approuvée " & [Acceptation visee par et le] & ".", "REFUSE", "Acceptation refusée " & [Acceptation visee par et le] & " : reprendre le questionnaire, puis soumettre à nouveau.", IF ( ISBLANK ( n ), "Aucun questionnaire d'acceptation ouvert : le visa attend.", IF ( [Questionnaire complet] = "OUI", q & " questions répondues, " & ( p + 0 ) & IF ( p > 1, " pièces", " pièce" ) & " au coffre : le dossier peut partir au visa.", q & " questions répondues : le questionnaire n'est pas complet, le visa attend." ) ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: 75488fc5-a92d-4dbd-a8b9-b8160bb86224
 

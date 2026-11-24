@@ -1,5 +1,5 @@
 
--- --- 6 : B16, la concordance des 2 modes -------------------------------
+-- --- 6 : la concordance des 2 modes -------------------------------
 -- Deux intentions sur le meme compte et le meme arrete, l'une par ligne
 -- et l'autre par solde cible, concordent si leur montant resolu et leur
 -- sens resolu sont egaux. La vue apparie par compte, la preuve se lit.

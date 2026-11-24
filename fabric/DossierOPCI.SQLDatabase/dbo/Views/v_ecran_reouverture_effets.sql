@@ -1,5 +1,6 @@
-
+-- --- 8. v_ecran_reouverture_effets ----------------------------------------------------------------------
 -- 8 lignes par arrete du segment (est_reouvrable ou demande_en_attente), ce que l'accord ferait, compte en base.
+-- : seule une demande REOUVERTURE en attente y fait entrer un arrete ; un deverrouillage n'a pas ces effets.
 CREATE   VIEW dbo.v_ecran_reouverture_effets AS
 SELECT a.entite, a.arrete, l.ordre, a.entite + '|' + a.arrete + '|' + CAST(l.ordre AS VARCHAR (2)) AS cle_ecran,
        l.quoi AS [Ce que touche la réouverture], l.aujourdhui AS [Aujourd'hui], l.apres AS [Après la réouverture]
@@ -40,7 +41,9 @@ CROSS APPLY (VALUES
         CASE WHEN cp.n = 0 THEN N'aucune copie chez le client' WHEN cp.n = 1 THEN N'1 copie chez le client marquée périmée'
              ELSE CAST(cp.n AS NVARCHAR (10)) + N' copies chez le client marquées périmées' END)
 ) l (ordre, quoi, aujourdhui, apres)
-WHERE a.est_reouvrable = 1 OR a.demande_en_attente = 1;
+WHERE a.est_reouvrable = 1
+   OR EXISTS (SELECT 1 FROM dbo.demande_reouverture q
+              WHERE q.entite = a.entite AND q.arrete = a.arrete AND q.etat = 'EN_ATTENTE' AND q.nature = 'REOUVERTURE');
 
 GO
 

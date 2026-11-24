@@ -1,5 +1,5 @@
--- 175 -- Les 5 grilles de l'ecran 1.1, filtrees par le contexte du reviseur
--- 13/09/2026. Premiere application du contexte de travail pose au script 174. Chaque grille de cet
+-- Les 5 grilles de l'ecran 1.1, filtrees par le contexte du reviseur
+-- 13/09/2026. Premiere application du contexte de travail (contexte_reviseur, v_mon_perimetre). Chaque grille de cet
 -- ecran ne montre desormais que le perimetre choisi par la personne connectee, et elle reste
 -- SAISISSABLE : eprouve ce jour, un UPDATE et un INSERT passent a travers une vue qui filtre par
 -- EXISTS sur une seule table de base, la transaction d'essai ayant ete annulee.

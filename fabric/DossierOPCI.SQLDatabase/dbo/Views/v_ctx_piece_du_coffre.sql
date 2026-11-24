@@ -1,5 +1,5 @@
--- 177 -- Le coffre des pieces, filtre par le contexte sans devenir inutilisable
--- 13/09/2026, arbitrage du candidat : « l'affichage des documents du coffre doit suivre le
+-- Le coffre des pieces, filtre par le contexte sans devenir inutilisable
+-- 13/09/2026, arbitrage : « l'affichage des documents du coffre doit suivre le
 -- contexte de l'OPCI selectionnee ».
 --
 -- LA DIFFICULTE, mesuree avant d'ecrire : la table piece ne porte AUCUNE entite. Le lien a un

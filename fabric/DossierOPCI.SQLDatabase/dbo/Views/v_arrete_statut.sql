@@ -1,5 +1,5 @@
--- 190 -- Un arrete rouvert restait CLOS : le statut ignorait les renvois
--- 13/09/2026. Second defaut trouve en rouvrant l'arrete du 31/12/2025, apres celui du script 189.
+-- Un arrete rouvert restait CLOS : le statut ignorait les renvois
+-- 13/09/2026. Second defaut trouve en rouvrant l'arrete du 31/12/2025, apres celui de pr_rouvrir_arrete.
 --
 -- LE DEFAUT. dbo.pr_rouvrir_arrete inscrit un visa de cloture a l'issue RENVOYE, sans supprimer le
 -- visa VISE d'origine, et c'est voulu : la trace demeure. Mais dbo.v_arrete_statut ne regardait que

@@ -1,6 +1,6 @@
 
 -- Le prochain arrete ouvrable par entite, et ce qui empeche de l'ouvrir.
--- L'ecran C0 affiche le motif AVANT le clic : un bouton grise sans motif
+-- L'ecran affiche le motif AVANT le clic : un bouton grise sans motif
 -- laisse le preparateur sans geste.
 CREATE   VIEW dbo.v_prochain_arrete AS
 WITH suivant AS (

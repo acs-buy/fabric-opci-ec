@@ -1,5 +1,5 @@
--- 178 -- Les 4 derniers objets, rattaches au contexte par un chemin indirect
--- 13/09/2026. Fin du branchement commence aux scripts 175, 176 et 177. Ces 4 objets ne portent ni
+-- Les 4 derniers objets, rattaches au contexte par un chemin indirect
+-- 13/09/2026. Fin du branchement des grilles au contexte (v_ecran_c11_*, v_ctx_*). Ces 4 objets ne portent ni
 -- entite ni arrete : chacun se rattache par une table voisine, relevee ce jour.
 --   actif             -> entite_detentrice, l'entite qui detient l'actif
 --   expertise         -> code_actif, puis l'entite detentrice de cet actif

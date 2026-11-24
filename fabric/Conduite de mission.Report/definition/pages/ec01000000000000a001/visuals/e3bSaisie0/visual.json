@@ -3,7 +3,7 @@
   "name": "e3bSaisie0",
   "position": {
     "x": 728,
-    "y": 450,
+    "y": 374,
     "z": 59200,
     "height": 86,
     "width": 197,
@@ -77,7 +77,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E8D9A8'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }
@@ -120,7 +120,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Nom du fichier déposé, sous-dossier facultatif'"
+                  "Value": "'Nom du fichier déposé'"
                 }
               }
             },

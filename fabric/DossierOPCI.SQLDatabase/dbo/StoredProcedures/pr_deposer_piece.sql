@@ -23,8 +23,8 @@ BEGIN
         THROW 50272, N'La nature de la pièce n''est pas au référentiel. Les natures se complètent à l''écran Référentiels.', 1;
     IF @arrete IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND arrete = @arrete)
         THROW 50273, N'L''arrêté désigné n''est pas au référentiel de cette entité.', 1;
-    -- 51303, D1 (15/11/2026) : action 10, apres l'existence de l'arrete. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 51303 (15/11/2026) : action 10, apres l'existence de l'arrete. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 51303, N'Action refusée : seule l''équipe du dossier peut déposer une pièce dans ce dossier.', 1;

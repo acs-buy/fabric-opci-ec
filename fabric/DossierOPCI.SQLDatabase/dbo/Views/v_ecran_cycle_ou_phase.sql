@@ -1,5 +1,5 @@
 -- 3. Les vues de l'etape 3
--- ecran 5, lot 1, script 324 (61_DEPLOIEMENT/generer_e5_324_questions.py) : genere, ne pas modifier a la main.
+-- ecran 5
 -- Objet n° 30 : la table du segment « Cycle ou phase », une ligne par cycle et par phase, reliee au modele a
 -- v_ecran_question_referentiel (cycle_ou_phase) et a aucune autre table. Cycles : nom d'usage et ordre de passage du
 -- modele publie, relus a la generation (modele publie, relu le 23/10/2026 18:05 UTC) ; un cycle que le modele ne connaissait pas alors prend son

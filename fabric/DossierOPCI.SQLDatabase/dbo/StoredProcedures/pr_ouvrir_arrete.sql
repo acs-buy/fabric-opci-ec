@@ -1,7 +1,7 @@
 
 -- pr_ouvrir_arrete : 1 refus
 -- --- 3-bis : ouvrir un arrete, avec son exercice et sa date -------------
--- La procedure de 55_journal_refus_et_procedures est reprise ici : sans
+-- La procedure est reprise ici : sans
 -- l'exercice, l'index d'unicite du bloc 3 ne sait pas a quel exercice
 -- rattacher la cloture annuelle.
 CREATE   PROCEDURE dbo.pr_ouvrir_arrete

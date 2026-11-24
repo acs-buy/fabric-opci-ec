@@ -1,5 +1,5 @@
 
--- --- depuis 63_SQL/112_etats_financiers_modeles.sql : v_controle_compte_hors_modele ---
+-- --- v_controle_compte_hors_modele ---
 -- --- 4 : les controles ----------------------------------------------
 -- C58 : un compte mouvemente qu'aucune racine des 3 modeles ne
 -- rattache. C'est le controle que la specification demandait sous la

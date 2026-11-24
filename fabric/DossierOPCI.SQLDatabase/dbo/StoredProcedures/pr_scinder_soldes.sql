@@ -1,5 +1,5 @@
 
--- pr_scinder_soldes : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_scinder_soldes : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_scinder_soldes
     @entite  VARCHAR (20),
     @a_blanc BIT = 1

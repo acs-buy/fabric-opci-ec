@@ -3,7 +3,7 @@
 -- pr_charger_import_fec : le corps d'origine, renomme
 -- pr_charger_import_fec : le corps d'origine, renomme
 -- --- 4 : charger un import, en une procedure --------------------------
--- Reprise des blocs 2, 3, 5, 6, 7 et 8 de 11_chargement.sql, avec toutes
+-- Reprise des blocs 2, 3, 5, 6, 7 et 8, avec toutes
 -- leurs gardes. Les lignes doivent deja etre dans stg_fec, sous leur
 -- reference d'import, et leur recevabilite deja posee.
 CREATE   PROCEDURE dbo.pr_charger_import_fec_corps
@@ -98,8 +98,8 @@ BEGIN
 
     BEGIN TRY
         BEGIN TRANSACTION;
-        -- Bloc 5 : le lot, famille importee, balance B0 au prix de revient.
-        -- La contrainte ck_lot_source_par_famille, posee par le script 56,
+        -- Bloc 5 : le lot, famille importee, balance au prix de revient.
+        -- La contrainte ck_lot_source_par_famille
         -- exige l'identifiant d'import sur un lot de famille importee.
         INSERT INTO dbo.lot_ecritures
             (arrete, famille, portee, entite, statut, version_regles, motif,

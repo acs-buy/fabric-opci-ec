@@ -1,5 +1,5 @@
 
--- pr_creer_client : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_creer_client : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_creer_client
     @code               VARCHAR (20),
     @denomination       NVARCHAR (400),

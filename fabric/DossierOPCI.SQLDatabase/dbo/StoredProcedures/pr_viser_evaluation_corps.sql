@@ -3,7 +3,7 @@
 
 -- pr_viser_evaluation : le corps d'origine, renomme
 -- pr_viser_evaluation : le corps d'origine, renomme
--- --- E6, E9 : la procedure refaite et renommee ----------------------
+-- --- la procedure refaite et renommee ----------------------
 CREATE   PROCEDURE dbo.pr_viser_evaluation_corps
     @evaluation_id INT,
     @decision      VARCHAR (8),

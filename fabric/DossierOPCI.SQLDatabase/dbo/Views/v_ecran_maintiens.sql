@@ -1,5 +1,5 @@
 -- 216. La table des maintiens de la fiche du dossier, en colonnes lisibles.
--- Arbitre le 21/09/2026 : dans un TABLEAU, nativeQueryRef est ignore pour une mesure (releve Fabric IQ) ;
+-- Arbitre le 21/09/2026 : dans un TABLEAU, nativeQueryRef est ignore pour une mesure ;
 -- l'en-tete d'une colonne se regle au modele, par le nom de l'objet. Une mesure de libelle ne peut donc pas
 -- porter un en-tete court sans entrer en conflit avec la colonne brute du meme nom. La 3e voie, deja employee
 -- pour v_filiale_dependances (214) et v_ecran_pieces_du_dossier (211) : la VUE rend le libelle en COLONNE.

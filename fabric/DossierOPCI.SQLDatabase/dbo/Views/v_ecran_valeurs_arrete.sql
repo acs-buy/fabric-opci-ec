@@ -1,7 +1,7 @@
 
 -- ------------------------------------------------------------------ n° 15 : les valeurs de l'arrete
 -- Une ligne par actif a valeur saisie (familles IMMEUBLE et INSTRUMENT) du vehicule et de ses filiales, a l'arrete.
--- Dates tronquees a la seconde. ordre_entite : rang de v_ordre_entite (filiales par numero, vehicule en dernier, D6).
+-- Dates tronquees a la seconde. ordre_entite : rang de v_ordre_entite (filiales par numero, vehicule en dernier).
 CREATE   VIEW dbo.v_ecran_valeurs_arrete AS
 SELECT pv.vehicule, g.arrete, g.entite,
        CAST(CASE WHEN g.entite <> pv.vehicule THEN 1 ELSE 0 END AS BIT)            AS est_filiale,

@@ -1,8 +1,7 @@
 -- =====================================================================
--- 307 : fn_compte_du_modele SORTIE DE L'APPEL LIGNE A LIGNE (15/10/2026)
--- Genere par 61_DEPLOIEMENT/generer_compte_du_modele_en_jointure.py : ne pas modifier a la main.
--- Etude de performance du 14/10/2026 rectifiee le 15/10/2026 (65_JOURNAL/performance_service_20261014.md) ; decision du
--- candidat du 15/10/2026. 4 vues ; meme resultat, prouve ligne a ligne par essai_compte_du_modele_en_jointure.sql.
+-- fn_compte_du_modele SORTIE DE L'APPEL LIGNE A LIGNE (15/10/2026)
+-- Etude de performance du 14/10/2026 rectifiee le 15/10/2026 ; decision du 15/10/2026. 4 vues ;
+-- meme resultat, prouve ligne a ligne par un essai.
 -- A executer contre la BASE SQL Fabric DossierOPCI.
 -- =====================================================================
 
@@ -32,7 +31,7 @@
 -- CE QUE LE FILET NE COUVRE PAS. Il fige des grandeurs, non des
 -- structures : une vue qui perdrait une colonne ou changerait un libelle
 -- passerait au travers. Il couvre ce qui se chiffre, et c'est ce qui
--- porte les preuves du memoire.
+-- porte les preuves chiffrees.
 -- A executer contre la BASE SQL Fabric DossierOPCI.
 -- =====================================================================
 

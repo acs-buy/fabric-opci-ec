@@ -1,13 +1,12 @@
 """Fonction metier fn_valorisation : enveloppe mince du moteur teste.
 
-Publiee par l'API, jamais collee a la main : 61_DEPLOIEMENT/poser_fonction_ecran.py --nom fn_valorisation --ecrire
+Publiee par l'API, jamais collee a la main : un script de pose
 envoie ce fichier, definition.json et la roue
 `privateLibraries/moteur_opci-0.3.0-py3-none-any.whl` par updateDefinition, puis relit chaque partie par
-getDefinition. La roue est produite, versionnee et verifiee module par module par `66_FONCTIONS/publier_roue.py` :
+getDefinition. La roue est produite, versionnee et verifiee module par module par un script de publication :
 elle n'est jamais copiee a la main, une roue de contenu different sous un meme numero de version ayant deja circule.
 
-CE FICHIER EST LA COPIE DE REFERENCE, VERSIONNEE DANS LE DEPOT. Les copies 60_FABRIC_DEV et
-66_FONCTIONS/fn_valorisation.py lui sont egales.
+CE FICHIER EST LA COPIE DE REFERENCE, VERSIONNEE DANS LE DEPOT. Ses autres copies lui sont egales.
 
 Contraintes du service, valeurs verifiees le 19/08/2026 :
   charge de requete 4 Mo, execution 240 s, point de terminaison public 100 s,
@@ -29,8 +28,7 @@ Trois points de conception imposes par la plateforme ou par le modele :
    actif. Les identifiants inseres sont donc relus par une requete separee.
 
 =======================================================================
-LES QUATRE REPARATIONS DU 25/08/2026, CHAINE A DU PARAGRAPHE 6 DE
-docs/superpowers/specs/2026-08-25-valorisation-participations-design.md.
+LES QUATRE REPARATIONS DU 25/08/2026.
 
 1. LA FEUILLE DE TRAVAIL EST CREEE AVANT LE LOT (ck_lot_source_par_famille ;
    cle fk_lot_feuille composee, cote, arrete et entite).
@@ -42,25 +40,23 @@ docs/superpowers/specs/2026-08-25-valorisation-participations-design.md.
 4. LA REFERENCE DE ROUE EST CORRIGEE.
 
 =======================================================================
-LA REPRISE DU 10/10/2026, OBJET N° 224 DE LA MAQUETTE RETENUE DE L'ECRAN 3
-(option 1 du lot 0, tranchee par le candidat le 10/10/2026 ;
-65_JOURNAL/roadmap_ecran_3_valorisation.md, § 4.2 et lot 4).
+LES REGLES DU 10/10/2026, ECRAN 3 DE VALORISATION.
 
-1. LA GARDE B6 BIS RESTE LA 1RE ETAPE. Une valeur d'expertise sans son rapport
+1. LA GARDE DES EXPERTISES SANS RAPPORT RESTE LA 1RE ETAPE. Une valeur d'expertise sans son rapport
    au coffre n'alimente pas la valorisation (dbo.v_expertise_sans_rapport,
    filtree sur l'arrete et l'entite detentrice). Son refus est desormais un
    refus francais (UserThrownError) pose dans la zone de message, et non une
    phrase rendue comme une reussite.
 
-2. LA GARDE DE LA GENERATION, dbo.pr_garde_generer_lot_valorisation (objet de
-   base n° 25), S'EXECUTE A SA SUITE, DANS LA TRANSACTION DE LA FONCTION, AVANT
+2. LA GARDE DE LA GENERATION, dbo.pr_garde_generer_lot_valorisation,
+   S'EXECUTE A SA SUITE, DANS LA TRANSACTION DE LA FONCTION, AVANT
    TOUTE ECRITURE. Elle prend les verrous d'entite et un verrou d'application
    sur l'entite et l'arrete, tenus jusqu'au commit de la fonction, puis relit
    les 3 gardes de l'ancienne demande : une demande EN_ATTENTE, un lot
    DERIVABLE PROPOSE non perime, aucun actif CALCULABLE (refus 50061). Un 2e
    appel concurrent attend le commit du 1er, puis est refuse : jamais 2 lots
    PROPOSE concurrents. La transaction est celle du pilote : la connexion n'est
-   pas en validation automatique, et la 1re lecture (garde B6 bis) ouvre la
+   pas en validation automatique, et la 1re lecture (garde des expertises sans rapport) ouvre la
    transaction implicite que la garde exige (refus 50795 sans transaction).
 
 3. LA MATIERE EST CELLE DE L'ECRAN : les seuls actifs CALCULABLE de
@@ -93,11 +89,10 @@ LA REPRISE DU 10/10/2026, OBJET N° 224 DE LA MAQUETTE RETENUE DE L'ECRAN 3
    titres de filiales. matiere_du_lot refuse donc tout lot qui porterait une
    ligne au compte 275, en nommant l'actif, son poste et le montant, tant que
    REPRISE_275_DISTINGUE_LES_TITRES est faux ; la constante passe a vrai,
-   et la fonction se republie, quand la session base aura corrige la vue (filtre
-   par l'axe des titres de filiales, ou subdivision du 275). Un ecart nul ne
-   porte aucune ligne et ne refuse rien. FAIT LE 10/10/2026 : la session base a
-   separe le 275 par l'axe de l'actif (63_SQL/291, commit aae31138, decision du
-   candidat) ; la constante vaut vrai.
+   et la fonction se republie, quand la vue sera corrigee (filtre par l'axe
+   des titres de filiales, ou subdivision du 275). Un ecart nul ne porte
+   aucune ligne et ne refuse rien. FAIT LE 10/10/2026 : la vue separe le 275
+   par l'axe de l'actif ; la constante vaut vrai.
 
 5. UN POSTE SANS COMPTE DE DIFFERENCE (NatureNonValorisable) EST UN REFUS
    FRANCAIS qui nomme l'actif et le poste, et non une exception anglaise.
@@ -154,15 +149,15 @@ JOURNAL_CODE = "ODV"
 JOURNAL_LIB = "OD de valorisation"
 
 # La feuille de travail que le lot derivable cite. Le cycle VALO et le modele
-# VALO-ECARTS sont semes par 63_SQL/16_seed_ref_cycle_phase.sql et par le
-# bloc 1 de 63_SQL/28_seed_modele_feuille.sql ; l'origine MOTEUR est la valeur
+# VALO-ECARTS sont semes par les scripts de semis des cycles et des modeles de
+# feuille ; l'origine MOTEUR est la valeur
 # que ck_ft_origine reserve a une feuille preremplie par un moteur.
 CYCLE_FEUILLE = "VALO"
 MODELE_FEUILLE = "VALO-ECARTS"
 ORIGINE_FEUILLE = "MOTEUR"
 PREFIXE_COTE = "VALO"
-# dbo.feuille_travail.cote est en VARCHAR (30), 63_SQL/27_feuilles_de_travail
-# .sql, longueur elle-meme dictee par ref_croisee.xref.
+# dbo.feuille_travail.cote est en VARCHAR (30), longueur elle-meme dictee par
+# ref_croisee.xref.
 COTE_LONGUEUR_MAX = 30
 # lot_ecritures.version_regles est en VARCHAR (20)
 VERSION_LONGUEUR_MAX = 20
@@ -184,7 +179,7 @@ REFUS_VEHICULE = ("Génération refusée : pour le véhicule du sélecteur Véhi
                   "(expertise sans rapport rattaché, demande de réévaluation en attente, lot dérivable proposé non "
                   "périmé, ou aucun actif calculable).")
 
-# 0. La porte du critere B6 bis : le perimetre de l'appel, l'arrete et l'entite detentrice.
+# 0. La porte des expertises sans rapport : le perimetre de l'appel, l'arrete et l'entite detentrice.
 REQUETE_EXPERTISES_SANS_RAPPORT = """
 SELECT v.code_actif, v.motif
 FROM dbo.v_expertise_sans_rapport v
@@ -192,7 +187,7 @@ WHERE v.date_valeur = ?
   AND v.entite_detentrice = ?
 """
 
-# 1. La garde n° 25, dans la transaction de la fonction, avant toute ecriture.
+# 1. La garde de la generation, dans la transaction de la fonction, avant toute ecriture.
 REQUETE_GARDE = "EXEC dbo.pr_garde_generer_lot_valorisation @entite = ?, @arrete = ?, @par = ?"
 
 # 2. Les actifs CALCULABLE de l'entite a l'arrete, leur poste du bilan, leur valeur
@@ -283,9 +278,21 @@ def _qui(ctx) -> str:
 
 
 def _texte_pilote(exc) -> str:
-    """Le texte de l'erreur du pilote ODBC : le 2e argument de l'exception pyodbc, (etat SQL, texte), sinon str(exc)."""
+    """Le texte de l'erreur ODBC, brut et non par le repr du tuple. Une erreur du pilote porte (etat SQL, texte), le
+    texte commencant par « [ » ; une erreur levee par pyodbc lui-meme porte (texte, etat SQL), et le 2e argument seul
+    rendait l'etat (HY000) au lieu du texte. Une erreur sans diagnostic du pilote (unixODBC, hote Linux de la
+    fonction) porte (HY000, « The driver did not supply an error! ») : etat en 1er, texte sans « [ », lu en 2e.
+    Toute autre forme se lit par str(exc), comme avant. Meme lecture que fn_ecran_revision et fn_ecran_client
+    (24/11/2026)."""
     a = getattr(exc, "args", ())
-    return a[1] if len(a) > 1 and isinstance(a[1], str) else str(exc)
+    if len(a) > 1 and isinstance(a[0], str) and isinstance(a[1], str):
+        if a[1].startswith("["):
+            return a[1]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[1]):
+            return a[0]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[0]):
+            return a[1]
+    return str(exc)
 
 
 def _message_sql(exc) -> str:
@@ -460,7 +467,7 @@ def matiere_du_lot(rangs, date_arrete):
     if au_275 and not REPRISE_275_DISTINGUE_LES_TITRES:
         cites = "; ".join(f"{code} (poste {postes.get(code) or 'vide'}, {_montant_ecran(montant)})"
                           for code, montant in sorted(au_275.items()))
-        # R9, D6, texte n° 16 : « calculée pour » devant le code d'actif, apostrophes typographiques
+        # « calculée pour » devant le code d'actif, apostrophes typographiques
         raise _Refus(
             f"Génération refusée : la différence d’estimation calculée pour {cites} s’écrirait au compte 275, que "
             "« Reprendre l’écart du 275 » rapproche de la seule valeur des titres de filiales ; visée, elle serait "
@@ -475,13 +482,13 @@ def _generer(base, qui: str, arrete: str, entite: str, version: str) -> str:
     try:
         curseur = connexion.cursor()
 
-        # 0. LA PORTE DU CRITERE B6 BIS, 1re etape. Cette lecture ouvre aussi la
-        #    transaction implicite du pilote, que la garde n° 25 exige.
+        # 0. LA PORTE DES EXPERTISES SANS RAPPORT, 1re etape. Cette lecture ouvre aussi
+        #    la transaction implicite du pilote, que la garde de la generation exige.
         curseur.execute(REQUETE_EXPERTISES_SANS_RAPPORT, arrete, entite)
         fautives = curseur.fetchall()
         if fautives:
             codes = ", ".join(sorted({r.code_actif for r in fautives}))
-            # R9, D6, texte n° 15 : « pour » devant le code d'entite, le nombre d'expertises accorde, sans « (s) »
+            # « pour » devant le code d'entite, le nombre d'expertises accorde, sans « (s) »
             n = len(fautives)
             raise _Refus(
                 f"Génération refusée pour {entite} au {_date_ecran(arrete)} : {n} "
@@ -489,7 +496,7 @@ def _generer(base, qui: str, arrete: str, entite: str, version: str) -> str:
                 "à la Collecte et rattachez-le à son actif ou à son entité, puis générez de nouveau."
             )
 
-        # 1. LA GARDE N° 25, avant la lecture de la feuille et l'insertion du lot.
+        # 1. LA GARDE DE LA GENERATION, avant la lecture de la feuille et l'insertion du lot.
         #    Un refus de la base (numero d'au moins 50000) est un refus francais ; toute autre erreur est une erreur du
         #    moteur, rendue par le point 9 (point 10 de l'en-tete).
         try:
@@ -624,14 +631,13 @@ def generer_lot_valorisation(
     UserThrownError. Les noms de parametres emploient la casse chameau, les soulignes etant interdits. versionRegles
     est facultatif, le bouton ne le passe pas (point 7 de l'en-tete).
 
-    ARRETE ET ENTITE ONT UNE VALEUR PAR DEFAUT VIDE (24/10/2026, decision du candidat « 1-A », regle du meme jour : tout
-    message a l'ecran en francais) : un parametre facultatif dont la mesure est vide n'est pas envoye par le service, et
-    la valeur par defaut le remplace. La fonction lit la base avant la garde (expertises sans rapport) : l'arrete vide
-    ou mal forme, puis le vehicule vide sont refuses ici, avant toute lecture. [Entite si generable] etant vide aussi
-    par etat, le texte du vehicule vide est celui de l'etude du 24/10/2026 (_scratch/fonctions_fr/
-    etude_fonctions_20261024.json, champ « plan »), que la base reprend dans ses procedures. L'ORDRE DES REFUS EST
-    CELUI DU PLAN DE L'ETUDE (24/10/2026) : l'arrete, puis le vehicule, puis la version des regles trop longue, que le
-    bouton ne passe pas."""
+    ARRETE ET ENTITE ONT UNE VALEUR PAR DEFAUT VIDE (24/10/2026, regle du meme jour : tout message a l'ecran en
+    francais) : un parametre facultatif dont la mesure est vide n'est pas envoye par le service, et la valeur par
+    defaut le remplace. La fonction lit la base avant la garde (expertises sans rapport) : l'arrete vide ou mal forme,
+    puis le vehicule vide sont refuses ici, avant toute lecture. [Entite si generable] etant vide aussi par etat, le
+    texte du vehicule vide nomme aussi les causes d'etat, et la base le reprend dans ses procedures. LES REFUS SE
+    SUIVENT DANS CET ORDRE : l'arrete, puis le vehicule, puis la version des regles trop longue, que le bouton ne
+    passe pas."""
     qui = _qui(ctx)
     version = (versionRegles or "").strip() or VERSION_REGLES
     try:

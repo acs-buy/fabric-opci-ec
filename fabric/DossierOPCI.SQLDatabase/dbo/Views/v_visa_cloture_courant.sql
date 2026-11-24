@@ -1,15 +1,15 @@
 -- =====================================================================
 -- LA PUBLICATION AU CLIENT : LA PORTE EST DANS LA DONNEE.
 --
--- LA REGLE, ARRETEE PAR LE CANDIDAT LE 06/09/2026. Rien ne remonte dans
+-- LA REGLE, ARRETEE LE 06/09/2026. Rien ne remonte dans
 -- le rapport client avant que le chef de mission ait vise la cloture de
 -- l'etape 5, nature CLOTURE, decision VISE. Ce visa existe deja :
--- pr_cloturer_etape_5, script 109, l'exige apres la valeur liquidative
--- publiee, les categories visees et le document produit ; pr_rouvrir_arrete,
--- script 113, le RENVOIE quand l'arrete est rouvert. La dimension d'arrete
+-- pr_cloturer_etape_5 l'exige apres la valeur liquidative
+-- publiee, les categories visees et le document produit ; pr_rouvrir_arrete
+-- le RENVOIE quand l'arrete est rouvert. La dimension d'arrete
 -- du modele client, v_arrete_client, ne porte donc plus que les arretes
 -- dont le DERNIER visa de cloture est VISE : toutes les tables clientes en
--- dependent, script 141, et un arrete rouvert disparait du rapport sans
+-- dependent, et un arrete rouvert disparait du rapport sans
 -- qu'aucun visuel n'ait a le savoir.
 --
 -- POURQUOI LA PORTE EST ICI ET NON DANS LE RAPPORT. Un filtre de rapport

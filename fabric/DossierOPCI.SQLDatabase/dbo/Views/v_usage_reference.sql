@@ -1,8 +1,7 @@
 
 -- --- 9 : la vue de l'usage des references, pour le reviseur --------
 -- Elle repond a la question « si je change cette reference, qu'est-ce qui
--- bouge ? ». C'est ce que le candidat a demande : une table ou l'on change
--- une reference et ou l'on voit ce que cela met a jour.
+-- bouge ? » : une table ou l'on change une reference et ou l'on voit ce que cela met a jour.
 CREATE   VIEW dbo.v_usage_reference AS
 SELECT r.id, r.norme, r.reference, r.citation_courte, r.intitule,
        CAST(r.lu_sur_piece AS BIT)                    AS lu_sur_piece,

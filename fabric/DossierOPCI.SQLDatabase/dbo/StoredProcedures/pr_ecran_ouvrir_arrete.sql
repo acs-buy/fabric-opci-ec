@@ -1,5 +1,5 @@
 
--- pr_ecran_ouvrir_arrete : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_ecran_ouvrir_arrete : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_ecran_ouvrir_arrete
     @entite          VARCHAR (20),
     @exercice_debut  DATE,

@@ -1,5 +1,5 @@
 -- ------------------------------------------------------------------ la forme du code d'un referentiel : les libelles des colonnes de sa cle, joints par « · »
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 CREATE   FUNCTION dbo.fn_e5_forme_cle (@table VARCHAR (120))
 RETURNS NVARCHAR (400)
 AS

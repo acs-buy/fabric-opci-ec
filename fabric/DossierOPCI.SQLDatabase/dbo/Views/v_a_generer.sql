@@ -1,11 +1,11 @@
 
--- ------------------------------------------------------------------ B2 : la garde B6 bis lue par l'ecran (et n° 14)
+-- ------------------------------------------------------------------ la garde lue par l'ecran (et n° 14)
 -- RAPPORT_NON_RATTACHE retient aussi la piece sans ligne de piece_rattachement sur l'actif ni sur l'entite detentrice,
 -- test de v_expertise_sans_rapport ; les motifs sont accentues.
 
 -- --- 4 : ce qui est generable, et ce qui bloque ----------------------
 -- Une ligne par actif du perimetre, avec son etat : CALCULABLE, ou
--- bloque avec le motif. C'est l'ecran E3-A avant la generation.
+-- bloque avec le motif. C'est l'ecran du lot de reevaluation avant la generation.
 CREATE   VIEW dbo.v_a_generer AS
 SELECT p.entite, p.arrete, p.exercice, p.code_actif, p.nature, p.famille,
        p.valeur_comptable, p.valeur_actuelle, p.difference_estimation,

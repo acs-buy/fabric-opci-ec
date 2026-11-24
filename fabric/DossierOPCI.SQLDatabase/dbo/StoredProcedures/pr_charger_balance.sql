@@ -1,5 +1,5 @@
 
--- pr_charger_balance : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_charger_balance : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_charger_balance
     @import_id INT,
     @par       NVARCHAR (200)

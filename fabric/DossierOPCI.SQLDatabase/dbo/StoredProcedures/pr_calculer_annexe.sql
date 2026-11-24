@@ -1,4 +1,4 @@
-
+-- --- 10 ---------------------------------------------------------------------------------------------
 -- pr_calculer_annexe : 3 refus
 -- ------------------------------------------------------------------------------------------------- le calcul
 CREATE   PROCEDURE dbo.pr_calculer_annexe
@@ -6,7 +6,7 @@ CREATE   PROCEDURE dbo.pr_calculer_annexe
     @arrete      VARCHAR (20)   = NULL,
     @declencheur VARCHAR (12),
     @par         NVARCHAR (400),
-    -- lot B2 : un appelant qui calcule dans sa transaction ne recoit pas la ligne de resultat (@rendre = 0) ; il lit le
+    -- un appelant qui calcule dans sa transaction ne recoit pas la ligne de resultat (@rendre = 0) ; il lit le
     -- nombre de documents perimes et l'identifiant du calcul en sortie
     @rendre            BIT = 1,
     @documents_perimes INT = NULL OUTPUT,
@@ -161,7 +161,8 @@ BEGIN
     IF @rendre = 0 RETURN;
     SELECT k.calcul_id, k.fin AS calcule_le, k.cellules, k.cellules_changees, k.a_remplir, k.en_attente, k.versions_creees, k.documents_perimes,
            k.arretes AS arretes_recalcules,
-           N'Annexe recalculée le ' + CONVERT(NVARCHAR (10), k.fin, 103) + N' à ' + LEFT(CONVERT(NVARCHAR (8), k.fin, 108), 5) + N' UTC : '
+           -- : l'heure de fin a l'heure de Paris, sans « UTC » ; calcule_le reste en UTC
+           N'Annexe recalculée le ' + CONVERT(NVARCHAR (10), CAST(k.fin AT TIME ZONE 'UTC' AT TIME ZONE 'Romance Standard Time' AS DATETIME2 (3)), 103) + N' à ' + LEFT(CONVERT(NVARCHAR (8), CAST(k.fin AT TIME ZONE 'UTC' AT TIME ZONE 'Romance Standard Time' AS DATETIME2 (3)), 108), 5) + N' : '
            + CAST(k.cellules AS NVARCHAR (10)) + N' cellules, dont ' + CAST(k.a_remplir AS NVARCHAR (10)) + N' à remplir et '
            + CAST(k.en_attente AS NVARCHAR (10)) + N' en attente ; versions créées : ' + CASE WHEN k.versions_creees = N'' THEN N'aucune' ELSE k.versions_creees END + N'.' AS message
     FROM dbo.calcul_annexe k WHERE k.calcul_id = @c;

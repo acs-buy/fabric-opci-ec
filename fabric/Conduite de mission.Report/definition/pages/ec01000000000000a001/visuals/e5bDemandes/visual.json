@@ -3,7 +3,7 @@
   "name": "e5bDemandes",
   "position": {
     "x": 519,
-    "y": 630,
+    "y": 554,
     "z": 74700,
     "height": 120,
     "width": 1033,
@@ -135,11 +135,11 @@
                       "Entity": "v_ecran_demandes_reouverture"
                     }
                   },
-                  "Property": "demande_le"
+                  "Property": "id"
                 }
               },
-              "queryRef": "v_ecran_demandes_reouverture.demande_le",
-              "nativeQueryRef": "demande_le",
+              "queryRef": "v_ecran_demandes_reouverture.id",
+              "nativeQueryRef": "id",
               "displayName": " "
             }
           ]
@@ -155,7 +155,7 @@
                     "Entity": "v_ecran_demandes_reouverture"
                   }
                 },
-                "Property": "demande_le"
+                "Property": "id"
               }
             },
             "direction": "Descending"
@@ -494,7 +494,7 @@
             }
           },
           "selector": {
-            "metadata": "v_ecran_demandes_reouverture.demande_le"
+            "metadata": "v_ecran_demandes_reouverture.id"
           }
         }
       ]
@@ -539,7 +539,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

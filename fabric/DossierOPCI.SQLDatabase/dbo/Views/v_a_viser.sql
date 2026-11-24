@@ -1,6 +1,6 @@
 
 CREATE   VIEW dbo.v_a_viser AS
--- 06/09/2026, demande de Fabric IQ : objet_id, l'identifiant entier de l'objet quand la
+-- 06/09/2026 : objet_id, l'identifiant entier de l'objet quand la
 -- reference en est un (LOT, DEROGATION, EVALUATION), NULL quand elle est textuelle
 -- (CONCLUSION, PUBLICATION). Le panneau d'une automatisation PowerTable ne propose,
 -- pour un parametre de type int, que les colonnes numeriques de la feuille. La colonne

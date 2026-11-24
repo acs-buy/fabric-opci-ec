@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
+/// Ajoutee le 15/09/2026 pour le front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_questions_acceptation
 	lineageTag: b1dcde84-77bf-42f2-bd3d-54b0c5bd49ed
 
@@ -26,15 +26,15 @@ table v_questions_acceptation
 		displayFolder: Ecran 1 Client
 		lineageTag: c47ba6df-7bb9-46b5-90c9-d05d953f773e
 
-	measure 'Sous-titre questionnaire' = VAR r = [Questions repondues du questionnaire] VAR q = [Questions dues du questionnaire] VAR p = [Pieces du client] RETURN IF ( ISBLANK ( q ), "aucun questionnaire ouvert", ( r + 0 ) & " sur " & q & IF ( r > 1, " répondues", " répondue" ) & " · " & ( p + 0 ) & IF ( p > 1, " pièces", " pièce" ) & " · une ligne par question, on y répond directement" )
+	measure 'Sous-titre questionnaire' = VAR r = [Questions repondues du questionnaire] VAR q = [Questions dues du questionnaire] VAR p = [Pieces du client] RETURN IF ( ISBLANK ( q ), "aucun questionnaire ouvert", ( r + 0 ) & " sur " & q & IF ( r > 1, " répondues", " répondue" ) & " · " & ( p + 0 ) & IF ( p > 1, " pièces", " pièce" ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: 74b03cd8-0867-429b-95f7-b9f55b9c7fd9
 
-	measure 'Compteur grille questionnaire' = VAR r = [Questions repondues du questionnaire] VAR q = [Questions dues du questionnaire] VAR aff = MIN ( 10, q ) RETURN IF ( ISBLANK ( q ), BLANK (), ( r + 0 ) & " sur " & q & IF ( r > 1, " répondues", " répondue" ) & " · " & aff & " affichées" & IF ( q > 10, ", la grille défile", "" ) )
+	measure 'Compteur grille questionnaire' = VAR r = [Questions repondues du questionnaire] VAR q = [Questions dues du questionnaire] VAR aff = MIN ( 10, q ) RETURN IF ( ISBLANK ( q ), BLANK (), ( r + 0 ) & " sur " & q & IF ( r > 1, " répondues", " répondue" ) & " · " & aff & " affichées" )
 		displayFolder: Ecran 1 Client
 		lineageTag: b66b97c7-88d5-4a44-8177-db780064d9af
 
-	measure 'Question selectionnee' = VAR c = [Cote questionnaire] VAR r = [Reference acceptation selectionnee] VAR e = CALCULATE ( SELECTEDVALUE ( v_questions_acceptation[Question] ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = c && v_questions_acceptation[Réf.] = r ) ) RETURN IF ( ISBLANK ( r ), "Cliquez une question dans la grille pour y répondre", r & " · " & IF ( LEN ( e ) > 90, LEFT ( e, 90 ) & "…", e ) )
+	measure 'Question selectionnee' = VAR c = [Cote questionnaire] VAR r = [Reference acceptation selectionnee] VAR e = CALCULATE ( SELECTEDVALUE ( v_questions_acceptation[Question] ), FILTER ( ALL ( v_questions_acceptation ), v_questions_acceptation[cote] = c && v_questions_acceptation[Réf.] = r ) ) RETURN IF ( ISBLANK ( r ), "Aucune question choisie", r & " · " & IF ( LEN ( e ) > 90, LEFT ( e, 90 ) & "…", e ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: 533d97cc-7b3c-4603-98b1-aebd54cc5bfb
 

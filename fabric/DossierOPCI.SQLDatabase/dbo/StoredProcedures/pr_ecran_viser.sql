@@ -12,8 +12,7 @@ BEGIN
     -- 15/10/2026 : une personne vide ou NULL se refuse en francais, avant tout le reste
     IF NULLIF(LTRIM(RTRIM(@decide_par)), N'') IS NULL
         THROW 50105, N'Visa refusé : votre compte ne tient pas, sur ce dossier, le rôle habilité à viser cet objet.', 1;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : apres le refus de la personne vide (50105) ; le renvoi d'une publication garde son refus 50101.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -23,7 +22,6 @@ BEGIN
         THROW 51230, N'Visa refusé : l''écran ne désigne aucun objet à viser ; l''action n''est pas exécutée.', 1;
     IF @nature <> 'PUBLICATION' AND @decision = 'RENVOYE' AND ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @motif COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51225, N'Renvoi refusé : un renvoi porte son motif. Sans lui, le préparateur ne sait pas ce qu''il doit corriger.', 1;
-    -- 327 fin
     DECLARE @p1 int = CHARINDEX('|', @objet_ref);
     DECLARE @p2 int = CASE WHEN @p1 > 0 THEN CHARINDEX('|', @objet_ref, @p1 + 1) ELSE 0 END;
     IF @nature = 'CONCLUSION'

@@ -1,7 +1,7 @@
 -- ===================================================================== 1. LE CLASSEUR DES NIVEAUX DE PROGRAMME
--- ecran 5, lot 5, script 335 (61_DEPLOIEMENT/generer_e5_335_export_niveaux_programme.py)
--- Decision D-v : une ligne par question de cycle (hors ECARTEE), les croix de son niveau en base quand il est pose,
--- sinon la proposition mecanique du 28/09/2026 (exporter_niveaux_a_cocher.py) ; le motif dit laquelle. Lue par la
+-- ecran 5
+-- Une ligne par question de cycle (hors ECARTEE), les croix de son niveau en base quand il est pose,
+-- sinon la proposition mecanique du 28/09/2026 ; le motif dit laquelle. Lue par la
 -- fonction exporter_niveaux (n° 194), triee par ordre_cycle et ordre_question.
 CREATE   VIEW dbo.v_export_niveaux_programme
 AS

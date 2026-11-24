@@ -1,5 +1,5 @@
 -- ------------------------------------------------------------------ le refus : THROW du texte, « % » double
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 CREATE   PROCEDURE dbo.pr_e5_refuser @numero INT, @texte NVARCHAR (2000)
 AS
 BEGIN

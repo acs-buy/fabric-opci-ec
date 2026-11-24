@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "revOdLibelle",
   "position": {
-    "x": 177,
-    "y": 910,
+    "x": 188,
+    "y": 934,
     "z": 11100,
-    "height": 83,
-    "width": 357,
+    "height": 48,
+    "width": 335,
     "tabOrder": 11100
   },
   "visual": {

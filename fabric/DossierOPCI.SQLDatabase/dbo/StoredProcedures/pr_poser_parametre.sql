@@ -7,12 +7,12 @@ BEGIN
     SET NOCOUNT ON;
     IF @code IS NULL OR LTRIM(RTRIM(@code)) = ''
         THROW 50930, N'Le code du paramètre est obligatoire.', 1;
-    -- 318 (ecran 5, objet n° 19) : ref_parametre est gardee (tr_ref_parametre_garde) et horodatee sur pose_par et
+    -- (ecran 5, objet n° 19) : ref_parametre est gardee (tr_ref_parametre_garde) et horodatee sur pose_par et
     -- pose_le (tr_ref_parametre_horodatage). Le MERGE s'ecrit sous le contexte semis, que la garde et
     -- l'horodatage laissent passer : l'installation, qui appelle cette procedure avec l'adresse de
     -- l'installateur, n'est pas jugee sur un role, et pose_par garde @par. La valeur d'avant du contexte
     -- est retablie apres le MERGE, refus compris. Un code absent s'inscrit en INSTALLATION ; une mise a
-    -- jour ne change pas genre. Genere par 61_DEPLOIEMENT/generer_e5_318_tables_gardees.py.
+    -- jour ne change pas genre.
     DECLARE @semis_avant SQL_VARIANT = SESSION_CONTEXT(N'semis');
     BEGIN TRY
         EXEC sp_set_session_context N'semis', 1;

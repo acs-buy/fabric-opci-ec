@@ -1,5 +1,5 @@
 
--- --- depuis 63_SQL/94_vues_intragroupe.sql : v_charges_fonctionnement ------------
+-- --- v_charges_fonctionnement ---
 -- --- 8 : la vue des charges de fonctionnement de l'OPCI ----------
 -- Article 322-10 : « l'ensemble des depenses engagees pour le
 -- fonctionnement de l'OPCI ». Elle les rend par nature, avec le compte et

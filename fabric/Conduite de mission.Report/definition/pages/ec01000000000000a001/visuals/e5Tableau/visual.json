@@ -3,7 +3,7 @@
   "name": "e5Tableau",
   "position": {
     "x": 519,
-    "y": 552,
+    "y": 476,
     "z": 63900,
     "height": 300,
     "width": 1033,
@@ -427,7 +427,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

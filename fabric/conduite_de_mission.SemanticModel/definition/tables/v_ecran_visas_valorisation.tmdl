@@ -158,6 +158,16 @@ table v_ecran_visas_valorisation
 
 		annotation SummarizationSetBy = Automatic
 
+	column decide_le_utc
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 45322325-d548-4382-a571-50dbef9787f1
+		summarizeBy: none
+		sourceColumn: decide_le_utc
+
+		annotation SummarizationSetBy = Automatic
+
 	partition v_ecran_visas_valorisation = m
 		mode: directQuery
 		source =

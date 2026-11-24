@@ -2,7 +2,7 @@
 table classeur_cabinet
 	lineageTag: 6d580d1f-2d0c-4685-ad12-8011b28bd83c
 
-	/// n° 132, VAR c = [Referentiel choisi] : web_url de la ligne la plus récente (depose_le) de classeur_cabinet où genre = REFERENTIEL et referentiel = c ; vide sans classeur déposé : le lien web ne s’ouvre pas (GUIDE_API_RAPPORT_POWER_BI.md, § 17.26, point 4)
+	/// n° 132, VAR c = [Referentiel choisi] : web_url de la ligne la plus récente (depose_le) de classeur_cabinet où genre = REFERENTIEL et referentiel = c ; vide sans classeur déposé : le lien web ne s’ouvre pas
 	measure 'Adresse du classeur du referentiel' = VAR c = [Referentiel choisi] VAR t = FILTER ( ALL ( classeur_cabinet ), classeur_cabinet[genre] = "REFERENTIEL" && classeur_cabinet[referentiel] = c ) VAR d = MAXX ( t, classeur_cabinet[depose_le] ) RETURN MAXX ( FILTER ( t, classeur_cabinet[depose_le] = d ), classeur_cabinet[web_url] ) & ""
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: b1484613-b1e2-43a5-a17f-2e7d5179014c

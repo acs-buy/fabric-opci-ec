@@ -1,5 +1,5 @@
 
--- C41 : une diligence dont la reference textuelle cite une source que le
+-- une diligence dont la reference textuelle cite une source que le
 -- referentiel des normes ne porte pas, un paragraphe du referentiel
 -- normatif CNOEC ou un article du reglement general de l'AMF. Elle n'est
 -- pas fausse, mais sa citation ne se met pas a jour quand le referentiel

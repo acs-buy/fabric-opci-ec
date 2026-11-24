@@ -1,10 +1,10 @@
 """fn_ecran_valorisation : les boutons de l'ecran Valorisation (ecran 3), une fonction par bouton.
 
-Memes regles que fn_ecran_revision : chaque fonction appelle UNE procedure de la base (lot 1 de la feuille de route
-65_JOURNAL/roadmap_ecran_3_valorisation.md), rend la phrase du bouton, prend l'utilisateur dans le contexte d'execution
-(PreferredUsername) et jamais dans un parametre, et un refus remonte en francais par UserThrownError.
+Memes regles que fn_ecran_revision : chaque fonction appelle UNE procedure de la base, rend la phrase du bouton,
+prend l'utilisateur dans le contexte d'execution (PreferredUsername) et jamais dans un parametre, et un refus remonte
+en francais par UserThrownError.
 Connexions : « DossierOPCI » (base) et « Coffre » (lakehouse, raccourci fec vers le site du cabinet). Bibliotheque :
-openpyxl. « Generer le lot » n'est pas ici : il appelle fn_valorisation.generer_lot_valorisation (option 1 du lot 0).
+openpyxl. « Generer le lot » n'est pas ici : il appelle fn_valorisation.generer_lot_valorisation.
 
 Les etapes de l'ecran et leurs boutons :
   1a Immeubles   enregistrer_expertise, proposer_valeur_retenue, exporter_valeurs, importer_valeurs
@@ -18,23 +18,23 @@ Les etapes de l'ecran et leurs boutons :
 
 UN CHAMP VIDE NE DESACTIVE AUCUN BOUTON : tout parametre lie a un champ de saisie, a un segment de saisie ou a une ligne
 choisie est facultatif, la fonction lui donne un defaut vide, et la base refuse en francais en nommant le champ
-(refus 50700 a 50799 du lot 1).
+(refus 50700 a 50799).
 
-LES SELECTEURS ET LES ETATS VIDES (24/10/2026, decision du candidat « 1-A », regle du meme jour : tout message a
-l'ecran en francais). Les parametres d'etat ou de droit, jusque-la obligatoires (entite et arrete des selecteurs,
-mesures vides par construction), ont aussi une valeur par defaut vide ; seule la decision de viser_synthese, constante
-du bouton, reste obligatoire, en tete de la signature. Learn, « Python programming model for Fabric user data
-function » (ms.date 2026-01-21, mise a jour du 2026-08-04, relue le 24/10/2026) : « Parameters with default values
-are optional at invocation time ». Cas general : la fonction passe la valeur vide telle quelle a la procedure, qui la
-refuse en francais avant toute ecriture (THROW d'un numero d'au moins 50000), et la fonction relaie ce refus.
+LES SELECTEURS ET LES ETATS VIDES (24/10/2026, regle du meme jour : tout message a l'ecran en francais). Les
+parametres d'etat ou de droit, jusque-la obligatoires (entite et arrete des selecteurs, mesures vides par
+construction), ont aussi une valeur par defaut vide ; seule la decision de viser_synthese, constante du bouton, reste
+obligatoire, en tete de la signature. Learn, « Python programming model for Fabric user data function » (ms.date
+2026-01-21, mise a jour du 2026-08-04, relue le 24/10/2026) : « Parameters with default values are optional at
+invocation time ». Cas general : la fonction passe la valeur vide telle quelle a la procedure, qui la refuse en
+francais avant toute ecriture (THROW d'un numero d'au moins 50000), et la fonction relaie ce refus.
 Exception : une fonction qui se sert du champ avant son 1er appel de procedure (lecture de la base, d'une piece ou d'un
-classeur, classeur fabrique) le refuse elle-meme, avant de s'en servir, avec le texte de l'etude du 24/10/2026
-(_controles) : enregistrer_expertise, proposer_valeur_retenue, exporter_valeurs, importer_valeurs,
-enregistrer_valeur_instrument, annuler_lot et viser_synthese.
-L'ORDRE DES REFUS EST CELUI DU PLAN DE L'ETUDE (24/10/2026) : une fonction qui oppose elle-meme un refus a une saisie
-(un montant qui n'est pas un nombre, _nombre) refuse d'abord, aux textes du plan et dans son ordre, le vehicule puis
-l'arrete vides (_controles) : enregistrer_cours et enregistrer_revision. Une saisie illisible et un selecteur vide a la
-fois rendent ainsi le texte du selecteur, et non celui de la saisie.
+classeur, classeur fabrique) le refuse elle-meme, avant de s'en servir, avec un texte fixe (_controles) :
+enregistrer_expertise, proposer_valeur_retenue, exporter_valeurs, importer_valeurs, enregistrer_valeur_instrument,
+annuler_lot et viser_synthese.
+L'ORDRE DES REFUS (24/10/2026) : une fonction qui oppose elle-meme un refus a une saisie (un montant qui n'est pas un
+nombre, _nombre) refuse d'abord, dans cet ordre, le vehicule puis l'arrete vides (_controles) : enregistrer_cours et
+enregistrer_revision. Une saisie illisible et un selecteur vide a la fois rendent ainsi le texte du selecteur, et
+non celui de la saisie.
 
 LE MESSAGE S'ECRIT SOUS LE VEHICULE DU SELECTEUR, jamais sous l'entite de l'objet (filiale d'un lot, d'un actif, d'une
 feuille) : [Message ecran] ne lit que le vehicule choisi et « - ». Chaque procedure rend une ligne (vehicule, message) ;
@@ -86,9 +86,21 @@ def _qui(ctx) -> str:
 
 
 def _texte_pilote(exc) -> str:
-    """Le texte de l'erreur du pilote ODBC : le 2e argument de l'exception pyodbc, (etat SQL, texte), sinon str(exc)."""
+    """Le texte de l'erreur ODBC, brut et non par le repr du tuple. Une erreur du pilote porte (etat SQL, texte), le
+    texte commencant par « [ » ; une erreur levee par pyodbc lui-meme porte (texte, etat SQL), et le 2e argument seul
+    rendait l'etat (HY000) au lieu du texte. Une erreur sans diagnostic du pilote (unixODBC, hote Linux de la
+    fonction) porte (HY000, « The driver did not supply an error! ») : etat en 1er, texte sans « [ », lu en 2e.
+    Toute autre forme se lit par str(exc), comme avant. Meme lecture que fn_ecran_revision et fn_ecran_client
+    (24/11/2026)."""
     a = getattr(exc, "args", ())
-    return a[1] if len(a) > 1 and isinstance(a[1], str) else str(exc)
+    if len(a) > 1 and isinstance(a[0], str) and isinstance(a[1], str):
+        if a[1].startswith("["):
+            return a[1]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[1]):
+            return a[0]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[0]):
+            return a[1]
+    return str(exc)
 
 
 def _message_sql(exc) -> str:
@@ -194,8 +206,11 @@ def _poser(g: _Action, message, genre: str, procedure: str, journal: bool = Fals
             pass
 
 
-TEXTE_ERREUR = ("Action interrompue par une erreur d'exécution. Le détail technique est consigné au journal des refus ; "
-                "relisez l'écran avant de recommencer.")
+# LE TEXTE D'UNE ERREUR NON PREVUE (24/11/2026) : celui de fn_ecran_client et fn_ecran_revision ; 982,5 px a la
+# chasse publiee : 1 ligne a ec40 et ec41 (coupe 1 487 px), dans la carte de 1 503 px d'ec42, a ec01 et ec02 (coupe
+# 1 487 px).
+TEXTE_ERREUR = ("L'action n'a pas abouti à cause d'un problème technique. Vérifiez à l'écran ce qui a été enregistré, "
+                "puis réessayez. Si le problème revient, prévenez l'administrateur.")
 
 
 def _rendre(g: _Action, nom: str, faire):
@@ -210,8 +225,8 @@ def _rendre(g: _Action, nom: str, faire):
         # Erreur non prevue, du moteur SQL, du pilote ou de Python : le texte francais au bouton et a la zone de
         # message, le detail au journal seul.
         procedure = g.procedures[-1] if g.procedures else nom
-        # LE DETAIL DU JOURNAL (R9, D6, texte n° 18) : « de la fonction » devant son nom, « procédure » devant celui de
-        # la procedure ; sans procedure appelee, la forme du texte n° 19 (fn_documents), sans procedure nommee
+        # LE DETAIL DU JOURNAL : « de la fonction » devant son nom, « procédure » devant celui de la procedure ;
+        # sans procedure appelee, la forme de fn_documents, sans procedure nommee
         detail = ("Erreur d’exécution de la fonction %s, procédure %s : %s" % (nom, procedure, _detail(e))
                   if g.procedures else "Erreur d’exécution de la fonction %s : %s" % (nom, _detail(e)))
         _poser(g, TEXTE_ERREUR, "REFUS", procedure, journal=True, detail=detail)
@@ -287,9 +302,8 @@ def _superviseur(g: _Action, superviseur: str) -> None:
         raise _refus(g, "Le visa est réservé au superviseur connecté ; l'action n'est pas exécutée.")
 
 
-# LES REFUS DES CHAMPS VIDES QUE LA FONCTION OPPOSE ELLE-MEME (24/10/2026, exception au cas general de l'en-tete) : les
-# textes de l'etude du 24/10/2026 (_scratch/fonctions_fr/etude_fonctions_20261024.json, champ « plan »), mot pour mot,
-# un seul texte par champ, que la base reprend dans ses procedures.
+# LES REFUS DES CHAMPS VIDES QUE LA FONCTION OPPOSE ELLE-MEME (24/10/2026, exception au cas general de l'en-tete) :
+# un seul texte par champ, que la base reprend mot pour mot dans ses procedures.
 REFUS_VEHICULE = "Choisissez le véhicule dans le sélecteur Véhicule."
 REFUS_ARRETE = "Choisissez l'arrêté dans le sélecteur Arrêté."
 REFUS_LOT = "Choisissez dans la grille « Lots de valorisation de l’arrêté » un lot au statut proposé."
@@ -299,7 +313,7 @@ REFUS_SYNTHESE_A_VISER = ("Visa refusé : aucune synthèse proposée n'attend de
 
 def _controles(g: _Action, champs) -> None:
     """Les controles d'entree d'une fonction qui se sert d'un champ avant son 1er appel de procedure : champs,
-    [(valeur, texte du refus)] dans l'ordre de l'etude ; la 1re valeur vide est refusee en francais, avant toute lecture
+    [(valeur, texte du refus)] dans l'ordre des refus ; la 1re valeur vide est refusee en francais, avant toute lecture
     ou procedure de la base, le refus etant ensuite journalise et pose par _rendre."""
     for valeur, texte in champs:
         if _vide(valeur) is None:
@@ -360,8 +374,8 @@ def _montant_ecran(x) -> str:
     return "{:,.2f}".format(Decimal(str(x))).replace(",", " ").replace(".", ",")
 
 
-# LA DATE ET L'HEURE D'UN DEPOT, A L'HEURE DE PARIS (R9, D6, regle des textes a raccourcir, validation du 27/10/2026) :
-# celles de la mesure [Depose le heure de Paris] du modele, que montre la ligne de titre de D2. L'instant est
+# LA DATE ET L'HEURE D'UN DEPOT, A L'HEURE DE PARIS (27/10/2026) : celles de la mesure [Depose le heure de Paris] du
+# modele, que montre l'ecran sur la ligne de titre du depot. L'instant est
 # export_dossier.depose_le, ecrit en UTC par la base (defaut SYSUTCDATETIME, relu le 27/10/2026), lu dans
 # v_export_dossier (dernier depot reussi du fichier) ; heure d'ete, UTC + 2, du dernier dimanche de mars a 01:00 UTC au
 # dernier dimanche d'octobre a 01:00 UTC, UTC + 1 sinon, puis la troncature a la minute, comme l'expression de la
@@ -520,8 +534,8 @@ def exporter_valeurs(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
         fichier = _fichier_valeurs(entite, arrete)
         _executer(base, "EXEC dbo.pr_deposer_classeur @entite=?, @arrete=?, @fichier=?, @contenu_base64=?, @par=?",
                   (entite, arrete, fichier, base64.b64encode(tampon.getvalue()).decode("ascii"), g.qui), g)
-        # LA PHRASE DE R9 (D6, texte n° 7) : sans adresse, « Ouvrir le classeur Excel » ouvrant le fichier sur la meme
-        # ligne ; la date et l'heure de Paris du depot ; le nombre d'actifs accorde
+        # LA PHRASE DU DEPOT : sans adresse, « Ouvrir le classeur Excel » ouvrant le fichier sur la meme ligne ; la
+        # date et l'heure de Paris du depot ; le nombre d'actifs accorde
         date, heure = _depot_a_paris(base, entite, arrete, fichier)
         n = len(donnees)
         return (f"Classeur Excel des valeurs de {n} {'actif' if n <= 1 else 'actifs'} déposé le {date} à {heure} ; il "
@@ -600,8 +614,8 @@ def importer_valeurs(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCli
 def enregistrer_revision(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str = "",
                          arrete: str = "", avance: str = "", montant: str = "", motif: str = "") -> str:
     """Bouton « Enregistrer la révision » : le montant revise de l'avance en compte courant choisie, et son motif.
-    pr_ecran_enregistrer_revision. Le vehicule puis l'arrete vides sont refuses ici avant le montant, dans l'ordre du
-    plan de l'etude (_controles, en-tete)."""
+    pr_ecran_enregistrer_revision. Le vehicule puis l'arrete vides sont refuses ici avant le montant, dans cet
+    ordre (_controles, en-tete)."""
     g = _action(base, ctx, entite)
 
     def faire():
@@ -643,7 +657,7 @@ def enregistrer_cours(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCont
                       arrete: str = "", titre: str = "", quantite: str = "", cours: str = "", source: str = "") -> str:
     """Bouton « Enregistrer le cours » : la quantite et le cours d'un titre du vehicule inscrit au compte 256 ou 258,
     et la source du cours. pr_ecran_enregistrer_cours. Le vehicule puis l'arrete vides sont refuses ici avant la
-    quantite et le cours, dans l'ordre du plan de l'etude (_controles, en-tete)."""
+    quantite et le cours, dans cet ordre (_controles, en-tete)."""
     g = _action(base, ctx, entite)
 
     def faire():
@@ -735,7 +749,7 @@ def marquer_compte_revu(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCo
     """Bouton « Marquer le compte revu » : le compte choisi dans la balance de la valorisation passe a l'etat conclu,
     rattache a une feuille du vehicule a l'arrete. pr_ecran_marquer_compte_revu. xref, champ « Référence croisée »,
     est facultatif : vide, la procedure rattache le compte a la feuille de valorisation la plus recente ; saisi, il
-    passe a la procedure (@xref, 63_SQL/291, 10/10/2026), qui refuse en 50773 une feuille qui n'est pas du vehicule a
+    passe a la procedure (@xref, 10/10/2026), qui refuse en 50773 une feuille qui n'est pas du vehicule a
     l'arrete."""
     g = _action(base, ctx, entite)
 

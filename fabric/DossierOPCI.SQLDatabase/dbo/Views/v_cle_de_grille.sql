@@ -1,19 +1,19 @@
--- 181 -- Quelle colonne une grille PowerTable doit declarer comme cle, vue par vue
--- 13/09/2026. Repond au refus mesure par l'agent Fabric IQ : le service rend HTTP 400 avec
+-- Quelle colonne une grille PowerTable doit declarer comme cle, vue par vue
+-- 13/09/2026. Repond au refus mesure : le service rend HTTP 400 avec
 -- « There is no primary key column detected in source table or column configuration » a la lecture
 -- des lignes d'une grille dont la source est une vue sans colonne identifiante.
 --
 -- LE PROBLEME. Une vue n'a pas de cle primaire : sys.indexes ne connait que les tables. Le
 -- generateur de feuilles ne declarait identifiante que cle_ecran, presente sur les seules vues
--- d'ecran issues du script 144. Les 15 vues de contexte qui s'appuient directement sur une table,
+-- d'ecran v_ecran_*. Les 15 vues de contexte qui s'appuient directement sur une table,
 -- et les 5 vues de l'ecran 1.1, n'en portent pas : leurs grilles ne peuvent pas servir de lignes.
 --
 -- CE QUE CETTE VUE REND, et c'est une DONNEE, pas du code : pour chaque vue lisible par une grille,
 -- la colonne a declarer identifiante, et d'ou elle vient. Le generateur la lit au lieu de deduire.
---   'cle_ecran'          la vue porte deja la colonne du script 144, rien a faire
+--   'cle_ecran'          la vue porte deja la colonne cle_ecran, rien a faire
 --   'cle primaire'       la table sous-jacente a une cle primaire d'UNE colonne, presente dans la vue
 --   'unicite de groupe'  la vue agrege, la colonne de regroupement est unique par construction
---   'a traiter'          aucune des 3, il faut ajouter cle_ecran a la vue, cf. le script 182
+--   'a traiter'          aucune des 3, il faut ajouter cle_ecran a la vue
 --
 -- POURQUOI UNE VUE ET NON UNE REGLE DE NOMMAGE. La deduction X -> v_ctx_X ne couvre pas
 -- v_ecran_mon_contexte, dont la table est contexte_reviseur, ni v_ecran_vehicules_ouverts, qui

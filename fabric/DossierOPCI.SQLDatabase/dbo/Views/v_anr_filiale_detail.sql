@@ -1,7 +1,7 @@
 
--- --- depuis 63_SQL/107_anr_filiale_detail.sql : v_anr_filiale_detail -------------
--- --- 2 : V13, l'actif net d'une filiale compte par compte -----------
--- Ce que l'ecran E3-F1 affiche : les capitaux propres ligne a ligne, les
+-- --- v_anr_filiale_detail ---
+-- --- 2 : l'actif net d'une filiale compte par compte -----------
+-- Ce que l'ecran du detail par filiale affiche : les capitaux propres ligne a ligne, les
 -- actifs et leurs differences, l'actif net reevalue, la quote-part et la
 -- valeur des titres chez la mere, et le lot qui porte la valorisation.
 CREATE   VIEW dbo.v_anr_filiale_detail AS

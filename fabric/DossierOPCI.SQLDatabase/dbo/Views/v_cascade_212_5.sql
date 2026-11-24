@@ -17,7 +17,7 @@
 -- Dépréciation du compte courant : compte 276 (sous-classe 26),
 -- contrepartie 1052.
 -- Contrepartie de la provision : compte 105 (texte de l'article), et non
--- sa subdivision 1052 comme le critère B18 de la conception le limitait
+-- sa subdivision 1052 comme le critère de la conception le limitait
 -- à tort.
 -- ATTENDU : une ligne par détention dont la valeur de détention est
 -- négative. Zéro ligne est le cas normal d'un groupe sain.

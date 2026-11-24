@@ -5,7 +5,7 @@
 -- DERNIERE date de valeur de CHAQUE porteur qui ne depasse pas la date de
 -- l'arrete, jamais a une date globale : un porteur sans mouvement dans la
 -- periode detient toujours ses parts. C'est la lecture que fait deja
--- v_controle_parts_porteurs, script 51, bloc 5.
+-- v_controle_parts_porteurs.
 -- date_valeur est un varchar : la convention du dossier est la forme
 -- AAAA-MM-JJ, sous laquelle l'ordre alphabetique est l'ordre
 -- chronologique. La date de l'arrete y est ramenee par le style 23.

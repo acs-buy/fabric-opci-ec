@@ -1,5 +1,5 @@
 -- ===================================================================== 1. LE REIMPORT D'UN CLASSEUR DE REFERENTIEL
--- ecran 5, lot 5, script 332 (61_DEPLOIEMENT/generer_e5_332_import_referentiel.py)
+-- ecran 5
 -- Objet n° 37 : les lignes du dernier classeur du referentiel (@lignes, tableau JSON, un objet par ligne de l'onglet, cles
 -- de la ligne 2 et « _ligne »), jugees ligne a ligne aux regles des n° 11 (valeur) et 12 (ligne neuve), et aux refus des
 -- n° 13 et 14 sur le code et l'ecart ; aucune suppression (n° 15). Tout ou rien : chaque valeur et chaque regle sont
@@ -21,7 +21,7 @@ BEGIN
     DECLARE @journal_avant INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
             @proc VARCHAR (60) = 'pr_importer_referentiel', @e_num INT, @e_msg NVARCHAR (2048), @e_fr NVARCHAR (2000),
             @e_journal NVARCHAR (2000), @m NVARCHAR (2000), @message NVARCHAR (2000);
-    -- le vide : les 29 caracteres de str.isspace(), compares au point de code (script 327)
+    -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
         + NCHAR(133) + NCHAR(160) + NCHAR(5760) + NCHAR(8192) + NCHAR(8193) + NCHAR(8194) + NCHAR(8195) + NCHAR(8196) + NCHAR(8197) + NCHAR(8198)
         + NCHAR(8199) + NCHAR(8200) + NCHAR(8201) + NCHAR(8202) + NCHAR(8232) + NCHAR(8233) + NCHAR(8239) + NCHAR(8287) + NCHAR(12288);
@@ -170,8 +170,8 @@ BEGIN
             SET @m = N'Réimport refusé sur « ' + @lib + N' » : le code de ce référentiel ne tient pas en 1 ou 2 parties, que le classeur sait lire.';
             EXEC dbo.pr_e5_refuser 50911, @m;
         END;
-        -- 343 (30/10/2026) : ELSE N'' dans le MAX, repris par NULLIF : aucun NULL dans l'agregat, donc aucun avertissement 8153, que
-        -- le pilote lirait a la place du refus. Genere par 61_DEPLOIEMENT/generer_e5_343_correctif_avertissement_8153.py.
+        -- 30/10/2026 : ELSE N'' dans le MAX, repris par NULLIF : aucun NULL dans l'agregat, donc aucun avertissement 8153, que
+        -- le pilote lirait a la place du refus.
         SELECT @pk1 = NULLIF(MAX(CASE WHEN c.rang_cle = 1 THEN c.colonne ELSE N'' END), N''),
                @pk2 = NULLIF(MAX(CASE WHEN c.rang_cle = 2 THEN c.colonne ELSE N'' END), N''),
                @type_ref = NULLIF(MAX(CASE WHEN c.colonne = N'reference' THEN c.type_sql ELSE N'' END), N''),
@@ -273,7 +273,7 @@ BEGIN
                      WHERE q.reference = v.texte OR (v.texte NOT LIKE N'%[^0-9]%' AND LEN(v.texte) <= 9 AND q.id = TRY_CAST(v.texte AS INT))
                      ORDER BY CASE WHEN q.reference = v.texte THEN 0 ELSE 1 END) x
         WHERE c.fk_cible = N'ref_question' AND c.fk_col = N'id' AND v.vide = 0 AND v.erreur IS NULL;
-        -- un sujet des questions sur la tenue : son libelle ou son code (B14)
+        -- un sujet des questions sur la tenue : son libelle ou son code
         SET @ex = (SELECT TOP (1) s.libelle FROM dbo.ref_sujet_tenue s ORDER BY s.code);
         UPDATE v SET valeur = x.code, fait = 1,
                      erreur = CASE WHEN x.code IS NULL THEN CASE WHEN c.rang_cle IS NULL THEN 50914 ELSE 50911 END END,
@@ -592,7 +592,7 @@ BEGIN
             END;
         END;
         -- une reference normative neuve, ou dont la norme ou la reference change, s'inscrit avec l'intitule de son article
-        -- (D29 de l'existant) : article absent du referentiel des articles, refus
+        -- article absent du referentiel des articles : refus
         IF @t = 'ref_reference'
         BEGIN
             SET @r = NULL;
@@ -714,7 +714,7 @@ BEGIN
         CLOSE c_ecrit;
         DEALLOCATE c_ecrit;
         SET @rang_ecrit = NULL;
-        -- 13. la designation de chaque ligne ecrite reste unique dans son referentiel (B13), relue apres l'ecriture ; une
+        -- 13. la designation de chaque ligne ecrite reste unique dans son referentiel, relue apres l'ecriture ; une
         --     designation inchangee ne se refuse pas (un doublon anterieur ne vient pas de ce reimport)
         INSERT INTO #des (apres, cle, ligne) SELECT 1, d.cle, d.ligne FROM dbo.v_ecran_referentiel_lignes d WHERE d.referentiel = @t OPTION (RECOMPILE);
         SET @r = NULL;

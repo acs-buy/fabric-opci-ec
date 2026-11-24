@@ -1,6 +1,6 @@
 
 -- pr_ouvrir_maintien : 1 refus
--- Le maintien suit la meme regle. L'ecran C4 porte « Approuver le
+-- Le maintien suit la meme regle. L'ecran porte « Approuver le
 -- maintien », grise tant que le questionnaire n'est pas complet.
 CREATE   PROCEDURE dbo.pr_ouvrir_maintien
     @entite         VARCHAR (20),

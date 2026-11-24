@@ -1,5 +1,5 @@
 
--- pr_traduire_entite : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_traduire_entite : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_traduire_entite
     @entite  VARCHAR (20),
     @a_blanc BIT = 1

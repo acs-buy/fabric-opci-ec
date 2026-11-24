@@ -1,4 +1,4 @@
-/// L'avancement des 5 etapes du parcours par entite et arrete : fait, total, part, etape en cours. Script 63_SQL/152_avancement_etapes.sql. Ajoutee le 09/09/2026.
+/// L'avancement des 5 etapes du parcours par entite et arrete : fait, total, part, etape en cours. Vue dbo.v_avancement_etapes. Ajoutee le 09/09/2026.
 table v_avancement_etapes
 	lineageTag: f8ac9cc4-fe5d-4988-86de-a3efd8c6758d
 

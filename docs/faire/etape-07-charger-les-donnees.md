@@ -6,8 +6,8 @@ Ici, vous remplissez la base. La connexion des fonctions se vérifie à l'étape
 
 | Dossier | Contenu | Ce que c'est |
 |---|---|---|
-| `sql/10_referentiels/` | 49 fichiers, 4 051 lignes | Le socle : questions d'acceptation, plan de comptes, natures de pièces, rôles, articles du règlement |
-| `sql/80_demonstration/` | 36 fichiers, 7 176 lignes | Deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures |
+| `sql/10_referentiels/` | 49 fichiers, 4 058 lignes | Le socle : questions d'acceptation, plan de comptes, natures de pièces, rôles, articles du règlement |
+| `sql/80_demonstration/` | 36 fichiers, 3 719 lignes | Deux véhicules fictifs, leurs filiales, leurs arrêtés, leurs écritures |
 | `sql/89_effacer_la_demonstration.sql` | | Le script qui retire la démonstration quand vous passerez à vos dossiers |
 
 **Le socle est ce que vous gardez.** Il ne contient aucune donnée de client : ce sont des
@@ -107,9 +107,11 @@ UNION ALL SELECT 'entites', COUNT(*) FROM dbo.ref_entite;
 
 ## Quand vous passerez à vos propres dossiers
 
-Jouez `sql/89_effacer_la_demonstration.sql`. Lisez son en-tête avant : il dit exactement ce qu'il
-supprime, ce qu'il vide entièrement, et pourquoi il vaut mieux le jouer **avant** de saisir vos
-premiers dossiers plutôt qu'après.
+Jouez `sql/89_effacer_la_demonstration.sql`. Il supprime les 16 entités de démonstration et les
+lignes qui s'y rattachent, dans 81 tables, dont une seule du socle, `ref_ratio_vehicule`. Il ne vide
+aucune table entièrement : les lignes de vos propres dossiers restent en place, que vous le jouiez
+avant ou après les avoir saisies. Son en-tête décrit les 15 tables qu'il ne touche pas, et le rôle
+qu'il demande : un compte qui porte le rôle d'associé sur les dossiers.
 
 ---
 

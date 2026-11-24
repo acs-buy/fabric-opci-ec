@@ -3,7 +3,7 @@
   "name": "e4CaseS0",
   "position": {
     "x": 736,
-    "y": 534,
+    "y": 458,
     "z": 61000,
     "height": 24,
     "width": 250,
@@ -22,7 +22,7 @@
                     "value": "par le chef de mission",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "10px",
+                      "fontSize": "10pt",
                       "color": "#5B6B7D"
                     }
                   }

@@ -3,7 +3,7 @@
   "name": "e1SecTable3",
   "position": {
     "x": 519,
-    "y": 1201,
+    "y": 1125,
     "z": 43500,
     "height": 99,
     "width": 1033,
@@ -346,7 +346,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

@@ -1,6 +1,6 @@
 -- 223. Les libelles d'en-tete viennent de la VUE, et une mesure ne lit jamais une colonne d'affichage.
 --
--- DEFAUT MESURE PAR FABRIC IQ LE 21/09/2026 : renommer une colonne au modele casse les mesures qui la
+-- DEFAUT MESURE LE 21/09/2026 : renommer une colonne au modele casse les mesures qui la
 -- lisent. Power BI Desktop met a jour les references d'une mesure quand on renomme ; par l'API et le TMDL
 -- il ne le fait pas, et la mesure tombe :
 --   « Column 'etat' in table 'v_ecran_equipe_mission' cannot be found or may not be used in this expression. »
@@ -11,9 +11,9 @@
 --   2. une MESURE ne lit QUE des colonnes techniques, en minuscules et sans accent : role_code, a_designer.
 -- Ainsi renommer un libelle ne casse jamais une mesure, et le modele n'a aucun renommage a porter.
 --
--- Cette vue remplace celle du script 222. Les mesures [Titre equipe], [Alerte equipe] et [Fond alerte equipe]
--- sont reecrites en consequence dans pose_ecran_client.json : elles lisent a_designer, cumul_a_signaler et
--- sans_connexion, 3 colonnes techniques qui ne bougeront plus. Prerequis : 219. Rejouable.
+-- Cette vue remplace sa 1re version. Les mesures [Titre equipe], [Alerte equipe] et [Fond alerte equipe]
+-- sont reecrites en consequence : elles lisent a_designer, cumul_a_signaler et
+-- sans_connexion, 3 colonnes techniques qui ne bougeront plus. Rejouable.
 
 CREATE   VIEW dbo.v_ecran_equipe_mission AS
 WITH roles_attendus AS (

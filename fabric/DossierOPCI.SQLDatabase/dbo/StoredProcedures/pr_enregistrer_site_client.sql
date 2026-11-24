@@ -1,19 +1,19 @@
 -- 213. Le site SharePoint du client, enregistre par le reviseur depuis la fiche du dossier.
--- Regle du candidat, 19/09/2026 : « dans le formulaire de saisie du nouveau client, il doit y avoir un endroit
+-- Regle du 19/09/2026 : « dans le formulaire de saisie du nouveau client, il doit y avoir un endroit
 -- pour indiquer le lien vers le site SharePoint qui a ete cree. Le site SharePoint doit etre cree manuellement
 -- par l'utilisateur, via une equipe Teams ; il prend le lien du site et vient nous le mettre la. »
--- Architecture 21_ARCHITECTURE_DATA_V2.md, ligne 96 : les pieces vivent dans SharePoint, le coffre OneLake
+-- Les pieces vivent dans SharePoint, le coffre OneLake
 -- n'en porte qu'un raccourci sans copie.
 --
 -- La table dbo.demande_espace_client (script du 08/09/2026) porte deja site_url, statut et l'historique ;
 -- pr_ecran_provisionner_espace y ecrit la voie AUTOMATIQUE (fonction Azure qui cree l'equipe et le site).
--- Ce script ajoute la voie MANUELLE, celle que le candidat demande, sans toucher a l'automatique :
+-- La voie MANUELLE, demandee le 19/09/2026, s'ajoute sans toucher a l'automatique :
 --   1. pr_enregistrer_site_client : une ligne FAIT, source MANUEL, avec l'URL collee ; rejouable (meme URL =
 --      rien de nouveau) ; l'URL doit commencer par https:// et porter sharepoint.com.
 --   2. pr_creer_client et pr_modifier_client prennent @site_url (facultatif) et l'enregistrent dans le
---      meme geste. Leurs definitions des scripts 211 et 212 sont REMPLACEES ici, a l'identique par ailleurs.
+--      meme action. Leurs definitions anterieures sont REMPLACEES, a l'identique par ailleurs.
 -- Lecture a l'ecran : v_espace_client (entite, statut, site_url, equipe_indice), 1 ligne par entite.
--- Prerequis : 211, 212. Rejouable.
+-- Prerequis : pr_creer_client et pr_modifier_client. Rejouable.
 
 CREATE   PROCEDURE dbo.pr_enregistrer_site_client
     @entite    VARCHAR (20),

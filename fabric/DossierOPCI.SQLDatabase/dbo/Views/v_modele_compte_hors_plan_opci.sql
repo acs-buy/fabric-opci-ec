@@ -1,5 +1,5 @@
 
--- C47 : un modele dont le compte n'appartient pas au plan de l'entite
+-- un modele dont le compte n'appartient pas au plan de l'entite
 -- qui repondrait a la question. La cle etrangere garantit que le compte
 -- est au referentiel ; elle ne garantit pas qu'il est au plan de
 -- l'OPCI. Les comptes de ces modeles viennent tous de l'article 411-3.

@@ -1,8 +1,10 @@
-
-
+-- --- 2. v_ligne_etat_montant ---------------------------------------------------------------------
 -- Le montant de chaque ligne des etats, par vehicule et arrete de mission, en N et en N-1. Meme resultat
 -- que la version de 239, ligne pour ligne (0 ecart dans les 2 sens sur les 672 lignes, 03/10/2026), ecrit en jointures
 -- et agregats sur le detail materialise.
+-- « NULL des que l'une manque » sans agreger de NULL (COUNT(w.n) et SUM(w.n) levaient 8153
+-- avant les refus 50088 et 50613 de pr_valider_pour_client, par v_obligation_par_categorie) : pas de NULL, la somme ;
+-- un NULL, NULL. Memes valeurs (ISNULL garde le type de w.n).
 CREATE   VIEW dbo.v_ligne_etat_montant AS
 WITH valeur AS (
     -- la valeur d'une ligne DETAIL en N et en N-1, NULL quand la donnee manque
@@ -21,8 +23,8 @@ WITH valeur AS (
 total AS (
     -- une ligne TOTAL ou RESULTAT : la somme signee de ses lignes DETAIL, NULL des que l'une manque
     SELECT f.etat, f.code, w.entite, w.arrete,
-           CASE WHEN COUNT(*) = COUNT(w.n) THEN SUM(f.signe * w.n) END AS n,
-           CASE WHEN COUNT(*) = COUNT(w.n_1) THEN SUM(f.signe * w.n_1) END AS n_1
+           CASE WHEN SUM(CASE WHEN w.n IS NULL THEN 1 ELSE 0 END) = 0 THEN SUM(f.signe * ISNULL(w.n, 0)) END AS n,
+           CASE WHEN SUM(CASE WHEN w.n_1 IS NULL THEN 1 ELSE 0 END) = 0 THEN SUM(f.signe * ISNULL(w.n_1, 0)) END AS n_1
     FROM dbo.v_ligne_etat_formule f
     JOIN valeur w ON w.etat = f.etat AND w.code = f.code_detail
     WHERE NOT EXISTS (SELECT 1 FROM dbo.v_controle_formule_ligne_etat c WHERE c.etat = f.etat AND c.code = f.code)
@@ -31,8 +33,8 @@ total AS (
 capitaux AS (
     -- P_CP, art. 321-1 : la somme de P_CP_1 a P_CP_5
     SELECT w.etat, CAST('P_CP' AS VARCHAR (20)) AS code, w.entite, w.arrete,
-           CASE WHEN COUNT(*) = COUNT(w.n) THEN SUM(w.n) END AS n,
-           CASE WHEN COUNT(*) = COUNT(w.n_1) THEN SUM(w.n_1) END AS n_1
+           CASE WHEN SUM(CASE WHEN w.n IS NULL THEN 1 ELSE 0 END) = 0 THEN SUM(ISNULL(w.n, 0)) END AS n,
+           CASE WHEN SUM(CASE WHEN w.n_1 IS NULL THEN 1 ELSE 0 END) = 0 THEN SUM(ISNULL(w.n_1, 0)) END AS n_1
     FROM valeur w WHERE w.etat = 'BILAN_PASSIF' AND w.code LIKE 'P[_]CP[_]%'
     GROUP BY w.etat, w.entite, w.arrete
 ),

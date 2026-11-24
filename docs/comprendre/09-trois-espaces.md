@@ -44,6 +44,12 @@ d'installation ne se refont donc pas. Mais il copie les **définitions**, et rie
 | Le lien entre le rapport et son modèle | L'éditeur appelle cela l'autobinding |
 | Les connexions et les bibliothèques des ensembles de fonctions | L'éditeur l'écrit : « All connections and libraries are added to new user data functions items created in other environments. » La roue `moteur_opci` de `fn_valorisation` est l'une de ces bibliothèques |
 
+**Ce pipeline n'a pas été éprouvé sur la version publiée.** Une page de l'éditeur écrit que les
+rapports au format PBIR ne sont pas pris en charge par les pipelines, et le rapport des écrans est
+au format PBIR ; une autre page ne cite pas cette limite. Le détail, et les 2 déploiements tentés
+en septembre 2026, sont dans
+[Pipeline de déploiement : non éprouvé](../faire/deployer-en-trois-espaces.md#pipeline-de-déploiement--non-éprouvé).
+
 ### Ce qu'il ne copie pas, et qui est à refaire dans chaque espace
 
 Comme à l'installation, le pipeline copie la forme des éléments. Il ne copie ni leur contenu ni
@@ -92,7 +98,11 @@ le modèle de conduite répète le même serveur et la même base dans chaque pa
 Cette règle remplace `scripts/25_relier_le_modele.py` pour les déploiements suivants. **Elle reste
 à éprouver dans votre installation** : une règle de source ne s'applique pas à un modèle dont la
 source est une fonction Power Query, et nos sources sont des expressions, ce qui n'est pas la même
-chose.
+chose. L'éditeur exclut aussi un modèle qui emploie ensemble requête native et DirectQuery, pour
+une règle de source comme pour un déploiement où l'autobinding est engagé, et
+`conduite_de_mission` combine DirectQuery et `Value.NativeQuery` : voir
+[Pipeline de déploiement : non éprouvé](../faire/deployer-en-trois-espaces.md#pipeline-de-déploiement--non-éprouvé),
+point 2.
 
 ---
 

@@ -12,7 +12,7 @@ Les etapes de l'ecran et leurs boutons :
   OD libres     saisir_od, exporter_od (sans question), importer_classeur, valider_od_libres
   Conclure      conclure_cycle, viser (nature CYCLE ou REVUE, parametre superviseur obligatoire),
                 conclure_revue
-  Livrables     exporter_dossier, deverrouiller_dossier, importer_classeur (dossier entier), arreter_forme_rapport,
+  Livrables     exporter_dossier, demander_deverrouillage, importer_classeur (dossier entier), arreter_forme_rapport,
                 saisir_cellule_annexe, recalculer_annexe, valider_pour_le_client
 
 UN CHAMP VIDE NE DESACTIVE AUCUN BOUTON : tout parametre lie a un champ de saisie est facultatif, la fonction lui donne
@@ -20,20 +20,19 @@ un defaut vide et refuse en francais quand il manque (_obligatoires). Le service
 obligatoire est vide, et sa bulle est en anglais ; un bouton reste donc gris pour un droit ou un etat, jamais pour un
 champ vide.
 
-LES SELECTEURS, LES CHOIX ET LES ETATS VIDES (24/10/2026, decision du candidat « 1-A », regle du meme jour : tout
-message a l'ecran en francais). Chaque parametre d'une fonction qu'appelle un bouton des ecrans 2 et 3 a une valeur par
+LES SELECTEURS, LES CHOIX ET LES ETATS VIDES (24/10/2026 ; tout message a l'ecran est en francais). Chaque parametre d'une fonction qu'appelle un bouton des ecrans 2 et 3 a une valeur par
 defaut vide, sauf les constantes du bouton (actif, nature, decision, reponse), obligatoires et en tete de la signature.
 Learn, « Python programming model for Fabric user data function » (ms.date 2026-01-21, mise a jour du 2026-08-04, relue
 le 24/10/2026) : « Parameters with default values are optional at invocation time » ; un parametre facultatif dont la
-mesure est vide n'est pas envoye, et sa valeur par defaut le remplace (GUIDE_API_RAPPORT_POWER_BI.md, § 17.43, point 8).
+mesure est vide n'est pas envoye, et sa valeur par defaut le remplace.
 Cas general : la fonction passe la valeur vide telle quelle a la procedure, qui la refuse en francais avant toute
 ecriture (THROW d'un numero d'au moins 50000), et la fonction relaie ce refus. Exception : une fonction qui se sert du
 champ avant son 1er appel de procedure (lecture de la base, lecture ou fabrication d'un classeur) le refuse elle-meme,
-avant de s'en servir, avec le texte de l'etude du 24/10/2026 (_controles) : repondre_question, conclure_feuille,
+avant de s'en servir, avec le texte de _controles : repondre_question, conclure_feuille,
 valider_od_question, exporter_questions, exporter_od, exporter_dossier et importer_classeur.
-L'ORDRE DES REFUS EST CELUI DU PLAN DE L'ETUDE (24/10/2026) : une fonction qui oppose elle-meme un refus a un champ de
+L'ORDRE DES REFUS EST FIXE (24/10/2026) : une fonction qui oppose elle-meme un refus a un champ de
 saisie ou a une ligne choisie (_obligatoires, ecriture sans compte, ligne du brouillon libre) refuse d'abord, aux
-textes du plan et dans son ordre, les parametres que le plan met avant ce controle (_controles) : conclure_cycle,
+textes de _controles et dans leur ordre, les parametres places avant ce controle : conclure_cycle,
 conclure_revue, saisir_od, saisir_od_double et retirer_ligne_od. Un champ et un selecteur vides a la fois rendent ainsi
 le texte du selecteur, et non celui du champ.
 
@@ -52,13 +51,13 @@ Le verrou du dossier est controle par les procedures : une fonction n'a rien a e
 LA ZONE DE MESSAGE DE L'ECRAN, comme pour fn_ecran_client (_poser_message, _journaliser_refus). Chaque fonction pose
 son message dans la boite aux lettres de l'ecran, dbo.pr_poser_message_ecran, que le modele lit par
 [Message de la revision] : la reussite avec la phrase rendue, le refus avec le texte de la base. Le refus se pose
-APRES le rollback du geste, dans une connexion neuve donc une transaction neuve, et il est journalise par
-dbo.pr_journaliser_refus : SQL Server n'a pas de transaction autonome, un message ecrit dans la transaction du geste
+APRES le rollback de l'action, dans une connexion neuve donc une transaction neuve, et il est journalise par
+dbo.pr_journaliser_refus : SQL Server n'a pas de transaction autonome, un message ecrit dans la transaction de l'action
 partirait avec son rollback.
-L'ENTITE DU MESSAGE EST CELLE DU GESTE, jamais devinee dans les parametres : le parametre entite quand la fonction
+L'ENTITE DU MESSAGE EST CELLE DE L'ACTION, jamais devinee dans les parametres : le parametre entite quand la fonction
 en a un ; pour viser, l'entite en tete de objetRef (« entite|arrete|cycle », « entite|arrete »), et pour un lot le
 vehicule du perimetre qui le porte ; pour une cote, le vehicule de la feuille.
-L'utilisateur vient du contexte de chaque appel, porte par le geste, et non d'une variable de module : 2 appels
+L'utilisateur vient du contexte de chaque appel, porte par l'action, et non d'une variable de module : 2 appels
 simultanes ne se melangent pas.
 """
 
@@ -82,9 +81,21 @@ def _qui(ctx) -> str:
 
 
 def _texte_pilote(exc) -> str:
-    """Le texte de l'erreur du pilote ODBC : le 2e argument de l'exception pyodbc, (etat SQL, texte), sinon str(exc)."""
+    """Le texte de l'erreur ODBC, brut et non par le repr du tuple. Une erreur du pilote porte (etat SQL, texte), le
+    texte commencant par « [ » ; une erreur levee par pyodbc lui-meme porte (texte, etat SQL), et le 2e argument seul
+    rendait l'etat (HY000) au lieu du texte. Une erreur sans diagnostic du pilote (unixODBC, hote Linux de la
+    fonction) porte (HY000, « The driver did not supply an error! ») : etat en 1er, texte sans « [ », lu en 2e.
+    Toute autre forme se lit par str(exc), comme avant. Meme lecture que fn_ecran_client (21/11/2026), plus ce
+    dernier cas (24/11/2026)."""
     a = getattr(exc, "args", ())
-    return a[1] if len(a) > 1 and isinstance(a[1], str) else str(exc)
+    if len(a) > 1 and isinstance(a[0], str) and isinstance(a[1], str):
+        if a[1].startswith("["):
+            return a[1]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[1]):
+            return a[0]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[0]):
+            return a[1]
+    return str(exc)
 
 
 def _message_sql(exc) -> str:
@@ -124,7 +135,7 @@ def _nom_procedure(sql) -> str:
 # ----------------------------------------------------------------------------- la zone de message
 
 class _Geste:
-    """Le geste en cours : la base, la personne connectee, l'entite du message, les procedures appelees et le texte
+    """L'action en cours : la base, la personne connectee, l'entite du message, les procedures appelees et le texte
     du dernier refus de la base."""
 
     def __init__(self, base, qui, entite):
@@ -193,8 +204,10 @@ def _poser(g, message, genre: str, procedure: str, journal: bool = False, detail
             pass
 
 
-TEXTE_ERREUR = ("Action interrompue par une erreur d'exécution. Le détail technique est consigné au journal des refus ; "
-                "relisez l'écran avant de recommencer.")
+# LE TEXTE D'UNE ERREUR NON PREVUE (24/11/2026) : celui de fn_ecran_client ; a la coupe publiee d'ec02 (870 px),
+# 2 lignes, rien de coupe.
+TEXTE_ERREUR = ("L'action n'a pas abouti à cause d'un problème technique. Vérifiez à l'écran ce qui a été enregistré, "
+                "puis réessayez. Si le problème revient, prévenez l'administrateur.")
 
 
 def _rendre(g: _Geste, nom: str, faire):
@@ -211,8 +224,8 @@ def _rendre(g: _Geste, nom: str, faire):
         raise
     except Exception as e:
         procedure = g.procedures[-1] if g.procedures else nom
-        # LE DETAIL DU JOURNAL (R9, D6, texte n° 17) : « de la fonction » devant son nom, « procédure » devant celui de
-        # la procedure ; sans procedure appelee, la forme du texte n° 19 (fn_documents), sans procedure nommee
+        # LE DETAIL DU JOURNAL : « de la fonction » devant son nom, « procédure » devant celui de
+        # la procedure ; sans procedure appelee, la forme de fn_documents, sans procedure nommee
         detail = ("Erreur d’exécution de la fonction %s, procédure %s : %s" % (nom, procedure, _detail(e))
                   if g.procedures else "Erreur d’exécution de la fonction %s : %s" % (nom, _detail(e)))
         _poser(g, TEXTE_ERREUR, "REFUS", procedure, journal=True, detail=detail)
@@ -306,7 +319,7 @@ def _vide(s):
 
 
 def _obligatoires(g: _Geste, champs) -> None:
-    """Refuse le geste, en francais et avant toute procedure, quand un champ de saisie obligatoire est vide. champs :
+    """Refuse l'action, en francais et avant toute procedure, quand un champ de saisie obligatoire est vide. champs :
     [(valeur, libelle du champ a l'ecran)] ; le refus nomme tous les champs vides, dans l'ordre de l'ecran."""
     manquants = ["« %s »" % lib for v, lib in champs if _vide(v) is None]
     if manquants:
@@ -318,8 +331,7 @@ def _superviseur(g: _Geste, superviseur: str) -> None:
         raise _refus(g, "Le visa est réservé au superviseur connecté ; l'action n'est pas exécutée.")
 
 
-# LES REFUS DES CHAMPS VIDES QUE LA FONCTION OPPOSE ELLE-MEME (24/10/2026, exception au cas general de l'en-tete) : les
-# textes de l'etude du 24/10/2026 (_scratch/fonctions_fr/etude_fonctions_20261024.json, champ « plan »), mot pour mot,
+# LES REFUS DES CHAMPS VIDES QUE LA FONCTION OPPOSE ELLE-MEME (24/10/2026, exception au cas general de l'en-tete) :
 # un seul texte par champ, que la base reprend dans ses procedures.
 REFUS_VEHICULE = "Choisissez le véhicule dans le sélecteur Véhicule."
 REFUS_ARRETE = "Choisissez l'arrêté dans le sélecteur Arrêté."
@@ -333,7 +345,7 @@ REFUS_ARRETE_REIMPORT = ("Choisissez l'arrêté dans le sélecteur Arrêté ; le
                          "arrêté ouvert dont le dossier de travail n'est pas verrouillé.")
 REFUS_CLASSEUR = ("Réimport refusé : aucun classeur n'est désigné ; choisissez la question dans la grille "
                   "« Questions du cycle », ou exportez d'abord le classeur à réimporter.")
-# Les selecteurs que le plan de l'etude fait refuser avant le controle existant du champ (en-tete, ordre des refus)
+# Les selecteurs refuses avant le controle existant du champ (en-tete, ordre des refus)
 REFUS_CYCLE_A_CONCLURE = ("Conclusion refusée : choisissez le cycle dans la bande des cycles ; un cycle se conclut sur "
                           "un arrêté ouvert, dossier de travail non verrouillé, tant que ni lui ni la revue ne sont "
                           "visés.")
@@ -359,7 +371,7 @@ def _copies_a_faire(n: int) -> str:
 
 def _controles(g, champs) -> None:
     """Les controles d'entree d'une fonction qui se sert d'un champ avant son 1er appel de procedure : champs,
-    [(valeur, texte du refus)] dans l'ordre de l'etude ; la 1re valeur vide est refusee en francais, avant toute lecture
+    [(valeur, texte du refus)] dans l'ordre des refus ; la 1re valeur vide est refusee en francais, avant toute lecture
     ou procedure de la base, le refus etant ensuite journalise et pose par _rendre."""
     for valeur, texte in champs:
         if _vide(valeur) is None:
@@ -369,7 +381,7 @@ def _controles(g, champs) -> None:
 def _absent(exc) -> bool:
     """Vrai quand le client de fichiers dit le fichier absent : statut 404 (ResourceNotFoundError), ou code NotFound,
     PathNotFound ou BlobNotFound dans son texte (« Failed with NotFound on GetBlob operation », releve le 23/10/2026
-    sur « Réimporter le dossier », action 89 du lot 11)."""
+    sur « Réimporter le dossier »)."""
     if getattr(exc, "status_code", None) == 404 or exc.__class__.__name__ == "ResourceNotFoundError":
         return True
     return re.search(r"\b(NotFound|PathNotFound|BlobNotFound)\b", str(exc)) is not None
@@ -393,7 +405,7 @@ def _entite_de_visa(base, objetRef, nature=None):
     """L'entite d'un visa, pour le message : la tete de objetRef pour un cycle ou une revue (« entite|arrete|cycle »,
     « entite|arrete ») ; pour un lot, dont objetRef est le seul numero, le vehicule du perimetre qui le porte
     (v_lots_perimetre, le sien d'abord), sinon l'entite du lot. Jamais la nature.
-    POUR UNE VALEUR RETENUE (nature EVALUATION, 10/10/2026, objet n° 225 de l'ecran 3), objetRef est le numero de la
+    POUR UNE VALEUR RETENUE (nature EVALUATION, 10/10/2026, ecran 3), objetRef est le numero de la
     ligne de evaluation_actif, et non celui d'un lot : l'entite est celle de cette ligne (l'entite detentrice de
     l'actif, filiale comprise), puis le vehicule du perimetre qui la porte a son arrete (v_perimetre_vehicule, le sien
     d'abord), sous lequel [Message ecran] lit le message."""
@@ -523,7 +535,7 @@ def ouvrir_feuille(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext
             r = _executer(base, "EXEC dbo.pr_ouvrir_feuille_question @entite=?, @arrete=?, @reference=?, @par=?",
                           (entite, arrete, reference, g.qui), g)
             message = r.get("message", "Feuille ouverte.")
-            # LA FEUILLE OUVERTE PAR CET APPEL (R9, D6, textes n° 3 et 4) : la procedure rend alors son gabarit (colonne
+            # LA FEUILLE OUVERTE PAR CET APPEL : la procedure rend alors son gabarit (colonne
             # modele) ; pour une feuille deja ouverte, sa cote et sa phrase seules (definition relue le 27/10/2026)
             deja = "modele" not in r
         except fn.UserThrownError as e:
@@ -602,7 +614,7 @@ def saisir_od(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
               credit: float = 0, reference: str = "", journal: str = "ODR", piece: str = "") -> str:
     """Une ligne d'OD, liee a une question si reference est donnee, libre sinon. Le compte et le libelle sont
     facultatifs au bouton : vides, la fonction refuse en nommant les champs, apres le vehicule puis l'arrete vides,
-    refuses ici dans l'ordre du plan de l'etude (_controles, en-tete)."""
+    refuses ici dans l'ordre des refus (_controles, en-tete)."""
     g = _geste(base, ctx, entite)
 
     def faire():
@@ -624,7 +636,7 @@ def saisir_od_double(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
                      debit2: float = 0, credit2: float = 0,
                      reference: str = "", journal: str = "ODR",
                      piece1: str = "", piece2: str = "") -> str:
-    """Les 2 lignes d'une ecriture de revision, ecrites en un seul geste.
+    """Les 2 lignes d'une ecriture de revision, ecrites en une seule action.
 
     Une ecriture porte toujours au moins 2 lignes. Les saisir une par une obligeait a vider le
     champ oppose entre les 2, et la seconde partait sans sa reference : l'execution d'une
@@ -632,7 +644,7 @@ def saisir_od_double(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
     """
     # LES 2 LIGNES S'ECRIVENT ENSEMBLE OU PAS DU TOUT : pr_saisir_od_paire controle les 2 lignes avant toute
     # ecriture, un refus n'en ecrit aucune. Une seule ligne saisie passe par pr_saisir_od.
-    # LE VEHICULE PUIS L'ARRETE VIDES SONT REFUSES D'ABORD, dans l'ordre du plan de l'etude (_controles, en-tete) ; les
+    # LE VEHICULE PUIS L'ARRETE VIDES SONT REFUSES D'ABORD, dans l'ordre des refus (_controles, en-tete) ; les
     # refus de l'ecriture sans compte et des champs obligatoires suivent, inchanges.
     g = _geste(base, ctx, entite)
 
@@ -672,7 +684,7 @@ def retirer_ligne_od(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
     ligneId EST UN TEXTE : un parametre de bouton Data function ne se lie jamais a
     une mesure numerique (documentation desktop-buttons). La mesure [Ligne OD libre choisie] rend donc le
     N° en texte, et la conversion se fait ici. Le vehicule puis l'arrete vides sont refuses avant la ligne, dans l'ordre
-    du plan de l'etude (_controles, en-tete)."""
+    des refus (_controles, en-tete)."""
     g = _geste(base, ctx, entite)
 
     def faire():
@@ -709,7 +721,7 @@ def conclure_cycle(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext
                    entite: str = "", arrete: str = "", cycle: str = "", conclusion: str = "", forme: str = "") -> str:
     """Bouton « Enregistrer la conclusion du cycle » : la synthese des feuilles se regenere, le texte se pose. La
     conclusion est facultative au bouton : vide, la fonction refuse en nommant le champ, apres le vehicule, l'arrete
-    puis le cycle vides, refuses ici dans l'ordre du plan de l'etude (_controles, en-tete)."""
+    puis le cycle vides, refuses ici dans l'ordre des refus (_controles, en-tete)."""
     g = _geste(base, ctx, entite)
 
     def faire():
@@ -727,7 +739,7 @@ def conclure_cycle(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext
 def conclure_revue(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
                    entite: str = "", arrete: str = "", conclusion: str = "") -> str:
     """Bouton « Enregistrer la conclusion générale ». La conclusion est facultative au bouton : vide, la fonction refuse
-    en nommant le champ, apres l'arrete puis le vehicule vides, refuses ici dans l'ordre du plan de l'etude (un arrete
+    en nommant le champ, apres l'arrete puis le vehicule vides, refuses ici dans l'ordre des refus (un arrete
     vide vide aussi [Entite de la revue a conclure] ; _controles, en-tete)."""
     g = _geste(base, ctx, entite)
 
@@ -754,22 +766,21 @@ def viser(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
     message est celle de objetRef, jamais la nature (_entite_de_visa).
 
     LE MESSAGE D'UN VISA DE VALEUR RETENUE OU D'UNE PUBLICATION (15/10/2026) : pr_ecran_viser ne rend pas de ligne, et
-    le texte par defaut « EVALUATION : vise. » portait la nature en code, sans accent ni objet (recette du lot 9 de
-    l'ecran 3). Pour les natures EVALUATION et PUBLICATION, la fonction lit apres la procedure dbo.fn_message_visa
-    (script 306), qui rend « Valeur retenue de <actif> visée. », son renvoi, ou « Valeur liquidative publiée. » ; les
+    le texte par defaut « EVALUATION : vise. » portait la nature en code, sans accent ni objet (ecran 3). Pour les
+    natures EVALUATION et PUBLICATION, la fonction lit apres la procedure dbo.fn_message_visa, qui rend
+    « Valeur retenue de <actif> visée. », son renvoi, ou « Valeur liquidative publiée. » ; les
     natures LOT, CYCLE et REVUE gardent leur texte jusqu'au retour sur l'ecran 2. Aucun bouton n'appelle viser avec la
-    nature SYNTHESE : le visa de la synthese passe par viser_synthese de fn_ecran_valorisation (rapport ba40a95a relu par
+    nature SYNTHESE : le visa de la synthese passe par viser_synthese de fn_ecran_valorisation (rapport relu par
     getDefinition le 15/10/2026 : 8 boutons sur viser, natures CYCLE, LOT, REVUE et EVALUATION ; 2 sur viser_synthese).
 
-    OBJETREF ET SUPERVISEUR ONT UNE VALEUR PAR DEFAUT VIDE (15/10/2026, decision du candidat « Gris + refus en
-    français », ecran 4) : « Publier la VL » les lie, facultatifs, a [Publication a viser] et a [Associe connecte], et
-    une mesure vide n'envoie pas le parametre (GUIDE_API_RAPPORT_POWER_BI.md, § 17.43, point 8). nature et decision,
+    OBJETREF ET SUPERVISEUR ONT UNE VALEUR PAR DEFAUT VIDE (15/10/2026, ecran 4 : bouton gris pour un droit ou un etat,
+    refus en francais pour un champ vide) : « Publier la VL » les lie, facultatifs, a [Publication a viser] et a
+    [Associe connecte], et une mesure vide n'envoie pas le parametre. nature et decision,
     constantes du bouton, restent obligatoires, donc en tete ; l'invocation porte chaque parametre sous son nom. Vides,
     ils sont refuses en francais avant toute procedure : le droit d'abord, objetRef ensuite. Le droit d'une publication
     (nature PUBLICATION) appartient a l'associe signataire, lie par [Associe connecte] : son refus le nomme, comme la
     carte [Blocage publication de la VL] (« visa réservé à l'associé signataire ») ; toute autre nature garde le refus de
-    _superviseur. Les boutons des ecrans 2 et 3 gardent ces 2 parametres obligatoires a leur pose (isOptional faux, meme
-    guide, § 3.4, point 1)."""
+    _superviseur. Les boutons des ecrans 2 et 3 gardent ces 2 parametres obligatoires a leur pose (isOptional faux)."""
     g = _geste(base, ctx, _entite_de_visa(base, objetRef, nature))
 
     def faire():
@@ -803,24 +814,27 @@ def _message_visa(base, nature, objetRef, decision):
 
 
 # ----------------------------------------------------------------------------- le dossier de travail
+# 21/11/2026 : deverrouiller_dossier (demandeur tape, pr_deverrouiller_dossier) est retiree apres la pose
+# d'ec02 ; pr_deverrouiller_dossier refuse en base (51253). Le deverrouillage passe par demander_deverrouillage.
 
 @udf.context(argName="ctx")
 @udf.connection(alias="DossierOPCI", argName="base")
 @udf.function()
-def deverrouiller_dossier(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str = "",
-                          arrete: str = "", motif: str = "", demandePar: str = "") -> str:
-    """Bouton « Déverrouiller le dossier de travail » :
-    un motif, la personne qui demande le deverrouillage et celle qui le decide, distinctes ; la decideuse est
-    la personne connectee. La trace est un visa de revue renvoye, motif « Déverrouillage : ». Sans motif ou
-    sans demandeur, la base refuse avec un message lisible (50516). Pas de tiret bas dans un nom de parametre :
-    le service le refuse, d'ou demandePar."""
+def demander_deverrouillage(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, entite: str = "",
+                            arrete: str = "", motif: str = "") -> str:
+    """Bouton « Déverrouiller le dossier » de l'etape 6 : pr_ecran_demander_deverrouillage inscrit une
+    demande de deverrouillage ; le demandeur est la personne connectee, jamais tapee. Le chef de mission la decide a
+    l'ecran 1, sous-etat 5b (accorder_reouverture ou ecarter_reouverture de fn_ecran_client). La base refuse un champ
+    vide (51201, 51240), un non-membre de l'equipe (51241), qui decide les deverrouillages (51242), un arrete valide
+    pour le client (51243), un dossier non verrouille (51240), une autre demande en attente (51244), un motif vide
+    (51245) ou de plus de 580 caracteres (51247)."""
     g = _geste(base, ctx, entite)
 
     def faire():
-        r = _executer(base, "EXEC dbo.pr_deverrouiller_dossier @entite=?, @arrete=?, @motif=?, @demande_par=?, @par=?",
-                      (entite, arrete, _vide(motif), _vide(demandePar), g.qui), g)
-        return r.get("message", "Dossier déverrouillé.")
-    return _rendre(g, "deverrouiller_dossier", faire)
+        r = _executer(base, "EXEC dbo.pr_ecran_demander_deverrouillage @entite=?, @arrete=?, @motif=?, @par=?",
+                      (entite, arrete, _vide(motif), g.qui), g)
+        return r.get("message", "Déverrouillage demandé.")
+    return _rendre(g, "demander_deverrouillage", faire)
 
 
 # ----------------------------------------------------------------------------- les livrables
@@ -902,7 +916,7 @@ def arreter_forme_rapport(base: fn.FabricSqlConnection, ctx: fn.UserDataFunction
                       (entite, arrete, code, g.qui, _vide(motif), _vide(considerations)), g)
         message = r.get("message", "Forme du rapport de l'expert-comptable arrêtée.")
         # LA FORME SE NOMME PAR SON LIBELLE, celui de ref_forme_rapport, et non par son code : la phrase de la base porte
-        # le code (« Forme du rapport arrêtée : COMPTE_RENDU_TRAVAUX. »). La lecture ne defait pas le geste, deja
+        # le code (« Forme du rapport arrêtée : COMPTE_RENDU_TRAVAUX. »). La lecture ne defait pas l'action, deja
         # valide : le code reste si elle echoue.
         # LE LIBELLE EST CELUI DES TUILES DES FORMES (_FORME_COURT), le meme que la colonne libelle_court de
         # ref_forme_rapport au modele : le libelle long d'une attestation avec observation compte 195 caracteres, et le
@@ -1166,8 +1180,8 @@ def _deposer(base, g: _Geste, entite: str, arrete: str, fichier: str, wb) -> dic
                      (entite, arrete, fichier, base64.b64encode(tampon.getvalue()).decode("ascii"), g.qui), g)
 
 
-# LA DATE ET L'HEURE D'UN DEPOT, A L'HEURE DE PARIS (R9, D6, regle des textes a raccourcir, validation du 27/10/2026) :
-# celles de la mesure [Depose le heure de Paris] du modele, que montrent la ligne de titre de D1 et D2 et les 2 listes
+# LA DATE ET L'HEURE D'UN DEPOT, A L'HEURE DE PARIS (27/10/2026) :
+# celles de la mesure [Depose le heure de Paris] du modele, que montrent les lignes de titre des depots et les 2 listes
 # du dossier de travail. L'instant est export_dossier.depose_le, ecrit en UTC par la base (defaut SYSUTCDATETIME, relu
 # le 27/10/2026), lu dans v_export_dossier (dernier depot reussi du fichier) ; heure d'ete, UTC + 2, du dernier dimanche
 # de mars a 01:00 UTC au dernier dimanche d'octobre a 01:00 UTC, UTC + 1 sinon, puis la troncature a la minute, comme
@@ -1205,13 +1219,13 @@ def _depot_a_paris(base, entite: str, arrete: str, fichier: str):
 
 
 def _compte(n: int, singulier: str, pluriel: str) -> str:
-    """Le nombre et son nom accorde, sans « (s) » : le singulier pour 0 et 1 (R9, D6, regle des textes)."""
+    """Le nombre et son nom accorde, sans « (s) » : le singulier pour 0 et 1."""
     return "%d %s" % (n, singulier if n <= 1 else pluriel)
 
 
-# LE NOM DU CYCLE A L'ECRAN (R9, D6, texte n° 2) : nom_usage de la vue dbo.v_ecran_cycle_ou_phase, genre CYCLE, que
+# LE NOM DU CYCLE A L'ECRAN : nom_usage de la vue dbo.v_ecran_cycle_ou_phase, genre CYCLE, que
 # lit le segment « Cycle ou phase » ; la vue est generee depuis la colonne calculee ref_cycle[Cycle] du modele
-# conduite_de_mission (61_DEPLOIEMENT/generer_e5_324_questions.py), et un cycle que le modele ne connait pas y prend
+# conduite_de_mission, et un cycle que le modele ne connait pas y prend
 # le libelle de ref_cycle (vue et lignes relues le 27/10/2026 : 11 cycles, memes noms que le modele). Une lecture en
 # echec ou sans ligne rend le code du cycle.
 def _cycle_a_l_ecran(base, cycle: str) -> str:
@@ -1393,8 +1407,8 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
             chemin = f"fec/Dossiers de travail/{entite}/{arrete}/{chemin.rsplit('/', 1)[-1]}"
         source = "site du cabinet" if chemin.startswith("fec/") else "coffre"
         # LE CLASSEUR ABSENT DU SITE DU CABINET EST UN REFUS NOMME (24/10/2026) : « Réimporter le dossier » sans
-        # classeur depose rendait « Failed with NotFound on GetBlob operation » et une reponse 500 (action 89 du lot 11,
-        # 23/10/2026). Toute autre erreur du client de fichiers suit le filet de _rendre.
+        # classeur depose rendait « Failed with NotFound on GetBlob operation » et une reponse 500
+        # (23/10/2026). Toute autre erreur du client de fichiers suit le filet de _rendre.
         try:
             octets = coffre.connectToFiles().get_file_client(chemin).download_file().readall()
         except Exception as e:
@@ -1405,7 +1419,7 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
         wb = load_workbook(io.BytesIO(octets), data_only=True)
         par = g.qui
         faits, refus = [], []
-        # LE BILAN DU DOSSIER ENTIER (R9, D6, texte n° 6) : ce que rendent les procedures, onglet par onglet
+        # LE BILAN DU DOSSIER ENTIER : ce que rendent les procedures, onglet par onglet
         # (pr_importer_reponses : importees ; pr_importer_od : lignes, debit et credit du brouillon ;
         # pr_importer_feuille : la feuille reprise), definitions relues le 27/10/2026. pr_importer_od remplace le
         # brouillon de la question a chaque import : une question presente dans 2 onglets (OD-<cycle> et
@@ -1440,7 +1454,7 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                 elif t.startswith("OD-"):
                     # L'ONGLET D'OD D'UN CYCLE, dans le dossier de travail. Chaque question du cycle voit son
                     # brouillon REMPLACE par ses lignes de l'onglet ; une question dont toutes les lignes ont
-                    # ete effacees voit donc son brouillon vide, ce qui est le sens du geste.
+                    # ete effacees voit donc son brouillon vide, ce qui est le sens de l'action.
                     cycle = t[3:].strip()
                     lignes = [d for d in _lignes_de(ws)
                               if d.get("compte") and str(d.get("compte")).strip().lower() not in ("total", "écart")]
@@ -1504,13 +1518,13 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
                 refus.append(f"{t} : {ONGLET_INTERROMPU}")
                 g.refus = None
                 _journaliser(g, procedure, "Import de l'onglet %s interrompu, %s : %s" % (t, procedure, _detail(e)))
-        # LE DOSSIER ENTIER, SES OD TOUTES EQUILIBREES (R9, D6, texte n° 6) : le bilan compte ce que les procedures ont
+        # LE DOSSIER ENTIER, SES OD TOUTES EQUILIBREES : le bilan compte ce que les procedures ont
         # rendu, nombres accordes, sans adresse, a l'heure de Paris de la relecture. Toute partie vide est omise : aucun
         # onglet importe, aucune reponse, aucune ligne d'OD de question ou libre, aucune feuille ; un onglet de questions
         # ne compte dans les cycles que si ses reponses importees sont plus de 0, une question que si les lignes de son
         # dernier import sont plus de 0 (un brouillon vide par le reimport n'est pas compte), une feuille une fois par
         # cote.
-        # Tout autre classeur, ou un brouillon desequilibre, garde le texte d'avant R9, qui cite chaque procedure.
+        # Tout autre classeur, ou un brouillon desequilibre, garde le texte detaille, qui cite chaque procedure.
         n_lignes_q = sum(n for n, _ in od_par_question.values())
         n_questions = sum(1 for n, _ in od_par_question.values() if n > 0)
         equilibrees = libres_equilibrees and all(e for _, e in od_par_question.values())
@@ -1552,19 +1566,17 @@ def importer_classeur(base: fn.FabricSqlConnection, coffre: fn.FabricLakehouseCl
 @udf.function()
 def ajouter_question(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, teneur: str = "",
                      cycleOuPhase: str = "", enonce: str = "") -> str:
-    """Bouton « Ajouter une question » de l'etape 2, a la bande des cycles (objet n° 204 de la maquette retenue de
-    l'ecran 5, 20_LIVRABLES_V2/PARCOURS_ECRANS/83_referentiels_option_1.html ; lot 4 de
-    65_JOURNAL/roadmap_ecran_5_referentiels.md) : une question de reference neuve, au statut « à valider », dans le cycle
+    """Bouton « Ajouter une question » de l'etape 2, a la bande des cycles (ecran 5) : une question de reference
+    neuve, au statut « à valider », dans le cycle
     choisi a la bande des cycles (revCycles : nom d'usage ou code, une phase admise), avec l'enonce saisi au champ
     « Énoncé de la question ».
 
     teneur est lie a la mesure [Teneur des questions connecte]. Il a une valeur par defaut vide, comme cycleOuPhase et
     enonce, selon la regle du 24/10/2026 ecrite en tete de ce fichier (chaque parametre d'une fonction qu'appelle un
-    bouton des ecrans 2 et 3 a une valeur par defaut vide, sauf les constantes du bouton). Le caractere obligatoire que
-    lui donnent la feuille de route (lot 4) et l'objet n° 204 de la maquette est tenu par la fonction : absent, vide, a
+    bouton des ecrans 2 et 3 a une valeur par defaut vide, sauf les constantes du bouton). Le caractere obligatoire de
+    teneur est tenu par la fonction : absent, vide, a
     blancs ou d'une autre personne que la personne connectee, teneur est refuse en francais AVANT TOUT APPEL A LA BASE,
-    sans journal ni message, au texte du refus 50888 de la procedure (regle de fn_ecran_referentiels, critere 1 du
-    lot 4). La liaison du bouton n° 205 se decide a la pose (lot 7 de la feuille de route, contrat d'actions).
+    sans journal ni message, au texte du refus 50888 de la procedure (regle de fn_ecran_referentiels).
     cycleOuPhase et enonce passent tels quels a dbo.pr_ecran_ajouter_question (@cycle_ou_phase, @enonce, @par, relus en
     base le 28/10/2026), qui refuse en francais, dans son ordre : aucun mandat d'associe ni de reviseur en cours (50888),
     cycle ou phase vide, commun a un cycle et a une phase, inconnu ou ecarte (50871, 50887, 50872, 50873), enonce vide
@@ -1573,7 +1585,7 @@ def ajouter_question(base: fn.FabricSqlConnection, ctx: fn.UserDataFunctionConte
 
     L'auteur est la personne connectee (ctx.executing_user), passee en @par, jamais un parametre : la session SQL de la
     fonction porte le compte a la fois proprietaire de la fonction et auteur de sa connexion, quel que soit le compte qui
-    clique (R5, § 6.1 de la feuille de route), et seul @par nomme la personne en base. La procedure pose le message de
+    clique, et seul @par nomme la personne en base. La procedure pose le message de
     reussite sous « - », que [Message de la revision] lit sur ec02 ; la fonction le pose de meme apres le commit, et pose
     un refus de la procedure apres le rollback."""
     qui = _qui(ctx)

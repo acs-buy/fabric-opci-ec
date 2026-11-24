@@ -1,4 +1,4 @@
--- --- E4 : le journal du visa, refait ---------------------------
+-- --- le journal du visa, refait ---------------------------
 -- Trois corrections. Il unissait TOUT dbo.journal_refus, y compris les
 -- refus d'import ou de validation de brouillon, qui ne sont pas des
 -- refus de visa. Le proposant etait nul sur les refus. Et le cycle
@@ -14,7 +14,7 @@ SELECT v.entite, v.arrete, v.cycle,
        v.decide_par                                   AS auteur,
        v.propose_par,
        CAST(v.motif AS NVARCHAR (2000))               AS message,
-       -- 19/10/2026 : une cle propre a chaque ligne (P9.6 bis de l'ecran 4)
+       -- 19/10/2026 : une cle propre a chaque ligne (de l'ecran 4)
        ISNULL(CAST('V' + CAST(v.id AS VARCHAR (11)) AS VARCHAR (12)), '') AS cle_visa
 FROM dbo.visa v
 LEFT JOIN dbo.ref_cycle c ON c.code = v.cycle

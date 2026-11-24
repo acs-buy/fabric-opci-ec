@@ -641,13 +641,6 @@
               }
             }
           },
-          "revLivDevPar": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          },
           "revLivDeverrouiller": {
             "singleVisual": {
               "display": {
@@ -1552,6 +1545,20 @@
             }
           },
           "revAjoutEnonce": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "revCclBlocage2": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "revCclBlocage3": {
             "singleVisual": {
               "display": {
                 "mode": "hidden"

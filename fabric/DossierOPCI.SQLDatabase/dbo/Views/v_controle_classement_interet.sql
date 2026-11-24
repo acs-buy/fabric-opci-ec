@@ -1,5 +1,5 @@
 
--- --- depuis 63_SQL/94_vues_intragroupe.sql : v_controle_classement_interet -------
+-- --- v_controle_classement_interet ---
 -- --- 7 : le controle du classement -------------------------------
 -- Un interet d'emprunt affecte a un actif immobilier porte au compte 608
 -- tomberait dans le resultat financier, ce que l'article 322-5 exclut.

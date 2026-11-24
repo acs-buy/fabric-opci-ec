@@ -1,4 +1,4 @@
--- ref_article : 139 ligne(s) de referentiel.
+-- ref_article : 141 ligne(s) de referentiel.
 -- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
 -- Produit depuis la base de reference, ne pas modifier a la main.
 
@@ -103,7 +103,9 @@ BEGIN
         (N'512-3',N'Traitement de l’opération dans les comptes de la SPPICAV absorbante ou bénéficiaire des apports',N'5',N'1',N'2',N'96',N'0',N'ANC',NULL,NULL,N'ANC2021-09'),
         (N'512-4',N'Informations devant figurer dans l’annexe',N'5',N'1',N'2',N'97',N'0',N'ANC',NULL,NULL,N'ANC2021-09'),
         (N'D214-113',N'L''engagement de l''organisme sur les instruments financiers à terme, défini à l''article R. 214-112, n''est pas supérieur à la valeur de son actif net',NULL,NULL,NULL,N'34',N'1',N'CMF',NULL,NULL,N'CMF'),
+        (N'L214-148',N'Sauf dispositions contraires, les articles L. 214-33 à L. 214-85 sont applicables aux organismes professionnels de placement collectif immobilier.',NULL,NULL,NULL,N'43',N'1',N'CMF',NULL,NULL,N'CMF'),
         (N'L214-149',N'Evaluation du contrat de credit-bail par un expert independant, fonds professionnel',NULL,NULL,NULL,N'8',N'1',N'CMF',NULL,NULL,N'CMF'),
+        (N'L214-151',N'Un organisme professionnel de placement collectif immobilier peut, dans des conditions et limites fixées par décret en Conseil d''Etat, déroger aux limites prévues aux articles L. 214-37 à L. 214-41.',NULL,NULL,NULL,N'44',N'1',N'CMF',NULL,NULL,N'CMF'),
         (N'L214-36',NULL,NULL,NULL,NULL,N'1',N'1',N'CMF',NULL,NULL,N'CMF'),
         (N'L214-37',N'Composition de l''actif : 60 %, 51 % et 5 %',NULL,NULL,NULL,N'9',N'1',N'CMF',NULL,NULL,N'CMF'),
         (N'L214-39',N'Limite d''endettement de 40 %, filiales à la quote-part',NULL,NULL,NULL,N'10',N'1',N'CMF',NULL,NULL,N'CMF'),

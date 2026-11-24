@@ -17,8 +17,7 @@ CREATE   PROCEDURE dbo.pr_deposer_fichier_espace
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : le dossier vide reste admis : depot a la racine.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -26,19 +25,18 @@ BEGIN
         + NCHAR(8199) + NCHAR(8200) + NCHAR(8201) + NCHAR(8202) + NCHAR(8232) + NCHAR(8233) + NCHAR(8239) + NCHAR(8287) + NCHAR(12288);
     IF ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @entite COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51201, N'Choisissez le véhicule dans le sélecteur Véhicule.', 1;
-    -- 327 fin
     DECLARE @url NVARCHAR (800) = (SELECT valeur FROM dbo.ref_parametre WHERE code = 'DEPOT_CLASSEUR_URL');
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite)
         THROW 50950, N'Entité inconnue.', 1;
     IF @bibliotheque NOT IN (N'Dépôt du client', N'Dossier permanent', N'Dossier annuel', N'Livrables')
         THROW 50951, N'La bibliothèque est l''une des 4 de l''espace : Dépôt du client, Dossier permanent, Dossier annuel, Livrables.', 1;
-    -- 50616, D1 (15/11/2026) : action 33, Livrables : chef de mission du dossier ou du vehicule, garde 50616 reprise. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 50616 (15/11/2026) : action 33, Livrables : chef de mission du dossier ou du vehicule, garde 50616 reprise. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND @bibliotheque = N'Livrables' AND NOT EXISTS (SELECT 1 FROM dbo.role_mission r WHERE (r.connexion = @par OR r.personne = @par) AND r.role = 'CHEF_MISSION' AND r.du <= CAST(SYSUTCDATETIME() AS DATE) AND (r.au IS NULL OR r.au > CAST(SYSUTCDATETIME() AS DATE)) AND (r.entite = @entite OR r.entite IN (SELECT p.vehicule FROM dbo.v_perimetre_vehicule p WHERE p.entite = @entite AND p.vehicule <> @entite)))
         THROW 50616, N'Validation refusée : cette personne n''a pas, sur cette entité, le rôle de chef de mission.', 1;
-    -- 51325, D1 (15/11/2026) : action 33, Depot du client et dossiers : equipe du dossier ou du vehicule. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 51325 (15/11/2026) : action 33, Depot du client et dossiers : equipe du dossier ou du vehicule. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND @bibliotheque <> N'Livrables' AND dbo.fn_membre_equipe(@entite, NULL, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 51325, N'Action refusée : seule l''équipe du dossier peut déposer un fichier dans l''espace de ce dossier.', 1;

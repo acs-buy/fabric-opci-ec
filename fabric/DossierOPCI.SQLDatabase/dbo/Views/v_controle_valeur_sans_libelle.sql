@@ -1,5 +1,5 @@
 -- La valeur codee presente en base sans libelle dans ref_libelle_valeur, colonne par colonne. ATTENDU zero.
--- Generee par 61_DEPLOIEMENT/generer_e5_319_libelles_classement_ecart.py sur les 52 colonnes de LIBELLES_VALEURS : une colonne codee qui s'ajoute se regenere.
+-- Porte sur 52 colonnes codees.
 CREATE   VIEW dbo.v_controle_valeur_sans_libelle AS
 SELECT x.table_nom, x.colonne, x.valeur, x.lignes
 FROM (

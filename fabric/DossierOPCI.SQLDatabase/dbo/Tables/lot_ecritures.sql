@@ -41,12 +41,34 @@ CREATE TABLE [dbo].[lot_ecritures] (
 GO
 
 
+CREATE   TRIGGER dbo.tr_lot_ecritures_annexe_retard ON dbo.lot_ecritures
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM inserted
+        EXCEPT SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM deleted EXCEPT SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch WHERE ch.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'lot_ecritures', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
+
+GO
+
+
 -- tr_lot_ecritures_non_regenerable : 1 refus
 -- ---------------------------------------------------------------------
 -- BLOC 6 : tr_lot_ecritures_non_regenerable. Le refus de supprimer la
 -- ligne d'un lot déjà remis. SEUL DANS SON LOT.
 -- ---------------------------------------------------------------------
-CREATE   TRIGGER dbo.tr_lot_ecritures_non_regenerable
+CREATE TRIGGER dbo.tr_lot_ecritures_non_regenerable
 ON dbo.lot_ecritures
 AFTER DELETE
 AS
@@ -65,7 +87,7 @@ BEGIN
     BEGIN
         DECLARE @msg NVARCHAR (700) =
             N'Suppression refusee par tr_lot_ecritures_non_regenerable de '
-            + N'63_SQL/33_export_fec.sql : un lot supprime porte le statut '
+            + N'l''export FEC : un lot supprime porte le statut '
             + @statut + N', il est deja remis. Un lot exporte ou publie '
             + N'n''est plus regenerable : sa correction passe par une '
             + N'ecriture inverse dans un nouveau lot, jamais par une '
@@ -78,7 +100,7 @@ END
 GO
 
 
--- LA PEREMPTION D'UNE SYNTHESE, que le point O1 exige : un lot vise
+-- LA PEREMPTION D'UNE SYNTHESE : un lot vise
 -- APRES la proposition change l'actif net, donc la synthese ne vaut
 -- plus. Le declencheur la marque perimee.
 CREATE   TRIGGER dbo.tr_lot_perime_synthese
@@ -98,28 +120,6 @@ BEGIN
     FROM dbo.synthese_proposee s
     JOIN inserted i ON i.entite = s.entite AND i.arrete = s.arrete
     WHERE s.perime_le IS NULL AND s.propose_le < SYSUTCDATETIME();
-END;
-
-GO
-
-
-CREATE   TRIGGER dbo.tr_lot_ecritures_annexe_retard ON dbo.lot_ecritures
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
-    ;WITH ch AS (
-        SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM inserted
-        EXCEPT SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM deleted
-        UNION ALL
-        SELECT * FROM (SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM deleted EXCEPT SELECT id, arrete, entite, famille, feuille_cote, perime_le, question_id, statut, version_regles FROM inserted) d
-    ),
-    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT ch.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch WHERE ch.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')) q GROUP BY q.x, q.vehicule)
-    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
-    SELECT v.entite, SYSUTCDATETIME(), N'lot_ecritures', SUM(x.n)
-    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
-    GROUP BY v.entite;
 END;
 
 GO

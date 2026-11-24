@@ -1,5 +1,5 @@
 
--- --- 2 : O9, les ecritures d'un compte sur l'arrete -----------------
+-- --- 2 : les ecritures d'un compte sur l'arrete -----------------
 -- L'origine se lit de ce que l'ecriture porte : une question de feuille,
 -- un actif, ou ni l'un ni l'autre pour une ecriture importee.
 CREATE   VIEW dbo.v_ecritures_du_compte AS
@@ -21,7 +21,7 @@ SELECT e.id                                AS ecriture_id,
                                            AS lot_perime,
        -- L'origine de l'ecriture. Elle ne se lit PAS de l'ecriture :
        -- dbo.ecriture ne porte ni question ni actif. La question est sur
-       -- le LOT, depuis le script 56 ; l'actif est dans dbo.ecriture_axe,
+       -- le LOT (fk_lot_question) ; l'actif est dans dbo.ecriture_axe,
        -- l'axe analytique du format d'ecriture.
        CASE WHEN q.reference IS NOT NULL THEN N'Question ' + q.reference
             WHEN ax.code_actif IS NOT NULL THEN N'Actif ' + ax.code_actif

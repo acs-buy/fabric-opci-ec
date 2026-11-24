@@ -1,18 +1,18 @@
 -- =====================================================================
--- Critere B12 : le rejeu du fichier des ecritures comptables.
+-- le rejeu du fichier des ecritures comptables.
 -- Le fichier produit, reimporte comme un nouveau lot, doit redonner la
--- balance de l'arrete d'origine. Profil source : la balance B0 initiale.
+-- balance de l'arrete d'origine. Profil source : la balance initiale.
 -- Profil source plus ajustements : la balance finale.
 --
 -- CE QUE CE SCRIPT AJOUTE, et pourquoi.
--- Le chargement d'un import vivait dans 11_chargement.sql, en 11 blocs
+-- Le chargement d'un import vivait, en 11 blocs
 -- dont chacun exige la substitution manuelle d'un identifiant. Un rejeu
 -- automatique en est impossible, et un cabinet tiers ne peut pas le
 -- reproduire. Les blocs 2, 3, 5, 6, 7 et 8 sont donc repris ici en UNE
 -- procedure, avec TOUTES leurs gardes, sans en retirer aucune :
 --   appariement du lot et de l'import, second chargement refuse, comptes
 --   non rattaches refuses, axe entite pose.
--- Le fichier physique est ecrit par 61_DEPLOIEMENT/rejeu_fec.ps1, qui
+-- Le fichier physique est ecrit par un outil de rejeu, qui
 -- appelle ces procedures.
 --
 -- Format du fichier, article A47 A-1 du livre des procedures fiscales :

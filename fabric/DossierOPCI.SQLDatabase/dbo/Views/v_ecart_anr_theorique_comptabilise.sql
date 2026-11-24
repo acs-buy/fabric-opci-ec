@@ -1,8 +1,8 @@
 
--- --- depuis 63_SQL/127_valeur_historique_des_filiales.sql : v_ecart_anr_theorique_comptabilise ---
+-- --- v_ecart_anr_theorique_comptabilise ---
 -- --- 2 : la vue de l'ecart, qui connait desormais la regle ----------
 -- UNE FILIALE TENUE EN VALEUR HISTORIQUE N'EST PAS EN ECART. La
--- redaction du script 107 attendait un lot de valorisation de chaque
+-- 1re redaction de cette vue attendait un lot de valorisation de chaque
 -- entite. Elle comptait donc 12 anomalies qui decrivaient la regle du
 -- dossier, et le tableau de bord en heritait.
 CREATE   VIEW dbo.v_ecart_anr_theorique_comptabilise AS

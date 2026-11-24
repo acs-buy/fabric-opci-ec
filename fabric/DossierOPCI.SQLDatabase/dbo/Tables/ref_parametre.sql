@@ -19,7 +19,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- Genere par 61_DEPLOIEMENT/generer_e5_318_tables_gardees.py (script 318, ecran 5, objet n° 19). ref_parametre
+    -- Ecran 5, objet n° 19. ref_parametre
     -- porte son auteur et sa date dans pose_par et pose_le, que pr_poser_parametre ecrit sous le contexte semis :
     -- pr_proteger_referentiel sort sans ecrire sur cette table, et cet horodatage s'ecrit ici, sous la forme des
     -- objets n° 16 et 17. Un semis ne marque pas la ligne comme modifiee.
@@ -38,7 +38,7 @@ AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- Objet n° 16 de l'ecran 5 (script 317) : l'identite jugee est celle que la procedure d'ecran pose dans le
+    -- Objet n° 16 de l'ecran 5 : l'identite jugee est celle que la procedure d'ecran pose dans le
     -- contexte par, a defaut le compte connecte. Le CAST est exige : un sql_variant passe nu a
     -- fn_peut_ecrire_referentiel rend le Msg 257.
     IF dbo.fn_peut_ecrire_referentiel('ref_parametre',
@@ -46,7 +46,7 @@ BEGIN
     -- Objet n° 17 : le refus s'inscrit dans journal_refus avant d'etre leve. Le ROLLBACK precede
     -- l'inscription, que le THROW annulerait sinon avec l'ecriture refusee (pas de transaction autonome) ;
     -- sous une Data function, la fonction annule aussi l'inscription, puis journalise le refus apres son
-    -- propre rollback (script 220). refuse_pour est un nvarchar(200) : l'identite y est coupee a 200
+    -- propre rollback (pr_journaliser_refus). refuse_pour est un nvarchar(200) : l'identite y est coupee a 200
     -- caracteres, une ecriture plus longue y serait refusee et remplacerait le 50074.
     DECLARE @m NVARCHAR (2000) = N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.';
     ROLLBACK TRANSACTION;

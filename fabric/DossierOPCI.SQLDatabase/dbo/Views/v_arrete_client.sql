@@ -13,7 +13,7 @@ WITH vise AS (
       AND r.porte_balance = 1
 )
 SELECT v.*,
-       -- 06/09/2026, decision du candidat : le segment du rapport client porte un
+       -- Decision du 06/09/2026 : le segment du rapport client porte un
        -- libelle stable, « Dernier arrete », sur le plus recent des arretes vises de
        -- chaque vehicule ; la selection enregistree dans le rapport suit donc chaque
        -- nouvelle publication sans republier le rapport.

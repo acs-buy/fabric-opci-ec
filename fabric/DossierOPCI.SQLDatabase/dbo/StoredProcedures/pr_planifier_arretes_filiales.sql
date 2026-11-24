@@ -1,5 +1,5 @@
 
--- pr_planifier_arretes_filiales : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_planifier_arretes_filiales : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_planifier_arretes_filiales
     @entite  VARCHAR (20),
     @arrete  VARCHAR (20),

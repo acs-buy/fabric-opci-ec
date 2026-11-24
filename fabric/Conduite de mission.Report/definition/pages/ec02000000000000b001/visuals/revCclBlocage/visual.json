@@ -23,11 +23,11 @@
                       "Entity": "v_etat_conclusion_cycle"
                     }
                   },
-                  "Property": "Blocage du visa du cycle"
+                  "Property": "Blocage du visa du cycle ligne 1 sur 520 px"
                 }
               },
-              "queryRef": "v_etat_conclusion_cycle.Blocage du visa du cycle",
-              "nativeQueryRef": "Blocage du visa du cycle"
+              "queryRef": "v_etat_conclusion_cycle.Blocage du visa du cycle ligne 1 sur 520 px",
+              "nativeQueryRef": "Blocage du visa du cycle ligne 1 sur 520 px"
             }
           ]
         }

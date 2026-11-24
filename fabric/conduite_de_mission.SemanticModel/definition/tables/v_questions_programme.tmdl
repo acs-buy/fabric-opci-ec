@@ -6,7 +6,7 @@ table v_questions_programme
 
 	measure 'Reference selectionnee' = IF ( HASONEVALUE ( v_questions_programme[Réf.] ), SELECTEDVALUE ( v_questions_programme[Réf.] ) )
 
-	measure 'Enonce selectionne' = IF ( HASONEVALUE ( v_questions_programme[Réf.] ), SELECTEDVALUE ( v_questions_programme[Question] ) )
+	measure 'Enonce selectionne' = ( IF ( HASONEVALUE ( v_questions_programme[Réf.] ), SELECTEDVALUE ( v_questions_programme[Question] ) ) ) & ""
 
 	measure 'Pieces de la question' = VAR n = SUM ( v_questions_programme[Pièces] ) RETURN IF ( ISBLANK ( n ) || n = 0, "aucune pièce jointe", FORMAT ( n, "0" ) & IF ( n = 1, " pièce jointe", " pièces jointes" ) )
 
@@ -54,6 +54,9 @@ table v_questions_programme
 
 	measure 'Fond revFeuilleConclure' = VAR f = ( IF ( ISBLANK ( [Feuille de la question] ), "#D9DFE6", "#FFFFFF" ) ) RETURN IF ( [Connecte hors equipe du dossier] = 1, "#D9DFE6", f )
 		lineageTag: 2ccc7cbb-33e5-4bb5-9e41-469ef63fa70f
+
+	measure 'Reference affichee' = [Reference selectionnee] & ""
+		displayFolder: C1 cartes
 
 	column entite
 		dataType: string

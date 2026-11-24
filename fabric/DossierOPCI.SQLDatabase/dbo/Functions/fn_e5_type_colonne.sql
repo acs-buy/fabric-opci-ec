@@ -1,7 +1,7 @@
 
 -- ===================================================================== 1. LES OUTILS
 -- ------------------------------------------------------------------ le type d'une colonne, a la forme d'un CAST
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 CREATE   FUNCTION dbo.fn_e5_type_colonne (@table SYSNAME, @colonne SYSNAME)
 RETURNS NVARCHAR (60)
 AS

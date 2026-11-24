@@ -1,6 +1,8 @@
-
+-- --- 6 ---------------------------------------------------------------------------------------------
 -- La derniere version de chaque arrete de mission, et la version validee (contrat, 1.4 et 2.4) : visa.annexe_version du
 -- visa de cloture courant ; les cellules imprimees autrement entre les 2 ; les memes pour l'arrete N-1.
+-- : cree_le_paris, en dernier, a l'heure de Paris, pour la mesure « Calcul de l annexe » ; cree_le reste
+-- en UTC (lue par 9 objets de la base).
 CREATE   VIEW dbo.v_annexe_version AS
 SELECT e.entite, e.arrete, d.derniere_version, d.cree_le,
        vv.annexe_version AS version_validee,
@@ -8,7 +10,8 @@ SELECT e.entite, e.arrete, d.derniere_version, d.cree_le,
             THEN (SELECT COUNT(*) FROM dbo.fn_annexe_imprime_autrement(e.entite, e.arrete, vv.annexe_version, d.derniere_version)) END
            AS cellules_differentes_validee,
        e.arrete_n_1 AS n1_arrete,
-       n1.cellules_differentes_validee AS n1_cellules_differentes_validee
+       n1.cellules_differentes_validee AS n1_cellules_differentes_validee,
+       CAST(d.cree_le AT TIME ZONE 'UTC' AT TIME ZONE 'Romance Standard Time' AS DATETIME2 (3)) AS cree_le_paris
 FROM dbo.v_arrete_etat e
 JOIN dbo.ref_arrete r ON r.entite = e.entite AND r.arrete = e.arrete
 OUTER APPLY (SELECT TOP (1) av.version AS derniere_version, av.cree_le FROM dbo.annexe_version av

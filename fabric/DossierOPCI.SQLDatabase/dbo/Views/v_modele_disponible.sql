@@ -1,8 +1,8 @@
 
 
--- --- 5 : V6, le modele d'ecriture disponible par question ------------
+-- --- 5 : le modele d'ecriture disponible par question ------------
 -- La colonne « Modele » de l'ecran A est un oui ou non, lu d'une vue sur
--- dbo.modele_ecriture, complement 8 du § 7.13. La vue rend la reponse
+-- dbo.modele_ecriture. La vue rend la reponse
 -- pour TOUTE question, y compris celle qui n'a pas de modele : une
 -- jointure externe sur la table des modeles laisserait la colonne vide au
 -- lieu de rendre « non ».

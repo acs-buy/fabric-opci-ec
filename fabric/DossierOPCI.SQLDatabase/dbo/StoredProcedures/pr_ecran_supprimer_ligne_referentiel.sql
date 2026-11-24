@@ -1,9 +1,9 @@
 -- ------------------------------------------------------------------ n° 15 : supprimer une ligne non employee
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 -- Raisons de [Blocage supprimer la ligne], dans l'ordre de la maquette : mode TEXTE, action_propre, droit,
 -- actions_de_ligne 0, ligne employee, avec le renvoi a « Ecarter la ligne » (guillemets a espace fine insecable,
 -- ECARTER_PLUTOT de la maquette, GUILLEMETS_202F de la mesure), ou, sur les 4 referentiels sans colonnes d'ecart, ou
--- « Ecarter la ligne » est gris, a ce qui met la ligne hors d'usage (PLUTOT_SANS_ECART, decision D-c).
+-- « Ecarter la ligne » est gris, a ce qui met la ligne hors d'usage (PLUTOT_SANS_ECART).
 CREATE   PROCEDURE dbo.pr_ecran_supprimer_ligne_referentiel
     @referentiel NVARCHAR (200) = NULL,
     @cle         NVARCHAR (400) = NULL,

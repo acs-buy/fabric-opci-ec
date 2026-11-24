@@ -3,7 +3,7 @@
   "name": "e1SecSaisie1_0",
   "position": {
     "x": 519,
-    "y": 1069,
+    "y": 993,
     "z": 41800,
     "height": 86,
     "width": 197,
@@ -18,7 +18,7 @@
             "placeholder": {
               "expr": {
                 "Literal": {
-                  "Value": "'le nom qui s'affichera dans les visas'"
+                  "Value": "'à saisir'"
                 }
               }
             },
@@ -77,7 +77,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E8D9A8'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

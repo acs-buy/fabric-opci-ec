@@ -80,7 +80,7 @@ table v_valeur_liquidative
 		lineageTag: 6f6d3f11-9c98-4804-85b1-09e8fe41ebb7
 
 	/// « + x sur le jj/mm/aaaa » : [R41 Ecart de VL] et l’arrêté précédent
-	measure 'Sous-ligne VL calculee' = VAR vl = SUM ( v_valeur_liquidative[valeur_liquidative] ) VAR e = [R41 Ecart de VL] VAR p = MAX ( v_rationalisation_opci[arrete_precedent] ) RETURN IF ( ISBLANK ( vl ), "aucune valeur calculée à l’arrêté", IF ( NOT ISBLANK ( e ), IF ( e >= 0, "+ ", "- " ) & FORMAT ( ABS ( e ), "#,0.00" ) & IF ( NOT ISBLANK ( p ), " sur le " & RIGHT ( p, 2 ) & "/" & MID ( p, 6, 2 ) & "/" & LEFT ( p, 4 ) ), "" ) )
+	measure 'Sous-ligne VL calculee' = VAR vl = SUM ( v_valeur_liquidative[valeur_liquidative] ) VAR e = [R41 Ecart de VL] VAR p = MAX ( v_rationalisation_opci[arrete_precedent] ) RETURN IF ( ISBLANK ( vl ), "aucune valeur calculée à l’arrêté", IF ( NOT ISBLANK ( e ), IF ( e >= 0, "+ ", "- " ) & FORMAT ( ABS ( e ), "#,0.00" ) & IF ( NOT ISBLANK ( p ), " sur le " & RIGHT ( p, 2 ) & "/" & MID ( p, 6, 2 ) & "/" & LEFT ( p, 4 ) ), IF ( ISBLANK ( p ), "aucun arrêté précédent", "aucune VL au " & RIGHT ( p, 2 ) & "/" & MID ( p, 6, 2 ) & "/" & LEFT ( p, 4 ) ) ) )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: d8a40ed9-8232-449a-a26a-d0dc2c7129f6
 

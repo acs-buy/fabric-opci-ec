@@ -1,12 +1,15 @@
-
+-- --- 1. v_forme_attestation_proposee ---------------------------------------------------------------------
 -- 5. LA FORME PROPOSEE. Les colonnes d'hier gardent leur nom et leur place ; les 2 nouvelles viennent en dernier.
 -- Une feuille REFUS_ATTESTER se traduit en IMPOSSIBILITE, code du rapport pour le refus d'attester. Entite soumise au
 -- commissariat aux comptes : le compte rendu de travaux (NP 2300, A10, exemple E4).
+-- feuilles et feuilles_conclues sans COUNT d'une colonne du LEFT JOIN, qui levait 8153 avant
+-- les refus 50085 et 50098 de pr_arreter_forme_attestation ; memes valeurs (chaque groupe a au moins 1 ligne : 0 et
+-- non NULL), meme type et meme nullabilite.
 CREATE   VIEW dbo.v_forme_attestation_proposee AS
 WITH f AS (
     SELECT r.entite, r.arrete,
-           COUNT(f.cote) AS feuilles,
-           COUNT(f.forme_conclusion) AS feuilles_conclues,
+           SUM(CASE WHEN f.cote IS NOT NULL THEN 1 ELSE 0 END) AS feuilles,
+           SUM(CASE WHEN f.forme_conclusion IS NOT NULL THEN 1 ELSE 0 END) AS feuilles_conclues,
            SUM(CASE WHEN f.forme_conclusion = 'REFUS_ATTESTER' THEN 1 ELSE 0 END) AS en_refus,
            SUM(CASE WHEN f.forme_conclusion = 'AVEC_OBSERVATION' THEN 1 ELSE 0 END) AS avec_observation
     FROM dbo.ref_arrete r

@@ -1,22 +1,22 @@
 
--- --- depuis 63_SQL/107_anr_filiale_detail.sql : v_anr_filiale --------------------
+-- --- v_anr_filiale ---
 -- =====================================================================
--- O8 : L'ACTIF NET REEVALUE D'UNE FILIALE, COMPTE PAR COMPTE, ET LES
+-- L'ACTIF NET REEVALUE D'UNE FILIALE, COMPTE PAR COMPTE, ET LES
 -- DEUX DEFINITIONS QUI DIVERGENT.
 --
--- CE QUE LE POINT DEMANDAIT. La vue v_anr_filiale_detail pour l'ecran
--- E3-F1, et « 1 seule definition de l'actif net d'une filiale entre les
--- scripts 42 corrige par le 71 et 46 ».
+-- CE QUI ETAIT DEMANDE. La vue v_anr_filiale_detail pour l'ecran
+-- du detail par filiale, et une seule definition de l'actif net d'une filiale
+-- entre v_anr_filiale, dans sa version corrigee, et v_anr_entite.
 --
 -- CE QUE J'AI TROUVE, ET POURQUOI JE NE LES FUSIONNE PAS. Trois
--- definitions existent dans le depot, dont une morte : celle du script
--- 42 est ecrasee par celle du 71, qui vient apres dans la sequence. Les
+-- definitions existaient dans la sequence d'installation, dont une morte : la
+-- 1re version de v_anr_filiale, ecrasee par la 2e, qui vient apres. Les
 -- 2 vivantes ne mesurent PAS la meme chose :
---   dbo.v_anr_filiale, script 71, lit les differences d'estimation de
+--   dbo.v_anr_filiale lit les differences d'estimation de
 --   dbo.v_valeur_actuelle_actif : la difference THEORIQUE, ecart entre
 --   la valeur actuelle retenue et la valeur comptable, rattachee a
 --   l'entite qui DETIENT l'actif ;
---   dbo.v_anr_entite, script 46, lit les ecritures des comptes 27x des
+--   dbo.v_anr_entite lit les ecritures des comptes 27x des
 --   lots derivables : la difference COMPTABILISEE, rattachee a l'entite
 --   du LOT.
 -- Mesure du 04/09/2026 : 26 lignes sur 28 divergent, jusqu'a 158 000,00
@@ -31,14 +31,14 @@
 -- clos, 193 des plus-values anterieures non distribuees et 198 des
 -- acomptes verses. Le modele de bilan passif de l'article 321-6 ouvre
 -- par « Capitaux propres (= actif net) ». L'inclusion du prefixe 19 dans
--- les capitaux propres est donc fondee : le script 46 l'inclut, le 71
--- l'omet, et ce script aligne le 71. Aucun compte 19 n'est mouvemente
+-- les capitaux propres est donc fondee : v_anr_entite l'inclut, v_anr_filiale
+-- l'omettait, et cette version l'y aligne. Aucun compte 19 n'est mouvemente
 -- dans le jeu, mesure : l'alignement est donc sans effet chiffre
 -- aujourd'hui, et il evite une divergence a la premiere regularisation.
 -- A executer contre la BASE SQL Fabric DossierOPCI.
 -- =====================================================================
 
--- --- 1 : l'alignement du script 71 sur la classe 19 -----------------
+-- --- 1 : l'alignement de v_anr_filiale sur la classe 19 ------------
 CREATE   VIEW dbo.v_anr_filiale AS
 WITH capitaux AS (
     SELECT l.entite, l.arrete,

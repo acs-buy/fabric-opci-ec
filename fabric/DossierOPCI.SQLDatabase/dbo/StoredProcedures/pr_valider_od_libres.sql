@@ -1,5 +1,5 @@
 
--- pr_valider_od_libres : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_valider_od_libres : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_valider_od_libres
     @entite      VARCHAR (20),
     @arrete      VARCHAR (20),
@@ -9,8 +9,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : avant le TRY de l'enveloppe.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -20,7 +19,6 @@ BEGIN
         THROW 51201, N'Choisissez le véhicule dans le sélecteur Véhicule.', 1;
     IF ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @arrete COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51218, N'Validation refusée : aucun brouillon d''OD libres à valider à l''arrêté du sélecteur Arrêté : il faut un arrêté ouvert, un dossier de travail non verrouillé et un brouillon équilibré dont chaque ligne porte un montant.', 1;
-    -- 327 fin
     DECLARE @ann_tc INT = @@TRANCOUNT, @ann_journal INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
             @ann_e VARCHAR (20), @ann_par NVARCHAR (400) = @valide_par;
     DECLARE @ann_v TABLE (entite VARCHAR (20) PRIMARY KEY, verrou TINYINT NOT NULL DEFAULT 0);   -- 0 a verrouiller, 1 verrouille, 2 calcule

@@ -24,7 +24,7 @@
 -- arrete. La proportion n'est pas choisie, elle est constatee.
 --
 -- COMMENT UNE ECRITURE DE SOLDE SE RECONNAIT. Par son numero, « DET »,
--- que le script 69 pose lors de la determination du resultat. Le
+-- pose lors de la determination du resultat. Le
 -- critere est etroit et c'est voulu : elargir a toute la famille DECIDEE
 -- ferait scinder des ecritures de revision qui n'ont rien a solder.
 --

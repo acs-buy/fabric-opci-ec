@@ -1,5 +1,5 @@
 
--- pr_ouvrir_questionnaire_acceptation : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_ouvrir_questionnaire_acceptation : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_ouvrir_questionnaire_acceptation
     @entite   VARCHAR (20),
     @arrete   VARCHAR (20)   = NULL,   -- l'arrete vise ; par defaut la prochaine cloture, planifiee

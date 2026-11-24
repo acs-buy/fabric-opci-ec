@@ -2,7 +2,7 @@
 -- LE CONTEXTE DE SEMIS, ET LA PROTECTION D'UN REFERENTIEL.
 --
 -- POURQUOI CE SCRIPT EST SI TOT DANS LA SEQUENCE. Les semis des
--- referentiels commencent au script 17, et chacun a besoin de 2 choses
+-- referentiels commencent tot dans la sequence, et chacun a besoin de 2 choses
 -- qui doivent donc exister avant lui : la declaration du contexte de
 -- semis, et la colonne modifie_le sur la table qu'il alimente. Un script
 -- unique place en fin de sequence ne pourrait pas les servir.

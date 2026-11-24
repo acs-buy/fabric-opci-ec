@@ -279,6 +279,41 @@ contrôles du groupe, rationalisation et synthèse). L'étape 2 n'a aucun bouton
 véhicule qui détient la filiale. Hors de l'équipe, la base refuse sous le numéro indiqué, à défaut
 sous le numéro 50700. Voir plus bas, la séparation des fonctions.
 
+### Ce que le jeu de démonstration montre et ne montre pas
+
+Le jeu de démonstration porte 2 véhicules. OMEGA-OPCI détient 12 filiales, OMEGA-SCI-1 à
+OMEGA-SCI-12. OPCI-1 détient 2 filiales, SCI-NORD et SIGMA-SCI-2. Les arrêtés chargés vont du
+31/12/2021 au 31/12/2026.
+
+Les données portent sur les arrêtés annuels du 31/12/2022 au 31/12/2025 pour OMEGA-OPCI et ses
+filiales, et sur le seul arrêté du 31/12/2025 pour OPCI-1 et ses filiales. Quelques lignes portent
+sur le 31/12/2021 et le 30/06/2025 (OMEGA-OPCI, OMEGA-SCI-1). Au 30/06/2026, seule OMEGA-OPCI a
+des données aux écrans Valorisation et Arrêté ; au 31/12/2026, seuls l'avancement des étapes et la
+rationalisation d'OMEGA-OPCI ont des lignes. Aucun immeuble n'est valorisé à ces 2 arrêtés.
+
+Les messages d'écran partent vides : le premier message apparaît à votre premier clic. Chaque
+entité porte 3 mandats ouverts, associé, chef de mission et préparateur ; le script
+`sql/90_vous_inscrire_aux_missions.sql` vous y inscrit.
+
+Les contenus des tableaux sont calculés le 24/11/2026, par entité, sur les lignes que le jeu
+charge. Le chargement du jeu sur une base vide n'a pas été joué : ce qu'affiche une installation
+neuve n'est pas relevé à l'écran.
+
+| Entité | Ce que l'écran montre |
+|---|---|
+| OMEGA-OPCI, arrêtés annuels 2022 à 2025 | 3 immeubles par arrêté et leurs pièces, 15 expertises ; les différences d'estimation (28 lignes de détail, 4 comptes) ; les comptes courants (13 lignes) ; les titres de ses 12 filiales en valeur actuelle ; la reprise du compte 275 à passer ; la valeur liquidative, l'actif net réévalué, la balance, la rationalisation de l'actif net, les visas de la valorisation. Au 31/12/2025, en plus : 1 évaluation, 2 publications de la valeur liquidative, 12 lignes de cadrage des prêts entre entités du groupe |
+| OMEGA-OPCI, 30/06/2026 | La balance (4 comptes), 1 lot de 2 écritures, 1 feuille de travail, l'avancement des 5 étapes, la rationalisation de l'actif net |
+| OMEGA-SCI-1 à OMEGA-SCI-12, arrêtés annuels 2022 à 2025 | 1 immeuble par arrêté et ses pièces, 4 ou 5 expertises, sa différence d'estimation, le détail de son actif net réévalué, la balance, les lots d'écritures ; au 31/12/2025, les flux avec le groupe (2 ou 3 lignes) |
+| OPCI-1, 31/12/2025 | La balance (3 comptes), 4 différences par compte, la valeur liquidative, l'actif net réévalué, 2 lignes de détail de l'actif net réévalué, 2 lignes de rationalisation des filiales, 1 lot de 3 écritures ; aucun immeuble, aucune expertise, aucune pièce |
+| SCI-NORD, 31/12/2025 | La balance (2 comptes), 1 lot de 2 écritures, 2 feuilles de travail |
+| SIGMA-SCI-2 | Aucune ligne de dossier à cet écran |
+
+**Vide pour les 16 entités :** les instruments financiers à valoriser, les titres inscrits au compte
+256 ou 258 et leurs cours, les écritures miroir du groupe, les révisions de comptes courants, les
+synthèses proposées, les comptes de classe 1 hors actif net, la liste des exports du dossier. Il
+s'en déduit que les boutons « Enregistrer la valeur » de l'étape 1 et « Enregistrer le cours » de
+l'étape 3 n'ont rien à choisir sur le jeu ; ce n'est pas vérifié au clic.
+
 ---
 
 ## L'écran Arrêté
@@ -300,6 +335,25 @@ pose.
 | 3 | Proposer la base | La base proposée de la catégorie choisie, et sa source | Préparateur du véhicule (50814) |
 | 3 | Viser la catégorie, Renvoyer la catégorie | Le visa de la base proposée ; le renvoi exige un motif | Associé signataire (50051) |
 | 3 | Enregistrer la décision | La décision de l'assemblée pour la catégorie choisie : son montant et sa date | Associé du véhicule (51323) |
+
+### Ce que le jeu de démonstration montre et ne montre pas
+
+Même jeu et même méthode que pour l'écran Valorisation.
+
+| Entité | Ce que l'écran montre |
+|---|---|
+| OMEGA-OPCI | Les ratios, 4 par arrêté annuel de 2021 à 2025 ; la valeur liquidative, de 2022 à 2025 ; les sommes distribuables et les 3 catégories de l'obligation de distribution, de 2022 à 2025 ; le visa de clôture, de 2022 à 2025 ; le journal des visas ; 2 publications de la valeur liquidative au 31/12/2025 |
+| OPCI-1, 31/12/2025 | Les 4 ratios, la valeur liquidative, 1 visa au journal ; aucune obligation de distribution, aucune somme distribuable |
+| OMEGA-SCI-1 à OMEGA-SCI-12, arrêtés annuels 2022 à 2025 | L'avancement des 5 étapes, les lots d'écritures, 1 ou 2 feuilles de travail, le journal des visas |
+| SCI-NORD, 31/12/2025 | L'avancement des étapes, 1 lot, 3 feuilles de travail |
+| SIGMA-SCI-2 | Aucune ligne de dossier |
+
+Les ratios, la valeur liquidative et la distribution n'ont de lignes que pour les 2 véhicules.
+
+**Vide pour les 16 entités :** les conclusions sur les ratios, les décisions de distribution, les
+seuils propres à un véhicule, les refus du journal des visas. Le jeu ne charge pas la table des
+refus : le journal des visas n'y montre que les décisions. Chez vous, cette table se remplit des
+refus que prononcent vos propres procédures.
 
 ---
 
@@ -333,6 +387,18 @@ volet de l'étape 2.
 
 Le teneur d'un référentiel est l'associé ; pour les questions de révision et de mission, l'associé
 ou le réviseur. Sur cet écran, un mandat en cours sur un dossier quelconque suffit.
+
+### Ce que le jeu de démonstration montre et ne montre pas
+
+L'écran lit le socle, le même pour toutes les entités : 44 référentiels, 2 721 lignes, 620
+questions, 18 cycles ou phases. Les seuils du véhicule ont des lignes pour OMEGA-OPCI (8 arrêtés)
+et pour OPCI-1 (31/12/2025), aucune pour les 14 filiales. Même méthode que pour l'écran
+Valorisation.
+
+**Vide :** la liste des classeurs du cabinet, tant que vous n'en avez pas rattaché ; l'emploi des
+111 contrôles, qui compte leurs relevés. Lancez `EXEC dbo.pr_relever_controles;` pour obtenir les
+premiers relevés de votre base. Les paramètres qui désignent l'infrastructure d'un cabinet ne sont
+pas chargés : seuls les 4 seuils du programme le sont.
 
 ---
 

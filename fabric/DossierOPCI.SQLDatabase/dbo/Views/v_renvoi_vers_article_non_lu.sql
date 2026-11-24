@@ -1,7 +1,7 @@
 
 
 -- --- 3 : les renvois d'un article lu vers un article non lu ---------
--- C73 : un article lu qui RENVOIE a un article non lu. Le renvoi est un
+-- un article lu qui RENVOIE a un article non lu. Le renvoi est un
 -- trou connu : la regle que l'article lu enonce depend d'un texte que
 -- personne n'a ouvert. La vue les nomme, pour que le trou soit visible
 -- plutot que suppose comble.

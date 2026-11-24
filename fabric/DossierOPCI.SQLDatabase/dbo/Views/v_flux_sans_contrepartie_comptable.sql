@@ -1,7 +1,7 @@
 
--- --- depuis 63_SQL/125_rapprochement_intragroupe.sql : v_flux_sans_contrepartie_comptable ---
+-- --- v_flux_sans_contrepartie_comptable ---
 -- --- 5 : le fait, nomme au lieu d'etre dilue ------------------------
--- C77 : les flux intragroupe DECLARES dont aucun compte ne porte trace.
+-- les flux intragroupe DECLARES dont aucun compte ne porte trace.
 -- La vue separe ce qui est un ecart de montant, qui appelle une reprise,
 -- de ce qui est une absence totale d'ecriture, qui appelle une decision
 -- de calibrage du jeu d'essai.

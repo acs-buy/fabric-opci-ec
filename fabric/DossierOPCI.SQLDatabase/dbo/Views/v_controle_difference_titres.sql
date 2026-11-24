@@ -1,8 +1,8 @@
 
--- --- depuis 63_SQL/73_cles_arrete.sql : v_controle_difference_titres -------------
+-- --- v_controle_difference_titres ---
 -- --- 3-bis : le controle de concordance, borne aux arretes valorises --
 -- Un arrete sans lot de valorisation n'a rien a concorder : l'ancien jeu
--- d'essai du script 42 en laissait un au 31/12/2023, avec un ecart de
+-- d'essai en laissait un au 31/12/2023, avec un ecart de
 -- 100,00 qui n'etait pas une divergence mais une absence. L'absence de
 -- valorisation la ou elle est attendue releve d'un autre controle, a
 -- ecrire avec la procedure de generation.

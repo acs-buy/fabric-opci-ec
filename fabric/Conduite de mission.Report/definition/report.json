@@ -184,8 +184,8 @@
           "type": "Image"
         },
         {
-          "name": "fond_etape3_196bc9827a.png",
-          "path": "fond_etape3_196bc9827a.png",
+          "name": "fond_etape3_9331f6b0e9.png",
+          "path": "fond_etape3_9331f6b0e9.png",
           "type": "Image"
         },
         {
@@ -229,11 +229,6 @@
           "type": "Image"
         },
         {
-          "name": "nav_fond_ecran_client_9c5cf78566_2364836461.png",
-          "path": "nav_fond_ecran_client_9c5cf78566_2364836461.png",
-          "type": "Image"
-        },
-        {
           "name": "nav_fond_ecran_valorisation_7a9fd9b541_2f4136ed72.png",
           "path": "nav_fond_ecran_valorisation_7a9fd9b541_2f4136ed72.png",
           "type": "Image"
@@ -261,6 +256,16 @@
         {
           "name": "fond_ref_2a_21fd8170c6.png",
           "path": "fond_ref_2a_21fd8170c6.png",
+          "type": "Image"
+        },
+        {
+          "name": "fond_ecran_client_2708debb0c.png",
+          "path": "fond_ecran_client_2708debb0c.png",
+          "type": "Image"
+        },
+        {
+          "name": "nav_fond_ecran_client_2708debb0c_5148668879.png",
+          "path": "nav_fond_ecran_client_2708debb0c_5148668879.png",
           "type": "Image"
         }
       ]

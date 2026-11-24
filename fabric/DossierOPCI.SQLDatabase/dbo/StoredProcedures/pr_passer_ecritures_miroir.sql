@@ -1,5 +1,5 @@
 
--- pr_passer_ecritures_miroir : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_passer_ecritures_miroir : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_passer_ecritures_miroir
     @arrete   VARCHAR (20),
     @natures  NVARCHAR (200) = NULL,   -- NULL pour les 3

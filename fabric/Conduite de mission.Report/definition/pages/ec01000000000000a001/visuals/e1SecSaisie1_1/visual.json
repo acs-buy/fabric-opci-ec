@@ -3,7 +3,7 @@
   "name": "e1SecSaisie1_1",
   "position": {
     "x": 728,
-    "y": 1069,
+    "y": 993,
     "z": 41900,
     "height": 86,
     "width": 197,
@@ -18,7 +18,7 @@
             "placeholder": {
               "expr": {
                 "Literal": {
-                  "Value": "'sans elle, la personne ne sera pas reconnue'"
+                  "Value": "'à saisir'"
                 }
               }
             },
@@ -77,7 +77,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E8D9A8'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }
@@ -120,7 +120,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Connexion (UPN)'"
+                  "Value": "'Adresse de connexion'"
                 }
               }
             },

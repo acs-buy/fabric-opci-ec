@@ -1,5 +1,5 @@
 
--- --- 2 : O33, les procedures d'ecran ----------------------------------
+-- --- 2 : les procedures d'ecran ----------------------------------
 CREATE   PROCEDURE dbo.pr_ecran_viser_lot
     @lot_id INT,
     @decision VARCHAR (8),

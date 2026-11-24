@@ -1,7 +1,7 @@
 
--- --- 6 : O31, tranche le 06/09/2026 ---------------------------------
+-- --- 6 : le visa de production, tranche le 06/09/2026 -----------
 -- LA PRODUCTION D'UN DOCUMENT N'EST PAS UN OBJET VISABLE. Arbitrage du
--- candidat : produire un document est un GESTE DE TRAVAIL, non une
+-- 06/09/2026 : produire un document est une ACTION DE TRAVAIL, non une
 -- decision. Trois motifs le fondent.
 --   1. Ce qui engage le cabinet est deja vise ailleurs. La synthese
 --      porte le visa de l'associe, l'attestation porte sa signature, et

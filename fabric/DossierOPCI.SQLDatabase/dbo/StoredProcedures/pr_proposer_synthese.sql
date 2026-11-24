@@ -4,10 +4,10 @@
 -- Une synthese non perimee qui attend son visa refuse la proposition (50780) ; une synthese visee la refuse (50781) ; une
 -- synthese renvoyee est perimee, et la nouvelle proposition s'inscrit.
 
--- --- 3 : O1, la proposition de la synthese --------------------------
+-- --- 3 : la proposition de la synthese --------------------------
 -- 50077 : un lot de l'arrete est propose et non vise.
 -- 50078 : un compte de classe 1 mouvemente sort du perimetre de l'actif
---         net, ce que la vue du script 46 mesure.
+--         net, ce que mesure v_comptes_classe_1_hors_anr.
 -- 50079 : la rationalisation ne boucle pas, ou n'est pas calculable.
 -- 50080 : la valeur liquidative n'est pas calculable.
 CREATE   PROCEDURE dbo.pr_proposer_synthese

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "docMsgFond",
   "position": {
-    "x": 507,
-    "y": 1219,
+    "x": 429,
+    "y": 1212,
     "z": 3900,
-    "height": 30,
-    "width": 382,
+    "height": 44,
+    "width": 472,
     "tabOrder": 3900
   },
   "visual": {

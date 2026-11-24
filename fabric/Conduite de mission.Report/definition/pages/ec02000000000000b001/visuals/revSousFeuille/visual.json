@@ -23,11 +23,11 @@
                       "Entity": "v_questions_programme"
                     }
                   },
-                  "Property": "Reference selectionnee"
+                  "Property": "Reference affichee"
                 }
               },
-              "queryRef": "v_questions_programme.Reference selectionnee",
-              "nativeQueryRef": "Reference selectionnee"
+              "queryRef": "v_questions_programme.Reference affichee",
+              "nativeQueryRef": "Reference affichee"
             }
           ]
         }

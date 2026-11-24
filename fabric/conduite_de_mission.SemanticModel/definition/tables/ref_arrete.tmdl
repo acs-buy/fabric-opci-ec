@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
+/// Ajoutee le 15/09/2026 pour le front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table ref_arrete
 	lineageTag: 8ceccea3-e3c4-4c88-8571-79449f35e86a
 
@@ -26,7 +26,7 @@ table ref_arrete
 		lineageTag: 6cdc459a-3080-4213-8710-064482c79227
 
 	/// ref_arrete[Type] de l’arrêté de la ligne, à la française : ANNUEL « Annuel », SEMESTRIEL « Semestriel » (VAR e, a puis FILTER ALL (ref_arrete)) ; v_valeur_liquidative ne porte pas le type, et la grille ne joint pas 2 tables côté plusieurs
-	measure 'Type de l arrete de la ligne' = VAR a2 = COALESCE ( SELECTEDVALUE ( v_valeur_liquidative[arrete] ), [Arrete selectionne] ) VAR e = [Client selectionne] VAR ty = CALCULATE ( MAX ( ref_arrete[Type] ), FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a2 ) ) RETURN SWITCH ( ty, "ANNUEL", "Annuel", "SEMESTRIEL", "Semestriel", "TRIMESTRIEL", "Trimestriel", "INTERMEDIAIRE", "Intermédiaire", ty ) & ""
+	measure 'Type de l arrete de la ligne' = VAR a2 = COALESCE ( SELECTEDVALUE ( v_valeur_liquidative[arrete] ), [Arrete selectionne] ) VAR e = [Client selectionne] VAR tv = CALCULATE ( MAX ( v_ecran_arretes[Type] ), FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = e && v_ecran_arretes[arrete] = a2 ) ) VAR ty = CALCULATE ( MAX ( ref_arrete[Type] ), FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a2 ) ) RETURN IF ( ISBLANK ( tv ) || tv = "", SWITCH ( ty, "ANNUEL", "Annuel", "SEMESTRIEL", "Semestriel", "TRIMESTRIEL", "Trimestriel", "INTERMEDIAIRE", "Intermédiaire", ty ), tv ) & ""
 		displayFolder: Ecran 4 Arrete
 		lineageTag: 9f499a90-6af8-43aa-a094-b11bc3b249bd
 
@@ -36,7 +36,7 @@ table ref_arrete
 		displayFolder: Ecran 4 Arrete
 		lineageTag: a28b8aa4-0318-4847-972c-0775cdedd32a
 
-	/// « 3 Distribution annuelle » ; « 3 Distribution annuelle · sans objet » à un arrêté semestriel ou intermédiaire : libellé de la case 3 de la barre, rang compris (décision du candidat du 15/10/2026, « Numéro dans le libellé »)
+	/// « 3 Distribution annuelle » ; « 3 Distribution annuelle · sans objet » à un arrêté semestriel ou intermédiaire : libellé de la case 3 de la barre, rang compris (décision du 15/10/2026)
 	measure 'Libelle etape distribution' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR typ = CALCULATE ( MAX ( ref_arrete[Type] ), FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[Arrêté] = a ) ) RETURN IF ( ISBLANK ( typ ) || typ = "ANNUEL", "3 Distribution annuelle", "3 Distribution annuelle · sans objet" )
 		displayFolder: Ecran 4 Arrete
 		lineageTag: 83b2b495-879f-489a-b189-f1bb4f810f23

@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "m3Men04Tag",
   "position": {
-    "x": 305,
+    "x": 304,
     "y": 524,
     "z": 11400,
     "height": 24,

@@ -1,3 +1,4 @@
+-- --- 6. pr_valider_pour_client ---------------------------------------------------------------------
 -- pr_valider_pour_client : 3 refus
 -- les lecteurs qui testent qu'une VL est publiee ne comptent que la publication en vigueur
 
@@ -5,7 +6,10 @@
 -- La validation pour le client (contrat, 2.4 et 3.1, point 5) : verrou, calcul VALIDATION, gardes, visa de cloture qui
 -- porte la derniere version. Un document COMPTES_ANNUELS ou ATTESTATION sans version de l'annexe ne compte pas comme
 -- produit (2.2, point 7). Un document que le calcul perime fait refuser la validation (50613), calcul compris.
-CREATE   PROCEDURE dbo.pr_valider_pour_client
+-- La liste des livrables perimes et leur plus petite version d'annexe en 2 lectures, la 2e sans
+-- les NULL, qui levaient 8153 avant le refus 50613 (sans valeur sentinelle). Memes valeurs : MIN
+-- ignorait les NULL, NULL si aucune version ; tout livrable est au referentiel (fk_document_livrable).
+CREATE PROCEDURE dbo.pr_valider_pour_client
     @entite VARCHAR (20),
     @arrete VARCHAR (20),
     @par    NVARCHAR (400)
@@ -36,7 +40,7 @@ BEGIN
         THROW 50087, N'Validation refusée : la valeur liquidative de cet arrêté n''est pas publiée.', 1;
     IF @nature = 'ANNUEL'
     BEGIN
-        -- Decision du candidat du 18/10/2026 : chaque categorie du referentiel doit avoir sa ligne VISEE ; une categorie
+        -- Regle du 18/10/2026 : chaque categorie du referentiel doit avoir sa ligne VISEE ; une categorie
         -- absente compte comme non visee (auparavant, 0 ligne laissait passer la validation).
         DECLARE @non_visees INT = (SELECT COUNT(*) FROM dbo.ref_obligation_distribution r
                                    WHERE NOT EXISTS (SELECT 1 FROM dbo.v_obligation_par_categorie v
@@ -54,11 +58,13 @@ BEGIN
     IF @perimes > 0
     BEGIN
         DECLARE @libs NVARCHAR (800), @vmin INT;
-        SELECT @libs = STRING_AGG(CAST(l.libelle AS NVARCHAR (200)), N', '), @vmin = MIN(x.annexe_version)
-        FROM (SELECT livrable, MIN(annexe_version) AS annexe_version FROM dbo.document_produit
-              WHERE entite = @entite AND arrete = @arrete AND perime_le >= @debut AND livrable IN ('COMPTES_ANNUELS', 'ATTESTATION')
-              GROUP BY livrable) x
+        SELECT @libs = STRING_AGG(CAST(l.libelle AS NVARCHAR (200)), N', ')
+        FROM (SELECT DISTINCT livrable FROM dbo.document_produit
+              WHERE entite = @entite AND arrete = @arrete AND perime_le >= @debut AND livrable IN ('COMPTES_ANNUELS', 'ATTESTATION')) x
         JOIN dbo.ref_livrable l ON l.code = x.livrable;
+        SET @vmin = (SELECT MIN(d.annexe_version) FROM dbo.document_produit d
+                     WHERE d.entite = @entite AND d.arrete = @arrete AND d.perime_le >= @debut
+                       AND d.livrable IN ('COMPTES_ANNUELS', 'ATTESTATION') AND d.annexe_version IS NOT NULL);
         SET @derniere = (SELECT derniere_version FROM dbo.v_annexe_version WHERE entite = @entite AND arrete = @arrete);
         SET @m = N'Validation refusée : l''annexe a changé depuis la production de ' + ISNULL(@libs, N'livrables') + N' (version '
                + ISNULL(CAST(@vmin AS NVARCHAR (10)), N'?') + N' de l''annexe, dernière version ' + ISNULL(CAST(@derniere AS NVARCHAR (10)), N'?')

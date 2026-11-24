@@ -182,7 +182,7 @@
             "fontFamily": {
               "expr": {
                 "Literal": {
-                  "Value": "'Times New Roman'"
+                  "Value": "'Segoe UI'"
                 }
               }
             }

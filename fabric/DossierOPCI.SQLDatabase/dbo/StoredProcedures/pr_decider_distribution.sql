@@ -1,5 +1,5 @@
 
--- pr_decider_distribution : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_decider_distribution : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_decider_distribution
     @entite    VARCHAR (20),
     @exercice  VARCHAR (20),

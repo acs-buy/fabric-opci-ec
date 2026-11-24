@@ -33,14 +33,14 @@ CREATE TABLE [dbo].[stg_fec] (
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_stg_fec_import]
-    ON [dbo].[stg_fec]([import_id] ASC, [recevable] ASC);
+CREATE NONCLUSTERED INDEX [ix_stg_fec_reference]
+    ON [dbo].[stg_fec]([reference_import] ASC);
 
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_stg_fec_reference]
-    ON [dbo].[stg_fec]([reference_import] ASC);
+CREATE NONCLUSTERED INDEX [ix_stg_fec_import]
+    ON [dbo].[stg_fec]([import_id] ASC, [recevable] ASC);
 
 
 GO

@@ -1,4 +1,8 @@
-CREATE   VIEW dbo.v_obligation_par_categorie AS
+-- --- v_obligation_par_categorie ---------------------------------------------------------------------
+-- Les SUM et le MIN lisent sans les NULL (exercice_n ou exercice_n_1 « à remplir »),
+-- qui levaient 8153 avant les refus 50088 et 50613 de pr_valider_pour_client ; SUM et MIN ignoraient deja les NULL,
+-- NULL sans valeur : memes resultats.
+CREATE VIEW dbo.v_obligation_par_categorie AS
 WITH cat AS (
     SELECT r.categorie AS categorie_ref, r.libelle, r.taux AS taux_ref, r.article, r.ordre,
            CASE r.categorie WHEN 'RESULTAT'    THEN 'REVENUS_85'
@@ -34,10 +38,10 @@ SELECT s.entite + '|' + s.arrete + '|' + c.categorie AS cle,
 FROM dbo.v_sommes_distribuables s
 JOIN dbo.ref_arrete a ON a.entite = s.entite AND a.arrete = s.arrete AND a.type_arrete = 'ANNUEL'
 CROSS JOIN cat c
--- Decisions du candidat du 19/10/2026 (63_SQL/314) : proposition du moteur pour REVENUS_85.
+-- Regle du 19/10/2026 : proposition du moteur pour REVENUS_85.
 -- CMF, art. L. 214-69, II, 1° et III (LEGIARTI000027810446, relu le 18/10/2026) ; D. 214-124, III (LEGIARTI000027780356).
 -- Plancher a 0, plafond au resultat distribuable, frais au seul 31/12 de N-1 et mesure de la quote-part des filiales :
--- deductions ou ecarts declares, non textes (65_JOURNAL/preuves_ecran_4/obligation_resultat_modeste_essai_20261019.txt).
+-- deductions ou ecarts declares, non textes.
 OUTER APPLY (SELECT TOP (1) o.* FROM dbo.obligation_distribution o
              WHERE o.entite = s.entite AND o.exercice = s.arrete AND o.categorie = c.categorie
              ORDER BY o.id DESC) AS o
@@ -47,13 +51,15 @@ CROSS APPLY (SELECT CAST(ISNULL((SELECT SUM(x.prix_de_revient) FROM dbo.actif x
                      WHERE r.entite = s.entite AND r.type_arrete = 'ANNUEL' AND r.arrete < s.arrete) AS n_1) AS pr
 CROSS APPLY (SELECT
        CAST(ISNULL((SELECT SUM(CASE l.code WHEN 'R_PI_1' THEN l.exercice_n ELSE -l.exercice_n END) FROM dbo.v_ligne_etat_montant l
-                    WHERE l.entite = s.entite AND l.arrete = s.arrete AND l.code IN ('R_PI_1', 'R_CI_1', 'R_CI_4')), 0) AS DECIMAL (19,2)) AS pd,
+                    WHERE l.entite = s.entite AND l.arrete = s.arrete AND l.code IN ('R_PI_1', 'R_CI_1', 'R_CI_4')
+                      AND l.exercice_n IS NOT NULL), 0) AS DECIMAL (19,2)) AS pd,
        CAST(ROUND((SELECT SUM(l.exercice_n) FROM dbo.v_ligne_etat_montant l
-                   WHERE l.entite = s.entite AND l.arrete = s.arrete AND l.code IN ('R_TVI', 'R_TVII'))
+                   WHERE l.entite = s.entite AND l.arrete = s.arrete AND l.code IN ('R_TVI', 'R_TVII') AND l.exercice_n IS NOT NULL)
                 * (SELECT SUM(l.exercice_n_1) FROM dbo.v_ligne_etat_montant l
-                   WHERE l.entite = s.entite AND l.arrete = s.arrete AND l.code IN ('A_IMMO_1', 'A_IMMO_2'))
+                   WHERE l.entite = s.entite AND l.arrete = s.arrete AND l.code IN ('A_IMMO_1', 'A_IMMO_2') AND l.exercice_n_1 IS NOT NULL)
                 / NULLIF((SELECT SUM(l.exercice_n_1) FROM dbo.v_ligne_etat_montant l
-                          WHERE l.entite = s.entite AND l.arrete = s.arrete AND l.code = 'A_TOTAL'), 0), 2) AS DECIMAL (19,2)) AS fi,
+                          WHERE l.entite = s.entite AND l.arrete = s.arrete AND l.code = 'A_TOTAL' AND l.exercice_n_1 IS NOT NULL), 0), 2)
+            AS DECIMAL (19,2)) AS fi,
        CAST(CASE WHEN o.indirect_saisi_par IS NOT NULL THEN ISNULL(o.dont_indirect_n_moins_1, 0)
                  ELSE ISNULL((SELECT SUM(ROUND(q.produits_nets * q.quote_part, 2)) FROM (
                           SELECT d.quote_part,
@@ -75,7 +81,7 @@ CROSS APPLY (SELECT CAST(CASE c.categorie_ref
                                         ELSE (SELECT MIN(m) FROM (VALUES (s.resultat_distribuable),
                                                  ((CASE WHEN k.pd - k.fi - ROUND(pr.prix_revient_immeubles * 0.015, 2) > 0
                                                         THEN k.pd - k.fi - ROUND(pr.prix_revient_immeubles * 0.015, 2) ELSE 0 END)
-                                                  + CASE WHEN k.qp > 0 THEN k.qp ELSE 0 END)) t (m)) END
+                                                  + CASE WHEN k.qp > 0 THEN k.qp ELSE 0 END)) t (m) WHERE m IS NOT NULL) END
                               WHEN 'PLUS_VALUES' THEN s.plus_values_distribuables
                               ELSE 0 END AS DECIMAL (19,2)) AS base_calcul) AS b
 LEFT JOIN dbo.decision_distribution d

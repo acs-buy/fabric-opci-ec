@@ -1,5 +1,5 @@
 
--- --- depuis 63_SQL/94_vues_intragroupe.sql : v_controle_symetrie_intragroupe -----
+-- --- v_controle_symetrie_intragroupe ---
 -- --- 6 : le controle de symetrie, l'invariant du lot ---------------
 -- Un interet intragroupe est une charge chez l'emprunteur et un produit
 -- chez le preteur, pour le meme montant et le meme arrete. Si les 2 ne

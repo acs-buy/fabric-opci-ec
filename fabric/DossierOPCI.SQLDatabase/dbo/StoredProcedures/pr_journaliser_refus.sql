@@ -1,6 +1,6 @@
 -- 220. Un refus de la base atteint le reviseur, quelle que soit la procedure qui refuse.
 --
--- DEFAUT MESURE PAR FABRIC IQ LE 21/09/2026 : au temps 2, ajouter une filiale deja au perimetre ne
+-- DEFAUT MESURE LE 21/09/2026 : au temps 2, ajouter une filiale deja au perimetre ne
 -- produit RIEN a l'ecran. La base refuse bien (50214), la base ne change pas, et le reviseur ne lit
 -- aucun message. Le canal n'est pas casse, IL N'EXISTE PAS pour ces procedures : le pied du panneau lit
 -- une colonne message_ecran de acceptation_mission, table qu'une procedure de filiale n'ecrit jamais.
@@ -9,7 +9,7 @@
 -- un THROW voit son INSERT de journal annule par le ROLLBACK de la fonction appelante (fabric.functions
 -- ouvre une connexion sans autocommit, et _executer fait conn.rollback() sur l'exception). SQL Server n'a
 -- pas de transaction autonome. Le refus se journalise donc APRES le rollback, par la FONCTION, qui
--- appelle pr_journaliser_refus dans une transaction neuve. C'est le script 220 cote base, et la
+-- appelle pr_journaliser_refus dans une transaction neuve : cette procedure cote base, et la
 -- modification de _executer cote fonction.
 --
 -- Ce que ce script pose :

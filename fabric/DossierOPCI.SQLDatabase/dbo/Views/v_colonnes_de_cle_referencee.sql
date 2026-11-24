@@ -1,5 +1,5 @@
 
--- --- 3 : O35, le recensement des colonnes de cle referencee -----------
+-- --- 3 : le recensement des colonnes de cle referencee -----------
 -- LA REGLE PORTE SUR LA COLONNE, NON SUR LA TABLE. Une colonne qu'une
 -- autre table reference ne peut pas etre saisie librement en grille : la
 -- modifier romprait la reference. Elle passe en lecture seule, et le

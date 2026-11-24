@@ -10,7 +10,7 @@
 -- ambigu (meme reviseur, meme arrete/entite), la vue liste tous les entetes
 -- correspondants.
 -- Compte tout lot IMPORTEE quel que soit son statut (REJETE ne double plus
--- la balance depuis 63_SQL/08_classe9_et_colonnes_balance.sql partie B3,
+-- la balance, v_balance ne retenant que les lots VALIDE, EXPORTE et PUBLIE,
 -- mais reste visible ici).
 -- Forme retenue : STUFF + FOR XML PATH plutot que STRING_AGG, non
 -- documente comme applicable a SQL database in Microsoft Fabric

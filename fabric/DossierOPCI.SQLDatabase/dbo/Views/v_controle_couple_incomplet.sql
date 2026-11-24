@@ -9,7 +9,7 @@
 -- creances immobilisees », global et non ventile par filiale. Le couple
 -- ne se refermera que si le plan de la mere est subdivise par filiale,
 -- ce que l'article 411-3 permet sans l'imposer. La vue mesure donc ce
--- qui reste a subdiviser, et le controle de symetrie du script 94
+-- qui reste a subdiviser, et v_controle_symetrie_intragroupe
 -- continue de rapprocher les 2 cotes par les montants.
 CREATE   VIEW dbo.v_controle_couple_incomplet AS
 SELECT entite_porteuse, compte_porteur, entite_liee

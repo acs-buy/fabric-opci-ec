@@ -66,7 +66,7 @@ table v_revision_indicateurs
 	measure 'Aff Carte revue sous-titre' = [Carte revue sous-titre] & ""
 		lineageTag: 58dc0faa-a0ac-485f-9b4d-0df855fd5eea
 
-	measure 'Fond revLivDeverrouiller' = IF ( ISBLANK ( [Arrete du dossier verrouille] ), "#D9DFE6", "#0F5C8C" )
+	measure 'Fond revLivDeverrouiller' = IF ( ISBLANK ( [Arrete du dossier verrouille] ) || NOT ISBLANK ( [Refus revLivDeverrouiller] ), "#D9DFE6", "#0F5C8C" )
 		lineageTag: 9c553498-9733-4c13-b9d4-d5a193d31650
 
 	measure 'Libelle revLivDeverrouiller' = "Déverrouiller le dossier"
@@ -74,6 +74,10 @@ table v_revision_indicateurs
 
 	measure 'Filet Carte revue' = VAR c = [Carte revue encre] RETURN SWITCH ( c, "#8A6710", "#C8961E", "#9A2A2A", "#9A2A2A", "#1F6D4A", "#1F6D4A", "#0F5C8C" )
 		lineageTag: 9c6addb8-e01f-441b-963e-298691b6ebd2
+
+	/// grise revLivDeverrouiller (la raison s'affiche au clic dans la zone de message, refus de la base) ; ordre de pr_ecran_demander_deverrouillage, motif vide exclu (bouton actif, refus de la base)
+	measure 'Refus revLivDeverrouiller' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR u = USERPRINCIPALNAME () VAR membre = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[role] IN { "ASSOCIE", "CHEF_MISSION", "PREPARATEUR", "REVISEUR" } && role_mission[du] <= TODAY () && ( ISBLANK ( role_mission[au] ) || role_mission[au] > TODAY () ) ) ) + 0 VAR roles = CALCULATETABLE ( VALUES ( role_nature_visa[role_code] ), role_nature_visa[nature] = "REVUE" ) VAR decide = COUNTROWS ( FILTER ( ALL ( role_mission ), role_mission[entite] = e && ( role_mission[connexion] = u || role_mission[personne] = u ) && role_mission[role] IN roles && role_mission[du] <= TODAY () && ( ISBLANK ( role_mission[au] ) || role_mission[au] > TODAY () ) ) ) + 0 VAR clos = COUNTROWS ( FILTER ( ALL ( v_ecran_arretes ), v_ecran_arretes[entite] = e && v_ecran_arretes[arrete] = a && v_ecran_arretes[est_clos] = TRUE () ) ) + 0 VAR attend = COUNTROWS ( FILTER ( ALL ( v_ecran_demandes_reouverture ), v_ecran_demandes_reouverture[entite] = e && v_ecran_demandes_reouverture[arrete] = a && v_ecran_demandes_reouverture[etat] = "EN_ATTENTE" ) ) + 0 RETURN SWITCH ( TRUE (), ISBLANK ( e ) || ISBLANK ( a ), BLANK (), membre = 0, "Votre adresse de connexion n'est rattachée à aucun membre de l'équipe de ce dossier.", decide > 0, "Vous décidez les déverrouillages de ce dossier ; la demande vient d'un autre membre de l'équipe.", clos > 0, "L'arrêté est validé pour le client ; son dossier se rouvre par « Demander la réouverture ».", ISBLANK ( [Arrete du dossier verrouille] ), "Aucun dossier de travail verrouillé pour le véhicule et l'arrêté des sélecteurs.", attend > 0, "Une demande attend déjà la décision du chef de mission pour cet arrêté." )
+		lineageTag: 647c7ff1-ab66-5992-b42e-037900bb3c9e
 
 	column entite
 		dataType: string

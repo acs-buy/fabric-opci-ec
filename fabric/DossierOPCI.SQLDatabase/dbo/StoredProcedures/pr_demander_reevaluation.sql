@@ -15,13 +15,13 @@ BEGIN
                        WHERE entite = @entite AND arrete = @arrete)
             THROW 50061, 'Demande refusee : cet arrete n''existe pas au referentiel.', 1;
 
-        -- K4, premier volet : une demande en attente interdit la seconde.
+        -- premier volet : une demande en attente interdit la seconde.
         IF EXISTS (SELECT 1 FROM dbo.demande_reevaluation
                    WHERE entite = @entite AND arrete = @arrete
                      AND etat = 'EN_ATTENTE')
             THROW 50061, 'Demande refusee : une demande est deja en attente pour cette entite a cet arrete. Attendre son compte rendu, ou l''annuler.', 1;
 
-        -- K4, second volet : un lot propose non perime couvre deja le
+        -- second volet : un lot propose non perime couvre deja le
         -- perimetre. En generer un second produirait 2 lots concurrents.
         DECLARE @lot_propose INT =
             (SELECT TOP (1) id FROM dbo.lot_ecritures
@@ -37,7 +37,7 @@ BEGIN
             BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50061, @m, 1; END
         END;
 
-        -- K4, troisieme volet : rien de calculable, rien a generer. Les
+        -- troisieme volet : rien de calculable, rien a generer. Les
         -- motifs de blocage se lisent dans dbo.v_a_generer.
         DECLARE @calculables INT =
             (SELECT COUNT(*) FROM dbo.v_a_generer

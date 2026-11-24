@@ -1,12 +1,12 @@
 -- ------------------------------------------------------------------ n° 12 : ajouter une ligne, copie de la ligne choisie
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
--- Contrat de la maquette (objet n° 12, B13, B17, B19) : copie de @modele ; @cle, le code neuf a la forme de la vue (vide
+-- ecran 5
+-- Contrat de la maquette (objet n° 12) : copie de @modele ; @cle, le code neuf a la forme de la vue (vide
 -- pour une cle numerotee) ; raisons de [Blocage ajouter la ligne], dans l'ordre de la maquette : mode TEXTE,
 -- action_propre, droit, actions_de_ligne 0, 2 et 3 ; @libelle remplace la valeur copiee de colonne_designation ; une
 -- colonne ordre sous unicite recoit le plus grand ordre plus 1, dans le groupe de son index, et celle d'un referentiel
--- de ORDRE_PAR_GROUPE dans son groupe (ref_piece_attendue : cycle ou phase, B13), le groupe compare par INTERSECT ;
+-- de ORDRE_PAR_GROUPE dans son groupe (ref_piece_attendue : cycle ou phase), le groupe compare par INTERSECT ;
 -- chaque autre unicite verifiee avant l'ecriture, la colonne nommee ; la designation de la ligne neuve relue apres
--- l'insertion, unique dans le referentiel (B13) ; ref_reference : la reference copiee refusee, intitule de ref_article,
+-- l'insertion, unique dans le referentiel ; ref_reference : la reference copiee refusee, intitule de ref_article,
 -- citation et lecture sur piece non copiees ; une ligne copiee n'est pas ecartee ; modifie_par = @par et modifie_le sur
 -- la ligne inseree.
 CREATE   PROCEDURE dbo.pr_ecran_ajouter_ligne_referentiel
@@ -79,8 +79,8 @@ BEGIN
             EXEC dbo.pr_e5_refuser 50842, @m;
         END;
         SET @oid = OBJECT_ID(N'dbo.' + QUOTENAME(@t));
-        -- 343 (30/10/2026) : ELSE N'' dans le MAX, repris par NULLIF : aucun NULL dans l'agregat, donc aucun avertissement 8153, que
-        -- le pilote lirait a la place du refus. Genere par 61_DEPLOIEMENT/generer_e5_343_correctif_avertissement_8153.py.
+        -- 30/10/2026 : ELSE N'' dans le MAX, repris par NULLIF : aucun NULL dans l'agregat, donc aucun avertissement 8153, que
+        -- le pilote lirait a la place du refus.
         SELECT @numerotee = CASE WHEN MAX(CAST(c.is_identity AS INT)) = 1 THEN 1 ELSE 0 END,
                @pk1 = NULLIF(MAX(CASE WHEN ic.key_ordinal = 1 THEN c.name ELSE N'' END), N''),
                @pk2 = NULLIF(MAX(CASE WHEN ic.key_ordinal = 2 THEN c.name ELSE N'' END), N'')
@@ -136,7 +136,7 @@ BEGIN
                 EXEC dbo.pr_e5_refuser 50853, @m;
             END;
         END;
-        -- ref_reference : une reference neuve, son intitule lu dans ref_article (D29 de l'existant)
+        -- ref_reference : une reference neuve, son intitule lu dans ref_article
         IF @t = 'ref_reference'
         BEGIN
             SELECT @n_norme = r.norme, @n_ref = ISNULL(CAST(@libelle AS VARCHAR (20)), r.reference) FROM dbo.ref_reference r WHERE r.id = CAST(@m1 AS INT);
@@ -239,7 +239,7 @@ BEGIN
             EXEC dbo.pr_e5_refuser 50842, @m;
         END;
         IF @numerotee = 1 SET @canon_k = CAST(@id AS NVARCHAR (12));
-        -- la designation de la ligne neuve, unique dans son referentiel (B13) : relue apres l'insertion
+        -- la designation de la ligne neuve, unique dans son referentiel : relue apres l'insertion
         EXEC dbo.pr_e5_designation @t, @canon_k, NULL, @ligne_k OUTPUT, @nb_d OUTPUT;
         IF @nb_d > 1
         BEGIN

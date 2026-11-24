@@ -3,7 +3,7 @@
   "name": "e3cSegment",
   "position": {
     "x": 519,
-    "y": 450,
+    "y": 374,
     "z": 71100,
     "height": 86,
     "width": 1033,
@@ -176,7 +176,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

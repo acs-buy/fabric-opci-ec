@@ -13,7 +13,7 @@ SELECT p.entite + '|' + p.arrete AS cle_arrete, p.entite, p.arrete,
                      WHEN 'NOMINAL'     THEN N'Montant nominal'
                      ELSE p.source END    AS source_libelle,
        p.article, p.entite_liee, p.quote_part,
-       -- 06/09/2026, demande du candidat : la localisation des immeubles pour la
+       -- Demande du 06/09/2026 : la localisation des immeubles pour la
        -- carte de l'ecran 3. L'adresse est saisie sur l'actif, « n° rue, Ville » ;
        -- la commune est le dernier segment apres la virgule.
        a.adresse,

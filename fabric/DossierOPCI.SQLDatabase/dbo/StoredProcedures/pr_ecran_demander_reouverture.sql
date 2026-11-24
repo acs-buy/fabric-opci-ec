@@ -1,6 +1,7 @@
-
+-- --- 2. pr_ecran_demander_reouverture --------------------------------------------------------------------
 -- pr_ecran_demander_reouverture : 1 refus
 -- ------------------------------------------------------------------------------------------------- 2.4 : les 3 procedures d'ecran
+-- : 50985 lit toute demande en attente, quelle que soit sa nature ; 51247 borne le motif a 580 caracteres.
 CREATE   PROCEDURE dbo.pr_ecran_demander_reouverture @entite VARCHAR (20), @arrete VARCHAR (20), @motif NVARCHAR (800), @par NVARCHAR (400)
 AS
 BEGIN
@@ -19,11 +20,13 @@ BEGIN
         SET @m = N'Demande refusée : l''arrêté postérieur du ' + dbo.fn_date_ecran(@p) + N' est clos ; la réouverture commence par le dernier arrêté clos.';
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50984, @m, 1; END
     END;
-    IF EXISTS (SELECT 1 FROM dbo.demande_reouverture WHERE entite = @entite AND arrete = @arrete AND nature = 'REOUVERTURE' AND etat = 'EN_ATTENTE')
+    IF EXISTS (SELECT 1 FROM dbo.demande_reouverture WHERE entite = @entite AND arrete = @arrete AND etat = 'EN_ATTENTE')
         THROW 50985, N'Demande refusée : une demande attend déjà la décision du chef de mission pour cet arrêté.', 1;
     SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
     IF @motif IS NULL
         THROW 50986, N'Demande refusée : elle exige un motif, qui dit quel lot tardif justifie de rouvrir l''arrêté.', 1;
+    IF LEN(@motif) > 580
+        THROW 51247, N'Demande refusée : le motif tient en 580 caractères au plus.', 1;
     INSERT INTO dbo.demande_reouverture (entite, arrete, nature, motif, demande_par) VALUES (@entite, @arrete, 'REOUVERTURE', @motif, @par);
     SELECT SCOPE_IDENTITY() AS demande_id,
            N'Réouverture de l''arrêté du ' + dbo.fn_date_ecran(@arrete) + N' demandée ; elle attend la décision du chef de mission.' AS message;

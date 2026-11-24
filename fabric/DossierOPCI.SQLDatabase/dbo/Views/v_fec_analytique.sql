@@ -1,7 +1,6 @@
 -- =====================================================================
 -- L'export du fichier des écritures comptables : 3 vues de projection et 2 contrôles de refus
--- À exécuter bloc par bloc, après 63_SQL/01_schema.sql, 63_SQL/09_fec_18_champs.sql
--- et 63_SQL/10_transit_et_rattachement.sql
+-- À exécuter après le schéma, les 18 champs du FEC et le transit avec son rattachement.
 -- Les 18 champs sont ceux de l'article A47 A-1 du livre des procédures fiscales, section VII
 -- =====================================================================
 

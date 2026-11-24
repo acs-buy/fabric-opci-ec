@@ -1,5 +1,5 @@
 -- ------------------------------------------------------------------ le referentiel recu par sa table ou par son nom, et son mode de tenue (objet n° 1)
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 CREATE   PROCEDURE dbo.pr_e5_lire_referentiel
     @referentiel NVARCHAR (200),
     @table       VARCHAR (120)  OUTPUT,

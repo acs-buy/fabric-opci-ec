@@ -3,7 +3,7 @@
   "name": "e4Saisie0",
   "position": {
     "x": 728,
-    "y": 667,
+    "y": 591,
     "z": 62100,
     "height": 86,
     "width": 197,
@@ -18,7 +18,7 @@
             "placeholder": {
               "expr": {
                 "Literal": {
-                  "Value": "'exigé seulement si Refuser'"
+                  "Value": "'à saisir'"
                 }
               }
             },
@@ -77,7 +77,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E8D9A8'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

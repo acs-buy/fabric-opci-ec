@@ -1,12 +1,104 @@
 # Déployer en trois espaces : DEV, TEST et PROD
 
-**Durée :** 45 minutes par déploiement, dont 3 minutes de machine.
+**Durée :** estimée à 45 minutes par déploiement, sans mesure sur la version publiée. Les 2
+déploiements relevés en septembre 2026 ont pris 9 min 09 s et 27 min 25 s de machine : voir
+[Pipeline de déploiement : non éprouvé](#pipeline-de-déploiement--non-éprouvé).
 **Qui :** vous, contributeur des deux espaces concernés.
 
 Cette page s'intercale entre les étapes numérotées. Elle suppose que vous avez créé trois espaces
 à l'étape 3, et que l'installation est finie dans DEV.
 
 Le pourquoi est dans [Trois espaces de travail](../comprendre/09-trois-espaces.md).
+
+---
+
+## Pipeline de déploiement : non éprouvé
+
+**Le déploiement décrit sur cette page n'a pas été joué sur la version publiée de la solution.**
+Ses actions sont tirées de la documentation de l'éditeur et des scripts du dépôt. Le chemin joué de
+bout en bout est celui des 13 étapes, dans un espace neuf, le 16/11/2026, recette de l'étape 13
+comprise.
+
+### Ce qui a été tenté
+
+Un pipeline à 3 étapes relie notre espace de développement, notre espace de démonstration et un
+espace de production. Nous avons déployé 2 fois du premier vers le deuxième. Les 2 opérations ont
+fini en échec. Les durées sont celles que l'API Fabric rend pour chaque opération, du début à la
+fin, relevées le 24/11/2026.
+
+| Date | Durée de machine | Éléments nouveaux | Éléments en échec |
+|---|---|---|---|
+| 05/09/2026 | 9 min 09 s | 19 | 2 : un pipeline de données d'export du FEC, et un élément Plan |
+| 06/09/2026 | 27 min 25 s | 19 | 1 : le même pipeline de données d'export du FEC |
+
+Le pipeline de données a échoué les 2 fois sur le même message : « User does not have access to the
+connection used in the Pipeline ». Ni ce pipeline de données ni les éléments Plan ne font partie
+de ce dépôt.
+
+Les autres éléments, 17 le 05/09/2026 et 18 le 06/09/2026, ont été déployés, et ils sont restés en
+place malgré l'échec de l'opération : des bases SQL, un lakehouse, des ensembles de fonctions, des modèles et
+des rapports, entre autres. Le rapport « Conduite de mission » de ce dépôt n'en faisait pas partie :
+le rapport de conduite déployé alors était une version antérieure, sans bouton de fonction.
+
+### Pourquoi l'épreuve n'est pas faite
+
+L'espace de démonstration n'a plus de capacité Fabric. Relevé par l'API le 24/11/2026, il est en
+mode de licence « Pro », sans capacité. La capacité d'essai qui le portait n'est plus listée.
+
+La documentation de l'éditeur écrit, dans les limites générales des pipelines de déploiement :
+« The workspace must reside on a Fabric capacity. » Page « The deployment pipelines process »,
+mise à jour le 02/11/2026, relue le 24/11/2026. Aucun déploiement vers cet espace n'est donc
+possible en l'état. L'épreuve attend qu'il soit de nouveau rattaché à une capacité.
+
+### Ce que vous devez savoir avant de déployer
+
+**1. Le rapport des écrans est au format PBIR**, dossier `definition/` de
+`fabric/Conduite de mission.Report`. Deux pages de l'éditeur, relues le 24/11/2026, ne disent pas
+la même chose :
+
+| Page de l'éditeur | Mise à jour | Ce qu'elle écrit |
+|---|---|---|
+| « The deployment pipelines process », limites générales | 02/11/2026 | « PBIR reports aren't supported. » |
+| « Power BI Desktop project report folder » | 23/11/2026 | « PBIR is generally available and is the default report format. » Sa liste de limites ne cite pas les pipelines de déploiement |
+
+Que le pipeline accepte ou refuse ce rapport n'est pas établi. Le 06/09/2026, notre pipeline a
+déployé 2 rapports sans erreur, et l'export Git de ces rapports, le même jour, était au format
+PBIR. Ce précédent ne tranche pas : la seconde page écrit que l'intégration Git et les API de
+Fabric exportent les définitions de rapport en PBIR, et le format sous lequel le service tenait ces
+rapports au moment du déploiement n'a pas été relevé.
+
+Si le pipeline refuse le rapport, les autres éléments seront sans doute déployés quand même : c'est
+déduit des 2 opérations de septembre, où les éléments réussis sont restés en place malgré l'échec,
+et ce n'est pas mesuré. Aucun chemin de repli pour poser ce rapport après un déploiement n'est
+éprouvé. Le chemin éprouvé reste d'installer chaque espace par les 13 étapes.
+
+**2. Le déploiement du modèle `conduite_de_mission`, et sa règle de déploiement, risquent d'être
+refusés.** Ce modèle est en DirectQuery, et 18 de ses tables passent par `Value.NativeQuery`. Deux
+pages de l'éditeur, relues le 24/11/2026, excluent la combinaison d'une requête native et de
+DirectQuery :
+
+| Page de l'éditeur | Mise à jour | Ce qu'elle écrit |
+|---|---|---|
+| « The deployment pipelines process », limites des modèles sémantiques | 02/11/2026 | « If autobinding is engaged, then: Native query and DirectQuery together aren't supported. » |
+| « Create deployment rules », limites | 29/09/2026 | Parmi les cas non pris en charge : « Creating data source rules on a semantic model that uses Native query and DirectQuery together. » |
+
+De la première page, il se déduit que le déploiement du modèle lui-même peut être refusé, et pas
+seulement sa règle de source. Ce n'est pas mesuré. Deux points de ce raisonnement sont des
+déductions : que `Value.NativeQuery` soit une requête native au sens de ces pages, et que
+l'autobinding soit engagé quand le rapport est déployé avec son modèle.
+
+Le 06/09/2026, le pipeline a déployé `conduite_de_mission` sans erreur. Ce précédent ne tranche
+pas : le modèle n'employait alors aucune requête native, d'après l'export Git de notre espace de
+développement fait le même jour, avant le déploiement.
+
+Si seule la règle de source est refusée, un repli possible est de relier le modèle par
+`scripts/25_relier_le_modele.py`, comme à l'installation. Ce repli n'a pas été éprouvé après un
+déploiement par pipeline. Si le modèle lui-même est refusé, aucun repli n'est éprouvé : le chemin
+éprouvé reste d'installer chaque espace par les 13 étapes.
+
+**3. Les durées de cette page ne sont pas mesurées sur la version publiée.** Les 45 minutes sont
+une estimation. Les 2 durées de machine relevées portent chacune sur 19 éléments d'une version
+antérieure : 2 en échec le 05/09/2026, 1 le 06/09/2026.
 
 ---
 

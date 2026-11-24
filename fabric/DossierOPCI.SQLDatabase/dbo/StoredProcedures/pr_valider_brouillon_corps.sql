@@ -12,14 +12,14 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    -- 51317, D1 (15/11/2026) : action 24, viseur compris (decision 3). Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 51317 (15/11/2026) : action 24, viseur compris. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@valide_par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 51317, N'Action refusée : seule l''équipe du dossier peut valider les OD d''une question de ce dossier.', 1;
 
     -- Le perimetre est la QUESTION, non la feuille entiere : un lot est
-    -- par question depuis le script 56, et valider une question ne doit
+    -- par question (fk_lot_question), et valider une question ne doit
     -- pas emporter le brouillon des autres.
     IF NOT EXISTS (SELECT 1 FROM dbo.ecriture_brouillon
                    WHERE entite = @entite AND arrete = @arrete
@@ -46,7 +46,7 @@ BEGIN
         BEGIN TRANSACTION;
         -- question_id est pose sur le lot : ck_lot_source_par_famille
         -- l'exige pour la famille DECIDEE, et son absence faisait echouer
-        -- cette procedure depuis le script 56.
+        -- cette procedure.
         INSERT INTO dbo.lot_ecritures
             (arrete, famille, portee, entite, feuille_cote, question_id,
              statut, cree_par)

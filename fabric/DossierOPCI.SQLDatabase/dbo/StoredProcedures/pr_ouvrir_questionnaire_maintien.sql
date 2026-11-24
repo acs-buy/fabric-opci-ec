@@ -1,6 +1,6 @@
--- 206 : ouvrir le questionnaire de maintien d'un client, comme le 205 ouvre celui de l'acceptation.
+-- ouvrir le questionnaire de maintien d'un client.
 --
--- MESURE LE 16/09/2026 : pr_ouvrir_maintien (script 102) exige une feuille de phase MAINTIEN deja
+-- MESURE LE 16/09/2026 : pr_ouvrir_maintien exige une feuille de phase MAINTIEN deja
 -- existante (refus 50068), et rien ne la cree : le jeu porte MTN-OMEGA-OPCI-2025, semee par
 -- l'historique avec ses 36 questions. Le bouton « Ouvrir le maintien » de la maquette 71 doit donc
 -- creer la feuille et ses questions avant d'appeler la procedure, meme geste que pour l'acceptation.
@@ -18,8 +18,8 @@ BEGIN
     SET XACT_ABORT ON;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND est_client = 1)
         THROW 50281, N'Le maintien ne s''ouvre que sur un client du cabinet.', 1;
-    -- 51302, D1 (15/11/2026) : action 9. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 51302 (15/11/2026) : action 9. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete_conclu, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 51302, N'Action refusée : seule l''équipe du dossier peut ouvrir le questionnaire de maintien de ce dossier.', 1;

@@ -9,7 +9,7 @@ BEGIN
         (N'AUTRE_PROD',N'V',N'Autres produits',N'AUTRE',N'Article 322-2, Autres produits (V)',N'5',NULL,NULL),
         (N'CHRG_FIN',N'IV',N'Charges sur opérations financières',N'FINANCIER',N'Article 322-2, Total IV',N'4',NULL,NULL),
         (N'CHRG_IMMO',N'II',N'Charges de l''activité immobilière',N'IMMOBILIER',N'Article 322-2, Total II, y compris les charges d''emprunt sur les actifs à caractère immobilier',N'2',NULL,NULL),
-        (N'FRAIS_GEST',N'VI',N'Frais de gestion et de fonctionnement externes',N'CORPORATE',N'Article 322-2, Frais de gestion et de fonctionnement externes (VI). Article 322-10 pour les frais de gestion. Ce que le candidat nomme les charges corporate de l''OPCI.',N'6',NULL,NULL),
+        (N'FRAIS_GEST',N'VI',N'Frais de gestion et de fonctionnement externes',N'CORPORATE',N'Article 322-2, Frais de gestion et de fonctionnement externes (VI). Article 322-10 pour les frais de gestion. Ces frais sont aussi appelés charges corporate de l''OPCI.',N'6',NULL,NULL),
         (N'PMV_MOINS',N'X',N'Moins-values réalisées nettes',N'PMV',N'Article 322-2, Total X, nettes de frais',N'10',NULL,NULL),
         (N'PMV_PLUS',N'IX',N'Plus-values réalisées nettes',N'PMV',N'Article 322-2, Total IX, nettes de frais',N'9',NULL,NULL),
         (N'PROD_FIN',N'III',N'Produits sur opérations financières',N'FINANCIER',N'Article 322-2, Total III',N'3',NULL,NULL),

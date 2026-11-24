@@ -1,4 +1,4 @@
--- C12 : les references non lues sur piece. Ce n'est pas une anomalie,
+-- les references non lues sur piece. Ce n'est pas une anomalie,
 -- c'est l'etat de la verification : la vue dit ce qui reste a lire.
 CREATE   VIEW dbo.v_references_non_lues AS
 SELECT norme, norme_libelle, reference, genre, intitule

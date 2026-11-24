@@ -1074,7 +1074,7 @@
               },
               "metadata": {
                 "dataFunction": {
-                  "name": "deverrouiller_dossier",
+                  "name": "demander_deverrouillage",
                   "autoRefresh": true,
                   "parameters": [
                     {
@@ -1107,10 +1107,10 @@
                           "Measure": {
                             "Expression": {
                               "SourceRef": {
-                                "Entity": "v_revision_indicateurs"
+                                "Entity": "v_dim_arrete"
                               }
                             },
-                            "Property": "Arrete du dossier verrouille"
+                            "Property": "Arrete selectionne"
                           }
                         }
                       }
@@ -1122,16 +1122,7 @@
                       "defaultValue": null,
                       "type": "SlicerParameter",
                       "slicer": "revLivDevMotif",
-                      "autoClear": false
-                    },
-                    {
-                      "name": "demandePar",
-                      "dataType": "string",
-                      "isOptional": true,
-                      "defaultValue": null,
-                      "type": "SlicerParameter",
-                      "slicer": "revLivDevPar",
-                      "autoClear": false
+                      "autoClear": true
                     }
                   ]
                 }
@@ -1140,7 +1131,7 @@
             "tooltip": {
               "expr": {
                 "Literal": {
-                  "Value": "'Déverrouiller le dossier avec le motif et le demandeur saisis'"
+                  "Value": "'Demander le déverrouillage du dossier avec le motif saisi ; le chef de mission décide la demande'"
                 }
               }
             }

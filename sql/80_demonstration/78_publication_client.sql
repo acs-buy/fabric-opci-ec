@@ -1,4 +1,4 @@
--- publication_client : 4 ligne(s) de referentiel.
+-- publication_client : 5 ligne(s) de referentiel.
 -- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
 -- Produit depuis la base de reference, ne pas modifier a la main.
 
@@ -9,7 +9,8 @@ BEGIN
         (N'3',N'OMEGA-OPCI',N'2025-12-31',N'8',N'PUBLIEE',N'2026-09-06 09:56:02.092',N'installation',NULL,N'2026-09-06 09:56:34.000'),
         (N'4',N'OMEGA-OPCI',N'2022-12-31',N'123',N'PUBLIEE',N'2026-09-06 16:27:46.649',N'installation',NULL,N'2026-09-06 16:28:34.153'),
         (N'5',N'OMEGA-OPCI',N'2023-12-31',N'124',N'PUBLIEE',N'2026-09-06 16:27:46.649',N'installation',NULL,N'2026-09-06 16:28:34.153'),
-        (N'6',N'OMEGA-OPCI',N'2024-12-31',N'125',N'PUBLIEE',N'2026-09-06 16:27:46.649',N'installation',NULL,N'2026-09-06 16:28:34.153');
+        (N'6',N'OMEGA-OPCI',N'2024-12-31',N'125',N'PUBLIEE',N'2026-09-06 16:27:46.649',N'installation',NULL,N'2026-09-06 16:28:34.153'),
+        (N'8',N'OMEGA-OPCI',N'2025-12-31',N'469',N'PUBLIEE',N'2026-10-19 13:25:10.262',N'installation',NULL,N'2026-10-19 13:25:58.090');
     SET IDENTITY_INSERT dbo.[publication_client] OFF;
     PRINT 'publication_client : ' + CAST((SELECT COUNT(*) FROM dbo.[publication_client]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END

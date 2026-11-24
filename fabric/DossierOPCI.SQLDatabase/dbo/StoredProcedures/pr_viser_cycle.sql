@@ -1,8 +1,8 @@
 
 -- pr_viser_cycle : 1 refus
 -- 7. VISER OU RENVOYER UN CYCLE. VISE : le premier obstacle de fn_obstacle_visa_cycle, puis
--- l'auteur et le role. RENVOYE : admis depuis CONCLU et VISE (§ 7, point 8), jamais sur dossier verrouille ni
--- revue visee ; il n'est pas soumis a E1, il peut porter sur ce qui manque.
+-- l'auteur et le role. RENVOYE : admis depuis CONCLU et VISE, jamais sur dossier verrouille ni
+-- revue visee ; il n'est pas soumis, il peut porter sur ce qui manque.
 CREATE   PROCEDURE dbo.pr_viser_cycle
     @entite      VARCHAR (20),
     @arrete      VARCHAR (20),

@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
+/// Ajoutee le 15/09/2026 pour le front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_ecran_pieces_du_dossier
 	lineageTag: 50416a1d-0ad7-451a-96b1-67a9cf69c79a
 
@@ -144,6 +144,9 @@ table v_ecran_pieces_du_dossier
 		displayFolder: Ecran Client retirer et rouvrir
 		lineageTag: 268b597b-107c-5f38-89ba-a5547636b7c5
 
+	measure 'Encre retrait' = VAR r = SELECTEDVALUE ( v_ecran_pieces_du_dossier[Retrait] ) RETURN IF ( ISBLANK ( r ) || r = "possible", "#5B6B7D", "#9A2A2A" )
+		displayFolder: C3 ecran 1
+
 	column entite
 		dataType: string
 		sourceProviderType: varchar(20)
@@ -186,10 +189,10 @@ table v_ecran_pieces_du_dossier
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 3a2c4f37-ac33-4fb4-8334-4312d57471b2
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: piece_id
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
 	column Fichier
 		dataType: string

@@ -1,8 +1,8 @@
 
--- --- 6 : les usages d'une piece, point V16 -------------------------
+-- --- 6 : les usages d'une piece -------------------------
 -- Une piece sert souvent plusieurs fois : un acte d'acquisition fonde le
 -- prix de revient ET la surface, un bail fonde le loyer ET la garantie.
--- L'ecran P1 affiche « Usages (n) » et doit les lister.
+-- L'ecran affiche « Usages (n) » et doit les lister.
 CREATE   VIEW dbo.v_usages_piece AS
 SELECT r.id AS rattachement_id, r.piece_id,
        p.nom_fichier, p.chemin_coffre, p.nature,

@@ -1,11 +1,9 @@
--- Objet n° 5 de l'ecran 5 (lot 1) : les referentiels du cabinet (du_cabinet = 1), table des segments Domaine,
+-- Objet n° 5 de l'ecran 5 : les referentiels du cabinet (du_cabinet = 1), table des segments Domaine,
 -- Categorie et Referentiel ; ordre : le rang de la grille de l'etape 1, categorie_ordre puis rang_categorie ;
 -- forme_cle : vide pour un code d'une colonne, les libelles effectifs des colonnes du code (ref_libelle_colonne,
 -- vue de la table puis '*') joints par « · », 1re lettre en minuscule, « numerotee » pour une cle numerotee par la
 -- base ; designation : colonne_designation ; adresse_fichiers : le dossier Modeles de la bibliotheque Documents du
 -- site du cabinet (SITE_CABINET), pour modele_feuille seul ; colonnes des cles relues au catalogue a la generation.
--- Pose par 63_SQL/322_e5_vues_choix_inventaire_seuils_articles.sql, genere par 61_DEPLOIEMENT/generer_e5_322_vues_choix_inventaire_seuils_articles.py ;
--- ne pas modifier a la main : regenerer le script quand une table s'inscrit ou qu'une colonne change.
 CREATE   VIEW dbo.v_ecran_referentiel_choix AS
 WITH cle_colonne AS (
     SELECT table_nom, rang, colonne, defaut FROM (VALUES

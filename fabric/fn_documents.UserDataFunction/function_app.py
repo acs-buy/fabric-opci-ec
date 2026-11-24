@@ -1,9 +1,9 @@
 """fn_documents : les livrables de l'etape 6 de l'ecran Revision, une fonction par document.
 
 Element User data functions `fn_documents` de l'espace OPCI-DEV, identifiant 01b1f037-0147-4046-9106-bd80d60c1310.
-Publie par l'API : python 61_DEPLOIEMENT/poser_fonction_ecran.py --nom fn_documents --ecrire, puis relu par
-getDefinition. Ecrit le 04/10/2026 ; remplace essai_modele, qui ecrivait au coffre (regle du 28/09/2026 : tout
-fichier se depose dans SharePoint par la base et se lit par raccourci).
+Publie par l'API Fabric (updateDefinition), puis relu par getDefinition. Ecrit le 04/10/2026.
+Aucun fichier ne s'ecrit au coffre (regle du 28/09/2026 : tout fichier se depose dans SharePoint par la base et se
+lit par raccourci).
 
 LES 4 FONCTIONS, chacune appelee par un bouton (elle rend une phrase) :
   produire_livrable(entite, arrete, livrable, format)  le livrable et le format passent en parametre : DOCX pour
@@ -40,21 +40,20 @@ L'ENCHAINEMENT :
      la version des comptes annuels qu'il couvre et l'enregistre.
 Le rapport a une source unique, la base : la forme arretee, son intitule, son texte et la donnee de chaque
 emplacement (v_rapport_expert_comptable, ref_forme_rapport). Le DIP lit v_dip_arrete et v_dip_rubrique_1 a 6.
-Rien ne s'ecrit au coffre. La fabrication est le module pur 61_DEPLOIEMENT/fabrication_livrables.py, recopie
-ci-dessous par assembler_fn_documents.py et essaye seul par produire_livrables_local.py.
+Rien ne s'ecrit au coffre. La fabrication est un module pur, recopie ci-dessous entre 2 marques et essaye seul
+hors du service.
 
 Connexions : DossierOPCI (base) et Coffre (lakehouse, lecture du modele par le raccourci fec). Bibliotheques :
 docxtpl (et python-docx qu'il embarque), openpyxl. Limites du service : 240 s par invocation.
 """
 
-# >>> fabrication_livrables.py : copie integrale, ne pas modifier ici (61_DEPLOIEMENT/assembler_fn_documents.py)
+# >>> module de fabrication des livrables : copie integrale de sa source, ne pas modifier ici
 # -*- coding: utf-8 -*-
 u"""Fabrication des livrables de l'etape 6 : comptes annuels (Word et Excel), rapport de l'expert-comptable (Word),
 DIP (Word). MODULE PUR : aucune dependance a Fabric, aucune ecriture.
 
-UN SEUL CODE POUR LA FONCTION ET POUR LE BANC D'ESSAI. Ce fichier est la source ; assembler_fn_documents.py le
-recopie tel quel dans 60_FABRIC/fn_documents.UserDataFunction/function_app.py, entre 2 marques, et le banc
-produire_livrables_local.py refuse de tourner si la copie differe. Ce que le banc prouve vaut donc pour le code
+UN SEUL CODE POUR LA FONCTION ET POUR LE BANC D'ESSAI. Le module est recopie tel quel dans la fonction, entre 2
+marques, et le banc d'essai refuse de s'executer si la copie differe. Ce que le banc prouve vaut donc pour le code
 publie.
 
 CE QUE LE MODULE FAIT : il lit la base par un lecteur qu'on lui passe, lire(sql, params) -> liste de dict, en
@@ -192,8 +191,8 @@ def empreinte(octets):
 PREFIXES = {u'ATTESTATION': u'RAPPORT_EXPERT_COMPTABLE'}
 
 # LES NOMS QU'UN MESSAGE DONNE au livrable et a l'etat, depuis le 05/10/2026 : un message de la zone de l'ecran Revision
-# ne montre aucun code de la base (ATTESTATION, BILAN_ACTIF), et tient en 2 lignes de 870 px (poser_ecran_revision,
-# lignes_msg_py ; preuve : prouver_messages_fn_documents.py). L'etat se nomme avec l'article de son modele au recueil.
+# ne montre aucun code de la base (ATTESTATION, BILAN_ACTIF), et tient en 2 lignes de 870 px. L'etat se nomme avec
+# l'article de son modele au recueil.
 NOMS_LIVRABLES = {u'COMPTES_ANNUELS': u'Comptes annuels', u'ATTESTATION': u'Rapport de l’expert-comptable',
                   u'DIP': u'Document d’information périodique'}
 NOMS_ETATS = {u'BILAN_ACTIF': (u'de l’actif du bilan', u'321-2'), u'BILAN_PASSIF': (u'du passif du bilan', u'321-6'),
@@ -227,7 +226,7 @@ def de_elide(nom):
 
 # Modeles 321-2, 321-6 et 322-2 du reglement ANC n° 2021-09, modifie par le reglement ANC n° 2024-01 (recueil,
 # pages 90 a 94 du fichier) : code de ref_ligne_etat, libelle imprime au recueil, graisse au recueil. Le banc
-# produire_livrables_local.py retrouve chaque libelle dans le texte du PDF.
+# d'essai retrouve chaque libelle dans le texte du PDF.
 MODELES_ETATS = {
     u'BILAN_ACTIF': [
         (u'A_IMMO', u'Actifs à caractère immobilier', 1),
@@ -657,8 +656,8 @@ TITRES_ARTICLES = {
 
 # ARTICLES DE PRINCIPE (331-1, 334-1, 335-1, 336-1) : le texte de l'article, au mot pres, LU EN BASE depuis le
 # 10/10/2026, une seule source pour le Word et l'ecran : ref_tableau_annexe.principe le designe, texte_principe le
-# porte, un alinea par ligne, separes par NCHAR(10) (63_SQL/288_articles_de_principe.sql, texte verifie sur le recueil,
-# pages 96, 99, 101 et 106 du fichier) ; lire_comptes_annuels le coupe en d['principes']. Aucune information n'y est
+# porte, un alinea par ligne, separes par NCHAR(10) (texte verifie sur le recueil, pages 96, 99, 101 et 106 du
+# fichier) ; lire_comptes_annuels le coupe en d['principes']. Aucune information n'y est
 # demandee ; une saisie que la base porterait sur leurs lignes s'imprime sous le texte.
 
 
@@ -3570,7 +3569,7 @@ def fabriquer_dip_docx(d, version, modele, produit_le):
     w.para(TITRES_DIP[u'r7'])
     w.para(TITRES_DIP[u'fondement'], italique=True, taille=8)
     return w.octets()
-# <<< fabrication_livrables.py
+# <<< module de fabrication des livrables
 
 # ============================================================================ Fabric
 
@@ -3589,9 +3588,21 @@ def _qui(ctx) -> str:
 
 
 def _texte_pilote(exc) -> str:
-    """Le texte de l'erreur du pilote ODBC : le 2e argument de l'exception pyodbc, (etat SQL, texte), sinon str(exc)."""
+    """Le texte de l'erreur ODBC, brut et non par le repr du tuple. Une erreur du pilote porte (etat SQL, texte), le
+    texte commencant par « [ » ; une erreur levee par pyodbc lui-meme porte (texte, etat SQL), et le 2e argument seul
+    rendait l'etat (HY000) au lieu du texte. Une erreur sans diagnostic du pilote (unixODBC, hote Linux de la
+    fonction) porte (HY000, « The driver did not supply an error! ») : etat en 1er, texte sans « [ », lu en 2e.
+    Toute autre forme se lit par str(exc), comme avant. Meme lecture que fn_ecran_revision et fn_ecran_client
+    (24/11/2026)."""
     a = getattr(exc, "args", ())
-    return a[1] if len(a) > 1 and isinstance(a[1], str) else str(exc)
+    if len(a) > 1 and isinstance(a[0], str) and isinstance(a[1], str):
+        if a[1].startswith("["):
+            return a[1]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[1]):
+            return a[0]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[0]):
+            return a[1]
+    return str(exc)
 
 
 def _message_sql(exc) -> str:
@@ -3767,7 +3778,7 @@ def _version(base, entite: str, arrete: str, livrable: str, fmt: str, par: str):
 
 
 def _empreinte_stockee(coffre, entite: str, arrete: str, fichier: str):
-    """L'empreinte de la COPIE STOCKEE, relue par le raccourci fec juste apres le depot (63_SQL/251, 04/10/2026).
+    """L'empreinte de la COPIE STOCKEE, relue par le raccourci fec juste apres le depot (04/10/2026).
 
     POURQUOI 2 EMPREINTES, releve du 04/10/2026 : SharePoint reecrit un fichier Office a l'enregistrement. Il ajoute
     des parties de metadonnees de bibliotheque (customXml, docProps/custom.xml) et en modifie 5 ; word/document.xml
@@ -3792,7 +3803,7 @@ def _deposer(base, entite: str, arrete: str, fichier: str, octets: bytes, par: s
 
 def _enregistrer(base, coffre, entite: str, arrete: str, livrable: str, fichier: str, par: str,
                  annexe_version: int = None) -> dict:
-    """Enregistrement du fichier depose, avec l'empreinte de sa copie stockee (63_SQL/251) ; la base reprend du depot
+    """Enregistrement du fichier depose, avec l'empreinte de sa copie stockee ; la base reprend du depot
     son adresse, sa taille et l'empreinte des octets produits. Pour les comptes annuels, la version de l'annexe que le
     fichier imprime, passee par son nom (@annexe_version) : la base refuse un document sans elle, sur une version
     depassee, d'une autre version que le format deja enregistre du meme document, ou quand les cellules de l'entite
@@ -3808,7 +3819,7 @@ def _enregistrer(base, coffre, entite: str, arrete: str, livrable: str, fichier:
 
 def _refus(e, version=None):
     """Le refus du module, suivi de la version qu'il laisse ouverte : pr_demander_document l'a creee, aucun fichier ne
-    s'y rattache, et la production suivante en demande une autre (la version suivante prend le maximum + 1, 63_SQL/262)."""
+    s'y rattache, et la production suivante en demande une autre (la version suivante prend le maximum + 1)."""
     suite = (" La version %d reste ouverte, sans fichier ; la production suivante ouvre la version %d." % (
         version, version + 1) if version else "")
     raise fn.UserThrownError(insecables(str(e) + suite), {})
@@ -3818,10 +3829,11 @@ def _refus(e, version=None):
 
 def _poser_message(base, par: str, texte: str, genre: str, entite: str, procedure: str, journal: bool = False,
                    texte_journal: str = None) -> None:
-    """Le message du geste dans la boite aux lettres de l'ecran Revision (dbo.pr_poser_message_ecran), que le modele lit
-    par [Message de la revision] : la phrase rendue a la reussite, le texte du refus sinon, comme fn_ecran_revision.
-    Le refus se journalise d'abord (dbo.pr_journaliser_refus). UNE CONNEXION NEUVE, donc une transaction neuve : le
-    geste a deja fait commit ou rollback. Ne leve jamais : un message qui echoue ne masque pas le geste qu'il rapporte.
+    """Le message de l'action dans la boite aux lettres de l'ecran Revision (dbo.pr_poser_message_ecran), que le modele
+    lit par [Message de la revision] : la phrase rendue a la reussite, le texte du refus sinon, comme fn_ecran_revision.
+    Le refus se journalise d'abord (dbo.pr_journaliser_refus). UNE CONNEXION NEUVE, donc une transaction neuve : la
+    transaction de l'action est deja validee ou annulee. Ne leve jamais : un message qui echoue ne masque pas l'action
+    qu'il rapporte.
     texte_journal : le texte journalise quand il differe de celui de l'ecran (l'erreur d'execution entiere)."""
     texte = (texte or "").strip()[:2000]
     texte_journal = (texte_journal or "").strip()[:2000] or texte
@@ -3873,8 +3885,11 @@ def _texte_erreur(e) -> str:
 # fn_ecran_valorisation, et non plus la classe et le texte anglais de l'exception, bornes a 160 caracteres (05/10/2026).
 # Le detail technique (production, classe, numero, texte entier) va au seul journal des refus, et la fonction leve une
 # UserThrownError (reponse 422) au lieu de relancer l'exception (reponse 500).
-TEXTE_ERREUR = ("Action interrompue par une erreur d'exécution. Le détail technique est consigné au journal des refus ; "
-                "relisez l'écran avant de recommencer.")
+# LE TEXTE D'UNE ERREUR NON PREVUE (24/11/2026) : celui de fn_ecran_client et fn_ecran_revision ; 982,5 px a la
+# chasse publiee : 1 ligne a ec40 et ec41
+# (coupe 1 487 px), dans la carte de 1 503 px d'ec42, a ec01 et ec02 (coupe 1 487 px).
+TEXTE_ERREUR = ("L'action n'a pas abouti à cause d'un problème technique. Vérifiez à l'écran ce qui a été enregistré, "
+                "puis réessayez. Si le problème revient, prévenez l'administrateur.")
 
 
 def _rendre(base, par: str, entite: str, nom: str, faire):
@@ -3889,7 +3904,7 @@ def _rendre(base, par: str, entite: str, nom: str, faire):
                        texte_journal=getattr(e, "detail_journal", None))
         raise
     except Exception as e:
-        detail = "Erreur d’exécution de la fonction %s : %s" % (nom, _detail(e))  # R9, D6, texte n° 19
+        detail = "Erreur d’exécution de la fonction %s : %s" % (nom, _detail(e))
         _poser_message(base, par, TEXTE_ERREUR, "REFUS", entite, nom, journal=True, texte_journal=detail)
         raise fn.UserThrownError(TEXTE_ERREUR, {"fonction": nom}) from e
     _poser_message(base, par, texte, "SUCCES", entite, nom)
@@ -3902,9 +3917,8 @@ def _rendre(base, par: str, entite: str, nom: str, faire):
 # fois, et la phrase de la base (pr_enregistrer_document) a la suite ; la 2e ligne de la zone finissait par « … ». La
 # fonction compose seule, sur les colonnes que la base rend (demande_produite), et non sur sa phrase : le livrable, sa
 # version et son format, le fichier depose et son dossier, ce qu'il porte, puis ce qui reste a produire de la version.
-# Le nom du fichier vient une fois, en tete, ou il tient sur la 1re ligne. Chaque phrase tient en 2 lignes de 870 px
-# (poser_ecran_revision.lignes_msg_py), pour les noms reels et l'entite au code le plus large de ref_entite :
-# 61_DEPLOIEMENT/prouver_messages_fn_documents.py.
+# Le nom du fichier vient une fois, en tete, ou il tient sur la 1re ligne. Chaque phrase tient en 2 lignes de 870 px,
+# pour les noms reels et l'entite au code le plus large de ref_entite.
 _PORTE = {("COMPTES_ANNUELS", "DOCX"): "Il porte le bilan, le compte de résultat et l’annexe.",
           ("COMPTES_ANNUELS", "XLSX"): "Il porte le bilan, le compte de résultat et la balance."}
 _LE_FORMAT = {"DOCX": "le Word", "XLSX": "l’Excel"}
@@ -4031,12 +4045,12 @@ _PRODUCTIONS = {"COMPTES_ANNUELS": ("produire_comptes_annuels", _faire_comptes_a
 _FORMATS = {"COMPTES_ANNUELS": ("DOCX", "XLSX"), "ATTESTATION": ("DOCX",), "DIP": ("DOCX",)}
 _NOM_FORMAT = {"DOCX": "Word", "XLSX": "Excel"}
 
-# LES CONTROLES D'ENTREE DE LA PRODUCTION (24/10/2026, decision du candidat « 1-A », regle du meme jour : tout message
+# LES CONTROLES D'ENTREE DE LA PRODUCTION (24/10/2026, regle du meme jour : tout message
 # a l'ecran en francais). entite, arrete et livrable ont une valeur par defaut vide a produire_livrable ; format,
 # constante du bouton, reste obligatoire, en tete. La production lit la base avant son 1er appel de procedure
 # (interface de depot, version ouverte, forme arretee, signataire) : le vehicule, le livrable puis l'arrete vides sont
-# refuses ici, avant le controle du code du livrable, avec les textes de l'etude du 24/10/2026 (_scratch/fonctions_fr/
-# etude_fonctions_20261024.json, champ « plan »), mot pour mot, que la base reprend dans ses procedures.
+# refuses ici, avant le controle du code du livrable, avec les memes textes, mot pour mot, que la base reprend dans
+# ses procedures.
 REFUS_VEHICULE = "Choisissez le véhicule dans le sélecteur Véhicule."
 REFUS_LIVRABLE = "Production refusée : choisissez le livrable dans la liste « 1. Livrables de l’arrêté »."
 REFUS_ARRETE_RAPPORT = ("Production refusée : le rapport de l’expert-comptable ne se produit pas à cet arrêté en "

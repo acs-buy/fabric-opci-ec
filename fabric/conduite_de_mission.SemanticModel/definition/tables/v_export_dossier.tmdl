@@ -51,7 +51,7 @@ table v_export_dossier
 		displayFolder: Ecran 2 etape 3
 		lineageTag: a62c14e9-8be8-4f54-8641-94a9c2bf7964
 
-	/// destination de « Voir le dossier exporté » : le nom affiché de la page ec05000000000000e001, relu au publié le 26/10/2026 ; vide sans dépôt, le clic est alors sans effet (GUIDE § 17.28, point 1, et § 17.41, point 4)
+	/// destination de « Voir le dossier exporté » : le nom affiché de la page ec05000000000000e001, relu au publié le 26/10/2026 ; vide sans dépôt, le clic est alors sans effet
 	measure 'Destination revDossier2' = IF ( NOT ISBLANK ( [Date du dossier exporte] ), "Dossier de travail" )
 		displayFolder: Ecran 2 etape 3
 		lineageTag: bceb6d96-afa0-4e41-af8e-63376e03129b
@@ -66,7 +66,7 @@ table v_export_dossier
 		displayFolder: Ecran 2 etape 3
 		lineageTag: 284319a3-cf4a-4e46-bc16-f6cc1dff623e
 
-	/// l'infobulle de « Voir le dossier exporté » : la raison du gris, sinon le texte validé avec R8
+	/// l'infobulle de « Voir le dossier exporté » : la raison du gris, sinon le texte validé 
 	measure 'Infobulle revDossier2' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "Choisissez le véhicule et l’arrêté dans les sélecteurs", IF ( ISBLANK ( [Date du dossier exporte] ), "Aucun dossier exporté pour cet arrêté : exportez-le par « Exporter le dossier »", "Ouvre la page Dossier de travail de l’arrêté" ) )
 		displayFolder: Ecran 2 etape 3
 		lineageTag: bc8acfe8-fcdd-4a1f-a234-8b10ba928fcc

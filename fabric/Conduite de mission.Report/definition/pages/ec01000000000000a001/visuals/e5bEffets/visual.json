@@ -3,7 +3,7 @@
   "name": "e5bEffets",
   "position": {
     "x": 519,
-    "y": 824,
+    "y": 748,
     "z": 74400,
     "height": 249,
     "width": 1033,
@@ -459,7 +459,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

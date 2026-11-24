@@ -488,7 +488,7 @@
         {
           "name": "Valo libelle bande synthese",
           "dataType": "Text",
-          "expression": "VAR e = SUM ( v_controle_rationalisation[ecart] ) VAR s = CALCULATE ( MAX ( synthese_proposee[propose_le] ), ISBLANK ( synthese_proposee[perime_le] ) ) VAR d = CALCULATE ( MAX ( v_ecran_visas_valorisation[decide_le] ), v_ecran_visas_valorisation[nature] = \"SYNTHESE\" ) VAR dv = CALCULATE ( MAX ( v_ecran_visas_valorisation[decide_le] ), v_ecran_visas_valorisation[nature] = \"SYNTHESE\", v_ecran_visas_valorisation[decision] = \"VISE\" ) VAR etat = IF ( ISBLANK ( s ), \"synthèse non proposée\", IF ( NOT ISBLANK ( d ) && d >= s, IF ( dv = d, \"synthèse visée\", \"synthèse renvoyée\" ), \"synthèse proposée\" ) ) RETURN IF ( NOT ISBLANK ( e ), \"écart \" & FORMAT ( e, \"#,0.00\" ) & \" · \", \"\" ) & etat"
+          "expression": "VAR e = SUM ( v_controle_rationalisation[ecart] ) VAR s = CALCULATE ( MAX ( synthese_proposee[propose_le] ), ISBLANK ( synthese_proposee[perime_le] ) ) VAR d = CALCULATE ( MAX ( v_ecran_visas_valorisation[decide_le_utc] ), v_ecran_visas_valorisation[nature] = \"SYNTHESE\" ) VAR dv = CALCULATE ( MAX ( v_ecran_visas_valorisation[decide_le_utc] ), v_ecran_visas_valorisation[nature] = \"SYNTHESE\", v_ecran_visas_valorisation[decision] = \"VISE\" ) VAR etat = IF ( ISBLANK ( s ), \"synthèse non proposée\", IF ( NOT ISBLANK ( d ) && d >= s, IF ( dv = d, \"synthèse visée\", \"synthèse renvoyée\" ), \"synthèse proposée\" ) ) RETURN IF ( NOT ISBLANK ( e ), \"écart \" & FORMAT ( e, \"#,0.00\" ) & \" · \", \"\" ) & etat"
         },
         {
           "name": "Valo libelle du compte choisi",

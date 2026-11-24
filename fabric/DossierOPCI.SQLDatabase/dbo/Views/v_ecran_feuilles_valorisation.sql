@@ -1,7 +1,8 @@
-
+-- --- 4 ---------------------------------------------------------------------------------------------
 -- ------------------------------------------------------------------ n° 20 : les feuilles et derogations de la valorisation
 -- Une ligne par feuille VALO et PART du vehicule et de ses filiales : la conclusion en attente de visa (v_a_viser) et la
 -- derogation en cours (non levee), avec son visa en libelle.
+-- : conclusion_proposee_le et derogation_proposee_le a l'heure de Paris, heure d'ete comprise.
 CREATE   VIEW dbo.v_ecran_feuilles_valorisation AS
 SELECT pv.vehicule, f.arrete, f.entite, f.cote, f.cycle,
        CAST(CASE WHEN c.objet_ref IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS conclusion_a_viser,
@@ -9,11 +10,11 @@ SELECT pv.vehicule, f.arrete, f.entite, f.cote, f.cycle,
                  WHEN f.forme_conclusion = 'AVEC_OBSERVATION' THEN N'avec observation'
                  WHEN f.forme_conclusion = 'SANS_OBSERVATION' THEN N'sans observation' END AS NVARCHAR (20)) AS conclusion_libelle,
        c.propose_par                                   AS conclusion_proposee_par,
-       CAST(c.propose_le AS DATETIME2 (0))             AS conclusion_proposee_le,
+       CAST(c.propose_le AT TIME ZONE 'UTC' AT TIME ZONE 'Romance Standard Time' AS DATETIME2 (0)) AS conclusion_proposee_le,
        dg.id                                           AS derogation_id,
        dg.motif                                        AS derogation_motif,
        dg.accordee_par                                 AS derogation_proposee_par,
-       CAST(dg.accordee_le AS DATETIME2 (0))           AS derogation_proposee_le,
+       CAST(dg.accordee_le AT TIME ZONE 'UTC' AT TIME ZONE 'Romance Standard Time' AS DATETIME2 (0)) AS derogation_proposee_le,
        CAST(CASE WHEN dg.id IS NULL THEN NULL WHEN vd.decision = 'VISE' THEN N'visée' ELSE N'à viser' END AS NVARCHAR (10)) AS derogation_visa,
        pv.vehicule + '|' + f.cote                      AS cle_ecran
 FROM dbo.feuille_travail f

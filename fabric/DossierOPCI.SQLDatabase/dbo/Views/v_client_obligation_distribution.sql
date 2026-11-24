@@ -1,9 +1,9 @@
 
 -- --- 5b : l'obligation de distribution, categorie par categorie ------------
--- Demande du candidat du 06/09/2026 : le client lit comment l'obligation minimale
+-- Demande du 06/09/2026 : le client lit comment l'obligation minimale
 -- se calcule, article L. 214-69 du CMF, II : la base, le taux et le montant de
--- chaque fraction. Les codes de dbo.obligation_distribution (script 52) sont
--- rapproches des categories du referentiel (script 58) pour en lire le libelle
+-- chaque fraction. Les codes de dbo.obligation_distribution sont
+-- rapproches des categories du referentiel pour en lire le libelle
 -- et l'article ; une categorie non renseignee n'apparait pas.
 CREATE   VIEW dbo.v_client_obligation_distribution AS
 SELECT o.entite + '|' + o.exercice AS cle_arrete, o.entite, o.exercice AS arrete,

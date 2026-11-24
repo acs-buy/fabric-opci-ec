@@ -133,7 +133,7 @@ r214_85 AS (
     GROUP BY pv.entite, pv.arrete
 ),
 dette AS (
-    -- LES EMPRUNTS EXTERIEURS SEULS, arbitrage du candidat du
+    -- LES EMPRUNTS EXTERIEURS SEULS, arbitrage du
     -- 04/09/2026 : comptes 512 emprunts lies a des actifs immobiliers,
     -- 513 autres emprunts et 164 emprunts aupres des etablissements de
     -- credit. Le compte 4551, dette envers la mere, est EXCLU : le
@@ -158,7 +158,7 @@ dette AS (
           -- compte 512, dont 74 620 000,00 avec le compte auxiliaire
           -- OMEGA-OPCI et 40 180 000,00 sans. Le plan de comptes seul ne
           -- distingue donc pas le bancaire de l'interne, la
-          -- correspondance du script 92 ayant traduit le 4551 du PCG en
+          -- correspondance de ref_correspondance_plan ayant traduit le 4551 du PCG en
           -- 512 du plan de l'article 411-3.
           AND NOT EXISTS (SELECT 1 FROM dbo.ref_entite x
                           WHERE x.code = e.comp_aux_num)
@@ -179,7 +179,7 @@ dette AS (
 ),
 immeubles AS (
     -- LA VALEUR DES IMMEUBLES DETENUS, MULTIPLIEE PAR LE TAUX DE
-    -- DETENTION, second arbitrage du candidat. Les immeubles en direct,
+    -- DETENTION, second arbitrage. Les immeubles en direct,
     -- plus ceux de chaque filiale lue par transparence a la quote-part
     -- (R. 214-104, 1°, a et b), plus ceux des organismes du 5° de la
     -- base au prorata (1°, d). Les TITRES de filiales n'y entrent pas :
@@ -276,8 +276,8 @@ SELECT rr.code,
        CAST(CASE WHEN sv.source IS NULL THEN rr.note
                  ELSE N'Calcul selon ' + rr.article + N' : ' + rr.note
             END AS NVARCHAR (800))                             AS note,
-       -- 06/09/2026, O7 : la source du seuil, texte, prospectus ou cabinet,
-       -- dit au reviseur s'il peut invoquer une derogation. Maquette E5-1.
+       -- 06/09/2026 : la source du seuil, texte, prospectus ou cabinet,
+       -- dit au reviseur s'il peut invoquer une derogation.
        ISNULL(CAST(sv.source AS VARCHAR (20)), rr.source_du_seuil) AS source_du_seuil,
        CAST(rr.calcul_a_valider AS BIT) AS calcul_a_valider,
        CAST(c.denominateur_r214_89 AS DECIMAL (19,2))    AS denominateur_r214_89,
@@ -307,7 +307,7 @@ CROSS APPLY (
            END AS denominateur
 ) AS n
 OUTER APPLY (
-    -- Decision D9 du candidat du 17/10/2026 : le seuil fixe par les statuts d'un OPCI professionnel (CMF,
+    -- Decision du 17/10/2026 : le seuil fixe par les statuts d'un OPCI professionnel (CMF,
     -- art. R. 214-196 et R. 214-200) remplace celui du texte pour ce vehicule seul ; la cle (entite, code) de
     -- ref_ratio_vehicule en rend 1 ligne au plus.
     SELECT v.seuil, v.source, v.lu_le, v.motif

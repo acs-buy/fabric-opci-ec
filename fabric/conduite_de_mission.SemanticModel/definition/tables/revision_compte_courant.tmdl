@@ -130,7 +130,7 @@ table revision_compte_courant
 		source =
 				let
 				    Source = Sql.Database("ra6uvi3ttf5e5kzvtpixiyxumu-5pgdmplbuqqu5iuftzacs77jay.database.fabric.microsoft.com", "DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1"),
-				    dbo_revision_compte_courant = Source{[Schema="dbo",Item="revision_compte_courant"]}[Data]
+				    dbo_revision_compte_courant = Source{[Schema="dbo",Item="v_ecran_revision_compte_courant"]}[Data]
 				in
 				    dbo_revision_compte_courant
 

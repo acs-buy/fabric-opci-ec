@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "docNav3Fond",
   "position": {
-    "x": 794,
+    "x": 793,
     "y": 150,
     "z": 1900,
     "height": 46,
-    "width": 198,
+    "width": 199,
     "tabOrder": 1900
   },
   "visual": {

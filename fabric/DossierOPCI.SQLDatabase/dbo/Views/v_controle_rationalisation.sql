@@ -1,4 +1,4 @@
-CREATE   VIEW dbo.v_controle_rationalisation AS
+CREATE VIEW dbo.v_controle_rationalisation AS
 SELECT o.entite, o.arrete, o.actif_net_precedent, o.actif_net_rationalise,
        o.actif_net_calcule,
        o.actif_net_rationalise - o.actif_net_calcule AS ecart,
@@ -16,7 +16,7 @@ SELECT o.entite, o.arrete, o.actif_net_precedent, o.actif_net_rationalise,
             THEN N'la rationalisation boucle au seuil de 1 000,00'
             ELSE N'la rationalisation ne boucle pas : un poste manque ou un montant est mal qualifié'
             END                                  AS lecture,
-       N'Seuil de 1 000,00 arrêté par le candidat le 04/09/2026, non prescrit par le règlement'
+       N'Seuil de 1 000,00 arrêté le 04/09/2026, non prescrit par le règlement'
                                                  AS source_du_seuil
 FROM dbo.v_rationalisation_opci o
 LEFT JOIN dbo.v_perimetre_arrete p ON p.entite = o.entite AND p.arrete = o.arrete;

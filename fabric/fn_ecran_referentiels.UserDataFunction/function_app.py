@@ -1,53 +1,47 @@
 """fn_ecran_referentiels : les boutons de l'ecran Referentiels (ecran 5), une fonction par bouton.
 
-Lot 4 de la feuille de route 65_JOURNAL/roadmap_ecran_5_referentiels.md ; maquette retenue
-20_LIVRABLES_V2/PARCOURS_ECRANS/83_referentiels_option_1.html (objets de fonction n° 182 a 186 et 190 a 193 ;
-connexions et bibliotheques, n° 196 et 197). Forme de fn_ecran_arrete (lot 4 de l'ecran 4, repris le 15/10/2026,
-commit 798a8ebe) : chaque fonction appelle UNE procedure d'ecran de la base (lot 1 de la feuille de route, scripts
-323 et 324), rend la phrase du bouton, prend l'utilisateur dans le contexte d'execution (PreferredUsername) et jamais
-dans un parametre, et un refus remonte en francais par UserThrownError. Connexions declarees : « DossierOPCI » (base),
-liee ici par l'argument « connexion », et « Coffre » (lakehouse), que lieront les fonctions du lot 5 (exporter et
-reimporter un classeur, rattacher un gabarit) ; bibliotheques : fabric-user-data-functions et openpyxl, que le lot 5
-emploie.
+Forme de fn_ecran_arrete : chaque fonction appelle UNE procedure d'ecran de la base, rend la phrase du bouton, prend
+l'utilisateur dans le contexte d'execution (PreferredUsername) et jamais dans un parametre, et un refus remonte en
+francais par UserThrownError. Connexions declarees : « DossierOPCI » (base), liee ici par l'argument « connexion », et
+« Coffre » (lakehouse), que lient les fonctions des classeurs et du fichier d'un gabarit (exporter et reimporter un
+classeur, rattacher un gabarit) ; bibliotheques : fabric-user-data-functions et openpyxl, qu'emploient ces memes
+fonctions.
 
 Les etapes de l'ecran et leurs boutons :
-  2a Tenir un referentiel    modifier_valeur         -> pr_ecran_modifier_valeur_referentiel (n° 182, objet n° 11)
-                             ajouter_ligne           -> pr_ecran_ajouter_ligne_referentiel   (n° 183, objet n° 12)
-                             changer_code            -> pr_ecran_changer_code_referentiel    (n° 184, objet n° 13)
-                             ecarter_ligne           -> pr_ecran_ecarter_ligne_referentiel   (n° 185, objet n° 14)
-                             supprimer_ligne         -> pr_ecran_supprimer_ligne_referentiel (n° 186, objet n° 15)
-  2b Seuil du vehicule       poser_seuil_vehicule    -> pr_ecran_poser_seuil_vehicule        (n° 190, objet n° 24)
-  3  Questions a valider     valider_questions       -> pr_ecran_valider_questions           (n° 191, objet n° 32)
-                             ecarter_question        -> pr_ecran_ecarter_question            (n° 192, objet n° 33)
-                             ajouter_question_tenue  -> pr_ecran_ajouter_question_tenue      (n° 193, objet n° 35)
-  2a Classeur et fichier     exporter_referentiel    -> pr_deposer_classeur_referentiel      (n° 187, objet n° 36)
-                             importer_referentiel    -> pr_importer_referentiel              (n° 188, objet n° 37)
-                             rattacher_gabarit       -> pr_ecran_rattacher_gabarit           (n° 189, objet n° 27)
-  3  Niveau de programme     exporter_niveaux        -> pr_deposer_classeur_referentiel      (n° 194, objet n° 36)
-                             importer_niveaux        -> pr_importer_niveaux_programme        (n° 195, objet n° 38)
-Les 5 fonctions du lot 5 (classeurs et fichier d'un gabarit) sont decrites en tete de leur section, en fin de fichier.
+  2a Tenir un referentiel    modifier_valeur         -> pr_ecran_modifier_valeur_referentiel
+                             ajouter_ligne           -> pr_ecran_ajouter_ligne_referentiel
+                             changer_code            -> pr_ecran_changer_code_referentiel
+                             ecarter_ligne           -> pr_ecran_ecarter_ligne_referentiel
+                             supprimer_ligne         -> pr_ecran_supprimer_ligne_referentiel
+  2b Seuil du vehicule       poser_seuil_vehicule    -> pr_ecran_poser_seuil_vehicule
+  3  Questions a valider     valider_questions       -> pr_ecran_valider_questions
+                             ecarter_question        -> pr_ecran_ecarter_question
+                             ajouter_question_tenue  -> pr_ecran_ajouter_question_tenue
+  2a Classeur et fichier     exporter_referentiel    -> pr_deposer_classeur_referentiel
+                             importer_referentiel    -> pr_importer_referentiel
+                             rattacher_gabarit       -> pr_ecran_rattacher_gabarit
+  3  Niveau de programme     exporter_niveaux        -> pr_deposer_classeur_referentiel
+                             importer_niveaux        -> pr_importer_niveaux_programme
+Les 5 fonctions des classeurs et du fichier d'un gabarit sont decrites en tete de leur section, en fin de fichier.
 
-LES PARAMETRES (decision du candidat du 15/10/2026, « Gris + refus en français », § 1.5, n° 2 de la feuille de route).
-Chaque parametre, le droit compris, a une valeur par defaut vide : un parametre facultatif dont la mesure est vide
-n'est pas envoye par le bouton, et sa valeur par defaut le remplace (GUIDE_API_RAPPORT_POWER_BI.md, § 17.43, point 8) ;
-un parametre obligatoire vide desactive le bouton avec une bulle anglaise (meme guide, § 17.25, point 1). Aucun
-parametre d'etat : chaque procedure refuse en francais, avant toute ecriture, chaque etat que nomme la mesure
-[Blocage ...], [Etat du seuil du vehicule] ou [Etat de la validation] du bouton. Aucun nom de parametre ne porte de
-tiret bas : le service le refuse (fn_ecran_revision, deverrouiller_dossier, d'ou demandePar ; 70 fonctions publiees,
-aucune n'en porte) ; les champs que la maquette nomme cycle_ou_phase et nouvelle_cle s'appellent donc cycleOuPhase et
-nouvelleCle.
+LES PARAMETRES. Chaque parametre, le droit compris, a une valeur par defaut vide : un parametre facultatif dont la
+mesure est vide n'est pas envoye par le bouton, et sa valeur par defaut le remplace ; un parametre obligatoire vide
+desactive le bouton avec une bulle anglaise. Aucun parametre d'etat : chaque procedure refuse en francais, avant toute
+ecriture, chaque etat que nomme la mesure [Blocage ...], [Etat du seuil du vehicule] ou [Etat de la validation] du
+bouton. Aucun nom de parametre ne porte de tiret bas : le service le refuse (fn_ecran_revision, deverrouiller_dossier,
+d'ou demandePar ; 70 fonctions publiees, aucune n'en porte) ; les champs que la maquette nomme cycle_ou_phase et
+nouvelle_cle s'appellent donc cycleOuPhase et nouvelleCle.
 
-LE DROIT EST REFUSE AVANT TOUT APPEL A LA BASE (critere 1 du lot 4 ; lot 10, « 0 message, 0 ligne ») : teneur, lie a
-[Teneur connecte] pour les 6 boutons des etapes 2a et 2b, et associe, lie a [Associe du cabinet connecte] pour les
-3 boutons de l'etape 3, doivent egaler la personne connectee. Vide ou different, le refus est leve en francais avant
-toute connexion a la base, sans journal ni message (_droit, hors de _rendre). Le texte reprend celui que la procedure
-oppose a un @par sans droit (50859, 50875), sans le nom du referentiel, que seule la base connait.
+LE DROIT EST REFUSE AVANT TOUT APPEL A LA BASE : teneur, lie a [Teneur connecte] pour les 6 boutons des etapes 2a et
+2b, et associe, lie a [Associe du cabinet connecte] pour les 3 boutons de l'etape 3, doivent egaler la personne
+connectee. Vide ou different, le refus est leve en francais avant toute connexion a la base, sans journal ni message
+(_droit, hors de _rendre). Le texte reprend celui que la procedure oppose a un @par sans droit (50859, 50875), sans le
+nom du referentiel, que seule la base connait.
 
 L'AUTEUR EST LA PERSONNE CONNECTEE : PreferredUsername de ctx.executing_user, passe en @par a chaque procedure, jamais
 un parametre. La session SQL d'une fonction porte le compte a la fois proprietaire de la fonction et auteur de sa
-connexion, quel que soit le compte qui clique, et executing_user nomme le compte qui clique (R5, § 6.1 de la feuille de
-route ; GUIDE_API_RAPPORT_POWER_BI.md, § 17.59) : seul @par nomme la personne en base, ou chaque procedure le pose dans
-le contexte « par » le temps de ses ecritures.
+connexion, quel que soit le compte qui clique, et executing_user nomme le compte qui clique : seul @par nomme la
+personne en base, ou chaque procedure le pose dans le contexte « par » le temps de ses ecritures.
 
 LE LIBELLE D'UN SEGMENT EST TRADUIT EN CODE PAR LA FONCTION, apres le droit : le referentiel par ref_referentiel
 (table_nom ou libelle), la colonne par v_ecran_referentiel_colonnes (colonne ou libelle_colonne, dans le referentiel
@@ -58,10 +52,10 @@ part tel quel : la procedure, qui recoit aussi le libelle, le refuse en le citan
 ([Ligne du referentiel choisie], une mesure) part telle quelle.
 
 LE MESSAGE : chaque procedure pose son message de reussite par dbo.pr_poser_message_ecran dans sa transaction et rend
-une ligne (entite, message), sous l'entite « - » pour les actions du cabinet et sous le vehicule pour le seuil (§ 1.3) ;
+une ligne (entite, message), sous l'entite « - » pour les actions du cabinet et sous le vehicule pour le seuil ;
 la fonction pose la phrase rendue de la meme facon apres le commit. Un refus de la procedure est leve sous la
 transaction de la fonction, que son rollback annule : la fonction le journalise par dbo.pr_journaliser_refus et le pose
-par dbo.pr_poser_message_ecran apres le rollback, dans une connexion neuve (script 323, pr_e5_conclure_refus).
+par dbo.pr_poser_message_ecran apres le rollback, dans une connexion neuve (forme de pr_e5_conclure_refus).
 
 UN TEXTE SAISI plus long que le parametre de la procedure qui le recoit est refuse ici en nommant le champ : la base
 tronquerait sans le dire un parametre de procedure trop long (parametres relus en base le 28/10/2026) : « Code de la
@@ -69,7 +63,7 @@ nouvelle ligne » et « Nouveau code » 400 caracteres, « Seuil du véhicule »
 
 UNE ERREUR NON PREVUE REMONTE EN FRANCAIS : seul un refus de la base (numero d'au moins 50000, THROW) devient le texte du
 bouton ; toute autre erreur (moteur SQL, pilote, Python) rend le texte francais de l'erreur d'execution, le detail
-technique allant au seul journal des refus, sous la forme des textes n° 17 et 19 de R9.
+technique allant au seul journal des refus, sous la forme de fn_ecran_revision.
 """
 
 import re
@@ -80,7 +74,7 @@ udf = fn.UserDataFunctions()
 
 
 # ----------------------------------------------------------------------------- outils, identiques a fn_ecran_arrete
-# Ecarts : _rendre (lot 4) ; lecture des refus (D1) : _enregistrement_sql, _message_sql, _numero_sql, _refus_de_la_base.
+# Ecarts : _rendre ; lecture des refus : _enregistrement_sql, _message_sql, _numero_sql, _refus_de_la_base.
 
 def _qui(ctx) -> str:
     u = (ctx.executing_user or {}).get("PreferredUsername") or (ctx.executing_user or {}).get("Oid")
@@ -90,24 +84,35 @@ def _qui(ctx) -> str:
 
 
 def _texte_pilote(exc) -> str:
-    """Le texte de l'erreur du pilote ODBC : le 2e argument de l'exception pyodbc, (etat SQL, texte), sinon str(exc)."""
+    """Le texte de l'erreur ODBC, brut et non par le repr du tuple. Une erreur du pilote porte (etat SQL, texte), le
+    texte commencant par « [ » ; une erreur levee par pyodbc lui-meme porte (texte, etat SQL), et le 2e argument seul
+    rendait l'etat (HY000) au lieu du texte. Une erreur sans diagnostic du pilote (unixODBC, hote Linux de la
+    fonction) porte (HY000, « The driver did not supply an error! ») : etat en 1er, texte sans « [ », lu en 2e.
+    Toute autre forme se lit par str(exc), comme avant. Meme lecture que fn_ecran_revision et fn_ecran_client
+    (24/11/2026)."""
     a = getattr(exc, "args", ())
-    return a[1] if len(a) > 1 and isinstance(a[1], str) else str(exc)
+    if len(a) > 1 and isinstance(a[0], str) and isinstance(a[1], str):
+        if a[1].startswith("["):
+            return a[1]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[1]):
+            return a[0]
+        if re.fullmatch(r"[0-9A-Z]{5}", a[0]):
+            return a[1]
+    return str(exc)
 
 
 def _enregistrement_sql(exc) -> tuple:
-    """(numero, texte) de l'enregistrement retenu du texte du pilote ODBC. Outil ajoute au lot 5 (decision D1 du
-    29/10/2026, condition de la decision D5 du 30/10/2026) : _message_sql, _numero_sql et _refus_de_la_base
-    l'emploient, et ne sont donc plus ceux de fn_ecran_arrete. Le pilote ecrit son 1er enregistrement de diagnostic
-    « [etat] [...][SQL Server]texte (numero) (fonction) », puis chacun des suivants « ; [etat] [...][SQL Server]texte
-    (numero) » ; l'exception pyodbc porte en 1er argument l'etat du 1er enregistrement et en 2e ce texte. Sous un
-    appel avec parametres, un avertissement leve avant un THROW y precede le refus (8153 de pr_importer_referentiel,
-    etat 01003 ; sonde du 29/10/2026, pyodbc 5.3.0 et ODBC Driver 18 for SQL Server du poste, pilote du service non
-    mesure). Les enregistrements ne sont parcourus que si l'exception a cette forme et que l'etat est de classe 01
-    (avertissement) : le 1er de numero au moins 50000 est alors retenu s'il n'est pas le 1er du texte, son texte sans
-    le prefixe du pilote. Dans tous les autres cas, numero et texte sont ceux de la lecture du lot 4, celle du 1er
-    enregistrement, sur le texte entier : numero None quand le texte n'en porte pas (delai ou coupure du pilote, erreur
-    Python)."""
+    """(numero, texte) de l'enregistrement retenu du texte du pilote ODBC. _message_sql, _numero_sql et
+    _refus_de_la_base l'emploient, et ne sont donc plus ceux de fn_ecran_arrete. Le pilote ecrit son 1er
+    enregistrement de diagnostic « [etat] [...][SQL Server]texte (numero) (fonction) », puis chacun des suivants
+    « ; [etat] [...][SQL Server]texte (numero) » ; l'exception pyodbc porte en 1er argument l'etat du 1er
+    enregistrement et en 2e ce texte. Sous un appel avec parametres, un avertissement leve avant un THROW y precede le
+    refus (8153 de pr_importer_referentiel, etat 01003 ; sonde du 29/10/2026, pyodbc 5.3.0 et ODBC Driver 18 for SQL
+    Server du poste, pilote du service non mesure). Les enregistrements ne sont parcourus que si l'exception a cette
+    forme et que l'etat est de classe 01 (avertissement) : le 1er de numero au moins 50000 est alors retenu s'il n'est
+    pas le 1er du texte, son texte sans le prefixe du pilote. Dans tous les autres cas, numero et texte sont ceux de la
+    lecture du 1er enregistrement, sur le texte entier : numero None quand le texte n'en porte pas (delai ou coupure du
+    pilote, erreur Python)."""
     s = _texte_pilote(exc)
     a = getattr(exc, "args", ())
     if len(a) > 1 and isinstance(a[0], str) and isinstance(a[1], str) and a[0].startswith("01"):
@@ -224,8 +229,11 @@ def _poser(g: _Action, message, genre: str, procedure: str, journal: bool = Fals
             pass
 
 
-TEXTE_ERREUR = ("Action interrompue par une erreur d'exécution. Le détail technique est consigné au journal des refus ; "
-                "relisez l'écran avant de recommencer.")
+# LE TEXTE D'UNE ERREUR NON PREVUE (24/11/2026) : celui de fn_ecran_client et fn_ecran_revision ; 982,5 px a la
+# chasse publiee : 1 ligne a ec40 et ec41 (coupe 1 487 px), dans la carte de 1 503 px d'ec42, a ec01 et ec02 (coupe
+# 1 487 px).
+TEXTE_ERREUR = ("L'action n'a pas abouti à cause d'un problème technique. Vérifiez à l'écran ce qui a été enregistré, "
+                "puis réessayez. Si le problème revient, prévenez l'administrateur.")
 
 
 def _rendre(g: _Action, nom: str, faire):
@@ -237,7 +245,7 @@ def _rendre(g: _Action, nom: str, faire):
         raise
     except Exception as e:
         # Erreur non prevue, du moteur SQL, du pilote ou de Python : le texte francais au bouton et a la zone de
-        # message, le detail au journal seul, sous la forme des textes n° 17 et 19 de R9 (fn_ecran_revision).
+        # message, le detail au journal seul, sous la forme de fn_ecran_revision.
         procedure = g.procedures[-1] if g.procedures else nom
         detail = ("Erreur d’exécution de la fonction %s, procédure %s : %s" % (nom, procedure, _detail(e))
                   if g.procedures else "Erreur d’exécution de la fonction %s : %s" % (nom, _detail(e)))
@@ -318,23 +326,24 @@ def _texte_saisi(g: _Action, valeur, libelle: str, maximum: int):
 
 # ----------------------------------------------------------------------------- outils propres a l'ecran 5
 
-# L'entite du message d'une action du cabinet (§ 1.3 de la feuille de route) : [Message ecran] lit les messages de la
-# personne dont l'entite vaut le client choisi ou « - ».
+# L'entite du message d'une action du cabinet : [Message ecran] lit les messages de la personne dont l'entite vaut le
+# client choisi ou « - ».
 ENTITE_CABINET = "-"
 
 
 def _droit(g: _Action, valeur, texte: str) -> None:
     """Le droit d'un bouton : la mesure liee au parametre ([Teneur connecte] ou [Associe du cabinet connecte]) rend
     l'adresse de connexion de la personne connectee quand elle tient le droit. Toute autre valeur, vide comprise, est
-    refusee en francais AVANT TOUT APPEL A LA BASE : appele hors de _rendre, ce refus ne pose ni journal ni message
-    (critere 1 du lot 4)."""
+    refusee en francais AVANT TOUT APPEL A LA BASE : appele hors de _rendre, ce refus ne pose ni journal ni
+    message."""
     v = _vide(valeur)
     if v is None or v.lower() != g.qui.strip().lower():
         raise fn.UserThrownError(texte, {})
 
 
-# Les refus du droit, au texte de la procedure pour un @par sans droit (50859 aux n° 11 a 15 et 24, sans le nom du
-# referentiel ; 50875 aux n° 32, 33 et 35, mot pour mot), relus en base le 28/10/2026.
+# Les refus du droit, au texte de la procedure pour un @par sans droit (50859 des 5 procedures de l'etape 2a et de
+# pr_ecran_poser_seuil_vehicule, sans le nom du referentiel ; 50875 de pr_ecran_valider_questions,
+# pr_ecran_ecarter_question et pr_ecran_ajouter_question_tenue, mot pour mot), relus en base le 28/10/2026.
 REFUS_DROIT_MODIFIER = "Modification refusée : aucun droit de modification."
 REFUS_DROIT_AJOUTER = "Ajout refusé : aucun droit de modification."
 REFUS_DROIT_CHANGER = "Changement de code refusé : aucun droit de modification."
@@ -478,13 +487,12 @@ def ajouter_ligne(connexion: fn.FabricSqlConnection, ctx: fn.UserDataFunctionCon
 @udf.function()
 def changer_code(connexion: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext, teneur: str = "",
                  referentiel: str = "", cle: str = "", nouvelleCle: str = "") -> str:
-    """Bouton « Changer le code » : le code de la ligne choisie devient celui saisi au champ « Nouveau code »
-    (D9 de l'existant, forme 2). La fonction refuse d'abord le droit (_droit, avant tout appel a la base), puis un code
-    de plus de 400 caracteres, et traduit le referentiel. pr_ecran_changer_code_referentiel refuse ensuite, dans son
-    ordre : referentiel (50831), fixe par un texte (50832), seuil propre (50833), aucun droit (50859), actions de ligne
-    fermees (50834, 50836), ligne numerotee (50838), ligne vide ou inconnue (50839, 50842), code mal forme (50840,
-    50841), ligne employee, en nommant l'emploi (50844), nouveau code vide ou inchange (50858), code deja pris (50843),
-    designation deja prise (50854)."""
+    """Bouton « Changer le code » : le code de la ligne choisie devient celui saisi au champ « Nouveau code ».
+    La fonction refuse d'abord le droit (_droit, avant tout appel a la base), puis un code de plus de 400 caracteres,
+    et traduit le referentiel. pr_ecran_changer_code_referentiel refuse ensuite, dans son ordre : referentiel (50831),
+    fixe par un texte (50832), seuil propre (50833), aucun droit (50859), actions de ligne fermees (50834, 50836), ligne
+    numerotee (50838), ligne vide ou inconnue (50839, 50842), code mal forme (50840, 50841), ligne employee, en nommant
+    l'emploi (50844), nouveau code vide ou inchange (50858), code deja pris (50843), designation deja prise (50854)."""
     g = _action(connexion, ctx, ENTITE_CABINET)
     _droit(g, teneur, REFUS_DROIT_CHANGER)
 
@@ -636,58 +644,56 @@ def ajouter_question_tenue(connexion: fn.FabricSqlConnection, ctx: fn.UserDataFu
     return _rendre(g, "ajouter_question_tenue", faire)
 
 
-# ----------------------------------------------------------------------------- lot 5, les classeurs et le fichier d'un gabarit
+# ----------------------------------------------------------------------------- les classeurs et le fichier d'un gabarit
 #
-# Lot 5 de 65_JOURNAL/roadmap_ecran_5_referentiels.md : fonctions n° 187, 188, 189, 194 et 195 de la maquette retenue
-# 20_LIVRABLES_V2/PARCOURS_ECRANS/83_referentiels_option_1.html, sur le contrat de la session base
-# (65_JOURNAL/preuves_ecran_5/plan_lot5_base_20261025.md, § 2, et ses decisions D-t a D-x,
-# 65_JOURNAL/preuves_ecran_5/decisions_session_base_lot1_20261021.md) et les procedures posees le 25/10/2026
-# (63_SQL/331 a 334, vue 335) : pr_deposer_classeur_referentiel (objet n° 36), pr_importer_referentiel (n° 37),
-# pr_importer_niveaux_programme (n° 38), pr_ecran_rattacher_gabarit (n° 27), v_export_niveaux_programme (D-v).
+# Les fonctions des boutons « Exporter le classeur », « Réimporter le classeur », « Rattacher le fichier », « Exporter
+# les niveaux » et « Réimporter les niveaux », sur les procedures posees le 25/10/2026 :
+# pr_deposer_classeur_referentiel, pr_importer_referentiel, pr_importer_niveaux_programme, pr_ecran_rattacher_gabarit,
+# et la vue v_export_niveaux_programme.
 #
-# TOUT FICHIER SE DEPOSE DANS SHAREPOINT ET SE LIT PAR LE RACCOURCI DU COFFRE (D21 de l'existant, regle du 28/09/2026) :
+# TOUT FICHIER SE DEPOSE DANS SHAREPOINT ET SE LIT PAR LE RACCOURCI DU COFFRE (regle du 28/09/2026) :
 # un classeur exporte part au dossier « Référentiels » du site du cabinet par la base, pr_deposer_classeur_referentiel
 # (route deposer_classeur, voie de pr_deposer_classeur : une Data function n'a pas d'identite a elle), qui l'inscrit
 # dans classeur_cabinet ; le reimport relit le dernier classeur inscrit par son chemin_onelake (« fec/Référentiels/... ») ;
 # le fichier d'un gabarit se lit a « <RACCOURCI_SITE_CABINET>/Modeles/<fichier> ». Rien ne s'ecrit au coffre.
 #
-# LE DROIT AVANT TOUT APPEL A LA BASE (critere 1 du lot 4) : importer_referentiel et rattacher_gabarit (teneur, lie a
+# LE DROIT AVANT TOUT APPEL A LA BASE : importer_referentiel et rattacher_gabarit (teneur, lie a
 # [Teneur connecte]) et importer_niveaux (associe, lie a [Associe du cabinet connecte]) refusent en francais un droit
 # absent, vide ou d'une autre personne, sans connexion a la base ni lecture au coffre (_droit). Les 2 exports n'ont ni
-# droit ni etat (objets n° 187 et 194) : l'export ne modifie pas le referentiel, et un referentiel fixe par un texte
-# s'exporte aussi.
+# droit ni etat : l'export ne modifie pas le referentiel, et un referentiel fixe par un texte s'exporte aussi.
 #
-# LE 1ER APPEL DES 3 RELECTURES (plan du lot 5, § 2.2 a 2.4) : la procedure est d'abord appelee sans son contenu (sans
+# LE 1ER APPEL DES 3 RELECTURES : la procedure est d'abord appelee sans son contenu (sans
 # @lignes ni @fichier, ou sans @empreinte), pour que ses refus suivent l'ordre de la mesure [Blocage ...] du bouton ; elle
 # refuse alors en 50910 (classeurs) ou 50927 (gabarit) quand tout le reste est admis : ce numero, et lui seul, dit a la
 # fonction de poursuivre (_premier_appel), sans journal ni message, son rollback effacant ce que la procedure a ecrit ;
 # tout autre refus s'affiche tel quel. La fonction lit ensuite le fichier par le raccourci, puis rappelle la procedure
 # avec le contenu ; un fichier absent est refuse par la fonction, sans 2e appel. Le numero et le texte d'un refus se
-# lisent sur l'enregistrement retenu du texte du pilote (_enregistrement_sql, decision D1 du 29/10/2026) :
-# pr_importer_referentiel leve l'avertissement 8153 avant son refus 50910 (63_SQL/332, lignes 238 et 239 du script), et
-# le pilote place cet avertissement en 1er enregistrement sous un appel avec parametres (sonde du 29/10/2026).
+# lisent sur l'enregistrement retenu du texte du pilote (_enregistrement_sql) : pr_importer_referentiel leve
+# l'avertissement 8153 avant son refus 50910, et le pilote place cet avertissement en 1er enregistrement sous un appel
+# avec parametres (sonde du 29/10/2026).
 #
-# UN DEPOT REFUSE PAR LA ROUTE (50905, decision D-x du 25/10/2026) : la procedure pose le detail de la route dans la cle
+# UN DEPOT REFUSE PAR LA ROUTE (50905) : la procedure pose le detail de la route dans la cle
 # detail_route du contexte de session, qui survit au rollback ; la fonction la relit sur la meme connexion apres son
 # rollback, la passe en detail de son journal (_rendre_depot, puis _poser), et la remet a vide ; l'ecran garde le texte
 # francais de la procedure.
 
-# Les numeros de refus de la base que les fonctions du lot 5 lisent (63_SQL/331 a 334, relus en base le 29/10/2026)
+# Les numeros de refus de la base que lisent les fonctions des classeurs et du gabarit (relus en base le 29/10/2026)
 REFUS_DEPOT_DE_LA_ROUTE = 50905     # pr_deposer_classeur_referentiel : depot refuse par la route, detail en contexte
 CONTENU_NON_PARVENU = 50910         # pr_importer_referentiel et pr_importer_niveaux_programme : tout le reste admis
 EMPREINTE_MANQUANTE = 50927         # pr_ecran_rattacher_gabarit : tout le reste admis
 
-# Les refus du droit, au texte de la procedure pour un @par sans droit (50908 des n° 37 et 27, sans le nom du
-# referentiel ; 50908 du n° 38, mot pour mot), relus en base le 29/10/2026.
+# Les refus du droit, au texte de la procedure pour un @par sans droit (50908 de pr_importer_referentiel et de
+# pr_ecran_rattacher_gabarit, sans le nom du referentiel ; 50908 de pr_importer_niveaux_programme, mot pour mot), relus
+# en base le 29/10/2026.
 REFUS_DROIT_REIMPORTER = "Réimport refusé : aucun droit de modification."
 REFUS_DROIT_RATTACHER = "Rattachement refusé : aucun droit de modification."
 REFUS_ASSOCIE_NIVEAUX = ("Réimport refusé : réservé à l’associé. Seul l’associé pose les niveaux de programme, et votre "
                          "adresse de connexion ne porte aucun mandat d’associé en cours.")
 
-# Le classeur des niveaux de programme : la forme de 61_DEPLOIEMENT/exporter_niveaux_a_cocher.py (28/09/2026), onglet
-# « Questions », libelles en ligne 1, cles en ligne 2, donnees a partir de la ligne 3, puis l'onglet « Racines par
-# cycle » ; les lignes et les croix sont celles de la vue v_export_niveaux_programme (decision D-v), dont les
-# 13 premieres colonnes sont ces cles, dans cet ordre.
+# Le classeur des niveaux de programme : la forme du classeur des niveaux a cocher du 28/09/2026, onglet « Questions »,
+# libelles en ligne 1, cles en ligne 2, donnees a partir de la ligne 3, puis l'onglet « Racines par cycle » ; les lignes
+# et les croix sont celles de la vue v_export_niveaux_programme, dont les 13 premieres colonnes sont ces cles, dans cet
+# ordre.
 COLONNES_NIVEAUX = [("Cycle", "cycle", 10), ("Libellé du cycle", "cycle_libelle", 30), ("Référence", "reference", 13),
                     ("Question", "enonce", 70), ("Applicabilité", "applicabilite", 16),
                     ("Type de réponse", "type_reponse", 14), ("Feuille type", "feuille_type", 14),
@@ -735,7 +741,7 @@ def _lire_au_coffre(coffre, chemin: str) -> bytes:
 
 
 def _premier_appel(connexion: fn.FabricSqlConnection, sql: str, params: tuple, g: _Action, poursuite: int) -> None:
-    """Le 1er appel d'une procedure de relecture, sans son contenu (plan du lot 5, § 2.2 a 2.4) : ses refus suivent
+    """Le 1er appel d'une procedure de relecture, sans son contenu : ses refus suivent
     l'ordre de la mesure [Blocage ...] du bouton. Le refus au numero poursuite (50910 ou 50927), et lui seul, dit que tout
     le reste est admis : la fonction poursuit, sans journal ni message. Le numero est celui de l'enregistrement
     retenu du texte du pilote (_numero_sql) : un avertissement leve avant le refus ne le masque pas. Tout autre refus
@@ -778,7 +784,7 @@ def _premier_appel(connexion: fn.FabricSqlConnection, sql: str, params: tuple, g
 
 def _detail_route(conn):
     """Le detail d'un depot refuse par la route, lu dans la cle detail_route du contexte de session de la connexion qui a
-    appele la procedure (decision D-x : la valeur survit au rollback), puis la cle remise a vide. None quand la lecture
+    appele la procedure (la valeur survit au rollback), puis la cle remise a vide. None quand la lecture
     echoue ou que la cle est vide ; ne leve jamais."""
     detail = None
     try:
@@ -800,10 +806,10 @@ def _detail_route(conn):
 
 
 def _deposer_classeur(connexion: fn.FabricSqlConnection, g: _Action, genre: str, referentiel, fichier, wb) -> dict:
-    """Depose le classeur au dossier « Référentiels » du site du cabinet par pr_deposer_classeur_referentiel (objet
-    n° 36), qui l'inscrit dans classeur_cabinet et rend classeur_id, web_url, chemin_onelake, empreinte_sha256 et
-    message. wb vaut None quand le referentiel ne se traduit pas : la procedure le refuse alors a son rang, en le citant
-    (50831). Sur un depot refuse par la route (50905, decision D-x), le detail est relu sur la meme connexion apres le
+    """Depose le classeur au dossier « Référentiels » du site du cabinet par pr_deposer_classeur_referentiel, qui
+    l'inscrit dans classeur_cabinet et rend classeur_id, web_url, chemin_onelake, empreinte_sha256 et message. wb vaut
+    None quand le referentiel ne se traduit pas : la procedure le refuse alors a son rang, en le citant (50831). Sur un
+    depot refuse par la route (50905), le detail est relu sur la meme connexion apres le
     rollback, retenu pour le journal (g.detail), puis la cle detail_route est remise a vide."""
     import base64
     import io
@@ -850,7 +856,7 @@ def _deposer_classeur(connexion: fn.FabricSqlConnection, g: _Action, genre: str,
 
 def _rendre_depot(g: _Action, nom: str, faire):
     """_rendre pour les 2 exports : sur un refus, le detail de la route (g.detail, depot refuse par la route, 50905) va
-    au journal des refus a la place du texte, qui reste celui de l'ecran (decision D-x) ; tout le reste comme _rendre."""
+    au journal des refus a la place du texte, qui reste celui de l'ecran ; tout le reste comme _rendre."""
     try:
         texte = faire()
     except fn.UserThrownError as e:
@@ -889,12 +895,11 @@ def _nom_sql(nom) -> str:
 
 
 def _colonnes_du_classeur(connexion, table: str) -> tuple:
-    """Les colonnes du classeur d'un referentiel (plan du lot 5, § 2.1), ([(colonne, libelle)], nombre de colonnes du
-    code) : les colonnes du code (cle primaire, identifiant compris pour un referentiel numerote), dans l'ordre de la
-    cle, au libelle de fn_e5_libelle_colonne ; puis les colonnes de la table que nomment la liste
-    (v_ecran_referentiel_valeurs) ou le segment « Colonne » (v_ecran_referentiel_colonnes), dans l'ordre de leur rang, a
-    leur libelle a l'ecran. « Employée par » n'est pas une colonne de la table et n'y entre pas, ni une colonne
-    calculee."""
+    """Les colonnes du classeur d'un referentiel, ([(colonne, libelle)], nombre de colonnes du code) : les colonnes du
+    code (cle primaire, identifiant compris pour un referentiel numerote), dans l'ordre de la cle, au libelle de
+    fn_e5_libelle_colonne ; puis les colonnes de la table que nomment la liste (v_ecran_referentiel_valeurs) ou le
+    segment « Colonne » (v_ecran_referentiel_colonnes), dans l'ordre de leur rang, a leur libelle a l'ecran.
+    « Employée par » n'est pas une colonne de la table et n'y entre pas, ni une colonne calculee."""
     table_cols = _lire(connexion,
                        "SELECT c.name AS colonne, c.column_id, c.is_computed, dbo.fn_e5_libelle_colonne(?, c.name) AS "
                        "libelle, (SELECT ic.key_ordinal FROM sys.indexes i JOIN sys.index_columns ic ON ic.object_id = "
@@ -942,9 +947,9 @@ def _ecrire_cellule(ws, ligne: int, colonne: int, valeur):
 
 
 def _classeur_referentiel(table: str, colonnes: list, nb_cles: int, lignes: list):
-    """Le classeur d'un referentiel (plan du lot 5, § 2.1) : 1 onglet au nom de la table, ligne 1 les libelles, ligne 2
-    les noms de colonne de la table, donnees a partir de la ligne 3, valeurs sous la forme de la base, que le reimport
-    lit (forme des classeurs de fn_ecran_revision et de 61_DEPLOIEMENT/exporter_niveaux_a_cocher.py)."""
+    """Le classeur d'un referentiel : 1 onglet au nom de la table, ligne 1 les libelles, ligne 2 les noms de colonne de
+    la table, donnees a partir de la ligne 3, valeurs sous la forme de la base, que le reimport lit (forme des classeurs
+    de fn_ecran_revision et de _classeur_niveaux)."""
     from openpyxl import Workbook
     from openpyxl.styles import Alignment, Font, PatternFill
     from openpyxl.utils import get_column_letter
@@ -973,9 +978,9 @@ def _classeur_referentiel(table: str, colonnes: list, nb_cles: int, lignes: list
 
 
 def _classeur_niveaux(questions: list, cycles: list):
-    """Le classeur des niveaux de programme, a la forme de 61_DEPLOIEMENT/exporter_niveaux_a_cocher.py : onglet
+    """Le classeur des niveaux de programme, a la forme du classeur des niveaux a cocher du 28/09/2026 : onglet
     « Questions » (les 13 colonnes de COLONNES_NIVEAUX, les croix a choisir dans la liste « X »), puis « Racines par
-    cycle ». Aucune regle ici : les croix et le motif sont ceux de v_export_niveaux_programme (decision D-v)."""
+    cycle ». Aucune regle ici : les croix et le motif sont ceux de v_export_niveaux_programme."""
     from openpyxl import Workbook
     from openpyxl.styles import Alignment, Font, PatternFill
     from openpyxl.utils import get_column_letter
@@ -1021,7 +1026,7 @@ def _classeur_niveaux(questions: list, cycles: list):
 
 def _phrase_du_depot(debut: str, n: int, singulier: str, pluriel: str, depot: dict) -> str:
     """La phrase d'un export reussi : ce qui est depose, le nombre de lignes, puis l'adresse du classeur que rend la
-    procedure (web_url), quand elle la rend (« rend l'adresse dans le message », objet n° 187)."""
+    procedure (web_url), quand elle la rend."""
     adresse = _vide(depot.get("web_url"))
     texte = "%s déposé au dossier Référentiels du site du cabinet (%s)" % (debut, _compte(n, singulier, pluriel))
     return texte + (" : %s" % adresse if adresse else ".")
@@ -1045,7 +1050,7 @@ def _ouvrir_classeur(g: _Action, octets: bytes, fichier: str):
 @udf.function()
 def exporter_referentiel(connexion: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext,
                          referentiel: str = "") -> str:
-    """Bouton « Exporter le classeur » (objet n° 187) : les lignes du referentiel choisi au segment « Référentiel » de
+    """Bouton « Exporter le classeur » : les lignes du referentiel choisi au segment « Référentiel » de
     l'etape 2, dans un classeur Excel (_classeur_referentiel : colonnes du code, puis colonnes de la table que montre la
     liste, valeurs sous la forme de la base), depose au dossier « Référentiels » du site du cabinet par
     pr_deposer_classeur_referentiel (genre REFERENTIEL), sous le nom referentiel_<table>.xlsx : un nouvel export du meme
@@ -1053,7 +1058,7 @@ def exporter_referentiel(connexion: fn.FabricSqlConnection, ctx: fn.UserDataFunc
     l'adresse du classeur. Aucun droit ni etat : l'export ne modifie pas le referentiel. Un referentiel vide, inconnu ou
     qui n'est pas du cabinet part sans contenu : pr_deposer_classeur_referentiel le refuse a son rang, en le citant
     (50831). La procedure refuse ensuite, dans son ordre : nom du classeur (50902), contenu (50903), depot non installe
-    (50904), depot refuse par la route (50905, detail au journal des refus, decision D-x)."""
+    (50904), depot refuse par la route (50905, detail au journal des refus)."""
     g = _action(connexion, ctx, ENTITE_CABINET)
 
     def faire():
@@ -1078,10 +1083,10 @@ def exporter_referentiel(connexion: fn.FabricSqlConnection, ctx: fn.UserDataFunc
 @udf.function()
 def importer_referentiel(connexion: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient,
                          ctx: fn.UserDataFunctionContext, teneur: str = "", referentiel: str = "") -> str:
-    """Bouton « Réimporter le classeur » (objet n° 188) : le dernier classeur depose du referentiel choisi, relu par le
-    raccourci du coffre, passe ligne a ligne a pr_importer_referentiel (objet n° 37), qui n'ecrit que les lignes dont une
-    valeur change, tout ou rien. La fonction refuse d'abord un droit vide ou different de la personne connectee (_droit,
-    avant tout appel a la base), puis traduit le referentiel. 1er appel sans @lignes ni @fichier (plan du lot 5, § 2.2) :
+    """Bouton « Réimporter le classeur » : le dernier classeur depose du referentiel choisi, relu par le raccourci du
+    coffre, passe ligne a ligne a pr_importer_referentiel, qui n'ecrit que les lignes dont une valeur change, tout ou
+    rien. La fonction refuse d'abord un droit vide ou different de la personne connectee (_droit, avant tout appel a la
+    base), puis traduit le referentiel. 1er appel sans @lignes ni @fichier :
     la procedure refuse, dans son ordre, referentiel vide ou inconnu (50831), fixe par un texte (50906), seuil propre au
     vehicule (50907), aucun droit (50908), aucun classeur depose (50909), code hors de 1 ou 2 parties (50911), et rend
     50910 quand tout le reste est admis. La fonction lit alors la ligne la plus recente de classeur_cabinet du
@@ -1128,12 +1133,12 @@ def importer_referentiel(connexion: fn.FabricSqlConnection, coffre: fn.FabricLak
 def rattacher_gabarit(connexion: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient,
                       ctx: fn.UserDataFunctionContext, teneur: str = "", referentiel: str = "", modele: str = "",
                       fichier: str = "") -> str:
-    """Bouton « Rattacher le fichier » (objet n° 189) : le fichier saisi au champ « Nom du fichier déposé », depose au
-    dossier « Modeles » du site du cabinet, rattache au modele de feuille choisi ([Ligne du referentiel choisie]) avec son
-    empreinte, par pr_ecran_rattacher_gabarit (objet n° 27), patron de inscrire_piece de fn_ecran_client. referentiel,
-    le segment « Référentiel » de l'etape 2, passe aux 2 appels (decision D-u de la session base). La fonction refuse
-    d'abord un droit vide ou different de la personne connectee (_droit, avant tout appel a la base), puis traduit le
-    referentiel. 1er appel sans @empreinte (plan du lot 5, § 2.3) : la procedure refuse, dans son ordre, le referentiel
+    """Bouton « Rattacher le fichier » : le fichier saisi au champ « Nom du fichier déposé », depose au dossier
+    « Modeles » du site du cabinet, rattache au modele de feuille choisi ([Ligne du referentiel choisie]) avec son
+    empreinte, par pr_ecran_rattacher_gabarit, patron de inscrire_piece de fn_ecran_client. referentiel, le segment
+    « Référentiel » de l'etape 2, passe aux 2 appels. La fonction refuse d'abord un droit vide ou different de la
+    personne connectee (_droit, avant tout appel a la base), puis traduit le referentiel. 1er appel sans @empreinte :
+    la procedure refuse, dans son ordre, le referentiel
     choisi qui ne porte pas de fichier (50923), aucun droit (50908), modele vide ou inconnu (50924), nom du fichier vide,
     trop long, avec un caractere refuse ou d'une autre extension que .docx, .dotx, .xlsx (50925), raccourci absent
     (50926), et rend 50927 quand tout le reste est admis. La fonction lit alors « <RACCOURCI_SITE_CABINET>/Modeles/
@@ -1173,14 +1178,13 @@ def rattacher_gabarit(connexion: fn.FabricSqlConnection, coffre: fn.FabricLakeho
 @udf.connection(alias="DossierOPCI", argName="connexion")
 @udf.function()
 def exporter_niveaux(connexion: fn.FabricSqlConnection, ctx: fn.UserDataFunctionContext) -> str:
-    """Bouton « Exporter les niveaux » (objet n° 194) : les questions de cycle hors ECARTEE et les croix de leur niveau de
-    programme, lues dans v_export_niveaux_programme (decision D-v : le niveau pose en base, sinon la proposition du
-    28/09/2026, et le motif qui dit laquelle ; ORDER BY ordre_cycle, ordre_question), dans le classeur de
-    61_DEPLOIEMENT/exporter_niveaux_a_cocher.py (_classeur_niveaux), depose au dossier « Référentiels » du site du
-    cabinet par pr_deposer_classeur_referentiel (genre NIVEAUX), sous le nom niveaux_de_programme.xlsx. La fonction
-    n'applique aucune regle elle-meme. Aucun parametre. La procedure refuse, dans son ordre : nom du classeur (50902),
-    contenu (50903), depot non installe (50904), depot refuse par la route (50905, detail au journal des refus, decision
-    D-x)."""
+    """Bouton « Exporter les niveaux » : les questions de cycle hors ECARTEE et les croix de leur niveau de programme,
+    lues dans v_export_niveaux_programme (le niveau pose en base, sinon la proposition du 28/09/2026, et le motif qui
+    dit laquelle ; ORDER BY ordre_cycle, ordre_question), dans le classeur de _classeur_niveaux, depose au dossier
+    « Référentiels » du site du cabinet par pr_deposer_classeur_referentiel (genre NIVEAUX), sous le nom
+    niveaux_de_programme.xlsx. La fonction n'applique aucune regle elle-meme. Aucun parametre. La procedure refuse, dans
+    son ordre : nom du classeur (50902), contenu (50903), depot non installe (50904), depot refuse par la route (50905,
+    detail au journal des refus)."""
     g = _action(connexion, ctx, ENTITE_CABINET)
 
     def faire():
@@ -1204,17 +1208,16 @@ def exporter_niveaux(connexion: fn.FabricSqlConnection, ctx: fn.UserDataFunction
 @udf.function()
 def importer_niveaux(connexion: fn.FabricSqlConnection, coffre: fn.FabricLakehouseClient,
                      ctx: fn.UserDataFunctionContext, associe: str = "") -> str:
-    """Bouton « Réimporter les niveaux » (objet n° 195) : le dernier classeur des niveaux depose, relu par le raccourci du
-    coffre, passe a pr_importer_niveaux_programme (objet n° 38), qui pose niveau_programme sur les questions de cycle
-    cochees (X : Allégé, Classique et Étendu, niveau 1 ; Classique et Étendu, 2 ; Étendu seul, 3), tout ou rien, une
-    ligne sans croix laissant la question a son niveau. La fonction refuse d'abord un associe vide ou different de la
-    personne connectee (_droit, avant tout appel a la base, texte de 50908). 1er appel sans @lignes ni @fichier (plan du
-    lot 5, § 2.4) : la procedure refuse, dans son ordre, aucun classeur depose (50909), reserve a l'associe (50908), et
-    rend 50910 quand tout le reste est admis. La fonction lit alors la ligne la plus recente de classeur_cabinet du genre
-    NIVEAUX, telecharge son chemin_onelake par le raccourci, refuse un classeur absent ou illisible, lit l'onglet
-    « Questions » (sinon l'onglet actif) et rappelle la procedure avec @lignes (« _ligne », reference, allege, classique,
-    etendu ; les autres colonnes sont sans effet) et @fichier ; elle refuse alors chaque ligne en la nommant (50910,
-    50920 a 50922)."""
+    """Bouton « Réimporter les niveaux » : le dernier classeur des niveaux depose, relu par le raccourci du coffre,
+    passe a pr_importer_niveaux_programme, qui pose niveau_programme sur les questions de cycle cochees (X : Allégé,
+    Classique et Étendu, niveau 1 ; Classique et Étendu, 2 ; Étendu seul, 3), tout ou rien, une ligne sans croix
+    laissant la question a son niveau. La fonction refuse d'abord un associe vide ou different de la personne connectee
+    (_droit, avant tout appel a la base, texte de 50908). 1er appel sans @lignes ni @fichier : la procedure refuse,
+    dans son ordre, aucun classeur depose (50909), reserve a l'associe (50908), et rend 50910 quand tout le reste est
+    admis. La fonction lit alors la ligne la plus recente de classeur_cabinet du genre NIVEAUX, telecharge son
+    chemin_onelake par le raccourci, refuse un classeur absent ou illisible, lit l'onglet « Questions » (sinon l'onglet
+    actif) et rappelle la procedure avec @lignes (« _ligne », reference, allege, classique, etendu ; les autres colonnes
+    sont sans effet) et @fichier ; elle refuse alors chaque ligne en la nommant (50910, 50920 a 50922)."""
     g = _action(connexion, ctx, ENTITE_CABINET)
     _droit(g, associe, REFUS_ASSOCIE_NIVEAUX)
 

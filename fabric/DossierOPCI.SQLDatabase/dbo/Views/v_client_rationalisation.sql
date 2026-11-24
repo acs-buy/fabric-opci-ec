@@ -1,10 +1,10 @@
 -- =====================================================================
--- LES VUES DU RAPPORT CLIENT, PARCOURS P1 : LES 5 ECRANS QUE LE MODELE
+-- LES VUES DU RAPPORT CLIENT : LES 5 ECRANS QUE LE MODELE
 -- SEMANTIQUE NE PORTAIT PAS ENCORE.
 --
 -- POURQUOI DES VUES DEDIEES. Le modele semantique restitution_client relie
 -- toutes ses tables a la dimension v_arrete_client par une cle sur une
--- seule colonne, cle_arrete = entite|arrete, script 64. Les vues de calcul
+-- seule colonne, cle_arrete = entite|arrete. Les vues de calcul
 -- que les 5 ecrans lisent, v_rationalisation_opci, v_differences_synthese,
 -- v_patrimoine_valorise, v_titres_valeur_actuelle et v_ratio_arrete,
 -- portent l'entite et l'arrete en 2 colonnes : chacune recoit ici une vue
@@ -19,10 +19,10 @@
 -- deplie, dans l'ordre de la feuille VAR ANR du classeur de valeur
 -- liquidative, ouverture, causes, cloture. Les dividendes internes,
 -- portes pour memoire et hors somme, sont exclus de la cascade : leur
--- montant est deja dans le resultat de la mere, cf. script 108.
+-- montant est deja dans le resultat de la mere.
 --
 -- L'EXEMPLE IR4 N'EST PAS DU PATRIMOINE. Les 2 actifs de l'exemple de
--- l'article 212-5, script 42, appartiennent a OMEGA-OPCI et remontent
+-- l'article 212-5 appartiennent a OMEGA-OPCI et remontent
 -- dans v_patrimoine_valorise a tout arrete, 100,00 de compte courant au
 -- 2025-12-31. Le rapport client les ecarte par leur code, et le dit ici.
 -- A executer contre la BASE SQL Fabric DossierOPCI.
@@ -43,7 +43,7 @@ FROM dbo.v_rationalisation_opci o
 JOIN dbo.v_controle_rationalisation c ON c.entite = o.entite AND c.arrete = o.arrete
 JOIN dbo.ref_arrete r ON r.entite = o.entite AND r.arrete = o.arrete
 -- 06/09/2026 : le premier arrete de l'entite n'a pas de comparatif, sa rationalisation
--- part de zero ; il ne se montre pas au client (script 148, arretes 2022 a 2024 vises).
+-- part de zero ; il ne se montre pas au client (arretes 2022 a 2024 vises).
 WHERE r.porte_balance = 1 AND o.arrete_precedent IS NOT NULL;
 
 GO

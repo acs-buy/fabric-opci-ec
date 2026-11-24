@@ -1,7 +1,7 @@
 
 -- --- 5f : le compte de resultat locatif, immeuble par immeuble -------------------
--- Demande du candidat du 06/09/2026 : les lignes de l'activite locative portent l'axe
--- de l'immeuble (script 145 et 67). La vue lit les ecritures par axe : loyers 721,
+-- Demande du 06/09/2026 : les lignes de l'activite locative portent l'axe
+-- de l'immeuble. La vue lit les ecritures par axe : loyers 721,
 -- entretien 624, interets d'emprunt 623, hors lots d'affectation et de valorisation,
 -- et rapproche la valeur actuelle de l'expertise a l'arrete.
 CREATE   VIEW dbo.v_client_pnl_immeuble AS

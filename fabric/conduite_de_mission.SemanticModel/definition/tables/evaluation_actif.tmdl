@@ -7,7 +7,7 @@ table evaluation_actif
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: cbe88a41-e0f0-4420-b9ef-7e771a7d73c8
 
-	/// gris quand [Evaluation a viser] ou A1 [Superviseur connecte EVALUATION] est vide
+	/// gris quand [Evaluation a viser] ou [Superviseur connecte EVALUATION] est vide
 	measure 'Fond viser la valeur' = IF ( ISBLANK ( [Evaluation a viser] ) || ISBLANK ( [Superviseur connecte EVALUATION] ), "#D9DFE6", "#0F5C8C" )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 7b13c4bd-342e-49d9-9d28-d48d537d75a0
@@ -57,7 +57,7 @@ table evaluation_actif
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 78141f60-7b18-43c6-8773-8780bfc5b630
 
-	/// « visa réservé au chef de mission » quand A1 [Superviseur connecte EVALUATION] est vide ; « aucune valeur retenue choisie », « aucune valeur proposée sur cet actif », « valeur renvoyée le jj/mm/aaaa », « valeur visée le jj/mm/aaaa » ; joints par « · » ; « conditions réunies » sinon
+	/// « visa réservé au chef de mission » quand [Superviseur connecte EVALUATION] est vide ; « aucune valeur retenue choisie », « aucune valeur proposée sur cet actif », « valeur renvoyée le jj/mm/aaaa », « valeur visée le jj/mm/aaaa » ; joints par « · » ; « conditions réunies » sinon
 	measure 'Blocage du visa de la valeur' = VAR c = [Actif choisi] VAR t = FILTER ( ALL ( evaluation_actif[code_actif] ), evaluation_actif[code_actif] = c ) VAR e = CALCULATE ( MAX ( evaluation_actif[etat] ), t ) VAR vl = CALCULATE ( MAX ( evaluation_actif[vise_le] ), t ) VAR p1 = IF ( ISBLANK ( [Superviseur connecte EVALUATION] ), "visa réservé au chef de mission" ) VAR j1 = p1 VAR p2 = IF ( ISBLANK ( c ), "aucune valeur retenue choisie", IF ( ISBLANK ( e ), "aucune valeur proposée sur cet actif" ) ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) VAR p3 = SWITCH ( e, "RENVOYE", "valeur renvoyée le " & FORMAT ( vl, "dd/MM/yyyy" ), "VISE", "valeur visée le " & FORMAT ( vl, "dd/MM/yyyy" ) ) VAR j3 = IF ( j2 <> "" && p3 <> "", j2 & " · " & p3, j2 & p3 ) RETURN IF ( j3 = "", "conditions réunies", j3 )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: fcc9c119-44a8-4879-9114-849cde0fc8eb

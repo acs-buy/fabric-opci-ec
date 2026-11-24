@@ -1,7 +1,6 @@
 -- C13 : un article de dbo.ref_article absent de dbo.ref_reference, ou
 -- l'inverse. Les 2 tables doivent concorder. ATTENDU zero.
--- C13 modifiee par 63_SQL/320_e5_articles_cites.sql (ecran 5, lot 1,
--- objet n° 25 ; decision D-a de la session base des 19 et 20/10/2026) :
+-- C13 modifiee les 19 et 20/10/2026 (ecran 5, objet n° 25) :
 -- la 1re branche ne compte pas un article du CMF que seules les limites citent,
 -- en article principal (ref_ratio_memoire.article_cite) ou dans un de
 -- leurs textes (ref_ratio_memoire_article), et qu'aucune autre colonne

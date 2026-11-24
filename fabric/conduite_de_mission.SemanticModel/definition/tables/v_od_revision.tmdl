@@ -2,7 +2,7 @@
 table v_od_revision
 	lineageTag: 0fef6d20-6cfc-46ce-a1aa-59344647129d
 
-	measure 'Equilibre du lot' = VAR db = SUM ( v_od_revision[Débit] ) VAR cr = SUM ( v_od_revision[Crédit] ) RETURN IF ( db + cr > 0, "Équilibre du lot " & FORMAT ( db, "#,##0.00" ) & IF ( db = cr, ", équilibré", ", DÉSÉQUILIBRÉ de " & FORMAT ( ABS ( db - cr ), "#,##0.00" ) ) )
+	measure 'Equilibre du lot' = ( VAR db = SUM ( v_od_revision[Débit] ) VAR cr = SUM ( v_od_revision[Crédit] ) RETURN IF ( db + cr > 0, "Équilibre du lot " & FORMAT ( db, "#,##0.00" ) & IF ( db = cr, ", équilibré", ", DÉSÉQUILIBRÉ de " & FORMAT ( ABS ( db - cr ), "#,##0.00" ) ) ) ) & ""
 
 	measure 'Arrete des OD libres' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR m = COUNTROWS ( FILTER ( ALL ( arrete_mission ), arrete_mission[entite] = e && arrete_mission[arrete] = a ) ) VAR v = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), IF ( v_revision_indicateurs[verrouille], 1, 0 ) ) RETURN IF ( NOT ISBLANK ( e ) && NOT ISBLANK ( a ) && m > 0 && v <> 1, a )
 		displayFolder: Ecran 2 etape 4

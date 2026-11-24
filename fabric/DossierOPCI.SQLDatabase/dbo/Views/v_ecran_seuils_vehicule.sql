@@ -1,14 +1,14 @@
--- Objet n° 23 de l'ecran 5 (lot 1) : les seuils propres a un vehicule, l'expression eprouvee de B20
--- (65_JOURNAL/preuves_ecran_5/besoins_base_20261016.md) sur les colonnes reelles. Les limites de ref_ratio_memoire
+-- Les seuils propres a un vehicule,
+-- sur les colonnes reelles. Les limites de ref_ratio_memoire
 -- dont valeur_laissee vaut GESTIONNAIRE, pour tout OPCI, ou STATUTS, pour un OPCI professionnel (est_professionnel
 -- = 1 ; NULL ou 0 : grand public), d'une forme compatible, pour chaque vehicule (forme_vehicule renseignee) et chaque
 -- arrete de ref_arrete ; le seuil du vehicule est la ligne de ref_ratio_vehicule en vigueur a l'arrete
--- (en_vigueur_depuis vide ou au plus tard la date d'arrete). Decision D9 : une limite RETENUE se lit « retenue par
+-- (en_vigueur_depuis vide ou au plus tard la date d'arrete). Une limite RETENUE se lit « retenue par
 -- le cabinet » avec le seuil du texte de ref_ratio, ou « fixee par les statuts » avec le seuil du vehicule.
--- Chaque colonne au type et a la nullabilite du tableau de B20.
--- Pose par 63_SQL/322_e5_vues_choix_inventaire_seuils_articles.sql, genere par 61_DEPLOIEMENT/generer_e5_322_vues_choix_inventaire_seuils_articles.py ;
--- ne pas modifier a la main : regenerer le script quand une table s'inscrit ou qu'une colonne change.
-CREATE   VIEW dbo.v_ecran_seuils_vehicule AS
+-- Une limite APPLICABLE laissee aux statuts se lit « fixee par les statuts » avec une
+-- ligne STATUTS ; sans ligne, seuil « aucun », depuis et motif « sans objet ».
+-- Chaque colonne a son type et sa nullabilite.
+CREATE VIEW dbo.v_ecran_seuils_vehicule AS
 SELECT ISNULL(CAST('ref_ratio_memoire' AS VARCHAR (120)), '') AS referentiel,
        e.code AS entite, a.arrete, m.code, m.libelle,
        ISNULL(CAST(CASE m.valeur_laissee WHEN 'GESTIONNAIRE' THEN N'le gestionnaire' WHEN 'STATUTS' THEN N'les statuts' END AS NVARCHAR (20)), N'') AS laissee_aux,
@@ -16,6 +16,7 @@ SELECT ISNULL(CAST('ref_ratio_memoire' AS VARCHAR (120)), '') AS referentiel,
             AS NVARCHAR (600)) AS fondement,
        m.limite_texte,
        ISNULL(CAST(CASE WHEN st.code = 'RETENUE' AND v.entite IS NOT NULL THEN N'fixée par les statuts'
+                        WHEN st.code = 'APPLICABLE' AND v.source = 'STATUTS' /* limite laissee aux statuts */ THEN N'fixée par les statuts'
                         WHEN st.code = 'APPLICABLE' THEN N'applicable'
                         WHEN st.code = 'A_ARRETER' THEN N'à arrêter'
                         WHEN st.code = 'CONDITION' THEN N'sous condition'
@@ -34,12 +35,13 @@ SELECT ISNULL(CAST('ref_ratio_memoire' AS VARCHAR (120)), '') AS referentiel,
                         THEN COALESCE(CASE WHEN m.unite_seuil = 'TAUX' THEN FORMAT(rr.seuil * 100, N'0.######', 'fr-FR') + NCHAR(160) + N'%'
                                                 ELSE FORMAT(rr.seuil, N'0.######', 'fr-FR') END,
                                       N'seuil du texte') + N', retenu par le cabinet'
+                        WHEN st.code = 'APPLICABLE' AND m.valeur_laissee = 'STATUTS' THEN N'aucun'
                         ELSE N'à remplir' END AS NVARCHAR (60)), N'à remplir') AS seuil_vehicule,
-       ISNULL(CAST(CASE WHEN v.entite IS NULL AND st.code = 'RETENUE' THEN N'sans objet'
+       ISNULL(CAST(CASE WHEN v.entite IS NULL AND (st.code = 'RETENUE' OR (st.code = 'APPLICABLE' AND m.valeur_laissee = 'STATUTS')) THEN N'sans objet'
                         WHEN v.entite IS NULL OR v.en_vigueur_depuis IS NULL THEN N'à remplir'
                         ELSE CONVERT(NVARCHAR (10), v.en_vigueur_depuis, 103) END AS NVARCHAR (10)), N'à remplir') AS depuis,
        CAST(v.motif AS NVARCHAR (600)) AS motif,
-       ISNULL(CAST(CASE WHEN v.entite IS NULL AND st.code = 'RETENUE' THEN N'sans objet'
+       ISNULL(CAST(CASE WHEN v.entite IS NULL AND (st.code = 'RETENUE' OR (st.code = 'APPLICABLE' AND m.valeur_laissee = 'STATUTS')) THEN N'sans objet'
                         WHEN ISNULL(v.motif, N'') = N'' THEN N'à remplir'
                         ELSE N'renseigné' END AS NVARCHAR (10)), N'à remplir') AS motif_court
 FROM dbo.ref_entite e

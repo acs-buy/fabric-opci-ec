@@ -1,4 +1,4 @@
--- ref_ratio_memoire_article : 49 ligne(s) de referentiel.
+-- ref_ratio_memoire_article : 54 ligne(s) de referentiel.
 -- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
 -- Produit depuis la base de reference, ne pas modifier a la main.
 
@@ -30,11 +30,16 @@ BEGIN
         (N'DIV_R214_96_II',N'R214-199',N'fondement_professionnel'),
         (N'DIV_R214_99',N'R214-199',N'fondement_professionnel'),
         (N'EMPRISE_R214_97',N'R214-199',N'fondement_professionnel'),
+        (N'EMPRUNT_ESPECES_10',N'L214-148',N'fondement_professionnel'),
+        (N'EMPRUNT_ESPECES_10',N'L214-151',N'fondement_professionnel'),
+        (N'EMPRUNT_ESPECES_10',N'L214-40',N'fondement_professionnel'),
         (N'EMPRUNT_ESPECES_10',N'R214-106',N'article_calcul'),
+        (N'EMPRUNT_ESPECES_10',N'R214-106',N'fondement_professionnel'),
         (N'EMPRUNT_ESPECES_10',N'R214-196',N'fondement_professionnel'),
         (N'EMPRUNT_ESPECES_10',N'R214-200',N'fondement_professionnel'),
         (N'ENDETTEMENT_40',N'L214-39',N'fondement_professionnel'),
         (N'ENDETTEMENT_40',N'L214-43',N'dates_respect'),
+        (N'ENDETTEMENT_40',N'L214-43',N'dates_respect_professionnel'),
         (N'ENDETTEMENT_40',N'R214-104',N'article_calcul'),
         (N'ENDETTEMENT_40',N'R214-104',N'fondement_professionnel'),
         (N'ENDETTEMENT_40',N'R214-105',N'dates_respect'),

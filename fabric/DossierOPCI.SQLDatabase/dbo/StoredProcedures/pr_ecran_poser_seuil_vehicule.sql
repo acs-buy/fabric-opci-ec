@@ -1,11 +1,11 @@
 -- ------------------------------------------------------------------ n° 24 : le seuil propre d'un vehicule, seule voie d'ecriture de ref_ratio_vehicule
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
--- Contrat de la maquette (objet n° 24), B5, B16, B19, B20, decision D9 ; raisons de [Etat du seuil du vehicule], dans
+-- ecran 5
+-- Contrat de la maquette (objet n° 24) ; raisons de [Etat du seuil du vehicule], dans
 -- son ordre : le referentiel choisi ne porte pas de seuil propre (le code n'est pas une limite), le texte fixe la valeur
 -- (valeur_laissee vide, ou STATUTS pour un OPCI grand public), le droit (fn_peut_ecrire_referentiel sur
 -- ref_ratio_vehicule, que la garde tr_ref_ratio_vehicule_garde rejoue en 50074). Les 7 refus que la garde rejoue
--- (script 318, 50890 a 50894) ont leur condition, leur numero et leur texte ecrits depuis REGLES_323 du generateur du
--- 318, source unique : vehicule nomme par son code, U+202F avant le « % » d'une limite du texte. Le seuil se lit a
+-- (tr_ref_ratio_vehicule_garde, 50890 a 50894) ont leur condition, leur numero et leur texte ecrits depuis une source
+-- unique : vehicule nomme par son code, U+202F avant le « % » d'une limite du texte. Le seuil se lit a
 -- l'unite de la limite (unite_seuil) : TAUX, un pourcentage enregistre en fraction de 1 ; NOMBRE, tel quel.
 -- ENDETTEMENT_40 (RETENUE) est admis pour un OPCI professionnel. MERGE sur (entite, code) ; message sous le vehicule.
 CREATE   PROCEDURE dbo.pr_ecran_poser_seuil_vehicule
@@ -58,7 +58,7 @@ BEGIN
                    + dbo.fn_e5_libelle_referentiel('ref_ratio_memoire') + N' ».';
             EXEC dbo.pr_e5_refuser 50861, @m;
         END;
-        -- la limite du texte telle que la base la porte, U+202F avant « % » (convention des refus, garde du script 318)
+        -- la limite du texte telle que la base la porte, U+202F avant « % » (convention des refus, tr_ref_ratio_vehicule_garde)
         SET @limite = REPLACE(@limite COLLATE Latin1_General_BIN2, N' %', NCHAR (8239) + N'%');
         IF @laissee IS NULL
         BEGIN

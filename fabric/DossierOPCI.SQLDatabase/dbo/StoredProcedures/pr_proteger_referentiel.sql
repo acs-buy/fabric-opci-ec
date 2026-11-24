@@ -1,14 +1,14 @@
--- --- 2 : la protection d'un referentiel ------------------------------
+-- --- la protection d'un referentiel ------------------------------
 -- Elle pose les 2 colonnes et le declencheur d'horodatage sur la table
 -- nommee, si elle existe et si elle porte une cle primaire. Chaque semis
 -- l'appelle sur sa table, juste apres pr_debut_semis : la colonne existe
--- ainsi au moment ou le semis la lit, quel que soit le rang du script
--- qui a cree la table.
+-- ainsi au moment ou le semis la lit, quel que soit l'ordre de creation
+-- de la table.
 --
 -- LA JOINTURE DU DECLENCHEUR SE LIT DE LA CLE PRIMAIRE, non d'une
 -- colonne devinee : une jointure sur une colonne supposee horodaterait
 -- les mauvaises lignes.
-CREATE   PROCEDURE dbo.pr_proteger_referentiel
+CREATE PROCEDURE dbo.pr_proteger_referentiel
     @table_nom VARCHAR (120)
 AS
 BEGIN
@@ -17,8 +17,8 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @table_nom)
         RETURN;                       -- la table n'existe pas encore
 
-    -- Objet n° 16 de l'ecran 5 (script 317, 19/10/2026) : une table qui porte pose_par, ref_parametre, a son
-    -- propre horodatage, sur pose_par et pose_le (objet n° 19) ; la protection n'y pose ni modifie_par, ni
+    -- Une table qui porte pose_par, ref_parametre, a son
+    -- propre horodatage, sur pose_par et pose_le ; la protection n'y pose ni modifie_par, ni
     -- modifie_le, ni tr_<table>_horodatage, et ne reecrit pas le sien.
     IF COL_LENGTH('dbo.' + @table_nom, 'pose_par') IS NOT NULL
         RETURN;
@@ -61,7 +61,7 @@ BEGIN
     IF @cle IS NULL
         RETURN;    -- sans cle primaire, la jointure serait devinee
 
-    -- Objet n° 16 de l'ecran 5 (script 317, 20/10/2026) : l'auteur s'ecrit a la longueur de modifie_par,
+    -- L'auteur s'ecrit a la longueur de modifie_par,
     -- nvarchar(400) quand cette procedure cree la colonne, nvarchar(200) sur ref_aide et ref_colonne_libelle ;
     -- le CAST coupe une identite plus longue que la colonne, que la mise a jour refuserait sinon (troncature).
     DECLARE @lg NVARCHAR (10) =
@@ -83,7 +83,7 @@ BEGIN
     -- propres lignes.
     IF CAST(ISNULL(SESSION_CONTEXT(N''semis''), 0) AS INT) = 1 RETURN;
     IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    -- Objet n° 16 de l''ecran 5 (script 317) : l''auteur est celui que la procedure d''ecran pose dans le
+    -- L''auteur est celui que la procedure d''ecran pose dans le
     -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
     UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N''par''), SUSER_SNAME()) AS NVARCHAR (' + @lg + N')), modifie_le = SYSUTCDATETIME()
     FROM dbo.' + QUOTENAME(@table_nom) + N' t

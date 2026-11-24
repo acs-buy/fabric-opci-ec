@@ -21,7 +21,7 @@ CREATE TABLE [dbo].[revision_compte_courant] (
 GO
 
 
--- --- 6 : le verrou de la revision d'un compte courant, K3 -------------
+-- --- 6 : le verrou de la revision d'un compte courant -------------
 -- La cascade de l'article 212-5 deprecie TOTALEMENT les comptes courants
 -- quand la valeur de l'entite est negative. Une revision saisie par
 -- ailleurs sur la meme filiale et le meme arrete se contredirait avec

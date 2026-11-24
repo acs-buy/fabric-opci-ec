@@ -3,7 +3,7 @@
   "name": "e3Tableau",
   "position": {
     "x": 519,
-    "y": 482,
+    "y": 406,
     "z": 57000,
     "height": 357,
     "width": 1033,
@@ -362,7 +362,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

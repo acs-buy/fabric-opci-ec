@@ -221,6 +221,11 @@
       "source": "docRapTexte",
       "target": "docSansArrete2",
       "type": "NoFilter"
+    },
+    {
+      "source": "docRapTexte",
+      "target": "docMsg2",
+      "type": "NoFilter"
     }
   ],
   "visibility": "HiddenInViewMode"

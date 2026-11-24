@@ -1,5 +1,5 @@
 
--- --- depuis 63_SQL/79_compte_estimation_par_poste.sql : v_controle_revision_sans_ecriture ---
+-- --- v_controle_revision_sans_ecriture ---
 -- C7 : une revision de compte courant saisie sans ecriture de difference
 -- d'estimation correspondante. La saisie n'est pas la comptabilite : une
 -- revision se traduit par une ecriture au compte 276 par le compte 105,

@@ -3,7 +3,7 @@
   "name": "e2Segment",
   "position": {
     "x": 728,
-    "y": 450,
+    "y": 374,
     "z": 51400,
     "height": 76,
     "width": 300,
@@ -176,7 +176,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

@@ -22,7 +22,7 @@
                     "value": "Visa",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "12px",
+                      "fontSize": "11pt",
                       "color": "#12233C"
                     }
                   }

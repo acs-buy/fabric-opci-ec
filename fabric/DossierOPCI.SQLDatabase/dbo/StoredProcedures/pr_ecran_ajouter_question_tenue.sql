@@ -1,9 +1,9 @@
--- ecran 5, lot 1, script 324 (61_DEPLOIEMENT/generer_e5_324_questions.py) : genere, ne pas modifier a la main.
+-- ecran 5
 -- Objet n° 35 : « Ajouter la question », questions sur la tenue de la comptabilite. Insere une question rattachee a un
 -- seul cycle ou a une seule phase, de niveau 2 (programmes classique et etendu) ou 3 (etendu seul), sur l'un des sujets
 -- de ref_sujet_tenue (recu par son code ou par son libelle) ; reference CODE-NN a la suite, type_reponse OUI_NON_NA,
 -- applicabilite LES_DEUX, ordre au plus grand plus 1, obligatoire et statut a leur defaut ; elle nait « à valider ».
--- Date d'effet en_vigueur_depuis : la date de l'ajout (UTC), regle O25 du script 105, controle C49.
+-- Date d'effet en_vigueur_depuis : la date de l'ajout (UTC), controle C49.
 -- Associe seul, exige ici. Refus en francais : @par vide, droit, cycle ou phase vide, inconnu, ecarte ou de code commun
 -- a un cycle et a une phase, sujet vide ou inconnu, niveau vide ou autre que 2 ou 3, enonce vide ou de plus de
 -- 400 caracteres.
@@ -56,7 +56,7 @@ BEGIN
             SET @m = N'Ajout refusé : ' + N'« ' + @cp + N' » n’est ni un cycle ni une phase des questions de référence (liste « Cycle ou phase »).';
             EXEC dbo.pr_e5_refuser 50872, @m;
         END;
-        -- un cycle ou une phase ecarte (ecartee_le posee, objet n° 10) ne recoit plus de question (§ 1.3)
+        -- un cycle ou une phase ecarte (ecartee_le posee, objet n° 10) ne recoit plus de question
         SET @ecartee = CASE @genre WHEN 'CYCLE' THEN (SELECT c.ecartee_le FROM dbo.ref_cycle c WHERE c.code = @code)
                                    ELSE (SELECT p.ecartee_le FROM dbo.ref_phase p WHERE p.code = @code) END;
         IF @ecartee IS NOT NULL
@@ -105,8 +105,8 @@ BEGIN
         FROM dbo.ref_question q WITH (UPDLOCK, HOLDLOCK)
         WHERE (@genre = 'CYCLE' AND q.cycle = @code) OR (@genre = 'PHASE' AND q.phase = @code);
         -- obligatoire et statut prennent leur defaut (1, A_AUDITER) : la question nait « à valider » ; la ligne inseree
-        -- recoit modifie_par = @par et modifie_le de la procedure, les horodatages etant AFTER UPDATE (§ 1.3) ; sa date
-        -- d'effet est la date de l'ajout (UTC), regle O25 du script 105 : en_vigueur_depuis, date NULL sans defaut, laissee
+        -- recoit modifie_par = @par et modifie_le de la procedure, les horodatages etant AFTER UPDATE ; sa date
+        -- d'effet est la date de l'ajout (UTC) : en_vigueur_depuis, date NULL sans defaut, laissee
         -- vide, ferait compter la question par le controle C49 (v_controle_sans_date_effet, 0 ligne attendue)
         INSERT INTO dbo.ref_question (reference, cycle, phase, enonce, type_reponse, applicabilite, ordre,
                                       niveau_programme, sujet_tenue, en_vigueur_depuis, modifie_par, modifie_le)

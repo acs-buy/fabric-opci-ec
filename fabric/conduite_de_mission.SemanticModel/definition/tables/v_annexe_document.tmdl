@@ -111,6 +111,16 @@ table v_annexe_document
 
 		annotation SummarizationSetBy = Automatic
 
+	column perime_le_paris
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 5550640c-8f2e-4bca-9c75-977bbfbc315a
+		summarizeBy: none
+		sourceColumn: perime_le_paris
+
+		annotation SummarizationSetBy = Automatic
+
 	partition v_annexe_document = m
 		mode: directQuery
 		source =

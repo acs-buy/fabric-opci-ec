@@ -6,7 +6,7 @@
 -- pr_passer_ecritures_miroir : le corps d'origine, renomme
 -- pr_passer_ecritures_miroir : le corps d'origine, renomme
 -- --- 2 : le passage, a blanc par defaut -----------------------------
-CREATE   PROCEDURE dbo.pr_passer_ecritures_miroir_corps
+CREATE PROCEDURE dbo.pr_passer_ecritures_miroir_corps
     @arrete   VARCHAR (20),
     @natures  NVARCHAR (200) = NULL,   -- NULL pour les 3
     @a_blanc  BIT            = 1,      -- 1 : calcule et n'ecrit rien
@@ -115,7 +115,7 @@ BEGIN
              question_id, motif, cree_par, statut_par, statut_le)
         VALUES (@arrete, 'DECIDEE', 'ENTITE', @entite, 'PROPOSE', @cote,
                 @question,
-                N'Écritures miroir des flux intragroupe, dérivées de dbo.emprunt_intragroupe et du solde de trésorerie. Arbitrage du candidat du 05/09/2026.',
+                N'Écritures miroir des flux intragroupe, dérivées de dbo.emprunt_intragroupe et du solde de trésorerie. Arbitrage du 05/09/2026.',
                 @qui, @qui, SYSUTCDATETIME());
         SET @lot = CAST(SCOPE_IDENTITY() AS INT);
 

@@ -1,33 +1,6 @@
-
--- =====================================================================
--- LA REPRISE SUR LE SOCLE : LES DEFINITIONS QUI LISENT
--- v_ecriture_normalisee OU fn_compte_du_modele, REGROUPEES APRES LE 131.
---
--- POURQUOI CE SCRIPT EXISTE. Le chantier des 05 et 06/09/2026 a porte
--- 26 objets sur le socle de normalisation, en editant chaque definition
--- dans son script d'origine, du 08 au 127. Sur la base en etat, chaque lot
--- s'est mesure a 0 ecart. Mais le socle n'existe qu'au 131 : un rejeu
--- depuis une base purgee s'arretait au 08, « Cannot find ...
--- dbo.fn_compte_du_modele ». Le defaut a ete revele par le rejeu complet
--- du 06/09/2026, le premier depuis ce chantier.
---
--- CE QUE CE SCRIPT FAIT. Il porte la definition courante de chacun de
--- ces objets ; leur script d'origine a repris sa definition d'avant la
--- reprise, celle que la base portait quand la sequence a ete jouee le
--- 04/09/2026. Le dernier defini gagne : l'etat final est celui d'avant,
--- seul l'ordre de construction est devenu jouable. Les scripts 132 a 139
--- qui redefinissent certains de ces objets viennent apres et gagnent
--- toujours.
---
--- CE QU'IL NE FAIT PAS. Il ne fige rien et ne touche a aucune donnee :
--- les 377 grandeurs figees au 131 se comparent apres lui par
--- v_ecart_de_reprise, et doivent rester a 0 ecart.
--- A executer contre la BASE SQL Fabric DossierOPCI.
--- =====================================================================
-
--- --- depuis 63_SQL/08_classe9_et_colonnes_balance.sql : v_balance ----------------
--- --- B3 : la vue de balance, avec ses 10 colonnes ---------------------
-CREATE   VIEW dbo.v_balance AS
+-- La vue de balance, avec ses 10 colonnes, lue sur le socle de normalisation (v_ecriture_normalisee,
+-- fn_compte_du_modele).
+CREATE VIEW dbo.v_balance AS
 SELECT
     l.arrete,
     l.entite,
@@ -65,7 +38,9 @@ SELECT
     MAX(x.xref)                                      AS xref,
     MAX(COALESCE(x.etat, 'A_FAIRE'))                 AS etat,
     MAX(x.par)                                       AS par,
-    MAX(x.date_etat)                                 AS date_etat
+    -- date_etat, instant ou le compte a ete marque revu (pr_ecran_marquer_compte_revu, SYSUTCDATETIME), a
+    -- l'heure de Paris ; aucun objet de la base ni aucune fonction ne lit v_balance.date_etat.
+    MAX(CAST(x.date_etat AT TIME ZONE 'UTC' AT TIME ZONE 'Romance Standard Time' AS DATETIME2 (3))) AS date_etat
 FROM ecriture e
 JOIN lot_ecritures l ON l.id = e.lot_id
 CROSS APPLY (SELECT CAST(CASE WHEN ISNULL((SELECT TOP (1) xe.plan_propre_en_service FROM dbo.ref_entite xe WHERE xe.code = l.entite), 0) = 0

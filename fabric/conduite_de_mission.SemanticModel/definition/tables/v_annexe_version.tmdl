@@ -2,7 +2,7 @@
 table v_annexe_version
 	lineageTag: 75444276-0f98-4bcc-b462-3e13e4ac80b8
 
-	measure 'Calcul de l annexe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tv = FILTER ( ALL ( v_annexe_version ), v_annexe_version[entite] = e && v_annexe_version[arrete] = a ) VAR v = MAXX ( tv, v_annexe_version[derniere_version] ) VAR d = MAXX ( tv, v_annexe_version[cree_le] ) VAR f = MAXX ( FILTER ( ALL ( v_annexe_retard ), v_annexe_retard[entite] = e ), v_annexe_retard[dernier_calcul] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( COUNTROWS ( tv ) = 0, "Pas d’annexe : l’arrêté choisi n’est pas un arrêté de mission", IF ( ISBLANK ( v ), "Annexe jamais calculée", "Annexe : version " & FORMAT ( v, "0" ) & " du " & FORMAT ( d, "dd/MM/yyyy" ) & " à " & FORMAT ( d, "hh:nn" ) & " UTC" ) & IF ( ISBLANK ( f ), "", " ; dernier calcul le " & FORMAT ( f, "dd/MM/yyyy" ) & " à " & FORMAT ( f, "hh:nn" ) & " UTC" ) ) )
+	measure 'Calcul de l annexe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tv = FILTER ( ALL ( v_annexe_version ), v_annexe_version[entite] = e && v_annexe_version[arrete] = a ) VAR v = MAXX ( tv, v_annexe_version[derniere_version] ) VAR d = MAXX ( tv, v_annexe_version[cree_le_paris] ) VAR f = MAXX ( FILTER ( ALL ( v_annexe_retard ), v_annexe_retard[entite] = e ), v_annexe_retard[dernier_calcul_paris] ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), "", IF ( COUNTROWS ( tv ) = 0, "Pas d’annexe : l’arrêté choisi n’est pas un arrêté de mission", IF ( ISBLANK ( v ), "Annexe jamais calculée", "Annexe : version " & FORMAT ( v, "0" ) & " du " & FORMAT ( d, "dd/MM/yyyy" ) & " à " & FORMAT ( d, "hh:nn" ) ) & IF ( ISBLANK ( f ), "", " ; dernier calcul le " & FORMAT ( f, "dd/MM/yyyy" ) & " à " & FORMAT ( f, "hh:nn" ) ) ) )
 		displayFolder: Ecran 2 etape 6 menu des etats
 		lineageTag: 6cbd20ea-7be7-4d2c-85f4-b4607753009f
 
@@ -96,6 +96,16 @@ table v_annexe_version
 		lineageTag: 2b369a20-3949-4dae-bdd0-3d9068b05fd7
 		summarizeBy: none
 		sourceColumn: n1_cellules_differentes_validee
+
+		annotation SummarizationSetBy = Automatic
+
+	column cree_le_paris
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 93568c30-92c1-40b0-9281-4a80c62418c1
+		summarizeBy: none
+		sourceColumn: cree_le_paris
 
 		annotation SummarizationSetBy = Automatic
 

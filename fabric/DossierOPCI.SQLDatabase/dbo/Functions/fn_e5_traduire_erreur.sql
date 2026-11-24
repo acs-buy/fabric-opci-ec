@@ -1,5 +1,5 @@
 -- ------------------------------------------------------------------ les erreurs 547, 2601 et 2627 en francais, la colonne nommee par son libelle
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 -- Jamais le nom de la contrainte : la colonne par son libelle (ref_libelle_colonne), le referentiel par son nom au
 -- registre ; NULL pour une autre erreur, que la procedure releve telle quelle.
 CREATE   FUNCTION dbo.fn_e5_traduire_erreur (@numero INT, @message NVARCHAR (4000))

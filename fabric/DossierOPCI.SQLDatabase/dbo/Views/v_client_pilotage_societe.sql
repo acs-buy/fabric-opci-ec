@@ -1,7 +1,7 @@
 
 -- --- 5d : le pilotage, societe par societe du groupe --------------------------
--- Decision du candidat du 06/09/2026 : une page « Le pilotage » regroupe ce que les
--- 4 rapports client du corps promettaient, sur ce que la base porte reellement :
+-- Decision du 06/09/2026 : une page « Le pilotage » regroupe ce que les
+-- 4 rapports client prevus promettaient, sur ce que la base porte reellement :
 -- tresorerie, emprunts, avances intragroupe, loyers, charges d'entretien, interets,
 -- resultat locatif, rendement locatif. Ce qu'elle ne porte pas et que la page ne
 -- montre pas : taux d'occupation, balance agee, DSO, echeancier des baux.

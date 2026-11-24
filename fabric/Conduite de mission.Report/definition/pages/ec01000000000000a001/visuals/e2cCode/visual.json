@@ -3,7 +3,7 @@
   "name": "e2cCode",
   "position": {
     "x": 728,
-    "y": 695,
+    "y": 543,
     "z": 54300,
     "height": 71,
     "width": 197,
@@ -23,11 +23,11 @@
                       "Entity": "v_filiale_dependances"
                     }
                   },
-                  "Property": "Filiale selectionnee"
+                  "Property": "Filiale affichee"
                 }
               },
-              "queryRef": "v_filiale_dependances.Filiale selectionnee",
-              "nativeQueryRef": "Filiale selectionnee"
+              "queryRef": "v_filiale_dependances.Filiale affichee",
+              "nativeQueryRef": "Filiale affichee"
             }
           ]
         }

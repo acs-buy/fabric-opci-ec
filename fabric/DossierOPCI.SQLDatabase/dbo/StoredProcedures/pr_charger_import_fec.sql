@@ -1,5 +1,5 @@
 
--- pr_charger_import_fec : l'enveloppe (regle unique, lot B2, enveloppe)
+-- pr_charger_import_fec : l'enveloppe (regle unique, enveloppe)
 CREATE   PROCEDURE dbo.pr_charger_import_fec
     @reference_import VARCHAR (100),
     @arrete           VARCHAR (20),

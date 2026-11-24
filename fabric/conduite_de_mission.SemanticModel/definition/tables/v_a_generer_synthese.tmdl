@@ -26,7 +26,7 @@ table v_a_generer_synthese
 		displayFolder: Rapports V2
 		lineageTag: cb7ce846-caaf-4ab7-8276-7e243b500811
 
-	/// « n expertises sans rapport rattaché » (objet B2), « demande de réévaluation en attente », « lot n proposé, non périmé », « aucun actif calculable » ; joints par « · » ; « conditions réunies » sinon
+	/// « n expertises sans rapport rattaché » (objet), « demande de réévaluation en attente », « lot n proposé, non périmé », « aucun actif calculable » ; joints par « · » ; « conditions réunies » sinon
 	measure 'Blocage generer le lot' = VAR e = [Client selectionne] VAR esr = SUM ( v_a_generer_synthese[expertises_sans_rapport] ) + 0 VAR dem = SUM ( v_a_generer_synthese[demande_en_attente] ) + 0 VAR calc = SUM ( v_a_generer_synthese[calculables] ) + 0 VAR lot = CALCULATE ( MIN ( v_lots_perimetre[Lot] ), FILTER ( ALL ( v_lots_perimetre[Entité] ), v_lots_perimetre[Entité] = e ), v_lots_perimetre[Statut du lot] = "PROPOSE", v_lots_perimetre[famille] = "DERIVABLE", v_lots_perimetre[perime] = FALSE () ) VAR p1 = IF ( esr > 0, FORMAT ( esr, "0" ) & IF ( esr = 1, " expertise sans rapport rattaché", " expertises sans rapport rattaché" ) ) VAR j1 = p1 VAR p2 = IF ( dem > 0, "demande de réévaluation en attente" ) VAR j2 = IF ( j1 <> "" && p2 <> "", j1 & " · " & p2, j1 & p2 ) VAR p3 = IF ( NOT ISBLANK ( lot ), "lot " & lot & " proposé, non périmé" ) VAR j3 = IF ( j2 <> "" && p3 <> "", j2 & " · " & p3, j2 & p3 ) VAR p4 = IF ( calc = 0, "aucun actif calculable" ) VAR j4 = IF ( j3 <> "" && p4 <> "", j3 & " · " & p4, j3 & p4 ) RETURN IF ( j4 = "", "conditions réunies", j4 )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: bd41d711-f6df-4188-ba44-e92a57a330a9
@@ -36,7 +36,7 @@ table v_a_generer_synthese
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 3ab14306-509d-44b7-941a-736b2ea40fc3
 
-	/// l’entité quand la garde B6 bis de la fonction et les 3 gardes de l’objet de base n° {garde} passent : aucune expertise sans rapport rattaché de l’entité à l’arrêté (expertises_sans_rapport = 0, objet B2), aucune demande EN_ATTENTE, aucun lot DERIVABLE PROPOSE non périmé de l’entité à l’arrêté, au mo
+	/// l’entité quand la garde de la fonction et les 3 gardes de l’objet de base n° {garde} passent : aucune expertise sans rapport rattaché de l’entité à l’arrêté (expertises_sans_rapport = 0, objet), aucune demande EN_ATTENTE, aucun lot DERIVABLE PROPOSE non périmé de l’entité à l’arrêté, au mo
 	measure 'Entite si generable' = VAR e = [Client selectionne] VAR esr = SUM ( v_a_generer_synthese[expertises_sans_rapport] ) + 0 VAR dem = SUM ( v_a_generer_synthese[demande_en_attente] ) + 0 VAR calc = SUM ( v_a_generer_synthese[calculables] ) + 0 VAR lot = CALCULATE ( MIN ( v_lots_perimetre[Lot] ), FILTER ( ALL ( v_lots_perimetre[Entité] ), v_lots_perimetre[Entité] = e ), v_lots_perimetre[Statut du lot] = "PROPOSE", v_lots_perimetre[famille] = "DERIVABLE", v_lots_perimetre[perime] = FALSE () ) RETURN IF ( NOT ISBLANK ( e ) && esr = 0 && dem = 0 && ISBLANK ( lot ) && calc > 0, e )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 60678f43-1593-4c9e-9711-3bc274f99828

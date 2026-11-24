@@ -5,8 +5,7 @@ CREATE   PROCEDURE dbo.pr_ecran_proposer_synthese
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 327 debut (24/10/2026) : un champ vide se refuse en francais avant toute ecriture, au texte du champ dans le
-    -- plan de l'etude des fonctions (decision A du candidat). Genere par 61_DEPLOIEMENT/generer_327_refus_champs_vides.py.
+    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : avant le TRY de l'enveloppe.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -16,9 +15,8 @@ BEGIN
         THROW 51202, N'Choisissez l''arrêté dans le sélecteur Arrêté.', 1;
     IF ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @entite COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51222, N'Proposition refusée : la synthèse ne se propose pas en l''état pour le véhicule du sélecteur Véhicule (lot proposé non visé, comptes de classe 1 hors actif net, rationalisation non calculée ou qui ne boucle pas, valeur liquidative non rendue, synthèse en attente du visa ou visée).', 1;
-    -- 327 fin
-    -- 51319, D1 (15/11/2026) : action 26, viseur compris (decision 3). Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+    -- 51319 (15/11/2026) : action 26, viseur compris. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite) AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 51319, N'Action refusée : seule l''équipe du dossier peut proposer la synthèse de ce dossier.', 1;

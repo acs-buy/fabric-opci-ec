@@ -1,5 +1,5 @@
 -- ------------------------------------------------------------------ l'emploi d'une ligne, par chaque cle etrangere entrante
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 -- La decision se prend sur ce decompte, relu en base : une ligne de la table qui emploie compte une fois, par 1 ou par 2
 -- cles. Le texte est celui de v_ecran_referentiel_lignes (objet n° 6), que montre la liste ; a defaut, le decompte par
 -- table. @clause est celle de pr_e5_resoudre_cle au prefixe @k.

@@ -1,5 +1,5 @@
 -- ===================================================================== 1. LE RATTACHEMENT DU FICHIER D'UN GABARIT
--- ecran 5, lot 5, script 334 (61_DEPLOIEMENT/generer_e5_334_rattacher_gabarit.py)
+-- ecran 5
 -- Objet n° 27 : inscrit sur modele_feuille le fichier depose au dossier Modeles du site du cabinet, lu par la fonction au
 -- raccourci du coffre (fec/Modeles/<fichier>) avec son empreinte : nom_fichier, chemin_coffre, empreinte_sha256. Associe
 -- seul. @referentiel, facultatif : le referentiel choisi a l'ecran, refuse s'il ne porte pas de fichier.
@@ -21,7 +21,7 @@ BEGIN
     DECLARE @journal_avant INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
             @proc VARCHAR (60) = 'pr_ecran_rattacher_gabarit', @e_num INT, @e_msg NVARCHAR (2048), @e_fr NVARCHAR (2000),
             @e_journal NVARCHAR (2000), @m NVARCHAR (2000), @message NVARCHAR (2000);
-    -- le vide : les 29 caracteres de str.isspace(), compares au point de code (script 327)
+    -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
         + NCHAR(133) + NCHAR(160) + NCHAR(5760) + NCHAR(8192) + NCHAR(8193) + NCHAR(8194) + NCHAR(8195) + NCHAR(8196) + NCHAR(8197) + NCHAR(8198)
         + NCHAR(8199) + NCHAR(8200) + NCHAR(8201) + NCHAR(8202) + NCHAR(8232) + NCHAR(8233) + NCHAR(8239) + NCHAR(8287) + NCHAR(12288);

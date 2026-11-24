@@ -13,7 +13,7 @@
     {
       "name": "generer_lot_valorisation",
       "description": "G\u00E9n\u00E9rer le lot : les diff\u00E9rences d\u0027estimation des actifs calculables d\u0027une entit\u00E9 \u00E0 un arr\u00EAt\u00E9, compte d\u00E9riv\u00E9 du poste du bilan, lot propos\u00E9 au visa du chef de mission ; refus\u00E9 en fran\u00E7ais quand une garde l\u0027interdit.",
-      "isPublicEndpointEnabled": true
+      "isPublicEndpointEnabled": false
     }
   ],
   "libraries": {

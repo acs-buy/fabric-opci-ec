@@ -2,7 +2,7 @@
 table v_annexe_retard
 	lineageTag: 79767097-115b-49a5-9dc7-25537cffd46e
 
-	measure 'Retard du calcul de l annexe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tv = FILTER ( ALL ( v_annexe_version ), v_annexe_version[entite] = e && v_annexe_version[arrete] = a ) VAR tr = FILTER ( ALL ( v_annexe_retard ), v_annexe_retard[entite] = e ) VAR r = MAXX ( tr, IF ( v_annexe_retard[en_retard], 1, 0 ) ) + 0 VAR dep = MAXX ( tr, v_annexe_retard[depuis] ) VAR td = FILTER ( ALL ( v_annexe_document ), v_annexe_document[entite] = e && v_annexe_document[arrete] = a && v_annexe_document[livrable] = "COMPTES_ANNUELS" ) VAR vm = MAXX ( td, v_annexe_document[version] ) VAR tdm = FILTER ( td, v_annexe_document[version] = vm ) VAR av = MAXX ( tdm, v_annexe_document[annexe_version] ) VAR dv = MAXX ( tdm, v_annexe_document[derniere_version] ) VAR ant = MAXX ( tdm, IF ( v_annexe_document[sur_version_anterieure], 1, 0 ) ) + 0 VAR pe = MAXX ( tdm, v_annexe_document[perime_le] ) VAR txd = IF ( ISBLANK ( vm ), "", IF ( ant = 1, "Comptes annuels v" & FORMAT ( vm, "0" ) & " produits sur la version " & FORMAT ( av, "0" ) & " de l’annexe, dernière version " & FORMAT ( dv, "0" ), IF ( ISBLANK ( av ), "Comptes annuels v" & FORMAT ( vm, "0" ) & " produits sans version de l’annexe", "" ) ) ) VAR txp = IF ( txd <> "" && NOT ISBLANK ( pe ), txd & ", périmés le " & FORMAT ( pe, "dd/MM/yyyy" ), txd ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || COUNTROWS ( tv ) = 0, "", IF ( r = 1, "Sources modifiées " & IF ( ISBLANK ( dep ), "depuis le dernier calcul", "depuis le " & FORMAT ( dep, "dd/MM/yyyy" ) & " à " & FORMAT ( dep, "hh:nn" ) & " UTC" ) & " : documents produits à vérifier", txp ) )
+	measure 'Retard du calcul de l annexe' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR tv = FILTER ( ALL ( v_annexe_version ), v_annexe_version[entite] = e && v_annexe_version[arrete] = a ) VAR tr = FILTER ( ALL ( v_annexe_retard ), v_annexe_retard[entite] = e ) VAR r = MAXX ( tr, IF ( v_annexe_retard[en_retard], 1, 0 ) ) + 0 VAR dep = MAXX ( tr, v_annexe_retard[depuis_paris] ) VAR td = FILTER ( ALL ( v_annexe_document ), v_annexe_document[entite] = e && v_annexe_document[arrete] = a && v_annexe_document[livrable] = "COMPTES_ANNUELS" ) VAR vm = MAXX ( td, v_annexe_document[version] ) VAR tdm = FILTER ( td, v_annexe_document[version] = vm ) VAR av = MAXX ( tdm, v_annexe_document[annexe_version] ) VAR dv = MAXX ( tdm, v_annexe_document[derniere_version] ) VAR ant = MAXX ( tdm, IF ( v_annexe_document[sur_version_anterieure], 1, 0 ) ) + 0 VAR pe = MAXX ( tdm, v_annexe_document[perime_le_paris] ) VAR txd = IF ( ISBLANK ( vm ), "", IF ( ant = 1, "Comptes annuels v" & FORMAT ( vm, "0" ) & " produits sur la version " & FORMAT ( av, "0" ) & " de l’annexe, dernière version " & FORMAT ( dv, "0" ), IF ( ISBLANK ( av ), "Comptes annuels v" & FORMAT ( vm, "0" ) & " produits sans version de l’annexe", "" ) ) ) VAR txp = IF ( txd <> "" && NOT ISBLANK ( pe ), txd & ", périmés le " & FORMAT ( pe, "dd/MM/yyyy" ), txd ) RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ) || COUNTROWS ( tv ) = 0, "", IF ( r = 1, "Sources modifiées " & IF ( ISBLANK ( dep ), "depuis le dernier calcul", "depuis le " & FORMAT ( dep, "dd/MM/yyyy" ) & " à " & FORMAT ( dep, "hh:nn" ) ) & " : documents produits à vérifier", txp ) )
 		displayFolder: Ecran 2 etape 6 menu des etats
 		lineageTag: af9a69d0-6d08-43c4-b4d5-7e669fe2ef68
 
@@ -62,6 +62,26 @@ table v_annexe_retard
 		lineageTag: 8593439b-ba39-41d1-a29a-10ea62c42a17
 		summarizeBy: none
 		sourceColumn: en_retard
+
+		annotation SummarizationSetBy = Automatic
+
+	column depuis_paris
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 61ffe5de-77ec-4043-971d-bd6b7bcaf547
+		summarizeBy: none
+		sourceColumn: depuis_paris
+
+		annotation SummarizationSetBy = Automatic
+
+	column dernier_calcul_paris
+		dataType: dateTime
+		formatString: dd/MM/yyyy HH:mm
+		sourceProviderType: datetime2
+		lineageTag: 3ffb7f47-b177-4913-a48f-61682fc52cca
+		summarizeBy: none
+		sourceColumn: dernier_calcul_paris
 
 		annotation SummarizationSetBy = Automatic
 

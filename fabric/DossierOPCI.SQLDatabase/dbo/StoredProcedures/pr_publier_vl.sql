@@ -5,7 +5,7 @@
 -- --- 8 : la publication et l'obligation, alignees sur le role --------
 -- Les 2 procedures existaient. Elles verifiaient l'etat des lots, jamais
 -- la qualite de celui qui decide : elles ecrivent desormais dans dbo.visa,
--- ce qui les soumet au verrou K8 comme les 4 autres.
+-- ce qui les soumet au verrou comme les 4 autres.
 CREATE   PROCEDURE dbo.pr_publier_vl
     @entite VARCHAR (20),
     @arrete VARCHAR (20),

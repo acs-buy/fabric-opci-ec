@@ -3,7 +3,7 @@
   "name": "e2Tableau",
   "position": {
     "x": 519,
-    "y": 563,
+    "y": 487,
     "z": 51500,
     "height": 430,
     "width": 1033,
@@ -263,7 +263,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

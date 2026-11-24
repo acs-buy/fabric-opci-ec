@@ -3,7 +3,7 @@
 -- revue demande : une question peut citer un article du reglement ET un
 -- paragraphe de norme. La premiere est dans ref_question_article, la
 -- seconde dans ref_question_reference : la vue les expose separement,
--- l'ecran R2 en faisant 2 colonnes.
+-- l'ecran en faisant 2 colonnes.
 CREATE   VIEW dbo.v_question_referentiel AS
 SELECT q.id AS question_id, q.reference, q.cycle, q.phase, q.section,
        q.enonce, q.type_reponse, q.options, q.doc_attendu,

@@ -1,7 +1,10 @@
-
+-- --- 9. v_controle_renvoi_sans_demande -------------------------------------------------------------------
 -- ------------------------------------------------------------------------------------------------- 2.5, point 5 : le controle
 -- Une ligne par ecart. Borne : les renvois de cloture decides a partir du 08/10/2026, jour de la pose ; le renvoi n° 131
 -- du 13/09/2026, anterieur, n'y figure pas.
+-- (C4) : le cas b lit la nature (DEVERROUILLAGE : renvoi de REVUE, motif « Déverrouillage : ») ; le cas e ne vise que
+-- REOUVERTURE ; le cas f : renvoi de revue au motif « Déverrouillage : », decide a partir du 21/11/2026, jour de la
+-- pose, qu'aucune demande accordee ne designe.
 CREATE   VIEW dbo.v_controle_renvoi_sans_demande AS
 WITH renvoi AS (
     SELECT v.id, v.entite, v.arrete, v.propose_par, v.decide_par, v.decide_le, v.motif
@@ -12,11 +15,12 @@ SELECT 'a' AS cas, r.entite, r.arrete, CAST(r.id AS NVARCHAR (40)) AS objet,
 FROM renvoi r WHERE NOT EXISTS (SELECT 1 FROM dbo.demande_reouverture q WHERE q.visa_id = r.id AND q.etat = 'ACCORDEE')
 UNION ALL
 SELECT 'b', q.entite, q.arrete, CAST(q.id AS NVARCHAR (40)),
-       N'demande accordée dont le visa n''est pas un renvoi de clôture de son arrêté, proposé par son auteur, décidé par son décideur, au motif de la demande'
+       N'demande accordée dont le visa n''est pas un renvoi de clôture (réouverture) ou de revue (déverrouillage) de son arrêté, proposé par son auteur, décidé par son décideur, au motif de la demande'
 FROM dbo.demande_reouverture q LEFT JOIN dbo.visa v ON v.id = q.visa_id
 WHERE q.etat = 'ACCORDEE'
-  AND (v.id IS NULL OR v.nature <> 'CLOTURE' OR v.decision <> 'RENVOYE' OR v.entite <> q.entite OR v.arrete <> q.arrete
-       OR v.propose_par <> q.demande_par OR v.decide_par <> q.decide_par OR ISNULL(v.motif, N'') <> N'Réouverture : ' + q.motif)
+  AND (v.id IS NULL OR v.nature <> CASE q.nature WHEN 'DEVERROUILLAGE' THEN 'REVUE' ELSE 'CLOTURE' END OR v.decision <> 'RENVOYE'
+       OR v.entite <> q.entite OR v.arrete <> q.arrete OR v.propose_par <> q.demande_par OR v.decide_par <> q.decide_par
+       OR ISNULL(v.motif, N'') <> CASE q.nature WHEN 'DEVERROUILLAGE' THEN N'Déverrouillage : ' ELSE N'Réouverture : ' END + q.motif)
 UNION ALL
 SELECT 'c', d.entite, d.arrete, CAST(d.id AS NVARCHAR (40)), N'document produit avant un renvoi de clôture et toujours en vigueur'
 FROM dbo.document_produit d
@@ -27,9 +31,14 @@ FROM dbo.attestation a
 CROSS APPLY (SELECT MAX(r.decide_le) AS le FROM renvoi r WHERE r.entite = a.entite AND r.arrete = a.arrete) r
 WHERE r.le IS NOT NULL AND (a.arretee_le < r.le OR a.produit_le < r.le)
 UNION ALL
-SELECT 'e', q.entite, q.arrete, CAST(q.id AS NVARCHAR (40)), N'demande en attente sur un arrêté qui n''est pas validé pour le client'
+SELECT 'e', q.entite, q.arrete, CAST(q.id AS NVARCHAR (40)), N'demande de réouverture en attente sur un arrêté qui n''est pas validé pour le client'
 FROM dbo.demande_reouverture q
-WHERE q.etat = 'EN_ATTENTE' AND dbo.fn_valide_pour_client(q.entite, q.arrete) = 0;
+WHERE q.etat = 'EN_ATTENTE' AND q.nature = 'REOUVERTURE' AND dbo.fn_valide_pour_client(q.entite, q.arrete) = 0
+UNION ALL
+SELECT 'f', v.entite, v.arrete, CAST(v.id AS NVARCHAR (40)), N'renvoi de revue pour déverrouillage qu''aucune demande accordée ne désigne'
+FROM dbo.visa v
+WHERE v.nature = 'REVUE' AND v.decision = 'RENVOYE' AND v.motif LIKE N'Déverrouillage : %' AND v.decide_le >= '2026-11-21'
+  AND NOT EXISTS (SELECT 1 FROM dbo.demande_reouverture q WHERE q.visa_id = v.id AND q.etat = 'ACCORDEE');
 
 GO
 

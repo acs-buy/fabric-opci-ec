@@ -1,6 +1,6 @@
 
 -- --- 3 : l'equilibre du brouillon, visible en permanence ----------------
--- ' l'equilibre du lot en cours de saisie ' (P1.Ch3.S1 du corps).
+-- ' l'equilibre du lot en cours de saisie '.
 CREATE   VIEW dbo.v_brouillon_equilibre AS
 SELECT entite, arrete, feuille_cote,
        COUNT(*)                                    AS lignes,

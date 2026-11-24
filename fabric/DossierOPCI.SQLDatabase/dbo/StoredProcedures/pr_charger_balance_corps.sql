@@ -4,7 +4,7 @@
 -- pr_charger_balance : le corps d'origine, renomme
 -- --- 2 : pr_charger_balance, du transit vers un lot -----------------
 -- Une ligne d'ecriture par compte, au journal de reprise, datee de
--- l'arrete. C'est le point P7 de la specification.
+-- l'arrete. C'est le point de la specification.
 CREATE   PROCEDURE dbo.pr_charger_balance_corps
     @import_id INT,
     @par       NVARCHAR (200)

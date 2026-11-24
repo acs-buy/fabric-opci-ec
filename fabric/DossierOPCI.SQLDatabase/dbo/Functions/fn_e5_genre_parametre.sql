@@ -1,5 +1,5 @@
 -- ------------------------------------------------------------------ le genre d'un parametre du cabinet (objet n° 19)
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
+-- ecran 5
 CREATE   FUNCTION dbo.fn_e5_genre_parametre (@code NVARCHAR (400))
 RETURNS VARCHAR (12)
 AS

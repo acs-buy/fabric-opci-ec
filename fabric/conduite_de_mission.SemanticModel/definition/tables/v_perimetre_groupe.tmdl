@@ -1,4 +1,4 @@
-/// Ajoutee le 15/09/2026 pour la V2 du front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
+/// Ajoutee le 15/09/2026 pour le front office. Colonnes lues en base. Sa relation vers ref_entite reste a poser.
 table v_perimetre_groupe
 	lineageTag: 3e548577-1760-4327-97b6-07c0ad9e8eb7
 
@@ -26,7 +26,7 @@ table v_perimetre_groupe
 		lineageTag: dbe72ec2-be68-42d1-8cb4-d39913981321
 
 	measure 'Quote-part détenue' = IF ( ISINSCOPE ( liste_clients[Entité] ), IF ( NOT ( SELECTEDVALUE ( liste_clients[est_vehicule] ) = TRUE () ), MAX ( liste_clients[quote_part] ) ), VAR c = SELECTEDVALUE ( ref_entite[est_client] ) RETURN IF ( c <> TRUE (), CALCULATE ( MAX ( v_perimetre_groupe[quote_part] ) ) ) )
-		formatString: 0.00%
+		formatString: 0.00 %
 		displayFolder: Ecran 1 Client
 		lineageTag: 040ee993-896c-4d61-a813-972a98ec9bfe
 

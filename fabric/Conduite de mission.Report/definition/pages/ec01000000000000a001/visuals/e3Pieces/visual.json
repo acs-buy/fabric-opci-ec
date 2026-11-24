@@ -3,7 +3,7 @@
   "name": "e3Pieces",
   "position": {
     "x": 519,
-    "y": 879,
+    "y": 803,
     "z": 57200,
     "height": 170,
     "width": 1033,
@@ -127,9 +127,42 @@
               "queryRef": "v_ecran_pieces_du_dossier.cle_ecran",
               "nativeQueryRef": "cle_ecran",
               "displayName": " "
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_ecran_pieces_du_dossier"
+                    }
+                  },
+                  "Property": "piece_id"
+                }
+              },
+              "queryRef": "v_ecran_pieces_du_dossier.piece_id",
+              "nativeQueryRef": "piece_id",
+              "displayName": "  "
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_ecran_pieces_du_dossier"
+                  }
+                },
+                "Property": "piece_id"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
     "objects": {
@@ -298,7 +331,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "286D"
+                  "Value": "285D"
                 }
               }
             }
@@ -390,6 +423,20 @@
           "selector": {
             "metadata": "v_ecran_pieces_du_dossier.cle_ecran"
           }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "v_ecran_pieces_du_dossier.piece_id"
+          }
         }
       ]
     },
@@ -433,7 +480,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E3E8EF'"
+                      "Value": "'#D5DCE4'"
                     }
                   }
                 }

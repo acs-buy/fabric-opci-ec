@@ -3,7 +3,7 @@
   "name": "e3bBouton0",
   "position": {
     "x": 728,
-    "y": 552,
+    "y": 476,
     "z": 59800,
     "height": 36,
     "width": 197,
@@ -29,7 +29,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ouvrir le dépôt SharePoint du client'"
+                  "Value": "'Ouvrir le dépôt du client'"
                 }
               }
             },
@@ -43,7 +43,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },
@@ -136,7 +136,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ouvrir le dépôt SharePoint du client'"
+                  "Value": "'Ouvrir le dépôt du client'"
                 }
               }
             },
@@ -150,7 +150,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },
@@ -243,7 +243,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ouvrir le dépôt SharePoint du client'"
+                  "Value": "'Ouvrir le dépôt du client'"
                 }
               }
             },
@@ -257,7 +257,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "11D"
                 }
               }
             },

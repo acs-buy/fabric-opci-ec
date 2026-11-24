@@ -1,5 +1,5 @@
 
--- --- depuis 63_SQL/95_semis_emprunts_intragroupe.sql : v_controle_emprunt_vs_balance ---
+-- --- v_controle_emprunt_vs_balance ---
 -- --- 2 : le controle de concordance entre la table et les balances ---
 -- La table dit ce que l'emprunt porte, les balances disent ce qui est
 -- comptabilise. Un ecart entre les 2 signale soit un emprunt oublie dans

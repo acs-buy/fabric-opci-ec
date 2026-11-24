@@ -16,7 +16,7 @@ CREATE TABLE [dbo].[demande_reouverture] (
     CONSTRAINT [ck_demande_reouverture_ecart] CHECK ([etat]='ECARTEE' AND len(ltrim(rtrim(isnull([motif_ecart],N''))))>(0) OR [etat]<>'ECARTEE' AND [motif_ecart] IS NULL),
     CONSTRAINT [ck_demande_reouverture_etat] CHECK ([etat]='ECARTEE' OR [etat]='ACCORDEE' OR [etat]='EN_ATTENTE'),
     CONSTRAINT [ck_demande_reouverture_motif] CHECK (len(ltrim(rtrim([motif])))>(0)),
-    CONSTRAINT [ck_demande_reouverture_nature] CHECK ([nature]='REOUVERTURE'),
+    CONSTRAINT [ck_demande_reouverture_nature] CHECK ([nature]='DEVERROUILLAGE' OR [nature]='REOUVERTURE'),
     CONSTRAINT [ck_demande_reouverture_roles] CHECK ([decide_par] IS NULL OR [decide_par]<>[demande_par]),
     CONSTRAINT [ck_demande_reouverture_visa] CHECK ([etat]='ACCORDEE' AND [visa_id] IS NOT NULL OR [etat]<>'ACCORDEE' AND [visa_id] IS NULL),
     CONSTRAINT [fk_demande_reouverture_visa] FOREIGN KEY ([visa_id]) REFERENCES [dbo].[visa] ([id])
@@ -26,7 +26,7 @@ CREATE TABLE [dbo].[demande_reouverture] (
 GO
 
 CREATE UNIQUE NONCLUSTERED INDEX [uq_demande_reouverture_en_attente]
-    ON [dbo].[demande_reouverture]([entite] ASC, [arrete] ASC, [nature] ASC) WHERE ([etat]='EN_ATTENTE');
+    ON [dbo].[demande_reouverture]([entite] ASC, [arrete] ASC) WHERE ([etat]='EN_ATTENTE');
 
 
 GO

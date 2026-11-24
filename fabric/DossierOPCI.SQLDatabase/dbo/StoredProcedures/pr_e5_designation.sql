@@ -1,7 +1,7 @@
 -- ------------------------------------------------------------------ la designation d'une ligne et le nombre de lignes de son referentiel qui la portent
--- ecran 5, lot 1, script 323 (61_DEPLOIEMENT/generer_e5_323_procedures_de_tenue.py)
--- B13 : la designation (colonne ligne de v_ecran_referentiel_lignes, objet n° 6) est unique dans son referentiel ;
--- [Ligne du referentiel choisie] (B11) rend la plus grande cle des lignes de la designation choisie, et une 2e ligne de
+-- ecran 5
+-- la designation (colonne ligne de v_ecran_referentiel_lignes, objet n° 6) est unique dans son referentiel ;
+-- [Ligne du referentiel choisie] rend la plus grande cle des lignes de la designation choisie, et une 2e ligne de
 -- meme designation ne se choisirait plus. Lue apres l'ecriture, dans la transaction de la procedure, par la cle de la
 -- ligne ecrite (@cle1, sinon @cle2), avec la collation de la base, qui ignore la casse comme le modele.
 CREATE   PROCEDURE dbo.pr_e5_designation

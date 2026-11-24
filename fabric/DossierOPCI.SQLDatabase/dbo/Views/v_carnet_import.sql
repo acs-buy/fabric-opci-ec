@@ -1,8 +1,8 @@
 
--- --- 5 : le carnet d'import, tel que l'ecran E1-A le lit -------------
+-- --- 5 : le carnet d'import, tel que l'ecran d'import le lit -----------
 -- Il dit, par entite et par arrete, ce qui est entre, sous quel format,
 -- avec quel exercice, et si un autre import couvre deja le meme
--- perimetre. C'est le point V8 de la specification.
+-- perimetre. C'est le point de la specification.
 CREATE   VIEW dbo.v_carnet_import AS
 SELECT i.id AS import_id, i.entite, i.arrete, i.format, i.nom_fichier,
        i.empreinte, i.exercice_debut, i.exercice_fin,

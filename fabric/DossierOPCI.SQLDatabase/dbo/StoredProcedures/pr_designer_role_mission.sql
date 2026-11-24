@@ -2,8 +2,8 @@
 --
 -- BESOIN : aucun ecran ne permet aujourd'hui de designer l'associe signataire d'un dossier. role_mission
 -- se tient a la main, en base. C'est le manque que le parcours du 21/09/2026 a rendu visible : le createur
--- d'un dossier en devient chef de mission (script 218), mais l'associe qui visera, lui, ne se designe nulle
--- part. Cette procedure est la brique metier de l'ecran Referentiels R1, encore a construire.
+-- d'un dossier en devient chef de mission (pr_creer_client), mais l'associe qui visera, lui, ne se designe nulle
+-- part. Cette procedure est la brique metier de l'ecran Referentiels, encore a construire.
 --
 -- CE QU'ELLE N'EST PAS : une porte derobee de recette. Elle est appelee par la recette comme elle le sera
 -- par l'ecran, avec la meme trace et les memes refus. La recette ne contourne rien, elle emprunte le chemin.
@@ -37,7 +37,7 @@ BEGIN
     -- 50293 (19/10/2026) : l'equipe d'un dossier se designe par son associe ou par son chef de mission ; pour une
     -- filiale, aussi par ceux du vehicule qui la detient. Juge sur @par, celui qui clique, par sa connexion, avant toute
     -- ecriture : derriere une Data function, la session SQL est celle du proprietaire de la fonction. Un semis ecrit sans
-    -- cette garde. Generee par 61_DEPLOIEMENT/generer_garde_designer_role.py (script 316).
+    -- cette garde.
     DECLARE @garde_le DATE = CAST(SYSUTCDATETIME() AS DATE);
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND NOT EXISTS (SELECT 1 FROM dbo.role_mission r

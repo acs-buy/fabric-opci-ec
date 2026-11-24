@@ -1,5 +1,5 @@
 -- ===================================================================== 1. LE REIMPORT DU CLASSEUR DES NIVEAUX DE PROGRAMME
--- ecran 5, lot 5, script 333 (61_DEPLOIEMENT/generer_e5_333_import_niveaux_programme.py)
+-- ecran 5
 -- Objet n° 38 : pose niveau_programme sur les questions de cycle, d'apres les croix Allege, Classique et Etendu du
 -- dernier classeur des niveaux (1, 2, 3 ; une ligne sans croix laisse la question a son niveau). Tout ou rien ; chaque
 -- refus nomme la ligne du classeur et la question ; n'ecrit que les questions dont le niveau change.
@@ -17,7 +17,7 @@ BEGIN
     DECLARE @journal_avant INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
             @proc VARCHAR (60) = 'pr_importer_niveaux_programme', @e_num INT, @e_msg NVARCHAR (2048), @e_fr NVARCHAR (2000),
             @e_journal NVARCHAR (2000), @m NVARCHAR (2000), @message NVARCHAR (2000);
-    -- le vide : les 29 caracteres de str.isspace(), compares au point de code (script 327)
+    -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
         + NCHAR(133) + NCHAR(160) + NCHAR(5760) + NCHAR(8192) + NCHAR(8193) + NCHAR(8194) + NCHAR(8195) + NCHAR(8196) + NCHAR(8197) + NCHAR(8198)
         + NCHAR(8199) + NCHAR(8200) + NCHAR(8201) + NCHAR(8202) + NCHAR(8232) + NCHAR(8233) + NCHAR(8239) + NCHAR(8287) + NCHAR(12288);

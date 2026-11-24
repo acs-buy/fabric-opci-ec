@@ -1,9 +1,9 @@
 
--- --- 5 : B17, l'ecart de regeneration, ce que le bandeau lit -----------
+-- --- 5 : l'ecart de regeneration, ce que le bandeau lit -----------
 -- Pour chaque intention en mode solde cible deja materialisee, l'ecart
 -- entre la cible voulue et le solde tel qu'il est maintenant. Un ecart
 -- non nul veut dire qu'une ecriture ulterieure a bouge le compte.
--- Un lot PROPOSE ne bouge pas la balance, critere A3 : son ecart vaut
+-- Un lot PROPOSE ne bouge pas la balance : son ecart vaut
 -- alors la cible entiere, ce qui n'est pas un ecart mais une approbation
 -- en attente. Les 3 etats se distinguent, sans quoi le bandeau crierait
 -- a tort sur chaque intention non encore approuvee.

@@ -24,7 +24,7 @@
 -- Le compte de difference est donc « 27 » suivi du deuxieme chiffre du
 -- compte de l'actif pour la classe 2, et « 37 » pour la classe 3. La
 -- contrepartie aux capitaux propres se lit ensuite dans
--- dbo.ref_contrepartie_estimation, deja posee par le script 60.
+-- dbo.ref_contrepartie_estimation.
 --
 -- POURQUOI LA DERIVATION PLUTOT QU'UNE COLONNE SAISIE. Une meme nature se
 -- porte a des comptes differents : un immeuble bati est au 213, un

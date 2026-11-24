@@ -591,6 +591,26 @@
       "source": "docDipR6",
       "target": "docSansArrete2",
       "type": "NoFilter"
+    },
+    {
+      "source": "docDipR1",
+      "target": "docMsg2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR5",
+      "target": "docMsg2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR4",
+      "target": "docMsg2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "docDipR6",
+      "target": "docMsg2",
+      "type": "NoFilter"
     }
   ],
   "visibility": "HiddenInViewMode"

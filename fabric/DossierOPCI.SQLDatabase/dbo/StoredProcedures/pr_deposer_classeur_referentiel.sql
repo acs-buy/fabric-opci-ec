@@ -1,8 +1,8 @@
 -- ===================================================================== 1. LE DEPOT D'UN CLASSEUR DU CABINET
--- ecran 5, lot 5, script 331 (61_DEPLOIEMENT/generer_e5_331_depot_classeur_referentiel.py)
+-- ecran 5
 -- Objet n° 36 : depose au dossier Referentiels du site du cabinet, par la route deposer_classeur (voie de
 -- pr_deposer_classeur), le classeur d'un referentiel (REFERENTIEL) ou des niveaux de programme (NIVEAUX), puis inscrit
--- le depot dans classeur_cabinet. La route cree le dossier absent ; chemin_onelake se lit tel quel par le raccourci (R6).
+-- le depot dans classeur_cabinet. La route cree le dossier absent ; chemin_onelake se lit tel quel par le raccourci.
 CREATE   PROCEDURE dbo.pr_deposer_classeur_referentiel
     @genre          NVARCHAR (40)   = NULL,
     @referentiel    NVARCHAR (400)  = NULL,
@@ -19,7 +19,7 @@ BEGIN
     DECLARE @journal_avant INT = ISNULL((SELECT MAX(id) FROM dbo.journal_refus), 0),
             @proc VARCHAR (60) = 'pr_deposer_classeur_referentiel', @e_num INT, @e_msg NVARCHAR (2048), @e_fr NVARCHAR (2000),
             @e_journal NVARCHAR (2000), @m NVARCHAR (2000), @message NVARCHAR (2000);
-    -- le vide : les 29 caracteres de str.isspace(), compares au point de code (script 327)
+    -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
         + NCHAR(133) + NCHAR(160) + NCHAR(5760) + NCHAR(8192) + NCHAR(8193) + NCHAR(8194) + NCHAR(8195) + NCHAR(8196) + NCHAR(8197) + NCHAR(8198)
         + NCHAR(8199) + NCHAR(8200) + NCHAR(8201) + NCHAR(8202) + NCHAR(8232) + NCHAR(8233) + NCHAR(8239) + NCHAR(8287) + NCHAR(12288);
@@ -29,7 +29,7 @@ BEGIN
             @ret INT, @sql NVARCHAR (MAX), @corps NVARCHAR (MAX), @statut NVARCHAR (40), @web NVARCHAR (800),
             @onelake NVARCHAR (800), @detail NVARCHAR (4000), @code_retour NVARCHAR (12), @p INT, @id INT,
             @detail_route NVARCHAR (4000), @http NVARCHAR (200);
-    -- la cle detail_route (decision D-x) : remise a vide a chaque appel, une connexion de fonction pouvant resservir
+    -- la cle detail_route : remise a vide a chaque appel, une connexion de fonction pouvant resservir
     EXEC sp_set_session_context N'detail_route', NULL;
     BEGIN TRY
         -- 1. l'auteur, puis par pose avant la 1re ecriture (objet n° 16)
@@ -59,8 +59,8 @@ BEGIN
             SET @m = N'Dépôt refusé : le classeur des niveaux de programme ne porte aucun référentiel, et « ' + LEFT(LTRIM(RTRIM(@referentiel)), 200) + N' » est transmis.';
             EXEC dbo.pr_e5_refuser 50901, @m;
         END;
-        -- 51324, D1 (15/11/2026) : action 30, la garde du referentiel jugee sur @par ; refus par pr_e5_refuser, dans le TRY, comme l'ecran 5. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
-        -- Data function est celle du proprietaire). Un semis ecrit sans cette garde. 61_DEPLOIEMENT/generer_gardes_d1.py.
+        -- 51324 (15/11/2026) : action 30, la garde du referentiel jugee sur @par ; refus par pr_e5_refuser, dans le TRY, comme l'ecran 5. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+        -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
         IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1 AND dbo.fn_peut_ecrire_referentiel(CASE WHEN @g = N'NIVEAUX' THEN 'ref_question' ELSE @t END, @par) = 0
         BEGIN
             SET @m = N'Dépôt refusé sur «' + NCHAR(8239) + dbo.fn_e5_libelle_referentiel(CASE WHEN @g = N'NIVEAUX' THEN 'ref_question' ELSE @t END) + NCHAR(8239) + N'» : aucun droit de modification.';
@@ -183,7 +183,7 @@ BEGIN
         END
         ELSE
             EXEC dbo.pr_e5_conclure_refus @tc, @journal_avant, @proc, @par, '-', @e_journal;
-        -- 50905 (decision D-x) : sous la transaction d'une fonction, la ligne du journal part avec son rollback ; le
+        -- 50905 : sous la transaction d'une fonction, la ligne du journal part avec son rollback ; le
         -- detail passe aussi par la cle detail_route du contexte de session, qui survit au rollback (essai du
         -- 25/10/2026), relue par la fonction apres son rollback, passee en detail de son journal, puis remise a vide.
         -- Posee sur tout 50905 : @tc vaut 0 sur une connexion de fonction sans autocommit, la transaction implicite ne

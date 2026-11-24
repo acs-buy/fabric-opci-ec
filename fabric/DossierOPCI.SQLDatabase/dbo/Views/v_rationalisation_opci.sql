@@ -18,7 +18,7 @@ WITH bornes AS (
 -- LE LOT DE DETERMINATION DU RESULTAT EST EXCLU, et sans cela la
 -- rationalisation lit zero partout. Mesure du 04/09/2026 : les 3
 -- rubriques de resultat de l'OPCI rendent 0,00 chacune, parce que le
--- script 69 vire les comptes de classe 6 et 7 au compte 120 pour solde.
+-- lot de determination du resultat vire les comptes de classe 6 et 7 au compte 120 pour solde.
 -- La balance apres determination du resultat est correcte
 -- comptablement, mais le resultat ne s'y lit plus par rubrique. La
 -- rationalisation lit donc les comptes de resultat AVANT ce virement,
@@ -67,12 +67,12 @@ interne AS (
     FROM dbo.flux_intragroupe f
     GROUP BY f.arrete, f.entite_creditrice
 ),
--- L'ELIMINATION DES INTERETS INTERNES, DECIDEE PAR LE CANDIDAT LE 06/09/2026 : le
+-- L'ELIMINATION DES INTERETS INTERNES, DECIDEE LE 06/09/2026 : le
 -- produit chez la mere (compte 724 avec tiers) et la charge chez ses filiales
 -- (compte 623 du modele avec la mere pour tiers) se lisent des ECRITURES et se
 -- portent sur une meme ligne, qui vaut zero quand la symetrie tient. La version
 -- anterieure retirait 4 477 200,00 et ne bouclait que parce que le report a
--- nouveau du jeu oubliait ce meme produit (scripts 67 et 147).
+-- nouveau du jeu oubliait ce meme produit.
 elimination AS (
     SELECT m.entite, m.arrete,
            SUM(CASE WHEN l.entite = m.entite AND e.compte_num LIKE '724%'
@@ -122,7 +122,7 @@ SELECT b.entite, b.arrete, b.arrete_precedent,
        -- RELACHEMENT. Il l'etait parce que la valeur des titres ne
        -- suivait pas : le produit gonflait l'actif net sans que la
        -- filiale distributrice ne s'appauvrisse dans les comptes. Depuis
-       -- les scripts 126 et 127, la filiale comptabilise sa distribution
+       -- les ecritures miroir et la reprise du 275, la filiale comptabilise sa distribution
        -- et le compte 275 de la mere en tient compte : le produit et la
        -- baisse de valeur des titres se compensent d'eux-memes.
        -- Neutraliser en plus retirait le dividende UNE SECONDE FOIS.

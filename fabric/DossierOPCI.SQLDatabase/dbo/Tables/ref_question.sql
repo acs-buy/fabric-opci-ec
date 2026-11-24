@@ -46,7 +46,27 @@ CREATE NONCLUSTERED INDEX [ix_ref_question_cycle]
 
 GO
 
--- --- 5 : O26, le statut d'une question ajoutee ----------------------
+CREATE   TRIGGER dbo.[tr_ref_question_horodatage]
+ON dbo.[ref_question]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    -- Objet n° 16 de l'ecran 5 : l'auteur est celui que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
+    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_question] t
+    JOIN inserted i ON t.[id] = i.[id];
+END;
+
+GO
+
+-- --- 5 : le statut d'une question ajoutee ----------------------
 -- 50075 : une question creee au portail nait A_AUDITER, quel que soit le
 --         statut soumis. Seul l'associe la passe a VALIDEE.
 -- 50076 : le passage a VALIDEE est reserve a l'associe.
@@ -68,7 +88,7 @@ BEGIN
     WHERE NOT EXISTS (SELECT 1 FROM deleted d WHERE d.id = i.id)
       AND q.statut <> 'A_AUDITER';
 
-    -- Le passage a VALIDEE exige un mandat d'associe en cours. Objet n° 16 de l'ecran 5 (script 317) : l'identite
+    -- Le passage a VALIDEE exige un mandat d'associe en cours. Objet n° 16 de l'ecran 5 : l'identite
     -- jugee est celle que la procedure d'ecran pose dans le contexte par, a defaut le compte connecte ; la regle
     -- de date est celle de fn_peut_ecrire_referentiel (du au plus tard aujourd'hui, au vide ou posterieur).
     IF EXISTS (SELECT 1 FROM inserted i
@@ -94,7 +114,7 @@ AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- Objet n° 16 de l'ecran 5 (script 317) : l'identite jugee est celle que la procedure d'ecran pose dans le
+    -- Objet n° 16 de l'ecran 5 : l'identite jugee est celle que la procedure d'ecran pose dans le
     -- contexte par, a defaut le compte connecte. Le CAST est exige : un sql_variant passe nu a
     -- fn_peut_ecrire_referentiel rend le Msg 257.
     IF dbo.fn_peut_ecrire_referentiel('ref_question',
@@ -102,7 +122,7 @@ BEGIN
     -- Objet n° 17 : le refus s'inscrit dans journal_refus avant d'etre leve. Le ROLLBACK precede
     -- l'inscription, que le THROW annulerait sinon avec l'ecriture refusee (pas de transaction autonome) ;
     -- sous une Data function, la fonction annule aussi l'inscription, puis journalise le refus apres son
-    -- propre rollback (script 220). refuse_pour est un nvarchar(200) : l'identite y est coupee a 200
+    -- propre rollback (pr_journaliser_refus). refuse_pour est un nvarchar(200) : l'identite y est coupee a 200
     -- caracteres, une ecriture plus longue y serait refusee et remplacerait le 50074.
     DECLARE @m NVARCHAR (2000) = N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé ou réviseur. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.';
     ROLLBACK TRANSACTION;
@@ -111,25 +131,5 @@ BEGIN
     SET @m = REPLACE(@m, N'%', N'%%');
     THROW 50074, @m, 1;
 END;
-GO
-
-CREATE   TRIGGER dbo.[tr_ref_question_horodatage]
-ON dbo.[ref_question]
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    -- Objet n° 16 de l'ecran 5 (script 317) : l'auteur est celui que la procedure d'ecran pose dans le
-    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
-    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_question] t
-    JOIN inserted i ON t.[id] = i.[id];
-END;
-
 GO
 

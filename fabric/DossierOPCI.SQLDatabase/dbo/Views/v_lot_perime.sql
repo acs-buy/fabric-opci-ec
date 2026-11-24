@@ -24,7 +24,7 @@ OUTER APPLY (
         JOIN dbo.actif a ON a.code = e.code_actif
         WHERE a.entite_detentrice = l.entite
           -- 06/09/2026 : a la date de valeur du lot seulement. Une expertise
-          -- historique enregistree apres coup (script 143) ne perime pas les
+          -- historique enregistree apres coup ne perime pas les
           -- lots des autres arretes ; releve : 111 faux positifs avant ce filtre.
           AND e.date_valeur = TRY_CONVERT(DATE, l.arrete)
         UNION ALL

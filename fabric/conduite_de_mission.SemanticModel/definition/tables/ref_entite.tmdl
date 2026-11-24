@@ -104,11 +104,11 @@ table ref_entite
 		displayFolder: Ecran 1 Client
 		lineageTag: 2f6094a5-0793-4e90-b3ec-9dadc8d6ee85
 
-	measure 'En-tête étape 4' = [Client selectionne] & " · soumettre au visa, et suivre le statut"
+	measure 'En-tête étape 4' = [Client selectionne] & " · Visa de l'acceptation"
 		displayFolder: Ecran 1 Client
 		lineageTag: 26ca34d8-fd9f-44df-92d7-bb6d63a9392e
 
-	measure 'En-tête étape 5' = [Client selectionne] & " · ouvrir le premier arrêté, et fixer la périodicité"
+	measure 'En-tête étape 5' = [Client selectionne] & " · Arrêtés"
 		displayFolder: Ecran 1 Client
 		lineageTag: 113526c2-f60b-4a90-b1a0-729872ff7f05
 
@@ -147,7 +147,7 @@ table ref_entite
 		lineageTag: 36578599-c8e3-4bba-87dd-a831dbc67027
 
 	/// Carte titre du formulaire de modification.
-	measure 'En-tête étape 1c' = "Modifier " & [Client selectionne] & " · un champ laissé vide reste inchangé"
+	measure 'En-tête étape 1c' = VAR d = [Denomination du client] RETURN "Modifier " & [Client selectionne] & " · " & IF ( LEN ( d ) > 40, LEFT ( d, 39 ) & "…", d )
 		displayFolder: Ecran 1 Client
 		lineageTag: bcc9fa98-0112-491d-86de-8662019d25d0
 
@@ -240,7 +240,7 @@ table ref_entite
 		displayFolder: Ecran 1 Client
 		lineageTag: 1212ef51-4187-41c8-9623-c2d2f4b240ca
 
-	measure 'En-tête étape 2c' = "Modifier " & [Titre filiale]
+	measure 'En-tête étape 2c' = IF ( ISBLANK ( [Filiale selectionnee] ), "Modifier une filiale : choisissez-la dans la liste", "Modifier " & [Titre filiale] )
 		displayFolder: Ecran 1 Client
 		lineageTag: 09171af6-5ea7-4089-91c9-6d4f0fe5646f
 
@@ -278,7 +278,7 @@ table ref_entite
 		lineageTag: 2c017a59-b9f9-40f9-8c33-1d9f125f22b8
 
 	/// Le titre de l'état 2b ouvert depuis la Révision.
-	measure 'En-tête étape 2b révision' = VAR c = [Client de la revision] RETURN IF ( ISBLANK ( c ), "Ajouter une filiale : choisissez le client dans le sélecteur Véhicule de la Révision", "Ajouter une filiale à " & c )
+	measure 'En-tête étape 2b révision' = VAR c = [Client de la revision] RETURN IF ( ISBLANK ( c ), "Ajouter une filiale : aucun véhicule choisi", "Ajouter une filiale à " & c )
 		displayFolder: Ecran 1 Client
 		lineageTag: d1324308-bf64-422e-97a5-f47a82e4cec4
 
@@ -302,7 +302,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: ffc6d707-19cc-4d41-a8da-a4019cb6d794
 
-	measure 'Libelle e1cBouton0' = "Enregistrer les modifications"
+	measure 'Libelle e1cBouton0' = "Enregistrer"
 		displayFolder: Ecran Client boutons
 		lineageTag: 73fb5c0e-3cae-468d-ab9c-df98f29f9ec5
 
@@ -386,7 +386,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 13429aa6-526f-4617-8a8a-916b6816c658
 
-	measure 'Fond e4Bouton0' = IF ( ISBLANK ( [Client selectionne] ) || ISBLANK ( [Superviseur connecte] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e4Bouton0' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN IF ( ISBLANK ( c ) || ISBLANK ( [Superviseur connecte] ) || s <> "OUVERT", "#E4E9EF", "#0F5C8C" )
 		displayFolder: Ecran Client boutons
 		lineageTag: 932dc7be-a965-463d-bf25-c6b5c6ecba97
 
@@ -394,7 +394,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: f9d01a5e-d121-459a-a61e-12a1223ee9b9
 
-	measure 'Fond e4Bouton1' = IF ( ISBLANK ( [Client selectionne] ) || ISBLANK ( [Superviseur connecte] ), "#E4E9EF", "#0F5C8C" )
+	measure 'Fond e4Bouton1' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN IF ( ISBLANK ( c ) || ISBLANK ( [Superviseur connecte] ) || s <> "OUVERT", "#E4E9EF", "#0F5C8C" )
 		displayFolder: Ecran Client boutons
 		lineageTag: b5c15e78-48a6-4f9e-888b-27240173ed0a
 
@@ -470,11 +470,11 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 623102e3-f82a-449f-9ec3-9628d8f44175
 
-	measure 'Infobulle e4Bouton0' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", ISBLANK ( [Superviseur connecte] ), "Action réservée au superviseur de la mission.", "Accepte la mission ; action réservée au superviseur." )
+	measure 'Infobulle e4Bouton0' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( TRUE (), ISBLANK ( c ), "Aucun client choisi dans la liste des clients.", ISBLANK ( [Superviseur connecte] ), "Action réservée au superviseur de la mission.", s = "APPROUVE", "L'acceptation de cette entité est déjà approuvée. Pour la reprendre, passer par la reprise.", s = "REFUSE", "L'acceptation de cette entité est au statut refusé. L'action attendue est la reprise, qui exige un motif et remet le dossier à l'état ouvert.", s <> "OUVERT", "Aucune acceptation n'est ouverte pour cette entité. Ouvrir l'acceptation, répondre au questionnaire, puis approuver.", "Accepte la mission ; action réservée au superviseur." )
 		displayFolder: Ecran Client boutons
 		lineageTag: 899d094d-2547-4919-b477-6562241222e3
 
-	measure 'Infobulle e4Bouton1' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", ISBLANK ( [Superviseur connecte] ), "Action réservée au superviseur de la mission.", "Refuse la mission, avec son motif ; action réservée au superviseur." )
+	measure 'Infobulle e4Bouton1' = VAR c = [Client selectionne] VAR s = CALCULATE ( SELECTEDVALUE ( v_etat_dossier[acceptation_statut] ), FILTER ( ALL ( v_etat_dossier ), v_etat_dossier[entite] = c ) ) RETURN SWITCH ( TRUE (), ISBLANK ( c ), "Aucun client choisi dans la liste des clients.", ISBLANK ( [Superviseur connecte] ), "Action réservée au superviseur de la mission.", s = "APPROUVE", "L'acceptation de cette entité est déjà approuvée. Pour la reprendre, passer par la reprise.", s = "REFUSE", "L'acceptation de cette entité est au statut refusé. L'action attendue est la reprise, qui exige un motif et remet le dossier à l'état ouvert.", s <> "OUVERT", "Aucune acceptation n'est ouverte pour cette entité. Ouvrir l'acceptation, répondre au questionnaire, puis approuver.", "Refuse la mission, avec son motif ; action réservée au superviseur." )
 		displayFolder: Ecran Client boutons
 		lineageTag: 62f41c30-00ae-4f33-8b73-64b2846ef1b8
 
@@ -521,7 +521,7 @@ table ref_entite
 		lineageTag: 1bfdb3a8-a6c7-52fd-abe0-5d1e7de0f519
 
 	/// Le titre du sous-état 5b.
-	measure 'En-tête étape 5b' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Rouvrir un arrêté clos", c & " · rouvrir un arrêté clos : la demande, puis la décision" )
+	measure 'En-tête étape 5b' = VAR c = [Client selectionne] RETURN IF ( ISBLANK ( c ), "Rouvrir un arrêté clos", c & " · Rouvrir un arrêté clos" )
 		displayFolder: Ecran Client retirer et rouvrir
 		lineageTag: 1ab8bae1-9fac-571d-a67e-0d11a0989979
 
@@ -553,11 +553,11 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 8b71d8ed-0f0f-4f58-bd81-a8da0ac0109e
 
-	measure 'Libelle e5bBouton1' = "Rouvrir l'arrêté"
+	measure 'Libelle e5bBouton1' = IF ( [Nature demande choisie] = "DEVERROUILLAGE", "Déverrouiller le dossier", "Rouvrir l'arrêté" )
 		displayFolder: Ecran Client boutons
 		lineageTag: 76a5d4b1-675e-445a-bdcd-0bb38d4e9ee9
 
-	measure 'Infobulle e5bBouton1' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", NOT ISBLANK ( [Refus accord reouverture] ), [Refus accord reouverture], "Rouvre l'arrêté de la demande ; la personne connectée décide." )
+	measure 'Infobulle e5bBouton1' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", NOT ISBLANK ( [Refus accord reouverture] ), [Refus accord reouverture], [Nature demande choisie] = "DEVERROUILLAGE", "Lève le verrou du dossier et renvoie la revue ; la personne connectée décide.", "Rouvre l'arrêté de la demande ; la personne connectée décide." )
 		displayFolder: Ecran Client boutons
 		lineageTag: 33b4635c-36fa-4127-a448-77a925dfae86
 
@@ -569,7 +569,7 @@ table ref_entite
 		displayFolder: Ecran Client boutons
 		lineageTag: 40c1a994-6a87-49d1-b64d-cd9514c8047c
 
-	measure 'Infobulle e5bBouton2' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", NOT ISBLANK ( [Refus ecart reouverture] ), [Refus ecart reouverture], "Écarte la demande ; l'arrêté reste clos." )
+	measure 'Infobulle e5bBouton2' = SWITCH ( TRUE (), ISBLANK ( [Client selectionne] ), "Aucun client choisi dans la liste des clients.", NOT ISBLANK ( [Refus ecart reouverture] ), [Refus ecart reouverture], [Nature demande choisie] = "DEVERROUILLAGE", "Écarte la demande ; le dossier reste verrouillé.", "Écarte la demande ; l'arrêté reste clos." )
 		displayFolder: Ecran Client boutons
 		lineageTag: 5f9efce6-5ee3-45c0-8446-2ecbe1fb260b
 

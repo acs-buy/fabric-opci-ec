@@ -1,5 +1,5 @@
 
--- --- depuis 63_SQL/46_anr_vl.sql : v_comptes_classe_1_hors_anr -------------------
+-- --- v_comptes_classe_1_hors_anr ---
 -- --- 2 : le filet, tout compte de classe 1 mouvemente hors perimetre ---
 -- ATTENDU : zero ligne. Une ligne = un prefixe de classe 1 que la
 -- definition de l'ANR ne couvre pas, a trancher avant publication.
