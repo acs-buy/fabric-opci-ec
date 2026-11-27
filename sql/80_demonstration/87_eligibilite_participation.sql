@@ -19,7 +19,8 @@ BEGIN
         (N'OMEGA-OPCI',N'OMEGA-SCI-9',N'1',N'1',N'a',N'1.000000',N'0',NULL,N'installation',N'2026-09-06 01:11:31.683',N'La condition 2 est CONCLUE par la vue v_condition_2_immeubles, à partir du cas de l''article R. 214-81 et du droit réel de l''article R. 214-82 portés par chaque immeuble : satisfaite : les 1 immeubles relèvent des articles R. 214-81 et R. 214-82',N'1',NULL),
         (N'OPCI-1',N'SCI-NORD',N'1',N'1',N'a',N'1.000000',N'0',NULL,N'installation',N'2026-09-06 01:11:31.683',N'La condition 2 est CONCLUE par la vue v_condition_2_immeubles, à partir du cas de l''article R. 214-81 et du droit réel de l''article R. 214-82 portés par chaque immeuble : satisfaite sans objet : la société ne détient aucun immeuble, la condition ne peut pas être enfreinte',N'1',NULL),
         (N'OPCI-1',N'SIGMA-SCI-2',N'1',N'1',N'a',N'0.800000',N'0',NULL,N'installation',N'2026-09-06 01:11:31.683',N'La condition 2 est CONCLUE par la vue v_condition_2_immeubles, à partir du cas de l''article R. 214-81 et du droit réel de l''article R. 214-82 portés par chaque immeuble : satisfaite sans objet : la société ne détient aucun immeuble, la condition ne peut pas être enfreinte',N'1',NULL);
-    PRINT 'eligibilite_participation : ' + CAST((SELECT COUNT(*) FROM dbo.[eligibilite_participation]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[eligibilite_participation]);
+    PRINT 'eligibilite_participation : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'eligibilite_participation : deja chargee, rien a faire.';
 GO

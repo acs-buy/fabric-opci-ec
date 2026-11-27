@@ -28,7 +28,8 @@ BEGIN
         (N'NPMQ',N'NPMQ',N'Norme professionnelle de management de la qualite',N'CNOEC',N'Arrete ministeriel du 30 mai 2024, publie le 17 juillet 2024, qui abroge l''annexe 3 de l''arrete du 1er septembre 2016',N'A compter du 1er janvier 2025',N'2025',N'npmq-2025.pdf',N'1',NULL,N'1',N'23 pages, page 23 du referentiel. Norme de MANAGEMENT de la qualite, non de maitrise.',NULL,NULL),
         (N'PCG',N'Plan comptable general',N'Reglement ANC n° 2014-03 relatif au plan comptable general',N'ANC',NULL,N'Version a jour au 1er janvier 2026',N'1er janvier 2026',N'PCG-2026-01-01.pdf',N'1',NULL,N'1',N'183 pages. Verse au dossier le 04/09/2026. S''applique aux filiales du groupe, les SCI n''etant pas des OPCI. L''OPCI lui-meme applique le reglement ANC 2021-09.',NULL,NULL),
         (N'REF-OEC',N'Referentiel normatif OEC',N'Referentiel normatif de l''Ordre des experts-comptables',N'CNOEC',NULL,NULL,N'Aout 2025',N'202508Referentiel normatif DEF.pdf',N'1',NULL,N'1',N'284 pages. Porte 11 normes professionnelles et un glossaire des termes et expressions utilises, page 270.',NULL,NULL);
-    PRINT 'ref_norme : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_norme]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_norme]);
+    PRINT 'ref_norme : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_norme : deja chargee, rien a faire.';
 GO

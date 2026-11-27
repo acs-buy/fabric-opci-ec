@@ -9,7 +9,8 @@ BEGIN
         (N'CHEF_MISSION',N'Chef de mission : vise les lots, les conclusions, les derogations et les ecarts',N'1',N'1',NULL,NULL,NULL,NULL,NULL),
         (N'PREPARATEUR',N'Preparateur : prepare les feuilles et propose les lots',N'0',N'4',NULL,NULL,NULL,NULL,NULL),
         (N'REVISEUR',N'Reviseur : revoit les feuilles de travail',N'0',N'3',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_role : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_role]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_role]);
+    PRINT 'ref_role : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_role : deja chargee, rien a faire.';
 GO

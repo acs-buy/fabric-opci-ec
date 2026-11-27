@@ -60,7 +60,8 @@ BEGIN
         (N'OMEGA-OPCI',N'OMEGA-SCI-9',N'2025-12-31',N'1.000000'),
         (N'OPCI-1',N'SCI-NORD',N'2025-12-31',N'1.000000'),
         (N'OPCI-1',N'SIGMA-SCI-2',N'2025-12-31',N'0.800000');
-    PRINT 'detention : ' + CAST((SELECT COUNT(*) FROM dbo.[detention]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[detention]);
+    PRINT 'detention : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'detention : deja chargee, rien a faire.';
 GO

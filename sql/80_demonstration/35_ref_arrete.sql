@@ -88,7 +88,8 @@ BEGIN
         (N'OMEGA-SCI-9',N'2026-12-31',N'2026-12-31',N'2026-12-31',N'2026-12-31',N'ANNUEL',N'HORS_MISSION',N'4',N'5',N'0',N'0',N'2026-10-03 01:29:56.967',NULL,NULL,NULL),
         (N'OPCI-1',N'2025-12-31',N'2025-12-31',N'2025-12-31',N'2025-12-31',N'ANNUEL',N'HORS_MISSION',N'4',N'1',N'0',N'1',N'2026-09-06 01:05:50.769',NULL,NULL,NULL),
         (N'SCI-NORD',N'2025-12-31',N'2025-12-31',N'2025-12-31',N'2025-12-31',N'ANNUEL',N'HORS_MISSION',N'4',N'1',N'0',N'0',N'2026-09-06 01:05:50.769',NULL,NULL,NULL);
-    PRINT 'ref_arrete : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_arrete]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_arrete]);
+    PRINT 'ref_arrete : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_arrete : deja chargee, rien a faire.';
 GO

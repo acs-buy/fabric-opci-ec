@@ -123,7 +123,8 @@ BEGIN
         (N'121',N'2023-12-31',N'DERIVABLE',N'ENTITE',N'OMEGA-OPCI',N'VALIDE',N'v1',NULL,N'installation (cree_par)',N'2026-09-06 11:34:37.9890275',NULL,NULL,NULL,N'VALO-20231231',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
         (N'122',N'2026-06-30',N'DECIDEE',N'ENTITE',N'OMEGA-OPCI',N'PROPOSE',NULL,NULL,N'installation (cree_par)',N'2026-09-09 12:09:28.6413509',NULL,NULL,N'5',N'CAP-OMEGA-OPCI-20260630',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
     SET IDENTITY_INSERT dbo.[lot_ecritures] OFF;
-    PRINT 'lot_ecritures : ' + CAST((SELECT COUNT(*) FROM dbo.[lot_ecritures]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[lot_ecritures]);
+    PRINT 'lot_ecritures : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'lot_ecritures : deja chargee, rien a faire.';
 GO

@@ -135,7 +135,8 @@ BEGIN
         (N'131',N'CLOTURE',N'OMEGA-OPCI|2025-12-31',N'OMEGA-OPCI',N'2025-12-31',NULL,N'RENVOYE',N'Réouverture : Le dossier porte le jeu de demonstration et doit montrer un arrete en cours de revision. Demande du 13/09/2026.',N'installation (propose_par)',N'installation (decide_par)',N'2026-09-13 11:46:42.814',NULL),
         (N'469',N'CLOTURE',N'OMEGA-OPCI|2025-12-31',N'OMEGA-OPCI',N'2025-12-31',NULL,N'VISE',NULL,N'installation (propose_par)',N'installation (decide_par)',N'2026-10-18 22:35:20.298',NULL);
     SET IDENTITY_INSERT dbo.[visa] OFF;
-    PRINT 'visa : ' + CAST((SELECT COUNT(*) FROM dbo.[visa]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[visa]);
+    PRINT 'visa : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'visa : deja chargee, rien a faire.';
 GO

@@ -13,7 +13,8 @@ BEGIN
         (N'5',N'OPCI-1',N'PORT-12',N'Famille E',N'SIMULE : registre des porteurs du cas construit'),
         (N'6',N'OMEGA-OPCI',N'PORT-04',N'Personne physique D',N'SIMULE : registre des porteurs du cas construit');
     SET IDENTITY_INSERT dbo.[porteur] OFF;
-    PRINT 'porteur : ' + CAST((SELECT COUNT(*) FROM dbo.[porteur]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[porteur]);
+    PRINT 'porteur : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'porteur : deja chargee, rien a faire.';
 GO

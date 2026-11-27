@@ -49,7 +49,8 @@ BEGIN
         (N'ref_tableau_annexe',N'Tableaux de l''annexe',N'Annexe, menu Livrables',N'ASSOCIE',N'29',N'Comptes annuels et rapport',N'5',N'États financiers et annexe',N'13',N'2',N'TEXTE',N'1',N'libelle',N'1',NULL),
         (N'role_nature_visa',N'Natures visables par rôle',N'Visa, Supervision',N'ASSOCIE',N'22',N'Organisation du cabinet',N'7',N'Rôles et visas',N'16',N'2',N'TENU',N'1',NULL,N'1',NULL),
         (N'saisie_annexe',N'Saisie de l''annexe',N'Annexe, menu Livrables',N'REVISEUR',N'30',NULL,NULL,NULL,NULL,NULL,N'TENU',N'0',NULL,N'1',NULL);
-    PRINT 'ref_referentiel : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_referentiel]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_referentiel]);
+    PRINT 'ref_referentiel : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_referentiel : deja chargee, rien a faire.';
 GO

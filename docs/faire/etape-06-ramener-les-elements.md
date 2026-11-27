@@ -30,6 +30,9 @@ les éléments à ramener.*
 Soit 13 éléments, un par dossier du répertoire `fabric/` : `restitution_client` en compte 2, son
 modèle et son rapport.
 
+L'espace en montre 15 : la plateforme y ajoute 2 points de terminaison SQL, l'un nommé `Coffre`,
+pour le coffre, l'autre nommé `DossierOPCI`, pour la base. Le répertoire `fabric/` ne les porte pas.
+
 ## Ce qui ne fonctionne pas encore à ce stade
 
 L'installation n'est pas finie.

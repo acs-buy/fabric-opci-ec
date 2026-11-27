@@ -502,7 +502,8 @@ BEGIN
         (N'v_ecran_differences_synthese',N'famille',N'Famille, code'),
         (N'v_ecran_journal_visa',N'cycle',N'Cycle, code'),
         (N'v_ecran_journal_visa',N'nature',N'Nature, code');
-    PRINT 'ref_libelle_colonne : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_libelle_colonne]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_libelle_colonne]);
+    PRINT 'ref_libelle_colonne : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_libelle_colonne : deja chargee, rien a faire.';
 GO

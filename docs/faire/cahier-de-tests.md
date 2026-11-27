@@ -3663,7 +3663,7 @@ Passé ☐ · Échec ☐ · Constats :
 2. Jouez, seules, les 2 requêtes de comptage des lignes 36 à 39 de sql/99_terminer_le_chargement.sql.
 3. Jouez, seule, la requête des lignes 42 à 47 du même fichier.
 
-**Vous devez obtenir :** « declencheurs encore suspendus » : 0. « cles etrangeres non verifiees » : 0. La colonne nb égale la colonne attendu pour « questions d'acceptation » (620), « comptes du plan » (201), « articles du reglement » (139), « roles » (4) et « natures de pieces » (10). « entites de demonstration » vaut 16 plus le nombre d'entités créées et non supprimées pendant la phase, la requête comptant toutes les entités de la base.
+**Vous devez obtenir :** « declencheurs encore suspendus » : 0. « cles etrangeres non verifiees » : 0. La colonne nb égale la colonne attendu pour « questions d'acceptation » (620), « comptes du plan » (201), « articles du reglement » (141), « roles » (4) et « natures de pieces » (10). « entites de demonstration » vaut 16 plus le nombre d'entités créées et non supprimées pendant la phase, la requête comptant toutes les entités de la base.
 
 Passé ☐ · Échec ☐ · Remarque :
 

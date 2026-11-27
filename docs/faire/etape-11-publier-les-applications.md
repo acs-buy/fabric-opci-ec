@@ -13,40 +13,6 @@ Trois raisons.
    l'écran remis au client.
 3. **L'adresse ne change pas** quand vous republiez le rapport.
 
-## Créer l'application
-
-Le bouton **Create app** se trouve dans le bandeau de l'espace de travail.
-
-![Le bandeau de l'espace, avec Create app](../../captures/espace-bandeau.png)
-
-
-1. Dans votre espace de travail, cliquez sur **Créer une application**.
-2. Donnez-lui un nom, par exemple le nom de votre cabinet suivi de « conduite de mission ».
-3. Ajoutez le rapport **Conduite de mission** au contenu.
-4. Créez une seconde audience pour **restitution_client**, si vous voulez donner un écran à vos
-   clients.
-5. Dans **Autorisations**, donnez l'accès aux personnes ou aux groupes concernés.
-6. **Publier**.
-
-## Ce que l'application ne fait pas
-
-Elle ne dispense pas des licences. Sur une capacité inférieure à F64, chaque personne qui ouvre
-l'application a besoin d'une licence Power BI Pro, qu'elle passe par l'application ou par l'espace
-de travail.
-
-Elle ne remplace pas non plus les autorisations sur la base. Les boutons qui écrivent passent par
-les fonctions, puis par les procédures de la base, qui vérifient le rôle de la personne connectée
-dans la table des rôles de mission. Une personne sans rôle en cours sur un dossier, ni sur le
-véhicule qui le détient, voit grisés les boutons des actions de l'équipe, et la base lui refuse ces
-actions avec un message qui le dit.
-
-## Vérifier
-
-Demandez à un collègue d'ouvrir l'application. Il doit voir l'écran de conduite de mission et
-pouvoir sélectionner un dossier. S'il ne voit rien, vérifiez son autorisation et sa licence.
-
-### Ce que vous devez obtenir
-
 ## Avant l'application : créer un rôle de sécurité par client
 
 **Cette action n'est pas facultative.** Le dépôt livré a un seul rôle, celui du véhicule de
@@ -113,6 +79,48 @@ La même limite vaut ici : un membre ou un contributeur de l'espace voit tous le
 chaque collaborateur ne voie que ses dossiers, donnez-lui accès par l'application, avec le rôle de
 lecteur. Le rôle ne règle que l'affichage : les écritures restent jugées par la base, sur la table
 des rôles de mission.
+
+## Créer l'application
+
+Le bouton **Create app** se trouve dans le bandeau de l'espace de travail.
+
+![Le bandeau de l'espace, avec Create app](../../captures/espace-bandeau.png)
+
+
+1. Dans votre espace de travail, cliquez sur **Créer une application**.
+2. Donnez-lui un nom, par exemple le nom de votre cabinet suivi de « conduite de mission ».
+3. Ajoutez le rapport **Conduite de mission** au contenu.
+4. Créez une seconde audience pour **restitution_client**, si vous voulez donner un écran à vos
+   clients.
+5. Dans **Autorisations**, donnez l'accès aux personnes ou aux groupes concernés.
+6. **Publier**.
+
+## Ce que l'application ne fait pas
+
+Elle ne dispense pas des licences. Sur une capacité inférieure à F64, chaque personne qui ouvre
+l'application a besoin d'une licence Power BI Pro, qu'elle passe par l'application ou par l'espace
+de travail.
+
+Elle ne remplace pas non plus les autorisations sur la base. Les boutons qui écrivent passent par
+les fonctions, puis par les procédures de la base, qui vérifient le rôle de la personne connectée
+dans la table des rôles de mission. Une personne sans rôle en cours sur un dossier, ni sur le
+véhicule qui le détient, voit grisés les boutons des actions de l'équipe, et la base lui refuse ces
+actions avec un message qui le dit.
+
+## Vérifier
+
+Demandez à un collègue d'ouvrir l'application. Il doit voir l'écran de conduite de mission et
+pouvoir sélectionner un dossier. S'il ne voit rien, vérifiez son autorisation et sa licence.
+
+### Ce que vous devez obtenir
+
+- L'application publiée, avec le rapport **Conduite de mission** pour l'audience du cabinet et, si
+  vous l'avez créée, l'audience du client avec **restitution_client**.
+- Un collègue de l'audience du cabinet ouvre l'écran de conduite de mission et sélectionne un dossier.
+- Avec **Test as role**, ou un compte de test placé dans le rôle de lecteur, le rôle d'un client ne
+  montre que les données du véhicule de ce client.
+- Un collaborateur placé dans le rôle `Reviseur` et entré par l'application ne voit que les entités
+  sur lesquelles il tient un mandat en cours.
 
 ---
 

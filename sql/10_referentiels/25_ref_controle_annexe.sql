@@ -30,7 +30,8 @@ BEGIN
         (N'S336_2_ACTIF_NET',N'336-2',N'actif net de v_anr_entite et bilan P_CP',N'0'),
         (N'S336_2_DIFFERENCE',N'336-2',N'différence calculée et v_inventaire_filiales',N'0'),
         (N'S336_2_VUE',N'336-2',N'somme d''une colonne de la vue d''inventaire et poste du bilan',N'0');
-    PRINT 'ref_controle_annexe : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_controle_annexe]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_controle_annexe]);
+    PRINT 'ref_controle_annexe : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_controle_annexe : deja chargee, rien a faire.';
 GO

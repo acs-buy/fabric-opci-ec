@@ -148,7 +148,8 @@ BEGIN
         (N'ref_tableau_annexe',N'source_valeur',N'CALCUL',N'calcul'),
         (N'ref_tableau_annexe',N'source_valeur',N'MIXTE',N'mixte'),
         (N'ref_tableau_annexe',N'source_valeur',N'SAISIE',N'saisie');
-    PRINT 'ref_libelle_valeur : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_libelle_valeur]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_libelle_valeur]);
+    PRINT 'ref_libelle_valeur : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_libelle_valeur : deja chargee, rien a faire.';
 GO

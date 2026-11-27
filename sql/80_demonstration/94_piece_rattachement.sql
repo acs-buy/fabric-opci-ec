@@ -74,7 +74,8 @@ BEGIN
         (N'66',N'67',N'OMEGA-OPCI',NULL,NULL,N'2025-12-31',N'installation',N'2026-09-06 01:06:51.5163700',N'76',N'OMEGA-OPCI',N'2025-12-31'),
         (N'67',N'68',N'OMEGA-OPCI',NULL,NULL,N'2025-12-31',N'installation',N'2026-09-06 01:06:51.5163700',N'77',N'OMEGA-OPCI',N'2025-12-31');
     SET IDENTITY_INSERT dbo.[piece_rattachement] OFF;
-    PRINT 'piece_rattachement : ' + CAST((SELECT COUNT(*) FROM dbo.[piece_rattachement]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[piece_rattachement]);
+    PRINT 'piece_rattachement : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'piece_rattachement : deja chargee, rien a faire.';
 GO

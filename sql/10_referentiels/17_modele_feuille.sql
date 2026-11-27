@@ -29,7 +29,8 @@ BEGIN
         (N'TRESO-RAPPRO',N'État de rapprochement bancaire et justification des opérations non dénouées',N'0',NULL,NULL,NULL,N'1.0',N'2026-08-23',NULL,NULL,NULL,NULL,NULL,NULL),
         (N'VALO-ECARTS',N'Différences d''estimation par actif, écart de la valeur actuelle au coût d''acquisition',N'0',NULL,NULL,NULL,N'1.0',N'2026-08-23',NULL,NULL,NULL,NULL,NULL,NULL),
         (N'VALO-VL',N'Calcul de la valeur liquidative et rapprochement de l''actif net aux capitaux propres',N'0',NULL,NULL,NULL,N'1.0',N'2026-08-23',NULL,NULL,NULL,NULL,NULL,NULL);
-    PRINT 'modele_feuille : ' + CAST((SELECT COUNT(*) FROM dbo.[modele_feuille]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[modele_feuille]);
+    PRINT 'modele_feuille : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'modele_feuille : deja chargee, rien a faire.';
 GO

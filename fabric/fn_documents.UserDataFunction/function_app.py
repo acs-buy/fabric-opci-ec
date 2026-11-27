@@ -1,6 +1,6 @@
 """fn_documents : les livrables de l'etape 6 de l'ecran Revision, une fonction par document.
 
-Element User data functions `fn_documents` de l'espace OPCI-DEV, identifiant 01b1f037-0147-4046-9106-bd80d60c1310.
+Element User data functions `fn_documents` de l'espace de travail.
 Publie par l'API Fabric (updateDefinition), puis relu par getDefinition. Ecrit le 04/10/2026.
 Aucun fichier ne s'ecrit au coffre (regle du 28/09/2026 : tout fichier se depose dans SharePoint par la base et se
 lit par raccourci).

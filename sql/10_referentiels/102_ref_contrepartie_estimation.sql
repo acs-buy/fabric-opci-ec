@@ -12,7 +12,8 @@ BEGIN
         (N'275',N'105',N'Titres a caractere immobilier : aucune subdivision de 105 ne les couvre, ni 1052 qui vise les immeubles et droits reels, ni 1053 qui vise les depots et instruments financiers. La contrepartie est le compte 105 lui-meme',N'411-3 et 411-1',NULL,NULL,N'130',NULL,NULL,NULL),
         (N'276',N'105',N'Autres actifs immobiliers, dont les avances en compte courant : l''article 213-4 nomme explicitement le compte 105',N'213-4',NULL,NULL,N'69',NULL,NULL,NULL),
         (N'37',N'1053',N'Depots et instruments financiers et assimiles, classe 3 : le libelle de 1053 les nomme',N'411-3',NULL,NULL,N'130',NULL,NULL,NULL);
-    PRINT 'ref_contrepartie_estimation : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_contrepartie_estimation]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_contrepartie_estimation]);
+    PRINT 'ref_contrepartie_estimation : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_contrepartie_estimation : deja chargee, rien a faire.';
 GO

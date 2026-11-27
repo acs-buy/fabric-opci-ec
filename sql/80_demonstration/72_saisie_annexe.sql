@@ -10,7 +10,8 @@ BEGIN
         (N'135',N'OMEGA-OPCI',N'2026-06-30',N'311-1',N'DEVISE',N'1',N'euros',NULL,N'installation (saisi_par)',N'2026-10-07 04:32:55.359',N'devise de comptabilité confirmée le 07/10/2026 : l''euro pour tous les OPCI',N'installation (motif_par)',N'2026-10-07 04:32:55.359'),
         (N'136',N'OMEGA-OPCI',N'2026-12-31',N'311-1',N'DEVISE',N'1',N'euros',NULL,N'installation (saisi_par)',N'2026-10-07 04:32:55.359',N'devise de comptabilité confirmée le 07/10/2026 : l''euro pour tous les OPCI',N'installation (motif_par)',N'2026-10-07 04:32:55.359');
     SET IDENTITY_INSERT dbo.[saisie_annexe] OFF;
-    PRINT 'saisie_annexe : ' + CAST((SELECT COUNT(*) FROM dbo.[saisie_annexe]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[saisie_annexe]);
+    PRINT 'saisie_annexe : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'saisie_annexe : deja chargee, rien a faire.';
 GO

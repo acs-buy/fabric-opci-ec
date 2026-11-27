@@ -205,7 +205,8 @@ BEGIN
         (N'MTN-OMEGA-OPCI-2025',N'619',N'OUI',NULL,N'installation',N'2026-09-06 01:06:59.876',N'171',NULL,NULL),
         (N'MTN-OMEGA-OPCI-2025',N'620',N'OUI',NULL,N'installation',N'2026-09-06 01:06:59.876',N'172',NULL,NULL);
     SET IDENTITY_INSERT dbo.[feuille_question] OFF;
-    PRINT 'feuille_question : ' + CAST((SELECT COUNT(*) FROM dbo.[feuille_question]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[feuille_question]);
+    PRINT 'feuille_question : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'feuille_question : deja chargee, rien a faire.';
 GO

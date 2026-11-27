@@ -69,7 +69,8 @@ BEGIN
         (N'470',N'TRESO-EMPRUNTS',NULL,NULL,NULL,NULL,NULL),
         (N'477',N'PLANIF-SELECT',NULL,NULL,NULL,NULL,NULL),
         (N'478',N'PLANIF-SELECT',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_question_modele : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_question_modele]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_question_modele]);
+    PRINT 'ref_question_modele : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_question_modele : deja chargee, rien a faire.';
 GO

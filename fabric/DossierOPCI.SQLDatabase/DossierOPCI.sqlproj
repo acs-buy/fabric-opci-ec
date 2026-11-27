@@ -15,7 +15,7 @@
     <FileStreamDirectoryName></FileStreamDirectoryName>
     <IsQueryStoreOn>True</IsQueryStoreOn>
     <ModelCollation>1033, CI</ModelCollation>
-    <Name>DossierOPCI-fd9080bb-e3ae-4aab-bf09-edbfcc8606d1</Name>
+    <Name>DossierOPCI</Name>
     <PageVerify>CHECKSUM</PageVerify>
     <ProjectGuid>{00000000-0000-0000-0000-000000000000}</ProjectGuid>
     <QueryStoreCaptureMode>AUTO</QueryStoreCaptureMode>

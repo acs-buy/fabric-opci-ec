@@ -30,8 +30,9 @@ déduit du poste du bilan le compte de différence d'estimation et sa contrepart
 lot : l'écart entre la valeur actuelle et le prix de revient, moins ce qui est déjà comptabilisé. La
 base contrôle le lot et le propose au visa. Le fichier `.whl` est une archive zip : son code s'y lit.
 
-**`fn_valorisation` a son point de terminaison public activé.** Sa fonction `generer_lot_valorisation`
-porte `isPublicEndpointEnabled` à `true` dans son `definition.json` : votre copie le porte aussi.
+**Aucune fonction n'a de point de terminaison public.** Les 85 fonctions déclarées dans les
+`definition.json` des 7 ensembles, `generer_lot_valorisation` de `fn_valorisation` comprise, portent
+`isPublicEndpointEnabled` à `false` : votre copie les porte aussi.
 
 **`fn_documents` lit un modèle Word.** Ses fonctions fabriquent les documents sur le modèle Word du
 cabinet, qu'elles lisent au site SharePoint du cabinet, bibliothèque Documents, dossier `Modeles`,

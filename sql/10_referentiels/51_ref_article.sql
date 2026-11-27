@@ -146,7 +146,8 @@ BEGIN
         (N'R214-96',N'Les instruments financiers mentionnés aux 6° et 7° du I de l''article L. 214-36 et à l''article R. 214-93 émis par une même entité ne peuvent représenter plus de 10 % de l''actif',NULL,NULL,NULL,N'24',N'1',N'CMF',NULL,NULL,N'CMF'),
         (N'R214-97',N'Un organisme de placement collectif immobilier ne peut détenir plus de 20 % d''une même catégorie d''instruments financiers mentionnés aux 4°, 6° et 7° du I de l''article L. 214-36',NULL,NULL,NULL,N'25',N'1',N'CMF',NULL,NULL,N'CMF'),
         (N'R214-99',N'dépôts à terme mentionnés à l''article R. 214-92 effectués auprès d''un même établissement de crédit par l''organisme de placement collectif immobilier ne peuvent représenter plus de 20 % de son actif.',NULL,NULL,NULL,N'26',N'1',N'CMF',NULL,NULL,N'CMF');
-    PRINT 'ref_article : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_article]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_article]);
+    PRINT 'ref_article : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_article : deja chargee, rien a faire.';
 GO

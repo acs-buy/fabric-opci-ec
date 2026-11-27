@@ -15,7 +15,8 @@ BEGIN
         (N'PV_ASSEMBLEE',N'Procès-verbal d''assemblée ou de conseil',N'JURIDIQUE',N'PERMANENTE',NULL,N'10',N'Pratique du dossier : la piece qui fonde l''affectation du resultat et la distribution.',N'installation (modifie_par)',N'2026-10-08 06:15:54.397',NULL,NULL,NULL),
         (N'RAPPORT_EVALUATION',N'Rapport d''un évaluateur immobilier',N'IMMOBILIER',N'EXERCICE',NULL,N'5',N'Article L. 214-55 du code monetaire et financier, dont le texte n''est pas au dossier. Le reglement ANC 2021-09 ne prescrit aucun rapport, article 211-6.',N'installation (modifie_par)',N'2026-10-08 06:15:54.397',NULL,NULL,NULL),
         (N'RELEVE_BANCAIRE',N'Relevé bancaire',N'FINANCIER',N'EXERCICE',NULL,N'8',N'Pratique du dossier.',N'installation (modifie_par)',N'2026-10-08 06:15:54.397',NULL,NULL,NULL);
-    PRINT 'ref_nature_piece : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_nature_piece]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_nature_piece]);
+    PRINT 'ref_nature_piece : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_nature_piece : deja chargee, rien a faire.';
 GO

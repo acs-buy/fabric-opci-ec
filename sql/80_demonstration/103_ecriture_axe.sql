@@ -548,7 +548,8 @@ BEGIN
         (N'3484',N'OMEGA-OPCI',N'IMM-201',NULL,NULL),
         (N'3487',N'OMEGA-OPCI',N'TIT-01',NULL,NULL),
         (N'3488',N'OMEGA-OPCI',N'TIT-01',NULL,NULL);
-    PRINT 'ecriture_axe : ' + CAST((SELECT COUNT(*) FROM dbo.[ecriture_axe]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ecriture_axe]);
+    PRINT 'ecriture_axe : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ecriture_axe : deja chargee, rien a faire.';
 GO

@@ -1,7 +1,8 @@
 -- 00. À JOUER EN PREMIER, avant tout fichier de données.
 --
 -- POURQUOI CE FICHIER EXISTE
---     La base porte 93 déclencheurs et 379 contraintes qui protègent les données en exploitation.
+--     La base porte 137 déclencheurs, 202 clés étrangères et 232 contraintes de contrôle qui protègent
+--     les données en exploitation.
 --     Deux d'entre eux empêchent le chargement initial, et le blocage est circulaire :
 --
 --     1. LES DÉCLENCHEURS DE GARDE refusent toute écriture dans un référentiel à qui ne détient pas

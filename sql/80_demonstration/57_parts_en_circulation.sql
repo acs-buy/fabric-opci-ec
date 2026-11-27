@@ -10,7 +10,8 @@ BEGIN
         (N'OMEGA-OPCI',N'2024-12-31',N'1407990.0000',N'SIMULE : registre des porteurs du cas construit',NULL,NULL),
         (N'OMEGA-OPCI',N'2025-12-31',N'1407990.0000',N'SIMULE : registre des porteurs du cas construit',NULL,NULL),
         (N'OPCI-1',N'2025-12-31',N'10000.0000',N'SIMULE : registre des porteurs du cas construit',NULL,NULL);
-    PRINT 'parts_en_circulation : ' + CAST((SELECT COUNT(*) FROM dbo.[parts_en_circulation]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[parts_en_circulation]);
+    PRINT 'parts_en_circulation : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'parts_en_circulation : deja chargee, rien a faire.';
 GO

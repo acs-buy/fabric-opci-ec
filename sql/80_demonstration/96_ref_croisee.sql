@@ -9,7 +9,8 @@ BEGIN
         (N'1',N'2025-12-31',N'SCI-NORD',N'213',N'IMM-01',N'CONCLUE',N'installation',N'2026-09-06 01:01:55.783'),
         (N'2',N'2025-12-31',N'SCI-NORD',N'271',N'IMM-04',N'A_FAIRE',NULL,NULL);
     SET IDENTITY_INSERT dbo.[ref_croisee] OFF;
-    PRINT 'ref_croisee : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_croisee]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_croisee]);
+    PRINT 'ref_croisee : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_croisee : deja chargee, rien a faire.';
 GO

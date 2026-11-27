@@ -27,7 +27,8 @@ BEGIN
         (N'26',N'6',N'2022-12-31',N'DISTRIBUTION',N'0.0000',N'467022.04',N'installation',N'2026-09-06 11:34:39.053'),
         (N'27',N'6',N'2023-12-31',N'DISTRIBUTION',N'0.0000',N'483453.94',N'installation',N'2026-09-06 11:34:39.053');
     SET IDENTITY_INSERT dbo.[mouvement_porteur] OFF;
-    PRINT 'mouvement_porteur : ' + CAST((SELECT COUNT(*) FROM dbo.[mouvement_porteur]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[mouvement_porteur]);
+    PRINT 'mouvement_porteur : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'mouvement_porteur : deja chargee, rien a faire.';
 GO

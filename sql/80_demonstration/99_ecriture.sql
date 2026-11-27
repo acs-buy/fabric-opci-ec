@@ -1007,7 +1007,8 @@ BEGIN
         (N'3491',N'122',N'ODR',N'OD de revision',N'122',N'2026-06-30',N'1041',N'Frais d’acquisition à la clôture de l’exercice',NULL,NULL,NULL,NULL,N'Frais d''acquisition releves sur l''immeuble entre, art. 211-3 (illustration a montant rond)',N'120000.00',N'0.00',NULL,NULL,NULL,NULL,NULL,NULL,N'DECIDEE'),
         (N'3492',N'122',N'ODR',N'OD de revision',N'122',N'2026-06-30',N'405',N'Fournisseurs d''exploitation',NULL,NULL,NULL,NULL,N'Frais d''acquisition releves sur l''immeuble entre, art. 211-3 (illustration a montant rond)',N'0.00',N'120000.00',NULL,NULL,NULL,NULL,NULL,NULL,N'DECIDEE');
     SET IDENTITY_INSERT dbo.[ecriture] OFF;
-    PRINT 'ecriture : ' + CAST((SELECT COUNT(*) FROM dbo.[ecriture]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ecriture]);
+    PRINT 'ecriture : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ecriture : deja chargee, rien a faire.';
 GO

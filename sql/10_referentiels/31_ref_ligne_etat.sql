@@ -89,7 +89,8 @@ BEGIN
         (N'RESULTAT',N'R_TVIII',N'Régularisations sur résultat net (VIII)',N'DETAIL',N'VIII',N'772',N'CREDIT',NULL,N'Article 113-3 : un mecanisme correcteur neutralise l''incidence des souscriptions et des rachats sur le montant unitaire.',N'322-2',N'26',NULL,NULL),
         (N'RESULTAT',N'R_TX',N'Total X',N'TOTAL',N'X',NULL,NULL,N'R_MV_1 + R_MV_2',NULL,N'322-2',N'35',NULL,NULL),
         (N'RESULTAT',N'R_TXI',N'Régularisations sur plus et moins-values réalisées nettes (XI)',N'DETAIL',N'XI',N'776',N'CREDIT',NULL,NULL,N'322-2',N'37',NULL,NULL);
-    PRINT 'ref_ligne_etat : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_ligne_etat]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_ligne_etat]);
+    PRINT 'ref_ligne_etat : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_ligne_etat : deja chargee, rien a faire.';
 GO

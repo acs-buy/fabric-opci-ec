@@ -60,7 +60,8 @@ BEGIN
         (N'55',N'OMEGA-OPCI',N'2022-12-31',N'balance_omega-opci_20221231.txt',N'533440856BDC938DA24C40D50DCC6555909094B9B1C51BEF68DB2587125117D3',N'2022-01-01',N'2022-12-31',N'0',N'0',N'CHARGE',N'installation',N'2026-09-06 11:33:42.808',N'BALANCE'),
         (N'56',N'OMEGA-OPCI',N'2023-12-31',N'balance_omega-opci_20231231.txt',N'9C00DC88733DF583817376A02B67FDFCA321A3F2B7398694932F2678BDB5EF3C',N'2023-01-01',N'2023-12-31',N'0',N'0',N'CHARGE',N'installation',N'2026-09-06 11:33:42.808',N'BALANCE');
     SET IDENTITY_INSERT dbo.[import_fec] OFF;
-    PRINT 'import_fec : ' + CAST((SELECT COUNT(*) FROM dbo.[import_fec]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[import_fec]);
+    PRINT 'import_fec : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'import_fec : deja chargee, rien a faire.';
 GO

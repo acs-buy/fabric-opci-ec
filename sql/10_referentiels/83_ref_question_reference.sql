@@ -118,7 +118,8 @@ BEGIN
         (N'MTN-MR03',N'169',NULL,NULL,NULL,NULL,NULL),
         (N'MTN-MR03',N'170',NULL,NULL,NULL,NULL,NULL),
         (N'MTN-MR04',N'167',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_question_reference : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_question_reference]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_question_reference]);
+    PRINT 'ref_question_reference : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_question_reference : deja chargee, rien a faire.';
 GO

@@ -8,7 +8,8 @@ BEGIN
     INSERT INTO dbo.[acceptation_mission] ([id], [entite], [statut], [decision], [motif], [approuve_par], [approuve_le], [cree_par], [cree_le], [cote_questionnaire], [reprise_motif], [message_ecran], [message_ecran_le], [message_ecran_pour]) VALUES
         (N'1',N'OMEGA-OPCI',N'APPROUVE',N'ACCEPTEE',NULL,N'installation (approuve_par)',N'2026-09-06 01:06:59.512',N'installation (cree_par)',N'2026-09-06 01:06:59.2929588',N'ACC-OMEGA-OPCI',NULL,NULL,NULL,NULL);
     SET IDENTITY_INSERT dbo.[acceptation_mission] OFF;
-    PRINT 'acceptation_mission : ' + CAST((SELECT COUNT(*) FROM dbo.[acceptation_mission]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[acceptation_mission]);
+    PRINT 'acceptation_mission : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'acceptation_mission : deja chargee, rien a faire.';
 GO

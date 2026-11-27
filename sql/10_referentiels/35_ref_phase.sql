@@ -12,7 +12,8 @@ BEGIN
         (N'PERMANENT',N'Dossier permanent',N'MISSION',N'2',NULL,NULL,NULL,NULL,NULL),
         (N'PLANIF',N'Planification',N'ARRETE',N'3',NULL,NULL,NULL,NULL,NULL),
         (N'SYNTHESE',N'Note de synthèse',N'ANNUEL',N'6',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_phase : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_phase]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_phase]);
+    PRINT 'ref_phase : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_phase : deja chargee, rien a faire.';
 GO

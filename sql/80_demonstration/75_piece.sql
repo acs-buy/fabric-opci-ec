@@ -105,7 +105,8 @@ BEGIN
         (N'97',N'Rapport_evaluation_IMM-202_2023-12-31.pdf',N'/Coffre/sp_omega_opci_annuel/2023-12-31/Rapport_evaluation_IMM-202_2023-12-31.pdf',N'e588b21844568c6156c405df5ac68e385c4bd8f2904de3f48e9407100c0d0d6d',N'RAPPORT_EVALUATION',N'2023-12-31',N'2023-12-31',N'installation',N'2026-09-06 11:34:37.9140000',NULL,N'OMEGA-OPCI'),
         (N'98',N'Rapport_evaluation_IMM-203_2023-12-31.pdf',N'/Coffre/sp_omega_opci_annuel/2023-12-31/Rapport_evaluation_IMM-203_2023-12-31.pdf',N'e09696f2b6800469daa765b3296c6daa33f87f7438d1598a2b8d9d2a1528c0f8',N'RAPPORT_EVALUATION',N'2023-12-31',N'2023-12-31',N'installation',N'2026-09-06 11:34:37.9140000',NULL,N'OMEGA-OPCI');
     SET IDENTITY_INSERT dbo.[piece] OFF;
-    PRINT 'piece : ' + CAST((SELECT COUNT(*) FROM dbo.[piece]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[piece]);
+    PRINT 'piece : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'piece : deja chargee, rien a faire.';
 GO

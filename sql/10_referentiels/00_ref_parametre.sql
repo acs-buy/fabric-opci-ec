@@ -9,7 +9,8 @@ BEGIN
         (N'PROGRAMME_ALLEGE_FILIALES_MAX',N'0',N'Programme allege jusqu''a ce nombre de filiales ayant une balance. Seuil valide le 29/09/2026.',N'installation',N'2026-09-28 20:51:25.771',N'SEUIL',N'Programme allégé : filiales avec balance, au plus'),
         (N'PROGRAMME_ETENDU_FILIALES_MIN',N'5',N'Programme etendu a partir de ce nombre de filiales ayant une balance a l''arrete. Seuil valide le 29/09/2026.',N'installation',N'2026-09-28 20:51:25.771',N'SEUIL',N'Programme étendu : filiales avec balance, au moins'),
         (N'PROGRAMME_ETENDU_SOURCES_MIN',N'2',N'Programme etendu a partir de ce nombre d''imports distincts de la balance de l''entite. Seuil valide le 29/09/2026.',N'installation',N'2026-09-28 20:51:25.771',N'SEUIL',N'Programme étendu : imports de la balance, au moins');
-    PRINT 'ref_parametre : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_parametre]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_parametre]);
+    PRINT 'ref_parametre : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_parametre : deja chargee, rien a faire.';
 GO

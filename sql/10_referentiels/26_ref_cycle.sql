@@ -16,7 +16,8 @@ BEGIN
         (N'TIERS',N'Comptes de tiers, créances locatives et dépréciations',N'LES_DEUX',N'8',NULL,NULL,NULL,NULL,NULL),
         (N'TRESO',N'Comptes financiers et financement',N'LES_DEUX',N'7',NULL,NULL,NULL,NULL,NULL),
         (N'VALO',N'Différences d''estimation',N'LES_DEUX',N'5',NULL,NULL,NULL,NULL,NULL);
-    PRINT 'ref_cycle : ' + CAST((SELECT COUNT(*) FROM dbo.[ref_cycle]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[ref_cycle]);
+    PRINT 'ref_cycle : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'ref_cycle : deja chargee, rien a faire.';
 GO

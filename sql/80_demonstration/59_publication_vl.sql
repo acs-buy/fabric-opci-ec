@@ -9,7 +9,8 @@ BEGIN
         (N'1',N'OMEGA-OPCI',N'2025-12-31',N'114.84',N'1407990.0000',N'v1',N'installation',N'2026-09-06 01:06:36.353',N'2026-10-19 13:50:15.028'),
         (N'8',N'OMEGA-OPCI',N'2025-12-31',N'115.38',N'1407990.0000',N'val275-v1',N'installation',N'2026-10-19 13:50:15.092',NULL);
     SET IDENTITY_INSERT dbo.[publication_vl] OFF;
-    PRINT 'publication_vl : ' + CAST((SELECT COUNT(*) FROM dbo.[publication_vl]) AS VARCHAR(10)) + ' ligne(s) chargee(s).';
+    DECLARE @n INT = (SELECT COUNT(*) FROM dbo.[publication_vl]);
+    PRINT 'publication_vl : ' + CAST(@n AS VARCHAR(10)) + ' ligne(s) chargee(s).';
 END
 ELSE PRINT 'publication_vl : deja chargee, rien a faire.';
 GO
