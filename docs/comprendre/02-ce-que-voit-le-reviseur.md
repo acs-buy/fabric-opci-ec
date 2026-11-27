@@ -235,8 +235,8 @@ qui nomme la cellule, son ancien texte et son nouveau.
 *Capture de l'installation réelle, sur l'arrêté semestriel d'OPCI-ESSAI. En bas, le message du
 recalcul : le nombre de cellules, celles à remplir, celles en attente, et les versions créées.*
 
-**Une écriture faite hors du calcul**, par un bouton de saisie de lots, un classeur réimporté ou une
-feuille de saisie, laisse une marque de retard sur le véhicule. L'écran la signale, et
+**Une écriture faite hors du calcul**, par un bouton de saisie de lots ou un classeur réimporté,
+laisse une marque de retard sur le véhicule. L'écran la signale, et
 l'enregistrement d'un document est refusé tant que l'annexe n'a pas été recalculée : « Document
 refusé : les cellules de l'annexe de « OPCI D'ESSAI » sont en retard sur une modification de la
 fiche d'une entité du 07/10/2026 à 23:44 ; recalculez, puis produisez de nouveau. »
@@ -390,13 +390,13 @@ ou le réviseur. Sur cet écran, un mandat en cours sur un dossier quelconque su
 
 ### Ce que le jeu de démonstration montre et ne montre pas
 
-L'écran lit le socle, le même pour toutes les entités : 44 référentiels, 2 728 lignes, 620
+L'écran lit le socle, le même pour toutes les entités : 44 référentiels, 2 727 lignes, 620
 questions, 18 cycles ou phases. Les seuils du véhicule ont des lignes pour OMEGA-OPCI (8 arrêtés)
 et pour OPCI-1 (31/12/2025), aucune pour les 14 filiales. Même méthode que pour l'écran
 Valorisation.
 
 **Vide :** la liste des classeurs du cabinet, tant que vous n'en avez pas rattaché ; l'emploi des
-118 contrôles, qui compte leurs relevés. Lancez `EXEC dbo.pr_relever_controles;` pour obtenir les
+117 contrôles, qui compte leurs relevés. Lancez `EXEC dbo.pr_relever_controles;` pour obtenir les
 premiers relevés de votre base. Les paramètres qui désignent l'infrastructure d'un cabinet ne sont
 pas chargés : seuls les 4 seuils du programme le sont.
 

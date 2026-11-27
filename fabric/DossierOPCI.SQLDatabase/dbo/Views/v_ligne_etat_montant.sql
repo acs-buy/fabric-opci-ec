@@ -1,6 +1,6 @@
 -- --- 2. v_ligne_etat_montant ---------------------------------------------------------------------
 -- Le montant de chaque ligne des etats, par vehicule et arrete de mission, en N et en N-1. Meme resultat
--- que la version de 239, ligne pour ligne (0 ecart dans les 2 sens sur les 672 lignes, 03/10/2026), ecrit en jointures
+-- que la version precedente, ligne pour ligne (0 ecart dans les 2 sens sur les 672 lignes, 03/10/2026), ecrit en jointures
 -- et agregats sur le detail materialise.
 -- « NULL des que l'une manque » sans agreger de NULL (COUNT(w.n) et SUM(w.n) levaient 8153
 -- avant les refus 50088 et 50613 de pr_valider_pour_client, par v_obligation_par_categorie) : pas de NULL, la somme ;

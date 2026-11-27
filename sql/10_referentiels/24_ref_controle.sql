@@ -1,4 +1,4 @@
--- ref_controle : 118 ligne(s) de referentiel.
+-- ref_controle : 117 ligne(s) de referentiel.
 -- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
 -- Produit depuis la base de reference, ne pas modifier a la main.
 
@@ -26,7 +26,6 @@ BEGIN
         (N'v_controle_classement_interet',NULL,N'controle classement interet',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'17',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_classement_r214_83',NULL,N'controle classement r214 83',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'109',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_cle_arrete',NULL,N'controle cle arrete',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'18',NULL,NULL,NULL,NULL,NULL),
-        (N'v_controle_cle_ecran',NULL,N'controle cle ecran',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'107',NULL,NULL,N'2026-11-26',N'installation (ecartee_par)',N'Vue retirée avec les écrans PowerTable, dont elle contrôlait les clés.'),
         (N'v_controle_cle_montant',NULL,N'controle cle montant',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'19',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_collision_512',NULL,N'controle collision 512',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'20',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_compte_deux_lignes',NULL,N'controle compte deux lignes',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'21',NULL,NULL,NULL,NULL,NULL),

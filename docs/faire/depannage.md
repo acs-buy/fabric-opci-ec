@@ -110,8 +110,8 @@ essai lancé dans une transaction jamais fermée. Attendez sa fin, ou fermez la 
 
 ## « Document refusé : les cellules de l'annexe de … sont en retard sur une modification … »
 
-Une écriture a changé une donnée que l'annexe lit, sans recalcul : un lot validé, un classeur
-réimporté, une feuille de saisie. Cliquez **Recalculer**, puis produisez de nouveau. Le message
+Une écriture a changé une donnée que l'annexe lit, sans recalcul : un lot validé ou un classeur
+réimporté. Cliquez **Recalculer**, puis produisez de nouveau. Le message
 nomme la donnée modifiée et l'heure de la modification.
 
 ## La publication d'une fonction échoue
