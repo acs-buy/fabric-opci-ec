@@ -1,9 +1,8 @@
 
--- pr_saisir_cellule_annexe : 8 refus
--- La saisie d'une cellule (contrat, 3.1, point 1, et 3.3) : verrou au debut, avant toutes les gardes ; lignes variables
+-- La saisie d'une cellule : verrou au debut, avant toutes les gardes ; lignes variables
 -- et lignes creees admises quand la ligne est dans la derniere version ; refus 50643 a 50647 pour l'ecriture d'une
 -- valeur ; calcul SAISIE dans la transaction ; la peremption de la saisie n'est gardee que pour une ligne d'etat.
-CREATE   PROCEDURE dbo.pr_saisir_cellule_annexe
+CREATE PROCEDURE dbo.pr_saisir_cellule_annexe
     @entite  VARCHAR (20),
     @arrete  VARCHAR (20),
     @article VARCHAR (10),
@@ -23,7 +22,7 @@ BEGIN
             @c_trouvee BIT = 0, @c_nature VARCHAR (8), @c_etat VARCHAR (12), @c_format VARCHAR (10), @c_formule NVARCHAR (MAX),
             @c_vb NVARCHAR (2000), @c_texte NVARCHAR (2000), @c_source NVARCHAR (MAX), @ligne_version BIT = 0, @ref_ligne BIT = 0;
     SET @valeur = NULLIF(LTRIM(RTRIM(@valeur)), N'');
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     SET @colonne = LTRIM(RTRIM(@colonne));
     SET @ecrit = CASE WHEN @valeur IS NOT NULL OR @montant IS NOT NULL THEN 1 ELSE 0 END;
     BEGIN TRY
@@ -93,7 +92,7 @@ BEGIN
         SET @aucune = 1;
     ELSE
     BEGIN
-        -- l'ecriture d'une valeur sur une cellule de l'annexe (le retrait est toujours admis, 3.3, point 7)
+        -- l'ecriture d'une valeur sur une cellule de l'annexe (le retrait est toujours admis)
         IF @ecrit = 1 AND @etat IS NULL
         BEGIN
             IF @c_trouvee = 0 AND @ligne_version = 1
@@ -162,7 +161,7 @@ BEGIN
         -- le calcul de la saisie, dans sa transaction : il perime les documents dont une cellule imprimee change
         EXEC dbo.pr_calculer_annexe @entite = @entite, @arrete = @arrete, @declencheur = 'SAISIE', @par = @par, @rendre = 0,
              @documents_perimes = @perimes_calc OUTPUT;
-        -- une saisie d'une ligne d'etat change une ligne que les versions ne portent pas : peremption gardee (2.3, point 4)
+        -- une saisie d'une ligne d'etat change une ligne que les versions ne portent pas : peremption gardee
         IF @etat IS NOT NULL
         BEGIN
             UPDATE dbo.document_produit

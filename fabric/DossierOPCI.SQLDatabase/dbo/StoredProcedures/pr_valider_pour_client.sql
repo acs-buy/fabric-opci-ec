@@ -1,11 +1,9 @@
--- --- 6. pr_valider_pour_client ---------------------------------------------------------------------
--- pr_valider_pour_client : 3 refus
--- les lecteurs qui testent qu'une VL est publiee ne comptent que la publication en vigueur
+-- pr_valider_pour_client. Un test de VL publiee ne compte que la publication en vigueur.
 
 -- ------------------------------------------------------------------------------------------------- validation
--- La validation pour le client (contrat, 2.4 et 3.1, point 5) : verrou, calcul VALIDATION, gardes, visa de cloture qui
+-- La validation pour le client : verrou, calcul VALIDATION, gardes, visa de cloture qui
 -- porte la derniere version. Un document COMPTES_ANNUELS ou ATTESTATION sans version de l'annexe ne compte pas comme
--- produit (2.2, point 7). Un document que le calcul perime fait refuser la validation (50613), calcul compris.
+-- produit. Un document que le calcul perime fait refuser la validation (50613), calcul compris.
 -- La liste des livrables perimes et leur plus petite version d'annexe en 2 lectures, la 2e sans
 -- les NULL, qui levaient 8153 avant le refus 50613 (sans valeur sentinelle). Memes valeurs : MIN
 -- ignorait les NULL, NULL si aucune version ; tout livrable est au referentiel (fk_document_livrable).
@@ -66,7 +64,7 @@ BEGIN
                      WHERE d.entite = @entite AND d.arrete = @arrete AND d.perime_le >= @debut
                        AND d.livrable IN ('COMPTES_ANNUELS', 'ATTESTATION') AND d.annexe_version IS NOT NULL);
         SET @derniere = (SELECT derniere_version FROM dbo.v_annexe_version WHERE entite = @entite AND arrete = @arrete);
-        SET @m = N'Validation refusée : l''annexe a changé depuis la production de ' + ISNULL(@libs, N'livrables') + N' (version '
+        SET @m = N'Validation refusée : l''annexe a changé depuis la production ' + CASE WHEN LEFT(ISNULL(@libs, N'livrables'), 1) COLLATE Latin1_General_100_CI_AI LIKE N'[aeiouy]' THEN N'd''' ELSE N'de ' END + ISNULL(@libs, N'livrables') + N' (version '
                + ISNULL(CAST(@vmin AS NVARCHAR (10)), N'?') + N' de l''annexe, dernière version ' + ISNULL(CAST(@derniere AS NVARCHAR (10)), N'?')
                + N') ; recalculez avec le bouton « Recalculer », puis produisez de nouveau ces livrables.';
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50613, @m, 1; END
@@ -101,7 +99,7 @@ BEGIN
                       OR v.produit_par IN (SELECT r.connexion FROM dbo.role_mission r WHERE r.personne = @par AND r.entite = @entite)))
         THROW 50617, N'Validation refusée : le décideur a produit les livrables validés ; nul ne valide son propre travail.', 1;
 
-    -- le visa de cloture porte la derniere version de l'annexe (contrat, 2.4, point 2)
+    -- le visa de cloture porte la derniere version de l'annexe
     SET @derniere = (SELECT derniere_version FROM dbo.v_annexe_version WHERE entite = @entite AND arrete = @arrete);
     INSERT INTO dbo.visa (nature, objet_ref, entite, arrete, cycle, decision, propose_par, decide_par, decide_le, annexe_version)
     VALUES ('CLOTURE', @ref, @entite, @arrete, NULL, 'VISE', @propose, @par, SYSUTCDATETIME(), @derniere);

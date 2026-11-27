@@ -106,7 +106,23 @@ def _texte_pilote(exc) -> str:
 def _message_sql(exc) -> str:
     s = _texte_pilote(exc)
     m = re.search(r"\[SQL Server\](.*?)(\s\(\d+\)\s\(SQL\w+\)|$)", s, re.S)
-    return (m.group(1) if m else s).strip()
+    return (m.group(1) if m else s).strip().split(SEPARATEUR_DETAIL, 1)[0].strip()
+
+
+# UN REFUS DE LA BASE PEUT JOINDRE UN DETAIL TECHNIQUE (code et texte d'un service appele, 50946) apres le separateur
+# fixe SEPARATEUR_DETAIL : _message_sql coupe avant lui, pour l'ecran ; le detail va au journal des refus seul.
+SEPARATEUR_DETAIL = "[[detail]]"
+
+
+def _detail_de_la_base(exc):
+    """Le texte du journal d'un refus qui joint un detail : le texte court, puis le detail ; None sans detail."""
+    s = _texte_pilote(exc)
+    m = re.search(r"\[SQL Server\](.*?)(\s\(\d+\)\s\(SQL\w+\)|$)", s, re.S)
+    t = (m.group(1) if m else s).strip()
+    if SEPARATEUR_DETAIL not in t:
+        return None
+    court, detail = (x.strip() for x in t.split(SEPARATEUR_DETAIL, 1))
+    return "%s Détail : %s" % (court, detail)
 
 
 # THROW n'admet que des numeros d'au moins 50000 (en-tete, refus de la base et erreur du moteur).
@@ -145,7 +161,7 @@ class _Action:
         self.base, self.qui = base, qui
         e = None if entite is None else str(entite).strip()
         self.entite = e[:20] if e else None
-        self.procedures, self.refus = [], None
+        self.procedures, self.refus, self.detail_refus = [], None, None
 
 
 def _action(base, ctx, entite) -> _Action:
@@ -219,7 +235,8 @@ def _rendre(g: _Action, nom: str, faire):
     try:
         r = faire()
     except fn.UserThrownError as e:
-        _poser(g, g.refus or _texte(e), "REFUS", (g.procedures[-1] if g.procedures else nom), journal=True)
+        _poser(g, g.refus or _texte(e), "REFUS", (g.procedures[-1] if g.procedures else nom), journal=True,
+               detail=g.detail_refus if g.refus else None)
         raise
     except Exception as e:
         # Erreur non prevue, du moteur SQL, du pilote ou de Python : le texte francais au bouton et a la zone de
@@ -266,7 +283,7 @@ def _executer_tout(base: fn.FabricSqlConnection, sql: str, params: tuple, g: _Ac
         if message is None:
             raise
         if g is not None:
-            g.refus = message
+            g.refus, g.detail_refus = message, _detail_de_la_base(e)
         raise fn.UserThrownError(message, {"sql": sql.split("(")[0].strip()})
     finally:
         try:

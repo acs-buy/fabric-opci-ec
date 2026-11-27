@@ -2,12 +2,6 @@
 table v_supervision_cycle
 	lineageTag: 7a26f8ae-9370-4891-9ccc-3e3eba9f44a1
 
-	/// Lignes entite, arrete, cycle.
-	measure 'Lignes de supervision' = COUNTROWS(v_supervision_cycle) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: c5f9925b-81ec-46ce-b21e-7f09bc1f6507
-
 	/// Objets en attente de visa.
 	measure 'En attente de visa' = SUM(v_supervision_cycle[a_viser]) + 0
 		formatString: #,0
@@ -25,18 +19,6 @@ table v_supervision_cycle
 		formatString: #,0
 		displayFolder: Parcours
 		lineageTag: e1ac899f-e8a3-4960-bf32-54eb907b3aac
-
-	/// Decisions prises.
-	measure 'Decisions prises' = SUM(v_supervision_cycle[decisions]) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: e591d83e-c9d0-4e8f-be6f-3375db84ba0e
-
-	/// Lignes de cycle, a ventiler par etat_cycle.
-	measure 'Cycles par etat' = COUNTROWS(v_supervision_cycle) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: d1de1131-a875-489d-a74b-e1c0748d6f4e
 
 	/// En attente de visa, entite et arrete affiches.
 	measure 'En attente du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([En attente de visa], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)

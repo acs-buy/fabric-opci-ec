@@ -1,7 +1,7 @@
--- --- 2. le libelle d'un travail, pour les textes affiches (50265, 50218) --------------------------------
--- le nom de la table qui reference l'arrete, en francais ; une table ajoutee plus tard sans libelle rend son
--- nom, tirets bas remplaces par des espaces (controle 4 : aucune table d'aujourd'hui sans libelle).
-CREATE   FUNCTION dbo.fn_libelle_travail (@table SYSNAME)
+-- --- le libelle d'un travail, pour les textes affiches (50265, 50218) --------------------------------
+-- le nom, en francais, de la table qui reference l'arrete ou l'entite ; une table ajoutee plus tard sans libelle rend son
+-- nom, tirets bas remplaces par des espaces.
+CREATE FUNCTION dbo.fn_libelle_travail (@table SYSNAME)
 RETURNS NVARCHAR (128)
 AS
 BEGIN

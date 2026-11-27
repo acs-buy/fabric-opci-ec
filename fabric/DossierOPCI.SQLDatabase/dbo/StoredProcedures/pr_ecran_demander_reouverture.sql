@@ -1,8 +1,7 @@
--- --- 2. pr_ecran_demander_reouverture --------------------------------------------------------------------
--- pr_ecran_demander_reouverture : 1 refus
--- ------------------------------------------------------------------------------------------------- 2.4 : les 3 procedures d'ecran
--- : 50985 lit toute demande en attente, quelle que soit sa nature ; 51247 borne le motif a 580 caracteres.
-CREATE   PROCEDURE dbo.pr_ecran_demander_reouverture @entite VARCHAR (20), @arrete VARCHAR (20), @motif NVARCHAR (800), @par NVARCHAR (400)
+-- --- pr_ecran_demander_reouverture --------------------------------------------------------------------
+-- pr_ecran_demander_reouverture : 7 refus (50981 a 50986, 51247)
+-- 50985 lit toute demande en attente, quelle que soit sa nature ; 51247 borne le motif a 580 caracteres.
+CREATE PROCEDURE dbo.pr_ecran_demander_reouverture @entite VARCHAR (20), @arrete VARCHAR (20), @motif NVARCHAR (800), @par NVARCHAR (400)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -22,7 +21,7 @@ BEGIN
     END;
     IF EXISTS (SELECT 1 FROM dbo.demande_reouverture WHERE entite = @entite AND arrete = @arrete AND etat = 'EN_ATTENTE')
         THROW 50985, N'Demande refusée : une demande attend déjà la décision du chef de mission pour cet arrêté.', 1;
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     IF @motif IS NULL
         THROW 50986, N'Demande refusée : elle exige un motif, qui dit quel lot tardif justifie de rouvrir l''arrêté.', 1;
     IF LEN(@motif) > 580

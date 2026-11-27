@@ -171,7 +171,7 @@ table v_programme_selection
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Au programme' = IF ( v_programme_selection[actif], "Oui", "—" )
+	column 'Au programme' = IF ( v_programme_selection[actif], "Oui", "Non" )
 		dataType: string
 		lineageTag: 7d7fd149-5828-471d-855b-6eb6525617f3
 		summarizeBy: none

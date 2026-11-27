@@ -1,7 +1,6 @@
 
--- pr_ecran_enregistrer_revision : 1 refus
--- ------------------------------------------------------------------ n° 4 : la revision d'une avance (213-4)
-CREATE   PROCEDURE dbo.pr_ecran_enregistrer_revision
+-- ------------------------------------------------------------------ la revision d'une avance (213-4)
+CREATE PROCEDURE dbo.pr_ecran_enregistrer_revision
     @vehicule       VARCHAR (20),
     @arrete         VARCHAR (20),
     @code_actif     VARCHAR (20),
@@ -12,7 +11,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
+    -- Un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : avant fn_e3_refus_commun : l'arrete vide d'un vehicule choisi passe avant 50702 ; le vehicule vide garde 50701.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -29,7 +28,7 @@ BEGIN
         THROW 50740, N'Choisissez une avance en compte courant à une filiale dans la grille des avances.', 1;
     IF @montant_revise IS NULL
         THROW 50741, N'Le montant révisé est obligatoire.', 1;
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     IF @motif IS NULL
         THROW 50742, N'Le motif de la révision est obligatoire.', 1;
     IF @montant_revise < 0 OR @montant_revise > @nominal

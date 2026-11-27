@@ -3,7 +3,7 @@ table ref_cycle
 
 	measure 'Cycle selectionne' = IF ( HASONEVALUE ( ref_cycle[code] ), SELECTEDVALUE ( ref_cycle[code] ) )
 
-	measure 'Titre des questions' = "Questions du cycle " & COALESCE ( SELECTEDVALUE ( ref_cycle[Cycle] ), "— choisir un cycle" )
+	measure 'Titre des questions' = VAR c = SELECTEDVALUE ( ref_cycle[Cycle] ) RETURN IF ( ISBLANK ( c ), "Questions du cycle", "Questions du cycle " & c )
 
 	measure 'Fond revCclEnregistrer' = IF ( ISBLANK ( [Cycle a conclure] ), "#D9DFE6", "#0F5C8C" )
 		lineageTag: 7afbcb18-7664-4dd0-a524-7a4d78787a22

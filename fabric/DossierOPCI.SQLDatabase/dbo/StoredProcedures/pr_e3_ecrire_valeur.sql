@@ -1,7 +1,7 @@
 
 -- L'ecriture de la valeur retenue, controles faits : une ligne par actif, entite detentrice et arrete ; une valeur
 -- renvoyee ou proposee est reprise et repasse a PROPOSE.
-CREATE   PROCEDURE dbo.pr_e3_ecrire_valeur
+CREATE PROCEDURE dbo.pr_e3_ecrire_valeur
     @arrete     VARCHAR (20),
     @code_actif VARCHAR (20),
     @valeur     DECIMAL (19,2),
@@ -17,7 +17,7 @@ BEGIN
             @src VARCHAR (20) = dbo.fn_e3_source_saisie(@source),
             @expertise INT = (SELECT TOP (1) e.id FROM dbo.expertise e
                               WHERE e.code_actif = @code_actif AND e.date_valeur <= TRY_CONVERT(DATE, @arrete) ORDER BY e.date_valeur DESC);
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     IF EXISTS (SELECT 1 FROM dbo.evaluation_actif WHERE code_actif = @code_actif AND entite = @detentrice AND arrete = @arrete)
     BEGIN
         UPDATE dbo.evaluation_actif

@@ -1,7 +1,6 @@
--- pr_ouvrir_questionnaire_acceptation : le corps d'origine, renomme
--- pr_ouvrir_questionnaire_acceptation : le corps d'origine, renomme
--- --- 3. ouvrir le questionnaire d'acceptation d'un client -------------------------------------
-CREATE   PROCEDURE dbo.pr_ouvrir_questionnaire_acceptation_corps
+-- pr_ouvrir_questionnaire_acceptation_corps : le corps de pr_ouvrir_questionnaire_acceptation ; ouvrir le
+-- questionnaire d'acceptation d'un client.
+CREATE PROCEDURE dbo.pr_ouvrir_questionnaire_acceptation_corps
     @entite   VARCHAR (20),
     @arrete   VARCHAR (20)   = NULL,   -- l'arrete vise ; par defaut la prochaine cloture, planifiee
     @par      NVARCHAR (400)
@@ -11,7 +10,7 @@ BEGIN
     SET XACT_ABORT ON;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND est_client = 1)
         THROW 50231, N'L''acceptation ne s''ouvre que sur un client du cabinet. Une filiale n''a pas d''acceptation propre.', 1;
-    -- 51301 (15/11/2026) : action 8. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- 51301 : juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
     -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
@@ -22,7 +21,7 @@ BEGIN
     IF @deja > 0
     BEGIN
         SELECT @cote AS cote, @deja AS questions,
-               N'Le questionnaire d''acceptation de ' + @entite + N' est déjà ouvert, ' + CAST(@deja AS NVARCHAR (10)) + N' questions.' AS message;
+               N'Le questionnaire d''acceptation ' + dbo.fn_de(@entite) + N' est déjà ouvert, ' + CAST(@deja AS NVARCHAR (10)) + N' questions.' AS message;
         RETURN;
     END;
 
@@ -41,19 +40,21 @@ BEGIN
     ELSE IF NOT EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND arrete = @arrete)
         THROW 50233, N'L''arrêté désigné n''est pas au référentiel de ce client. Planifiez-le d''abord.', 1;
 
-    -- la feuille, meme forme que ACC-OMEGA-OPCI sur le jeu
-    DECLARE @nom NVARCHAR (400) = N'questionnaire_acceptation_' + @entite + N'.xlsx';
+    -- la feuille
+    -- le classeur, au nom que lui donne fn_ecran_client.exporter_questionnaire (<cote>.xlsx), dans le dossier de
+    -- l'arrete vise au site du cabinet
+    DECLARE @nom NVARCHAR (400) = @cote + N'.xlsx';
     IF NOT EXISTS (SELECT 1 FROM dbo.feuille_travail WHERE cote = @cote)
         INSERT INTO dbo.feuille_travail
             (cote, cycle, phase, arrete, entite, modele_code, origine, nom_fichier, chemin_coffre,
              empreinte_sha256, preparateur, prepare_le)
         VALUES
             (@cote, NULL, 'ACCEPT', @arrete, @entite, NULL, 'HUMAINE', @nom,
-             N'/Coffre/' + @entite + N'/permanent/questionnaire_acceptation.xlsx',
+             dbo.fn_chemin_dossier_de_travail(@entite, @arrete, @nom),
              CONVERT(CHAR (64), HASHBYTES('SHA2_256', CONVERT(NVARCHAR (100), @cote)), 2),
              @par, SYSUTCDATETIME());
 
-    -- les questions de la phase, toutes, comme le jeu en porte 110 sur ACC-OMEGA-OPCI
+    -- les questions de la phase, toutes
     INSERT INTO dbo.feuille_question (cote, question_id)
     SELECT @cote, q.id FROM dbo.ref_question q
     WHERE q.phase = 'ACCEPT' AND q.statut <> 'ECARTEE'

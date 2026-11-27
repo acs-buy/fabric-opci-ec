@@ -1,4 +1,4 @@
--- ref_controle : 111 ligne(s) de referentiel.
+-- ref_controle : 118 ligne(s) de referentiel.
 -- Rejouable : la table ne se remplit que si elle est vide. Rien n'est efface.
 -- Produit depuis la base de reference, ne pas modifier a la main.
 
@@ -24,8 +24,9 @@ BEGIN
         (N'v_controle_bornes_curseur',NULL,N'controle bornes curseur',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'15',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_classe_rattachement',NULL,N'controle classe rattachement',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'16',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_classement_interet',NULL,N'controle classement interet',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'17',NULL,NULL,NULL,NULL,NULL),
+        (N'v_controle_classement_r214_83',NULL,N'controle classement r214 83',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'109',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_cle_arrete',NULL,N'controle cle arrete',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'18',NULL,NULL,NULL,NULL,NULL),
-        (N'v_controle_cle_ecran',NULL,N'controle cle ecran',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'107',NULL,NULL,NULL,NULL,NULL),
+        (N'v_controle_cle_ecran',NULL,N'controle cle ecran',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'107',NULL,NULL,N'2026-11-26',N'installation (ecartee_par)',N'Vue retirée avec les écrans PowerTable, dont elle contrôlait les clés.'),
         (N'v_controle_cle_montant',NULL,N'controle cle montant',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'19',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_collision_512',NULL,N'controle collision 512',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'20',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_compte_deux_lignes',NULL,N'controle compte deux lignes',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'21',NULL,NULL,NULL,NULL,NULL),
@@ -55,6 +56,8 @@ BEGIN
         (N'v_controle_filiale_plan_opci',NULL,N'controle filiale plan opci',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'39',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_filiale_reevaluee',NULL,N'controle filiale reevaluee',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'95',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_flux_vs_ecritures',NULL,N'Flux intragroupe déclarés rapprochés des écritures du débiteur',N'RAPPROCHEMENT',N'ecart_debiteur <> 0',N'Rapprochement : un flux déclaré doit se lire dans les écritures de l''entité qui le doit, au compte du modèle ; l''anomalie est l''écart non nul.',N'40',NULL,NULL,NULL,NULL,NULL),
+        (N'v_controle_formule_annexe',NULL,N'controle formule annexe',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'110',NULL,NULL,NULL,NULL,NULL),
+        (N'v_controle_formule_ligne_etat',NULL,N'controle formule ligne etat',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'111',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_geste_sans_ecran',NULL,N'controle action sans ecran',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'102',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_immeuble_non_qualifie',NULL,N'controle immeuble non qualifie',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'41',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_import_concurrent',NULL,N'controle import concurrent',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'42',NULL,NULL,NULL,NULL,NULL),
@@ -63,6 +66,7 @@ BEGIN
         (N'v_controle_inventaire_bilan',N'C89',N'Inventaire 336-2 rapproché du bilan : prix de revient et valeur actuelle',N'RAPPROCHEMENT',N'ecart <> 0',N'Règlement ANC 2021-09, art. 336-2 et modèle 321-2',N'89',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_inventaire_filiales',N'C67',N'Inventaire des filiales : la différence d''estimation rapprochée de sa formule',N'RAPPROCHEMENT',N'ecart_a_la_formule <> 0',N'Règlement ANC 2021-09, articles 336-2 et 212-4',N'45',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_inventaire_incomplet',NULL,N'controle inventaire incomplet',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'46',NULL,NULL,NULL,NULL,NULL),
+        (N'v_controle_libelle_colonne_double',NULL,N'controle libelle colonne double',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'112',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_ligne_annexe_sans_source',NULL,N'controle ligne annexe sans source',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'47',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_lot_perime_a_trancher',N'C36',N'Lots périmés par un événement postérieur, en attente d''arbitrage',N'MESURE',NULL,N'MESURE d''une file de travail : un lot périmé attend une décision, il ne signale pas un défaut. La péremption est le mécanisme voulu.',N'48',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_lot_valide_sans_visa',NULL,N'controle lot valide sans visa',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'49',NULL,NULL,NULL,NULL,NULL),
@@ -95,10 +99,12 @@ BEGIN
         (N'v_controle_reference_abrogee',NULL,N'controle reference abrogee',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'73',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_reference_derivee',NULL,N'controle reference derivee',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'74',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_referentiel_absent',NULL,N'controle referentiel absent',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'75',NULL,NULL,NULL,NULL,NULL),
+        (N'v_controle_referentiel_sans_classement',NULL,N'controle referentiel sans classement',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'113',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_referentiel_sans_garde',NULL,N'controle referentiel sans garde',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'76',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_rejet_ligne_absente',NULL,N'controle rejet ligne absente',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'77',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_rejet_sans_trace',NULL,N'controle rejet sans trace',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'78',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_releve_inacheve',NULL,N'controle releve inacheve',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'79',NULL,NULL,NULL,NULL,NULL),
+        (N'v_controle_renvoi_sans_demande',NULL,N'controle renvoi sans demande',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'114',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_reponse_forme_discordante',NULL,N'controle reponse forme discordante',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'80',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_revision_sans_ecriture',NULL,N'controle revision sans ecriture',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'81',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_role_chevauchant',NULL,N'controle role chevauchant',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'82',NULL,NULL,NULL,NULL,NULL),
@@ -110,6 +116,7 @@ BEGIN
         (N'v_controle_societe_eligible_sans_immeuble',N'C75',N'Sociétés éligibles ne détenant aucun immeuble',N'MESURE',NULL,N'MESURE posant une question au réviseur sans la trancher : la condition 2 de l''article R. 214-83 est satisfaite par vacuité, et il reste à vérifier que la société relève des 2° et 3° du I de L. 214-36.',N'84',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_solde_mal_ventile',NULL,N'controle solde mal ventile',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'100',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_symetrie_intragroupe',NULL,N'controle symetrie intragroupe',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'85',NULL,NULL,NULL,NULL,NULL),
+        (N'v_controle_valeur_sans_libelle',NULL,N'controle valeur sans libelle',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'115',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_valeur_sans_source',NULL,N'controle valeur sans source',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'86',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_visa_de_production',NULL,N'controle visa de production',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'105',NULL,NULL,NULL,NULL,NULL),
         (N'v_controle_visa_hors_nature',NULL,N'controle visa hors nature',N'ZERO_ATTENDU',NULL,N'inscrit automatiquement, à qualifier par l''associé',N'87',NULL,NULL,NULL,NULL,NULL),

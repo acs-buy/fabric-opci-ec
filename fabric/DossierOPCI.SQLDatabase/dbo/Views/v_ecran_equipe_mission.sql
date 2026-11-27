@@ -1,21 +1,13 @@
--- 223. Les libelles d'en-tete viennent de la VUE, et une mesure ne lit jamais une colonne d'affichage.
---
--- DEFAUT MESURE LE 21/09/2026 : renommer une colonne au modele casse les mesures qui la
--- lisent. Power BI Desktop met a jour les references d'une mesure quand on renomme ; par l'API et le TMDL
--- il ne le fait pas, et la mesure tombe :
---   « Column 'etat' in table 'v_ecran_equipe_mission' cannot be found or may not be used in this expression. »
--- Et nativeQueryRef ne rattrape rien : il est ignore pour une COLONNE d'un tableEx comme pour une MESURE.
---
--- LA REGLE QUI EN SORT, et elle vaut pour toutes les vues d'ecran :
---   1. la VUE porte le libelle que le reviseur lit, entre crochets et avec ses accents : [Rôle], [État] ;
---   2. une MESURE ne lit QUE des colonnes techniques, en minuscules et sans accent : role_code, a_designer.
--- Ainsi renommer un libelle ne casse jamais une mesure, et le modele n'a aucun renommage a porter.
---
--- Cette vue remplace sa 1re version. Les mesures [Titre equipe], [Alerte equipe] et [Fond alerte equipe]
--- sont reecrites en consequence : elles lisent a_designer, cumul_a_signaler et
--- sans_connexion, 3 colonnes techniques qui ne bougeront plus. Rejouable.
+-- Les libelles d'en-tete viennent de la vue, et une mesure ne lit jamais une colonne d'affichage : renommer une
+-- colonne au modele par l'API ou le TMDL ne met pas a jour les mesures qui la lisent, a la difference de Power BI
+-- Desktop, et la mesure tombe ; nativeQueryRef est ignore pour une colonne d'un tableEx comme pour une mesure.
+-- La regle, pour toutes les vues d'ecran :
+--   1. la vue porte le libelle que le reviseur lit, entre crochets et avec ses accents : [Rôle], [État] ;
+--   2. une mesure ne lit que des colonnes techniques, en minuscules et sans accent : role_code, a_designer.
+-- Avec cette regle, renommer un libelle ne touche aucune mesure. [Titre equipe] lit a_designer ; [Alerte equipe]
+-- lit cumul_a_signaler, a_designer et sans_connexion ; [Fond alerte equipe] lit [Alerte equipe].
 
-CREATE   VIEW dbo.v_ecran_equipe_mission AS
+CREATE VIEW dbo.v_ecran_equipe_mission AS
 WITH roles_attendus AS (
     SELECT r.code, r.ordre
       FROM dbo.ref_role r

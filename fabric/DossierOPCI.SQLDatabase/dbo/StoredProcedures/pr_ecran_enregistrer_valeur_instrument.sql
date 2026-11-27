@@ -1,6 +1,6 @@
 
--- ------------------------------------------------------------------ n° 6 : la valeur d'un instrument de classe 3 (113-2)
-CREATE   PROCEDURE dbo.pr_ecran_enregistrer_valeur_instrument
+-- ------------------------------------------------------------------ la valeur d'un instrument de classe 3 (113-2)
+CREATE PROCEDURE dbo.pr_ecran_enregistrer_valeur_instrument
     @vehicule        VARCHAR (20),
     @arrete          VARCHAR (20),
     @code_actif      VARCHAR (20),
@@ -55,7 +55,7 @@ BEGIN
         THROW;
     END CATCH;
     SELECT @vehicule AS vehicule,
-           N'Valeur de ' + @code_actif + N' au ' + dbo.fn_date_ecran(@arrete) + N' enregistrée : ' + dbo.fn_e3_montant(@valeur_actuelle)
+           N'Valeur ' + dbo.fn_de(@code_actif) + N' au ' + dbo.fn_date_ecran(@arrete) + N' enregistrée : ' + dbo.fn_e3_montant(@valeur_actuelle)
            + N', valeur comptable ' + dbo.fn_e3_montant(@comptable) + N'.' AS message;
 END;
 

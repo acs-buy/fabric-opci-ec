@@ -38,18 +38,6 @@ table v_rationalisation_opci
 		displayFolder: Parcours
 		lineageTag: b2fe23ff-15b7-43f8-8bcc-55d54621e8c1
 
-	/// Calcule moins rationalise, attendu 0.
-	measure 'Ecart de rationalisation' = SUM(v_rationalisation_opci[actif_net_calcule]) - SUM(v_rationalisation_opci[actif_net_rationalise])
-		formatString: #,0.00
-		displayFolder: Parcours
-		lineageTag: 317f0224-546d-4452-965c-5047be8a3c03
-
-	/// Ecart de rationalisation, entite et arrete affiches.
-	measure 'Ecart de rationalisation du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Ecart de rationalisation], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0.00
-		displayFolder: Le dossier
-		lineageTag: 9511cd3e-4e29-4da8-bbb6-e2396e9ee2b7
-
 	/// ANR d ouverture, entite et arrete affiches. Ajoutee le 12/09/2026 pour le panneau du deplacement de l'actif net.
 	measure 'ANR d ouverture du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([ANR d ouverture], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
 		formatString: #,0

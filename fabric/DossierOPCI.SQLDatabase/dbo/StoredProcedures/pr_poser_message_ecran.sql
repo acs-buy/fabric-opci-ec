@@ -1,5 +1,5 @@
 
-CREATE   PROCEDURE dbo.pr_poser_message_ecran
+CREATE PROCEDURE dbo.pr_poser_message_ecran
     @pour           NVARCHAR (400),
     @message        NVARCHAR (2000),
     @genre          VARCHAR (10)   = 'SUCCES',
@@ -11,7 +11,7 @@ BEGIN
     SET NOCOUNT ON;
     -- elle ne refuse JAMAIS : un message qui echoue ne doit pas masquer le geste qu'il rapporte
     IF @pour IS NULL OR LTRIM(RTRIM(@pour)) = N'' RETURN;
-    IF @message IS NULL OR LTRIM(RTRIM(@message)) = N'' RETURN;
+    IF dbo.fn_texte_vide(@message) = 1 RETURN;
     SET @entite = ISNULL(NULLIF(LTRIM(RTRIM(@entite)), ''), '-');
     IF @genre NOT IN ('SUCCES', 'REFUS') SET @genre = 'SUCCES';
 

@@ -2,18 +2,6 @@
 table v_obligation_minimale
 	lineageTag: 748e898e-ff3d-4a61-af4a-b8905621d6b6
 
-	/// Obligation minimale de distribution, L. 214-69.
-	measure 'Obligation minimale' = SUM(v_obligation_minimale[obligation_minimale])
-		formatString: #,0.00
-		displayFolder: Parcours
-		lineageTag: 32fb1190-64da-4f35-bdc2-837bd355a708
-
-	/// Obligation minimale, entite et arrete affiches.
-	measure 'Obligation minimale du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Obligation minimale], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0.00
-		displayFolder: Le dossier
-		lineageTag: 21b9ff4f-415f-42eb-82b5-e482983907b0
-
 	/// Carte 4.2, Obligation minimale.
 	measure 'R42 Obligation minimale' = VAR lignes = COUNTROWS ( v_obligation_minimale ) RETURN IF ( lignes = 1, SUM ( v_obligation_minimale[obligation_minimale] ) )
 		formatString: #,0

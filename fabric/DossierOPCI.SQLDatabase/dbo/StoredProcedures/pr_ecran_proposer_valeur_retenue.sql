@@ -1,5 +1,5 @@
 
-CREATE   PROCEDURE dbo.pr_ecran_proposer_valeur_retenue
+CREATE PROCEDURE dbo.pr_ecran_proposer_valeur_retenue
     @vehicule   VARCHAR (20),
     @arrete     VARCHAR (20),
     @code_actif VARCHAR (20),
@@ -36,7 +36,7 @@ BEGIN
         THROW;
     END CATCH;
     SELECT @vehicule AS vehicule,
-           N'Valeur retenue de ' + @code_actif + N' ' + CASE @resultat WHEN 'REPRISE' THEN N'reprise' ELSE N'proposée' END
+           N'Valeur retenue ' + dbo.fn_de(@code_actif) + N' ' + CASE @resultat WHEN 'REPRISE' THEN N'reprise' ELSE N'proposée' END
            + N' : ' + dbo.fn_e3_montant(@valeur) + N', source ' + (SELECT libelle FROM dbo.ref_source_valeur WHERE source = dbo.fn_e3_source_saisie(@source))
            + N'. Elle attend le visa du chef de mission.' AS message;
 END;

@@ -62,7 +62,7 @@ BEGIN
         RETURN;    -- sans cle primaire, la jointure serait devinee
 
     -- L'auteur s'ecrit a la longueur de modifie_par,
-    -- nvarchar(400) quand cette procedure cree la colonne, nvarchar(200) sur ref_aide et ref_colonne_libelle ;
+    -- nvarchar(400) quand cette procedure cree la colonne, sinon la longueur de la colonne existante ;
     -- le CAST coupe une identite plus longue que la colonne, que la mise a jour refuserait sinon (troncature).
     DECLARE @lg NVARCHAR (10) =
         (SELECT CASE WHEN c.max_length = -1 THEN N'MAX'

@@ -24,7 +24,7 @@ table v_revision_indicateurs
 
 	measure 'Reponse NA' = "NA"
 
-	measure 'Type de programme' = VAR c = SUM ( v_revision_indicateurs[cycles] ) VAR q = SUM ( v_revision_indicateurs[questions] ) RETURN IF ( q > 0, FORMAT ( c, "0" ) & " cycles, " & FORMAT ( q, "0" ) & " questions" )
+	measure 'Type de programme' = VAR c = SUM ( v_revision_indicateurs[cycles] ) VAR q = SUM ( v_revision_indicateurs[questions] ) RETURN IF ( q > 0, IF ( c + 0 = 0, "aucun cycle", FORMAT ( c, "0" ) & IF ( c > 1, " cycles", " cycle" ) ) & ", " & FORMAT ( q, "0" ) & IF ( q > 1, " questions", " question" ) )
 
 	measure 'OD liees ou libres' = "liées ou libres"
 
@@ -40,7 +40,7 @@ table v_revision_indicateurs
 		displayFolder: Ecran 2 etape 6
 		lineageTag: 601a1679-26a1-4349-bd07-ddd5e0315e7d
 
-	measure 'Carte revue sous-titre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR cv = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), v_revision_indicateurs[cycles_vises] ) + 0 VAR cy = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), v_revision_indicateurs[cycles] ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), FORMAT ( cv, "0" ) & IF ( cv > 1, " cycles visés", " cycle visé" ) & " sur " & FORMAT ( cy, "0" ) )
+	measure 'Carte revue sous-titre' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR cv = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), v_revision_indicateurs[cycles_vises] ) + 0 VAR cy = MAXX ( FILTER ( ALL ( v_revision_indicateurs ), v_revision_indicateurs[entite] = e && v_revision_indicateurs[arrete] = a ), v_revision_indicateurs[cycles] ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( cv = 0, "aucun cycle visé", FORMAT ( cv, "0" ) & IF ( cv > 1, " cycles visés", " cycle visé" ) ) & " sur " & FORMAT ( cy, "0" ) )
 		displayFolder: Ecran 2 etape 6
 		lineageTag: befe7d32-6bc7-4993-b29f-9c4903105bbe
 

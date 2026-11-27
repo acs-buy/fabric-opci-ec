@@ -1,6 +1,6 @@
 
--- ------------------------------------------------------------------ n° 2 : conclure une limite
-CREATE   PROCEDURE dbo.pr_ecran_conclure_ratio
+-- ------------------------------------------------------------------ conclure une limite
+CREATE PROCEDURE dbo.pr_ecran_conclure_ratio
     @entite     VARCHAR (20),
     @arrete     VARCHAR (20),
     @code       NVARCHAR (120),
@@ -24,7 +24,7 @@ BEGIN
         SET @m = N'La limite « ' + REPLACE(@code, N'%', N'%%') + N' » n''est pas au référentiel des limites.';
         THROW 50801, @m, 1;
     END;
-    SET @conclusion = NULLIF(LTRIM(RTRIM(@conclusion)), N'');
+    SET @conclusion = CASE WHEN dbo.fn_texte_vide(@conclusion) = 1 THEN NULL ELSE LTRIM(RTRIM(@conclusion)) END;
     IF @conclusion IS NULL
         THROW 50802, N'La conclusion est obligatoire : saisissez-la avant de conclure la limite.', 1;
     IF dbo.fn_valide_pour_client(@entite, @arrete) = 1

@@ -1,7 +1,7 @@
 
 -- Les questions actives du programme deviennent des lignes a repondre : une feuille par cycle,
 -- cote Q-<cycle>-P<id>, et une ligne de feuille_question par question active.
-CREATE   PROCEDURE dbo.pr_instancier_programme
+CREATE PROCEDURE dbo.pr_instancier_programme
     @programme_id INT,
     @par          NVARCHAR (400)
 AS
@@ -14,7 +14,7 @@ BEGIN
                                      empreinte_sha256, preparateur, prepare_le)
     SELECT 'Q-' + c.code + '-P' + CAST(@programme_id AS VARCHAR (10)), c.code, NULL, @arrete, @entite, NULL, 'HUMAINE',
            N'questions_' + c.code + N'_' + @entite + N'_' + @arrete + N'.xlsx',
-           N'/Coffre/' + @entite + N'/' + @arrete + N'/questions/' + c.code + N'.xlsx',
+           dbo.fn_chemin_dossier_de_travail(@entite, @arrete, N'questions_' + c.code + N'_' + @entite + N'_' + @arrete + N'.xlsx'),
            CONVERT(CHAR (64), HASHBYTES('SHA2_256', CONVERT(NVARCHAR (100), 'Q-' + c.code + '-P' + CAST(@programme_id AS VARCHAR (10)))), 2),
            @par, SYSUTCDATETIME()
     FROM dbo.ref_cycle c

@@ -14,8 +14,8 @@ table revision_compte_courant
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 54cdd9ef-2d13-426e-9ea1-669ba0e1017e
 
-	/// « n révisions » ; « aucune »
-	measure 'Revisions de l arrete' = VAR n = COUNTROWS ( revision_compte_courant ) + 0 RETURN IF ( n > 0, FORMAT ( n, "0" ) & " révisions", "aucune" )
+	/// « n révisions », « 1 révision » ; « aucune »
+	measure 'Revisions de l arrete' = VAR n = COUNTROWS ( revision_compte_courant ) + 0 RETURN IF ( n > 0, FORMAT ( n, "0" ) & IF ( n > 1, " révisions", " révision" ), "aucune" )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 86c6f82c-8ecf-433f-894e-c97e16aa67fc
 

@@ -23,14 +23,14 @@ CREATE TABLE [dbo].[demande_reevaluation] (
 
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX [uq_demande_en_attente]
-    ON [dbo].[demande_reevaluation]([entite] ASC, [arrete] ASC) WHERE ([etat]='EN_ATTENTE');
+CREATE NONCLUSTERED INDEX [ix_demande_arrete]
+    ON [dbo].[demande_reevaluation]([entite] ASC, [arrete] ASC, [etat] ASC);
 
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_demande_arrete]
-    ON [dbo].[demande_reevaluation]([entite] ASC, [arrete] ASC, [etat] ASC);
+CREATE UNIQUE NONCLUSTERED INDEX [uq_demande_en_attente]
+    ON [dbo].[demande_reevaluation]([entite] ASC, [arrete] ASC) WHERE ([etat]='EN_ATTENTE');
 
 
 GO

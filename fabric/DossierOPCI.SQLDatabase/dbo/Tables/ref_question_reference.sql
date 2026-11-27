@@ -14,6 +14,26 @@ CREATE TABLE [dbo].[ref_question_reference] (
 
 GO
 
+CREATE   TRIGGER dbo.[tr_ref_question_reference_horodatage]
+ON dbo.[ref_question_reference]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    -- Objet n° 16 de l'ecran 5 : l'auteur est celui que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
+    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_question_reference] t
+    JOIN inserted i ON t.[question_reference] = i.[question_reference] AND t.[reference_id] = i.[reference_id];
+END;
+
+GO
+
 CREATE   TRIGGER dbo.[tr_ref_question_reference_garde]
 ON dbo.[ref_question_reference]
 AFTER INSERT, UPDATE, DELETE
@@ -36,26 +56,6 @@ BEGIN
     VALUES ('tr_ref_question_reference_garde', @m, LEFT(CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), 200), SYSUTCDATETIME());
     SET @m = REPLACE(@m, N'%', N'%%');
     THROW 50074, @m, 1;
-END;
-
-GO
-
-CREATE   TRIGGER dbo.[tr_ref_question_reference_horodatage]
-ON dbo.[ref_question_reference]
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    -- Objet n° 16 de l'ecran 5 : l'auteur est celui que la procedure d'ecran pose dans le
-    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
-    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_question_reference] t
-    JOIN inserted i ON t.[question_reference] = i.[question_reference] AND t.[reference_id] = i.[reference_id];
 END;
 
 GO

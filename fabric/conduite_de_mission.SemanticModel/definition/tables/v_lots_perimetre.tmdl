@@ -6,7 +6,7 @@ table v_lots_perimetre
 		displayFolder: Ecran 2 etape 5
 		lineageTag: 799a6e90-694d-495c-bd95-35ce380cf0c4
 
-	measure 'Sous-titre des lots en attente' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_lots_perimetre ), v_lots_perimetre[vehicule] = e && v_lots_perimetre[arrete] = a ) VAR p = COUNTROWS ( FILTER ( t, v_lots_perimetre[Statut du lot] = "PROPOSE" ) ) + 0 VAR r = COUNTROWS ( FILTER ( t, v_lots_perimetre[Statut du lot] = "REJETE" ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), FORMAT ( p, "0" ) & IF ( p > 1, " lots proposés", " lot proposé" ) & ", véhicule et filiales, au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) & IF ( r > 0, ", " & FORMAT ( r, "0" ) & IF ( r > 1, " renvoyés", " renvoyé" ), "" ) )
+	measure 'Sous-titre des lots en attente' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_lots_perimetre ), v_lots_perimetre[vehicule] = e && v_lots_perimetre[arrete] = a ) VAR p = COUNTROWS ( FILTER ( t, v_lots_perimetre[Statut du lot] = "PROPOSE" ) ) + 0 VAR r = COUNTROWS ( FILTER ( t, v_lots_perimetre[Statut du lot] = "REJETE" ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( p = 0, "aucun lot proposé", FORMAT ( p, "0" ) & IF ( p > 1, " lots proposés", " lot proposé" ) ) & ", véhicule et filiales, au " & MID ( a, 9, 2 ) & "/" & MID ( a, 6, 2 ) & "/" & LEFT ( a, 4 ) & IF ( r > 0, ", " & FORMAT ( r, "0" ) & IF ( r > 1, " renvoyés", " renvoyé" ), "" ) )
 		displayFolder: Ecran 2 etape 5
 		lineageTag: cf8784d8-9adf-4ee6-84e0-1dfd3773c4b4
 
@@ -79,7 +79,7 @@ table v_lots_perimetre
 		lineageTag: 56ebbc3d-09b3-4e27-ad84-fd20295b3838
 
 	/// « véhicule et filiales : n périmés, n visés » (carte 4), comptés sur tous les lots DERIVABLE du véhicule et de ses filiales à l’arrêté : la grille des lots ne filtre pas la carte (interaction coupée, section « Interactions »), sans quoi {ex_lot} choisi rendrait « {ex_sous_ligne} »
-	measure 'Sous-ligne lots de valorisation' = VAR p = CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Cycle] IN { "VALO", "PART" }, v_lots_perimetre[perime] = TRUE () ) + 0 + 0 VAR v = CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Cycle] IN { "VALO", "PART" }, v_lots_perimetre[Statut du lot] IN { "VALIDE", "EXPORTE", "PUBLIE" } ) + 0 + 0 RETURN "véhicule et filiales : " & FORMAT ( p, "0" ) & IF ( p > 1, " périmés, ", " périmé, " ) & FORMAT ( v, "0" ) & IF ( v > 1, " visés", " visé" )
+	measure 'Sous-ligne lots de valorisation' = VAR p = CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Cycle] IN { "VALO", "PART" }, v_lots_perimetre[perime] = TRUE () ) + 0 + 0 VAR v = CALCULATE ( COUNTROWS ( v_lots_perimetre ), v_lots_perimetre[Cycle] IN { "VALO", "PART" }, v_lots_perimetre[Statut du lot] IN { "VALIDE", "EXPORTE", "PUBLIE" } ) + 0 + 0 RETURN "véhicule et filiales : " & IF ( p = 0, "aucun périmé, ", FORMAT ( p, "0" ) & IF ( p > 1, " périmés, ", " périmé, " ) ) & IF ( v = 0, "aucun visé", FORMAT ( v, "0" ) & IF ( v > 1, " visés", " visé" ) )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 7a34fcde-b100-4135-beae-42ef2e18486f
 

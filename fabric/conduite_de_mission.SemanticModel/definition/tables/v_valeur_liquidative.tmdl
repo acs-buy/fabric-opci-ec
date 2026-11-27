@@ -1,12 +1,6 @@
 table v_valeur_liquidative
 	lineageTag: 120f4577-f9dd-491d-8e8e-7872ddf7302d
 
-	/// Valeur liquidative de l'arrêté.
-	measure 'Valeur liquidative' = SUM(v_valeur_liquidative[valeur_liquidative])
-		formatString: #,0.00
-		displayFolder: Valeur liquidative
-		lineageTag: 256a6270-35dd-46ef-af6a-e2fdc4073870
-
 	/// Valeur liquidative de l'arrêté précédent.
 	measure 'Valeur liquidative precedente' = SUM(v_valeur_liquidative[valeur_liquidative_precedente])
 		formatString: #,0.00
@@ -37,29 +31,11 @@ table v_valeur_liquidative
 		displayFolder: Valeur liquidative
 		lineageTag: fcdd64f7-e7c9-43a3-901c-316795a33fbf
 
-	/// Valeur liquidative de l'entite et de l'arrete affiches.
-	measure 'VL du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Valeur liquidative], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0.00
-		displayFolder: Le dossier
-		lineageTag: 6c797658-8b53-4025-b36f-73ebe95eb220
-
 	/// Variation de la valeur liquidative de l'entite et de l'arrete affiches.
 	measure 'Variation de VL du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Variation de valeur liquidative], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
 		formatString: 0.00 %
 		displayFolder: Le dossier
 		lineageTag: 54e63bf6-b781-4031-9c26-8e2f220d65d5
-
-	/// Valeur liquidative de l'entite affichee, par arrete.
-	measure 'VL de l entite' = VAR e = [Entite courante] RETURN IF(HASONEVALUE(v_valeur_liquidative[arrete]), CALCULATE([Valeur liquidative], ref_entite[Entité] = e))
-		formatString: #,0.00
-		displayFolder: Le dossier
-		lineageTag: f2c0e85d-3cef-482f-803a-da3120353050
-
-	/// Variation de la valeur liquidative de l'entite affichee, par arrete.
-	measure 'Variation de VL de l entite' = VAR e = [Entite courante] RETURN IF(HASONEVALUE(v_valeur_liquidative[arrete]), CALCULATE([Variation de valeur liquidative], ref_entite[Entité] = e))
-		formatString: 0.00 %
-		displayFolder: Le dossier
-		lineageTag: 002d39fb-90ff-401a-aeb3-227e8de99310
 
 	/// Carte 4.1, Valeur liquidative.
 	measure 'R41 Valeur liquidative' = VAR lignes = COUNTROWS ( v_valeur_liquidative ) RETURN IF ( lignes = 1, SUM ( v_valeur_liquidative[valeur_liquidative] ) )
@@ -145,7 +121,7 @@ table v_valeur_liquidative
 		lineageTag: 231b566e-8aab-4b99-a793-9676bb1e01dc
 
 	/// « n arrêtés calculés · n publiés »
-	measure 'Sous-titre grille des VL' = VAR e = [Client selectionne] VAR nc = COUNTROWS ( FILTER ( ALL ( v_valeur_liquidative ), v_valeur_liquidative[entite] = e && NOT ISBLANK ( v_valeur_liquidative[valeur_liquidative] ) ) ) + 0 VAR np = COUNTROWS ( DISTINCT ( SELECTCOLUMNS ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && ISBLANK ( publication_vl[perimee_le] ) ), "a", publication_vl[arrete] ) ) ) + 0 RETURN FORMAT ( nc, "0" ) & IF ( nc > 1, " arrêtés calculés", " arrêté calculé" ) & " · " & FORMAT ( np, "0" ) & IF ( np > 1, " publiés", " publié" )
+	measure 'Sous-titre grille des VL' = VAR e = [Client selectionne] VAR nc = COUNTROWS ( FILTER ( ALL ( v_valeur_liquidative ), v_valeur_liquidative[entite] = e && NOT ISBLANK ( v_valeur_liquidative[valeur_liquidative] ) ) ) + 0 VAR np = COUNTROWS ( DISTINCT ( SELECTCOLUMNS ( FILTER ( ALL ( publication_vl ), publication_vl[entite] = e && ISBLANK ( publication_vl[perimee_le] ) ), "a", publication_vl[arrete] ) ) ) + 0 RETURN IF ( nc = 0, "aucun arrêté calculé", FORMAT ( nc, "0" ) & IF ( nc > 1, " arrêtés calculés", " arrêté calculé" ) ) & " · " & IF ( np = 0, "aucun publié", FORMAT ( np, "0" ) & IF ( np > 1, " publiés", " publié" ) )
 		displayFolder: Ecran 4 Arrete
 		lineageTag: c33270fe-00eb-4848-add9-8bf71777dd20
 

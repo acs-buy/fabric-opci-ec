@@ -24,7 +24,7 @@ table v_od_revision
 		displayFolder: Ecran 2 etape 4
 		lineageTag: 8e59ee33-c4a5-47a9-9d13-0d7c5242e32a
 
-	measure 'Compte des OD libres' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_od_revision ), v_od_revision[entite] = e && v_od_revision[arrete] = a && ISBLANK ( v_od_revision[reference] ) && LEFT ( v_od_revision[cote], 4 ) = "ODL-" ) VAR n = COUNTROWS ( t ) + 0 VAR b = COUNTROWS ( FILTER ( t, v_od_revision[État] = "BROUILLON" ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), FORMAT ( n, "0" ) & IF ( n > 1, " lignes", " ligne" ) & " : " & FORMAT ( b, "0" ) & " au brouillon, " & FORMAT ( n - b, "0" ) & " en lot" )
+	measure 'Compte des OD libres' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_od_revision ), v_od_revision[entite] = e && v_od_revision[arrete] = a && ISBLANK ( v_od_revision[reference] ) && LEFT ( v_od_revision[cote], 4 ) = "ODL-" ) VAR n = COUNTROWS ( t ) + 0 VAR b = COUNTROWS ( FILTER ( t, v_od_revision[État] = "BROUILLON" ) ) + 0 RETURN IF ( ISBLANK ( e ) || ISBLANK ( a ), BLANK (), IF ( n = 0, "aucune ligne", FORMAT ( n, "0" ) & IF ( n > 1, " lignes", " ligne" ) & " : " & FORMAT ( b, "0" ) & " au brouillon, " & FORMAT ( n - b, "0" ) & " en lot" ) )
 		displayFolder: Ecran 2 etape 4
 		lineageTag: 9536e49d-0f07-4257-a1ed-beaa17d63a39
 

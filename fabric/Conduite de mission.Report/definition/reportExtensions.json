@@ -383,7 +383,7 @@
         {
           "name": "Valo sous-titre cours de l arrete",
           "dataType": "Text",
-          "expression": "VAR n = COUNTROWS ( cours_titre ) + 0 VAR t = IF ( ISFILTERED ( v_ecran_actifs_a_valoriser[code_actif] ) && HASONEVALUE ( v_ecran_actifs_a_valoriser[code_actif] ), SELECTEDVALUE ( v_ecran_actifs_a_valoriser[code_actif] ) ) RETURN FORMAT ( n, \"0\" ) & IF ( n < 2, \" cours saisi · \", \" cours saisis · \" ) & IF ( ISBLANK ( t ), \"aucun titre choisi\", t )"
+          "expression": "VAR n = COUNTROWS ( cours_titre ) + 0 VAR t = IF ( ISFILTERED ( v_ecran_actifs_a_valoriser[code_actif] ) && HASONEVALUE ( v_ecran_actifs_a_valoriser[code_actif] ), SELECTEDVALUE ( v_ecran_actifs_a_valoriser[code_actif] ) ) RETURN IF ( n = 0, \"aucun cours saisi · \", FORMAT ( n, \"0\" ) & IF ( n < 2, \" cours saisi · \", \" cours saisis · \" ) ) & IF ( ISBLANK ( t ), \"aucun titre choisi\", t )"
         },
         {
           "name": "Valo bouton enregistrer le cours",

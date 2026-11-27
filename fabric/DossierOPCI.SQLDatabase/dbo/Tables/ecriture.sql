@@ -82,28 +82,24 @@ END
 GO
 
 
--- INVARIANT : tout lot est equilibre, verifie a l'enregistrement
-CREATE   TRIGGER dbo.tr_lot_equilibre
-ON dbo.ecriture
+CREATE   TRIGGER dbo.tr_ecriture_annexe_retard ON dbo.ecriture
 AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    IF EXISTS (
-        SELECT e.lot_id
-        FROM ecriture e
-        WHERE e.lot_id IN (
-            SELECT lot_id FROM inserted
-            UNION
-            SELECT lot_id FROM deleted
-        )
-        GROUP BY e.lot_id
-        HAVING SUM(e.debit) <> SUM(e.credit)
-    )
-    BEGIN
-        THROW 50001, N'Lot déséquilibré : le total des débits diffère de celui des crédits. Corriger les montants, puis recommencer.', 1;
-    END
-END
+    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
+    ;WITH ch AS (
+        SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM inserted
+        EXCEPT SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM deleted
+        UNION ALL
+        SELECT * FROM (SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM deleted EXCEPT SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM inserted) d
+    ),
+    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT l.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch JOIN dbo.lot_ecritures l ON l.id = ch.lot_id WHERE l.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')) q GROUP BY q.x, q.vehicule)
+    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
+    SELECT v.entite, SYSUTCDATETIME(), N'ecriture', SUM(x.n)
+    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
+    GROUP BY v.entite;
+END;
 
 GO
 
@@ -143,24 +139,28 @@ END;
 GO
 
 
-CREATE   TRIGGER dbo.tr_ecriture_annexe_retard ON dbo.ecriture
+-- INVARIANT : tout lot est equilibre, verifie a l'enregistrement
+CREATE   TRIGGER dbo.tr_lot_equilibre
+ON dbo.ecriture
 AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    IF NOT EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted) RETURN;
-    ;WITH ch AS (
-        SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM inserted
-        EXCEPT SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM deleted
-        UNION ALL
-        SELECT * FROM (SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM deleted EXCEPT SELECT id, comp_aux_lib, comp_aux_num, compte_lib, compte_num, compte_origine, credit, date_let, debit, ecriture_date, ecriture_let, ecriture_lib, ecriture_num, famille, id_devise, journal_code, journal_lib, lot_id, montant_devise, piece_date, piece_ref, valid_date FROM inserted) d
-    ),
-    x AS (SELECT q.x, q.vehicule, COUNT(*) AS n FROM (SELECT l.entite AS x, CAST(NULL AS BIT) AS vehicule FROM ch JOIN dbo.lot_ecritures l ON l.id = ch.lot_id WHERE l.statut IN ('VALIDE', 'EXPORTE', 'PUBLIE')) q GROUP BY q.x, q.vehicule)
-    INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
-    SELECT v.entite, SYSUTCDATETIME(), N'ecriture', SUM(x.n)
-    FROM x CROSS APPLY dbo.fn_ann_vehicules(x.x, 0, x.vehicule) v
-    GROUP BY v.entite;
-END;
+    IF EXISTS (
+        SELECT e.lot_id
+        FROM ecriture e
+        WHERE e.lot_id IN (
+            SELECT lot_id FROM inserted
+            UNION
+            SELECT lot_id FROM deleted
+        )
+        GROUP BY e.lot_id
+        HAVING SUM(e.debit) <> SUM(e.credit)
+    )
+    BEGIN
+        THROW 50001, N'Lot déséquilibré : le total des débits diffère de celui des crédits. Corriger les montants, puis recommencer.', 1;
+    END
+END
 
 GO
 

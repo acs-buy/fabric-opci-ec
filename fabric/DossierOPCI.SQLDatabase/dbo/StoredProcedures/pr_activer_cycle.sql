@@ -1,8 +1,7 @@
--- pr_activer_cycle : 2 refus
 -- ACTIVER OU RETIRER UN CYCLE ENTIER. A l'activation, toutes ses questions eligibles entrent ; au
 -- retrait, toutes sortent, avec les memes refus que pour une question : motif obligatoire, aucune
 -- question repondue, et pas de retrait d'un cycle qui a des comptes en balance.
-CREATE   PROCEDURE dbo.pr_activer_cycle
+CREATE PROCEDURE dbo.pr_activer_cycle
     @entite  VARCHAR (20),
     @arrete  VARCHAR (20),
     @cycle   VARCHAR (10),
@@ -13,7 +12,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
+    -- Un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
         + NCHAR(133) + NCHAR(160) + NCHAR(5760) + NCHAR(8192) + NCHAR(8193) + NCHAR(8194) + NCHAR(8195) + NCHAR(8196) + NCHAR(8197) + NCHAR(8198)
@@ -31,7 +30,7 @@ BEGIN
     DECLARE @id INT = (SELECT id FROM dbo.programme_travail WHERE entite = @entite AND arrete = @arrete);
     IF @id IS NULL
         THROW 50311, N'Aucun programme n''est choisi pour cet arrêté ; choisir un type d''abord.', 1;
-    -- 51309 (15/11/2026) : action 16. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- 51309 : juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
     -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
@@ -42,7 +41,7 @@ BEGIN
         THROW 50320, N'Le cycle désigné n''existe pas.', 1;
     IF NOT EXISTS (SELECT 1 FROM dbo.v_programme_selection WHERE programme_id = @id AND cycle = @cycle)
         THROW 50321, N'Ce cycle n''a aucune question applicable à ce type d''arrêté.', 1;
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     DECLARE @m NVARCHAR (2000), @n INT;
     IF @actif = 0
     BEGIN

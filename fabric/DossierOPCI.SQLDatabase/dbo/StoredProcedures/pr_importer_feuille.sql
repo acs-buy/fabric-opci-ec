@@ -1,5 +1,5 @@
--- --- 2. l'import d'une feuille remplie : conclusion, forme, fichier -----------------------------------
-CREATE   PROCEDURE dbo.pr_importer_feuille
+-- --- l'import d'une feuille remplie : conclusion, forme, fichier -----------------------------------
+CREATE PROCEDURE dbo.pr_importer_feuille
     @cote         VARCHAR (30),
     @conclusion   NVARCHAR (MAX)  = NULL,
     @forme        VARCHAR (20)    = NULL,        -- SANS_OBSERVATION, AVEC_OBSERVATION, REFUS_ATTESTER : conclut la feuille
@@ -10,7 +10,7 @@ CREATE   PROCEDURE dbo.pr_importer_feuille
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
+    -- Un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
         + NCHAR(133) + NCHAR(160) + NCHAR(5760) + NCHAR(8192) + NCHAR(8193) + NCHAR(8194) + NCHAR(8195) + NCHAR(8196) + NCHAR(8197) + NCHAR(8198)
@@ -21,7 +21,7 @@ BEGIN
     SELECT @entite = entite, @arrete = arrete, @conclue = conclue_le FROM dbo.feuille_travail WHERE cote = @cote;
     IF @entite IS NULL
         THROW 50371, N'La feuille désignée n''existe pas.', 1;
-    -- 51311 (15/11/2026) : action 18, dossier lu par la cote. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- 51311 : dossier lu par la cote. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
     -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
@@ -41,6 +41,8 @@ BEGIN
     -- qui refuse la forme ne laisse pas un texte orphelin
     BEGIN TRY
     BEGIN TRANSACTION;
+    -- le reimport remplace nom_fichier par le nom du classeur relu, quand il est donne, et ne touche pas
+    -- chemin_coffre
     UPDATE dbo.feuille_travail
        SET conclusion = COALESCE(@conclusion, conclusion),
            objectif = COALESCE(@objectif, objectif),

@@ -1,12 +1,11 @@
--- --- 1. les vehicules a marquer, filiales declarees comprises -------------------------------------
--- Les vehicules a marquer pour une ecriture sur l'entite @x (contrat, 3.2, « Detenteurs et lecteurs d'une entite ») :
+-- --- les vehicules a marquer, filiales declarees comprises -------------------------------------
+-- Les vehicules a marquer pour une ecriture sur l'entite @x :
 -- @x s'il est un vehicule (@vehicule, quand la ligne le dit, sinon ref_entite), puis ses detenteurs de proche en proche
 -- (detention, filiales declarees, et actif au poste 25 par entite_liee), chacun visite une fois ; pour une ligne de
 -- ref_entite (@lecteurs), les lecteurs de sa denomination (preteurs de emprunt_intragroupe, entites des lots qui la
 -- portent en compte auxiliaire). Seuls les vehicules sont rendus.
--- eligibilite_participation remonte aussi ; une filiale sans detention saisie marque
--- et verrouille son vehicule.
-CREATE   FUNCTION dbo.fn_ann_vehicules (@x VARCHAR (20), @lecteurs BIT, @vehicule BIT)
+-- Une filiale declaree (eligibilite_participation) sans detention saisie rend son vehicule.
+CREATE FUNCTION dbo.fn_ann_vehicules (@x VARCHAR (20), @lecteurs BIT, @vehicule BIT)
 RETURNS @v TABLE (entite VARCHAR (20) PRIMARY KEY)
 AS
 BEGIN

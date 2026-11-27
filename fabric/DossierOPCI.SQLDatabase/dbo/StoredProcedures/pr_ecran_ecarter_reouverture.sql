@@ -1,7 +1,7 @@
--- --- 5. pr_ecran_ecarter_reouverture -----------------------------------------------------------------------
--- : ecarte la demande en attente de l'arrete, quelle que soit sa nature ; le role suit la nature (51252 pour
+-- --- pr_ecran_ecarter_reouverture -----------------------------------------------------------------------
+-- Ecarte la demande en attente de l'arrete, quelle que soit sa nature ; le role suit la nature (51252 pour
 -- DEVERROUILLAGE) ; motif d'ecart exige, toutes natures.
-CREATE   PROCEDURE dbo.pr_ecran_ecarter_reouverture @entite VARCHAR (20), @arrete VARCHAR (20), @motif_ecart NVARCHAR (800), @par NVARCHAR (400)
+CREATE PROCEDURE dbo.pr_ecran_ecarter_reouverture @entite VARCHAR (20), @arrete VARCHAR (20), @motif_ecart NVARCHAR (800), @par NVARCHAR (400)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -22,7 +22,7 @@ BEGIN
         THROW 50994, N'Écart refusé : vous avez demandé ce déverrouillage ; un autre membre habilité le décide.', 1;
     IF @auteur = @par
         THROW 50994, N'Écart refusé : vous avez demandé cette réouverture ; un autre membre habilité la décide.', 1;
-    SET @motif_ecart = NULLIF(LTRIM(RTRIM(@motif_ecart)), N'');
+    SET @motif_ecart = CASE WHEN dbo.fn_texte_vide(@motif_ecart) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif_ecart)) END;
     IF @motif_ecart IS NULL AND @nature = 'DEVERROUILLAGE'
         THROW 50995, N'Écart refusé : il exige un motif, qui dit pourquoi le dossier reste verrouillé.', 1;
     IF @motif_ecart IS NULL

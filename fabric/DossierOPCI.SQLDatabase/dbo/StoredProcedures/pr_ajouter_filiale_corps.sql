@@ -1,11 +1,10 @@
--- pr_ajouter_filiale : le corps d'origine, renomme
--- pr_ajouter_filiale : le corps d'origine, renomme
-CREATE   PROCEDURE dbo.pr_ajouter_filiale_corps
+-- pr_ajouter_filiale_corps : le corps de pr_ajouter_filiale
+CREATE PROCEDURE dbo.pr_ajouter_filiale_corps
     @client         VARCHAR (20),
     @code           VARCHAR (20),
     @denomination   NVARCHAR (400) = NULL,
     @forme_sociale  VARCHAR (10)   = 'SCI',
-    @droits_de_vote DECIMAL (9, 6),
+    @droits_de_vote FLOAT,                   -- fraction de 0 a 1 ; tout nombre fini admis, borne en francais (50213)
     @par            NVARCHAR (400),
     @controlee      BIT            = NULL    -- classement R. 214-83 : 1 controlee, 0 non controlee ; obligatoire
 AS
@@ -14,7 +13,7 @@ BEGIN
     SET XACT_ABORT ON;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @client AND est_client = 1)
         THROW 50211, N'Le client n''existe pas, ou l''entité désignée n''est pas un client du cabinet.', 1;
-    -- 51300 (15/11/2026) : action 3, equipe du vehicule client. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- 51300 : equipe du vehicule client ; juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
     -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@client, NULL, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
@@ -23,8 +22,10 @@ BEGIN
         THROW 50210, N'Le code de la filiale est obligatoire.', 1;
     IF @code = @client
         THROW 50212, N'Un client n''est pas sa propre filiale.', 1;
-    IF @droits_de_vote IS NULL OR @droits_de_vote <= 0 OR @droits_de_vote > 1
+    IF @droits_de_vote IS NULL OR ROUND(@droits_de_vote, 6) <= 0 OR ROUND(@droits_de_vote, 6) > 1
         THROW 50213, N'Les droits de vote se saisissent en pourcentage, de plus de 0 à 100 : 80 pour 80 %%.', 1;
+    -- la fraction bornee, a 6 decimales, comme la colonne droits_de_vote DECIMAL (9, 6)
+    SET @droits_de_vote = ROUND(@droits_de_vote, 6);
     IF @controlee IS NULL
         THROW 50220, N'Le classement de la filiale au sens de l''article R. 214-83 du code monétaire et financier est obligatoire : oui si elle est contrôlée, non sinon.', 1;
     IF EXISTS (SELECT 1 FROM dbo.eligibilite_participation WHERE entite_mere = @client AND entite_fille = @code)
@@ -46,7 +47,7 @@ BEGIN
     INSERT INTO dbo.eligibilite_participation (entite_mere, entite_fille, droits_de_vote, controlee, qualifie_par, qualifie_le)
     VALUES (@client, @code, @droits_de_vote, @controlee, @par, SYSUTCDATETIME());
     INSERT INTO dbo.journal_perimetre (entite_mere, entite_fille, action, detail, fait_par)
-    VALUES (@client, @code, 'AJOUT', N'droits de vote ' + FORMAT(@droits_de_vote, 'P2', 'fr-FR')
+    VALUES (@client, @code, 'AJOUT', N'droits de vote ' + FORMAT(CAST(@droits_de_vote AS DECIMAL (9, 6)), 'P2', 'fr-FR')
             + CASE WHEN @controlee = 1 THEN N' ; contrôlée' ELSE N' ; non contrôlée' END, @par);
     COMMIT;
     END TRY
@@ -56,7 +57,7 @@ BEGIN
     END CATCH;
 
     SELECT @code AS filiale,
-           N'Filiale ' + @code + N' ajoutée au périmètre de ' + @client + N'. Sa balance sera réclamée à la révision.' AS message;
+           N'Filiale ' + @code + N' ajoutée au périmètre ' + dbo.fn_de(@client) + N'. Sa balance sera réclamée à la révision.' AS message;
 END;
 
 GO

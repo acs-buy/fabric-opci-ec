@@ -13,13 +13,13 @@ table v_ecran_valeurs_arrete
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: c8f2acbf-6a05-47be-9bcf-7626d4440433
 
-	/// « n actifs · n / n valeurs arrêtées » (bande 1)
-	measure 'Libelle type immeubles' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE" ) + 0 VAR ok = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE", v_ecran_valeurs_arrete[etat_generation] = "CALCULABLE" ) + 0 RETURN FORMAT ( n, "0" ) & " actifs · " & FORMAT ( ok, "0" ) & " / " & FORMAT ( n, "0" ) & " valeurs arrêtées"
+	/// « n actifs · n / n valeurs arrêtées », au singulier pour 1 ; « aucun actif » (bande 1)
+	measure 'Libelle type immeubles' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE" ) + 0 VAR ok = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE", v_ecran_valeurs_arrete[etat_generation] = "CALCULABLE" ) + 0 RETURN IF ( n = 0, "aucun actif", FORMAT ( n, "0" ) & IF ( n > 1, " actifs · ", " actif · " ) & FORMAT ( ok, "0" ) & " / " & FORMAT ( n, "0" ) & IF ( n > 1, " valeurs arrêtées", " valeur arrêtée" ) )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 77f155f2-fd9d-4d58-91d8-09be67b9f44a
 
-	/// « n actifs » ou « aucun actif » (bande 1)
-	measure 'Libelle type instruments' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "INSTRUMENT" ) + 0 RETURN IF ( n > 0, FORMAT ( n, "0" ) & " actifs", "aucun actif" )
+	/// « n actifs », « 1 actif » ou « aucun actif » (bande 1)
+	measure 'Libelle type instruments' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "INSTRUMENT" ) + 0 RETURN IF ( n > 0, FORMAT ( n, "0" ) & IF ( n > 1, " actifs", " actif" ), "aucun actif" )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 8557d509-38fa-4cc0-88fc-c057e58c5542
 
@@ -34,7 +34,7 @@ table v_ecran_valeurs_arrete
 		lineageTag: 738403bc-c4ca-4f5f-8651-143a77cb3b7c
 
 	/// « n immeubles, véhicule et filiales », « immeuble » au singulier pour 0 et 1 (décision 92-1 du 26/10/2026 ; accord du nombre)
-	measure 'Sous-titre grille des immeubles' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE" ) + 0 RETURN FORMAT ( n, "0" ) & IF ( n <= 1, " immeuble", " immeubles" ) & ", véhicule et filiales"
+	measure 'Sous-titre grille des immeubles' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "IMMEUBLE" ) + 0 RETURN IF ( n = 0, "aucun immeuble", FORMAT ( n, "0" ) & IF ( n <= 1, " immeuble", " immeubles" ) ) & ", véhicule et filiales"
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 8b34d854-6454-4f22-af4a-de4fa74cf911
 
@@ -53,8 +53,8 @@ table v_ecran_valeurs_arrete
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 87f77095-17c1-4a2d-ab01-4a28a6281a66
 
-	/// « classe 3, véhicule et filiales · n actifs » ; « … · aucun actif »
-	measure 'Sous-titre grille des instruments' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "INSTRUMENT" ) + 0 RETURN "classe 3, véhicule et filiales · " & IF ( n > 0, FORMAT ( n, "0" ) & " actifs", "aucun actif" )
+	/// « classe 3, véhicule et filiales · n actifs », « … · 1 actif » ; « … · aucun actif »
+	measure 'Sous-titre grille des instruments' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_valeurs_arrete ), v_ecran_valeurs_arrete[famille] = "INSTRUMENT" ) + 0 RETURN "classe 3, véhicule et filiales · " & IF ( n > 0, FORMAT ( n, "0" ) & IF ( n > 1, " actifs", " actif" ), "aucun actif" )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 43ad90ad-6674-4a5f-a61b-829b27a60d84
 

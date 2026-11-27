@@ -1,17 +1,9 @@
 
--- Les libelles d'ecran des 5 etapes, avant la pose de la barre d'avancement
--- 12/09/2026. Il est arrete que le panneau des 15 ecrans de travail devient la barre
--- d'avancement de la mission, alimentee par cette vue. Une lecture de la vue a releve
--- que les libelles y sont des CODES : COLLECTE, REVISION, ARRETE, en capitales et sans accent.
--- Un ecran d'expert-comptable ne montre pas ses codes, et « ARRETE » sans accent est ambigu.
--- Deux colonnes de libelle sont donc ajoutees, etape_libelle et unite_libelle. Elles sont portees
--- par la vue et non redressees dans chaque visuel, pour etre les memes sur les 15 ecrans.
--- Les colonnes de code sont conservees telles quelles : elles servent aux jointures, aux filtres
--- et a la mesure « Etape en cours », et les changer casserait ce qui les compare.
--- LE MOMENT EST CHOISI : la vue alimente le modele semantique, donc cette colonne de plus demande
--- un rafraichissement. Il se fait maintenant, avant que les 15 ecrans soient poses ; apres, il
--- aurait coute une repose de chacun d'eux.
-CREATE   VIEW dbo.v_avancement_etapes AS
+-- Les libelles d'ecran des 5 etapes, etape_libelle et unite_libelle, sont portes par la vue pour etre les memes
+-- sur tous les ecrans. La colonne etape porte les codes COLLECTE, REVISION, VALORISATION, ARRETE et LIVRABLES, en
+-- capitales et sans accent ; elle sert a cle_ecran et a la mesure « Etape en cours ». La colonne unite, sans
+-- accent, compose message_ecran.
+CREATE VIEW dbo.v_avancement_etapes AS
 WITH couple AS (
     /* Tout couple entite et arrete connu d'au moins une des 5 sources. */
     SELECT entite, arrete FROM dbo.v_documents_attendus_synthese
@@ -21,13 +13,8 @@ WITH couple AS (
     UNION SELECT entite, arrete FROM dbo.v_livrables_dus
 ),
 etape AS (
-    -- LIBELLES D'ECRAN AJOUTES LE 12/09/2026, avant la pose des 15 ecrans de travail.
-    -- Les colonnes etape et unite sont des CODES, en capitales et sans accent, faits pour etre
-    -- compares et joints. La barre d'avancement les affichait tels quels, et « ARRETE » sans
-    -- accent se lit aussi bien arrete qu'arrete. Un ecran d'expert-comptable ne montre pas ses
-    -- codes. Les 2 libelles sont donc portes ICI plutot que redresses dans chaque visuel, pour
-    -- qu'ils soient les memes sur les 15 ecrans et dans toute lecture ulterieure.
-    -- Les colonnes de code sont conservees : elles servent aux jointures et aux filtres.
+    -- LES LIBELLES D'ECRAN : etape et unite gardent leurs codes sans accent ; les 2 libelles, avec leurs accents,
+    -- sont portes ici plutot que dans chaque visuel.
     SELECT 1 AS etape_ordre, 'COLLECTE'     AS etape, 'pieces obligatoires'    AS unite,
            N'Collecte'     AS etape_libelle, N'pièces obligatoires'     AS unite_libelle
     UNION ALL SELECT 2, 'REVISION',     'feuilles de travail',

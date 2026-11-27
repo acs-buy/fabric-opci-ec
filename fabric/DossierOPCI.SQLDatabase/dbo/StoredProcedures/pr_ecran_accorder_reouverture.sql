@@ -1,9 +1,9 @@
--- --- 4. pr_ecran_accorder_reouverture ----------------------------------------------------------------------
--- : decide la demande en attente de l'arrete, quelle que soit sa nature. REOUVERTURE : inchangee, hors du texte
--- de 50988. DEVERROUILLAGE : role qui vise la revue (51248), arrete non valide pour le client (51249), dossier
--- verrouille (51250), revue visee (51251), juges sous le verrou d'entite (pr_ann_verrou) ;
+-- --- pr_ecran_accorder_reouverture ----------------------------------------------------------------------
+-- Decide la demande en attente de l'arrete, quelle que soit sa nature. REOUVERTURE : l'arrete est rouvert par
+-- pr_rouvrir_arrete. DEVERROUILLAGE : role qui vise la revue (51248), puis, sous le verrou d'entite
+-- (pr_ann_verrou), arrete non valide pour le client (51249), dossier verrouille (51250), revue visee (51251) ;
 -- visa REVUE RENVOYE, verrou leve et demande accordee dans la meme transaction.
-CREATE   PROCEDURE dbo.pr_ecran_accorder_reouverture @entite VARCHAR (20), @arrete VARCHAR (20), @par NVARCHAR (400)
+CREATE PROCEDURE dbo.pr_ecran_accorder_reouverture @entite VARCHAR (20), @arrete VARCHAR (20), @par NVARCHAR (400)
 AS
 BEGIN
     SET NOCOUNT ON;

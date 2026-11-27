@@ -33,26 +33,6 @@ CREATE TABLE [dbo].[ref_ratio_memoire] (
 
 GO
 
-CREATE   TRIGGER dbo.[tr_ref_ratio_memoire_horodatage]
-ON dbo.[ref_ratio_memoire]
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    -- Objet n° 16 de l'ecran 5 : l'auteur est celui que la procedure d'ecran pose dans le
-    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
-    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_ratio_memoire] t
-    JOIN inserted i ON t.[code] = i.[code];
-END;
-
-GO
-
 CREATE   TRIGGER dbo.[tr_ref_ratio_memoire_garde]
 ON dbo.[ref_ratio_memoire]
 AFTER INSERT, UPDATE, DELETE
@@ -75,6 +55,26 @@ BEGIN
     VALUES ('tr_ref_ratio_memoire_garde', @m, LEFT(CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), 200), SYSUTCDATETIME());
     SET @m = REPLACE(@m, N'%', N'%%');
     THROW 50074, @m, 1;
+END;
+
+GO
+
+CREATE   TRIGGER dbo.[tr_ref_ratio_memoire_horodatage]
+ON dbo.[ref_ratio_memoire]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    -- Objet n° 16 de l'ecran 5 : l'auteur est celui que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
+    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_ratio_memoire] t
+    JOIN inserted i ON t.[code] = i.[code];
 END;
 
 GO

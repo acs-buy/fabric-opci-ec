@@ -8,36 +8,6 @@ table v_etat_dossier
 		displayFolder: Parcours
 		lineageTag: c95ecdaa-6f7a-4f71-aa99-1e8df1f48779
 
-	/// Arretes ouverts, toutes entites filtrees.
-	measure 'Arretes ouverts au dossier' = SUM(v_etat_dossier[arretes_ouverts]) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 7814be4c-affd-46d0-9862-84b8c228c1cc
-
-	/// Feuilles de travail des entites filtrees.
-	measure 'Feuilles du dossier' = SUM(v_etat_dossier[feuilles]) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 34666d29-e4f8-4183-945a-973928090963
-
-	/// Feuilles conclues des entites filtrees.
-	measure 'Feuilles conclues du dossier' = SUM(v_etat_dossier[feuilles_conclues]) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 5945c92a-af8e-446c-83b8-2c72612506ae
-
-	/// Expertises manquantes des entites filtrees.
-	measure 'Expertises manquantes' = SUM(v_etat_dossier[expertises_manquantes]) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 173e5ff2-7ff3-4f9a-abf3-9d754633e3da
-
-	/// Entites dont l'acceptation est approuvee.
-	measure 'Acceptations approuvees' = CALCULATE(COUNTROWS(v_etat_dossier), v_etat_dossier[acceptation_statut] = "APPROUVE") + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: e55cb1ce-f8e0-4a42-b808-81d504e9971d
-
 	/// Toujours 1 : l'entite affichee.
 	measure 'Entites au dossier courant' = VAR e = [Entite courante] RETURN CALCULATE([Entites au dossier], ref_entite[Entité] = e)
 		formatString: #,0
@@ -172,7 +142,7 @@ table v_etat_dossier
 		displayFolder: Ecran 1 Client
 		lineageTag: 09f244c3-89c9-4343-901a-81f3f82ef087
 
-	measure 'Sous-ligne acceptations' = VAR a = [Acceptations à faire] VAR c = [Clients du cabinet] RETURN IF ( ISBLANK ( a ) || a = 0, "toutes approuvées", FORMAT ( a, "#,0" ) & " sur " & FORMAT ( c, "#,0" ) & " clients" )
+	measure 'Sous-ligne acceptations' = VAR a = [Acceptations à faire] VAR c = [Clients du cabinet] RETURN IF ( ISBLANK ( a ) || a = 0, "toutes approuvées", FORMAT ( a, "#,0" ) & " sur " & FORMAT ( c, "#,0" ) & IF ( c > 1, " clients", " client" ) )
 		displayFolder: Ecran 1 Client
 		lineageTag: 89b1b862-0d83-41e4-b3dc-f10ab0600843
 

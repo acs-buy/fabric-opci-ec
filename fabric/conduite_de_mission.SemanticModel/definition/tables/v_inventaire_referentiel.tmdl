@@ -2,36 +2,6 @@
 table v_inventaire_referentiel
 	lineageTag: 4d647144-98e3-4c97-8186-ad10ac266734
 
-	/// Tables de reference inventoriees.
-	measure 'Referentiels inventories' = COUNTROWS(v_inventaire_referentiel) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: e4ca8ed4-6fc9-456b-97f4-8b9b4fbe5237
-
-	/// Lignes de reference, toutes tables.
-	measure 'Lignes de reference' = SUM(v_inventaire_referentiel[lignes]) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: b6c8d2c7-811b-4560-9bb5-536de4169267
-
-	/// Lignes reprises localement.
-	measure 'Lignes modifiees' = SUM(v_inventaire_referentiel[lignes_modifiees]) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 78498428-5984-4654-aaaa-b3fcbd7fd1f7
-
-	/// Tables vides a ce jour.
-	measure 'Referentiels non releves' = CALCULATE(COUNTROWS(v_inventaire_referentiel), v_inventaire_referentiel[etat] = "non relevé") + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 27d3a140-3c39-449b-81bd-a0a5cf39dac1
-
-	/// Referentiels tenus par l'associe.
-	measure 'Tenus par l associe' = CALCULATE(COUNTROWS(v_inventaire_referentiel), v_inventaire_referentiel[qui_tient] = "ASSOCIE") + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: eefae0af-7641-45f3-ab5f-2ce4ddf21b7a
-
 	column ordre
 		dataType: int64
 		isNullable: false

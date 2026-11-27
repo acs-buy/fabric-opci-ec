@@ -23,7 +23,7 @@ table v_complexite_balance
 	measure 'Raison du type propose' = SELECTEDVALUE ( v_complexite_balance[raison] )
 		lineageTag: 21a229c9-57ea-46fe-ab9c-53bd7062f534
 
-	measure 'Sous-titre de la couverture' = VAR n = CALCULATE ( COUNTROWS ( v_couverture_balance ) ) VAR c = CALCULATE ( COUNTROWS ( v_couverture_balance ), v_couverture_balance[etat] = "COUVERT" ) RETURN FORMAT ( n, "0" ) & " comptes, " & FORMAT ( c, "0" ) & " couverts par une question du programme"
+	measure 'Sous-titre de la couverture' = VAR n = CALCULATE ( COUNTROWS ( v_couverture_balance ) ) VAR c = CALCULATE ( COUNTROWS ( v_couverture_balance ), v_couverture_balance[etat] = "COUVERT" ) RETURN IF ( n + 0 = 0, "aucun compte", FORMAT ( n, "0" ) & IF ( n > 1, " comptes, ", " compte, " ) & IF ( c + 0 = 0, "aucun couvert", FORMAT ( c, "0" ) & IF ( c > 1, " couverts", " couvert" ) ) & " par une question du programme" )
 		lineageTag: 9c2e9626-ebc2-4920-9a17-65617ab88974
 
 	column entite

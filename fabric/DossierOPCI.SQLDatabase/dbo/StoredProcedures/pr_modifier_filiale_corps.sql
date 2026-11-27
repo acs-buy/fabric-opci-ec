@@ -1,12 +1,12 @@
 
 -- pr_modifier_filiale : le corps d'origine, renomme
 -- pr_modifier_filiale : le corps d'origine, renomme
-CREATE   PROCEDURE dbo.pr_modifier_filiale_corps
+CREATE PROCEDURE dbo.pr_modifier_filiale_corps
     @client         VARCHAR (20),
     @code           VARCHAR (20),
     @denomination   NVARCHAR (400) = NULL,   -- vide = inchange
     @forme_sociale  VARCHAR (10)   = NULL,   -- vide = inchange
-    @droits_de_vote DECIMAL (9, 6) = NULL,   -- vide = inchange
+    @droits_de_vote FLOAT          = NULL,   -- vide = inchange ; fraction de 0 a 1, bornee en francais (50213)
     @par            NVARCHAR (400),
     @controlee      BIT            = NULL    -- vide = inchange ; classement R. 214-83
 AS
@@ -15,8 +15,10 @@ BEGIN
     SET XACT_ABORT ON;
     IF NOT EXISTS (SELECT 1 FROM dbo.eligibilite_participation WHERE entite_mere = @client AND entite_fille = @code)
         THROW 50216, N'Cette entité n''est pas une filiale de ce client. Le code d''une filiale ne se modifie pas.', 1;
-    IF @droits_de_vote IS NOT NULL AND (@droits_de_vote <= 0 OR @droits_de_vote > 1)
+    IF @droits_de_vote IS NOT NULL AND (ROUND(@droits_de_vote, 6) <= 0 OR ROUND(@droits_de_vote, 6) > 1)
         THROW 50213, N'Les droits de vote se saisissent en pourcentage, de plus de 0 à 100 : 80 pour 80 %%.', 1;
+    -- la fraction bornee, a 6 decimales, comme la colonne droits_de_vote DECIMAL (9, 6)
+    SET @droits_de_vote = ROUND(@droits_de_vote, 6);
     SET @denomination = NULLIF(LTRIM(RTRIM(@denomination)), N'');
     SET @forme_sociale = NULLIF(LTRIM(RTRIM(@forme_sociale)), '');
     IF @denomination IS NULL AND @forme_sociale IS NULL AND @droits_de_vote IS NULL AND @controlee IS NULL
@@ -38,7 +40,7 @@ BEGIN
     BEGIN
         UPDATE dbo.eligibilite_participation SET droits_de_vote = @droits_de_vote, qualifie_par = @par, qualifie_le = SYSUTCDATETIME()
          WHERE entite_mere = @client AND entite_fille = @code;
-        SET @detail += N'droits de vote → ' + FORMAT(@droits_de_vote, 'P2', 'fr-FR') + N' ; ';
+        SET @detail += N'droits de vote → ' + FORMAT(CAST(@droits_de_vote AS DECIMAL (9, 6)), 'P2', 'fr-FR') + N' ; ';
     END;
     IF @controlee IS NOT NULL
     BEGIN

@@ -1,6 +1,5 @@
--- ------------------------------------------------------------------ n° 24 : le seuil propre d'un vehicule, seule voie d'ecriture de ref_ratio_vehicule
--- ecran 5
--- Contrat de la maquette (objet n° 24) ; raisons de [Etat du seuil du vehicule], dans
+-- ------------------------------------------------------------------ le seuil propre d'un vehicule, seule voie d'ecriture de ref_ratio_vehicule
+-- Raisons de [Etat du seuil du vehicule], dans
 -- son ordre : le referentiel choisi ne porte pas de seuil propre (le code n'est pas une limite), le texte fixe la valeur
 -- (valeur_laissee vide, ou STATUTS pour un OPCI grand public), le droit (fn_peut_ecrire_referentiel sur
 -- ref_ratio_vehicule, que la garde tr_ref_ratio_vehicule_garde rejoue en 50074). Les 7 refus que la garde rejoue
@@ -8,7 +7,7 @@
 -- unique : vehicule nomme par son code, U+202F avant le « % » d'une limite du texte. Le seuil se lit a
 -- l'unite de la limite (unite_seuil) : TAUX, un pourcentage enregistre en fraction de 1 ; NOMBRE, tel quel.
 -- ENDETTEMENT_40 (RETENUE) est admis pour un OPCI professionnel. MERGE sur (entite, code) ; message sous le vehicule.
-CREATE   PROCEDURE dbo.pr_ecran_poser_seuil_vehicule
+CREATE PROCEDURE dbo.pr_ecran_poser_seuil_vehicule
     @entite NVARCHAR (40)  = NULL,
     @code   NVARCHAR (240) = NULL,
     @seuil  NVARCHAR (60)  = NULL,
@@ -29,7 +28,7 @@ BEGIN
             @limite NVARCHAR (60), @forme_l VARCHAR (10), @laissee VARCHAR (12), @unite VARCHAR (6), @s NVARCHAR (60),
             @d DECIMAL (38, 10), @valeur DECIMAL (9, 6), @date DATE, @affiche NVARCHAR (60);
     SELECT @par = NULLIF(LTRIM(RTRIM(@par)), N''), @entite = NULLIF(LTRIM(RTRIM(@entite)), N''), @code = NULLIF(LTRIM(RTRIM(@code)), N''),
-           @seuil = NULLIF(LTRIM(RTRIM(@seuil)), N''), @depuis = NULLIF(LTRIM(RTRIM(@depuis)), N''), @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+           @seuil = NULLIF(LTRIM(RTRIM(@seuil)), N''), @depuis = NULLIF(LTRIM(RTRIM(@depuis)), N''), @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     BEGIN TRY
         IF @par IS NULL
             EXEC dbo.pr_e5_refuser 50830, N'Action refusée : l’auteur de l’action n’est pas transmis ; l’écran le transmet avec l’adresse de connexion de la personne qui clique.';
@@ -161,7 +160,7 @@ BEGIN
         IF @tc = 0 AND @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
         BEGIN TRY EXEC sp_set_session_context N'par', NULL; END TRY BEGIN CATCH END CATCH;
         SET @e_fr = dbo.fn_e5_traduire_erreur(@e_num, @e_msg);
-        -- un refus de garde (ROLLBACK, inscription, THROW, objet n° 17) recu sous 266 ou 3609 : son texte francais est
+        -- un refus de garde (ROLLBACK, inscription, THROW) recu sous 266 ou 3609 : son texte francais est
         -- la ligne qu'un declencheur a inscrite pour @par depuis l'entree
         IF @e_fr IS NULL AND @e_num IN (266, 3609) AND @par IS NOT NULL
             SELECT TOP (1) @e_fr = j.message FROM dbo.journal_refus j

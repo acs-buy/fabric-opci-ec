@@ -1,4 +1,4 @@
--- --- 1. les arretes d'une filiale que porte son lien avec un vehicule ----------------------------------
+-- --- les arretes d'une filiale que porte son lien avec un vehicule ----------------------------------
 -- Une ligne par arrete HORS_MISSION de @fille que le lien (@mere, @fille) concerne :
 --   partage = 1 quand un autre vehicule de @fille tient un arrete a la meme date ; seuls les arretes non partages
 --               partent avec le lien (pr_supprimer_filiale_corps) ;
@@ -10,7 +10,7 @@
 -- Entite qui part (ni cliente du cabinet, ni tenue par un autre vehicule) : tous ses arretes HORS_MISSION, partage = 0,
 -- compte = 1. Entite qui reste : seulement aux dates que @mere tient, et aucun
 -- pour un client du cabinet, dont les arretes HORS_MISSION sont les siens.
-CREATE   FUNCTION dbo.fn_lien_arretes (@mere VARCHAR (20), @fille VARCHAR (20))
+CREATE FUNCTION dbo.fn_lien_arretes (@mere VARCHAR (20), @fille VARCHAR (20))
 RETURNS TABLE
 AS RETURN
 SELECT a.arrete, p.partage,
@@ -25,7 +25,7 @@ CROSS APPLY (SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM dbo.eligibilite_partici
                                           WHERE o.entite_fille = @fille AND o.entite_mere <> @mere)
                               THEN 1 ELSE 0 END AS BIT) AS partage) p
 WHERE a.entite = @fille AND a.nature_technique = 'HORS_MISSION'
-  AND (   -- l'entite part : 
+  AND (   -- l'entite part : ni cliente du cabinet, ni tenue par un autre vehicule
           (fe.est_client = 0
            AND NOT EXISTS (SELECT 1 FROM dbo.eligibilite_participation o WHERE o.entite_fille = @fille AND o.entite_mere <> @mere))
           -- l'entite reste : une date que le vehicule tient, hors client du cabinet

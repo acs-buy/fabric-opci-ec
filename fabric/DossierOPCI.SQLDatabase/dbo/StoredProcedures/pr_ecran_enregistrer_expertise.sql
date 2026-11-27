@@ -1,5 +1,5 @@
 
-CREATE   PROCEDURE dbo.pr_ecran_enregistrer_expertise
+CREATE PROCEDURE dbo.pr_ecran_enregistrer_expertise
     @vehicule   VARCHAR (20),
     @arrete     VARCHAR (20),
     @code_actif VARCHAR (20),
@@ -35,7 +35,7 @@ BEGIN
         THROW;
     END CATCH;
     SELECT @vehicule AS vehicule,
-           N'Expertise de ' + @code_actif + N' au ' + dbo.fn_date_ecran(@arrete)
+           N'Expertise ' + dbo.fn_de(@code_actif) + N' au ' + dbo.fn_date_ecran(@arrete)
            + CASE @resultat WHEN 'INSEREE' THEN N' enregistrée : ' + dbo.fn_e3_montant(@valeur) + N'.'
                             WHEN 'REMPLACEE' THEN N' remplacée : ' + dbo.fn_e3_montant(@ancienne) + N' devient ' + dbo.fn_e3_montant(@valeur)
                                                   + N' (version ' + CAST(@version AS NVARCHAR (10)) + N').'

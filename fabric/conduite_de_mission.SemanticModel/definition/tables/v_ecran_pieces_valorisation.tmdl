@@ -2,8 +2,8 @@
 table v_ecran_pieces_valorisation
 	lineageTag: 2709c9bb-2663-4901-8605-a5920788b24e
 
-	/// « actif · n rapports déposés à la Collecte » : pièces RAPPORT_EVALUATION du véhicule et de ses filiales à l’arrêté
-	measure 'Sous-titre valeur d expertise' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_pieces_valorisation ), v_ecran_pieces_valorisation[nature] = "RAPPORT_EVALUATION" ) + 0 RETURN IF ( ISBLANK ( [Actif choisi] ), "aucun actif choisi", [Actif choisi] ) & " · " & FORMAT ( n, "0" ) & " rapports déposés à la Collecte"
+	/// « actif · n rapports déposés à la Collecte », « actif · 1 rapport déposé à la Collecte », « actif · aucun rapport déposé à la Collecte » : pièces RAPPORT_EVALUATION du véhicule et de ses filiales à l’arrêté
+	measure 'Sous-titre valeur d expertise' = VAR n = CALCULATE ( COUNTROWS ( v_ecran_pieces_valorisation ), v_ecran_pieces_valorisation[nature] = "RAPPORT_EVALUATION" ) + 0 RETURN IF ( ISBLANK ( [Actif choisi] ), "aucun actif choisi", [Actif choisi] ) & " · " & IF ( n = 0, "aucun rapport déposé", FORMAT ( n, "0" ) & IF ( n > 1, " rapports déposés", " rapport déposé" ) ) & " à la Collecte"
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: a672ee34-2cac-4f13-8695-c85ffa36a50e
 

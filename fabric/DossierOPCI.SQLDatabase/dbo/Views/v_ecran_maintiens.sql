@@ -1,15 +1,15 @@
--- 216. La table des maintiens de la fiche du dossier, en colonnes lisibles.
--- Arbitre le 21/09/2026 : dans un TABLEAU, nativeQueryRef est ignore pour une mesure ;
--- l'en-tete d'une colonne se regle au modele, par le nom de l'objet. Une mesure de libelle ne peut donc pas
--- porter un en-tete court sans entrer en conflit avec la colonne brute du meme nom. La 3e voie, deja employee
--- pour v_filiale_dependances (214) et v_ecran_pieces_du_dossier (211) : la VUE rend le libelle en COLONNE.
+-- La table des maintiens de la fiche du dossier, en colonnes lisibles.
+-- Dans un TABLEAU, nativeQueryRef est ignore pour une mesure ; l'en-tete d'une colonne se regle au modele, par le
+-- nom de l'objet. Une mesure de libelle ne peut donc pas porter un en-tete court sans entrer en conflit avec la
+-- colonne brute du meme nom : la VUE rend le libelle en COLONNE, comme v_filiale_dependances et
+-- v_ecran_pieces_du_dossier.
 --
 -- Une ligne par maintien, plus la ligne « A faire » du dernier arrete annuel conclu qui n'a pas encore son
 -- maintien (source v_maintien_requis) : c'est elle qui porte le bouton « Ouvrir le maintien ».
--- Les codes bruts restent en colonnes (statut_code, decision_code) : les mesures de couleur les lisent.
+-- Le code brut du statut reste en colonne (statut_code) : les mesures de couleur le lisent.
 -- Prerequis : maintien_mission, v_maintien_requis. Rejouable.
 
-CREATE   VIEW dbo.v_ecran_maintiens AS
+CREATE VIEW dbo.v_ecran_maintiens AS
 SELECT m.entite,
        m.arrete_conclu                                       AS exercice,
        CASE m.statut WHEN 'APPROUVE' THEN N'Approuvé'
@@ -18,7 +18,7 @@ SELECT m.entite,
                      ELSE m.statut END                       AS statut,
        m.statut                                              AS statut_code,
        CASE m.decision WHEN 'MAINTENU'     THEN N'Maintenu'
-                       WHEN 'NON_MAINTENU' THEN N'Non maintenu'
+                       WHEN 'ROMPU'        THEN N'Rompu'
                        WHEN 'EN_ATTENTE'   THEN N'En attente'
                        ELSE m.decision END                   AS decision,
        m.approuve_par                                        AS vise_par,

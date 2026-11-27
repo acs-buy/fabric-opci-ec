@@ -1,9 +1,9 @@
--- --- 5. retirer un arrete et ceux de ses filiales a sa date ----------------------------------------
+-- --- retirer un arrete et ceux de ses filiales a sa date ----------------------------------------
 -- l'arrete @arrete de @entite, et les arretes HORS_MISSION de ses filiales declarees a la meme date qu'aucun autre
 -- vehicule ne tient a cette date, sont retires ensemble si aucun ne porte de travail (pr_arrete_porte_travail) ; sinon
 -- rien n'est retire, @retire = 0, et @porteur, @trouve nomment le 1er travail trouve. Ni transaction ni THROW : la
 -- procedure appelante decide (50265 dans la boucle de retrait, silence dans le bloc du questionnaire).
-CREATE   PROCEDURE dbo.pr_arrete_retirer_avec_filiales
+CREATE PROCEDURE dbo.pr_arrete_retirer_avec_filiales
     @entite  VARCHAR (20),
     @arrete  VARCHAR (20),
     @retire  BIT OUTPUT,

@@ -1,11 +1,10 @@
--- --- supprimer une filiale, ou retirer son lien quand l'entite reste -----------------------------------
--- pr_supprimer_filiale_corps : 1 refus
--- pr_supprimer_filiale : le corps d'origine, renomme
+-- pr_supprimer_filiale_corps : le corps de pr_supprimer_filiale ; supprimer une filiale, ou retirer son lien
+-- quand l'entite reste.
 -- Les arretes HORS_MISSION de la filiale qu'aucun autre vehicule ne tient a la meme date partent avec elle, apres
 -- un dernier jugement de chacun par pr_arrete_porte_travail (toutes les cles, lues au catalogue) ; un travail trouve
 -- leve 50218, qui nomme l'arrete et le travail.
 -- Quand l'entite reste (cliente du cabinet ou tenue par un autre vehicule), seul le lien part : le refus
--- dit « Le lien de <client> avec la filiale <code> ... ne se retire pas », et role_mission et demande_espace_client de
+-- dit « Le lien de (ou d') <client> avec la filiale <code> ... ne se retire pas », et role_mission et demande_espace_client de
 -- l'entite restent. Les arretes retires viennent de dbo.fn_lien_arretes, la meme source que la vue.
 CREATE PROCEDURE dbo.pr_supprimer_filiale_corps
     @client   VARCHAR (20),
@@ -26,7 +25,7 @@ BEGIN
                               THEN 1 ELSE 0 END;
     SET @tete = CASE WHEN @reste = 0
                      THEN N'La filiale ' + @code + N' porte des données de mission et ne se supprime pas'
-                     ELSE N'Le lien de ' + @client + N' avec la filiale ' + @code + N' porte des données de mission et ne se retire pas' END;
+                     ELSE N'Le lien ' + dbo.fn_de(@client) + N' avec la filiale ' + @code + N' porte des données de mission et ne se retire pas' END;
     SELECT @arretes = arretes, @feuilles = feuilles, @pieces = pieces, @ecritures = ecritures, @comptes = comptes,
            @detentions = detentions, @supprimable = supprimable, @denomination = denomination
       FROM dbo.v_filiale_dependances WHERE entite_mere = @client AND entite_fille = @code;
@@ -113,7 +112,7 @@ BEGIN
         THROW;
     END CATCH;
 
-    SELECT @code AS filiale, N'Filiale ' + @code + N' (' + @denomination + N') retirée du périmètre de ' + @client + N'.' AS message;
+    SELECT @code AS filiale, N'Filiale ' + @code + N' (' + @denomination + N') retirée du périmètre ' + dbo.fn_de(@client) + N'.' AS message;
 END;
 
 GO

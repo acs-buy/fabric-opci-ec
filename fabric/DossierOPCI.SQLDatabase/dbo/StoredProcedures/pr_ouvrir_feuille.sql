@@ -1,6 +1,6 @@
 
 -- pr_ouvrir_feuille : 6 refus
-CREATE   PROCEDURE dbo.pr_ouvrir_feuille
+CREATE PROCEDURE dbo.pr_ouvrir_feuille
     @cote         VARCHAR (30),
     @modele_code  VARCHAR (20),
     @entite       VARCHAR (20),
@@ -68,10 +68,11 @@ BEGIN
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50051, @m, 1; END
     END;
 
-    /* La feuille attendue : nom, chemin et empreinte du gabarit. */
+    /* La feuille attendue : son classeur au site du cabinet, sous le nom que lui donne le depot de
+       fn_ecran_revision (feuille_<cote>.xlsx), son chemin vu du coffre, et l'empreinte du gabarit. */
     DECLARE @version VARCHAR (10) = (SELECT version FROM dbo.modele_feuille WHERE code = @modele_code);
-    DECLARE @nom VARCHAR (200) = @cote + '_' + LOWER(@modele_code) + '_' + @arrete + '.xlsx';
-    DECLARE @chemin VARCHAR (400) = '/Coffre/' + @entite + '/' + @arrete + '/feuilles/' + @nom;
+    DECLARE @nom VARCHAR (200) = 'feuille_' + @cote + '.xlsx';
+    DECLARE @chemin NVARCHAR (800) = dbo.fn_chemin_dossier_de_travail(@entite, @arrete, @nom);
     DECLARE @empreinte CHAR (64) = CONVERT(CHAR (64),
         HASHBYTES('SHA2_256', @cote + '|' + @modele_code + '|' + ISNULL(@version, '')), 2);
 

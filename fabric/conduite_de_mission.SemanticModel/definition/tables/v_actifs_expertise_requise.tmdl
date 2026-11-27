@@ -2,36 +2,6 @@
 table v_actifs_expertise_requise
 	lineageTag: 601e2bcb-1117-42d1-95f2-359325817621
 
-	/// Actifs exigeant une valeur externe.
-	measure 'Actifs a valeur externe' = COUNTROWS(v_actifs_expertise_requise) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 7e3756b3-e4a5-410b-9bc9-a52a78db61c2
-
-	/// Rapports d'expertise deposes.
-	measure 'Rapports deposes' = CALCULATE(COUNTROWS(v_actifs_expertise_requise), v_actifs_expertise_requise[rapport_depose] = TRUE()) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 3a86a890-9999-4e2f-9a14-f8a447e97bf5
-
-	/// Valeurs retenues saisies.
-	measure 'Valeurs retenues saisies' = CALCULATE(COUNTROWS(v_actifs_expertise_requise), v_actifs_expertise_requise[valeur_retenue_saisie] = TRUE()) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 358053b4-a268-4d43-84ca-18f31f380baf
-
-	/// Actifs a valeur externe, entite et arrete affiches.
-	measure 'Actifs a valeur externe du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Actifs a valeur externe], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0
-		displayFolder: Le dossier
-		lineageTag: dec7ff87-ad4b-4196-acda-8674f4747051
-
-	/// Rapports deposes, entite et arrete affiches.
-	measure 'Rapports deposes du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Rapports deposes], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0
-		displayFolder: Le dossier
-		lineageTag: c36fc047-1211-4ec3-9763-5181ad5d1200
-
 	column code_actif
 		dataType: string
 		isNullable: false

@@ -1,6 +1,4 @@
--- pr_deposer_classeur : 2 refus
--- 4. LE DEPOT.
-CREATE   PROCEDURE dbo.pr_deposer_classeur
+CREATE PROCEDURE dbo.pr_deposer_classeur
     @entite         VARCHAR (20),
     @arrete         VARCHAR (20),
     @fichier        NVARCHAR (400),
@@ -11,7 +9,7 @@ CREATE   PROCEDURE dbo.pr_deposer_classeur
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
+    -- Un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : avant le depot au site du cabinet.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -30,7 +28,7 @@ BEGIN
 
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite)
         THROW 50940, N'Entité inconnue.', 1;
-    -- 51304 (15/11/2026) : action 11. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- 51304 : juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
     -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
@@ -62,7 +60,7 @@ BEGIN
                    AND fichier = @fichier AND statut = 'FAIT')
         THROW 50609, N'Dépôt refusé : un livrable du même nom est déjà déposé dans le dossier Livrables de cet arrêté ; une version produite ne s''écrase pas.', 1;
 
-    DECLARE @dossier NVARCHAR (400) = N'Dossiers de travail/' + @entite + N'/' + @arrete + ISNULL(N'/' + @sous_dossier, N'');
+    DECLARE @dossier NVARCHAR (400) = dbo.fn_dossier_de_travail(@entite, @arrete, @sous_dossier);
     DECLARE @charge NVARCHAR (MAX) = JSON_MODIFY(JSON_MODIFY(JSON_MODIFY(JSON_MODIFY(N'{}',
         '$.site', @site), '$.dossier', @dossier), '$.fichier', @fichier), '$.contenu_base64', @contenu_base64);
     DECLARE @reponse NVARCHAR (MAX), @ret INT;
@@ -92,7 +90,15 @@ BEGIN
             TRY_CAST(JSON_VALUE(@corps, '$.taille') AS INT), @message, @par, @sous_dossier, @recue, @ecrase);
 
     IF @statut <> 'FAIT'
-        BEGIN SET @message = REPLACE(@message, N'%', N'%%'); THROW 50946, @message, 1; END
+        BEGIN
+            -- l'ecran lit le texte court ; le detail du service suit le separateur fixe, que les fonctions
+            -- retirent de l'affichage et portent au journal des refus (la ligne export_dossier est annulee avec
+            -- l'action)
+            SET @message = N'Dépôt refusé : le site du cabinet n''a pas accepté le fichier. Réessayez ; si le refus '
+                         + N'revient, prévenez l''administrateur. [[detail]] ' + LEFT(@message, 1700);
+            SET @message = REPLACE(@message, N'%', N'%%');
+            THROW 50946, @message, 1;
+        END
     SELECT @web AS web_url, @onelake AS chemin_onelake, @message AS message, @recue AS empreinte_sha256;
 END;
 

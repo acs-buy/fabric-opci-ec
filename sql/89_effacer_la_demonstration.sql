@@ -22,8 +22,6 @@
 --    annexe_w_arr, annexe_w_axe, annexe_w_cel, annexe_w_ctl, annexe_w_etat, annexe_w_nom, annexe_w_num,
 --      annexe_w_ops, annexe_w_sol : les lignes de travail d'un calcul de l'annexe, que le calcul efface
 --      lui-meme a sa fin.
---    essai_saisie_grille : une table d'essai de la saisie dans une grille, creee vide par le depot ;
---      seules les procedures pr_essai_du_cache, pr_essai_refus_avale et pr_essai_refus_relance y ecrivent.
 --    jeu_mention_refus, jeu_mention_retiree : le journal du retrait d'une mention dans les textes de la
 --      base qui a servi a construire le depot, creees vides par le depot ; aucun script du depot n'y
 --      ecrit.

@@ -2,29 +2,11 @@
 table v_perimetre_arrete
 	lineageTag: 7ccd1dad-27a5-44f9-9bf3-84583d38e8b6
 
-	/// Entites entrees dans le perimetre d'un arrete.
-	measure 'Entrees du perimetre' = COUNTROWS(v_perimetre_arrete) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: febad7bd-daae-45e5-866e-242b3f91128c
-
 	/// Entrees dont la balance est chargee.
 	measure 'Entrees chargees' = CALCULATE(COUNTROWS(v_perimetre_arrete), v_perimetre_arrete[etat_entree] = "CHARGE") + 0
 		formatString: #,0
 		displayFolder: Parcours
 		lineageTag: 570cd37f-d879-4c47-bba4-fb5c703c9815
-
-	/// Lots d'ecritures recus.
-	measure 'Lots recus' = SUM(v_perimetre_arrete[lots]) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: e245e779-e33d-4f33-ab79-887bc2cb84e6
-
-	/// Ecritures recues.
-	measure 'Ecritures recues' = SUM(v_perimetre_arrete[ecritures]) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 7a127676-bf77-489e-b8d5-cc98d4fa8538
 
 	column entite
 		dataType: string

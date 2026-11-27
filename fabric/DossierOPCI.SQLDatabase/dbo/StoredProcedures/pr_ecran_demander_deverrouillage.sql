@@ -1,8 +1,11 @@
--- --- 3. pr_ecran_demander_deverrouillage, neuve ----------------------------------------------------------
--- : bouton « Déverrouiller le dossier » de l'ecran 2, etape 6 (fonction demander_deverrouillage de
+-- --- pr_ecran_demander_deverrouillage ----------------------------------------------------------
+-- Bouton « Déverrouiller le dossier » de l'ecran 2, etape 6 (fonction demander_deverrouillage de
 -- fn_ecran_revision) ; le demandeur est la connexion, jamais tape. Le dossier verrouille est celui de l'entite meme
--- (dossier_verrou), comme pr_deverrouiller_dossier. Le vide : les 29 caracteres de str.isspace().
-CREATE   PROCEDURE dbo.pr_ecran_demander_deverrouillage @entite VARCHAR (20), @arrete VARCHAR (20), @motif NVARCHAR (800), @par NVARCHAR (400)
+-- (dossier_verrou), comme pr_deverrouiller_dossier. Le vide de @entite et @arrete : les 29 caracteres de
+-- str.isspace() ; celui du motif est juge par dbo.fn_texte_vide, qui ote les memes caracteres puis tient aussi
+-- pour vide un reste que la collation de la base egale a la chaine vide ; un motif rempli n'est rogne que des espaces
+-- (LTRIM, RTRIM).
+CREATE PROCEDURE dbo.pr_ecran_demander_deverrouillage @entite VARCHAR (20), @arrete VARCHAR (20), @motif NVARCHAR (800), @par NVARCHAR (400)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -25,7 +28,7 @@ BEGIN
         THROW 51240, N'Demande refusée : aucun dossier de travail verrouillé pour le véhicule et l''arrêté des sélecteurs.', 1;
     IF EXISTS (SELECT 1 FROM dbo.demande_reouverture WHERE entite = @entite AND arrete = @arrete AND etat = 'EN_ATTENTE')
         THROW 51244, N'Demande refusée : une demande attend déjà la décision du chef de mission pour cet arrêté.', 1;
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     IF @motif IS NULL
         THROW 51245, N'Demande refusée : elle exige un motif, qui dit quel travail justifie de déverrouiller le dossier.', 1;
     IF LEN(@motif) > 580

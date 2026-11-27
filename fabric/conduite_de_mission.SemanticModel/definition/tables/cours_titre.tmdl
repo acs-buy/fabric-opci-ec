@@ -14,8 +14,8 @@ table cours_titre
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 1acd9190-5fa0-44bc-af31-76e519dc9255
 
-	/// « n cours saisis · aucun titre choisi », « n cours saisis · <titre> »
-	measure 'Sous-titre cours de l arrete' = VAR n = COUNTROWS ( cours_titre ) + 0 VAR t = IF ( HASONEVALUE ( v_differences_titres[code_actif] ), SELECTEDVALUE ( v_differences_titres[code_actif] ) ) RETURN FORMAT ( n, "0" ) & " cours saisis · " & IF ( ISBLANK ( t ), "aucun titre choisi", t )
+	/// « n cours saisis · aucun titre choisi », « n cours saisis · <titre> » ; « 1 cours saisi · … », « aucun cours saisi · … »
+	measure 'Sous-titre cours de l arrete' = VAR n = COUNTROWS ( cours_titre ) + 0 VAR t = IF ( HASONEVALUE ( v_differences_titres[code_actif] ), SELECTEDVALUE ( v_differences_titres[code_actif] ) ) RETURN IF ( n = 0, "aucun cours saisi", FORMAT ( n, "0" ) & IF ( n > 1, " cours saisis", " cours saisi" ) ) & " · " & IF ( ISBLANK ( t ), "aucun titre choisi", t )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: ff75542e-e11c-4d0d-a536-fe795e24a799
 

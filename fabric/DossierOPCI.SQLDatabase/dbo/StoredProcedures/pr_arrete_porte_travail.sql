@@ -1,10 +1,10 @@
--- --- 4. un arrete porte-t-il un travail, et lequel ----------------------------------------------------
--- 19/11/2026 : 1 si une ligne d'une table qui reference ref_arrete par (entite, arrete) vise cet arrete, ou si une
--- expertise d'un actif de l'entite porte sa date ; 0 sinon. Les tables se lisent au catalogue (sys.foreign_keys) : une
+-- --- un arrete porte-t-il un travail, et lequel ----------------------------------------------------
+-- @travail vaut 1 si une ligne d'une table qui reference ref_arrete par (entite, arrete) vise cet arrete, ou si une
+-- expertise d'un actif de l'entite ou de ses filiales a l'arrete porte sa date ; 0 sinon. Les tables se lisent au catalogue (sys.foreign_keys) : une
 -- table ajoutee plus tard avec sa cle est couverte. Catalogue illisible : 1, par prudence. La cle etrangere reste le
 -- dernier rempart : un DELETE d'un arrete reference echoue et annule tout.
 -- @trouve rend le libelle du 1er travail trouve (ordre des noms de table), NULL sans travail ou catalogue illisible.
-CREATE   PROCEDURE dbo.pr_arrete_porte_travail
+CREATE PROCEDURE dbo.pr_arrete_porte_travail
     @entite  VARCHAR (20),
     @arrete  VARCHAR (20),
     @travail BIT OUTPUT,
@@ -21,7 +21,7 @@ BEGIN
                            N' UNION ALL ')
     FROM sys.foreign_keys fk
     JOIN sys.tables tb ON tb.object_id = fk.parent_object_id
-    -- aucun agregat ne voit de NULL (avertissement 8153 lu seul par pyodbc avant le THROW qui suit)
+    -- aucun agregat ne voit de NULL (avertissement 8153, que pyodbc lirait a la place d'un refus leve ensuite par l'appelant)
     CROSS APPLY (SELECT (SELECT TOP (1) pc.name
                          FROM sys.foreign_key_columns k
                          JOIN sys.columns pc ON pc.object_id = k.parent_object_id AND pc.column_id = k.parent_column_id

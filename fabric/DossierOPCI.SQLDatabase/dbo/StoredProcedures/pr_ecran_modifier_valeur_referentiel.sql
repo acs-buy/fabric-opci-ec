@@ -1,14 +1,13 @@
--- ===================================================================== 2. LES 6 PROCEDURES
--- ------------------------------------------------------------------ n° 11 : modifier la valeur d'une cellule
--- ecran 5
--- Contrat de la maquette (objet n° 11) ; raisons de [Blocage modifier la valeur], dans l'ordre de la maquette : mode
--- TEXTE, action_propre, droit, colonne non modifiable de la liste (une colonne de la liste que la table ne porte pas
--- comprise), lecture_seule (adresse d'installation) ; puis le contrat seul : colonne d'un parametre autre que la valeur ;
+-- ------------------------------------------------------------------ modifier la valeur d'une cellule
+-- Raisons de [Blocage modifier la valeur], dans son ordre : mode
+-- TEXTE, action_propre, droit, colonne d'un parametre autre que la valeur (libelle et description ; code, genre,
+-- pose_par et pose_le refuses par la procedure seule), colonne non modifiable de la liste (une colonne de la liste
+-- que la table ne porte pas comprise), lecture_seule (adresse d'installation) ;
 -- une colonne de la cle se change par « Changer le code » ; libelle d'enumeration traduit en code par ref_libelle_valeur ;
 -- « Reference » recue en « norme reference » ; ref_reference : une norme ou une reference neuve recopie l'intitule de
 -- ref_article et vide citation et lecture sur piece ; ref_parametre : la valeur d'un SEUIL seul, entier positif ou nul.
 -- Une valeur inchangee ne s'ecrit pas. La designation de la ligne, relue apres l'ecriture, reste unique.
-CREATE   PROCEDURE dbo.pr_ecran_modifier_valeur_referentiel
+CREATE PROCEDURE dbo.pr_ecran_modifier_valeur_referentiel
     @referentiel NVARCHAR (200) = NULL,
     @cle         NVARCHAR (400) = NULL,
     @colonne     NVARCHAR (200) = NULL,
@@ -104,7 +103,7 @@ BEGIN
             EXEC dbo.pr_e5_refuser 50846, @m;
         END;
         SET @lib_col = dbo.fn_e5_libelle_colonne(@t, @col);
-        -- contrat n° 11 : des parametres du cabinet, seule la valeur se modifie ; toute autre colonne de la table (code,
+        -- des parametres du cabinet, seule la valeur se modifie ; toute autre colonne de la table (code,
         -- libelle, description, genre, pose_par, pose_le) se refuse ici en 50834, des qu'elle est reconnue, avant les
         -- refus 50846 et l'adresse d'installation qui suivent ; l'ordre des autres referentiels ne change pas
         IF @t = 'ref_parametre' AND @col <> 'valeur'
@@ -151,7 +150,7 @@ BEGIN
         END;
         SET @type = dbo.fn_e5_type_colonne(@t, @col);
         SET @affiche = @valeur;
-        -- la cle etrangere d'une colonne : une reference normative se saisit « norme reference » (contrat n° 11), une
+        -- la cle etrangere d'une colonne : une reference normative se saisit « norme reference », une
         -- question de reference par sa reference, un sujet des questions sur la tenue par son libelle, comme
         -- la liste les montre
         SELECT TOP (1) @fk_cible = OBJECT_NAME(fk.referenced_object_id), @fk_col = rc.name
@@ -161,7 +160,7 @@ BEGIN
         JOIN sys.columns rc ON rc.object_id = fc.referenced_object_id AND rc.column_id = fc.referenced_column_id
         WHERE fk.parent_object_id = @oid AND pc.name = @col
           AND NOT EXISTS (SELECT 1 FROM sys.foreign_key_columns f2 WHERE f2.constraint_object_id = fk.object_id AND f2.constraint_column_id > 1);
-        -- un seuil des parametres du cabinet : un nombre entier positif ou nul (objet n° 11)
+        -- un seuil des parametres du cabinet : un nombre entier positif ou nul
         IF @t = 'ref_parametre'
         BEGIN
             IF @valeur IS NULL OR @valeur LIKE N'%[^0-9]%' OR LEN(@valeur) > 9
@@ -172,7 +171,7 @@ BEGIN
             END;
             SELECT @valeur = CAST(CAST(@valeur AS INT) AS NVARCHAR (12)), @affiche = CAST(CAST(@valeur AS INT) AS NVARCHAR (12));
         END;
-        -- la valeur : un libelle d'enumeration se traduit en code (ref_libelle_valeur, objet n° 8)
+        -- la valeur : un libelle d'enumeration se traduit en code (ref_libelle_valeur)
         IF @valeur IS NOT NULL AND EXISTS (SELECT 1 FROM dbo.ref_libelle_valeur lv WHERE lv.table_nom = @t AND lv.colonne = @col)
         BEGIN
             SELECT TOP (1) @code_enum = lv.valeur, @lib_enum = lv.libelle FROM dbo.ref_libelle_valeur lv
@@ -225,7 +224,7 @@ BEGIN
         END
         ELSE IF @fk_cible IN (N'ref_sujet_tenue') AND @fk_col = N'code'
         BEGIN
-            -- un sujet des questions sur la tenue se designe par son libelle, unique (objet n° 34), que la liste
+            -- un sujet des questions sur la tenue se designe par son libelle, unique, que la liste
             -- rend a la place du code ; la colonne le recoit, ou le code, et enregistre le code
             SET @sql = N'SELECT TOP (1) @v = CAST(x.[code] AS NVARCHAR (MAX)), @affiche = CAST(x.[libelle] AS NVARCHAR (MAX)) FROM dbo.'
                      + QUOTENAME(@fk_cible) + N' AS x WHERE x.[libelle] = @valeur OR CAST(x.[code] AS NVARCHAR (MAX)) = @valeur'
@@ -245,7 +244,7 @@ BEGIN
         ELSE IF @type_nom IN (N'tinyint', N'smallint', N'int', N'bigint')
         BEGIN
             SET @d = dbo.fn_e5_nombre(@valeur);
-            -- 25/10/2026 : un nombre d'au moins 9999999999999999999999999999,5 en valeur absolue deborderait
+            -- Un nombre d'au moins 9999999999999999999999999999,5 en valeur absolue deborderait
             -- ROUND (erreur 8115, en anglais) : il se refuse ici, avant tout arrondi, au texte du refus qui suit (50849).
             IF ABS(@d) >= 9999999999999999999999999999.5
             BEGIN
@@ -269,7 +268,7 @@ BEGIN
                 SET @m = N'« Nouvelle valeur » : « ' + @valeur + N' » n’est pas un nombre, et la colonne « ' + @lib_col + N' » en attend un.';
                 EXEC dbo.pr_e5_refuser 50849, @m;
             END;
-            -- 25/10/2026 : un nombre d'au moins 9999999999999999999999999999,5 en valeur absolue deborderait
+            -- Un nombre d'au moins 9999999999999999999999999999,5 en valeur absolue deborderait
             -- ROUND (erreur 8115, en anglais) : il se refuse ici, avant tout arrondi, au texte du refus qui suit (50849).
             IF ABS(@d) >= 9999999999999999999999999999.5
             BEGIN
@@ -331,7 +330,7 @@ BEGIN
                    @n_ref = CASE WHEN @col = 'reference' THEN CAST(@v AS VARCHAR (20)) ELSE r.reference END
             FROM dbo.ref_reference r WHERE r.id = CAST(@k1 AS INT);
             SELECT @intitule = a.intitule FROM dbo.ref_article a WHERE a.article = @n_ref AND a.norme = @n_norme;
-            IF NULLIF(LTRIM(RTRIM(@intitule)), N'') IS NULL
+            IF dbo.fn_texte_vide(@intitule) = 1
             BEGIN
                 SET @m = N'Modification refusée : l’article « ' + ISNULL(@n_ref, N'') + N' » de la norme « ' + ISNULL(@n_norme, N'')
                        + N' » n’est pas au référentiel des articles avec son intitulé ; aucun intitulé d’article ne se saisit à la main.';
@@ -359,7 +358,7 @@ BEGIN
         EXEC sp_executesql @sql, N'@k1 NVARCHAR (400), @k2 NVARCHAR (400), @v NVARCHAR (MAX), @intitule NVARCHAR (400), @n INT OUTPUT',
              @k1, @k2, @v, @intitule, @n = @n OUTPUT;
         -- la designation de la ligne reste unique dans son referentiel : relue apres l'ecriture ; une designation
-        -- inchangee ne se refuse pas (un doublon anterieur, que le controle C8 releve, ne vient pas de cette ecriture)
+        -- inchangee ne se refuse pas (un doublon anterieur ne vient pas de cette ecriture)
         EXEC dbo.pr_e5_designation @t, @canon, @cle, @ligne_n OUTPUT, @nb_d OUTPUT;
         IF @nb_d > 1 AND @ligne_n <> @ligne
         BEGIN
@@ -379,7 +378,7 @@ BEGIN
         IF @tc = 0 AND @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
         BEGIN TRY EXEC sp_set_session_context N'par', NULL; END TRY BEGIN CATCH END CATCH;
         SET @e_fr = dbo.fn_e5_traduire_erreur(@e_num, @e_msg);
-        -- un refus de garde (ROLLBACK, inscription, THROW, objet n° 17) recu sous 266 ou 3609 : son texte francais est
+        -- un refus de garde (ROLLBACK, inscription, THROW) recu sous 266 ou 3609 : son texte francais est
         -- la ligne qu'un declencheur a inscrite pour @par depuis l'entree
         IF @e_fr IS NULL AND @e_num IN (266, 3609) AND @par IS NOT NULL
             SELECT TOP (1) @e_fr = j.message FROM dbo.journal_refus j

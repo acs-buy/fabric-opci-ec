@@ -1,10 +1,12 @@
--- Objet n° 5 de l'ecran 5 : les referentiels du cabinet (du_cabinet = 1), table des segments Domaine,
+-- Les referentiels du cabinet (du_cabinet = 1), table des segments Domaine,
 -- Categorie et Referentiel ; ordre : le rang de la grille de l'etape 1, categorie_ordre puis rang_categorie ;
 -- forme_cle : vide pour un code d'une colonne, les libelles effectifs des colonnes du code (ref_libelle_colonne,
 -- vue de la table puis '*') joints par « · », 1re lettre en minuscule, « numerotee » pour une cle numerotee par la
 -- base ; designation : colonne_designation ; adresse_fichiers : le dossier Modeles de la bibliotheque Documents du
--- site du cabinet (SITE_CABINET), pour modele_feuille seul ; colonnes des cles relues au catalogue a la generation.
-CREATE   VIEW dbo.v_ecran_referentiel_choix AS
+-- site du cabinet (SITE_CABINET), pour modele_feuille seul.
+-- Les listes cle_colonne et numerotee sont figees : elles sont a mettre a jour quand un referentiel s'inscrit
+-- ou qu'une colonne de sa cle change.
+CREATE VIEW dbo.v_ecran_referentiel_choix AS
 WITH cle_colonne AS (
     SELECT table_nom, rang, colonne, defaut FROM (VALUES
         ('ref_question_article', 1, 'question_id', N'question_id'),
@@ -46,8 +48,8 @@ forme AS (
     FROM libelle_cle GROUP BY table_nom
 ),
 site AS (
-    SELECT MAX(CASE WHEN p.valeur LIKE N'%_:/sites/_%' THEN N'https://' + REPLACE(LTRIM(RTRIM(p.valeur)), N':/sites/', N'/sites/')
-                    + N'/Documents%20partages/Modeles' END) AS adresse
+    SELECT NULLIF(MAX(CASE WHEN p.valeur LIKE N'%_:/sites/_%' THEN N'https://' + REPLACE(LTRIM(RTRIM(p.valeur)), N':/sites/', N'/sites/')
+                    + N'/Documents%20partages/Modeles' ELSE N'' END), N'') AS adresse
     FROM dbo.ref_parametre p WHERE p.code = 'SITE_CABINET'
 )
 SELECT r.table_nom, r.libelle, r.mode_tenue, r.domaine, r.domaine_ordre, r.categorie, r.categorie_ordre,

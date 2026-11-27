@@ -1,12 +1,12 @@
--- 219. Designer une personne sur un role d'un dossier, et fermer le mandat precedent.
+-- Designer une personne sur un role d'un dossier, et fermer le mandat precedent.
 --
 -- BESOIN : aucun ecran ne permet aujourd'hui de designer l'associe signataire d'un dossier. role_mission
 -- se tient a la main, en base. C'est le manque que le parcours du 21/09/2026 a rendu visible : le createur
 -- d'un dossier en devient chef de mission (pr_creer_client), mais l'associe qui visera, lui, ne se designe nulle
 -- part. Cette procedure est la brique metier de l'ecran Referentiels, encore a construire.
 --
--- CE QU'ELLE N'EST PAS : une porte derobee de recette. Elle est appelee par la recette comme elle le sera
--- par l'ecran, avec la meme trace et les memes refus. La recette ne contourne rien, elle emprunte le chemin.
+-- CE QU'ELLE N'EST PAS : une porte derobee pour les essais. Les essais l'appellent comme l'ecran, avec la meme
+-- trace et les memes refus.
 --
 -- REGLES, portees par la base et non par cette procedure :
 --   fk_role_role       : le role existe au referentiel (ASSOCIE, CHEF_MISSION, PREPARATEUR) ;
@@ -18,7 +18,7 @@
 --
 -- Prerequis : role_mission, ref_role. Rejouable : redesigner la meme personne ne fait rien.
 
-CREATE   PROCEDURE dbo.pr_designer_role_mission
+CREATE PROCEDURE dbo.pr_designer_role_mission
     @entite     VARCHAR (20),
     @role       VARCHAR (20),
     @personne   NVARCHAR (400),
@@ -82,8 +82,8 @@ BEGIN
            @personne + N' désigné' + CASE WHEN @role = 'ASSOCIE' THEN N' associé signataire'
                                           WHEN @role = 'CHEF_MISSION' THEN N' chef de mission'
                                           ELSE N' ' + @role END
-         + N' de ' + @entite + N'.' + CASE WHEN @en_cours IS NULL THEN N''
-                                           ELSE N' Le mandat de ' + @en_cours + N' est clos.' END AS message;
+         + N' ' + dbo.fn_de(@entite) + N'.' + CASE WHEN @en_cours IS NULL THEN N''
+                                           ELSE N' Le mandat ' + dbo.fn_de(@en_cours) + N' est clos.' END AS message;
 END;
 
 GO

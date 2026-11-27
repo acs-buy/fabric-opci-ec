@@ -1,6 +1,6 @@
 
--- ------------------------------------------------------------------ n° 5 : le cours d'un titre 256 ou 258 du vehicule
-CREATE   PROCEDURE dbo.pr_ecran_enregistrer_cours
+-- ------------------------------------------------------------------ le cours d'un titre 256 ou 258 du vehicule
+CREATE PROCEDURE dbo.pr_ecran_enregistrer_cours
     @vehicule   VARCHAR (20),
     @arrete     VARCHAR (20),
     @code_actif VARCHAR (20),
@@ -51,7 +51,7 @@ BEGIN
         THROW;
     END CATCH;
     SELECT @vehicule AS vehicule,
-           N'Cours de ' + @code_actif + N' au ' + dbo.fn_date_ecran(@arrete) + N' enregistré : ' + dbo.fn_e3_montant(@quantite)
+           N'Cours ' + dbo.fn_de(@code_actif) + N' au ' + dbo.fn_date_ecran(@arrete) + N' enregistré : ' + dbo.fn_e3_montant(@quantite)
            + N' titres à ' + dbo.fn_e3_montant(@cours) + N'.' AS message;
 END;
 

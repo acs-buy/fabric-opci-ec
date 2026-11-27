@@ -89,7 +89,23 @@ def _message_sql(exc) -> str:
     """Le texte francais d'un THROW, sans le prefixe ni la queue du pilote ODBC."""
     s = _texte_pilote(exc)
     m = re.search(r"\[SQL Server\](.*?)(\s\(\d+\)\s\(SQL\w+\)|$)", s, re.S)
-    return (m.group(1) if m else s).strip()
+    return (m.group(1) if m else s).strip().split(SEPARATEUR_DETAIL, 1)[0].strip()
+
+
+# UN REFUS DE LA BASE PEUT JOINDRE UN DETAIL TECHNIQUE (code et texte d'un service appele, 50946) apres le separateur
+# fixe SEPARATEUR_DETAIL : _message_sql coupe avant lui, pour l'ecran ; le detail va au journal des refus seul.
+SEPARATEUR_DETAIL = "[[detail]]"
+
+
+def _detail_de_la_base(exc):
+    """Le texte du journal d'un refus qui joint un detail : le texte court, puis le detail ; None sans detail."""
+    s = _texte_pilote(exc)
+    m = re.search(r"\[SQL Server\](.*?)(\s\(\d+\)\s\(SQL\w+\)|$)", s, re.S)
+    t = (m.group(1) if m else s).strip()
+    if SEPARATEUR_DETAIL not in t:
+        return None
+    court, detail = (x.strip() for x in t.split(SEPARATEUR_DETAIL, 1))
+    return "%s Détail : %s" % (court, detail)
 
 
 def _numero_sql(exc):
@@ -318,7 +334,7 @@ def _executer(base: fn.FabricSqlConnection, sql: str, params: tuple, entite=_DED
         if message is None:                     # erreur non prevue : TEXTE_ERREUR, le detail au journal seul
             _journaliser_erreur(base, conn, sql, TEXTE_ERREUR, params, entite, detail=_detail(e, sql))
             raise _refus(TEXTE_ERREUR, sql) from e
-        _journaliser_erreur(base, conn, sql, message, params, entite)
+        _journaliser_erreur(base, conn, sql, message, params, entite, detail=_detail_de_la_base(e))
         raise _refus(message, sql, _numero_sql(e))
     finally:
         conn.close()
@@ -346,7 +362,7 @@ def _executer_ecran(base: fn.FabricSqlConnection, sql: str, params: tuple, relir
         if message is None:                     # erreur non prevue : TEXTE_ERREUR, le detail au journal seul
             _journaliser_erreur(base, conn, sql, TEXTE_ERREUR, params, detail=_detail(e, sql))
             raise fn.UserThrownError(TEXTE_ERREUR, {"sql": sql.split("(")[0].strip()}) from e
-        _journaliser_erreur(base, conn, sql, message, params)
+        _journaliser_erreur(base, conn, sql, message, params, detail=_detail_de_la_base(e))
         raise fn.UserThrownError(message, {"sql": sql.split("(")[0].strip()})
     finally:
         conn.close()

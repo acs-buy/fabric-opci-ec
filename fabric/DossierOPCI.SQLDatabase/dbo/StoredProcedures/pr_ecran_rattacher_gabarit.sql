@@ -1,9 +1,8 @@
--- ===================================================================== 1. LE RATTACHEMENT DU FICHIER D'UN GABARIT
--- ecran 5
--- Objet n° 27 : inscrit sur modele_feuille le fichier depose au dossier Modeles du site du cabinet, lu par la fonction au
+-- ===================================================================== LE RATTACHEMENT DU FICHIER D'UN GABARIT
+-- Inscrit sur modele_feuille le fichier depose au dossier Modeles du site du cabinet, lu par la fonction au
 -- raccourci du coffre (fec/Modeles/<fichier>) avec son empreinte : nom_fichier, chemin_coffre, empreinte_sha256. Associe
 -- seul. @referentiel, facultatif : le referentiel choisi a l'ecran, refuse s'il ne porte pas de fichier.
-CREATE   PROCEDURE dbo.pr_ecran_rattacher_gabarit
+CREATE PROCEDURE dbo.pr_ecran_rattacher_gabarit
     @modele        NVARCHAR (400)  = NULL,
     @fichier       NVARCHAR (4000) = NULL,
     @chemin_coffre NVARCHAR (4000) = NULL,
@@ -30,7 +29,7 @@ BEGIN
             @chemin_avant NVARCHAR (400), @emp_avant CHAR (64), @raccourci NVARCHAR (200), @attendu NVARCHAR (4000),
             @chemin NVARCHAR (400);
     BEGIN TRY
-        -- 1. l'auteur, puis par pose avant la 1re ecriture (objet n° 16)
+        -- 1. l'auteur, puis par pose avant la 1re ecriture
         IF ISNULL(DATALENGTH(TRIM(@blancs COLLATE Latin1_General_100_BIN2 FROM @par COLLATE Latin1_General_100_BIN2)), 0) = 0
             EXEC dbo.pr_e5_refuser 50900, N'Action refusée : l’auteur de l’action n’est pas transmis ; l’écran le transmet avec l’adresse de connexion de la personne qui clique.';
         SET @par = LTRIM(RTRIM(@par));
@@ -67,7 +66,7 @@ BEGIN
         END;
         -- 4. le fichier : un nom simple, en .docx, .dotx ou .xlsx
         IF ISNULL(DATALENGTH(TRIM(@blancs COLLATE Latin1_General_100_BIN2 FROM @fichier COLLATE Latin1_General_100_BIN2)), 0) = 0
-            EXEC dbo.pr_e5_refuser 50925, N'Le champ « Nom du fichier déposé » est vide : saisissez le nom du fichier déposé au dossier Modèles du site du cabinet.';
+            EXEC dbo.pr_e5_refuser 50925, N'Le champ « Nom du fichier déposé » est vide : saisissez le nom du fichier déposé au dossier Modeles du site du cabinet.';
         SET @fichier = LTRIM(RTRIM(@fichier));
         IF LEN(@fichier) > 400
         BEGIN
@@ -136,7 +135,7 @@ BEGIN
         BEGIN TRY EXEC sp_set_session_context N'par', NULL; END TRY BEGIN CATCH END CATCH;
         -- une contrainte de la table se dit en francais par le libelle de sa colonne, jamais par son nom
         SET @e_fr = dbo.fn_e5_traduire_erreur(@e_num, @e_msg);
-        -- un refus de garde (ROLLBACK, inscription, THROW, objet n° 17) recu sous 266 ou 3609 : la ligne qu'un declencheur
+        -- un refus de garde (ROLLBACK, inscription, THROW) recu sous 266 ou 3609 : la ligne qu'un declencheur
         -- a inscrite pour @par depuis l'entree
         IF @e_fr IS NULL AND @e_num IN (266, 3609) AND @par IS NOT NULL
             SELECT TOP (1) @e_fr = j.message FROM dbo.journal_refus j

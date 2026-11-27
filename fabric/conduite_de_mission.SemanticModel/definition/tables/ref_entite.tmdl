@@ -12,11 +12,6 @@ table ref_entite
 		displayFolder: Le dossier
 		lineageTag: 6e97c78b-8d3e-4616-9fca-c5c27c815e24
 
-	/// Denomination de l'entite affichee.
-	measure 'Denomination courante' = VAR e = [Entite courante] RETURN CALCULATE(MIN(ref_entite[Dénomination]), FILTER(ALL(ref_entite), ref_entite[Entité] = e))
-		displayFolder: Le dossier
-		lineageTag: 1e0cb6c9-bb29-4d8f-9be8-c708ecefa71e
-
 	/// Carte 1.
 	measure 'Clients du cabinet' = CALCULATE ( COUNTROWS ( ref_entite ), ref_entite[est_client] = TRUE () )
 		formatString: #,0
@@ -88,7 +83,7 @@ table ref_entite
 		displayFolder: Ecran 1 Client
 		lineageTag: 94b2b21c-1b36-4cba-9367-1c76f22ad01b
 
-	measure 'Sous-ligne clients' = VAR n = CALCULATE ( COUNTROWS ( ref_entite ) ) RETURN IF ( ISBLANK ( n ), "aucune entité", FORMAT ( n, "#,0" ) & " entités au périmètre" )
+	measure 'Sous-ligne clients' = VAR n = CALCULATE ( COUNTROWS ( ref_entite ) ) RETURN IF ( ISBLANK ( n ), "aucune entité", FORMAT ( n, "#,0" ) & IF ( n > 1, " entités", " entité" ) & " au périmètre" )
 		displayFolder: Ecran 1 Client
 		lineageTag: 12700850-775e-4be4-9c4e-6ca63281fcbd
 

@@ -1,6 +1,5 @@
--- pr_repondre_question : 7 refus
--- --- 9. pr_repondre_question, meme corps, plus la garde du verrou ----------------------
-CREATE   PROCEDURE dbo.pr_repondre_question
+-- pr_repondre_question, avec la garde du verrou
+CREATE PROCEDURE dbo.pr_repondre_question
     @cote                  VARCHAR (30),
     @reference             VARCHAR (20),
     @reponse               NVARCHAR (400) = NULL,
@@ -10,7 +9,7 @@ CREATE   PROCEDURE dbo.pr_repondre_question
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
+    -- Un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : fn_ecran_client.repondre_question refuse ces champs avant l'appel.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -30,7 +29,7 @@ BEGIN
         BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50242, @m1, 1; END
     END;
     SELECT @entite = entite, @arrete = arrete FROM dbo.feuille_travail WHERE cote = @cote;
-    -- 51305 (15/11/2026) : action 12, dossier lu par la cote. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- 51305 : dossier lu par la cote ; juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
     -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
@@ -40,7 +39,7 @@ BEGIN
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé : il s''exporte, il ne se modifie plus. Seule la personne qui a visé peut le déverrouiller.', 1;
 
-    SET @reponse = NULLIF(LTRIM(RTRIM(@reponse)), N'');
+    SET @reponse = CASE WHEN dbo.fn_texte_vide(@reponse) = 1 THEN NULL ELSE LTRIM(RTRIM(@reponse)) END;
     DECLARE @bin VARCHAR (20) = NULL, @val NVARCHAR (400) = NULL;
     IF @reponse IS NULL
     BEGIN
@@ -57,7 +56,7 @@ BEGIN
         IF @bin IS NULL
         BEGIN
             DECLARE @m2 NVARCHAR (400) = N'La question ' + @reference + N' se répond par OUI ou NON'
-                + CASE WHEN @type = 'OUI_NON_NA' THEN N', ou NA avec un motif' ELSE N'' END + N'. Reçu : « ' + @reponse + N' ».';
+                + CASE WHEN @type = 'OUI_NON_NA' THEN N', ou NA avec un motif' ELSE N'' END + N'. Reçu : « ' + CASE WHEN LEN(@reponse + N'.') - 1 > 40 THEN RTRIM(LEFT(@reponse, 39)) + N'…' ELSE @reponse END + N' ».';
             BEGIN SET @m2 = REPLACE(@m2, N'%', N'%%'); THROW 50244, @m2, 1; END
         END;
         IF @bin = 'NON_APPLICABLE' AND @type = 'OUI_NON'
@@ -65,7 +64,7 @@ BEGIN
             DECLARE @m3 NVARCHAR (400) = N'La question ' + @reference + N' n''admet pas la non-applicabilité.';
             BEGIN SET @m3 = REPLACE(@m3, N'%', N'%%'); THROW 50245, @m3, 1; END
         END;
-        IF @bin = 'NON_APPLICABLE' AND NULLIF(LTRIM(RTRIM(@motif_non_applicable)), N'') IS NULL
+        IF @bin = 'NON_APPLICABLE' AND dbo.fn_texte_vide(@motif_non_applicable) = 1
         BEGIN
             DECLARE @m4 NVARCHAR (400) = N'La question ' + @reference + N' est déclarée non applicable sans motif. Le motif est obligatoire.';
             BEGIN SET @m4 = REPLACE(@m4, N'%', N'%%'); THROW 50246, @m4, 1; END
@@ -77,17 +76,17 @@ BEGIN
         IF @type = 'CHOIX' AND @options IS NOT NULL
            AND NOT EXISTS (SELECT 1 FROM STRING_SPLIT(@options, '|') s WHERE LTRIM(RTRIM(s.value)) = @val)
         BEGIN
-            DECLARE @m5 NVARCHAR (600) = N'La question ' + @reference + N' se répond parmi : ' + REPLACE(@options, '|', N', ') + N'. Reçu : « ' + @val + N' ».';
+            DECLARE @m5 NVARCHAR (600) = N'La question ' + @reference + N' se répond par : ' + CASE WHEN LEN(REPLACE(@options, '|', N', ') + N'.') - 1 > 200 THEN RTRIM(LEFT(REPLACE(@options, '|', N', '), 199)) + N'…' ELSE REPLACE(@options, '|', N', ') END + CASE WHEN LEN(REPLACE(@options, '|', N', ') + N'.') - 1 > 200 THEN N' Reçu : « ' ELSE N'. Reçu : « ' END + CASE WHEN LEN(@val + N'.') - 1 > 40 THEN RTRIM(LEFT(@val, 39)) + N'…' ELSE @val END + N' ».';
             BEGIN SET @m5 = REPLACE(@m5, N'%', N'%%'); THROW 50247, @m5, 1; END
         END;
         IF @type = 'DATE' AND TRY_CONVERT(DATE, @val, 103) IS NULL AND TRY_CONVERT(DATE, @val, 23) IS NULL
         BEGIN
-            DECLARE @m6 NVARCHAR (400) = N'La question ' + @reference + N' attend une date, jj/mm/aaaa. Reçu : « ' + @val + N' ».';
+            DECLARE @m6 NVARCHAR (400) = N'La question ' + @reference + N' attend une date jj/mm/aaaa. Reçu : « ' + CASE WHEN LEN(@val + N'.') - 1 > 40 THEN RTRIM(LEFT(@val, 39)) + N'…' ELSE @val END + N' ».';
             BEGIN SET @m6 = REPLACE(@m6, N'%', N'%%'); THROW 50248, @m6, 1; END
         END;
         IF @type = 'MONTANT' AND TRY_CONVERT(DECIMAL (18, 2), REPLACE(REPLACE(@val, N' ', N''), N',', N'.')) IS NULL
         BEGIN
-            DECLARE @m7 NVARCHAR (400) = N'La question ' + @reference + N' attend un montant. Reçu : « ' + @val + N' ».';
+            DECLARE @m7 NVARCHAR (400) = N'La question ' + @reference + N' attend un montant. Reçu : « ' + CASE WHEN LEN(@val + N'.') - 1 > 40 THEN RTRIM(LEFT(@val, 39)) + N'…' ELSE @val END + N' ».';
             BEGIN SET @m7 = REPLACE(@m7, N'%', N'%%'); THROW 50249, @m7, 1; END
         END;
     END;

@@ -3,7 +3,7 @@ table v_ecran_articles_du_referentiel
 	lineageTag: 4415729d-abb5-4224-8d70-c45811cf94a0
 
 	/// n° 146, « n articles », n le nombre d’articles distincts du référentiel choisi
-	measure 'Sous-titre articles cites' = VAR r = [Referentiel choisi] VAR n = CALCULATE ( DISTINCTCOUNT ( v_ecran_articles_du_referentiel[article] ), FILTER ( ALL ( v_ecran_articles_du_referentiel ), v_ecran_articles_du_referentiel[referentiel] = r ) ) + 0 RETURN FORMAT ( n, "0" ) & IF ( n < 2, " article", " articles" )
+	measure 'Sous-titre articles cites' = VAR r = [Referentiel choisi] VAR n = CALCULATE ( DISTINCTCOUNT ( v_ecran_articles_du_referentiel[article] ), FILTER ( ALL ( v_ecran_articles_du_referentiel ), v_ecran_articles_du_referentiel[referentiel] = r ) ) + 0 RETURN IF ( n = 0, "aucun article", FORMAT ( n, "0" ) & IF ( n < 2, " article", " articles" ) )
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: f19bec00-4b6c-481d-b069-be8eb5d6867b
 

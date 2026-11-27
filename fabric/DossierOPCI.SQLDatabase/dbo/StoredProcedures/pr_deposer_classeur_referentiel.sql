@@ -1,9 +1,8 @@
--- ===================================================================== 1. LE DEPOT D'UN CLASSEUR DU CABINET
--- ecran 5
--- Objet n° 36 : depose au dossier Referentiels du site du cabinet, par la route deposer_classeur (voie de
+-- ===================================================================== LE DEPOT D'UN CLASSEUR DU CABINET
+-- Depose au dossier Referentiels du site du cabinet, par la route deposer_classeur (voie de
 -- pr_deposer_classeur), le classeur d'un referentiel (REFERENTIEL) ou des niveaux de programme (NIVEAUX), puis inscrit
 -- le depot dans classeur_cabinet. La route cree le dossier absent ; chemin_onelake se lit tel quel par le raccourci.
-CREATE   PROCEDURE dbo.pr_deposer_classeur_referentiel
+CREATE PROCEDURE dbo.pr_deposer_classeur_referentiel
     @genre          NVARCHAR (40)   = NULL,
     @referentiel    NVARCHAR (400)  = NULL,
     @fichier        NVARCHAR (4000) = NULL,
@@ -32,7 +31,7 @@ BEGIN
     -- la cle detail_route : remise a vide a chaque appel, une connexion de fonction pouvant resservir
     EXEC sp_set_session_context N'detail_route', NULL;
     BEGIN TRY
-        -- 1. l'auteur, puis par pose avant la 1re ecriture (objet n° 16)
+        -- 1. l'auteur, puis par pose avant la 1re ecriture
         IF ISNULL(DATALENGTH(TRIM(@blancs COLLATE Latin1_General_100_BIN2 FROM @par COLLATE Latin1_General_100_BIN2)), 0) = 0
             EXEC dbo.pr_e5_refuser 50900, N'Action refusée : l’auteur de l’action n’est pas transmis ; l’écran le transmet avec l’adresse de connexion de la personne qui clique.';
         SET @par = LTRIM(RTRIM(@par));
@@ -59,7 +58,7 @@ BEGIN
             SET @m = N'Dépôt refusé : le classeur des niveaux de programme ne porte aucun référentiel, et « ' + LEFT(LTRIM(RTRIM(@referentiel)), 200) + N' » est transmis.';
             EXEC dbo.pr_e5_refuser 50901, @m;
         END;
-        -- 51324 (15/11/2026) : action 30, la garde du referentiel jugee sur @par ; refus par pr_e5_refuser, dans le TRY, comme l'ecran 5. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+        -- 51324 : la garde du referentiel, jugee sur @par ; refus par pr_e5_refuser, dans le TRY. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
         -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
         IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1 AND dbo.fn_peut_ecrire_referentiel(CASE WHEN @g = N'NIVEAUX' THEN 'ref_question' ELSE @t END, @par) = 0
         BEGIN
@@ -104,7 +103,10 @@ BEGIN
             EXEC dbo.pr_e5_refuser 50904, N'Dépôt refusé : aucune DATABASE SCOPED CREDENTIAL ne porte le nom de l’adresse de dépôt (azure/README.md du dépôt).';
         IF NULLIF(LTRIM(RTRIM(@raccourci)), N'') IS NULL
             EXEC dbo.pr_e5_refuser 50904, N'Dépôt refusé : le raccourci du site du cabinet n’est pas installé (paramètre RACCOURCI_SITE_CABINET) ; sans lui, le classeur déposé ne se relit pas.';
-        -- 6. l'empreinte du contenu recu, calculee par la base sur les octets decodes, puis l'appel de la route
+        -- 6. l'empreinte des octets recus, calculee par la base sur le base64 decode avant l'appel de la route ; c'est
+        --    elle que classeur_cabinet.empreinte_sha256 garde. SharePoint reecrit l'enveloppe d'un fichier Office
+        --    depose : la copie stockee, relue par le raccourci, peut avoir une autre empreinte, et aucune procedure
+        --    ne compare les deux.
         SET @recue = dbo.fn_empreinte_base64(@contenu_base64);
         SET @charge = JSON_MODIFY(JSON_MODIFY(JSON_MODIFY(JSON_MODIFY(N'{}', '$.site', @site), '$.dossier', @dossier),
                                   '$.fichier', @fichier), '$.contenu_base64', @contenu_base64);
@@ -184,10 +186,10 @@ BEGIN
         ELSE
             EXEC dbo.pr_e5_conclure_refus @tc, @journal_avant, @proc, @par, '-', @e_journal;
         -- 50905 : sous la transaction d'une fonction, la ligne du journal part avec son rollback ; le
-        -- detail passe aussi par la cle detail_route du contexte de session, qui survit au rollback (essai du
-        -- 25/10/2026), relue par la fonction apres son rollback, passee en detail de son journal, puis remise a vide.
+        -- detail passe aussi par la cle detail_route du contexte de session, qui survit au rollback,
+        -- relue par la fonction apres son rollback, passee en detail de son journal, puis remise a vide.
         -- Posee sur tout 50905 : @tc vaut 0 sur une connexion de fonction sans autocommit, la transaction implicite ne
-        -- s'ouvrant qu'a la 1re lecture de table (mesure du 25/10/2026) ; sans effet dans un appel direct, l'appel
+        -- s'ouvrant qu'a la 1re lecture de table ; sans effet dans un appel direct, l'appel
         -- suivant la remettant a vide
         IF @e_num = 50905 AND @detail_route IS NOT NULL
             BEGIN TRY EXEC sp_set_session_context N'detail_route', @detail_route; END TRY BEGIN CATCH END CATCH;

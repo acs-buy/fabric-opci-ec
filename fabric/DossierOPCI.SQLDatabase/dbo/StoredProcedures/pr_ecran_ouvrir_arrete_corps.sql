@@ -1,18 +1,16 @@
--- --- 2. le corps du bouton « Ouvrir l'arrete » fige la periodicite des arretes qu'il planifie ------------------
--- --- 8. le corps du bouton « Ouvrir l'arrete » ---------------------------------------------------------
--- pr_ecran_ouvrir_arrete : le corps d'origine, renomme
--- --- 6. l'etape 6 de la maquette : planifier les arretes de l'exercice, ouvrir le premier ----------
--- 19/11/2026 : un refus des portes garde la planification. Les portes se jugent avant l'ouverture par
+-- pr_ecran_ouvrir_arrete_corps : le corps du bouton « Ouvrir l'arrete », appele par pr_ecran_ouvrir_arrete :
+-- planifier les arretes de l'exercice, ouvrir le premier, figer la periodicite des arretes qu'il planifie.
+-- Un refus des portes garde la planification. Les portes se jugent avant l'ouverture par
 -- dbo.fn_portes_arrete ; un refus s'ecrit dans ref_arrete.message_ecran du 1er arrete et dans journal_refus, et la
 -- procedure rend ouvert = 0 sans THROW : un THROW condamnerait la transaction de l'enveloppe, planification
--- comprise. Toute autre erreur de l'ouverture leve 50264 et annule tout, comme avant.
--- 19/11/2026 : un seul arrete SEMESTRIEL par exercice (ux_arrete_semestriel, DIP du 1er semestre) ; le retrait
+-- comprise. Toute autre erreur de l'ouverture leve 50264 et annule tout.
+-- Un seul arrete SEMESTRIEL par exercice (ux_arrete_semestriel, DIP du 1er semestre) ; le retrait
 -- d'un arrete passe par pr_arrete_retirer_avec_filiales, dans la boucle (50265, qui nomme l'entite et le travail) et
 -- dans le bloc du questionnaire (les arretes des filiales a la date de l'arrete par defaut partent avec lui).
 -- Dernier jeu de resultats, 1 ligne : arrete, planifies, ouvert, refus (NULL ou 50025, 50026, 50027), message.
--- (20/11/2026) : la periodicite de la planification se fige sur chaque arrete prevu non ouvert
+-- La periodicite de la planification se fige sur chaque arrete prevu non ouvert
 -- (dbo.arrete_periodicite) ; la periodicite de l'entite ne suit que son dernier exercice planifie ou ouvert.
-CREATE   PROCEDURE dbo.pr_ecran_ouvrir_arrete_corps
+CREATE PROCEDURE dbo.pr_ecran_ouvrir_arrete_corps
     @entite          VARCHAR (20),
     @exercice_debut  DATE,
     @exercice_fin    DATE,
@@ -189,7 +187,7 @@ BEGIN
          WHERE entite = @entite AND nature_technique = 'MISSION' AND exercice = @ex
            AND rang_exercice <> 1 + ISNULL((SELECT COUNT(DISTINCT z.exercice) FROM dbo.ref_arrete z
                                             WHERE z.entite = @entite AND z.nature_technique = 'MISSION' AND z.exercice < @ex), 0);
-        -- : chaque arrete prevu et non ouvert recoit la periodicite de cette planification, qui a fixe son type ;
+        -- chaque arrete prevu et non ouvert recoit la periodicite de cette planification, qui a fixe son type ;
         -- un arrete ouvert garde la sienne.
         UPDATE ap SET periodicite_vl = @periodicite_vl, fixee_le = SYSUTCDATETIME(), fixee_par = LEFT(@par, 400)
           FROM dbo.arrete_periodicite ap JOIN @prevu p ON p.arrete = ap.arrete
@@ -209,17 +207,24 @@ BEGIN
         -- le questionnaire d'acceptation s'etait adosse a la cloture par defaut : s'il vise un
         -- arrete hors de cet exercice, il se re-adosse a la cloture retenue, et la ligne planifiee
         -- par defaut est retiree si plus rien ne la reference.
-        -- seulement tant qu'aucun arrete du client n'est ouvert. Ensuite, le questionnaire appartient au 1er
+        -- Ce re-adossement n'a lieu que tant qu'aucun arrete du client n'est ouvert. Ensuite, le questionnaire appartient au 1er
         -- exercice de la mission et ne suit pas la planification des exercices suivants.
         DECLARE @cote VARCHAR (30) = 'ACC-' + @entite, @ancien VARCHAR (20);
         SELECT @ancien = arrete FROM dbo.feuille_travail WHERE cote = @cote;
         IF @ancien IS NOT NULL AND @ancien NOT IN (SELECT CONVERT(VARCHAR (10), d, 23) FROM @dates)
            AND NOT EXISTS (SELECT 1 FROM dbo.arrete_mission WHERE entite = @entite)
         BEGIN
-            UPDATE dbo.feuille_travail SET arrete = CONVERT(VARCHAR (10), @exercice_fin, 23) WHERE cote = @cote;
+            -- le chemin du classeur suit l'arrete quand il est deja dans le dossier de travail ; un chemin d'avant
+            -- reste tel quel
+            UPDATE dbo.feuille_travail
+               SET arrete = CONVERT(VARCHAR (10), @exercice_fin, 23),
+                   chemin_coffre = CASE WHEN chemin_coffre LIKE N'%/Dossiers de travail/%'
+                                        THEN dbo.fn_chemin_dossier_de_travail(entite, CONVERT(VARCHAR (10), @exercice_fin, 23), nom_fichier)
+                                        ELSE chemin_coffre END
+             WHERE cote = @cote;
             -- l'arrete par defaut n'est retire que s'il ne porte plus aucun travail, juge sur
             -- toutes les cles ; un visa d'acceptation ou une piece permanente le garde, sans l'erreur 547 d'avant.
-            -- : avec les arretes de ses filiales a sa date, par pr_arrete_retirer_avec_filiales ; un travail sur
+            -- Il part avec les arretes de ses filiales a sa date, par pr_arrete_retirer_avec_filiales ; un travail sur
             -- l'un d'eux les garde tous, sans refus.
             IF EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND arrete = @ancien AND est_arrete_client = 1)
                AND NOT EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND exercice = @ancien AND arrete <> @ancien)
@@ -232,7 +237,7 @@ BEGIN
            AND NOT EXISTS (SELECT 1 FROM dbo.ref_arrete z WHERE z.entite = @entite AND z.nature_technique = 'MISSION' AND z.exercice > @ex
                              AND (EXISTS (SELECT 1 FROM dbo.arrete_periodicite x WHERE x.entite = z.entite AND x.arrete = z.arrete)
                                   OR EXISTS (SELECT 1 FROM dbo.arrete_mission am WHERE am.entite = z.entite AND am.arrete = z.arrete)));
-        -- : la ligne d'un arrete de l'entite qui n'est plus au referentiel (retire ici ou ailleurs) part. La table
+        -- la ligne d'un arrete de l'entite qui n'est plus au referentiel (retire ici ou ailleurs) part. La table
         -- n'a pas de cle etrangere : pr_arrete_porte_travail, v_arrete_travail et v_entite_donnees, qui lisent le
         -- catalogue, y verraient un travail.
         DELETE ap FROM dbo.arrete_periodicite ap
@@ -272,8 +277,8 @@ BEGIN
         END TRY
         BEGIN CATCH
             IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
-            SET @message = N'L''arrêté du ' + CONVERT(NVARCHAR (10), CAST(@premier AS DATE), 103) + N' ne s''ouvre pas. '
-                         + LEFT(ERROR_MESSAGE(), 1700);
+            SET @message = N'L''arrêté du ' + CONVERT(NVARCHAR (10), CAST(@premier AS DATE), 103) + N' ne s''ouvre pas : '
+                         + CASE WHEN LEN(ERROR_MESSAGE() + N'.') - 1 > 300 THEN RTRIM(LEFT(ERROR_MESSAGE(), 299)) + N'…' ELSE ERROR_MESSAGE() END;
             SET @message = REPLACE(@message, N'%', N'%%');
             THROW 50264, @message, 1;
         END CATCH;

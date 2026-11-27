@@ -18,28 +18,6 @@ CREATE TABLE [dbo].[ref_nature_actif] (
 
 GO
 
-
--- --- 5 : le verrou, une reference abrogee ne s'emploie pas -----------
--- Rattacher une nature d'actif a un article d'un reglement abroge
--- ferait citer par la solution un texte qui ne vaut plus, tel le
--- reglement ANC 2014-06, abroge.
-CREATE   TRIGGER dbo.tr_nature_reference_en_vigueur
-ON dbo.ref_nature_actif
-AFTER INSERT, UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    IF EXISTS (
-        SELECT 1 FROM inserted i
-        JOIN dbo.ref_reference r ON r.id = i.reference_id
-        JOIN dbo.ref_norme n ON n.code = r.norme
-        WHERE n.en_vigueur = 0
-    )
-        THROW 50058, 'Rattachement refuse : la reference designee releve d''un texte abroge. Lire dbo.ref_norme pour le texte qui l''abroge, et rattacher la nature a l''article correspondant du texte en vigueur.', 1;
-END
-
-GO
-
 CREATE   TRIGGER dbo.[tr_ref_nature_actif_garde]
 ON dbo.[ref_nature_actif]
 AFTER INSERT, UPDATE, DELETE
@@ -63,6 +41,28 @@ BEGIN
     SET @m = REPLACE(@m, N'%', N'%%');
     THROW 50074, @m, 1;
 END;
+
+GO
+
+
+-- --- 5 : le verrou, une reference abrogee ne s'emploie pas -----------
+-- Rattacher une nature d'actif a un article d'un reglement abroge
+-- ferait citer par la solution un texte qui ne vaut plus, tel le
+-- reglement ANC 2014-06, abroge.
+CREATE   TRIGGER dbo.tr_nature_reference_en_vigueur
+ON dbo.ref_nature_actif
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF EXISTS (
+        SELECT 1 FROM inserted i
+        JOIN dbo.ref_reference r ON r.id = i.reference_id
+        JOIN dbo.ref_norme n ON n.code = r.norme
+        WHERE n.en_vigueur = 0
+    )
+        THROW 50058, 'Rattachement refuse : la reference designee releve d''un texte abroge. Lire dbo.ref_norme pour le texte qui l''abroge, et rattacher la nature a l''article correspondant du texte en vigueur.', 1;
+END
 
 GO
 

@@ -1,6 +1,6 @@
 
 -- LA FEUILLE DES OD LIBRES, creee au besoin, sa cote rendue en sortie et sans resultat.
-CREATE   PROCEDURE dbo.pr_assurer_feuille_od_libres
+CREATE PROCEDURE dbo.pr_assurer_feuille_od_libres
     @entite  VARCHAR (20),
     @arrete  VARCHAR (20),
     @par     NVARCHAR (400),
@@ -15,7 +15,7 @@ BEGIN
         INSERT INTO dbo.feuille_travail (cote, cycle, phase, arrete, entite, modele_code, origine, nom_fichier, chemin_coffre,
                                          empreinte_sha256, preparateur, prepare_le)
         VALUES (@cote, NULL, 'COMPTES', @arrete, @entite, NULL, 'HUMAINE',
-                N'od_libres_' + @entite + N'_' + @arrete + N'.xlsx', N'/Coffre/' + @entite + N'/' + @arrete + N'/od/od_libres.xlsx',
+                N'od_libres_' + @entite + N'_' + @arrete + N'.xlsx', dbo.fn_chemin_dossier_de_travail(@entite, @arrete, N'od_libres_' + @entite + N'_' + @arrete + N'.xlsx'),
                 CONVERT(CHAR (64), HASHBYTES('SHA2_256', CONVERT(NVARCHAR (100), @cote)), 2), @par, SYSUTCDATETIME());
 END;
 

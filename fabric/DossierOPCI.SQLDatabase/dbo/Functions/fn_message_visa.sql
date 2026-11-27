@@ -1,6 +1,6 @@
 
 -- Le message d'un visa reussi, en francais, par nature, objet et decision (pr_ecran_viser ne rend pas de ligne).
-CREATE   FUNCTION dbo.fn_message_visa (@nature VARCHAR (20), @objet_ref VARCHAR (60), @decision VARCHAR (10))
+CREATE FUNCTION dbo.fn_message_visa (@nature VARCHAR (20), @objet_ref VARCHAR (60), @decision VARCHAR (10))
 RETURNS NVARCHAR (400)
 AS
 BEGIN
@@ -8,7 +8,7 @@ BEGIN
     DECLARE @n INT = TRY_CAST(@objet_ref AS INT);
     RETURN CASE @nature
         WHEN 'LOT' THEN N'Lot n° ' + @objet_ref + CASE WHEN @v = 1 THEN N' visé.' ELSE N' renvoyé au préparateur.' END
-        WHEN 'EVALUATION' THEN N'Valeur retenue de ' + ISNULL((SELECT TOP (1) code_actif FROM dbo.evaluation_actif WHERE id = @n), @objet_ref)
+        WHEN 'EVALUATION' THEN N'Valeur retenue ' + dbo.fn_de(ISNULL((SELECT TOP (1) code_actif FROM dbo.evaluation_actif WHERE id = @n), @objet_ref))
                                 + CASE WHEN @v = 1 THEN N' visée.' ELSE N' renvoyée au préparateur.' END
         WHEN 'SYNTHESE' THEN N'Synthèse de l''arrêté ' + CASE WHEN @v = 1 THEN N'visée.' ELSE N'renvoyée au préparateur.' END
         WHEN 'CONCLUSION' THEN N'Conclusion ' + CASE WHEN @v = 1 THEN N'visée.' ELSE N'renvoyée au préparateur.' END

@@ -47,7 +47,7 @@ table v_a_generer_synthese
 		lineageTag: 1c0ae8eb-f9b7-47c4-8cae-ee4023a5ecca
 
 	/// « véhicule : n calculables, n bloqués » (carte 3)
-	measure 'Sous-ligne actifs suivis' = VAR c = [R34 Calculables] + 0 VAR b = [R34 Bloques] + 0 RETURN "véhicule : " & FORMAT ( c, "0" ) & IF ( c > 1, " calculables, ", " calculable, " ) & FORMAT ( b, "0" ) & IF ( b > 1, " bloqués", " bloqué" )
+	measure 'Sous-ligne actifs suivis' = VAR c = [R34 Calculables] + 0 VAR b = [R34 Bloques] + 0 RETURN "véhicule : " & IF ( c = 0, "aucun calculable, ", FORMAT ( c, "0" ) & IF ( c > 1, " calculables, ", " calculable, " ) ) & IF ( b = 0, "aucun bloqué", FORMAT ( b, "0" ) & IF ( b > 1, " bloqués", " bloqué" ) )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 132a026a-65eb-4f35-9956-7e0d616b1fb9
 

@@ -26,7 +26,7 @@ table v_etat_conclusion_cycle
 		displayFolder: Ecran 2 etape 5
 		lineageTag: 4d3372d8-1f89-46ae-9502-9d1dcf12350b
 
-	measure 'Questions repondues du cycle' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) RETURN IF ( COUNTROWS ( t ) = 1, FORMAT ( MAXX ( t, v_etat_conclusion_cycle[questions_repondues] ) + 0, "0" ) & " sur " & FORMAT ( MAXX ( t, v_etat_conclusion_cycle[Questions au programme] ) + 0, "0" ) & " répondues" )
+	measure 'Questions repondues du cycle' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) VAR r = MAXX ( t, v_etat_conclusion_cycle[questions_repondues] ) + 0 VAR q = MAXX ( t, v_etat_conclusion_cycle[Questions au programme] ) + 0 RETURN IF ( COUNTROWS ( t ) = 1, IF ( q = 0, "aucune question", FORMAT ( r, "0" ) & " sur " & FORMAT ( q, "0" ) & IF ( q > 1, " répondues", " répondue" ) ) )
 		displayFolder: Ecran 2 etape 5
 		lineageTag: 848f8cdd-27ff-47bb-911c-82f3ef35848e
 
@@ -34,7 +34,7 @@ table v_etat_conclusion_cycle
 		displayFolder: Ecran 2 etape 5
 		lineageTag: 7bead725-1fe5-42e4-a227-f7cbe90d5d14
 
-	measure 'Supervision du cycle' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) VAR av = MAXX ( t, v_etat_conclusion_cycle[a_viser] ) + 0 VAR vi = MAXX ( t, v_etat_conclusion_cycle[vises] ) + 0 VAR rv = MAXX ( t, v_etat_conclusion_cycle[renvoyes] ) + 0 RETURN IF ( COUNTROWS ( t ) <> 1, BLANK (), "Supervision du cycle : " & FORMAT ( av, "0" ) & IF ( av > 1, " objets", " objet" ) & " à viser · " & FORMAT ( vi, "0" ) & IF ( vi > 1, " visas accordés", " visa accordé" ) & " · " & IF ( rv > 0, FORMAT ( rv, "0" ) & IF ( rv > 1, " renvois en cours", " renvoi en cours" ), "aucun renvoi en cours" ) )
+	measure 'Supervision du cycle' = VAR e = [Entite selectionnee] VAR a = [Arrete selectionne] VAR c = [Cycle selectionne] VAR t = FILTER ( ALL ( v_etat_conclusion_cycle ), v_etat_conclusion_cycle[entite] = e && v_etat_conclusion_cycle[arrete] = a && v_etat_conclusion_cycle[cycle] = c ) VAR av = MAXX ( t, v_etat_conclusion_cycle[a_viser] ) + 0 VAR vi = MAXX ( t, v_etat_conclusion_cycle[vises] ) + 0 VAR rv = MAXX ( t, v_etat_conclusion_cycle[renvoyes] ) + 0 RETURN IF ( COUNTROWS ( t ) <> 1, BLANK (), "Supervision du cycle : " & IF ( av = 0, "aucun objet", FORMAT ( av, "0" ) & IF ( av > 1, " objets", " objet" ) ) & " à viser · " & IF ( vi = 0, "aucun visa accordé", FORMAT ( vi, "0" ) & IF ( vi > 1, " visas accordés", " visa accordé" ) ) & " · " & IF ( rv > 0, FORMAT ( rv, "0" ) & IF ( rv > 1, " renvois en cours", " renvoi en cours" ), "aucun renvoi en cours" ) )
 		displayFolder: Ecran 2 etape 5
 		lineageTag: 4d1553bd-fa03-46d6-914a-fb618896facb
 

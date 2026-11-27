@@ -1,7 +1,6 @@
 
--- pr_conclure_revue : 2 refus
--- 8. CONCLURE LA REVUE : un vehicule ; admis depuis A_CONCLURE, CONCLUE et RENVOYEE.
-CREATE   PROCEDURE dbo.pr_conclure_revue
+-- CONCLURE LA REVUE : un vehicule ; admis depuis A_CONCLURE, CONCLUE et RENVOYEE.
+CREATE PROCEDURE dbo.pr_conclure_revue
     @entite      VARCHAR (20),
     @arrete      VARCHAR (20),
     @conclusion  NVARCHAR (4000),
@@ -9,7 +8,7 @@ CREATE   PROCEDURE dbo.pr_conclure_revue
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
+    -- Un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : les selecteurs passent devant la garde de droit, qui se juge sur eux.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -25,7 +24,7 @@ BEGIN
         DECLARE @m_role NVARCHAR (400) = N'Conclusion refusée : cette personne ne tient aucun rôle de mission sur l''entité ' + @entite + N' ; la revue se conclut par l''équipe de la mission.';
         BEGIN SET @m_role = REPLACE(@m_role, N'%', N'%%'); THROW 50639, @m_role, 1; END
     END;
-    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
+    -- Un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : apres la garde de droit.
     IF ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @conclusion COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51237, N'Champs obligatoires à remplir : « Conclusion générale de la revue ».', 1;
@@ -37,7 +36,7 @@ BEGIN
     END;
     IF NOT EXISTS (SELECT 1 FROM dbo.arrete_mission WHERE entite = @entite AND arrete = @arrete)
         THROW 50322, N'La revue se conclut sur un arrêté ouvert.', 1;
-    IF NULLIF(LTRIM(RTRIM(@conclusion)), N'') IS NULL
+    IF dbo.fn_texte_vide(@conclusion) = 1
         THROW 50323, N'La conclusion générale est un texte.', 1;
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé ; le déverrouiller avant de conclure à nouveau.', 1;

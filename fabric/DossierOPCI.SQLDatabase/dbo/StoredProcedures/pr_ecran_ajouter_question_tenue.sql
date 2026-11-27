@@ -1,13 +1,12 @@
--- ecran 5
--- Objet n° 35 : « Ajouter la question », questions sur la tenue de la comptabilite. Insere une question rattachee a un
+-- « Ajouter la question », questions sur la tenue de la comptabilite. Insere une question rattachee a un
 -- seul cycle ou a une seule phase, de niveau 2 (programmes classique et etendu) ou 3 (etendu seul), sur l'un des sujets
 -- de ref_sujet_tenue (recu par son code ou par son libelle) ; reference CODE-NN a la suite, type_reponse OUI_NON_NA,
 -- applicabilite LES_DEUX, ordre au plus grand plus 1, obligatoire et statut a leur defaut ; elle nait « à valider ».
--- Date d'effet en_vigueur_depuis : la date de l'ajout (UTC), controle C49.
+-- Date d'effet en_vigueur_depuis : la date de l'ajout (UTC) ; une question sans date est comptee par v_controle_sans_date_effet.
 -- Associe seul, exige ici. Refus en francais : @par vide, droit, cycle ou phase vide, inconnu, ecarte ou de code commun
 -- a un cycle et a une phase, sujet vide ou inconnu, niveau vide ou autre que 2 ou 3, enonce vide ou de plus de
 -- 400 caracteres.
-CREATE   PROCEDURE dbo.pr_ecran_ajouter_question_tenue
+CREATE PROCEDURE dbo.pr_ecran_ajouter_question_tenue
     @cycle_ou_phase NVARCHAR (400) = NULL,
     @sujet          NVARCHAR (400) = NULL,
     @niveau         NVARCHAR (20) = NULL,
@@ -25,7 +24,7 @@ BEGIN
             @sujet_code VARCHAR (30), @sujet_libelle NVARCHAR (120), @nv NVARCHAR (20) = NULLIF(LTRIM(RTRIM(@niveau)), N''),
             @niv TINYINT, @num INT, @ordre INT, @ref VARCHAR (20);
     DECLARE @v TABLE (id INT NOT NULL);
-    SET @enonce = NULLIF(LTRIM(RTRIM(@enonce)), N'');
+    SET @enonce = CASE WHEN dbo.fn_texte_vide(@enonce) = 1 THEN NULL ELSE LTRIM(RTRIM(@enonce)) END;
     SET @par = NULLIF(LTRIM(RTRIM(@par)), N'');
     BEGIN TRY
         IF @par IS NULL
@@ -56,7 +55,7 @@ BEGIN
             SET @m = N'Ajout refusé : ' + N'« ' + @cp + N' » n’est ni un cycle ni une phase des questions de référence (liste « Cycle ou phase »).';
             EXEC dbo.pr_e5_refuser 50872, @m;
         END;
-        -- un cycle ou une phase ecarte (ecartee_le posee, objet n° 10) ne recoit plus de question
+        -- un cycle ou une phase ecarte (ecartee_le posee) ne recoit plus de question
         SET @ecartee = CASE @genre WHEN 'CYCLE' THEN (SELECT c.ecartee_le FROM dbo.ref_cycle c WHERE c.code = @code)
                                    ELSE (SELECT p.ecartee_le FROM dbo.ref_phase p WHERE p.code = @code) END;
         IF @ecartee IS NOT NULL
@@ -99,7 +98,8 @@ BEGIN
         FROM dbo.ref_question q WITH (UPDLOCK, HOLDLOCK)
         WHERE LEFT(q.reference, LEN(@code) + 1) = @code + '-'
           AND LEN(q.reference) > LEN(@code) + 1
-          AND SUBSTRING(q.reference, LEN(@code) + 2, 20) NOT LIKE '%[^0-9]%';
+          AND SUBSTRING(q.reference, LEN(@code) + 2, 20) NOT LIKE '%[^0-9]%'
+          AND TRY_CAST(SUBSTRING(q.reference, LEN(@code) + 2, 20) AS INT) IS NOT NULL;
         SET @ref = @code + '-' + CASE WHEN @num < 10 THEN '0' ELSE '' END + CAST(@num AS VARCHAR (10));
         SELECT @ordre = ISNULL(MAX(q.ordre), 0) + 1
         FROM dbo.ref_question q WITH (UPDLOCK, HOLDLOCK)
@@ -107,7 +107,7 @@ BEGIN
         -- obligatoire et statut prennent leur defaut (1, A_AUDITER) : la question nait « à valider » ; la ligne inseree
         -- recoit modifie_par = @par et modifie_le de la procedure, les horodatages etant AFTER UPDATE ; sa date
         -- d'effet est la date de l'ajout (UTC) : en_vigueur_depuis, date NULL sans defaut, laissee
-        -- vide, ferait compter la question par le controle C49 (v_controle_sans_date_effet, 0 ligne attendue)
+        -- vide, ferait compter la question par le controle v_controle_sans_date_effet (0 ligne attendue)
         INSERT INTO dbo.ref_question (reference, cycle, phase, enonce, type_reponse, applicabilite, ordre,
                                       niveau_programme, sujet_tenue, en_vigueur_depuis, modifie_par, modifie_le)
         OUTPUT inserted.id INTO @v (id)

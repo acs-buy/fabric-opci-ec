@@ -1,7 +1,6 @@
 
--- pr_ecran_creer_derogation : 1 refus
--- ------------------------------------------------------------------ n° 7 : la derogation sur une feuille de valorisation
-CREATE   PROCEDURE dbo.pr_ecran_creer_derogation
+-- ------------------------------------------------------------------ la derogation sur une feuille de valorisation
+CREATE PROCEDURE dbo.pr_ecran_creer_derogation
     @vehicule VARCHAR (20),
     @arrete   VARCHAR (20),
     @cote     VARCHAR (30),
@@ -11,7 +10,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
+    -- Un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : avant fn_e3_refus_commun : l'arrete vide d'un vehicule choisi passe avant 50702 ; le vehicule vide garde 50701.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -28,7 +27,7 @@ BEGIN
                                     WHERE f.cote = @cote AND f.arrete = @arrete AND f.cycle IN ('VALO', 'PART'));
     IF @entite IS NULL
         THROW 50761, N'La feuille choisie n''est pas une feuille de valorisation ou des participations de ce véhicule à cet arrêté.', 1;
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     IF @motif IS NULL
         THROW 50762, N'Le motif de la dérogation est obligatoire.', 1;
     DECLARE @deja INT = (SELECT TOP (1) id FROM dbo.derogation WHERE cote = @cote AND levee_le IS NULL ORDER BY id DESC);

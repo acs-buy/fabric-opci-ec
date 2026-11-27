@@ -3608,7 +3608,23 @@ def _texte_pilote(exc) -> str:
 def _message_sql(exc) -> str:
     s = _texte_pilote(exc)
     m = re.search(r"\[SQL Server\](.*?)(\s\(\d+\)\s\(SQL\w+\)|$)", s, re.S)
-    return (m.group(1) if m else s).strip()
+    return (m.group(1) if m else s).strip().split(SEPARATEUR_DETAIL, 1)[0].strip()
+
+
+# UN REFUS DE LA BASE PEUT JOINDRE UN DETAIL TECHNIQUE (code et texte d'un service appele, 50946) apres le separateur
+# fixe SEPARATEUR_DETAIL : _message_sql coupe avant lui, pour l'ecran ; le detail va au journal des refus seul.
+SEPARATEUR_DETAIL = "[[detail]]"
+
+
+def _detail_de_la_base(exc):
+    """Le texte du journal d'un refus qui joint un detail : le texte court, puis le detail ; None sans detail."""
+    s = _texte_pilote(exc)
+    m = re.search(r"\[SQL Server\](.*?)(\s\(\d+\)\s\(SQL\w+\)|$)", s, re.S)
+    t = (m.group(1) if m else s).strip()
+    if SEPARATEUR_DETAIL not in t:
+        return None
+    court, detail = (x.strip() for x in t.split(SEPARATEUR_DETAIL, 1))
+    return "%s Détail : %s" % (court, detail)
 
 
 # UNE ERREUR NON PREVUE REMONTE EN FRANCAIS (24/10/2026), comme dans fn_ecran_arrete et fn_ecran_valorisation : THROW
@@ -3664,7 +3680,9 @@ def _executer(base: fn.FabricSqlConnection, sql: str, params: tuple) -> dict:
         message = _refus_de_la_base(e)
         if message is None:
             raise
-        raise fn.UserThrownError(message, {"sql": sql.split("@")[0].strip()})
+        x = fn.UserThrownError(message, {"sql": sql.split("@")[0].strip()})
+        x.detail_journal = _detail_de_la_base(e)
+        raise x
     finally:
         try:
             conn.close()

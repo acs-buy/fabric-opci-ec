@@ -1,11 +1,11 @@
 
 -- pr_ajouter_filiale : l'enveloppe (regle unique, enveloppe)
-CREATE   PROCEDURE dbo.pr_ajouter_filiale
+CREATE PROCEDURE dbo.pr_ajouter_filiale
     @client         VARCHAR (20),
     @code           VARCHAR (20),
     @denomination   NVARCHAR (400) = NULL,
     @forme_sociale  VARCHAR (10)   = 'SCI',
-    @droits_de_vote DECIMAL (9, 6),
+    @droits_de_vote FLOAT,                   -- fraction de 0 a 1 ; tout nombre fini admis, borne en francais (50213)
     @par            NVARCHAR (400),
     @controlee      BIT            = NULL    -- classement R. 214-83 : 1 controlee, 0 non controlee ; obligatoire
     , @calculer BIT = 0   -- regle unique : 1 pour calculer les vehicules touches ; par defaut, la marque de retard seule

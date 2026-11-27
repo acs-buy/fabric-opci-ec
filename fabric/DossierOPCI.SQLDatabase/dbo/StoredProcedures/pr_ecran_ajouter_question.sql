@@ -1,6 +1,6 @@
 -- --- pr_ecran_ajouter_question ---------------------------------------------------------------------
 -- Genere, ne pas modifier a la main.
--- « Ajouter une question » de la Revision (ec02, etape 2,
+-- « Ajouter une question » de la Revision (etape 2,
 -- bande des cycles). Les regles de l'ajout d'une question, sans sujet ni niveau (niveau_programme vide). Le droit est celui de
 -- tr_ref_question_garde, associe ou reviseur (ref_question tenue par REVISEUR au registre), juge ici avant toute
 -- ecriture par fn_peut_ecrire_referentiel sur @par (50888 ; l'etat qui grise le bouton, [Teneur des
@@ -9,7 +9,7 @@
 -- (ref_cycle[Cycle] du modele) ou par son code ; une phase est admise. Date d'effet en_vigueur_depuis : la date de
 -- l'ajout (UTC). Refus en francais : @par vide, droit, cycle ou phase vide, inconnu, ecarte ou de code
 -- commun a un cycle et a une phase, enonce vide ou de plus de 400 caracteres. Message sous « - », que [Message de
--- la revision] lit sur ec02.
+-- la revision] lit sur l'ecran de la revision.
 -- La numerotation ignore une reference au-dela de INT (TRY_CAST NULL), qui levait 8153 avant
 -- l'INSERT et ses refus ; MAX l'ignorait deja : meme numero.
 CREATE PROCEDURE dbo.pr_ecran_ajouter_question
@@ -26,7 +26,7 @@ BEGIN
     DECLARE @cp NVARCHAR (400) = NULLIF(LTRIM(RTRIM(@cycle_ou_phase)), N''), @code VARCHAR (10), @genre VARCHAR (5),
             @nom NVARCHAR (400), @ecartee DATE, @num INT, @ordre INT, @ref VARCHAR (20);
     DECLARE @v TABLE (id INT NOT NULL);
-    SET @enonce = NULLIF(LTRIM(RTRIM(@enonce)), N'');
+    SET @enonce = CASE WHEN dbo.fn_texte_vide(@enonce) = 1 THEN NULL ELSE LTRIM(RTRIM(@enonce)) END;
     SET @par = NULLIF(LTRIM(RTRIM(@par)), N'');
     BEGIN TRY
         IF @par IS NULL

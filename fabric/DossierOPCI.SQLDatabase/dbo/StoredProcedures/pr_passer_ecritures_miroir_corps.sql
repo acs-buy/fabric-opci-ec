@@ -1,18 +1,16 @@
 
--- ------------------------------------------------------------------ n° 24 : les ecritures miroir d'un seul vehicule
--- pr_passer_ecritures_miroir_corps recoit 2 parametres optionnels en fin de liste, sans effet pour ses appels existants :
--- @vehicule borne les flux au perimetre du vehicule, @silencieux tait les tableaux de compte rendu.
+-- ------------------------------------------------------------------ les ecritures miroir, d'un vehicule ou de toutes les entites
+-- @vehicule, facultatif, borne les flux au perimetre du vehicule ; @silencieux tait les tableaux de compte rendu.
 
--- pr_passer_ecritures_miroir : le corps d'origine, renomme
--- pr_passer_ecritures_miroir : le corps d'origine, renomme
--- --- 2 : le passage, a blanc par defaut -----------------------------
+-- le corps de pr_passer_ecritures_miroir
+-- --- le passage, a blanc par defaut -----------------------------
 CREATE PROCEDURE dbo.pr_passer_ecritures_miroir_corps
     @arrete   VARCHAR (20),
     @natures  NVARCHAR (200) = NULL,   -- NULL pour les 3
     @a_blanc  BIT            = 1,      -- 1 : calcule et n'ecrit rien
     @par      NVARCHAR (400) = NULL,
-    @vehicule   VARCHAR (20) = NULL,  -- 10/10/2026 : les seuls flux du vehicule et de ses filiales
-    @silencieux BIT          = 0      -- 10/10/2026 : 1, aucun tableau rendu (procedure d'ecran)
+    @vehicule   VARCHAR (20) = NULL,  -- les seuls flux du vehicule et de ses filiales
+    @silencieux BIT          = 0      -- 1, aucun tableau rendu (procedure d'ecran)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -60,11 +58,10 @@ BEGIN
         RETURN;
     END;
 
-    -- L'ECRITURE, ENTITE PAR ENTITE, DANS UNE TRANSACTION. Les essais du
-    -- 05/09/2026 ont laisse 7 lots orphelins et 11 feuilles inutiles :
-    -- chaque refus de contrainte survenait APRES la creation du lot, et
-    -- rien ne l'annulait. Un lot sans ecriture est un dechet qu'aucun
-    -- controle ne rattrape, et le rejeu en aurait cree a chaque essai.
+    -- L'ECRITURE, ENTITE PAR ENTITE, DANS UNE SEULE TRANSACTION : un refus,
+    -- a quelque entite qu'il survienne, annule les feuilles, lots et
+    -- ecritures de tout l'appel ; aucun lot ne reste sans ecriture, aucune
+    -- feuille sans lot.
     DECLARE @entite VARCHAR (20), @lot INT, @n INT = 0;
     BEGIN TRANSACTION;
     BEGIN TRY
@@ -89,9 +86,8 @@ BEGIN
                  nom_fichier, chemin_coffre, empreinte_sha256, conclusion,
                  preparateur, prepare_le)
             VALUES (@cote, 'PART', @arrete, @entite, NULL, 'HUMAINE',
-                    N'miroir_intragroupe_' + @entite + N'_' + @arrete + N'.csv',
-                    N'/Coffre/' + @entite + N'/' + @arrete
-                      + N'/feuilles/miroir_intragroupe.csv',
+                    N'feuille_' + @cote + N'.xlsx',
+                    dbo.fn_chemin_dossier_de_travail(@entite, @arrete, N'feuille_' + @cote + N'.xlsx'),
                     CONVERT(CHAR (64), HASHBYTES('SHA2_256',
                         N'miroir|' + @entite + N'|' + @arrete + N'|'
                         + CONVERT(NVARCHAR (40), @total)), 2),
@@ -106,8 +102,7 @@ BEGIN
         -- question PART-01, qui porte les parts et actions inscrites
         -- parmi les actifs a caractere immobilier, en est le rattachement
         -- le plus proche. Aucune question du referentiel ne porte
-        -- specifiquement la distribution recue d'une filiale, et c'est un
-        -- manque du questionnaire, non du script.
+        -- specifiquement la distribution recue d'une filiale.
         DECLARE @question INT = (SELECT TOP 1 id FROM dbo.ref_question
                                  WHERE reference = 'PART-01');
         INSERT INTO dbo.lot_ecritures
@@ -115,17 +110,14 @@ BEGIN
              question_id, motif, cree_par, statut_par, statut_le)
         VALUES (@arrete, 'DECIDEE', 'ENTITE', @entite, 'PROPOSE', @cote,
                 @question,
-                N'Écritures miroir des flux intragroupe, dérivées de dbo.emprunt_intragroupe et du solde de trésorerie. Arbitrage du 05/09/2026.',
+                N'Écritures miroir des flux intragroupe, dérivées de dbo.emprunt_intragroupe et du solde de trésorerie.',
                 @qui, @qui, SYSUTCDATETIME());
         SET @lot = CAST(SCOPE_IDENTITY() AS INT);
 
         -- LES 2 LIGNES ENTRENT EN UN SEUL ORDRE. Le declencheur
         -- tr_lot_equilibre verifie l'equilibre du lot A CHAQUE
-        -- insertion, et il a refuse le 05/09/2026 une redaction en 2
-        -- ordres : le premier posait le debit seul, et le lot etait
-        -- desequilibre le temps d'une instruction. Un lot comptable
-        -- n'existe pas a moitie, et le declencheur a raison de
-        -- l'imposer.
+        -- insertion : un 1er ordre qui poserait le debit seul serait
+        -- refuse, le lot etant desequilibre le temps d'une instruction.
         INSERT INTO dbo.ecriture
             (lot_id, journal_code, journal_lib, ecriture_num, ecriture_date,
              compte_num, compte_lib, comp_aux_num, ecriture_lib,

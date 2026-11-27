@@ -41,6 +41,12 @@ CREATE TABLE [dbo].[feuille_travail] (
 
 GO
 
+CREATE NONCLUSTERED INDEX [ix_ft_phase]
+    ON [dbo].[feuille_travail]([phase] ASC);
+
+
+GO
+
 CREATE NONCLUSTERED INDEX [ix_ft_cycle]
     ON [dbo].[feuille_travail]([cycle] ASC);
 
@@ -53,15 +59,9 @@ CREATE NONCLUSTERED INDEX [ix_ft_modele]
 
 GO
 
-CREATE NONCLUSTERED INDEX [ix_ft_phase]
-    ON [dbo].[feuille_travail]([phase] ASC);
-
-
-GO
-
 
 -- tr_feuille_conclusion : 1 refus
-CREATE   TRIGGER dbo.tr_feuille_conclusion
+CREATE TRIGGER dbo.tr_feuille_conclusion
 ON dbo.feuille_travail
 AFTER UPDATE
 AS
@@ -94,11 +94,14 @@ BEGIN
     IF @manquantes IS NOT NULL
     BEGIN
         DECLARE @m1 NVARCHAR (2000) =
-            N'Conclusion refusée : des pièces obligatoires de ce cycle ne '
-            + N'sont rattachées à aucun document, pour cette entité et cet '
-            + N'arrêté. Manquent : ' + @manquantes
-            + N'. Déposer les pièces au coffre, les rattacher à la '
-            + N'question, puis conclure.';
+            CASE WHEN CHARINDEX(N' | ', @manquantes) > 0
+                 THEN N'Conclusion refusée : ces pièces obligatoires n''ont pas de document : '
+                 ELSE N'Conclusion refusée : cette pièce obligatoire n''a pas de document : ' END
+            + CASE WHEN LEN(@manquantes + N'.') - 1 > 160 THEN RTRIM(LEFT(@manquantes, 159)) + N'…' ELSE @manquantes END
+            + CASE WHEN LEN(@manquantes + N'.') - 1 > 160 THEN N' ' ELSE N'. ' END
+            + CASE WHEN CHARINDEX(N' | ', @manquantes) > 0
+                   THEN N'Déposez-les, rattachez-les à leur question, puis concluez.'
+                   ELSE N'Déposez-la, rattachez-la à sa question, puis concluez.' END;
         BEGIN SET @m1 = REPLACE(@m1, N'%', N'%%'); THROW 50028, @m1, 1; END
     END;
 

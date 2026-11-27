@@ -1,13 +1,13 @@
--- --- 1. les portes d'ouverture d'un arrete, jugees sans ecrire ---------------------------------------
+-- --- les portes d'ouverture d'un arrete, jugees sans ecrire ---------------------------------------
 -- Source unique du trigger tr_arrete_portes et du pre-controle de pr_ecran_ouvrir_arrete_corps.
 -- Rend 'NNNNN|texte' pour la 1re porte fermee, NULL si toutes sont ouvertes. Juge l'arrete AVANT comme APRES son
 -- INSERT dans arrete_mission : la porte 3 ne lit que les arretes annuels anterieurs (am.arrete < @arrete).
-CREATE   FUNCTION dbo.fn_portes_arrete (@entite VARCHAR (20), @arrete VARCHAR (20))
+CREATE FUNCTION dbo.fn_portes_arrete (@entite VARCHAR (20), @arrete VARCHAR (20))
 RETURNS NVARCHAR (2000)
 AS
 BEGIN
     -- Porte 1 : un actif dont la nature exige une expertise, dans le perimetre de l'entite et de ses filiales a l'arrete
-    -- (dbo.fn_filiales_a_l_arrete, B), sans expertise a la date de l'arrete, ouvre le refus.
+    -- (dbo.fn_filiales_a_l_arrete), sans expertise a la date de l'arrete, ouvre le refus.
     DECLARE @sans_expertise NVARCHAR (1200) =
         (SELECT STRING_AGG(CAST(x.code AS NVARCHAR (24)), N', ') WITHIN GROUP (ORDER BY x.code)
          FROM (SELECT DISTINCT TOP 20 a.code
@@ -25,7 +25,7 @@ BEGIN
     IF @sans_expertise IS NOT NULL
         RETURN N'50025|' + N'Expertises à enregistrer à l''arrêté : ' + @sans_expertise + N'.';
 
-    -- Porte 1 : une filiale a l'arrete (dbo.fn_filiales_a_l_arrete, B) sans balance validee (lot IMPORTEE) ouvre le refus.
+    -- Porte 2 : une filiale a l'arrete (dbo.fn_filiales_a_l_arrete) sans balance validee (lot IMPORTEE) ouvre le refus.
     DECLARE @sans_balance NVARCHAR (1200) =
         (SELECT STRING_AGG(CAST(x.entite_fille AS NVARCHAR (24)), N', ') WITHIN GROUP (ORDER BY x.entite_fille)
          FROM (SELECT DISTINCT TOP 20 d.entite_fille

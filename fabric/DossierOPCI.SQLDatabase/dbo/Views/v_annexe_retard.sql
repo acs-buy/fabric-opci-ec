@@ -1,9 +1,9 @@
--- --- 7 ---------------------------------------------------------------------------------------------
--- La marque de retard par vehicule (contrat, 1.4) : depuis, origine de la derniere marque, nombre de marques, fin du
+-- --- le retard du calcul de l'annexe ---------------------------------------------------------------------------------------------
+-- La marque de retard par vehicule : depuis, origine de la derniere marque, nombre de marques, fin du
 -- dernier calcul.
 -- depuis_paris et dernier_calcul_paris, en dernier, a l'heure de Paris ; depuis et
--- dernier_calcul restent en UTC tant que les 2 mesures de l'annexe les lisent avec « UTC ».
-CREATE   VIEW dbo.v_annexe_retard AS
+-- dernier_calcul restent en UTC.
+CREATE VIEW dbo.v_annexe_retard AS
 SELECT e.code AS entite,
        m.depuis, o.origine, ISNULL(m.ecritures, 0) AS ecritures, k.fin AS dernier_calcul,
        CAST(CASE WHEN ISNULL(m.ecritures, 0) > 0 THEN 1 ELSE 0 END AS BIT) AS en_retard,

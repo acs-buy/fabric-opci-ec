@@ -31,8 +31,8 @@ table v_titres_valeur_actuelle
 		displayFolder: Rapports V2
 		lineageTag: 4e15667c-8adc-408b-be37-f6624fc78190
 
-	/// « aucune filiale à actif net réévalué négatif » ; « n filiales à actif net réévalué négatif »
-	measure 'Sous-titre valeur negative' = VAR n = [Filiales a actif net negatif] RETURN IF ( n = 0, "aucune filiale à actif net réévalué négatif", FORMAT ( n, "0" ) & " filiales à actif net réévalué négatif" )
+	/// « aucune filiale à actif net réévalué négatif » ; « 1 filiale à actif net réévalué négatif » ; « n filiales à actif net réévalué négatif »
+	measure 'Sous-titre valeur negative' = VAR n = [Filiales a actif net negatif] RETURN IF ( n = 0, "aucune filiale à actif net réévalué négatif", FORMAT ( n, "0" ) & IF ( n > 1, " filiales", " filiale" ) & " à actif net réévalué négatif" )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: a811ca0b-67bf-4b77-be6c-7ebc3a53ee0d
 

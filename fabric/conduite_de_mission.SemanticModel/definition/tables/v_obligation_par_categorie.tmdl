@@ -89,7 +89,7 @@ table v_obligation_par_categorie
 		lineageTag: ddbcfdf0-5fd9-4f78-ba8c-275d2822400b
 
 	/// « n catégories · n visées », sur toutes les lignes de l’exercice (VAR e, x puis FILTER ALL)
-	measure 'Libelle bande base et visa' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a ) VAR n = COUNTROWS ( t ) + 0 VAR nv = COUNTROWS ( FILTER ( t, v_obligation_par_categorie[etat_obligation] = "VISEE" ) ) + 0 RETURN FORMAT ( n, "0" ) & IF ( n > 1, " catégories", " catégorie" ) & " · " & FORMAT ( nv, "0" ) & IF ( nv > 1, " visées", " visée" )
+	measure 'Libelle bande base et visa' = VAR e = [Client selectionne] VAR a = [Arrete selectionne] VAR t = FILTER ( ALL ( v_obligation_par_categorie ), v_obligation_par_categorie[entite] = e && v_obligation_par_categorie[arrete] = a ) VAR n = COUNTROWS ( t ) + 0 VAR nv = COUNTROWS ( FILTER ( t, v_obligation_par_categorie[etat_obligation] = "VISEE" ) ) + 0 RETURN IF ( n = 0, "aucune catégorie", FORMAT ( n, "0" ) & IF ( n > 1, " catégories", " catégorie" ) ) & " · " & IF ( nv = 0, "aucune visée", FORMAT ( nv, "0" ) & IF ( nv > 1, " visées", " visée" ) )
 		displayFolder: Ecran 4 Arrete
 		lineageTag: 5cbbb261-fd28-4aef-b14b-0b03c3c2aa76
 

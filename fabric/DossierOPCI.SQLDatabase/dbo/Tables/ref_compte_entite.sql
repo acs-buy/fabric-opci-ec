@@ -19,6 +19,26 @@ CREATE TABLE [dbo].[ref_compte_entite] (
 
 GO
 
+CREATE   TRIGGER dbo.[tr_ref_compte_entite_horodatage]
+ON dbo.[ref_compte_entite]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    -- Objet n° 16 de l'ecran 5 : l'auteur est celui que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
+    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_compte_entite] t
+    JOIN inserted i ON t.[entite] = i.[entite] AND t.[compte_entite] = i.[compte_entite];
+END;
+
+GO
+
 CREATE   TRIGGER dbo.[tr_ref_compte_entite_garde]
 ON dbo.[ref_compte_entite]
 AFTER INSERT, UPDATE, DELETE
@@ -84,26 +104,6 @@ BEGIN
     )
         THROW 50048, 'Rattachement refuse : le compte de l''entite et le compte modele ne sont pas de la meme classe, et aucune correspondance n''est declaree entre les 2 plans. Une traduction qui change de classe se justifie : la declarer dans dbo.ref_correspondance_plan avec son motif, comme le passage du compte 4551 du PCG au compte 512 du plan de l''article 411-3.', 1;
 END
-
-GO
-
-CREATE   TRIGGER dbo.[tr_ref_compte_entite_horodatage]
-ON dbo.[ref_compte_entite]
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    -- Objet n° 16 de l'ecran 5 : l'auteur est celui que la procedure d'ecran pose dans le
-    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
-    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_compte_entite] t
-    JOIN inserted i ON t.[entite] = i.[entite] AND t.[compte_entite] = i.[compte_entite];
-END;
 
 GO
 

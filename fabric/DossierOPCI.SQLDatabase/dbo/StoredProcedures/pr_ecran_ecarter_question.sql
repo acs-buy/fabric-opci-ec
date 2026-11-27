@@ -1,11 +1,10 @@
--- ecran 5
--- Objet n° 33 : « Ecarter la question ». Passe une question a ECARTEE (« écartée ») ; une question repondue s'ecarte
+-- « Ecarter la question ». Passe une question a ECARTEE (« écartée ») ; une question repondue s'ecarte
 -- et ne se supprime pas. Associe seul, exige ici, la garde tr_ref_question_garde admettant aussi le reviseur. La
 -- question se recoit par sa reference (segment « Question ») ou par son identifiant. Refus en francais : @par vide,
 -- droit, question vide ou inconnue, question deja ecartee, motif de plus de 600 caracteres. Le motif, facultatif
--- comme au n° 14, s'ecrit dans le message de reussite quand il est saisi, ref_question n'ayant pas de colonne de motif
--- (point 9 de la decoupe) ; il n'est garde nulle part ailleurs (limite declaree).
-CREATE   PROCEDURE dbo.pr_ecran_ecarter_question
+-- comme dans pr_ecran_ecarter_ligne_referentiel, s'ecrit dans le message de reussite quand il est saisi, ref_question n'ayant pas de colonne de motif ;
+-- il n'est garde nulle part ailleurs.
+CREATE PROCEDURE dbo.pr_ecran_ecarter_question
     @question       NVARCHAR (400) = NULL,
     @motif          NVARCHAR (MAX) = NULL,
     @par            NVARCHAR (400) = NULL
@@ -18,7 +17,7 @@ BEGIN
             @m NVARCHAR (2000), @message NVARCHAR (2000);
     DECLARE @q NVARCHAR (400) = NULLIF(LTRIM(RTRIM(@question)), N''), @id INT, @ref VARCHAR (20), @statut VARCHAR (20);
     DECLARE @v TABLE (id INT NOT NULL);
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     SET @par = NULLIF(LTRIM(RTRIM(@par)), N'');
     BEGIN TRY
         IF @par IS NULL
@@ -47,7 +46,7 @@ BEGIN
             SET @m = N'Écart refusé : la question ' + @ref + N' est déjà écartée.';
             EXEC dbo.pr_e5_refuser 50878, @m;
         END;
-        -- le motif est facultatif, comme au n° 14 (pr_ecran_ecarter_ligne_referentiel) ; un motif trop long est refuse
+        -- le motif est facultatif, comme dans pr_ecran_ecarter_ligne_referentiel ; un motif trop long est refuse
         IF LEN(@motif) > 600
         BEGIN
             SET @m = N'Écart refusé : le champ « Motif » compte ' + CAST(LEN(@motif) AS NVARCHAR (12))

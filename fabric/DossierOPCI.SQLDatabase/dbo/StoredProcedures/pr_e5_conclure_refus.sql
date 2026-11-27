@@ -1,15 +1,14 @@
 -- ------------------------------------------------------------------ le refus apres le ROLLBACK : journal_refus et message, sans 2e ligne
--- ecran 5
 -- Appelee dans le CATCH d'une procedure d'ecran, apres son ROLLBACK. Appel direct (@tc nul, plus aucune transaction) :
 -- la ligne de journal_refus, sauf si une garde l'a deja inscrite depuis l'entree de la procedure (id posterieur a
--- @journal_avant : la garde fait ROLLBACK, INSERT, puis THROW, objet n° 17), puis le message REFUS sous l'entite recue
--- (« - », le vehicule pour le n° 24). La ligne d'une garde se reconnait a son texte, ou, quel que soit le texte recu
+-- @journal_avant : la garde fait ROLLBACK, INSERT, puis THROW), puis le message REFUS sous l'entite recue
+-- (« - », le vehicule pour pr_ecran_poser_seuil_vehicule). La ligne d'une garde se reconnait a son texte, ou, quel que soit le texte recu
 -- (erreur 266 ou 3609 au lieu du THROW de la garde), a son auteur : un declencheur (tr_...) qui a refuse pour @par depuis
 -- l'entree ; le message pose est alors le sien, en francais. Sous la transaction d'un appelant (Data function), rien :
 -- son rollback effacerait l'ecriture, et la fonction pose refus et message apres lui (pr_journaliser_refus). Ne refuse
 -- jamais : un refus qui ne se journalise pas ne masque pas celui qu'il rapporte.
 -- Signature figee : les procedures de l'ecran 5 l'appellent.
-CREATE   PROCEDURE dbo.pr_e5_conclure_refus
+CREATE PROCEDURE dbo.pr_e5_conclure_refus
     @tc            INT,
     @journal_avant INT,
     @procedure_nom VARCHAR (60),
@@ -21,7 +20,7 @@ BEGIN
     SET NOCOUNT ON;
     IF @tc <> 0 OR @@TRANCOUNT <> 0 RETURN;
     SET @par = NULLIF(LTRIM(RTRIM(@par)), N'');
-    SET @message = NULLIF(LTRIM(RTRIM(@message)), N'');
+    SET @message = CASE WHEN dbo.fn_texte_vide(@message) = 1 THEN NULL ELSE LTRIM(RTRIM(@message)) END;
     IF @par IS NULL OR @message IS NULL RETURN;
     BEGIN TRY
         DECLARE @garde NVARCHAR (2000) =

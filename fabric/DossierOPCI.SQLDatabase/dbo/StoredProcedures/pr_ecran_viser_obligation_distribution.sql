@@ -1,8 +1,8 @@
 
--- ------------------------------------------------------------------ n° 6 : l'enveloppe d'ecran du visa d'une categorie
--- Refuse d'abord, avant tout appel : categorie vide, decision hors VISE et RENVOYE, renvoi sans motif ; puis appelle la
--- reprise n° 5, dont les 5 refus 50036 remontent tels quels.
-CREATE   PROCEDURE dbo.pr_ecran_viser_obligation_distribution
+-- ------------------------------------------------------------------ l'enveloppe d'ecran du visa d'une categorie
+-- Refuse d'abord, avant tout appel : categorie vide, decision hors VISE et RENVOYE, renvoi sans motif ; puis appelle
+-- pr_viser_obligation_distribution, dont les 5 refus 50036 remontent tels quels.
+CREATE PROCEDURE dbo.pr_ecran_viser_obligation_distribution
     @entite    VARCHAR (20),
     @arrete    VARCHAR (20),
     @categorie NVARCHAR (300),
@@ -13,7 +13,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    -- 15/10/2026 : une personne vide ou NULL se refuse en francais, avant tout le reste
+    -- Une personne vide ou NULL se refuse en francais, avant tout le reste
     IF NULLIF(LTRIM(RTRIM(@vise_par)), N'') IS NULL
         THROW 50824, N'Visa refusé : votre compte ne tient pas, sur ce dossier, le rôle d''associé signataire qui vise la catégorie.', 1;
     DECLARE @m NVARCHAR (1000);
@@ -23,7 +23,7 @@ BEGIN
     SET @decision = UPPER(LTRIM(RTRIM(@decision)));
     IF ISNULL(@decision, '') NOT IN ('VISE', 'RENVOYE')
         THROW 50821, N'La décision est « VISE » ou « RENVOYE ».', 1;
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     IF @decision = 'RENVOYE' AND @motif IS NULL
         THROW 50822, N'Le motif du renvoi est obligatoire : il dit au préparateur ce qui est à reprendre.', 1;
     DECLARE @cat VARCHAR (20) = dbo.fn_e4_categorie(@categorie);

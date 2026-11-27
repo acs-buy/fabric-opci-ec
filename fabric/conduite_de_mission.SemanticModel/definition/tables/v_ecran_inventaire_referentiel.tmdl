@@ -8,8 +8,8 @@ table v_ecran_inventaire_referentiel
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: 10d81b2f-7821-451e-8758-1bc2a7fd0a9a
 
-	/// n° 75, « n mis à jour par le cabinet, n fixés par un texte », sur les mêmes lignes (carte 1)
-	measure 'Sous-ligne referentiels du cabinet' = VAR t = FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[du_cabinet] = TRUE () && v_ecran_inventaire_referentiel[etat_genre] <> "non recensé" ) VAR n = COUNTROWS ( t ) + 0 VAR n1 = COUNTROWS ( FILTER ( t, v_ecran_inventaire_referentiel[mode_tenue] = "TENU" ) ) + 0 RETURN FORMAT ( n1, "0" ) & " mis à jour par le cabinet, " & FORMAT ( n - n1, "0" ) & " fixés par un texte"
+	/// « n mis à jour par le cabinet, n fixés par un texte », au singulier pour 1, « aucun » pour 0, sur les mêmes lignes (carte 1)
+	measure 'Sous-ligne referentiels du cabinet' = VAR t = FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[du_cabinet] = TRUE () && v_ecran_inventaire_referentiel[etat_genre] <> "non recensé" ) VAR n = COUNTROWS ( t ) + 0 VAR n1 = COUNTROWS ( FILTER ( t, v_ecran_inventaire_referentiel[mode_tenue] = "TENU" ) ) + 0 RETURN IF ( n1 = 0, "aucun", FORMAT ( n1, "0" ) ) & " mis à jour par le cabinet, " & IF ( n - n1 = 0, "aucun fixé", FORMAT ( n - n1, "0" ) & IF ( n - n1 > 1, " fixés", " fixé" ) ) & " par un texte"
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: ca04825a-4748-46fc-a4dc-0738386134a2
 
@@ -19,8 +19,8 @@ table v_ecran_inventaire_referentiel
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: fcd06ca4-5cee-4cfa-a444-dadfb6deb5c1
 
-	/// n° 77, « dans les n référentiels du cabinet », n = [Referentiels du cabinet] (carte 2)
-	measure 'Sous-ligne lignes de reference' = "dans les " & FORMAT ( [Referentiels du cabinet], "0" ) & " référentiels du cabinet"
+	/// « dans les n référentiels du cabinet », « dans 1 référentiel du cabinet », « dans aucun référentiel du cabinet », n = [Referentiels du cabinet] (carte 2)
+	measure 'Sous-ligne lignes de reference' = VAR n = [Referentiels du cabinet] + 0 RETURN IF ( n = 0, "dans aucun référentiel du cabinet", IF ( n > 1, "dans les " & FORMAT ( n, "0" ) & " référentiels du cabinet", "dans 1 référentiel du cabinet" ) )
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: f56703ed-799e-4164-b0f0-131eb0c75bc9
 
@@ -40,8 +40,8 @@ table v_ecran_inventaire_referentiel
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: 11f3da58-6d78-4c26-be19-6c720712ab9b
 
-	/// n° 87, « n recensés, n lignes ; n non recensés » (sous-titre de la grille de l’étape 1, en expression)
-	measure 'Sous-titre grille de l inventaire' = VAR nh = COUNTROWS ( FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[du_cabinet] = TRUE () && v_ecran_inventaire_referentiel[etat_genre] = "non recensé" ) ) + 0 VAR nl = [Lignes de reference du cabinet] RETURN FORMAT ( [Referentiels du cabinet], "0" ) & " recensés, " & SUBSTITUTE ( SUBSTITUTE ( FORMAT ( nl, "#,0" ), UNICHAR ( 160 ), " " ), UNICHAR ( 8239 ), " " ) & " lignes ; " & FORMAT ( nh, "0" ) & IF ( nh < 2, " non recensé", " non recensés" )
+	/// « n recensés, n lignes ; n non recensés », au singulier pour 1, « aucun recensé », « aucune ligne », « aucun non recensé » pour 0 (sous-titre de la grille de l’étape 1, en expression)
+	measure 'Sous-titre grille de l inventaire' = VAR nh = COUNTROWS ( FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[du_cabinet] = TRUE () && v_ecran_inventaire_referentiel[etat_genre] = "non recensé" ) ) + 0 VAR nl = [Lignes de reference du cabinet] VAR nr = [Referentiels du cabinet] + 0 RETURN IF ( nr = 0, "aucun recensé", FORMAT ( nr, "0" ) & IF ( nr > 1, " recensés", " recensé" ) ) & ", " & IF ( nl + 0 = 0, "aucune ligne", SUBSTITUTE ( SUBSTITUTE ( FORMAT ( nl, "#,0" ), UNICHAR ( 160 ), " " ), UNICHAR ( 8239 ), " " ) & IF ( nl > 1, " lignes", " ligne" ) ) & " ; " & IF ( nh = 0, "aucun non recensé", FORMAT ( nh, "0" ) & IF ( nh > 1, " non recensés", " non recensé" ) )
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: d1503105-3724-40cf-a4c4-b279c6a4f632
 
@@ -118,7 +118,7 @@ table v_ecran_inventaire_referentiel
 		lineageTag: 8186572a-ecb4-41c7-8363-2b7eb5252660
 
 	/// n° 106, « domaine › catégorie · n lignes · état » de la ligne du référentiel choisi, « domaine › catégorie · aucune ligne » pour un référentiel sans ligne (1re ligne de la carte de la bande)
-	measure 'Lignes et etat du referentiel choisi' = VAR c = [Referentiel choisi] VAR t = FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) VAR d = MAXX ( t, v_ecran_inventaire_referentiel[domaine] ) VAR g = MAXX ( t, v_ecran_inventaire_referentiel[categorie] ) VAR n = MAXX ( t, v_ecran_inventaire_referentiel[lignes] ) VAR e = MAXX ( t, v_ecran_inventaire_referentiel[etat] ) RETURN IF ( ISBLANK ( c ) || ISEMPTY ( t ), "", d & " › " & g & " · " & IF ( e = "aucune ligne", e, FORMAT ( n, "0" ) & IF ( n < 2, " ligne", " lignes" ) & " · " & e ) )
+	measure 'Lignes et etat du referentiel choisi' = VAR c = [Referentiel choisi] VAR t = FILTER ( ALL ( v_ecran_inventaire_referentiel ), v_ecran_inventaire_referentiel[table_nom] = c ) VAR d = MAXX ( t, v_ecran_inventaire_referentiel[domaine] ) VAR g = MAXX ( t, v_ecran_inventaire_referentiel[categorie] ) VAR n = MAXX ( t, v_ecran_inventaire_referentiel[lignes] ) VAR e = MAXX ( t, v_ecran_inventaire_referentiel[etat] ) RETURN IF ( ISBLANK ( c ) || ISEMPTY ( t ), "", d & " › " & g & " · " & IF ( e = "aucune ligne", e, IF ( n = 0, "aucune ligne", FORMAT ( n, "0" ) & IF ( n < 2, " ligne", " lignes" ) ) & " · " & e ) )
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: a681286c-3da6-464f-b89e-0f384197e14b
 

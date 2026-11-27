@@ -1,5 +1,5 @@
--- pr_modifier_client_corps : le corps d'origine, renomme ; @est_professionnel (objet n° 202)
-CREATE   PROCEDURE dbo.pr_modifier_client_corps
+-- pr_modifier_client_corps : la modification de la fiche d'un client, appelee par pr_modifier_client
+CREATE PROCEDURE dbo.pr_modifier_client_corps
     @code               VARCHAR (20),
     @denomination       NVARCHAR (400) = NULL,
     @siren              CHAR (9)       = NULL,
@@ -18,7 +18,7 @@ CREATE   PROCEDURE dbo.pr_modifier_client_corps
     @cloture            CHAR (5)       = NULL,
     @site_url           NVARCHAR (800) = NULL,
     @par                NVARCHAR (400)
-    , @est_professionnel NVARCHAR (400) = NULL   -- objet n° 202 : oui pose 1, non pose 0, - pose NULL, vide laisse la valeur
+    , @est_professionnel NVARCHAR (400) = NULL   -- oui pose 1, non pose 0, - pose NULL, vide laisse la valeur
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -36,7 +36,7 @@ BEGIN
         THROW 50203, N'Un client est un véhicule : SPPICAV ou FPI.', 1;
     IF @fv = 'FPI' AND (@fs IS NOT NULL OR @si IS NOT NULL)
         THROW 50204, N'Un FPI n''a ni forme sociale ni SIREN : effacez-les avec « - » en même temps.', 1;
-    IF TRY_CONVERT(DATE, @cl + '/2001', 103) IS NULL
+    IF TRY_CONVERT(DATE, REPLACE(@cl, '-', '/') + '/2001', 103) IS NULL   -- la cloture se lit « JJ/MM » ou « JJ-MM »
         THROW 50205, N'La clôture s''écrit jour/mois, par exemple 31/12 ou 30/06.', 1;
     DECLARE @ep NVARCHAR (400) = NULLIF(LTRIM(RTRIM(@est_professionnel)), N'');
     IF @ep IS NOT NULL AND @ep NOT IN (N'oui', N'non', @eff)
@@ -70,7 +70,7 @@ BEGIN
       FROM dbo.ref_entite e
      WHERE e.code = @code;
 
-    SELECT @code AS code, N'Informations de ' + @code + N' mises à jour.' + CASE WHEN @site_url IS NULL THEN N'' ELSE N' Site SharePoint enregistré.' END
+    SELECT @code AS code, N'Informations ' + dbo.fn_de(@code) + N' mises à jour.' + CASE WHEN @site_url IS NULL THEN N'' ELSE N' Site SharePoint enregistré.' END
          + N' Le code du client ne change pas.' AS message;
 END;
 

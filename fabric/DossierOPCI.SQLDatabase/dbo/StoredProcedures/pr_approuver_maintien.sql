@@ -1,6 +1,6 @@
 
 -- pr_approuver_maintien : 3 refus
-CREATE   PROCEDURE dbo.pr_approuver_maintien
+CREATE PROCEDURE dbo.pr_approuver_maintien
     @entite         VARCHAR (20),
     @arrete_conclu  VARCHAR (20),
     @decision       VARCHAR (10),     -- MAINTENU ou ROMPU
@@ -21,7 +21,7 @@ BEGIN
             1;
     IF @statut <> 'OUVERT'
         THROW 50072,
-            N'Approbation refusée : ce maintien n''est plus au statut ouvert. Un maintien approuvé ne se réapprouve pas, un maintien refusé se reprend.',
+            N'Approbation refusée : ce maintien est déjà décidé et ne s''approuve plus.',
             1;
 
     IF @propose = @par
@@ -74,9 +74,9 @@ BEGIN
         ORDER BY q.ordre;
         DECLARE @m69 NVARCHAR (2000) =
             N'Approbation refusée : ' + CAST(@reste AS NVARCHAR (10))
-            + N' question(s) obligatoire(s) du questionnaire de maintien '
-            + N'sont sans réponse, dont ' + @sans + N'. Répondre à toutes '
-            + N'les questions obligatoires, puis approuver.';
+            + CASE WHEN @reste > 1 THEN N' questions obligatoires du maintien sont sans réponse, dont '
+                   ELSE N' question obligatoire du maintien est sans réponse : ' END
+            + @sans + N'. Répondez-y, puis approuvez.';
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, arrete, cote, question_reference,
              message, geste, refuse_pour, refuse_le)

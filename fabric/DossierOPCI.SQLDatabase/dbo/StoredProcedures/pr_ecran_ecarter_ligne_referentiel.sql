@@ -1,14 +1,13 @@
--- ------------------------------------------------------------------ n° 14 : ecarter une ligne, colonnes d'ecart de l'objet n° 10
--- ecran 5
--- Raisons de [Blocage ecarter la ligne], dans l'ordre de blocages() de la maquette : mode TEXTE, action_propre, droit,
--- actions_de_ligne 0, puis referentiel sans colonnes d'ecart (arrete les 19 et 20/10/2026) :
+-- ------------------------------------------------------------------ ecarter une ligne
+-- Raisons de [Blocage ecarter la ligne], dans son ordre : mode TEXTE, action_propre, droit,
+-- actions_de_ligne 0, puis referentiel sans colonnes d'ecart :
 -- ref_norme, ref_question, ref_reference et ref_sujet_tenue refusent en 50855, avant toute ecriture, avec la raison que
--- la mesure nomme (RAISONS_SANS_ECART), le bouton etant gris ; un autre referentiel sans colonnes d'ecart (COL_LENGTH
--- lu a l'execution ; aucun au 20/10/2026, controle C9) refuse en 50855 en nommant les 3 colonnes absentes. Une ligne
+-- la mesure nomme, le bouton etant gris ; un autre referentiel sans colonnes d'ecart (COL_LENGTH
+-- lu a l'execution) refuse en 50855 en nommant les 3 colonnes absentes. Une ligne
 -- deja ecartee refuse en 50857 en nommant la ligne et la date de son ecart, la raison que [Blocage ecarter la ligne]
 -- nomme (« ligne écartée depuis le jj/mm/aaaa », ecartee_le de v_ecran_referentiel_lignes), le bouton gris.
--- Motif facultatif, 600 caracteres au plus (contrat n° 14).
-CREATE   PROCEDURE dbo.pr_ecran_ecarter_ligne_referentiel
+-- Motif facultatif, 600 caracteres au plus.
+CREATE PROCEDURE dbo.pr_ecran_ecarter_ligne_referentiel
     @referentiel NVARCHAR (200) = NULL,
     @cle         NVARCHAR (400) = NULL,
     @motif       NVARCHAR (MAX) = NULL,
@@ -26,7 +25,7 @@ BEGIN
     DECLARE @t VARCHAR (120), @lib NVARCHAR (160), @mode VARCHAR (5), @actions TINYINT, @propre NVARCHAR (60), @designation VARCHAR (128),
             @clause NVARCHAR (MAX), @affectation NVARCHAR (MAX), @k1 NVARCHAR (400), @k2 NVARCHAR (400), @canon NVARCHAR (400), @ligne NVARCHAR (400),
             @existe BIT, @le DATE, @sql NVARCHAR (MAX), @nb INT;
-    SELECT @par = NULLIF(LTRIM(RTRIM(@par)), N''), @cle = NULLIF(LTRIM(RTRIM(@cle)), N''), @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SELECT @par = NULLIF(LTRIM(RTRIM(@par)), N''), @cle = NULLIF(LTRIM(RTRIM(@cle)), N''), @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     BEGIN TRY
         IF @par IS NULL
             EXEC dbo.pr_e5_refuser 50830, N'Action refusée : l’auteur de l’action n’est pas transmis ; l’écran le transmet avec l’adresse de connexion de la personne qui clique.';
@@ -86,7 +85,7 @@ BEGIN
             EXEC dbo.pr_e5_refuser 50857, @m;
         END;
         -- le champ du formulaire est « Motif » (aide « 600 caracteres au plus ») ; la colonne de la liste, « Motif de
-        -- l'ecart » (objet n° 7) ; le contrat n° 14 refuse un motif trop long, il n'exige pas de motif
+        -- l'ecart » ; un motif trop long se refuse, aucun motif n'est exige
         IF LEN(@motif) > 600
         BEGIN
             SET @m = N'« Motif » : ' + CAST(LEN(@motif) AS NVARCHAR (12)) + N' caractères, pour 600 au plus.';
@@ -109,7 +108,7 @@ BEGIN
         IF @tc = 0 AND @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
         BEGIN TRY EXEC sp_set_session_context N'par', NULL; END TRY BEGIN CATCH END CATCH;
         SET @e_fr = dbo.fn_e5_traduire_erreur(@e_num, @e_msg);
-        -- un refus de garde (ROLLBACK, inscription, THROW, objet n° 17) recu sous 266 ou 3609 : son texte francais est
+        -- un refus de garde (ROLLBACK, inscription, THROW) recu sous 266 ou 3609 : son texte francais est
         -- la ligne qu'un declencheur a inscrite pour @par depuis l'entree
         IF @e_fr IS NULL AND @e_num IN (266, 3609) AND @par IS NOT NULL
             SELECT TOP (1) @e_fr = j.message FROM dbo.journal_refus j

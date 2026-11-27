@@ -1,8 +1,7 @@
 
--- pr_conclure_cycle : 3 refus
--- 6. CONCLURE UN CYCLE : un cycle au programme d'un vehicule, admis depuis A_CONCLURE,
+-- CONCLURE UN CYCLE : un cycle au programme d'un vehicule, admis depuis A_CONCLURE,
 -- CONCLU et RENVOYE. La synthese et le compte des feuilles lisent le perimetre.
-CREATE   PROCEDURE dbo.pr_conclure_cycle
+CREATE PROCEDURE dbo.pr_conclure_cycle
     @entite      VARCHAR (20),
     @arrete      VARCHAR (20),
     @cycle       VARCHAR (10),
@@ -12,7 +11,7 @@ CREATE   PROCEDURE dbo.pr_conclure_cycle
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
+    -- Un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : les selecteurs passent devant la garde de droit, qui se juge sur eux.
     -- le vide : les 29 caracteres de str.isspace(), compares au point de code
     DECLARE @r327_blancs NVARCHAR (29) = NCHAR(9) + NCHAR(10) + NCHAR(11) + NCHAR(12) + NCHAR(13) + NCHAR(28) + NCHAR(29) + NCHAR(30) + NCHAR(31) + NCHAR(32)
@@ -28,7 +27,7 @@ BEGIN
         DECLARE @m_role NVARCHAR (400) = N'Conclusion refusée : cette personne ne tient aucun rôle de mission sur l''entité ' + @entite + N' ; le cycle se conclut par l''équipe de la mission.';
         BEGIN SET @m_role = REPLACE(@m_role, N'%', N'%%'); THROW 50639, @m_role, 1; END
     END;
-    -- 24/10/2026 : un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
+    -- Un champ vide se refuse en francais avant toute ecriture, par un texte propre au champ.
     -- Place : apres la garde de droit.
     IF ISNULL(DATALENGTH(TRIM(@r327_blancs COLLATE Latin1_General_100_BIN2 FROM @cycle COLLATE Latin1_General_100_BIN2)), 0) = 0
         THROW 51210, N'Conclusion refusée : choisissez le cycle dans la bande des cycles ; un cycle se conclut sur un arrêté ouvert, dossier de travail non verrouillé, tant que ni lui ni la revue ne sont visés.', 1;
@@ -49,7 +48,7 @@ BEGIN
         SET @m = N'Conclusion refusée : le cycle ' + @cycle + N' n''est pas au programme de cet arrêté.';
         BEGIN SET @m = REPLACE(@m, N'%', N'%%'); THROW 50519, @m, 1; END
     END;
-    IF NULLIF(LTRIM(RTRIM(@conclusion)), N'') IS NULL
+    IF dbo.fn_texte_vide(@conclusion) = 1
         THROW 50323, N'La conclusion du cycle est un texte : ce qui a été vu de bloquant, ce qui a été vu de satisfaisant.', 1;
     IF dbo.fn_dossier_verrouille(@entite, @arrete) = 1
         THROW 50303, N'Le dossier de cet arrêté est visé et verrouillé ; le déverrouiller avant de conclure à nouveau.', 1;

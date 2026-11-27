@@ -3,7 +3,7 @@ table v_ecran_question_referentiel
 	lineageTag: 9d441eb6-a858-40b6-ab41-f8cc06578a92
 
 	/// n° 159, « nom d’usage · n questions », n les questions du cycle ou de la phase choisi (sous-titre du bloc « Questions du cycle »)
-	measure 'Sous-titre questions du cycle' = VAR c = [Cycle ou phase choisi] VAR nm = [Nom du cycle ou phase choisi] VAR n = COUNTROWS ( FILTER ( ALL ( v_ecran_question_referentiel ), v_ecran_question_referentiel[cycle_ou_phase] = c ) ) + 0 RETURN IF ( ISBLANK ( c ), "", nm & " · " & FORMAT ( n, "0" ) & IF ( n < 2, " question", " questions" ) )
+	measure 'Sous-titre questions du cycle' = VAR c = [Cycle ou phase choisi] VAR nm = [Nom du cycle ou phase choisi] VAR n = COUNTROWS ( FILTER ( ALL ( v_ecran_question_referentiel ), v_ecran_question_referentiel[cycle_ou_phase] = c ) ) + 0 RETURN IF ( ISBLANK ( c ), "", nm & " · " & IF ( n = 0, "aucune question", FORMAT ( n, "0" ) & IF ( n < 2, " question", " questions" ) ) )
 		displayFolder: Ecran 5 Referentiels
 		lineageTag: 86adb463-0e1d-47c3-a9ba-8be7d427088d
 

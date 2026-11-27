@@ -1,6 +1,6 @@
 
 -- pr_approuver_acceptation : 3 refus
-CREATE   PROCEDURE dbo.pr_approuver_acceptation
+CREATE PROCEDURE dbo.pr_approuver_acceptation
     @entite    VARCHAR (20),
     @decision  VARCHAR (10),          -- ACCEPTEE ou REFUSEE
     @motif     NVARCHAR (800) = NULL,
@@ -68,7 +68,7 @@ BEGIN
                              OR fq.reponse_valeur IS NOT NULL));
     IF @reste > 0
     BEGIN
-        SELECT TOP 1 @sans = q.reference, @sans_enonce = LEFT(q.enonce, 120)
+        SELECT TOP 1 @sans = q.reference, @sans_enonce = LEFT(q.enonce, 121)
         FROM dbo.ref_question q
         WHERE q.phase = 'ACCEPT' AND q.obligatoire = 1
           AND NOT EXISTS (SELECT 1 FROM dbo.feuille_question fq
@@ -77,7 +77,7 @@ BEGIN
                                  OR fq.reponse_valeur IS NOT NULL))
         ORDER BY q.ordre;
         DECLARE @m69 NVARCHAR (2000) =
-            N'Décision refusée : ' + CAST(@reste AS NVARCHAR (10)) + N' question(s) obligatoire(s) sans réponse, dont ' + @sans + N', « ' + @sans_enonce + N' ». Répondre à toutes, puis décider.';
+            N'Décision refusée : ' + CAST(@reste AS NVARCHAR (10)) + CASE WHEN @reste > 1 THEN N' questions obligatoires sont sans réponse, dont ' ELSE N' question obligatoire est sans réponse : ' END + @sans + N' « ' + CASE WHEN LEN(@sans_enonce + N'.') - 1 > 120 THEN RTRIM(LEFT(@sans_enonce, 119)) + N'…' ELSE @sans_enonce END + N' ». ' + CASE WHEN @reste > 1 THEN N'Répondez à toutes, puis décidez.' ELSE N'Répondez-y, puis décidez.' END;
         INSERT INTO dbo.journal_refus
             (procedure_nom, entite, cote, question_reference, message, geste,
              refuse_pour, refuse_le)

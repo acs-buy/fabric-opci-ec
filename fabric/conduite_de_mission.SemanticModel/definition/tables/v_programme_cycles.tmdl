@@ -17,10 +17,10 @@ table v_programme_cycles
 	measure 'Titre des questions du programme' = VAR c = [Cycle choisi] RETURN IF ( ISBLANK ( c ), "Questions du programme", "Questions du cycle " & c )
 		lineageTag: fa6f197f-7ced-4c51-8987-36ca30661532
 
-	measure 'Sous-titre des questions du programme' = FORMAT ( SUM ( v_programme_cycles[questions_actives] ), "0" ) & " au programme sur " & FORMAT ( SUM ( v_programme_cycles[questions_eligibles] ), "0" ) & " éligibles"
+	measure 'Sous-titre des questions du programme' = VAR qa = SUM ( v_programme_cycles[questions_actives] ) + 0 VAR qe = SUM ( v_programme_cycles[questions_eligibles] ) + 0 RETURN IF ( qe = 0, "aucune question éligible", FORMAT ( qa, "0" ) & " au programme sur " & FORMAT ( qe, "0" ) & IF ( qe > 1, " éligibles", " éligible" ) )
 		lineageTag: 444d5a52-4316-454f-b5b5-1ea6773cf0f2
 
-	measure 'Sous-titre des cycles du programme' = VAR n = CALCULATE ( DISTINCTCOUNT ( v_programme_cycles[cycle] ), REMOVEFILTERS ( ref_cycle ), v_programme_cycles[questions_eligibles] > 0 ) RETURN FORMAT ( n, "0" ) & IF ( n > 1, " cycles", " cycle" )
+	measure 'Sous-titre des cycles du programme' = VAR n = CALCULATE ( DISTINCTCOUNT ( v_programme_cycles[cycle] ), REMOVEFILTERS ( ref_cycle ), v_programme_cycles[questions_eligibles] > 0 ) RETURN IF ( n = 0, "aucun cycle", FORMAT ( n, "0" ) & IF ( n > 1, " cycles", " cycle" ) )
 		lineageTag: 5273f9c3-d6d5-4a0a-9452-ea1b72756350
 
 	measure 'Questions repondues du programme' = CALCULATE ( SUM ( v_programme_cycles[questions_repondues] ), REMOVEFILTERS ( ref_cycle ) )

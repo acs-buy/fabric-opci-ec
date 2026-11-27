@@ -1,7 +1,6 @@
--- pr_deposer_piece : 1 refus
--- --- 7. inscrire une piece au dossier : le fichier est depose dans SharePoint, le coffre le lit par raccourci ---
+-- Inscrire une piece au dossier : le fichier est depose dans SharePoint, le coffre le lit par raccourci.
 -- @web_url, ajoute le 28/09/2026 : le lien SharePoint du fichier, que dbo.pr_resoudre_fichier_depot calcule.
-CREATE   PROCEDURE dbo.pr_deposer_piece
+CREATE PROCEDURE dbo.pr_deposer_piece
     @entite         VARCHAR (20),
     @nom_fichier    NVARCHAR (400),
     @chemin_coffre  NVARCHAR (400),
@@ -23,7 +22,7 @@ BEGIN
         THROW 50272, N'La nature de la pièce n''est pas au référentiel. Les natures se complètent à l''écran Référentiels.', 1;
     IF @arrete IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.ref_arrete WHERE entite = @entite AND arrete = @arrete)
         THROW 50273, N'L''arrêté désigné n''est pas au référentiel de cette entité.', 1;
-    -- 51303 (15/11/2026) : action 10, apres l'existence de l'arrete. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- 51303 (15/11/2026) : apres l'existence de l'arrete ; juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
     -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
@@ -57,7 +56,7 @@ BEGIN
         THROW;
     END CATCH;
 
-    SELECT @piece AS piece_id, N'Pièce « ' + @nom_fichier + N' » inscrite au dossier de ' + @entite
+    SELECT @piece AS piece_id, N'Pièce « ' + @nom_fichier + N' » inscrite au dossier ' + dbo.fn_de(@entite)
          + CASE WHEN @question IS NOT NULL THEN N', rattachée à la question ' + @question ELSE N'' END + N'.' AS message;
 END;
 

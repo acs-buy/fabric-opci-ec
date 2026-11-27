@@ -36,30 +36,6 @@ table v_avancement_etapes
 		displayFolder: Le dossier
 		lineageTag: bf736477-941a-44b2-9f6a-af170676806a
 
-	/// Numero de l'etape en cours, entite et arrete affiches.
-	measure 'Etape du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Numero de l etape en cours], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: 0
-		displayFolder: Le dossier
-		lineageTag: bcd7b4d4-4fe7-4e99-81b1-7e3b79df4d63
-
-	/// Part faite de l'etape, entite et arrete affiches.
-	measure 'Avancement du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Avancement], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: 0 %
-		displayFolder: Le dossier
-		lineageTag: 1e9059bf-3f4b-421a-85a5-21c427345302
-
-	/// Unites faites, entite et arrete affiches.
-	measure 'Fait du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Fait de l etape], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0
-		displayFolder: Le dossier
-		lineageTag: 221b85cb-23b5-476f-bd17-965205a90f2a
-
-	/// Unites attendues, entite et arrete affiches.
-	measure 'Total du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Total de l etape], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0
-		displayFolder: Le dossier
-		lineageTag: 7bd803d7-71d6-470e-b38d-e6d64a7088d2
-
 	/// Part faite de l'etape 1, Collecte, quel que soit le filtre d'etape du visuel.
 	measure 'Avancement etape 1' = CALCULATE([Avancement], v_avancement_etapes[etape_ordre] = 1)
 		formatString: 0 %

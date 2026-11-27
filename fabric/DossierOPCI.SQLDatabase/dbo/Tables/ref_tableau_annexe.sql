@@ -20,6 +20,26 @@ CREATE TABLE [dbo].[ref_tableau_annexe] (
 
 GO
 
+CREATE   TRIGGER dbo.[tr_ref_tableau_annexe_horodatage]
+ON dbo.[ref_tableau_annexe]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
+    -- premier passage interdirait a tous les suivants de corriger leurs
+    -- propres lignes.
+    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
+    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
+    -- Objet n° 16 de l'ecran 5 : l'auteur est celui que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
+    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
+    FROM dbo.[ref_tableau_annexe] t
+    JOIN inserted i ON t.[article] = i.[article];
+END;
+
+GO
+
 CREATE   TRIGGER dbo.[tr_ref_tableau_annexe_garde]
 ON dbo.[ref_tableau_annexe]
 AFTER INSERT, UPDATE, DELETE
@@ -62,26 +82,6 @@ BEGIN
     INSERT INTO dbo.annexe_retard (entite, ecrit_le, origine, lignes)
     SELECT e.code, SYSUTCDATETIME(), N'ref_tableau_annexe', (SELECT COUNT(*) FROM ch)
     FROM dbo.ref_entite e WHERE e.forme_vehicule IS NOT NULL AND EXISTS (SELECT 1 FROM ch);
-END;
-
-GO
-
-CREATE   TRIGGER dbo.[tr_ref_tableau_annexe_horodatage]
-ON dbo.[ref_tableau_annexe]
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    -- Un semis ne marque pas la ligne comme modifiee : sans quoi son
-    -- premier passage interdirait a tous les suivants de corriger leurs
-    -- propres lignes.
-    IF CAST(ISNULL(SESSION_CONTEXT(N'semis'), 0) AS INT) = 1 RETURN;
-    IF NOT EXISTS (SELECT 1 FROM inserted) RETURN;
-    -- Objet n° 16 de l'ecran 5 : l'auteur est celui que la procedure d'ecran pose dans le
-    -- contexte par, a defaut le compte connecte, a la longueur de la colonne modifie_par.
-    UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
-    FROM dbo.[ref_tableau_annexe] t
-    JOIN inserted i ON t.[article] = i.[article];
 END;
 
 GO

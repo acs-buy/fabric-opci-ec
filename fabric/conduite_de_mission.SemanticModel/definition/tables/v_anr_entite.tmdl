@@ -25,18 +25,6 @@ table v_anr_entite
 		displayFolder: Actif net
 		lineageTag: 634ca5b2-4a69-4788-a420-3ce6213d6013
 
-	/// Actif net reevalue de l'entite et de l'arrete affiches.
-	measure 'ANR du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Actif net reevalue], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0
-		displayFolder: Le dossier
-		lineageTag: e7d73ce4-34ce-4cac-94a3-30447c49af44
-
-	/// Differences d'estimation comptabilisees de l'entite et de l'arrete affiches.
-	measure 'Differences comptabilisees du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Differences d estimation], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0
-		displayFolder: Le dossier
-		lineageTag: 155ad860-d789-4208-87e9-4bf3fb9d2dfb
-
 	/// Carte 3.3, Actif net reevalue.
 	measure 'R33 Actif net reevalue' = VAR lignes = CALCULATE ( COUNTROWS ( v_anr_entite ), v_perimetre_groupe[est_vehicule] = TRUE () ) RETURN IF ( lignes = 1, CALCULATE ( SUM ( v_anr_entite[actif_net_reevalue] ), v_perimetre_groupe[est_vehicule] = TRUE () ) )
 		formatString: #,0

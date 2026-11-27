@@ -49,8 +49,8 @@ table v_balance
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 00f1e78b-6c68-4672-927e-577e613f5a48
 
-	/// « n comptes · n revus » (bande 5)
-	measure 'Libelle bande balance' = VAR m = COUNTROWS ( FILTER ( v_balance, ( LEFT ( v_balance[Compte], 1 ) IN { "2", "3" } || LEFT ( v_balance[Compte], 3 ) = "105" ) ) ) + 0 VAR n = COUNTROWS ( FILTER ( v_balance, ( LEFT ( v_balance[Compte], 1 ) IN { "2", "3" } || LEFT ( v_balance[Compte], 3 ) = "105" ) && v_balance[etat] = "CONCLUE" ) ) + 0 RETURN FORMAT ( m, "0" ) & " comptes · " & FORMAT ( n, "0" ) & " revus"
+	/// « n comptes · n revus », au singulier pour 1, « aucun revu » pour 0 ; « aucun compte » (bande 5)
+	measure 'Libelle bande balance' = VAR m = COUNTROWS ( FILTER ( v_balance, ( LEFT ( v_balance[Compte], 1 ) IN { "2", "3" } || LEFT ( v_balance[Compte], 3 ) = "105" ) ) ) + 0 VAR n = COUNTROWS ( FILTER ( v_balance, ( LEFT ( v_balance[Compte], 1 ) IN { "2", "3" } || LEFT ( v_balance[Compte], 3 ) = "105" ) && v_balance[etat] = "CONCLUE" ) ) + 0 RETURN IF ( m = 0, "aucun compte", FORMAT ( m, "0" ) & IF ( m > 1, " comptes · ", " compte · " ) & IF ( n = 0, "aucun revu", FORMAT ( n, "0" ) & IF ( n > 1, " revus", " revu" ) ) )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 458f13d1-4adf-4b03-9475-7d0054c18cfb
 

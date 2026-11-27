@@ -25,6 +25,32 @@ CREATE TABLE [dbo].[ref_reference] (
 
 GO
 
+CREATE   TRIGGER dbo.[tr_ref_reference_garde]
+ON dbo.[ref_reference]
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Objet n° 16 de l'ecran 5 : l'identite jugee est celle que la procedure d'ecran pose dans le
+    -- contexte par, a defaut le compte connecte. Le CAST est exige : un sql_variant passe nu a
+    -- fn_peut_ecrire_referentiel rend le Msg 257.
+    IF dbo.fn_peut_ecrire_referentiel('ref_reference',
+                                      CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400))) = 1 RETURN;
+    -- Objet n° 17 : le refus s'inscrit dans journal_refus avant d'etre leve. Le ROLLBACK precede
+    -- l'inscription, que le THROW annulerait sinon avec l'ecriture refusee (pas de transaction autonome) ;
+    -- sous une Data function, la fonction annule aussi l'inscription, puis journalise le refus apres son
+    -- propre rollback (pr_journaliser_refus). refuse_pour est un nvarchar(200) : l'identite y est coupee a 200
+    -- caracteres, une ecriture plus longue y serait refusee et remplacerait le 50074.
+    DECLARE @m NVARCHAR (2000) = N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.';
+    ROLLBACK TRANSACTION;
+    INSERT INTO dbo.journal_refus (procedure_nom, message, refuse_pour, refuse_le)
+    VALUES ('tr_ref_reference_garde', @m, LEFT(CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), 200), SYSUTCDATETIME());
+    SET @m = REPLACE(@m, N'%', N'%%');
+    THROW 50074, @m, 1;
+END;
+
+GO
+
 
 CREATE   TRIGGER dbo.tr_ref_reference_annexe_retard ON dbo.ref_reference
 AFTER INSERT, UPDATE, DELETE
@@ -61,32 +87,6 @@ BEGIN
     UPDATE t SET modifie_par = CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), modifie_le = SYSUTCDATETIME()
     FROM dbo.[ref_reference] t
     JOIN inserted i ON t.[id] = i.[id];
-END;
-
-GO
-
-CREATE   TRIGGER dbo.[tr_ref_reference_garde]
-ON dbo.[ref_reference]
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    -- Objet n° 16 de l'ecran 5 : l'identite jugee est celle que la procedure d'ecran pose dans le
-    -- contexte par, a defaut le compte connecte. Le CAST est exige : un sql_variant passe nu a
-    -- fn_peut_ecrire_referentiel rend le Msg 257.
-    IF dbo.fn_peut_ecrire_referentiel('ref_reference',
-                                      CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400))) = 1 RETURN;
-    -- Objet n° 17 : le refus s'inscrit dans journal_refus avant d'etre leve. Le ROLLBACK precede
-    -- l'inscription, que le THROW annulerait sinon avec l'ecriture refusee (pas de transaction autonome) ;
-    -- sous une Data function, la fonction annule aussi l'inscription, puis journalise le refus apres son
-    -- propre rollback (pr_journaliser_refus). refuse_pour est un nvarchar(200) : l'identite y est coupee a 200
-    -- caracteres, une ecriture plus longue y serait refusee et remplacerait le 50074.
-    DECLARE @m NVARCHAR (2000) = N'Écriture refusée : la modification de ce référentiel du cabinet demande le rôle associé. Votre compte ne porte aucun rôle de ce genre sur les dossiers ouverts. Demander à l''associé de porter la modification, ou de vous attribuer le rôle.';
-    ROLLBACK TRANSACTION;
-    INSERT INTO dbo.journal_refus (procedure_nom, message, refuse_pour, refuse_le)
-    VALUES ('tr_ref_reference_garde', @m, LEFT(CAST(COALESCE(SESSION_CONTEXT(N'par'), SUSER_SNAME()) AS NVARCHAR (400)), 200), SYSUTCDATETIME());
-    SET @m = REPLACE(@m, N'%', N'%%');
-    THROW 50074, @m, 1;
 END;
 
 GO

@@ -1,7 +1,7 @@
 
--- 1.2 : la reprise. Droit en tete (50980), puis motif (50277), rattachement (50278), verrou (50303), donnee fondee
--- (50279) ; le rattachement designe, ou, sans lui, le dernier de la piece (appels directs d'aujourd'hui).
-CREATE   PROCEDURE dbo.pr_retirer_piece
+-- Droit en tete (50980), puis motif (50277), rattachement (50278), verrou (50303), donnee fondee
+-- (50279) ; le rattachement designe, ou, sans lui, le dernier de la piece (appel sans @rattachement_id).
+CREATE PROCEDURE dbo.pr_retirer_piece
     @entite          VARCHAR (20),
     @piece_id        INT = NULL,
     @motif           NVARCHAR (800),
@@ -19,10 +19,10 @@ BEGIN
     ELSE IF @piece_id IS NOT NULL
         SELECT TOP (1) @ratt = pr.id, @piece = pr.piece_id, @arrete = pr.arrete FROM dbo.piece_rattachement pr
         WHERE pr.piece_id = @piece_id AND pr.entite = @entite ORDER BY pr.id DESC;
-    -- 1. le droit, avant tout autre refus
+    -- le droit, avant tout autre refus
     IF dbo.fn_membre_equipe(@entite, @arrete, @par, CAST(SYSUTCDATETIME() AS DATE)) = 0
         THROW 50980, N'Retrait refusé : votre adresse de connexion n''est rattachée à aucun membre de l''équipe de ce dossier.', 1;
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
     IF @motif IS NULL
         THROW 50277, N'Le motif du retrait est obligatoire : il reste dans la trace du dossier.', 1;
     IF @ratt IS NULL
@@ -54,7 +54,7 @@ BEGIN
         THROW;
     END CATCH;
 
-    -- 1.2, point 6 : le message de reussite, seul a nommer le fichier
+    -- le message de reussite, seul a nommer le fichier
     DECLARE @autres INT, @autres_arretes INT, @autre_arrete VARCHAR (20);
     SELECT @autres = COUNT(*), @autres_arretes = COUNT(arrete), @autre_arrete = MAX(arrete) FROM dbo.piece_rattachement WHERE piece_id = @piece;
     SELECT @piece AS piece_id,

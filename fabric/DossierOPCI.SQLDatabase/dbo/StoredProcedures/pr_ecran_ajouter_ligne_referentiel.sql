@@ -1,15 +1,14 @@
--- ------------------------------------------------------------------ n° 12 : ajouter une ligne, copie de la ligne choisie
--- ecran 5
--- Contrat de la maquette (objet n° 12) : copie de @modele ; @cle, le code neuf a la forme de la vue (vide
--- pour une cle numerotee) ; raisons de [Blocage ajouter la ligne], dans l'ordre de la maquette : mode TEXTE,
+-- ------------------------------------------------------------------ ajouter une ligne, copie de la ligne choisie
+-- Copie de @modele ; @cle, le code neuf a la forme de la vue (vide
+-- pour une cle numerotee) ; raisons de [Blocage ajouter la ligne], dans son ordre : mode TEXTE,
 -- action_propre, droit, actions_de_ligne 0, 2 et 3 ; @libelle remplace la valeur copiee de colonne_designation ; une
 -- colonne ordre sous unicite recoit le plus grand ordre plus 1, dans le groupe de son index, et celle d'un referentiel
--- de ORDRE_PAR_GROUPE dans son groupe (ref_piece_attendue : cycle ou phase), le groupe compare par INTERSECT ;
+-- ordonne par groupe dans son groupe (ref_piece_attendue : cycle ou phase), le groupe compare par INTERSECT ;
 -- chaque autre unicite verifiee avant l'ecriture, la colonne nommee ; la designation de la ligne neuve relue apres
 -- l'insertion, unique dans le referentiel ; ref_reference : la reference copiee refusee, intitule de ref_article,
 -- citation et lecture sur piece non copiees ; une ligne copiee n'est pas ecartee ; modifie_par = @par et modifie_le sur
 -- la ligne inseree.
-CREATE   PROCEDURE dbo.pr_ecran_ajouter_ligne_referentiel
+CREATE PROCEDURE dbo.pr_ecran_ajouter_ligne_referentiel
     @referentiel NVARCHAR (200) = NULL,
     @modele      NVARCHAR (400) = NULL,
     @cle         NVARCHAR (400) = NULL,
@@ -33,7 +32,7 @@ BEGIN
             @unicites NVARCHAR (MAX), @sql NVARCHAR (MAX), @doublon SYSNAME, @n INT, @id INT, @noms NVARCHAR (1000), @nb_noms INT,
             @avec_designation BIT, @nl NCHAR (1) = NCHAR (10), @gx NVARCHAR (MAX), @gl NVARCHAR (MAX), @avec_ordre BIT = 0, @nb_d INT;
     SELECT @par = NULLIF(LTRIM(RTRIM(@par)), N''), @modele = NULLIF(LTRIM(RTRIM(@modele)), N''),
-           @cle = NULLIF(LTRIM(RTRIM(@cle)), N''), @libelle = NULLIF(LTRIM(RTRIM(@libelle)), N'');
+           @cle = NULLIF(LTRIM(RTRIM(@cle)), N''), @libelle = CASE WHEN dbo.fn_texte_vide(@libelle) = 1 THEN NULL ELSE LTRIM(RTRIM(@libelle)) END;
     BEGIN TRY
         IF @par IS NULL
             EXEC dbo.pr_e5_refuser 50830, N'Action refusée : l’auteur de l’action n’est pas transmis ; l’écran le transmet avec l’adresse de connexion de la personne qui clique.';
@@ -79,7 +78,7 @@ BEGIN
             EXEC dbo.pr_e5_refuser 50842, @m;
         END;
         SET @oid = OBJECT_ID(N'dbo.' + QUOTENAME(@t));
-        -- 30/10/2026 : ELSE N'' dans le MAX, repris par NULLIF : aucun NULL dans l'agregat, donc aucun avertissement 8153, que
+        -- ELSE N'' dans le MAX, repris par NULLIF : aucun NULL dans l'agregat, donc aucun avertissement 8153, que
         -- le pilote lirait a la place du refus.
         SELECT @numerotee = CASE WHEN MAX(CAST(c.is_identity AS INT)) = 1 THEN 1 ELSE 0 END,
                @pk1 = NULLIF(MAX(CASE WHEN ic.key_ordinal = 1 THEN c.name ELSE N'' END), N''),
@@ -111,7 +110,7 @@ BEGIN
             EXEC dbo.pr_e5_controler_reference @t, @pk1, @k1, N'Code de la nouvelle ligne';
             IF @pk2 IS NOT NULL EXEC dbo.pr_e5_controler_reference @t, @pk2, @k2, N'Code de la nouvelle ligne';
         END;
-        -- le libelle remplace la valeur copiee de colonne_designation (objet n° 1)
+        -- le libelle remplace la valeur copiee de colonne_designation
         IF @libelle IS NOT NULL
         BEGIN
             IF @designation IS NULL OR COL_LENGTH(N'dbo.' + QUOTENAME(@t), @designation) IS NULL
@@ -147,7 +146,7 @@ BEGIN
                 EXEC dbo.pr_e5_refuser 50854, @m;
             END;
             SELECT @intitule = a.intitule FROM dbo.ref_article a WHERE a.article = @n_ref AND a.norme = @n_norme;
-            IF NULLIF(LTRIM(RTRIM(@intitule)), N'') IS NULL
+            IF dbo.fn_texte_vide(@intitule) = 1
             BEGIN
                 SET @m = N'Ajout refusé : l’article « ' + @n_ref + N' » de la norme « ' + @n_norme
                        + N' » n’est pas au référentiel des articles avec son intitulé ; aucun intitulé d’article ne se saisit à la main, et la référence s’inscrit avec son article.';
@@ -171,7 +170,7 @@ BEGIN
         JOIN sys.columns c ON c.object_id = ic.object_id AND c.column_id = ic.column_id
         WHERE i.object_id = @oid AND i.is_unique = 1 AND c.name = N'ordre';
         -- le groupe de l'ordre : les autres colonnes de l'index unique qui porte ordre ; a defaut, le debut de la
-        -- designation (ORDRE_PAR_GROUPE : « cycle ou phase » d'une piece attendue) ; compare par INTERSECT, qui egale
+        -- designation (« cycle ou phase » d'une piece attendue) ; compare par INTERSECT, qui egale
         -- 2 NULL comme un index unique
         IF @idx_ordre IS NOT NULL
         BEGIN
@@ -259,7 +258,7 @@ BEGIN
         IF @tc = 0 AND @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
         BEGIN TRY EXEC sp_set_session_context N'par', NULL; END TRY BEGIN CATCH END CATCH;
         SET @e_fr = dbo.fn_e5_traduire_erreur(@e_num, @e_msg);
-        -- un refus de garde (ROLLBACK, inscription, THROW, objet n° 17) recu sous 266 ou 3609 : son texte francais est
+        -- un refus de garde (ROLLBACK, inscription, THROW) recu sous 266 ou 3609 : son texte francais est
         -- la ligne qu'un declencheur a inscrite pour @par depuis l'entree
         IF @e_fr IS NULL AND @e_num IN (266, 3609) AND @par IS NOT NULL
             SELECT TOP (1) @e_fr = j.message FROM dbo.journal_refus j

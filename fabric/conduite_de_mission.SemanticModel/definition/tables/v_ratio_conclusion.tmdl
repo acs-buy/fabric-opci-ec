@@ -8,19 +8,6 @@ table v_ratio_conclusion
 		displayFolder: Parcours
 		lineageTag: fa861edb-a24f-40e5-a927-63a2aa2984ec
 
-	/// Comparaison arithmetique du ratio a son seuil selon le sens ; indicative : la conformite
-	/// n'est pas conclue, la vue la laisse a NULL tant que le calcul est a valider.
-	measure 'Ratios en ecart au seuil' = SUMX(v_ratio_conclusion, IF((v_ratio_conclusion[sens] = "MINIMUM" && v_ratio_conclusion[ratio] < v_ratio_conclusion[seuil]) || (v_ratio_conclusion[sens] = "MAXIMUM" && v_ratio_conclusion[ratio] > v_ratio_conclusion[seuil]), 1, 0)) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 307d6d73-1c0a-4d19-9210-77e2f9f68161
-
-	/// Ratios dont le calcul porte la mention a valider.
-	measure 'Ratios a valider' = CALCULATE(COUNTROWS(v_ratio_conclusion), v_ratio_conclusion[calcul_a_valider] = TRUE()) + 0
-		formatString: #,0
-		displayFolder: Parcours
-		lineageTag: 84edc213-3d24-45a7-9a65-cbe2ed48d81c
-
 	/// Valeur du ratio de la ligne.
 	measure 'Valeur du ratio' = MAX(v_ratio_conclusion[ratio])
 		formatString: 0.00 %
@@ -32,30 +19,6 @@ table v_ratio_conclusion
 		formatString: 0 %
 		displayFolder: Parcours
 		lineageTag: 74949d5e-ec28-4b62-a538-e29b76c3f83a
-
-	/// Ratios en ecart au seuil, entite et arrete affiches.
-	measure 'Ratios en ecart au seuil du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Ratios en ecart au seuil], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0
-		displayFolder: Le dossier
-		lineageTag: c985f4c6-e551-4f58-a385-6736b904ca12
-
-	/// Ratios a valider, entite et arrete affiches.
-	measure 'Ratios a valider du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Ratios a valider], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0
-		displayFolder: Le dossier
-		lineageTag: 98714207-c103-4bab-a2f2-c9e5e725384d
-
-	/// Ratio de la ligne, entite et arrete affiches.
-	measure 'Valeur du ratio du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Valeur du ratio], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: 0.00 %
-		displayFolder: Le dossier
-		lineageTag: 79b47ca5-3974-486c-9e9c-17b1e45faf10
-
-	/// Seuil de la ligne, entite et arrete affiches.
-	measure 'Seuil du ratio du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Seuil du ratio], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: 0 %
-		displayFolder: Le dossier
-		lineageTag: dea557d6-78e2-4c41-bcd1-89ec63ba0b7d
 
 	/// Ratios calcules, entite et arrete affiches.
 	measure 'Ratios calcules du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Ratios calcules], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
@@ -81,7 +44,7 @@ table v_ratio_conclusion
 		lineageTag: 0505fa06-3e91-493c-a8f9-2009d73c9c9d
 
 	/// « n arrêtés de mission · n limites calculées · en rouge, en écart au seuil » ; une limite sans objet n’est jamais en rouge
-	measure 'Sous-titre ratios des arretes' = VAR e = [Client selectionne] VAR am = SELECTCOLUMNS ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[est_arrete_client] = TRUE () ), "a", ref_arrete[Arrêté] ) VAR t = FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] IN am ) VAR na = COUNTROWS ( DISTINCT ( SELECTCOLUMNS ( t, "a", v_ratio_conclusion[arrete] ) ) ) + 0 VAR nl = COUNTROWS ( DISTINCT ( SELECTCOLUMNS ( t, "c", v_ratio_conclusion[code] ) ) ) + 0 RETURN FORMAT ( na, "0" ) & IF ( na > 1, " arrêtés de mission", " arrêté de mission" ) & " · " & FORMAT ( nl, "0" ) & IF ( nl > 1, " limites calculées", " limite calculée" ) & " · en rouge, en écart au seuil"
+	measure 'Sous-titre ratios des arretes' = VAR e = [Client selectionne] VAR am = SELECTCOLUMNS ( FILTER ( ALL ( ref_arrete ), ref_arrete[entite] = e && ref_arrete[est_arrete_client] = TRUE () ), "a", ref_arrete[Arrêté] ) VAR t = FILTER ( ALL ( v_ratio_conclusion ), v_ratio_conclusion[entite] = e && v_ratio_conclusion[arrete] IN am ) VAR na = COUNTROWS ( DISTINCT ( SELECTCOLUMNS ( t, "a", v_ratio_conclusion[arrete] ) ) ) + 0 VAR nl = COUNTROWS ( DISTINCT ( SELECTCOLUMNS ( t, "c", v_ratio_conclusion[code] ) ) ) + 0 RETURN IF ( na = 0, "aucun arrêté de mission", FORMAT ( na, "0" ) & IF ( na > 1, " arrêtés de mission", " arrêté de mission" ) & " · " & IF ( nl = 0, "aucune limite calculée", FORMAT ( nl, "0" ) & IF ( nl > 1, " limites calculées", " limite calculée" ) ) & " · en rouge, en écart au seuil" )
 		displayFolder: Ecran 4 Arrete
 		lineageTag: 37189254-6363-4c50-ac4e-24c15657b8e6
 

@@ -5,8 +5,8 @@ managee de la Function App. Aucun secret : les roles d'application Graph sont af
 l'identite managee (Group.Create, Group.ReadWrite.All, Team.Create, User.Read.All,
 User.Invite.All, Sites.ReadWrite.All).
 
-Appelee par la base SQL Fabric (sp_invoke_external_rest_endpoint, depuis la procedure du bouton
-PowerTable) avec un JSON :
+Appelee par la base SQL Fabric (sp_invoke_external_rest_endpoint, depuis la procedure
+pr_ecran_provisionner_espace) avec un JSON :
   {"entite": "OMEGA-SCI-11", "denomination": "SCI Omega 11", "proprietaires": ["upn", ...],
    "membres": ["upn", ...], "invites": ["adresse@client.fr", ...], "equipe": true}
 Rend toujours un JSON, statut FAIT, PARTIEL ou ERREUR, avec le detail de chaque etape, pour que

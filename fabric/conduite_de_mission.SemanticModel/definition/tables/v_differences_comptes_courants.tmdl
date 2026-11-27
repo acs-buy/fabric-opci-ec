@@ -18,7 +18,7 @@ table v_differences_comptes_courants
 		lineageTag: 54e12a68-b7ad-4e00-9baa-787cba51bd7b
 
 	/// « n avances du véhicule »
-	measure 'Sous-titre grille des avances' = VAR n = COUNTROWS ( v_differences_comptes_courants ) + 0 RETURN FORMAT ( n, "0" ) & IF ( n > 1, " avances du véhicule", " avance du véhicule" )
+	measure 'Sous-titre grille des avances' = VAR n = COUNTROWS ( v_differences_comptes_courants ) + 0 RETURN IF ( n = 0, "aucune avance du véhicule", FORMAT ( n, "0" ) & IF ( n > 1, " avances du véhicule", " avance du véhicule" ) )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 3f196f3f-919a-4d78-8161-308144e35ffd
 
@@ -45,7 +45,7 @@ table v_differences_comptes_courants
 		lineageTag: 03a9809a-a8ed-4be0-b091-20161b0ff1b0
 
 	/// « n avances · n révisions » (bande 1)
-	measure 'Libelle type comptes courants' = VAR n = COUNTROWS ( v_differences_comptes_courants ) + 0 VAR r = CALCULATE ( COUNTROWS ( v_differences_comptes_courants ), v_differences_comptes_courants[source] = "REVISION" ) + 0 RETURN FORMAT ( n, "0" ) & IF ( n > 1, " avances · ", " avance · " ) & IF ( r = 0, "aucune révision", FORMAT ( r, "0" ) & IF ( r > 1, " révisions", " révision" ) )
+	measure 'Libelle type comptes courants' = VAR n = COUNTROWS ( v_differences_comptes_courants ) + 0 VAR r = CALCULATE ( COUNTROWS ( v_differences_comptes_courants ), v_differences_comptes_courants[source] = "REVISION" ) + 0 RETURN IF ( n = 0, "aucune avance · ", FORMAT ( n, "0" ) & IF ( n > 1, " avances · ", " avance · " ) ) & IF ( r = 0, "aucune révision", FORMAT ( r, "0" ) & IF ( r > 1, " révisions", " révision" ) )
 		displayFolder: Ecran 3 Valorisation
 		lineageTag: 540df2b8-dd5a-41a4-8718-070be13cfd66
 

@@ -37,12 +37,6 @@ table v_livrables_dus
 		displayFolder: Le dossier
 		lineageTag: d12234b4-38d7-4d27-ac84-34630a418392
 
-	/// Livrables produits, entite et arrete affiches.
-	measure 'Livrables produits du dossier' = VAR e = [Entite courante] VAR a = [Arrete courant] RETURN CALCULATE([Livrables produits], ref_entite[Entité] = e, v_dim_arrete[arrete] = a)
-		formatString: #,0
-		displayFolder: Le dossier
-		lineageTag: 73ac2c5f-358c-47fc-92d1-238eb50f1e65
-
 	/// Alias.
 	measure 'Livrables dus du dossier courant' = [Livrables dus du dossier]
 		formatString: #,0

@@ -1,9 +1,8 @@
--- ===================================================================== 1. LE CLASSEUR DES NIVEAUX DE PROGRAMME
--- ecran 5
+-- ===================================================================== LE CLASSEUR DES NIVEAUX DE PROGRAMME
 -- Une ligne par question de cycle (hors ECARTEE), les croix de son niveau en base quand il est pose,
--- sinon la proposition mecanique du 28/09/2026 ; le motif dit laquelle. Lue par la
--- fonction exporter_niveaux (n° 194), triee par ordre_cycle et ordre_question.
-CREATE   VIEW dbo.v_export_niveaux_programme
+-- sinon la proposition mecanique ; le motif dit laquelle. Lue par la fonction exporter_niveaux, triee par
+-- ordre_cycle et ordre_question.
+CREATE VIEW dbo.v_export_niveaux_programme
 AS
 SELECT p.cycle, p.cycle_libelle, p.reference, p.enonce, p.applicabilite, p.type_reponse, p.feuille_type, p.racines_cycle,
        p.racines_directes,
@@ -23,7 +22,7 @@ SELECT p.cycle, p.cycle_libelle, p.reference, p.enonce, p.applicabilite, p.type_
        p.niveau_programme, p.ordre_cycle, p.ordre_question
 FROM (SELECT b.*,
              CASE WHEN b.socle = 1 THEN NULL
-                  WHEN b.vl = 1 AND b.rang_vl = 1 AND MAX(CASE WHEN b.vl = 1 THEN b.socle END) OVER (PARTITION BY b.cycle) = 0 THEN N'arrêté de VL'
+                  WHEN b.vl = 1 AND b.rang_vl = 1 AND MAX(CASE WHEN b.vl = 1 THEN b.socle ELSE 0 END) OVER (PARTITION BY b.cycle) = 0 THEN N'arrêté de VL'
                   WHEN MAX(b.vl) OVER (PARTITION BY b.cycle) = 0 AND MAX(b.socle) OVER (PARTITION BY b.cycle) = 0 AND b.rang_cycle = 1 THEN N'clôture'
              END AS complement
       FROM (SELECT q.cycle, c.libelle AS cycle_libelle, q.reference, q.enonce, q.applicabilite, q.type_reponse, f.feuille_type,

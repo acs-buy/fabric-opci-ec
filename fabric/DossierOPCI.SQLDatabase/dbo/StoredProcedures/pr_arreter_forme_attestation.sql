@@ -1,9 +1,8 @@
 
--- pr_arreter_forme_attestation : 8 refus
--- 6. L'ARRET DE LA FORME. Controles dans l'ordre du contrat : 50083, 50632, 50630, regles de l'entite (50628, 50629,
+-- L'ARRET DE LA FORME. Controles dans l'ordre : 50083, 50632, 50630, regles de l'entite (50628, 50629,
 -- 50631), 50084, puis pour une forme d'attestation 50085 et 50098 sur la forme d'attestation derivee. Tout arret
 -- perime, dans la meme transaction, la derniere version non perimee du rapport de l'arrete.
-CREATE   PROCEDURE dbo.pr_arreter_forme_attestation
+CREATE PROCEDURE dbo.pr_arreter_forme_attestation
     @entite VARCHAR (20),
     @arrete VARCHAR (20),
     @forme  VARCHAR (20),
@@ -16,8 +15,8 @@ BEGIN
     SET XACT_ABORT ON;
     DECLARE @m NVARCHAR (2000), @soumise BIT, @derivee VARCHAR (20), @limitation BIT, @proposee VARCHAR (20),
             @ancienne VARCHAR (20), @maintenant DATETIME2 (3) = SYSUTCDATETIME(), @perimes INT = 0;
-    SET @motif = NULLIF(LTRIM(RTRIM(@motif)), N'');
-    SET @motif_considerations = NULLIF(LTRIM(RTRIM(@motif_considerations)), N'');
+    SET @motif = CASE WHEN dbo.fn_texte_vide(@motif) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif)) END;
+    SET @motif_considerations = CASE WHEN dbo.fn_texte_vide(@motif_considerations) = 1 THEN NULL ELSE LTRIM(RTRIM(@motif_considerations)) END;
 
     IF dbo.fn_peut_viser_nature(@entite, @par, 'PUBLICATION', CAST(SYSUTCDATETIME() AS DATE)) = 0
     BEGIN

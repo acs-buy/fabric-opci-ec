@@ -1,14 +1,12 @@
--- ouvrir le questionnaire de maintien d'un client.
+-- Ouvrir le questionnaire de maintien d'un client.
 --
--- MESURE LE 16/09/2026 : pr_ouvrir_maintien exige une feuille de phase MAINTIEN deja
--- existante (refus 50068), et rien ne la cree : le jeu porte MTN-OMEGA-OPCI-2025, semee par
--- l'historique avec ses 36 questions. Le bouton « Ouvrir le maintien » de la maquette 71 doit donc
--- creer la feuille et ses questions avant d'appeler la procedure, meme geste que pour l'acceptation.
+-- pr_ouvrir_maintien exige une feuille de phase MAINTIEN deja existante (refus 50068) : cette procedure la
+-- cree avant son appel, avec ses questions, comme pour l'acceptation.
 --
 -- La feuille s'adosse a l'arrete conclu, qui existe au referentiel par construction : on ne maintient
--- une mission qu'apres un arrete. Cote MTN-<entite>-<annee de l'arrete conclu>, comme sur le jeu.
+-- une mission qu'apres un arrete. Cote MTN-<entite>-<annee de l'arrete conclu>.
 
-CREATE   PROCEDURE dbo.pr_ouvrir_questionnaire_maintien
+CREATE PROCEDURE dbo.pr_ouvrir_questionnaire_maintien
     @entite         VARCHAR (20),
     @arrete_conclu  VARCHAR (20),
     @par            NVARCHAR (400)
@@ -18,7 +16,7 @@ BEGIN
     SET XACT_ABORT ON;
     IF NOT EXISTS (SELECT 1 FROM dbo.ref_entite WHERE code = @entite AND est_client = 1)
         THROW 50281, N'Le maintien ne s''ouvre que sur un client du cabinet.', 1;
-    -- 51302 (15/11/2026) : action 9. Juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
+    -- 51302 : juge sur @par, celui qui clique, par sa connexion, avant toute ecriture (la session SQL d'une
     -- Data function est celle du proprietaire). Un semis ecrit sans cette garde.
     IF ISNULL(TRY_CAST(SESSION_CONTEXT(N'semis') AS INT), 0) <> 1
        AND dbo.fn_membre_equipe(@entite, @arrete_conclu, NULLIF(LTRIM(RTRIM(@par)), N''), CAST(SYSUTCDATETIME() AS DATE)) = 0
@@ -33,7 +31,7 @@ BEGIN
     IF @deja > 0
     BEGIN
         SELECT @cote AS cote, @deja AS questions,
-               N'Le maintien ' + LEFT(@arrete_conclu, 4) + N' de ' + @entite + N' est déjà ouvert, ' + CAST(@deja AS NVARCHAR (10)) + N' questions.' AS message;
+               N'Le maintien ' + LEFT(@arrete_conclu, 4) + N' ' + dbo.fn_de(@entite) + N' est déjà ouvert, ' + CAST(@deja AS NVARCHAR (10)) + N' questions.' AS message;
         RETURN;
     END;
 
@@ -45,8 +43,8 @@ BEGIN
              empreinte_sha256, preparateur, prepare_le)
         VALUES
             (@cote, NULL, 'MAINTIEN', @arrete_conclu, @entite, NULL, 'HUMAINE',
-             N'questionnaire_maintien_' + @entite + N'_' + LEFT(@arrete_conclu, 4) + N'.xlsx',
-             N'/Coffre/' + @entite + N'/' + @arrete_conclu + N'/questionnaire_maintien.xlsx',
+             @cote + N'.xlsx',
+             dbo.fn_chemin_dossier_de_travail(@entite, @arrete_conclu, @cote + N'.xlsx'),
              CONVERT(CHAR (64), HASHBYTES('SHA2_256', CONVERT(NVARCHAR (100), @cote)), 2),
              @par, SYSUTCDATETIME());
     INSERT INTO dbo.feuille_question (cote, question_id)
